@@ -1,0 +1,5 @@
+bin/block_thingy_d
+bin/block_thingy_r
+*.o
+*.depend
+*.layout

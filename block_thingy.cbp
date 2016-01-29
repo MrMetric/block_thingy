@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="block_thingy" />
+		<Option pch_mode="2" />
+		<Option compiler="clang" />
+		<Build>
+			<Target title="Debug">
+				<Option platforms="Unix;" />
+				<Option output="bin/block_thingy_d" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="clang" />
+				<Compiler>
+					<Add option="-ftrapv" />
+					<Add option="-g" />
+					<Add option="-fsanitize=undefined,integer" />
+				</Compiler>
+				<Linker>
+					<Add option="-lubsan" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option platforms="Unix;" />
+				<Option output="bin/block_thingy_r" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="clang" />
+				<Compiler>
+					<Add option="-fomit-frame-pointer" />
+					<Add option="-O3" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Weverything" />
+			<Add option="-fexceptions" />
+			<Add option="-std=c++14" />
+			<Add option="-DWEIRD_BUG_FIX" />
+			<Add option="-DGLM_FORCE_RADIANS" />
+		</Compiler>
+		<Linker>
+			<Add option="-lglfw3" />
+			<Add option="-lGLEW" />
+			<Add option="-lglut" />
+			<Add option="-lGLU" />
+			<Add option="-lGL" />
+			<Add option="-lX11" />
+			<Add option="-lXxf86vm" />
+			<Add option="-lXrandr" />
+			<Add option="-lXi" />
+			<Add option="-lXcursor" />
+			<Add option="-lpthread" />
+			<Add option="-lXinerama" />
+			<Add option="-lpng" />
+		</Linker>
+		<Unit filename="src/Block.cpp" />
+		<Unit filename="src/Block.hpp" />
+		<Unit filename="src/Camera.cpp" />
+		<Unit filename="src/Camera.hpp" />
+		<Unit filename="src/Chunk.cpp" />
+		<Unit filename="src/Chunk.hpp" />
+		<Unit filename="src/Coords.cpp" />
+		<Unit filename="src/Coords.hpp" />
+		<Unit filename="src/Cube.cpp" />
+		<Unit filename="src/Cube.hpp" />
+		<Unit filename="src/FPSManager.hpp" />
+		<Unit filename="src/Game.cpp" />
+		<Unit filename="src/Game.hpp" />
+		<Unit filename="src/Gfx.cpp" />
+		<Unit filename="src/Gfx.hpp" />
+		<Unit filename="src/Phys.cpp" />
+		<Unit filename="src/Phys.hpp" />
+		<Unit filename="src/Player.cpp" />
+		<Unit filename="src/Player.hpp" />
+		<Unit filename="src/Util.cpp" />
+		<Unit filename="src/Util.hpp" />
+		<Unit filename="src/World.cpp" />
+		<Unit filename="src/World.hpp" />
+		<Unit filename="src/gui/Console.cpp" />
+		<Unit filename="src/gui/Console.hpp" />
+		<Unit filename="src/gui/GUI.cpp" />
+		<Unit filename="src/gui/GUI.hpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/shader_util.cpp" />
+		<Unit filename="src/shader_util.hpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<envvars />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

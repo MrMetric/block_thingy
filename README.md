@@ -1,2 +1,2 @@
-# block_thingy
+# block thingy
 I mek GAme
