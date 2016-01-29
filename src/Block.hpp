@@ -7,7 +7,7 @@ using block_id_type = uint_fast16_t;
 class Block
 {
 	public:
-		Block(block_id_type type);
+		explicit Block(block_id_type type);
 		~Block();
 
 		__attribute__((pure))

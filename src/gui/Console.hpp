@@ -6,7 +6,7 @@
 class Console
 {
 	public:
-		Console(GLFWwindow* window);
+		explicit Console(GLFWwindow* window);
 		virtual ~Console();
 
 		void draw();

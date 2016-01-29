@@ -15,7 +15,7 @@ class Camera
 		void keypress(int key, int action);
 
 		// Constructor
-		Camera(GLFWwindow* window);
+		explicit Camera(GLFWwindow* window);
 
 		// Mouse movement handler to look around
 		void handleMouseMove(double mouseX, double mouseY);

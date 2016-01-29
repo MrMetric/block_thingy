@@ -10,7 +10,7 @@
 class Game
 {
 	public:
-		Game(GLFWwindow* window);
+		explicit Game(GLFWwindow* window);
 		virtual ~Game();
 
 		void draw();

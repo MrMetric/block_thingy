@@ -74,7 +74,7 @@ class FPSManager
 	public:
 		// Single parameter constructor - just set a desired framerate and let it go.
 		// Note: No FPS reporting by default, although you can turn it on or off later with the setVerbose(true/false) method
-		FPSManager(int theTargetFps)
+		explicit FPSManager(int theTargetFps)
 		{
 			init(theTargetFps);
 		}
