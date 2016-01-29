@@ -121,11 +121,6 @@ int main()
 
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-	/*glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);*/
-	//GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "my amazing thingy", monitor, nullptr);
 	int width = mode->width * 3 / 4;
 	int height = mode->height * 3 / 4;
 	std::cout << "window size: " << width << "×" << height << "\n";
@@ -158,17 +153,6 @@ int main()
 	{
 		std::cout << "INFO: GLEW initialized\n";
 	}
-
-	/*
-	{
-		Game game_test(window);
-		CALLGRIND_START_INSTRUMENTATION;
-		game_test.world.gen();
-		CALLGRIND_STOP_INSTRUMENTATION;
-		CALLGRIND_DUMP_STATS;
-		exit(0);
-	}
-	//*/
 
 	Game game(window);
 	game.cam.keypress('P', GLFW_RELEASE); // load cam_pos

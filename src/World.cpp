@@ -31,7 +31,6 @@ uint64_t World::chunk_key(int32_t x, int32_t y, int32_t z)
 	return key;
 }
 
-// TODO: deduplicate shit
 void World::set_block(Position::BlockInWorld bwp, Block* block, bool delete_old_block)
 {
 	Position::ChunkInWorld cp(bwp);
@@ -94,37 +93,12 @@ Chunk* World::get_chunk(Position::ChunkInWorld cp, bool create_if_null)
 	return chunk;
 }
 
-void World::update_all_chunks()
-{
-	for(auto chunk_pair : this->chunks)
-	{
-		Chunk* chunk = chunk_pair.second;
-		// TODO (Andrew): check for nullptr?
-		chunk->update();
-	}
-}
-
 void World::gen_chunk(const Position::ChunkInWorld& cp)
 {
 	//std::cout << "INFO: generating chunk: " << cp << "\n";
 	Position::BlockInChunk min(0, 0, 0);
 	Position::BlockInChunk max(CHUNK_SIZE - 1, CHUNK_SIZE - 1, CHUNK_SIZE - 1);
 	this->gen_at(Position::BlockInWorld(cp, min), Position::BlockInWorld(cp, max));
-}
-
-__attribute__((const))
-bwp_type mod_and_square(bwp_type x)
-{
-	if(x >= 0)
-	{
-		x %= 32;
-	}
-	else
-	{
-		x = 32 - ((-x) % 32);
-	}
-
-	return x*x;
 }
 
 void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max)
@@ -134,20 +108,6 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 	{
 		for(bwp_type z = min.z; z <= max.z; ++z)
 		{
-			/*
-			bwp_type y1 = bwp_type(std::round(4 * (sin((x + z) / 16.0) - 16)));
-			bwp_type y2 = 0;//std::round(2 * cos(x / 4.0));//bwp_type(std::round(2 * (cos(2*M_PI * x / 128.0) + sin(2*M_PI * z / 128.0) + 2)));
-
-			bwp_type offset = (x + z) / 4;
-
-			y1 += offset;
-			y2 += offset;
-
-			for(bwp_type i = y1; i <= y2; ++i)
-			{
-				this->set_block(BlockInWorld(x, i, z), 1);
-			}
-			*/
 			for(bwp_type y = min.y; y <= max.y; ++y)
 			{
 				block_pos.x = x;
@@ -181,45 +141,12 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 
 void World::render_chunks()
 {
-	//std::cout << "INFO: rendering chunks\n";
-
-	//std::cout << "using " << Gfx::sp_cube << "; setting " << Gfx::vs_cube_matriks << " to:\n";
-	//Gfx::print_mat4(Gfx::matriks);
-	//std::cout << "projection matrix:\n";
-	//Gfx::print_mat4(Gfx::projection_matrix);
-	//std::cout << "view matrix:\n";
-	//Gfx::print_mat4(Gfx::view_matrix);
 	glUseProgram(Gfx::sp_cube);
-	//std::cout << "program used\n";
 	glUniformMatrix4fv(Gfx::vs_cube_matriks, 1, GL_FALSE, Gfx::matriks_ptr);
-	//std::cout << "shiznit set\n";
 
-	//exit(0);
-
-	//const int render_distance = 2;
-	//const int render_distance_squared = render_distance*render_distance;
 	const int render_distance = 2;
 
 	Position::ChunkInWorld cp(Position::BlockInWorld(Game::instance->cam.position));
-	/*for(map::value_type chunk_pair : this->chunks)
-	{
-		Chunk* chunk = chunk_pair.second;
-		if(chunk != nullptr)
-		{
-			int x = cp.x - chunk->pos.x;
-			int y = cp.y - chunk->pos.y;
-			int z = cp.z - chunk->pos.z;
-			x *= x;
-			y *= y;
-			z *= z;
-			int distance_squared = x + y + z;
-			if(distance_squared <= render_distance_squared)
-			{
-				chunk->render();
-			}
-		}
-	}*/
-
 	Position::ChunkInWorld min(cp.x - render_distance, cp.y - render_distance, cp.z - render_distance);
 	Position::ChunkInWorld max(cp.x + render_distance, cp.y + render_distance, cp.z + render_distance);
 	for(int x = min.x; x <= max.x; ++x)
@@ -233,5 +160,4 @@ void World::render_chunks()
 			}
 		}
 	}
-	//exit(0);
 }

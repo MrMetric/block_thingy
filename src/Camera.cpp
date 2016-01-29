@@ -59,66 +59,6 @@ void Camera::handleMouseMove(double mouseX, double mouseY)
 	glfwSetCursorPos(this->window, this->window_midX, this->window_midY);
 }
 
-/*
-// Function to calculate which direction we need to move the camera and by what amount
-void Camera::move(double delta_time)
-{
-	// Vector to break up our movement into components along the X, Y and Z axis
-	glm::dvec3 movement;
-
-	// Get the sine and cosine of our X and Y axis rotation
-	double sinXRot = sin( glm::radians( rotation.x ) );
-	double cosXRot = cos( glm::radians( rotation.x ) );
-
-	double sinYRot = sin( glm::radians( rotation.y ) );
-	double cosYRot = cos( glm::radians( rotation.y ) );
-
-	double pitchLimitFactor = cosXRot; // This cancels out moving on the Z axis when we're looking up or down
-
-	if(holdingForward)
-	{
-		movement.x += sinYRot * pitchLimitFactor;
-		movement.y += -sinXRot;
-		movement.z += -cosYRot * pitchLimitFactor;
-	}
-
-	if(holdingBackward)
-	{
-		movement.x += -sinYRot * pitchLimitFactor;
-		movement.y += sinXRot;
-		movement.z += cosYRot * pitchLimitFactor;
-	}
-
-	if(holdingLeftStrafe)
-	{
-		movement.x += -cosYRot;
-		movement.z += -sinYRot;
-	}
-
-	if(holdingRightStrafe)
-	{
-		movement.x += cosYRot;
-		movement.z += sinYRot;
-	}
-
-	if(movement.x == 0 && movement.y == 0 && movement.z == 0)
-	{
-		return;
-	}
-
-	movement = glm::normalize(movement);
-
-	// Calculate our value to keep the movement the same speed regardless of the framerate...
-	double framerateIndependentFactor = movementSpeedFactor * delta_time;
-
-	// .. and then apply it to our movement vector.
-	movement *= framerateIndependentFactor;
-
-	// Finally, apply the movement to our position
-	position += movement;
-}
-*/
-
 void Camera::keypress(int key, int action)
 {
 	if(action == GLFW_PRESS || action == GLFW_REPEAT)

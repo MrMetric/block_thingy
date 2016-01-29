@@ -277,16 +277,6 @@ void Player::reset_position()
 
 bool Player::can_place_block_at(const Position::BlockInWorld& bwp)
 {
-	/*
-	BlockInWorld pos1(this->pos.x - abs_offset, this->pos.y, this->pos.z - abs_offset);
-	BlockInWorld pos2(this->pos.x - abs_offset, this->pos.y, this->pos.z + abs_offset);
-	BlockInWorld pos3(this->pos.x + abs_offset, this->pos.y, this->pos.z - abs_offset);
-	BlockInWorld pos4(this->pos.x + abs_offset, this->pos.y, this->pos.z + abs_offset);
-	if(bwp == pos1 || bwp == pos2 || bwp == pos3 || bwp == pos4)
-	{
-		return false;
-	}
-	*/
 	Position::BlockInWorld pos0(this->pos.x, this->pos.y, this->pos.z);
 	if(bwp == pos0)
 	{
@@ -308,8 +298,6 @@ double Player::move_to(double coord, const double move_var, const double offset,
 		return coord + move_var;
 	}
 
-	//Game::instance->phys.draw_outline(bwp.x, bwp.y, bwp.z, glm::vec4(1, 0, 0, 1));
-	//Game::instance->phys.draw_outline(bwp.x, bwp.y + 1, bwp.z, glm::vec4(1, 0, 0, 1));
 	if(this->block_is_at(bwp.x, bwp.y, bwp.z) || this->block_is_at(bwp.x, bwp.y + 1, bwp.z))
 	{
 		if(move_var > 0)

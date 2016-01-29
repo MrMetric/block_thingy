@@ -142,17 +142,6 @@ void Chunk::set(uint8_t x, uint8_t y, uint8_t z, Block* block, bool delete_old_b
 	delete[] naybors;
 }
 
-bool Chunk::block_is_hidden(uint8_t x, uint8_t y, uint8_t z) const
-{
-	return
-	get2(x - 1, y, z) &&
-	get2(x + 1, y, z) &&
-	get2(x, y + 1, z) &&
-	get2(x, y - 1, z) &&
-	get2(x, y, z - 1) &&
-	get2(x, y, z + 1) ;
-}
-
 /** TODO: figure out what causes the weird chunk rendering error
 INFO:
 	it happens on both of my laptop computers (Intel graphics cards, GNU/Linux (3.3) and Windows (3.0))

@@ -19,7 +19,6 @@ class World
 
 		Chunk* get_chunk(Position::ChunkInWorld cp, bool create_if_null = false);
 		void set_chunk(int32_t x, int32_t y, int32_t z, Chunk* chunk);
-		void update_all_chunks();
 
 		void gen_chunk(const Position::ChunkInWorld&);
 		void gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max);
