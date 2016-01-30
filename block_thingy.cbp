@@ -46,16 +46,15 @@
 		<Linker>
 			<Add option="-lglfw3" />
 			<Add option="-lGLEW" />
-			<Add option="-lGLU" />
 			<Add option="-lGL" />
+			<Add option="-lpthread" />
+			<Add option="-lpng" />
 			<Add option="-lX11" />
 			<Add option="-lXxf86vm" />
 			<Add option="-lXrandr" />
 			<Add option="-lXi" />
 			<Add option="-lXcursor" />
-			<Add option="-lpthread" />
 			<Add option="-lXinerama" />
-			<Add option="-lpng" />
 		</Linker>
 		<Unit filename="src/Block.cpp" />
 		<Unit filename="src/Block.hpp" />

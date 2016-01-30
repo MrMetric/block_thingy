@@ -15,6 +15,7 @@
 #include "Game.hpp"
 #include "World.hpp"
 #include "Gfx.hpp"
+#include "Util.hpp"
 
 #include <valgrind/callgrind.h>
 
@@ -25,7 +26,7 @@ void printOglError(const std::string& file, int line)
 	GLenum glErr = glGetError();
 	if(glErr != GL_NO_ERROR)
 	{
-		std::cout << "glError in file " << file << " @ line " << line << ": " << gluErrorString(glErr) << "\n";
+		std::cout << "glError in file " << file << " @ line " << line << ": " << Util::gl_error_string(glErr) << "\n";
 	}
 }
 
