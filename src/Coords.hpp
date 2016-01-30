@@ -1,6 +1,8 @@
 #pragma once
 
-#include <ostream>
+#include <cstdint>
+#include <iosfwd>
+
 #include <glm/vec3.hpp>
 
 using bwp_type = int_fast64_t;

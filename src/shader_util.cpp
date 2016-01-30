@@ -1,9 +1,10 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "shader_util.hpp"
+
 #include <iostream>
 #include <sstream>
 
-#include "shader_util.hpp"
+#include <GL/glew.h>
+
 #include "Util.hpp"
 
 void print_log(GLuint object)

@@ -4,24 +4,14 @@
 #include <GLFW/glfw3.h>
 #include <glm/vec3.hpp>
 
-namespace Position
-{
-	struct BlockInWorld;
-}
-
 class Camera
 {
 	public:
 		void keypress(int key, int action);
 
-		// Constructor
 		explicit Camera(GLFWwindow* window);
 
-		// Mouse movement handler to look around
 		void handleMouseMove(double mouseX, double mouseY);
-
-		// Method to move the camera based on the current direction
-		//void move(double delta_time);
 
 		glm::dvec3 position;
 		glm::dvec3 rotation;

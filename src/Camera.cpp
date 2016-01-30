@@ -1,8 +1,4 @@
 #include "Camera.hpp"
-#include <glm/detail/func_trigonometric.hpp>	// glm::radians
-#include <glm/detail/func_geometric.hpp>		// glm::normalize
-#include "Coords.hpp"
-#include "Game.hpp"
 
 Camera::Camera(GLFWwindow* window)
 	:

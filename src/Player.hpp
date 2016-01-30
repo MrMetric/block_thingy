@@ -2,7 +2,10 @@
 
 #include <glm/vec3.hpp>
 
-#include "Coords.hpp"
+namespace Position
+{
+	struct BlockInWorld;
+}
 
 class Player
 {

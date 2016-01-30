@@ -1,7 +1,10 @@
 #include "World.hpp"
-#include <iostream>
-#include <algorithm> // std::find
-#include <cmath>
+
+#include <GL/glew.h>
+
+#include "Block.hpp"
+#include "Chunk.hpp"
+#include "Coords.hpp"
 #include "Game.hpp"
 #include "Gfx.hpp"
 

@@ -1,19 +1,16 @@
-#include <iostream>
+#include <cstdint>
 #include <ctime>
+#include <iostream>
 #include <iomanip>
+#include <stdexcept>
+#include <string>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <glm/gtx/transform.hpp> // glm::rotate, glm::translate
-#include <glm/gtc/type_ptr.hpp> // glm::value_ptr
-
-#include "shader_util.hpp"
-#include "Chunk.hpp"
-#include "Cube.hpp"
-#include "Phys.hpp"
+#include "Block.hpp"
+#include "Coords.hpp"
 #include "Game.hpp"
-#include "World.hpp"
 #include "Gfx.hpp"
 #include "Util.hpp"
 

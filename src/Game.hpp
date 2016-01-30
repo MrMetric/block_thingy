@@ -1,11 +1,15 @@
 #pragma once
 
+#include <string>
+
 #include "Camera.hpp"
 #include "World.hpp"
 #include "Phys.hpp"
 #include "Player.hpp"
 #include "gui/GUI.hpp"
 #include "FPSManager.hpp"
+
+struct GLFWwindow;
 
 class Game
 {

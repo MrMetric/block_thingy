@@ -1,7 +1,9 @@
+#include "Phys.hpp"
+
 #include <glm/detail/func_matrix.hpp> // glm::sign, glm::inverse, glm::normalize
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
-#include "Phys.hpp"
+#include "Coords.hpp"
 #include "Cube.hpp"
 #include "Game.hpp"
 #include "Gfx.hpp"
@@ -23,13 +25,13 @@ Phys::~Phys()
 	}
 }
 
+//constexpr
 double mod(double a, double b)
 {
 	return fmod(fmod(a, b) + b, b);
 }
 
-//constexpr
-double intbound(double s, double ds)
+constexpr double intbound(double s, double ds)
 {
 	// Find the smallest positive t such that s+t*ds is an integer.
 	if(ds < 0)

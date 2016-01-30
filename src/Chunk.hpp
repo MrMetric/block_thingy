@@ -1,13 +1,16 @@
 #pragma once
 
+#include <cstdint>
 #include <vector>
+
 #include <GL/glew.h>
 
 #include "Coords.hpp"
-#include "Block.hpp"
 
 #define CHUNK_SIZE 32
 #define CHUNK_BLOCK_COUNT (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
+
+class Block;
 
 class Chunk
 {
@@ -23,7 +26,6 @@ class Chunk
 
 		__attribute__((pure))
 		Block* get_block(Position::BlockInChunk bcp) const;
-
 
 		Block* get2(int_fast16_t x, int_fast16_t y, int_fast16_t z) const;
 		void set(uint8_t x, uint8_t y, uint8_t z, Block* block, bool delete_old_block = true);

@@ -4,9 +4,12 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/detail/func_trigonometric.hpp>	// glm::radians
-#include <glm/detail/func_common.hpp>			// glm::sign
 
+#include <glm/trigonometric.hpp>	// glm::radians
+#include <glm/common.hpp>			// glm::sign
+
+#include "Block.hpp"
+#include "Coords.hpp"
 #include "Game.hpp"
 
 Player::Player()

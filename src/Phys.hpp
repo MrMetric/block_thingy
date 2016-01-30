@@ -1,7 +1,10 @@
 #pragma once
 
-#include <glm/mat4x4.hpp>
-#include <GL/glew.h>
+#include <cstdint>
+
+#include <GL/glew.h>			// GLuint
+#include <glm/mat4x4.hpp>		// glm::mat4, glm::vec4
+#include <glm/vec3.hpp>			// glm::ivec3
 
 namespace Position
 {

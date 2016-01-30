@@ -1,8 +1,8 @@
-#include <cmath> // floor
+#include "Coords.hpp"
 
+#include <cmath> // floor
 #include <iostream>
 
-#include "Coords.hpp"
 #include "Chunk.hpp"
 
 namespace Position

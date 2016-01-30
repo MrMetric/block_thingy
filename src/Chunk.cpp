@@ -1,7 +1,9 @@
-#include <glm/vec3.hpp>
-#include <iostream>
-
 #include "Chunk.hpp"
+
+#include <iostream>
+#include <algorithm>		// std::fill_n
+
+#include "Block.hpp"
 #include "Cube.hpp"
 #include "Game.hpp"
 #include "Gfx.hpp"

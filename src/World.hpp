@@ -1,8 +1,16 @@
 #pragma once
 
-#include <boost/unordered_map.hpp>
+#include <cstdint>
 
-#include "Chunk.hpp"
+#include <boost/unordered/unordered_map.hpp>
+
+class Chunk;
+class Block;
+namespace Position
+{
+	struct BlockInWorld;
+	struct ChunkInWorld;
+}
 
 using map = boost::unordered_map<uint64_t, Chunk*>;
 

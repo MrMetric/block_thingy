@@ -1,9 +1,10 @@
 #include "Gfx.hpp"
 
 #include <iostream>
+#include <stdexcept>				// std::runtime_error
 
-#include <glm/gtx/transform.hpp> // glm::perspective
-#include <glm/gtc/type_ptr.hpp> // glm::value_ptr
+#include <glm/gtx/transform.hpp>	// glm::perspective
+#include <glm/gtc/type_ptr.hpp>		// glm::value_ptr
 
 #include <png.h>
 
