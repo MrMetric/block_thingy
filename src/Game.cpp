@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-#include <png++/png.hpp>
+#include <iostream>
 
 #include "Gfx.hpp"
 
@@ -52,18 +52,9 @@ void Game::draw()
 
 void Game::screenshot(const std::string& filename)
 {
-	std::cout << "saving " << filename << "\n";
+	std::cout << "saving screenshot to " << filename << "\n";
 	GLubyte* pixels = new GLubyte[3 * Gfx::width * Gfx::height];
 	glReadPixels(0, 0, Gfx::width, Gfx::height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-	png::image<png::rgb_pixel> image(Gfx::width, Gfx::height);
-	for(uint_fast32_t y = 0; y < Gfx::height; ++y)
-	{
-		for(uint_fast32_t x = 0; x < Gfx::width; ++x)
-		{
-			uint_fast32_t index = 3 * (y * Gfx::width + x);
-			image.set_pixel(x, Gfx::height - y - 1, png::rgb_pixel(pixels[index], pixels[index + 1], pixels[index + 2]));
-		}
-	}
+	Gfx::write_png_RGB(filename.c_str(), pixels, Gfx::width, Gfx::height);
 	delete[] pixels;
-	image.write(filename);
 }

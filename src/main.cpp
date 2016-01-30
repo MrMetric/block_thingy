@@ -56,7 +56,14 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			ss << std::setfill('0') << std::setw(2) << t.tm_min << ":";
 			ss << std::setfill('0') << std::setw(2) << t.tm_sec;
 			ss << " (" << time << ").png";
-			Game::instance->screenshot(ss.str());
+			try
+			{
+				Game::instance->screenshot(ss.str());
+			}
+			catch(const std::runtime_error& e)
+			{
+				std::cerr << "error saving screenshot: " << e.what() << "\n";
+			}
 		}
 	}
 }

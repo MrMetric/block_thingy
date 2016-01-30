@@ -34,6 +34,8 @@ class Gfx
 		static void update_framebuffer_size();
 		static void set_cam_view();
 
+		static void write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint32_t height);
+
 		static void print_mat4(const glm::dmat4& mat);
 		static void print_mat4(const glm::mat4& mat);
 

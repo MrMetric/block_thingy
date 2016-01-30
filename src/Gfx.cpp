@@ -5,6 +5,8 @@
 #include <glm/gtx/transform.hpp> // glm::perspective
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
+#include <png.h>
+
 #include "Game.hpp"
 #include "shader_util.hpp"
 
@@ -105,6 +107,40 @@ void Gfx::set_cam_view()
 	Gfx::matriks = Gfx::projection_matrix * viewf;
 	Gfx::matriks_ptr = glm::value_ptr(Gfx::matriks);
 	Gfx::view_matrix = viewf;
+}
+
+void Gfx::write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint32_t height)
+{
+	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+	if(png_ptr == nullptr)
+	{
+		throw std::runtime_error("png_create_write_struct returned null");
+	}
+	png_infop info_ptr = png_create_info_struct(png_ptr);
+	if(info_ptr == nullptr)
+	{
+		png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
+		png_destroy_write_struct(&png_ptr, nullptr);
+		throw std::runtime_error("png_create_info_struct returned null");
+	}
+	FILE* fp = fopen(filename, "wb");
+	if(fp == nullptr)
+	{
+		throw std::runtime_error(std::string("error opening png file: ") + strerror(errno));
+	}
+	png_init_io(png_ptr, fp);
+	const int bit_depth = 8;
+	png_set_IHDR(png_ptr, info_ptr, width, height, bit_depth, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+	png_write_info(png_ptr, info_ptr);
+	uint_fast32_t rowsize = 3 * width * sizeof(png_byte);
+	for(uint_fast32_t y = 0; y < height; ++y)
+	{
+		png_write_row(png_ptr, buf + y * rowsize);
+	}
+	png_write_end(png_ptr, info_ptr);
+	fclose(fp);
+	png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
+	png_destroy_write_struct(&png_ptr, &info_ptr);
 }
 
 void Gfx::print_mat4(const glm::dmat4& mat)
