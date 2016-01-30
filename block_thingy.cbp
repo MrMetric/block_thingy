@@ -46,7 +46,6 @@
 		<Linker>
 			<Add option="-lglfw3" />
 			<Add option="-lGLEW" />
-			<Add option="-lglut" />
 			<Add option="-lGLU" />
 			<Add option="-lGL" />
 			<Add option="-lX11" />
