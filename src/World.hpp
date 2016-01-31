@@ -17,8 +17,8 @@ class World
 		World();
 		virtual ~World();
 
-		Block* get_block(Position::BlockInWorld bwp) const;
-		void set_block(Position::BlockInWorld bwp, Block* block, bool delete_old_block = true);
+		std::shared_ptr<Block> get_block(Position::BlockInWorld bwp) const;
+		void set_block(Position::BlockInWorld bwp, std::shared_ptr<Block> block);
 
 		void render_chunks();
 

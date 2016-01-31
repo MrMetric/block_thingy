@@ -43,7 +43,7 @@ Chunk::~Chunk()
 
 void Chunk::init()
 {
-	this->blok = new Block*[CHUNK_BLOCK_COUNT];
+	this->blok = new std::shared_ptr<Block>[CHUNK_BLOCK_COUNT];
 	this->changed = true;
 	this->vertexes_i = 0;
 
@@ -51,17 +51,17 @@ void Chunk::init()
 	glGenBuffers(1, &this->vbo_v);
 }
 
-Block* Chunk::get_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const
+std::shared_ptr<Block> Chunk::get_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const
 {
 	return this->blok[CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x];
 }
 
-Block* Chunk::get_block(Position::BlockInChunk bcp) const
+std::shared_ptr<Block> Chunk::get_block(Position::BlockInChunk bcp) const
 {
 	return this->blok[CHUNK_SIZE * CHUNK_SIZE * bcp.y + CHUNK_SIZE * bcp.z + bcp.x];
 }
 
-Block* Chunk::get2(int_fast16_t x, int_fast16_t y, int_fast16_t z) const
+std::shared_ptr<Block> Chunk::get2(int_fast16_t x, int_fast16_t y, int_fast16_t z) const
 {
 	if(x < 0 || x >= CHUNK_SIZE
 	|| y < 0 || y >= CHUNK_SIZE
@@ -75,7 +75,7 @@ Block* Chunk::get2(int_fast16_t x, int_fast16_t y, int_fast16_t z) const
 	return this->blok[CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x];
 }
 
-void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, Block* block, bool delete_old_block)
+void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, std::shared_ptr<Block> block)
 {
 	if(x >= CHUNK_SIZE
 	|| y >= CHUNK_SIZE
@@ -88,54 +88,38 @@ void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, B
 
 	unsigned int index = CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
 
-	if(delete_old_block)
-	{
-		Block* old_block = this->blok[index];
-		if(old_block != nullptr)
-		{
-			delete old_block;
-		}
-	}
-
 	this->blok[index] = block;
 	this->changed = true;
 
 	// TODO: make a separate function for the following stuff
 	// TODO: is it worth it to check if the naybor chunk has a block beside this one? (to avoid updating when the appearance won't change)
 	//std::vector<ChunkInWorld> naybors;
-	Position::ChunkInWorld** naybors = new Position::ChunkInWorld*[6];
+	Position::ChunkInWorld** naybors = new Position::ChunkInWorld*[3];
 	int i = 0;
 	if(x == 0)
 	{
-		//ChunkInWorld cp(this->pos.x - 1, this->pos.y, this->pos.z);
-		//naybors.push_back(cp);
-		Position::ChunkInWorld* cp = new Position::ChunkInWorld(this->pos.x - 1, this->pos.y, this->pos.z);
-		naybors[i++] = cp;
+		//naybors.push_back(ChunkInWorld(this->pos.x - 1, this->pos.y, this->pos.z));
+		naybors[i++] = new Position::ChunkInWorld(this->pos.x - 1, this->pos.y, this->pos.z);
 	}
 	else if(x == CHUNK_SIZE - 1)
 	{
-		Position::ChunkInWorld* cp = new Position::ChunkInWorld(this->pos.x + 1, this->pos.y, this->pos.z);
-		naybors[i++] = cp;
+		naybors[i++] = new Position::ChunkInWorld(this->pos.x + 1, this->pos.y, this->pos.z);
 	}
 	if(y == 0)
 	{
-		Position::ChunkInWorld* cp = new Position::ChunkInWorld(this->pos.x, this->pos.y - 1, this->pos.z);
-		naybors[i++] = cp;
+		naybors[i++] = new Position::ChunkInWorld(this->pos.x, this->pos.y - 1, this->pos.z);
 	}
 	else if(y == CHUNK_SIZE - 1)
 	{
-		Position::ChunkInWorld* cp = new Position::ChunkInWorld(this->pos.x, this->pos.y + 1, this->pos.z);
-		naybors[i++] = cp;
+		naybors[i++] = new Position::ChunkInWorld(this->pos.x, this->pos.y + 1, this->pos.z);
 	}
 	if(z == 0)
 	{
-		Position::ChunkInWorld* cp = new Position::ChunkInWorld(this->pos.x, this->pos.y, this->pos.z - 1);
-		naybors[i++] = cp;
+		naybors[i++] = new Position::ChunkInWorld(this->pos.x, this->pos.y, this->pos.z - 1);
 	}
 	else if(z == CHUNK_SIZE - 1)
 	{
-		Position::ChunkInWorld* cp = new Position::ChunkInWorld(this->pos.x, this->pos.y, this->pos.z + 1);
-		naybors[i++] = cp;
+		naybors[i++] = new Position::ChunkInWorld(this->pos.x, this->pos.y, this->pos.z + 1);
 	}
 
 	for(int j = 0; j < i; ++j)

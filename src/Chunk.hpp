@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <vector>
 
 #include <GL/glew.h>
@@ -23,13 +24,13 @@ class Chunk
 		Position::ChunkInWorld pos;
 
 		__attribute__((pure))
-		Block* get_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
+		std::shared_ptr<Block> get_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
 
 		__attribute__((pure))
-		Block* get_block(Position::BlockInChunk bcp) const;
+		std::shared_ptr<Block> get_block(Position::BlockInChunk bcp) const;
 
-		Block* get2(int_fast16_t x, int_fast16_t y, int_fast16_t z) const;
-		void set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, Block* block, bool delete_old_block = true);
+		std::shared_ptr<Block> get2(int_fast16_t x, int_fast16_t y, int_fast16_t z) const;
+		void set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, std::shared_ptr<Block> block);
 		bool block_is_hidden(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
 
 		void update();
@@ -38,7 +39,7 @@ class Chunk
 	private:
 		GLuint vbo_v;
 		//std::vector<std::pair<GLuint, GLsizei>> sections; // vbo, draw count
-		Block** blok;
+		std::shared_ptr<Block>* blok;
 		std::vector<GLfloat> vertexes;
 		uint_fast64_t vertexes_i;
 		//GLuint vbo_e;

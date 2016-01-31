@@ -1,5 +1,7 @@
 #include "World.hpp"
 
+#include <memory>
+
 #include <GL/glew.h>
 
 #include "Block.hpp"
@@ -35,16 +37,16 @@ uint64_t World::chunk_key(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld
 	return key;
 }
 
-void World::set_block(Position::BlockInWorld bwp, Block* block, bool delete_old_block)
+void World::set_block(Position::BlockInWorld bwp, std::shared_ptr<Block> block)
 {
 	Position::ChunkInWorld cp(bwp);
 	Chunk* chunk = this->get_or_make_chunk(cp);
 
 	Position::BlockInChunk bcp(bwp);
-	chunk->set(bcp.x, bcp.y, bcp.z, block, delete_old_block);
+	chunk->set(bcp.x, bcp.y, bcp.z, block);
 }
 
-Block* World::get_block(Position::BlockInWorld bwp) const
+std::shared_ptr<Block> World::get_block(Position::BlockInWorld bwp) const
 {
 	Position::ChunkInWorld cp(bwp);
 	Chunk* chunk = this->get_chunk(cp);
@@ -119,11 +121,11 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 				block_pos.z = z;
 				if(y == -128 || (y > -64 && y < -32))
 				{
-					this->set_block(block_pos, new Block(1));
+					this->set_block(block_pos, std::make_shared<Block>(1));
 				}
 				else if(x == -32 && y < 32)
 				{
-					this->set_block(block_pos, new Block(1));
+					this->set_block(block_pos, std::make_shared<Block>(1));
 				}
 				else if(y == -32)
 				{
@@ -134,7 +136,7 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 						for(BlockInWorld_type y2 = -32; y2 < -24; ++y2)
 						{
 							block_pos.y = y2;
-							this->set_block(block_pos, new Block(1));
+							this->set_block(block_pos, std::make_shared<Block>(1));
 						}
 					}
 				}

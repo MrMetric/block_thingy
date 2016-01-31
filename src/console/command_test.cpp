@@ -40,7 +40,7 @@ void add_test_commands(Game* game)
 					}
 					else
 					{
-						Block* block = new Block(block_id);
+						auto block = std::make_shared<Block>(block_id);
 						game->world.set_block(block_pos, block);
 					}
 				}

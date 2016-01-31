@@ -109,7 +109,7 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 				Position::BlockInWorld pos = Game::instance->hovered_block->adjacent();
 				if(Game::instance->player.can_place_block_at(pos))
 				{
-					Block* block = new Block(1);
+					auto block = std::make_shared<Block>(1);
 					Game::instance->world.set_block(pos, block);
 				}
 			}
