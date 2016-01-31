@@ -7,19 +7,22 @@
 
 #include "Coords.hpp"
 #include "Gfx.hpp"
+#include "console/command_test.hpp"
 
 Game* Game::instance = nullptr;
 bool Game::debug = false;
 
 Game::Game(GLFWwindow* window)
 	:
-	cam(window),
 	window(window),
+	cam(window),
 	delta_time(0),
 	fps(144)
 {
 	Game::instance = this;
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // for screenshots
+
+	add_test_commands(this);
 }
 
 Game::~Game()

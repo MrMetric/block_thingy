@@ -8,8 +8,6 @@
 #include <glm/trigonometric.hpp>	// glm::radians
 #include <glm/common.hpp>			// glm::sign
 
-#include "Block.hpp"
-#include "Coords.hpp"
 #include "Game.hpp"
 
 Player::Player()
@@ -92,42 +90,7 @@ void Player::keypress(int key, int scancode, int action, int mods)
 		{
 			if(released)
 			{
-				if(Game::instance->phys.bwp == nullptr)
-				{
-					break;
-				}
-				Position::BlockInWorld bwp = *Game::instance->phys.bwp + Game::instance->phys.face;
-				uint16_t nazi[9][9]
-				{
-					{ 1, 0, 0, 0, 1, 1, 1, 1, 1, },
-					{ 1, 0, 0, 0, 1, 0, 0, 0, 0, },
-					{ 1, 0, 0, 0, 1, 0, 0, 0, 0, },
-					{ 1, 0, 0, 0, 1, 0, 0, 0, 0, },
-					{ 1, 1, 1, 1, 1, 1, 1, 1, 1, },
-					{ 0, 0, 0, 0, 1, 0, 0, 0, 1, },
-					{ 0, 0, 0, 0, 1, 0, 0, 0, 1, },
-					{ 0, 0, 0, 0, 1, 0, 0, 0, 1, },
-					{ 1, 1, 1, 1, 1, 0, 0, 0, 1, },
-				};
-				for(BlockInWorld_type x = 0; x < 9; ++x)
-				{
-					for(BlockInWorld_type y = 8; y >= 0; --y)
-					{
-						for(BlockInWorld_type z = 0; z < 1; ++z)
-						{
-							Position::BlockInWorld block_pos(bwp.x + x, bwp.y + y, bwp.z + z);
-							if(nazi[y][x] == 0)
-							{
-								Game::instance->world.set_block(block_pos, nullptr);
-							}
-							else
-							{
-								Block* block = new Block(2);
-								Game::instance->world.set_block(block_pos, block);
-							}
-						}
-					}
-				}
+				Game::instance->console.run_command("nazi");
 			}
 			break;
 		}

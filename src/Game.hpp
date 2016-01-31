@@ -3,11 +3,12 @@
 #include <string>
 
 #include "Camera.hpp"
-#include "World.hpp"
+#include "FPSManager.hpp"
 #include "Phys.hpp"
 #include "Player.hpp"
+#include "World.hpp"
+#include "console/Console.hpp"
 #include "gui/GUI.hpp"
-#include "FPSManager.hpp"
 
 struct GLFWwindow;
 
@@ -23,11 +24,13 @@ class Game
 
 		static Game* instance;
 
-		World world;
-		Camera cam;
 		GLFWwindow* window;
+
+		Camera cam;
+		World world;
 		Phys phys;
 		Player player;
+		Console console;
 		GUI gui;
 
 		static bool debug;

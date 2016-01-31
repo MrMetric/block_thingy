@@ -80,6 +80,12 @@
 		<Unit filename="src/Util.hpp" />
 		<Unit filename="src/World.cpp" />
 		<Unit filename="src/World.hpp" />
+		<Unit filename="src/console/ArgumentParser.cpp" />
+		<Unit filename="src/console/ArgumentParser.hpp" />
+		<Unit filename="src/console/Console.cpp" />
+		<Unit filename="src/console/Console.hpp" />
+		<Unit filename="src/console/command_test.cpp" />
+		<Unit filename="src/console/command_test.hpp" />
 		<Unit filename="src/gui/GUI.cpp" />
 		<Unit filename="src/gui/GUI.hpp" />
 		<Unit filename="src/main.cpp" />
