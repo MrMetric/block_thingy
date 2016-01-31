@@ -111,7 +111,7 @@ void Gfx::set_cam_view()
 	Gfx::view_matrix = viewf;
 }
 
-void Gfx::write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint32_t height)
+void Gfx::write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint32_t height, bool reverse_rows)
 {
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if(png_ptr == nullptr)
@@ -135,9 +135,19 @@ void Gfx::write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint
 	png_set_IHDR(png_ptr, info_ptr, width, height, bit_depth, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 	png_write_info(png_ptr, info_ptr);
 	uint_fast32_t rowsize = 3 * width * sizeof(png_byte);
-	for(uint_fast32_t y = 0; y < height; ++y)
+	if(reverse_rows)
 	{
-		png_write_row(png_ptr, buf + y * rowsize);
+		for(uint_fast32_t y = height; y > 0; --y)
+		{
+			png_write_row(png_ptr, buf + (y - 1) * rowsize);
+		}
+	}
+	else
+	{
+		for(uint_fast32_t y = 0; y < height; ++y)
+		{
+			png_write_row(png_ptr, buf + y * rowsize);
+		}
 	}
 	png_write_end(png_ptr, info_ptr);
 	fclose(fp);

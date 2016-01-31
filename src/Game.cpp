@@ -62,6 +62,6 @@ void Game::screenshot(const std::string& filename)
 	std::cout << "saving screenshot to " << filename << "\n";
 	GLubyte* pixels = new GLubyte[3 * Gfx::width * Gfx::height];
 	glReadPixels(0, 0, Gfx::width, Gfx::height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-	Gfx::write_png_RGB(filename.c_str(), pixels, Gfx::width, Gfx::height);
+	Gfx::write_png_RGB(filename.c_str(), pixels, Gfx::width, Gfx::height, true);
 	delete[] pixels;
 }
