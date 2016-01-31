@@ -40,8 +40,9 @@
 			<Add option="-Weverything" />
 			<Add option="-fexceptions" />
 			<Add option="-std=c++14" />
+			<Add option="-Werror=delete-incomplete" />
+			<Add option="-isystem lib" />
 			<Add option="-DWEIRD_BUG_FIX" />
-			<Add option="-DGLM_FORCE_RADIANS" />
 		</Compiler>
 		<Linker>
 			<Add option="-lglfw3" />
