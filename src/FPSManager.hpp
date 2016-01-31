@@ -99,7 +99,7 @@ class FPSManager
 			// Calculate how long it's been since the frameStartTime was set (at the end of this method)
 			frameDuration = frameEndTime - frameStartTime;
 
-			if(reportInterval != 0)
+			if(reportInterval > 0)
 			{
 				// Calculate and display the FPS every specified time interval
 				if((frameEndTime - lastReportTime) > reportInterval)
@@ -110,20 +110,19 @@ class FPSManager
 					// Calculate the FPS as the number of frames divided by the interval in seconds
 					currentFps =  double(frameCount) / reportInterval;
 
-					// Reset the frame counter to 1 (and not zero - which would make our FPS values off)
-					frameCount = 1;
+					frameCount = 0;
 				}
 				else // FPS calculation time interval hasn't elapsed yet? Simply increment the FPS frame counter
 				{
 					++frameCount;
 				}
-			} // End of if we specified a report interval section
+			}
 
 			// Calculate how long we should sleep for to stick to our target frame rate
 			double sleepDuration = targetFrameDuration - frameDuration;
 
 			// If we're running faster than our target duration, sleep until we catch up!
-			if(sleepDuration > 0.0)
+			if(sleepDuration > 0)
 			{
 				std::chrono::duration<double> a(sleepDuration);
 				std::this_thread::sleep_for(a);
@@ -134,7 +133,6 @@ class FPSManager
 
 			// Pass back our total frame duration (including any sleep and the time it took to run this function) to be used as our deltaTime value
 			return frameDuration + (frameStartTime - frameEndTime);
-
 		}
 
 		double getFPS()
