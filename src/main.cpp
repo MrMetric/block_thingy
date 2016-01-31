@@ -13,6 +13,7 @@
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "Util.hpp"
+#include "physics/RaytraceHit.hpp"
 
 #include <valgrind/callgrind.h>
 
@@ -94,21 +95,22 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 	{
 		if(button == GLFW_MOUSE_BUTTON_LEFT)
 		{
-			if(Game::instance->phys.bwp != nullptr)
+			if(Game::instance->hovered_block != nullptr)
 			{
-				Game::instance->world.set_block(*Game::instance->phys.bwp, nullptr);
-				std::cout << "broke " << *Game::instance->phys.bwp << "\n";
+				auto break_pos = Game::instance->hovered_block->pos;
+				Game::instance->world.set_block(break_pos, nullptr);
+				std::cout << "broke " << break_pos << "\n";
 			}
 		}
 		else if(button == GLFW_MOUSE_BUTTON_RIGHT)
 		{
-			if(Game::instance->phys.bwp != nullptr)
+			if(Game::instance->hovered_block != nullptr)
 			{
-				Position::BlockInWorld bwp = *Game::instance->phys.bwp + Game::instance->phys.face;
-				if(Game::instance->player.can_place_block_at(bwp))
+				Position::BlockInWorld pos = Game::instance->hovered_block->adjacent();
+				if(Game::instance->player.can_place_block_at(pos))
 				{
 					Block* block = new Block(1);
-					Game::instance->world.set_block(bwp, block);
+					Game::instance->world.set_block(pos, block);
 				}
 			}
 		}

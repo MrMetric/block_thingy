@@ -6,6 +6,8 @@
 #include <GLFW/glfw3.h>
 #include <glm/mat4x4.hpp>
 
+#include "Coords.hpp"
+
 class Gfx
 {
 	public:
@@ -30,11 +32,15 @@ class Gfx
 		static GLuint sp_crosshair;
 		static GLint vs_crosshair_matriks;
 
+		static GLuint outline_vbo;
+
 		static void init_glfw();
 		static void opengl_setup();
 		static void opengl_cleanup();
 		static void update_framebuffer_size();
 		static void set_cam_view();
+
+		static void draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color = glm::vec4(1, 1, 1, 1));
 
 		static void write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint32_t height, bool reverse_rows = false);
 

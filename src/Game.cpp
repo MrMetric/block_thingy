@@ -8,6 +8,8 @@
 #include "Coords.hpp"
 #include "Gfx.hpp"
 #include "console/command_test.hpp"
+#include "physics/Raytracer.hpp"
+#include "physics/RaytraceHit.hpp"
 
 Game* Game::instance = nullptr;
 bool Game::debug = false;
@@ -15,6 +17,7 @@ bool Game::debug = false;
 Game::Game(GLFWwindow* window)
 	:
 	window(window),
+	hovered_block(nullptr),
 	cam(window),
 	delta_time(0),
 	fps(144)
@@ -35,7 +38,8 @@ void Game::draw()
 
 	Gfx::set_cam_view();
 	this->player.step(this->delta_time);
-	this->phys.step(Gfx::projection_matrix, Gfx::view_matrix);
+	this->phys.step();
+	this->find_hovered_block(Gfx::projection_matrix, Gfx::view_matrix);
 
 	this->world.render_chunks();
 	this->gui.draw_crosshair();
@@ -64,4 +68,24 @@ void Game::screenshot(const std::string& filename)
 	glReadPixels(0, 0, Gfx::width, Gfx::height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
 	Gfx::write_png_RGB(filename.c_str(), pixels, Gfx::width, Gfx::height, true);
 	delete[] pixels;
+}
+
+void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat4& view_matrix)
+{
+	glm::dvec3 out_origin;
+	glm::dvec3 out_direction;
+	Raytracer::ScreenPosToWorldRay(
+		Gfx::width / 2, Gfx::height / 2,
+		Gfx::width, Gfx::height,
+		glm::dmat4(view_matrix),
+		glm::dmat4(projection_matrix),
+		out_origin,
+		out_direction
+	);
+
+	this->hovered_block = Raytracer::raycast(this->world, out_origin, out_direction, 8);
+	if(this->hovered_block != nullptr)
+	{
+		Gfx::draw_cube_outline(this->hovered_block->pos);
+	}
 }

@@ -9,6 +9,7 @@
 
 #include <png.h>
 
+#include "Cube.hpp"
 #include "Game.hpp"
 #include "shader_util.hpp"
 
@@ -31,6 +32,8 @@ GLint Gfx::vs_lines_color = -1;
 
 GLuint Gfx::sp_crosshair = ~GLuint(0);
 GLint Gfx::vs_crosshair_matriks = -1;
+
+GLuint Gfx::outline_vbo = 0;
 
 void Gfx::init_glfw()
 {
@@ -67,6 +70,8 @@ void Gfx::opengl_setup()
 	Gfx::sp_crosshair = make_program("shaders/crosshair");
 	Gfx::vs_crosshair_matriks = getUniformLocation(Gfx::sp_crosshair, "matriks");
 
+	glGenBuffers(1, &Gfx::outline_vbo);
+
 	GLfloat lineWidthRange[2];
 	glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, lineWidthRange);
 	std::cout << "OpenGL aliased line width range: " << lineWidthRange[0] << "," << lineWidthRange[1] << "\n";
@@ -81,6 +86,7 @@ void Gfx::opengl_cleanup()
 	glDeleteProgram(Gfx::sp_cube);
 	glDeleteProgram(Gfx::sp_lines);
 	glDeleteProgram(Gfx::sp_crosshair);
+	glDeleteBuffers(1, &Gfx::outline_vbo);
 }
 
 void Gfx::update_framebuffer_size()
@@ -109,6 +115,54 @@ void Gfx::set_cam_view()
 	Gfx::matriks = Gfx::projection_matrix * viewf;
 	Gfx::matriks_ptr = glm::value_ptr(Gfx::matriks);
 	Gfx::view_matrix = viewf;
+}
+
+// TODO: use GL_LINES
+void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
+{
+	GLfloat vertexes[16 * 3];
+	uint_fast16_t o1 = 0;
+	// damn thing is not Eulerian
+	// TODO: determine shortest path
+	GLuint elements[] = {
+		0, 1, 3, 2, 0,
+		4, 5, 7, 6, 4,
+		5, 1, 3, 7, 6, 2
+	};
+	for(uint_fast8_t e = 0; e < 16; ++e)
+	{
+		uint_fast32_t o2 = 3 * elements[e];
+		for(uint_fast8_t i = 0; i < 3; ++i)
+		{
+			vertexes[o1 + i] = Cube::cube_vertex[o2 + i];
+			if(i == 0)
+			{
+				vertexes[o1 + i] += pos.x;
+			}
+			else if(i == 1)
+			{
+				vertexes[o1 + i] += pos.y;
+			}
+			else if(i == 2)
+			{
+				vertexes[o1 + i] += pos.z;
+			}
+		}
+		o1 += 3;
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, Gfx::outline_vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexes), vertexes, GL_STATIC_DRAW);
+
+	glUseProgram(Gfx::sp_lines);
+	glUniformMatrix4fv(Gfx::vs_lines_matriks, 1, GL_FALSE, Gfx::matriks_ptr);
+	glUniform4fv(Gfx::vs_lines_color, 1, glm::value_ptr(color));
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, Gfx::outline_vbo);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	glDrawArrays(GL_LINE_STRIP, 0, 16);
+	glDisableVertexAttribArray(0);
 }
 
 void Gfx::write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint32_t height, bool reverse_rows)

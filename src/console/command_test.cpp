@@ -3,16 +3,17 @@
 #include "../Block.hpp"
 #include "../Coords.hpp"
 #include "../Game.hpp"
+#include "../physics/RaytraceHit.hpp"
 
 void add_test_commands(Game* game)
 {
 	game->console.add_command("nazi", [game](std::vector<std::string> args)
 	{
-		if(game->phys.bwp == nullptr)
+		if(game->hovered_block == nullptr)
 		{
 			return;
 		}
-		Position::BlockInWorld bwp = *game->phys.bwp + game->phys.face;
+		Position::BlockInWorld bwp = game->hovered_block->adjacent();
 		block_id_type nazi[9][9]
 		{
 			{ 1, 0, 0, 0, 1, 1, 1, 1, 1, },

@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string>
+#include <memory>
+
+#include <glm/mat4x4.hpp>
 
 #include "Camera.hpp"
 #include "FPSManager.hpp"
@@ -11,6 +14,7 @@
 #include "gui/GUI.hpp"
 
 struct GLFWwindow;
+struct RaytraceHit;
 
 class Game
 {
@@ -23,8 +27,10 @@ class Game
 		void screenshot(const std::string& filename);
 
 		static Game* instance;
+		static bool debug;
 
 		GLFWwindow* window;
+		std::unique_ptr<RaytraceHit> hovered_block;
 
 		Camera cam;
 		World world;
@@ -33,9 +39,9 @@ class Game
 		Console console;
 		GUI gui;
 
-		static bool debug;
-
 	private:
 		double delta_time;
 		FPSManager fps;
+
+		void find_hovered_block(const glm::mat4& projection_matrix, const glm::mat4& view_matrix);
 };
