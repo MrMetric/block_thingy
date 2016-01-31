@@ -17,12 +17,13 @@ class World
 		World();
 		virtual ~World();
 
-		Block* get_block(Position::BlockInWorld bwp);
+		Block* get_block(Position::BlockInWorld bwp) const;
 		void set_block(Position::BlockInWorld bwp, Block* block, bool delete_old_block = true);
 
 		void render_chunks();
 
-		Chunk* get_chunk(Position::ChunkInWorld cp, bool create_if_null = false);
+		Chunk* get_chunk(Position::ChunkInWorld cp) const;
+		Chunk* get_or_make_chunk(Position::ChunkInWorld cp);
 		void set_chunk(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z, Chunk* chunk);
 
 		void gen_chunk(const Position::ChunkInWorld&);
@@ -30,8 +31,8 @@ class World
 
 	private:
 		map chunks;
-		uint64_t last_key;
-		Chunk* last_chunk;
+		mutable uint64_t last_key;
+		mutable Chunk* last_chunk;
 
 		__attribute__((const))
 		static uint64_t chunk_key(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z);

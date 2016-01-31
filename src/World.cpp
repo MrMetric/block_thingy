@@ -38,13 +38,13 @@ uint64_t World::chunk_key(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld
 void World::set_block(Position::BlockInWorld bwp, Block* block, bool delete_old_block)
 {
 	Position::ChunkInWorld cp(bwp);
-	Chunk* chunk = this->get_chunk(cp, true);
+	Chunk* chunk = this->get_or_make_chunk(cp);
 
 	Position::BlockInChunk bcp(bwp);
 	chunk->set(bcp.x, bcp.y, bcp.z, block, delete_old_block);
 }
 
-Block* World::get_block(Position::BlockInWorld bwp)
+Block* World::get_block(Position::BlockInWorld bwp) const
 {
 	Position::ChunkInWorld cp(bwp);
 	Chunk* chunk = this->get_chunk(cp);
@@ -64,7 +64,7 @@ void World::set_chunk(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_typ
 	this->chunks.insert(map::value_type(key, chunk));
 }
 
-Chunk* World::get_chunk(Position::ChunkInWorld cp, bool create_if_null)
+Chunk* World::get_chunk(Position::ChunkInWorld cp) const
 {
 	uint64_t key = chunk_key(cp.x, cp.y, cp.z);
 	// TODO: what if this chunk has been changed by set_chunk?
@@ -72,28 +72,28 @@ Chunk* World::get_chunk(Position::ChunkInWorld cp, bool create_if_null)
 	{
 		return this->last_chunk;
 	}
-	map::iterator it = this->chunks.find(key);
+	map::const_iterator it = this->chunks.find(key);
 	Chunk* chunk;
 	if(it == this->chunks.end())
 	{
-		if(create_if_null)
-		{
-			//std::cout << "INFO: creating new chunk at (" << cp.x << "," << cp.y << "," << cp.z << ")\n";
-			chunk = new Chunk(cp.x, cp.y, cp.z);
-			this->chunks[key] = chunk;
-			this->gen_chunk(cp);
-		}
-		else
-		{
-			return nullptr;
-		}
+		return nullptr;
 	}
-	else
-	{
-		chunk = it->second;
-	}
+	chunk = it->second;
 	this->last_key = key;
 	this->last_chunk = chunk;
+	return chunk;
+}
+
+Chunk* World::get_or_make_chunk(Position::ChunkInWorld cp)
+{
+	Chunk* chunk = this->get_chunk(cp);
+	if(chunk == nullptr)
+	{
+		chunk = new Chunk(cp);
+		this->set_chunk(cp.x, cp.y, cp.z, chunk);
+		this->gen_chunk(cp); // should this really be here?
+	}
+	// should this set last_key/last_chunk?
 	return chunk;
 }
 
@@ -159,7 +159,7 @@ void World::render_chunks()
 		{
 			for(int z = min.z; z <= max.z; ++z)
 			{
-				Chunk* chunk = this->get_chunk(Position::ChunkInWorld(x, y, z), true);
+				Chunk* chunk = this->get_or_make_chunk(Position::ChunkInWorld(x, y, z));
 				chunk->render();
 			}
 		}
