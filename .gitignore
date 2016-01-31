@@ -1,5 +1,6 @@
 bin/block_thingy_d
 bin/block_thingy_r
+bin/*.png
 *.o
 *.depend
 *.layout
