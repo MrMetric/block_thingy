@@ -8,6 +8,12 @@
 #include "Game.hpp"
 #include "Gfx.hpp"
 
+Chunk::Chunk(Position::ChunkInWorld pos)
+	:
+	Chunk(pos.x, pos.y, pos.z)
+{
+}
+
 Chunk::Chunk(ChunkInWorld_type chunk_x, ChunkInWorld_type chunk_y, ChunkInWorld_type chunk_z)
 	:
 	pos(chunk_x, chunk_y, chunk_z)

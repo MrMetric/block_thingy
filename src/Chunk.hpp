@@ -15,6 +15,7 @@ class Block;
 class Chunk
 {
 	public:
+		explicit Chunk(Position::ChunkInWorld pos);
 		Chunk(ChunkInWorld_type chunk_x, ChunkInWorld_type chunk_y, ChunkInWorld_type chunk_z);
 		Chunk(const Chunk& chunk);
 		virtual ~Chunk();
