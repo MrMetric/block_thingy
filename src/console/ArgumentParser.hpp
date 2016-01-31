@@ -19,7 +19,7 @@ class ArgumentParser
 class truncated_argument : public std::runtime_error
 {
 	public:
-		truncated_argument(const char* message) : std::runtime_error(message)
+		explicit truncated_argument(const char* message) : std::runtime_error(message)
 		{
 		}
 };
