@@ -18,10 +18,6 @@ World::World()
 
 World::~World()
 {
-	for(auto thingy : this->chunks)
-	{
-		delete thingy.second;
-	}
 }
 
 uint64_t World::chunk_key(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z)
@@ -40,7 +36,7 @@ uint64_t World::chunk_key(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld
 void World::set_block(Position::BlockInWorld bwp, std::shared_ptr<Block> block)
 {
 	Position::ChunkInWorld cp(bwp);
-	Chunk* chunk = this->get_or_make_chunk(cp);
+	std::shared_ptr<Chunk> chunk = this->get_or_make_chunk(cp);
 
 	Position::BlockInChunk bcp(bwp);
 	chunk->set(bcp.x, bcp.y, bcp.z, block);
@@ -49,7 +45,7 @@ void World::set_block(Position::BlockInWorld bwp, std::shared_ptr<Block> block)
 std::shared_ptr<Block> World::get_block(Position::BlockInWorld bwp) const
 {
 	Position::ChunkInWorld cp(bwp);
-	Chunk* chunk = this->get_chunk(cp);
+	std::shared_ptr<Chunk> chunk = this->get_chunk(cp);
 	if(chunk == nullptr)
 	{
 		return nullptr;
@@ -59,14 +55,13 @@ std::shared_ptr<Block> World::get_block(Position::BlockInWorld bwp) const
 	return chunk->get_block(bcp);
 }
 
-void World::set_chunk(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z, Chunk* chunk)
+void World::set_chunk(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z, std::shared_ptr<Chunk> chunk)
 {
 	uint64_t key = chunk_key(x, y, z);
-	// TODO: delete old Chunk if overwriting?
 	this->chunks.insert(map::value_type(key, chunk));
 }
 
-Chunk* World::get_chunk(Position::ChunkInWorld cp) const
+std::shared_ptr<Chunk> World::get_chunk(Position::ChunkInWorld cp) const
 {
 	uint64_t key = chunk_key(cp.x, cp.y, cp.z);
 	// TODO: what if this chunk has been changed by set_chunk?
@@ -75,23 +70,22 @@ Chunk* World::get_chunk(Position::ChunkInWorld cp) const
 		return this->last_chunk;
 	}
 	map::const_iterator it = this->chunks.find(key);
-	Chunk* chunk;
 	if(it == this->chunks.end())
 	{
 		return nullptr;
 	}
-	chunk = it->second;
+	std::shared_ptr<Chunk> chunk = it->second;
 	this->last_key = key;
 	this->last_chunk = chunk;
 	return chunk;
 }
 
-Chunk* World::get_or_make_chunk(Position::ChunkInWorld cp)
+std::shared_ptr<Chunk> World::get_or_make_chunk(Position::ChunkInWorld cp)
 {
-	Chunk* chunk = this->get_chunk(cp);
+	std::shared_ptr<Chunk> chunk = this->get_chunk(cp);
 	if(chunk == nullptr)
 	{
-		chunk = new Chunk(cp);
+		chunk = std::make_shared<Chunk>(cp);
 		this->set_chunk(cp.x, cp.y, cp.z, chunk);
 		this->gen_chunk(cp); // should this really be here?
 	}
@@ -161,7 +155,7 @@ void World::render_chunks()
 		{
 			for(int z = min.z; z <= max.z; ++z)
 			{
-				Chunk* chunk = this->get_or_make_chunk(Position::ChunkInWorld(x, y, z));
+				std::shared_ptr<Chunk> chunk = this->get_or_make_chunk(Position::ChunkInWorld(x, y, z));
 				chunk->render();
 			}
 		}

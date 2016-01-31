@@ -9,7 +9,7 @@
 class Chunk;
 class Block;
 
-using map = boost::unordered_map<uint64_t, Chunk*>;
+using map = boost::unordered_map<uint64_t, std::shared_ptr<Chunk>>;
 
 class World
 {
@@ -22,9 +22,9 @@ class World
 
 		void render_chunks();
 
-		Chunk* get_chunk(Position::ChunkInWorld cp) const;
-		Chunk* get_or_make_chunk(Position::ChunkInWorld cp);
-		void set_chunk(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z, Chunk* chunk);
+		std::shared_ptr<Chunk> get_chunk(Position::ChunkInWorld cp) const;
+		std::shared_ptr<Chunk> get_or_make_chunk(Position::ChunkInWorld cp);
+		void set_chunk(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z, std::shared_ptr<Chunk> chunk);
 
 		void gen_chunk(const Position::ChunkInWorld&);
 		void gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max);
@@ -32,7 +32,7 @@ class World
 	private:
 		map chunks;
 		mutable uint64_t last_key;
-		mutable Chunk* last_chunk;
+		mutable std::shared_ptr<Chunk> last_chunk;
 
 		__attribute__((const))
 		static uint64_t chunk_key(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z);

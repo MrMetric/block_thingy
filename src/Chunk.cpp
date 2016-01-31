@@ -125,7 +125,7 @@ void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, s
 	for(int j = 0; j < i; ++j)
 	{
 		Position::ChunkInWorld* cp = naybors[j];
-		Chunk* chunk = Game::instance->world.get_chunk(*cp);
+		std::shared_ptr<Chunk> chunk = Game::instance->world.get_chunk(*cp);
 		delete cp;
 		if(chunk != nullptr)
 		{
