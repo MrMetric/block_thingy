@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdexcept>				// std::runtime_error
 
+#include <glm/trigonometric.hpp>	// glm::radians
 #include <glm/gtx/transform.hpp>	// glm::perspective
 #include <glm/gtc/type_ptr.hpp>		// glm::value_ptr
 
@@ -35,7 +36,7 @@ void Gfx::init_glfw()
 {
 	if(!glfwInit())
 	{
-		exit(1);
+		throw std::runtime_error("glfwInit() failed");
 	}
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

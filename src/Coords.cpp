@@ -2,6 +2,8 @@
 
 #include <cmath> // floor
 #include <iostream>
+#include <sstream>
+#include <stdexcept>
 
 #include "Chunk.hpp"
 
@@ -61,9 +63,9 @@ namespace Position
 		|| y >= CHUNK_SIZE
 		|| z >= CHUNK_SIZE)
 		{
-			// TODO: throw exception
-			std::cerr << "BlockInChunk constructed with invalid coordinates: (" << int(x) << "," << int(y) << "," << int(z) << ")\n";
-			exit(1);
+			std::ostringstream ss;
+			ss << "Position::BlockInChunk constructed with invalid coordinates: (" << int(x) << "," << int(y) << "," << int(z) << ")";
+			throw std::logic_error(ss.str());
 		}
 		this->x = x;
 		this->y = y;

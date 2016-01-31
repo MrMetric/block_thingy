@@ -1,13 +1,13 @@
 #include "shader_util.hpp"
 
 #include <iostream>
-#include <sstream>
+#include <stdexcept>
 
 #include <GL/glew.h>
 
 #include "Util.hpp"
 
-void print_log(GLuint object)
+std::string get_log(GLuint object)
 {
 	GLuint log_length = 0;
 	if(glIsShader(object))
@@ -20,8 +20,7 @@ void print_log(GLuint object)
 	}
 	else
 	{
-		std::cerr << "Error printing log: object is not a shader or a program\n";
-		return;
+		throw std::runtime_error("Error printing log: object is not a shader or a program\n");
 	}
 
 	char* log = new char[log_length];
@@ -35,8 +34,9 @@ void print_log(GLuint object)
 		glGetProgramInfoLog(object, log_length, nullptr, log);
 	}
 
-	std::cerr << log << "\n";
+	std::string log_string(log);
 	delete[] log;
+	return log_string;
 }
 
 GLuint compile_shader(const std::string& filename, GLenum type)
@@ -52,50 +52,49 @@ GLuint compile_shader(const std::string& filename, GLenum type)
 	glGetShaderiv(res, GL_COMPILE_STATUS, &compile_ok);
 	if(compile_ok == GL_FALSE)
 	{
-		std::cerr << "error compiling " << filename << "\n";
-		print_log(res);
+		std::string log = get_log(res);
 		glDeleteShader(res);
-		exit(1);
+		throw std::runtime_error("error compiling " + filename + ":\n" + log);
 	}
-
-	//std::cout << "compiled " << filename << "\n";
 
 	return res;
 }
 
 GLuint make_program(const std::string& path)
 {
-	std::stringstream ss_path;
-
-	ss_path << path << ".vs";
-	GLuint vs = compile_shader(ss_path.str(), GL_VERTEX_SHADER);
-
-	//ss_path.clear();
-	ss_path.str("");
-	ss_path << path << ".fs";
-	GLuint fs = compile_shader(ss_path.str(), GL_FRAGMENT_SHADER);
+	GLuint vs = compile_shader(path + ".vs", GL_VERTEX_SHADER);
+	GLuint fs = compile_shader(path + ".fs", GL_FRAGMENT_SHADER);
 
 	GLuint program = glCreateProgram();
 	glAttachShader(program, vs);
 	glAttachShader(program, fs);
 
-	glLinkProgram(program);
 	GLint izgud;
+
+	glLinkProgram(program);
 	glGetProgramiv(program, GL_LINK_STATUS, &izgud);
 	if(!izgud)
 	{
-		std::cerr << "error linking program:\n";
-		print_log(program);
-		exit(1);
+		std::string log = get_log(program);
+		glDeleteShader(vs);
+		glDeleteShader(fs);
+		glDeleteProgram(program);
+		throw std::runtime_error("error linking program:\n" + log);
 	}
+
+	// shader objects are not needed after linking, so memory can be freed by deleting them
+	glDetachShader(program, vs);
+	glDeleteShader(vs);
+	glDetachShader(program, fs);
+	glDeleteShader(fs);
 
 	glValidateProgram(program);
 	glGetProgramiv(program, GL_VALIDATE_STATUS, &izgud);
 	if(!izgud)
 	{
-		std::cerr << "program validation failed:\n";
-		print_log(program);
-		exit(1);
+		std::string log = get_log(program);
+		glDeleteProgram(program);
+		throw std::runtime_error("program validation failed:\n" + log);
 	}
 
 	return program;
@@ -106,8 +105,7 @@ GLint getUniformLocation(GLuint program, const char* name)
 	GLint location = glGetUniformLocation(program, name);
 	if(location == -1)
 	{
-		std::cerr << "glGetUniformLocation returned -1 for " << name << "\n";
-		exit(1);
+		throw std::runtime_error(std::string("glGetUniformLocation returned -1 for ") + name);
 	}
 	return location;
 }
