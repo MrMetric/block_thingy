@@ -9,8 +9,8 @@
 
 #include <png.h>
 
+#include "Camera.hpp"
 #include "Cube.hpp"
-#include "Game.hpp"
 #include "shader_util.hpp"
 
 GLFWwindow* Gfx::window = nullptr;
@@ -103,13 +103,13 @@ void Gfx::update_projection_matrix()
 	Gfx::projection_matrix = glm::perspective(fov, aspect_ratio, near, far);
 }
 
-void Gfx::set_cam_view()
+void Gfx::set_cam_view(const Camera& cam)
 {
 	glm::dmat4 view;
-	view *= glm::rotate(glm::radians(Game::instance->cam.rotation.x), glm::dvec3(1, 0, 0));
-	view *= glm::rotate(glm::radians(Game::instance->cam.rotation.y), glm::dvec3(0, 1, 0));
-	view *= glm::rotate(glm::radians(Game::instance->cam.rotation.z), glm::dvec3(0, 0, 1));
-	glm::dvec3 position = Game::instance->cam.position * -1.0;
+	view *= glm::rotate(glm::radians(cam.rotation.x), glm::dvec3(1, 0, 0));
+	view *= glm::rotate(glm::radians(cam.rotation.y), glm::dvec3(0, 1, 0));
+	view *= glm::rotate(glm::radians(cam.rotation.z), glm::dvec3(0, 0, 1));
+	glm::dvec3 position = cam.position * -1.0;
 	view *= glm::translate(position);
 	glm::mat4 viewf(view);
 	Gfx::matriks = Gfx::projection_matrix * viewf;

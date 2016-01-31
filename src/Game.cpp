@@ -37,7 +37,7 @@ void Game::draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-	Gfx::set_cam_view();
+	Gfx::set_cam_view(this->cam);
 	this->player.step(this->delta_time);
 	this->phys.step();
 	this->find_hovered_block(Gfx::projection_matrix, Gfx::view_matrix);

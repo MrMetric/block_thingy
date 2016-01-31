@@ -8,6 +8,8 @@
 
 #include "Coords.hpp"
 
+class Camera;
+
 class Gfx
 {
 	public:
@@ -38,7 +40,7 @@ class Gfx
 		static void opengl_setup();
 		static void opengl_cleanup();
 		static void update_framebuffer_size();
-		static void set_cam_view();
+		static void set_cam_view(const Camera& cam);
 
 		static void draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color = glm::vec4(1, 1, 1, 1));
 
