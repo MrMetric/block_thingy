@@ -1,7 +1,7 @@
 #include "Chunk.hpp"
 
-#include <iostream>
 #include <algorithm>		// std::fill_n
+#include <stdexcept>
 
 #include "Block.hpp"
 #include "Cube.hpp"
@@ -81,9 +81,8 @@ void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, s
 	|| y >= CHUNK_SIZE
 	|| z >= CHUNK_SIZE)
 	{
-		// TODO: Block to stream output
-		std::cout << "WARNING: Chunk" << this->pos << " ignoring set (" << int(x) << "," << int(y) << "," << int(z) << ") = " << block << "\n";
-		return;
+		std::string set_info = "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ") = " + std::to_string(block->type());
+		throw std::domain_error("position out of bounds in Chunk::set: " + set_info);
 	}
 
 	unsigned int index = CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
