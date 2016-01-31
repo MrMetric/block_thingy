@@ -1,6 +1,7 @@
 #include "Game.hpp"
 
 #include <iostream>
+#include <memory>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -64,10 +65,9 @@ void Game::draw()
 void Game::screenshot(const std::string& filename)
 {
 	std::cout << "saving screenshot to " << filename << "\n";
-	GLubyte* pixels = new GLubyte[3 * Gfx::width * Gfx::height];
-	glReadPixels(0, 0, Gfx::width, Gfx::height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-	Gfx::write_png_RGB(filename.c_str(), pixels, Gfx::width, Gfx::height, true);
-	delete[] pixels;
+	std::unique_ptr<GLubyte> pixels = std::make_unique<GLubyte>(3 * Gfx::width * Gfx::height);
+	glReadPixels(0, 0, Gfx::width, Gfx::height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
+	Gfx::write_png_RGB(filename.c_str(), pixels.get(), Gfx::width, Gfx::height, true);
 }
 
 void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat4& view_matrix)
