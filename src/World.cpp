@@ -12,6 +12,7 @@
 
 World::World()
 	:
+	last_key(~uint64_t(0)),
 	last_chunk(nullptr)
 {
 }
@@ -58,13 +59,16 @@ std::shared_ptr<Block> World::get_block(Position::BlockInWorld bwp) const
 void World::set_chunk(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z, std::shared_ptr<Chunk> chunk)
 {
 	uint64_t key = chunk_key(x, y, z);
+	if(key == this->last_key)
+	{
+		this->last_chunk = chunk;
+	}
 	this->chunks.insert(map::value_type(key, chunk));
 }
 
 std::shared_ptr<Chunk> World::get_chunk(Position::ChunkInWorld cp) const
 {
 	uint64_t key = chunk_key(cp.x, cp.y, cp.z);
-	// TODO: what if this chunk has been changed by set_chunk?
 	if(this->last_chunk != nullptr && key == this->last_key)
 	{
 		return this->last_chunk;
