@@ -5,8 +5,9 @@
 
 #include <glm/vec3.hpp>
 
-using bwp_type = int_fast64_t;
-using bcp_type = uint8_t;
+using ChunkInWorld_type = int32_t;
+using BlockInWorld_type = int_fast64_t;
+using BlockInChunk_type = uint8_t;
 
 namespace Position
 {
@@ -15,28 +16,28 @@ namespace Position
 
 	struct ChunkInWorld
 	{
-		ChunkInWorld(int32_t x, int32_t y, int32_t z);
+		ChunkInWorld(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z);
 		explicit ChunkInWorld(BlockInWorld bwp);
 
-		int32_t x, y, z;
+		ChunkInWorld_type x, y, z;
 	};
 
 	struct BlockInWorld
 	{
-		BlockInWorld(const bwp_type x, const bwp_type y, const bwp_type z);
+		BlockInWorld(const BlockInWorld_type x, const BlockInWorld_type y, const BlockInWorld_type z);
 		BlockInWorld(const ChunkInWorld& cp, const BlockInChunk& bcp);
 		explicit BlockInWorld(const glm::dvec3 vec3);
 		BlockInWorld(const double x, const double y, const double z);
 
-		bwp_type x, y, z;
+		BlockInWorld_type x, y, z;
 	};
 
 	struct BlockInChunk
 	{
-		BlockInChunk(const bcp_type x, const bcp_type y, const bcp_type z);
+		BlockInChunk(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z);
 		explicit BlockInChunk(BlockInWorld bwp);
 
-		bcp_type x, y, z;
+		BlockInChunk_type x, y, z;
 	};
 
 	std::ostream& operator<<(std::ostream& os, const ChunkInWorld& cp);

@@ -109,11 +109,11 @@ void Player::keypress(int key, int scancode, int action, int mods)
 					{ 0, 0, 0, 0, 1, 0, 0, 0, 1, },
 					{ 1, 1, 1, 1, 1, 0, 0, 0, 1, },
 				};
-				for(bwp_type x = 0; x < 9; ++x)
+				for(BlockInWorld_type x = 0; x < 9; ++x)
 				{
-					for(bwp_type y = 8; y >= 0; --y)
+					for(BlockInWorld_type y = 8; y >= 0; --y)
 					{
-						for(bwp_type z = 0; z < 1; ++z)
+						for(BlockInWorld_type z = 0; z < 1; ++z)
 						{
 							Position::BlockInWorld block_pos(bwp.x + x, bwp.y + y, bwp.z + z);
 							if(nazi[y][x] == 0)

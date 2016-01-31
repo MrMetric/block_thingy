@@ -5,11 +5,13 @@
 #include <sstream>
 #include <stdexcept>
 
+#include <glm/vec3.hpp>
+
 #include "Chunk.hpp"
 
 namespace Position
 {
-	ChunkInWorld::ChunkInWorld(int32_t x, int32_t y, int32_t z)
+	ChunkInWorld::ChunkInWorld(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z)
 		:
 		x(x),
 		y(y),
@@ -17,7 +19,7 @@ namespace Position
 	{
 	}
 
-	#define t(a) int32_t(floor(double(a) / CHUNK_SIZE))
+	#define t(a) ChunkInWorld_type(floor(double(a) / CHUNK_SIZE))
 	ChunkInWorld::ChunkInWorld(BlockInWorld bwp)
 	{
 		this->x = t(bwp.x);
@@ -25,7 +27,7 @@ namespace Position
 		this->z = t(bwp.z);
 	}
 
-	BlockInWorld::BlockInWorld(const bwp_type x, const bwp_type y, const bwp_type z)
+	BlockInWorld::BlockInWorld(const BlockInWorld_type x, const BlockInWorld_type y, const BlockInWorld_type z)
 	{
 		this->x = x;
 		this->y = y;
@@ -33,7 +35,7 @@ namespace Position
 	}
 
 	#undef t
-	#define t(a,b) bwp_type(a) * CHUNK_SIZE + b
+	#define t(a,b) BlockInWorld_type(a) * CHUNK_SIZE + b
 	BlockInWorld::BlockInWorld(const ChunkInWorld& cp, const BlockInChunk& bcp)
 	{
 		this->x = t(cp.x, bcp.x);
@@ -42,7 +44,7 @@ namespace Position
 	}
 
 	#undef t
-	#define t(a) bwp_type(std::floor(a))
+	#define t(a) BlockInWorld_type(std::floor(a))
 	BlockInWorld::BlockInWorld(const glm::dvec3 vec3)
 	{
 		this->x = t(vec3.x);
@@ -57,7 +59,7 @@ namespace Position
 		this->z = t(z);
 	}
 
-	BlockInChunk::BlockInChunk(const bcp_type x, const bcp_type y, const bcp_type z)
+	BlockInChunk::BlockInChunk(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 	{
 		if(x >= CHUNK_SIZE
 		|| y >= CHUNK_SIZE
@@ -75,7 +77,7 @@ namespace Position
 	// % can return a negative result, so do it properly here
 	// TODO: find out if std mod works instead
 	#undef t
-	#define t(a) bcp_type(a - CHUNK_SIZE * floor(float(a) / CHUNK_SIZE))
+	#define t(a) BlockInChunk_type(a - CHUNK_SIZE * floor(float(a) / CHUNK_SIZE))
 	BlockInChunk::BlockInChunk(BlockInWorld bwp)
 	{
 		this->x = t(bwp.x);

@@ -15,21 +15,21 @@ class Block;
 class Chunk
 {
 	public:
-		Chunk(int32_t chunk_x, int32_t chunk_y, int32_t chunk_z);
+		Chunk(ChunkInWorld_type chunk_x, ChunkInWorld_type chunk_y, ChunkInWorld_type chunk_z);
 		Chunk(const Chunk& chunk);
 		virtual ~Chunk();
 
 		Position::ChunkInWorld pos;
 
 		__attribute__((pure))
-		Block* get_block(uint8_t x, uint8_t y, uint8_t z) const;
+		Block* get_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
 
 		__attribute__((pure))
 		Block* get_block(Position::BlockInChunk bcp) const;
 
 		Block* get2(int_fast16_t x, int_fast16_t y, int_fast16_t z) const;
-		void set(uint8_t x, uint8_t y, uint8_t z, Block* block, bool delete_old_block = true);
-		bool block_is_hidden(uint8_t x, uint8_t y, uint8_t z) const;
+		void set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, Block* block, bool delete_old_block = true);
+		bool block_is_hidden(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
 
 		void update();
 		void render();
@@ -47,5 +47,5 @@ class Chunk
 		void init();
 
 		void add_vertexes(int x, int y, int z, int offset, std::vector<GLfloat>& vertexes);
-		void draw_cube(uint8_t x, uint8_t y, uint8_t z, std::vector<GLfloat>& vertexes);
+		void draw_cube(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, std::vector<GLfloat>& vertexes);
 };

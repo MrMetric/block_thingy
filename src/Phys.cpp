@@ -81,9 +81,9 @@ void Phys::raycast(glm::dvec3 origin, glm::dvec3 direction, double radius)
 	// tMaxX, tMaxY, and tMaxZ.
 
 	// Cube containing origin point.
-	bwp_type x = bwp_type(floor(origin[0]));
-	bwp_type y = bwp_type(floor(origin[1]));
-	bwp_type z = bwp_type(floor(origin[2]));
+	BlockInWorld_type x(std::floor(origin[0]));
+	BlockInWorld_type y(std::floor(origin[1]));
+	BlockInWorld_type z(std::floor(origin[2]));
 	// Break out direction vector.
 	double dx = direction[0];
 	double dy = direction[1];

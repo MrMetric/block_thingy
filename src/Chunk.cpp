@@ -8,7 +8,7 @@
 #include "Game.hpp"
 #include "Gfx.hpp"
 
-Chunk::Chunk(int32_t chunk_x, int32_t chunk_y, int32_t chunk_z)
+Chunk::Chunk(ChunkInWorld_type chunk_x, ChunkInWorld_type chunk_y, ChunkInWorld_type chunk_z)
 	:
 	pos(chunk_x, chunk_y, chunk_z)
 {
@@ -18,7 +18,8 @@ Chunk::Chunk(int32_t chunk_x, int32_t chunk_y, int32_t chunk_z)
 
 // note: the caller must change the position
 Chunk::Chunk(const Chunk& chunk)
-  :	pos(chunk.pos)
+	:
+	pos(chunk.pos)
 {
 	this->init();
 	for(uint_fast32_t i = 0; i < CHUNK_BLOCK_COUNT; ++i)
@@ -44,7 +45,7 @@ void Chunk::init()
 	glGenBuffers(1, &this->vbo_v);
 }
 
-Block* Chunk::get_block(uint8_t x, uint8_t y, uint8_t z) const
+Block* Chunk::get_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const
 {
 	return this->blok[CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x];
 }
@@ -68,7 +69,7 @@ Block* Chunk::get2(int_fast16_t x, int_fast16_t y, int_fast16_t z) const
 	return this->blok[CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x];
 }
 
-void Chunk::set(uint8_t x, uint8_t y, uint8_t z, Block* block, bool delete_old_block)
+void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, Block* block, bool delete_old_block)
 {
 	if(x >= CHUNK_SIZE
 	|| y >= CHUNK_SIZE
@@ -157,11 +158,11 @@ void Chunk::update()
 	#endif
 
 	this->vertexes.clear();
-	for(uint8_t x = 0; x < CHUNK_SIZE; ++x)
+	for(BlockInChunk_type x = 0; x < CHUNK_SIZE; ++x)
 	{
-		for(uint8_t y = 0; y < CHUNK_SIZE; ++y)
+		for(BlockInChunk_type y = 0; y < CHUNK_SIZE; ++y)
 		{
-			for(uint8_t z = 0; z < CHUNK_SIZE; ++z)
+			for(BlockInChunk_type z = 0; z < CHUNK_SIZE; ++z)
 			{
 				if(this->get_block(x, y, z) == nullptr)
 				{
@@ -224,7 +225,7 @@ void Chunk::add_vertexes(int x, int y, int z, int offset, std::vector<GLfloat>& 
 	}
 }
 
-void Chunk::draw_cube(uint8_t x, uint8_t y, uint8_t z, std::vector<GLfloat>& vertexes)
+void Chunk::draw_cube(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, std::vector<GLfloat>& vertexes)
 {
 	// front
 	if(this->get2(x, y, z - 1) == nullptr)

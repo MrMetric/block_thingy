@@ -22,8 +22,9 @@ World::~World()
 	}
 }
 
-uint64_t World::chunk_key(int32_t x, int32_t y, int32_t z)
+uint64_t World::chunk_key(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z)
 {
+	static_assert(sizeof(ChunkInWorld_type) <= 4, "update chunk_key for new ChunkInWorld_type size");
 	uint32_t x_ = x & 0xFFFFF;
 	uint32_t y_ = y & 0xFFFFF;
 	uint32_t z_ = z & 0xFFFFF;
@@ -56,7 +57,7 @@ Block* World::get_block(Position::BlockInWorld bwp)
 	return chunk->get_block(bcp);
 }
 
-void World::set_chunk(int32_t x, int32_t y, int32_t z, Chunk* chunk)
+void World::set_chunk(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z, Chunk* chunk)
 {
 	uint64_t key = chunk_key(x, y, z);
 	// TODO: delete old Chunk if overwriting?
@@ -106,12 +107,12 @@ void World::gen_chunk(const Position::ChunkInWorld& cp)
 
 void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max)
 {
-	Position::BlockInWorld block_pos(bwp_type(0), 0, 0);
-	for(bwp_type x = min.x; x <= max.x; ++x)
+	Position::BlockInWorld block_pos(BlockInWorld_type(0), 0, 0);
+	for(BlockInWorld_type x = min.x; x <= max.x; ++x)
 	{
-		for(bwp_type z = min.z; z <= max.z; ++z)
+		for(BlockInWorld_type z = min.z; z <= max.z; ++z)
 		{
-			for(bwp_type y = min.y; y <= max.y; ++y)
+			for(BlockInWorld_type y = min.y; y <= max.y; ++y)
 			{
 				block_pos.x = x;
 				block_pos.y = y;
@@ -130,7 +131,7 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 					int r = rand() % 9999;
 					if(r == 0)
 					{
-						for(bwp_type y2 = -32; y2 < -24; ++y2)
+						for(BlockInWorld_type y2 = -32; y2 < -24; ++y2)
 						{
 							block_pos.y = y2;
 							this->set_block(block_pos, new Block(1));
