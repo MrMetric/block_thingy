@@ -117,10 +117,16 @@ void Game::add_commands()
 	{
 		game->player.toggle_noclip();
 	});
+
+	this->commands.emplace_back(&this->console, "respawn", [game=this](const std::vector<std::string>& args)
+	{
+		game->player.reset_position();
+	});
 }
 
 void Game::bind_keys()
 {
+	this->keybinder.bind_key(GLFW_KEY_R, "respawn");
 	this->keybinder.bind_key(GLFW_KEY_SPACE, "jump");
 	this->keybinder.bind_key(GLFW_KEY_L, "noclip");
 	this->keybinder.bind_key(GLFW_KEY_N, "nazi");

@@ -46,11 +46,6 @@ void Player::keypress(int key, int scancode, int action, int mods)
 			key_right = pressed;
 			break;
 		}
-		case GLFW_KEY_R:
-		{
-			this->reset_position();
-			break;
-		}
 		case GLFW_KEY_SEMICOLON:
 		{
 			std::ofstream streem("cam_pos");
