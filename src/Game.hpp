@@ -13,6 +13,7 @@
 #include "World.hpp"
 #include "console/Command.hpp"
 #include "console/Console.hpp"
+#include "console/KeybindManager.hpp"
 #include "gui/GUI.hpp"
 
 struct GLFWwindow;
@@ -25,8 +26,8 @@ class Game
 		virtual ~Game();
 
 		void draw();
-
 		void screenshot(const std::string& filename);
+		void keypress(int key, int scancode, int action, int mods);
 
 		static Game* instance;
 		static bool debug;
@@ -35,9 +36,9 @@ class Game
 		std::unique_ptr<RaytraceHit> hovered_block;
 
 		Camera cam;
-		World world;
 		Phys phys;
 		Player player;
+		World world;
 		Console console;
 		GUI gui;
 
@@ -49,4 +50,7 @@ class Game
 
 		std::vector<Command> commands;
 		void add_commands();
+
+		KeybindManager keybinder;
+		void bind_keys();
 };

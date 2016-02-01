@@ -70,30 +70,6 @@ void Player::keypress(int key, int scancode, int action, int mods)
 			streem >> Game::instance->cam.rotation.z;
 			break;
 		}
-		case GLFW_KEY_SPACE:
-		{
-			if(pressed)
-			{
-				Game::instance->console.run_command("jump");
-			}
-			break;
-		}
-		case GLFW_KEY_L:
-		{
-			if(pressed)
-			{
-				Game::instance->console.run_command("noclip");
-			}
-			break;
-		}
-		case GLFW_KEY_N: // n for nazi
-		{
-			if(pressed)
-			{
-				Game::instance->console.run_command("nazi");
-			}
-			break;
-		}
 		default: break;
 	}
 }

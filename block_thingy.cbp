@@ -82,13 +82,20 @@
 		<Unit filename="src/World.hpp" />
 		<Unit filename="src/console/ArgumentParser.cpp" />
 		<Unit filename="src/console/ArgumentParser.hpp" />
+		<Unit filename="src/console/Command.cpp" />
+		<Unit filename="src/console/Command.hpp" />
 		<Unit filename="src/console/Console.cpp" />
 		<Unit filename="src/console/Console.hpp" />
+		<Unit filename="src/console/KeybindManager.hpp" />
 		<Unit filename="src/console/command_test.cpp" />
 		<Unit filename="src/console/command_test.hpp" />
 		<Unit filename="src/gui/GUI.cpp" />
 		<Unit filename="src/gui/GUI.hpp" />
 		<Unit filename="src/main.cpp" />
+		<Unit filename="src/physics/RaytraceHit.cpp" />
+		<Unit filename="src/physics/RaytraceHit.hpp" />
+		<Unit filename="src/physics/Raytracer.cpp" />
+		<Unit filename="src/physics/Raytracer.hpp" />
 		<Unit filename="src/shader_util.cpp" />
 		<Unit filename="src/shader_util.hpp" />
 		<Extensions>

@@ -18,7 +18,6 @@
 #include <valgrind/callgrind.h>
 
 // http://www.lighthouse3d.com/cg-topics/error-tracking-in-opengl/
-#define printOpenGLError() printOglError(__FILE__, __LINE__)
 void printOglError(const std::string& file, int line)
 {
 	GLenum glErr = glGetError();
@@ -27,6 +26,7 @@ void printOglError(const std::string& file, int line)
 		std::cout << "glError in file " << file << " @ line " << line << ": " << Util::gl_error_string(glErr) << "\n";
 	}
 }
+#define printOpenGLError() printOglError(__FILE__, __LINE__)
 
 static void error_callback(int error, const char* description)
 {
@@ -35,8 +35,7 @@ static void error_callback(int error, const char* description)
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	Game::instance->player.keypress(key, scancode, action, mods);
-	Game::instance->cam.keypress(key, action);
+	Game::instance->keypress(key, scancode, action, mods);
 	if(action == GLFW_PRESS)
 	{
 		if(key == GLFW_KEY_ESCAPE)
@@ -182,7 +181,7 @@ int main()
 	}
 	CALLGRIND_STOP_INSTRUMENTATION;
 	CALLGRIND_DUMP_STATS;
-	Gfx::opengl_cleanup();
+	Gfx::opengl_cleanup(); printOpenGLError();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 

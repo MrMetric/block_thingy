@@ -21,13 +21,15 @@ Game::Game(GLFWwindow* window)
 	hovered_block(nullptr),
 	cam(window),
 	delta_time(0),
-	fps(144)
+	fps(144),
+	keybinder(&this->console)
 {
 	Game::instance = this;
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // for screenshots
 
 	add_test_commands(this);
 	this->add_commands();
+	this->bind_keys();
 }
 
 Game::~Game()
@@ -71,6 +73,19 @@ void Game::screenshot(const std::string& filename)
 	Gfx::write_png_RGB(filename.c_str(), pixels.get(), Gfx::width, Gfx::height, true);
 }
 
+void Game::keypress(int key, int scancode, int action, int mods)
+{
+	bool pressed = (action == GLFW_PRESS || action == GLFW_REPEAT);
+	bool released = (action == GLFW_RELEASE);
+
+	if(pressed)
+	{
+		this->keybinder.keypress(key);
+	}
+	this->player.keypress(key, scancode, action, mods);
+	this->cam.keypress(key, action);
+}
+
 void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat4& view_matrix)
 {
 	glm::dvec3 out_origin;
@@ -102,4 +117,11 @@ void Game::add_commands()
 	{
 		game->player.toggle_noclip();
 	});
+}
+
+void Game::bind_keys()
+{
+	this->keybinder.bind_key(GLFW_KEY_SPACE, "jump");
+	this->keybinder.bind_key(GLFW_KEY_L, "noclip");
+	this->keybinder.bind_key(GLFW_KEY_N, "nazi");
 }
