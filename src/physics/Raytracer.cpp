@@ -168,7 +168,7 @@ std::unique_ptr<RaytraceHit> Raytracer::raycast(const World& world, glm::dvec3 o
 			Position::BlockInWorld pos(x, y, z);
 			if(world.get_block(pos) != nullptr)
 			{
-				return std::unique_ptr<RaytraceHit>(new RaytraceHit{pos, face});
+				return std::make_unique<RaytraceHit>(pos, face);
 			}
 		}
 

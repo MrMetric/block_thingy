@@ -1,5 +1,12 @@
 #include "RaytraceHit.hpp"
 
+RaytraceHit::RaytraceHit(Position::BlockInWorld pos, glm::ivec3 face)
+	:
+	pos(pos),
+	face(face)
+{
+}
+
 Position::BlockInWorld RaytraceHit::adjacent()
 {
 	return this->pos + this->face;
