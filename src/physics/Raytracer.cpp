@@ -2,12 +2,15 @@
 
 #include <cmath>
 #include <cstdint>
+#include <limits>
 #include <stdexcept>
 
-#include <glm/detail/func_matrix.hpp> // glm::sign, glm::inverse, glm::normalize
-#include <glm/gtc/type_ptr.hpp> // glm::value_ptr
+#include <glm/detail/func_matrix.hpp>	// glm::sign, glm::inverse, glm::normalize
+#include <glm/gtc/type_ptr.hpp>			// glm::value_ptr
 
 #include "../World.hpp"
+
+const double infinity = std::numeric_limits<double>::infinity();
 
 //constexpr
 double mod(double a, double b)
@@ -24,7 +27,7 @@ constexpr double intbound(double s, double ds)
 	}
 	if(ds == 0)
 	{
-		return INFINITY;
+		return infinity;
 	}
 
 	s = mod(s, 1);
@@ -134,9 +137,9 @@ std::unique_ptr<RaytraceHit> Raytracer::raycast(const World& world, glm::dvec3 o
 	double tMaxY = intbound(origin[1], dy);
 	double tMaxZ = intbound(origin[2], dz);
 	// The change in t when taking a step (always positive).
-	double tDeltaX = dx == 0 ? INFINITY : stepX / dx;
-	double tDeltaY = dy == 0 ? INFINITY : stepY / dy;
-	double tDeltaZ = dz == 0 ? INFINITY : stepZ / dz;
+	double tDeltaX = dx == 0 ? infinity : stepX / dx;
+	double tDeltaY = dy == 0 ? infinity : stepY / dy;
+	double tDeltaZ = dz == 0 ? infinity : stepZ / dz;
 	// Buffer for reporting faces to the callback.
 	glm::vec3 face;
 

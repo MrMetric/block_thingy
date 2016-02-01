@@ -19,7 +19,7 @@ namespace Position
 	{
 	}
 
-	#define t(a) ChunkInWorld_type(floor(double(a) / CHUNK_SIZE))
+	#define t(a) ChunkInWorld_type(std::floor(a / static_cast<BlockInWorld_type>(CHUNK_SIZE)))
 	ChunkInWorld::ChunkInWorld(BlockInWorld bwp)
 	{
 		this->x = t(bwp.x);
@@ -77,7 +77,7 @@ namespace Position
 	// % can return a negative result, so do it properly here
 	// TODO: find out if std mod works instead
 	#undef t
-	#define t(a) BlockInChunk_type(a - CHUNK_SIZE * floor(float(a) / CHUNK_SIZE))
+	#define t(a) BlockInChunk_type(a - CHUNK_SIZE * std::floor(a / static_cast<double>(CHUNK_SIZE)))
 	BlockInChunk::BlockInChunk(BlockInWorld bwp)
 	{
 		this->x = t(bwp.x);

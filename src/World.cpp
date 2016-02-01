@@ -73,7 +73,7 @@ std::shared_ptr<Chunk> World::get_chunk(Position::ChunkInWorld cp) const
 	{
 		return this->last_chunk;
 	}
-	map::const_iterator it = this->chunks.find(key);
+	auto it = this->chunks.find(key);
 	if(it == this->chunks.end())
 	{
 		return nullptr;

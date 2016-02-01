@@ -42,6 +42,7 @@
 			<Add option="-std=c++14" />
 			<Add option="-Werror=delete-incomplete" />
 			<Add option="-isystem lib" />
+			<Add option="-Wno-padded" />
 			<Add option="-DWEIRD_BUG_FIX" />
 		</Compiler>
 		<Linker>
@@ -86,6 +87,7 @@
 		<Unit filename="src/console/Command.hpp" />
 		<Unit filename="src/console/Console.cpp" />
 		<Unit filename="src/console/Console.hpp" />
+		<Unit filename="src/console/KeybindManager.cpp" />
 		<Unit filename="src/console/KeybindManager.hpp" />
 		<Unit filename="src/console/command_test.cpp" />
 		<Unit filename="src/console/command_test.hpp" />

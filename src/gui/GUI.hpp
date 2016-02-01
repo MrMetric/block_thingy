@@ -13,6 +13,4 @@ class GUI
 
 	private:
 		GLuint crosshair_vbo;
-
-		char pad[4];
 };
