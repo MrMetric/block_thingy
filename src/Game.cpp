@@ -67,7 +67,7 @@ void Game::draw()
 	Position::BlockInWorld bwp(this->player.pos);
 	Position::ChunkInWorld cp(bwp);
 	Position::BlockInChunk bcp(bwp);
-	ss << " | player.pos" << glm::to_string(this->player.pos);
+	ss << " | player.pos(" << glm::to_string(this->player.pos) << ")";
 	ss << " | block" << bwp;
 	ss << " | chunk" << cp;
 	ss << " | chunkblock" << bcp;
