@@ -72,8 +72,6 @@ void Player::step(double delta_time)
 	glm::dvec3 acceleration;
 	acceleration.y -= 0.5; // gravity
 
-	this->rot = Game::instance->cam.rotation;
-
 	acceleration = this->apply_movement_input(acceleration, this->walk_speed);
 
 	if(this->noclip)
@@ -115,8 +113,6 @@ void Player::step(double delta_time)
 
 	acceleration *= delta_time;
 	this->move(acceleration);
-	Game::instance->cam.position = this->pos;
-	Game::instance->cam.position.y += this->eye_height;
 }
 
 glm::dvec3 Player::apply_movement_input(glm::dvec3 acceleration, double move_speed)
@@ -140,10 +136,10 @@ glm::dvec3 Player::apply_movement_input(glm::dvec3 acceleration, double move_spe
 	return acceleration;
 }
 
-void Player::reset_position()
+void Player::respawn()
 {
 	this->pos.x = this->pos.y = this->pos.z = 0;
-	this->rot.x = this->rot.y = this->rot.z = 0;
+	this->rot.x = this->rot.y = this->rot.z = 0; // TODO: improve design (this needs to be set in the camera, not here)
 
 	while(!this->block_is_at(this->pos.x, this->pos.y, this->pos.z))
 	{
@@ -153,7 +149,6 @@ void Player::reset_position()
 	{
 		++this->pos.y;
 	}
-	++this->pos.y;
 
 	this->velocity.x = this->velocity.y = this->velocity.z = 0;
 }
@@ -203,7 +198,7 @@ void Player::toggle_noclip()
 
 bool Player::block_is_at(const double x, const double y, const double z)
 {
-	Position::BlockInWorld block_pos(glm::dvec3(x, y, z));
+	Position::BlockInWorld block_pos(x, y, z);
 	return (Game::instance->world.get_block(block_pos) != nullptr);
 }
 

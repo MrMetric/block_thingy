@@ -1,6 +1,9 @@
 #include <chrono>
 #include <thread>
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 /** The FpsManager class is designed to work with GLFW and enforces a specified framerate on an application.
   * It can also display the current framerate at user-specified intervals, and in addition returns the time
   * duration since the last frame, which can be used to implement framerate independent movement.

@@ -150,7 +150,7 @@ void World::render_chunks()
 
 	const int render_distance = 2;
 
-	Position::ChunkInWorld cp(Position::BlockInWorld(Game::instance->cam.position));
+	Position::ChunkInWorld cp(Position::BlockInWorld(Game::instance->player.pos));
 	Position::ChunkInWorld min(cp.x - render_distance, cp.y - render_distance, cp.z - render_distance);
 	Position::ChunkInWorld max(cp.x + render_distance, cp.y + render_distance, cp.z + render_distance);
 	for(int x = min.x; x <= max.x; ++x)

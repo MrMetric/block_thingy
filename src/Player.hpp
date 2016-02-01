@@ -22,7 +22,7 @@ class Player
 		void move(const glm::dvec3& acceleration);
 		void step(double delta_time);
 		glm::dvec3 apply_movement_input(glm::dvec3 acceleration, double move_speed);
-		void reset_position();
+		void respawn();
 
 		bool can_place_block_at(const Position::BlockInWorld& bwp);
 

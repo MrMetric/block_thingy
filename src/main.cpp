@@ -162,10 +162,6 @@ int main()
 	}
 
 	Game game(window);
-	game.cam.keypress('P', GLFW_RELEASE); // load cam_pos
-
-	Game::instance->player.pos = Game::instance->cam.position;
-	Game::instance->player.pos.y -= Game::instance->player.eye_height;
 
 	Gfx::opengl_setup(); printOpenGLError();
 

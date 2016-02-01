@@ -8,6 +8,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/gtx/string_cast.hpp>
+
 #include "Coords.hpp"
 #include "Gfx.hpp"
 #include "console/command_test.hpp"
@@ -43,7 +45,12 @@ void Game::draw()
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
 	Gfx::set_cam_view(this->cam);
+
+	this->player.rot = this->cam.rotation;
 	this->player.step(this->delta_time);
+	this->cam.position = this->player.pos;
+	this->cam.position.y += this->player.eye_height;
+
 	this->phys.step();
 	this->find_hovered_block(Gfx::projection_matrix, Gfx::view_matrix);
 
@@ -57,13 +64,13 @@ void Game::draw()
 
 	std::stringstream ss;
 	ss << "Baby's First Voxel Engine | " << fps.getFPS() << " fps";
-	Position::BlockInWorld bwp(this->cam.position.x, this->cam.position.y, this->cam.position.z);
+	Position::BlockInWorld bwp(this->player.pos);
 	Position::ChunkInWorld cp(bwp);
 	Position::BlockInChunk bcp(bwp);
-	ss << " | bwp" << bwp;
-	ss << " | cp" << cp;
-	ss << " | bcp" << bcp;
-	ss << " | pos(" << this->player.pos.x << "," << this->player.pos.y << "," << this->player.pos.z << ")";
+	ss << " | player.pos" << glm::to_string(this->player.pos);
+	ss << " | block" << bwp;
+	ss << " | chunk" << cp;
+	ss << " | chunkblock" << bcp;
 	glfwSetWindowTitle(window, ss.str().c_str());
 }
 
@@ -149,7 +156,7 @@ void Game::add_commands()
 	});
 	this->commands.emplace_back(console, "respawn", [game=this](const std::vector<std::string>& args)
 	{
-		game->player.reset_position();
+		game->player.respawn();
 	});
 
 	this->commands.emplace_back(console, "save_pos", [game=this](const std::vector<std::string>& args)

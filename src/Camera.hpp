@@ -1,8 +1,8 @@
 #pragma once
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include <glm/vec3.hpp>
+
+struct GLFWwindow;
 
 class Camera
 {
@@ -17,8 +17,8 @@ class Camera
 		glm::dvec3 rotation;
 
 	private:
-		double pitchSensitivity;    // Controls how sensitive mouse movements affect looking up and down
-		double yawSensitivity;      // Controls how sensitive mouse movements affect looking left and right
+		double pitchSensitivity;	// Controls how sensitive mouse movements affect looking up and down
+		double yawSensitivity;		// Controls how sensitive mouse movements affect looking left and right
 
 		GLFWwindow* window;
 		int window_width;
