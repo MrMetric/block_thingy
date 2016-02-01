@@ -27,6 +27,7 @@ Game::Game(GLFWwindow* window)
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // for screenshots
 
 	add_test_commands(this);
+	this->add_commands();
 }
 
 Game::~Game()
@@ -88,4 +89,17 @@ void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat
 	{
 		Gfx::draw_cube_outline(this->hovered_block->pos);
 	}
+}
+
+void Game::add_commands()
+{
+	this->commands.emplace_back(&this->console, "jump", [game=this](const std::vector<std::string>& args)
+	{
+		game->player.jump();
+	});
+
+	this->commands.emplace_back(&this->console, "noclip", [game=this](const std::vector<std::string>& args)
+	{
+		game->player.toggle_noclip();
+	});
 }

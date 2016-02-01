@@ -1,7 +1,8 @@
 #pragma once
 
-#include <string>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include <glm/mat4x4.hpp>
 
@@ -10,6 +11,7 @@
 #include "Phys.hpp"
 #include "Player.hpp"
 #include "World.hpp"
+#include "console/Command.hpp"
 #include "console/Console.hpp"
 #include "gui/GUI.hpp"
 
@@ -44,4 +46,7 @@ class Game
 		FPSManager fps;
 
 		void find_hovered_block(const glm::mat4& projection_matrix, const glm::mat4& view_matrix);
+
+		std::vector<Command> commands;
+		void add_commands();
 };

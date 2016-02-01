@@ -27,18 +27,22 @@ class Player
 
 		bool can_place_block_at(const Position::BlockInWorld& bwp);
 
+		void jump();
+		void toggle_noclip();
+
 		glm::dvec3 pos;
 		glm::dvec3 rot;
 		glm::dvec3 velocity;
+
+	private:
+		bool block_is_at(const double x, const double y, const double z);
+		double move_to(double coord, const double move_var, const double offset, Position::BlockInWorld bwp);
+
 		bool key_forward = false;
 		bool key_backward = false;
 		bool key_left = false;
 		bool key_right = false;
 		bool on_ground;
-		bool jump = false;
+		bool do_jump = false;
 		bool noclip = false;
-
-	private:
-		bool block_is_at(const double x, const double y, const double z);
-		double move_to(double coord, const double move_var, const double offset, Position::BlockInWorld bwp);
 };

@@ -72,9 +72,9 @@ void Player::keypress(int key, int scancode, int action, int mods)
 		}
 		case GLFW_KEY_SPACE:
 		{
-			if(pressed && !this->jump)
+			if(pressed)
 			{
-				this->jump = true;
+				Game::instance->console.run_command("jump");
 			}
 			break;
 		}
@@ -82,13 +82,13 @@ void Player::keypress(int key, int scancode, int action, int mods)
 		{
 			if(pressed)
 			{
-				this->noclip = !this->noclip;
+				Game::instance->console.run_command("noclip");
 			}
 			break;
 		}
 		case GLFW_KEY_N: // n for nazi
 		{
-			if(released)
+			if(pressed)
 			{
 				Game::instance->console.run_command("nazi");
 			}
@@ -165,17 +165,17 @@ void Player::step(double delta_time)
 		this->velocity.x *= 0.75;
 		this->velocity.y *= 0.75;
 		this->velocity.z *= 0.75;
-		if(this->jump)
+		if(this->do_jump)
 		{
-			this->jump = false;
+			this->do_jump = false;
 			acceleration.y += 0.30 * sqrt(60 / delta_time);
 		}
 	}
 	else
 	{
-		if(this->jump && this->on_ground)
+		if(this->do_jump && this->on_ground)
 		{
-			this->jump = false;
+			this->do_jump = false;
 			acceleration.y += 0.15 * sqrt(60 / delta_time);
 		}
 
@@ -249,6 +249,19 @@ bool Player::can_place_block_at(const Position::BlockInWorld& bwp)
 		return false;
 	}
 	return true;
+}
+
+void Player::jump()
+{
+	if(!this->do_jump)
+	{
+		this->do_jump = true;
+	}
+}
+
+void Player::toggle_noclip()
+{
+	this->noclip = !this->noclip;
 }
 
 bool Player::block_is_at(const double x, const double y, const double z)
