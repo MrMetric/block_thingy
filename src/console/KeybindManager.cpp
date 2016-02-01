@@ -1,19 +1,50 @@
 #include "KeybindManager.hpp"
 
+#include <algorithm>
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include "Console.hpp"
 
-KeybindManager::KeybindManager(const Console* console)
+KeybindManager::KeybindManager(Console* console)
 	:
 	console(console)
 {
+	console->add_command("bind", [keybinder=this](const std::vector<std::string>& args)
+	{
+		if(args.size() != 2)
+		{
+			// print usage
+			return;
+		}
+		std::cout << "bind " << args[0] << " " << args[1] << "\n";
+		keybinder->bind_key(args[0], args[1]);
+	});
+}
+
+KeybindManager::~KeybindManager()
+{
+	this->console->unadd_command("bind");
 }
 
 void KeybindManager::bind_key(int key, const std::string& command)
 {
 	this->keybinds[key] = command;
+}
+
+void KeybindManager::bind_key(const std::string& key_string, const std::string& command)
+{
+	int key = KeybindManager::translate_key(key_string);
+	if(key == GLFW_KEY_UNKNOWN)
+	{
+		throw std::runtime_error("unknown key: " + key_string);
+	}
+	this->bind_key(key, command);
 }
 
 void KeybindManager::unbind_key(int key)
@@ -39,7 +70,7 @@ void KeybindManager::keypress(int key, int action)
 				command2[0] = '-';
 				this->release_auto[key] = command2;
 			}
-			this->console->run_command(command);
+			this->console->run_line(command);
 		}
 	}
 	else if(action == GLFW_RELEASE)
@@ -47,11 +78,147 @@ void KeybindManager::keypress(int key, int action)
 		auto i = this->release_auto.find(key);
 		if(i != this->release_auto.end())
 		{
-			this->console->run_command(i->second);
+			this->console->run_line(i->second);
 		}
 	}
 	else
 	{
 		// TODO: log unknown action
 	}
+}
+
+// I think this is too long :[
+int KeybindManager::translate_key(std::string key)
+{
+	std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+	if(key.length() == 1)
+	{
+		switch(key[0])
+		{
+			case ' ': return GLFW_KEY_SPACE;
+			case '\'': return GLFW_KEY_APOSTROPHE;
+			case ',': return GLFW_KEY_COMMA;
+			case '-': return GLFW_KEY_MINUS;
+			case '.': return GLFW_KEY_PERIOD;
+			case '/': return GLFW_KEY_SLASH;
+			case '0': return GLFW_KEY_0;
+			case '1': return GLFW_KEY_1;
+			case '2': return GLFW_KEY_2;
+			case '3': return GLFW_KEY_3;
+			case '4': return GLFW_KEY_4;
+			case '5': return GLFW_KEY_5;
+			case '6': return GLFW_KEY_6;
+			case '7': return GLFW_KEY_7;
+			case '8': return GLFW_KEY_8;
+			case '9': return GLFW_KEY_9;
+			case ';': return GLFW_KEY_SEMICOLON;
+			case '=': return GLFW_KEY_EQUAL;
+			case 'a': return GLFW_KEY_A;
+			case 'b': return GLFW_KEY_B;
+			case 'c': return GLFW_KEY_C;
+			case 'd': return GLFW_KEY_D;
+			case 'e': return GLFW_KEY_E;
+			case 'f': return GLFW_KEY_F;
+			case 'g': return GLFW_KEY_G;
+			case 'h': return GLFW_KEY_H;
+			case 'i': return GLFW_KEY_I;
+			case 'j': return GLFW_KEY_J;
+			case 'k': return GLFW_KEY_K;
+			case 'l': return GLFW_KEY_L;
+			case 'm': return GLFW_KEY_M;
+			case 'n': return GLFW_KEY_N;
+			case 'o': return GLFW_KEY_O;
+			case 'p': return GLFW_KEY_P;
+			case 'q': return GLFW_KEY_Q;
+			case 'r': return GLFW_KEY_R;
+			case 's': return GLFW_KEY_S;
+			case 't': return GLFW_KEY_T;
+			case 'u': return GLFW_KEY_U;
+			case 'v': return GLFW_KEY_V;
+			case 'w': return GLFW_KEY_W;
+			case 'x': return GLFW_KEY_X;
+			case 'y': return GLFW_KEY_Y;
+			case 'z': return GLFW_KEY_Z;
+			case '[': return GLFW_KEY_LEFT_BRACKET;
+			case '\\': return GLFW_KEY_BACKSLASH;
+			case ']': return GLFW_KEY_RIGHT_BRACKET;
+			case '`': return GLFW_KEY_GRAVE_ACCENT;
+			case '\t': return GLFW_KEY_TAB;
+			default: return GLFW_KEY_UNKNOWN;
+		}
+	}
+
+	if(key == "space") return GLFW_KEY_SPACE;
+	if(key == "tab") return GLFW_KEY_TAB;
+	if(key == "esc" || key == "escape") return GLFW_KEY_ESCAPE;
+	if(key == "enter" || key == "return") return GLFW_KEY_ENTER;
+	if(key == "backspace") return GLFW_KEY_BACKSPACE;
+	if(key == "insert") return GLFW_KEY_INSERT;
+	if(key == "delete") return GLFW_KEY_DELETE;
+	if(key == "right") return GLFW_KEY_RIGHT;
+	if(key == "left") return GLFW_KEY_LEFT;
+	if(key == "down") return GLFW_KEY_DOWN;
+	if(key == "up") return GLFW_KEY_UP;
+	if(key == "page_up" || key == "pgdn") return GLFW_KEY_PAGE_UP;
+	if(key == "page_down" || key == "pgup") return GLFW_KEY_PAGE_DOWN;
+	if(key == "home") return GLFW_KEY_HOME;
+	if(key == "end") return GLFW_KEY_END;
+	if(key == "caps_lock") return GLFW_KEY_CAPS_LOCK;
+	if(key == "scroll_lock") return GLFW_KEY_SCROLL_LOCK;
+	if(key == "num_lock") return GLFW_KEY_NUM_LOCK;
+	if(key == "print_screen") return GLFW_KEY_PRINT_SCREEN;
+	if(key == "pause") return GLFW_KEY_PAUSE;
+	if(key == "f1") return GLFW_KEY_F1;
+	if(key == "f2") return GLFW_KEY_F2;
+	if(key == "f3") return GLFW_KEY_F3;
+	if(key == "f4") return GLFW_KEY_F4;
+	if(key == "f5") return GLFW_KEY_F5;
+	if(key == "f6") return GLFW_KEY_F6;
+	if(key == "f7") return GLFW_KEY_F7;
+	if(key == "f8") return GLFW_KEY_F8;
+	if(key == "f9") return GLFW_KEY_F9;
+	if(key == "f10") return GLFW_KEY_F10;
+	if(key == "f11") return GLFW_KEY_F11;
+	if(key == "f12") return GLFW_KEY_F12;
+	if(key == "f13") return GLFW_KEY_F13;
+	if(key == "f14") return GLFW_KEY_F14;
+	if(key == "f15") return GLFW_KEY_F15;
+	if(key == "f16") return GLFW_KEY_F16;
+	if(key == "f17") return GLFW_KEY_F17;
+	if(key == "f18") return GLFW_KEY_F18;
+	if(key == "f19") return GLFW_KEY_F19;
+	if(key == "f20") return GLFW_KEY_F20;
+	if(key == "f21") return GLFW_KEY_F21;
+	if(key == "f22") return GLFW_KEY_F22;
+	if(key == "f23") return GLFW_KEY_F23;
+	if(key == "f24") return GLFW_KEY_F24;
+	if(key == "f25") return GLFW_KEY_F25;
+	if(key == "kp0" || key == "kp_0") return GLFW_KEY_KP_0;
+	if(key == "kp1" || key == "kp_1") return GLFW_KEY_KP_1;
+	if(key == "kp2" || key == "kp_2") return GLFW_KEY_KP_2;
+	if(key == "kp3" || key == "kp_3") return GLFW_KEY_KP_3;
+	if(key == "kp4" || key == "kp_4") return GLFW_KEY_KP_4;
+	if(key == "kp5" || key == "kp_5") return GLFW_KEY_KP_5;
+	if(key == "kp6" || key == "kp_6") return GLFW_KEY_KP_6;
+	if(key == "kp7" || key == "kp_7") return GLFW_KEY_KP_7;
+	if(key == "kp8" || key == "kp_8") return GLFW_KEY_KP_8;
+	if(key == "kp9" || key == "kp_9") return GLFW_KEY_KP_9;
+	if(key == "kp_decimal") return GLFW_KEY_KP_DECIMAL;
+	if(key == "kp_divide") return GLFW_KEY_KP_DIVIDE;
+	if(key == "kp_multiply") return GLFW_KEY_KP_MULTIPLY;
+	if(key == "kp_subtract") return GLFW_KEY_KP_SUBTRACT;
+	if(key == "kp_add") return GLFW_KEY_KP_ADD;
+	if(key == "kp_enter") return GLFW_KEY_KP_ENTER;
+	if(key == "kp_equal") return GLFW_KEY_KP_EQUAL;
+	if(key == "lshift") return GLFW_KEY_LEFT_SHIFT;
+	if(key == "lctrl" || key == "lcontrol") return GLFW_KEY_LEFT_CONTROL;
+	if(key == "lalt") return GLFW_KEY_LEFT_ALT;
+	if(key == "lsuper") return GLFW_KEY_LEFT_SUPER;
+	if(key == "rshift") return GLFW_KEY_RIGHT_SHIFT;
+	if(key == "rctrl" || key == "rcontrol") return GLFW_KEY_RIGHT_CONTROL;
+	if(key == "ralt") return GLFW_KEY_RIGHT_ALT;
+	if(key == "rsuper") return GLFW_KEY_RIGHT_SUPER;
+	if(key == "menu") return GLFW_KEY_MENU;
+
+	return GLFW_KEY_UNKNOWN;
 }

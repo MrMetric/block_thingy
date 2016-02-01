@@ -22,6 +22,14 @@ void Console::unadd_command(const std::string& name)
 	this->handlers.erase(name);
 }
 
+void Console::run_line(const std::string& line)
+{
+	std::vector<std::string> args = ArgumentParser().parse_args(line);
+	std::string name = args[0];
+	args.erase(args.begin(), args.begin() + 1);
+	this->run_command(name, args);
+}
+
 void Console::run_command(const std::string& name, const std::string& argline) const
 {
 	std::vector<std::string> args = ArgumentParser().parse_args(argline);

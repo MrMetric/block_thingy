@@ -183,15 +183,15 @@ void Game::add_commands()
 
 void Game::bind_keys()
 {
-	this->keybinder.bind_key(GLFW_KEY_W, "+forward");
-	this->keybinder.bind_key(GLFW_KEY_S, "+backward");
-	this->keybinder.bind_key(GLFW_KEY_A, "+left");
-	this->keybinder.bind_key(GLFW_KEY_D, "+right");
-	this->keybinder.bind_key(GLFW_KEY_R, "respawn");
-	this->keybinder.bind_key(GLFW_KEY_SPACE, "jump");
-	this->keybinder.bind_key(GLFW_KEY_L, "noclip");
-	this->keybinder.bind_key(GLFW_KEY_N, "nazi");
-	this->keybinder.bind_key(GLFW_KEY_SEMICOLON, "save_pos");
-	this->keybinder.bind_key(GLFW_KEY_P, "load_pos");
-	this->keybinder.bind_key(GLFW_KEY_K, "+test");
+	this->console.run_line("bind w +forward");
+	this->console.run_line("bind s +backward");
+	this->console.run_line("bind a +left");
+	this->console.run_line("bind d +right");
+	this->console.run_line("bind r respawn");
+	this->console.run_line("bind space jump");
+	this->console.run_line("bind l noclip");
+	this->console.run_line("bind n nazi");
+	this->console.run_line("bind ; save_pos");
+	this->console.run_line("bind p load_pos");
+	this->console.run_line("bind k +test");
 }

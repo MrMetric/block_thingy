@@ -13,6 +13,7 @@ class Console
 
 		void add_command(const std::string& name, const console_handler_t& handler);
 		void unadd_command(const std::string& name);
+		void run_line(const std::string& line);
 		void run_command(const std::string& name, const std::string& argline = "") const;
 		void run_command(const std::string& name, const std::vector<std::string>& args) const;
 
