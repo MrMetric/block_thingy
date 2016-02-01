@@ -8,14 +8,15 @@
 #include "Game.hpp"
 #include "Gfx.hpp"
 
-Chunk::Chunk(Position::ChunkInWorld pos)
+Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	:
-	Chunk(pos.x, pos.y, pos.z)
+	Chunk(pos.x, pos.y, pos.z, owner)
 {
 }
 
-Chunk::Chunk(ChunkInWorld_type chunk_x, ChunkInWorld_type chunk_y, ChunkInWorld_type chunk_z)
+Chunk::Chunk(ChunkInWorld_type chunk_x, ChunkInWorld_type chunk_y, ChunkInWorld_type chunk_z, World* owner)
 	:
+	owner(owner),
 	pos(chunk_x, chunk_y, chunk_z)
 {
 	this->init();
@@ -25,6 +26,7 @@ Chunk::Chunk(ChunkInWorld_type chunk_x, ChunkInWorld_type chunk_y, ChunkInWorld_
 // note: the caller must change the position
 Chunk::Chunk(const Chunk& chunk)
 	:
+	owner(chunk.owner),
 	pos(chunk.pos)
 {
 	this->init();
@@ -70,7 +72,7 @@ std::shared_ptr<Block> Chunk::get2(int_fast16_t x, int_fast16_t y, int_fast16_t 
 		int64_t bx = this->pos.x * CHUNK_SIZE + x;
 		int64_t by = this->pos.y * CHUNK_SIZE + y;
 		int64_t bz = this->pos.z * CHUNK_SIZE + z;
-		return Game::instance->world.get_block(Position::BlockInWorld(bx, by, bz));
+		return this->owner->get_block(Position::BlockInWorld(bx, by, bz));
 	}
 	return this->blok[CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x];
 }
@@ -124,7 +126,7 @@ void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, s
 	for(int j = 0; j < i; ++j)
 	{
 		Position::ChunkInWorld* cp = naybors[j];
-		std::shared_ptr<Chunk> chunk = Game::instance->world.get_chunk(*cp);
+		std::shared_ptr<Chunk> chunk = this->owner->get_chunk(*cp);
 		delete cp;
 		if(chunk != nullptr)
 		{

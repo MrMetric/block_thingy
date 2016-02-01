@@ -12,16 +12,15 @@
 #define CHUNK_BLOCK_COUNT (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
 
 class Block;
+class World;
 
 class Chunk
 {
 	public:
-		explicit Chunk(Position::ChunkInWorld pos);
-		Chunk(ChunkInWorld_type chunk_x, ChunkInWorld_type chunk_y, ChunkInWorld_type chunk_z);
+		Chunk(Position::ChunkInWorld pos, World* owner);
+		Chunk(ChunkInWorld_type chunk_x, ChunkInWorld_type chunk_y, ChunkInWorld_type chunk_z, World* owner);
 		Chunk(const Chunk& chunk);
 		virtual ~Chunk();
-
-		Position::ChunkInWorld pos;
 
 		__attribute__((pure))
 		std::shared_ptr<Block> get_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
@@ -37,6 +36,8 @@ class Chunk
 		void render();
 
 	private:
+		World* owner;
+		Position::ChunkInWorld pos;
 		GLuint vbo_v;
 		//std::vector<std::pair<GLuint, GLsizei>> sections; // vbo, draw count
 		std::shared_ptr<Block>* blok;

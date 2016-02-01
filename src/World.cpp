@@ -89,7 +89,7 @@ std::shared_ptr<Chunk> World::get_or_make_chunk(Position::ChunkInWorld cp)
 	std::shared_ptr<Chunk> chunk = this->get_chunk(cp);
 	if(chunk == nullptr)
 	{
-		chunk = std::make_shared<Chunk>(cp);
+		chunk = std::make_shared<Chunk>(cp, this);
 		this->set_chunk(cp.x, cp.y, cp.z, chunk);
 		this->gen_chunk(cp); // should this really be here?
 	}
