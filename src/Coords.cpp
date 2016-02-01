@@ -19,7 +19,7 @@ namespace Position
 	{
 	}
 
-	#define t(a) ChunkInWorld_type(std::floor(a / static_cast<BlockInWorld_type>(CHUNK_SIZE)))
+	#define t(a) ChunkInWorld_type(std::floor(a / static_cast<double>(CHUNK_SIZE)))
 	ChunkInWorld::ChunkInWorld(BlockInWorld bwp)
 	{
 		this->x = t(bwp.x);
