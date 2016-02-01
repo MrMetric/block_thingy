@@ -38,6 +38,10 @@ void Console::run_command(const std::string& name, const std::string& argline) c
 
 void Console::run_command(const std::string& name, const std::vector<std::string>& args) const
 {
+	if(name[0] == '#') // ignore comments
+	{
+		return;
+	}
 	auto i = this->handlers.find(name);
 	if(i == this->handlers.end())
 	{

@@ -1,0 +1,12 @@
+# input configuration goes here
+bind w +forward
+bind s +backward
+bind a +left
+bind d +right
+bind r respawn
+bind space jump
+bind l noclip
+bind n nazi
+bind ; save_pos
+bind p load_pos
+bind k +test

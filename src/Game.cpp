@@ -1,9 +1,11 @@
 #include "Game.hpp"
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <memory>
 #include <sstream>
+#include <string>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -186,19 +188,35 @@ void Game::add_commands()
 		streem >> game->cam.rotation.y;
 		streem >> game->cam.rotation.z;
 	});
+
+	this->commands.emplace_back(console, "exec", [console=console](const std::vector<std::string>& args)
+	{
+		if(args.size() != 1)
+		{
+			// print usage
+			return;
+		}
+		std::string filename = args[0];
+		/*
+		std::replace(filename.begin(), filename.end(), '\\', '/'); // for Windows paths
+		if(filename.find("/../") != std::string::npos || filename.substr(0, 3) == "../")
+		{
+			// no
+			return;
+		}
+		*/
+		// I will leave that disabled until I think of a good reason to use it
+
+		std::ifstream file("scripts/" + filename);
+		std::string line;
+		while(std::getline(file, line))
+		{
+			console->run_line(line);
+		}
+	});
 }
 
 void Game::bind_keys()
 {
-	this->console.run_line("bind w +forward");
-	this->console.run_line("bind s +backward");
-	this->console.run_line("bind a +left");
-	this->console.run_line("bind d +right");
-	this->console.run_line("bind r respawn");
-	this->console.run_line("bind space jump");
-	this->console.run_line("bind l noclip");
-	this->console.run_line("bind n nazi");
-	this->console.run_line("bind ; save_pos");
-	this->console.run_line("bind p load_pos");
-	this->console.run_line("bind k +test");
+	this->console.run_line("exec binds");
 }
