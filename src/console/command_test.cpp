@@ -7,7 +7,7 @@
 
 void add_test_commands(Game* game)
 {
-	game->console.add_command("nazi", [game](std::vector<std::string> args)
+	game->console.add_command("nazi", [game](const std::vector<std::string>& args)
 	{
 		if(game->hovered_block == nullptr)
 		{
