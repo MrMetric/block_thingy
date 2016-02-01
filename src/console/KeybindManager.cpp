@@ -1,7 +1,6 @@
 #include "KeybindManager.hpp"
 
 #include <algorithm>
-#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -22,8 +21,17 @@ KeybindManager::KeybindManager(Console* console)
 			// print usage
 			return;
 		}
-		std::cout << "bind " << args[0] << " " << args[1] << "\n";
 		keybinder->bind_key(args[0], args[1]);
+	});
+	console->add_command("unbind", [keybinder=this](const std::vector<std::string>& args)
+	{
+		if(args.size() != 1)
+		{
+			// print usage
+			return;
+		}
+		int key = KeybindManager::translate_key(args[0]);
+		keybinder->unbind_key(key);
 	});
 }
 
