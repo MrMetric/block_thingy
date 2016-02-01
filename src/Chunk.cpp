@@ -10,14 +10,8 @@
 
 Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	:
-	Chunk(pos.x, pos.y, pos.z, owner)
-{
-}
-
-Chunk::Chunk(ChunkInWorld_type chunk_x, ChunkInWorld_type chunk_y, ChunkInWorld_type chunk_z, World* owner)
-	:
 	owner(owner),
-	pos(chunk_x, chunk_y, chunk_z)
+	pos(pos)
 {
 	this->init();
 	std::fill_n(this->blok, CHUNK_BLOCK_COUNT, nullptr);
