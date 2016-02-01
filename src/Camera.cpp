@@ -57,46 +57,33 @@ void Camera::handleMouseMove(double mouseX, double mouseY)
 
 void Camera::keypress(int key, int action)
 {
-	if(action == GLFW_PRESS || action == GLFW_REPEAT)
+	bool pressed = action == GLFW_PRESS || action == GLFW_REPEAT;
+
+	switch(key)
 	{
-		switch(key)
-		{
-			case 'W':
-				this->holdingForward = true;
-				break;
-			case 'S':
-				this->holdingBackward = true;
-				break;
-			case 'A':
-				this->holdingLeftStrafe = true;
-				break;
-			case 'D':
-				this->holdingRightStrafe = true;
-				break;
-			case 'Q':
+		case 'W':
+			this->holdingForward = pressed;
+			break;
+		case 'S':
+			this->holdingBackward = pressed;
+			break;
+		case 'A':
+			this->holdingLeftStrafe = pressed;
+			break;
+		case 'D':
+			this->holdingRightStrafe = pressed;
+			break;
+		case 'Q':
+			if(pressed)
+			{
 				this->rotation.z -= 5;
-				break;
-			case 'E':
+			}
+			break;
+		case 'E':
+			if(pressed)
+			{
 				this->rotation.z += 5;
-				break;
-		}
-	}
-	else
-	{
-		switch(key)
-		{
-			case 'W':
-				this->holdingForward = false;
-				break;
-			case 'S':
-				this->holdingBackward = false;
-				break;
-			case 'A':
-				this->holdingLeftStrafe = false;
-				break;
-			case 'D':
-				this->holdingRightStrafe = false;
-				break;
-		}
+			}
+			break;
 	}
 }
