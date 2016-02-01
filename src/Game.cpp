@@ -77,13 +77,7 @@ void Game::screenshot(const std::string& filename)
 
 void Game::keypress(int key, int scancode, int action, int mods)
 {
-	bool pressed = (action == GLFW_PRESS || action == GLFW_REPEAT);
-	bool released = (action == GLFW_RELEASE);
-
-	if(pressed)
-	{
-		this->keybinder.keypress(key);
-	}
+	this->keybinder.keypress(key, action);
 	this->player.keypress(key, scancode, action, mods);
 	this->cam.keypress(key, action);
 }
@@ -162,4 +156,5 @@ void Game::bind_keys()
 	this->keybinder.bind_key(GLFW_KEY_N, "nazi");
 	this->keybinder.bind_key(GLFW_KEY_SEMICOLON, "save_pos");
 	this->keybinder.bind_key(GLFW_KEY_P, "load_pos");
+	this->keybinder.bind_key(GLFW_KEY_K, "+test");
 }

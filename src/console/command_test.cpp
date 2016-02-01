@@ -1,5 +1,9 @@
 #include "command_test.hpp"
 
+#include <iostream>
+#include <string>
+#include <vector>
+
 #include "../Block.hpp"
 #include "../Coords.hpp"
 #include "../Game.hpp"
@@ -46,5 +50,14 @@ void add_test_commands(Game* game)
 				}
 			}
 		}
+	});
+
+	game->console.add_command("+test", [game](const std::vector<std::string>& args)
+	{
+		std::cout << "+test\n";
+	});
+	game->console.add_command("-test", [game](const std::vector<std::string>& args)
+	{
+		std::cout << "-test\n";
 	});
 }
