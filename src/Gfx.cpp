@@ -208,37 +208,3 @@ void Gfx::write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint
 	png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 }
-
-void Gfx::print_mat4(const glm::dmat4& mat)
-{
-	std::cout << "matrix4:\n";
-	const double* p = static_cast<const double*>(glm::value_ptr(mat));
-	for(int x = 0; x < 4; ++x)
-	{
-		for(int y = 0; y < 4; ++y)
-		{
-			std::cout << p[y*4 + x] << ", ";
-		}
-		std::cout << "\n";
-	}
-	std::cout << "\n";
-}
-
-void Gfx::print_mat4(const glm::mat4& mat)
-{
-	const float* p = static_cast<const float*>(glm::value_ptr(mat));
-	for(int x = 0; x < 4; ++x)
-	{
-		std::cout << "(";
-		for(int y = 0; y < 4; ++y)
-		{
-			std::cout << p[y*4 + x];
-			if(y < 3)
-			{
-				std::cout << ", ";
-			}
-		}
-		std::cout << ")\n";
-	}
-	std::cout << "\n";
-}
