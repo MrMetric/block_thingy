@@ -1,7 +1,5 @@
 #include "Player.hpp"
 
-#include <fstream>
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -23,7 +21,6 @@ Player::~Player()
 void Player::keypress(int key, int scancode, int action, int mods)
 {
 	bool pressed = (action == GLFW_PRESS || action == GLFW_REPEAT);
-	bool released = (action == GLFW_RELEASE);
 	switch(key)
 	{
 		case GLFW_KEY_W:
@@ -44,25 +41,6 @@ void Player::keypress(int key, int scancode, int action, int mods)
 		case GLFW_KEY_D:
 		{
 			key_right = pressed;
-			break;
-		}
-		case GLFW_KEY_SEMICOLON:
-		{
-			std::ofstream streem("cam_pos");
-			streem << this->pos.x << " " << this->pos.y << " " << this->pos.z << " ";
-			streem << this->rot.x << " " << this->rot.y << " " << this->rot.z;
-			streem.flush();
-			break;
-		}
-		case GLFW_KEY_P:
-		{
-			std::ifstream streem("cam_pos");
-			streem >> this->pos.x;
-			streem >> this->pos.y;
-			streem >> this->pos.z;
-			streem >> Game::instance->cam.rotation.x;
-			streem >> Game::instance->cam.rotation.y;
-			streem >> Game::instance->cam.rotation.z;
 			break;
 		}
 		default: break;

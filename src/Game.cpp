@@ -1,5 +1,6 @@
 #include "Game.hpp"
 
+#include <fstream>
 #include <iostream>
 #include <memory>
 #include <sstream>
@@ -109,19 +110,47 @@ void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat
 
 void Game::add_commands()
 {
-	this->commands.emplace_back(&this->console, "jump", [game=this](const std::vector<std::string>& args)
+	Console* console = &this->console;
+
+	this->commands.emplace_back(console, "jump", [game=this](const std::vector<std::string>& args)
 	{
 		game->player.jump();
 	});
-
-	this->commands.emplace_back(&this->console, "noclip", [game=this](const std::vector<std::string>& args)
+	this->commands.emplace_back(console, "noclip", [game=this](const std::vector<std::string>& args)
 	{
 		game->player.toggle_noclip();
 	});
-
-	this->commands.emplace_back(&this->console, "respawn", [game=this](const std::vector<std::string>& args)
+	this->commands.emplace_back(console, "respawn", [game=this](const std::vector<std::string>& args)
 	{
 		game->player.reset_position();
+	});
+
+	this->commands.emplace_back(console, "save_pos", [game=this](const std::vector<std::string>& args)
+	{
+		std::string save_name = "cam_pos";
+		if(args.size() >= 1)
+		{
+			save_name = args[0];
+		}
+		std::ofstream streem(save_name);
+		streem << game->player.pos.x << " " << game->player.pos.y << " " << game->player.pos.z << " ";
+		streem << game->player.rot.x << " " << game->player.rot.y << " " << game->player.rot.z;
+		streem.flush();
+	});
+	this->commands.emplace_back(console, "load_pos", [game=this](const std::vector<std::string>& args)
+	{
+		std::string save_name = "cam_pos";
+		if(args.size() >= 1)
+		{
+			save_name = args[0];
+		}
+		std::ifstream streem(save_name);
+		streem >> game->player.pos.x;
+		streem >> game->player.pos.y;
+		streem >> game->player.pos.z;
+		streem >> game->cam.rotation.x;
+		streem >> game->cam.rotation.y;
+		streem >> game->cam.rotation.z;
 	});
 }
 
@@ -131,4 +160,6 @@ void Game::bind_keys()
 	this->keybinder.bind_key(GLFW_KEY_SPACE, "jump");
 	this->keybinder.bind_key(GLFW_KEY_L, "noclip");
 	this->keybinder.bind_key(GLFW_KEY_N, "nazi");
+	this->keybinder.bind_key(GLFW_KEY_SEMICOLON, "save_pos");
+	this->keybinder.bind_key(GLFW_KEY_P, "load_pos");
 }
