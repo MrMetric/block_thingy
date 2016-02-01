@@ -23,7 +23,6 @@ class Game
 {
 	public:
 		explicit Game(GLFWwindow* window);
-		virtual ~Game();
 
 		void draw();
 		void screenshot(const std::string& filename);
@@ -52,5 +51,4 @@ class Game
 		void add_commands();
 
 		KeybindManager keybinder;
-		void bind_keys();
 };

@@ -35,11 +35,7 @@ Game::Game(GLFWwindow* window)
 
 	add_test_commands(this);
 	this->add_commands();
-	this->bind_keys();
-}
-
-Game::~Game()
-{
+	this->console.run_line("exec binds");
 }
 
 void Game::draw()
@@ -214,9 +210,4 @@ void Game::add_commands()
 			console->run_line(line);
 		}
 	});
-}
-
-void Game::bind_keys()
-{
-	this->console.run_line("exec binds");
 }
