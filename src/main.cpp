@@ -2,6 +2,7 @@
 #include <ctime>
 #include <iostream>
 #include <iomanip>
+#include <memory>
 #include <stdexcept>
 #include <string>
 

@@ -48,7 +48,7 @@ void Game::draw()
 	this->find_hovered_block(Gfx::projection_matrix, Gfx::view_matrix);
 
 	this->world.render_chunks();
-	this->gui.draw_crosshair();
+	this->gui.draw();
 
 	glfwSwapBuffers(window);
 	glfwPollEvents();

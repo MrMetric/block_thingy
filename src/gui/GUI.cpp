@@ -39,6 +39,11 @@ void GUI::update_framebuffer_size()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(crosshair_vertex), crosshair_vertex, GL_STATIC_DRAW);
 }
 
+void GUI::draw()
+{
+	this->draw_crosshair();
+}
+
 void GUI::draw_crosshair()
 {
 	glDisable(GL_DEPTH_TEST);
@@ -46,8 +51,8 @@ void GUI::draw_crosshair()
 	glUseProgram(Gfx::sp_crosshair);
 	glUniformMatrix4fv(Gfx::vs_crosshair_matriks, 1, GL_FALSE, Gfx::matriks_ptr);
 
-	glm::mat4 fuck = glm::ortho(0.0f, float(Gfx::width), float(Gfx::height), 0.0f, -1.0f, 1.0f);
-	glUniformMatrix4fv(Gfx::vs_crosshair_matriks, 1, GL_FALSE, glm::value_ptr(fuck));
+	glm::mat4 crosshair_matrix = glm::ortho(0.0f, float(Gfx::width), float(Gfx::height), 0.0f, -1.0f, 1.0f);
+	glUniformMatrix4fv(Gfx::vs_crosshair_matriks, 1, GL_FALSE, glm::value_ptr(crosshair_matrix));
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->crosshair_vbo);

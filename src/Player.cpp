@@ -47,7 +47,6 @@ void Player::move(const glm::dvec3& acceleration)
 		if(moveY < 0)
 		{
 			Position::BlockInWorld pos_feet_new(glm::dvec3(this->pos.x, this->pos.y + moveY, this->pos.z));
-			//Game::instance->phys.draw_outline(pos_feet_new.x, pos_feet_new.y, pos_feet_new.z, glm::vec4(0, 0, 1, 1));
 			if(Game::instance->world.get_block(pos_feet_new) != nullptr)
 			{
 				this->pos.y = pos_feet_new.y + 1;
@@ -75,13 +74,14 @@ void Player::step(double delta_time)
 
 	this->rot = Game::instance->cam.rotation;
 
-	acceleration = apply_movement_input(acceleration, this->walk_speed);
+	acceleration = this->apply_movement_input(acceleration, this->walk_speed);
 
 	if(this->noclip)
 	{
 		this->velocity.x *= 0.75;
 		this->velocity.y *= 0.75;
 		this->velocity.z *= 0.75;
+		acceleration.y = 0;
 		if(this->do_jump)
 		{
 			this->do_jump = false;
