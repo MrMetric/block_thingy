@@ -1,8 +1,5 @@
 #include "Player.hpp"
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 #include <glm/trigonometric.hpp>	// glm::radians
 #include <glm/common.hpp>			// glm::sign
 
@@ -16,35 +13,6 @@ Player::Player()
 
 Player::~Player()
 {
-}
-
-void Player::keypress(int key, int scancode, int action, int mods)
-{
-	bool pressed = (action == GLFW_PRESS || action == GLFW_REPEAT);
-	switch(key)
-	{
-		case GLFW_KEY_W:
-		{
-			key_forward = pressed;
-			break;
-		}
-		case GLFW_KEY_S:
-		{
-			key_backward = pressed;
-			break;
-		}
-		case GLFW_KEY_A:
-		{
-			key_left = pressed;
-			break;
-		}
-		case GLFW_KEY_D:
-		{
-			key_right = pressed;
-			break;
-		}
-		default: break;
-	}
 }
 
 void Player::move(const glm::dvec3& acceleration)
@@ -153,19 +121,19 @@ void Player::step(double delta_time)
 
 glm::dvec3 Player::apply_movement_input(glm::dvec3 acceleration, double move_speed)
 {
-	if(this->key_forward)
+	if(this->moving_forward)
 	{
 		acceleration.z -= move_speed;
 	}
-	if(this->key_backward)
+	if(this->moving_backward)
 	{
 		acceleration.z += move_speed;
 	}
-	if(this->key_left)
+	if(this->moving_left)
 	{
 		acceleration.x -= move_speed;
 	}
-	if(this->key_right)
+	if(this->moving_right)
 	{
 		acceleration.x += move_speed;
 	}
@@ -198,6 +166,26 @@ bool Player::can_place_block_at(const Position::BlockInWorld& bwp)
 		return false;
 	}
 	return true;
+}
+
+void Player::move_forward(bool do_that)
+{
+	this->moving_forward = do_that;
+}
+
+void Player::move_backward(bool do_that)
+{
+	this->moving_backward = do_that;
+}
+
+void Player::move_left(bool do_that)
+{
+	this->moving_left = do_that;
+}
+
+void Player::move_right(bool do_that)
+{
+	this->moving_right = do_that;
 }
 
 void Player::jump()

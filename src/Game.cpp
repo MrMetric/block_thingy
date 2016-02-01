@@ -78,7 +78,6 @@ void Game::screenshot(const std::string& filename)
 void Game::keypress(int key, int scancode, int action, int mods)
 {
 	this->keybinder.keypress(key, action);
-	this->player.keypress(key, scancode, action, mods);
 	this->cam.keypress(key, action);
 }
 
@@ -105,6 +104,40 @@ void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat
 void Game::add_commands()
 {
 	Console* console = &this->console;
+
+	// TODO: less copy/paste
+	this->commands.emplace_back(console, "+forward", [game=this](const std::vector<std::string>& args)
+	{
+		game->player.move_forward(true);
+	});
+	this->commands.emplace_back(console, "-forward", [game=this](const std::vector<std::string>& args)
+	{
+		game->player.move_forward(false);
+	});
+	this->commands.emplace_back(console, "+backward", [game=this](const std::vector<std::string>& args)
+	{
+		game->player.move_backward(true);
+	});
+	this->commands.emplace_back(console, "-backward", [game=this](const std::vector<std::string>& args)
+	{
+		game->player.move_backward(false);
+	});
+	this->commands.emplace_back(console, "+left", [game=this](const std::vector<std::string>& args)
+	{
+		game->player.move_left(true);
+	});
+	this->commands.emplace_back(console, "-left", [game=this](const std::vector<std::string>& args)
+	{
+		game->player.move_left(false);
+	});
+	this->commands.emplace_back(console, "+right", [game=this](const std::vector<std::string>& args)
+	{
+		game->player.move_right(true);
+	});
+	this->commands.emplace_back(console, "-right", [game=this](const std::vector<std::string>& args)
+	{
+		game->player.move_right(false);
+	});
 
 	this->commands.emplace_back(console, "jump", [game=this](const std::vector<std::string>& args)
 	{
@@ -150,6 +183,10 @@ void Game::add_commands()
 
 void Game::bind_keys()
 {
+	this->keybinder.bind_key(GLFW_KEY_W, "+forward");
+	this->keybinder.bind_key(GLFW_KEY_S, "+backward");
+	this->keybinder.bind_key(GLFW_KEY_A, "+left");
+	this->keybinder.bind_key(GLFW_KEY_D, "+right");
 	this->keybinder.bind_key(GLFW_KEY_R, "respawn");
 	this->keybinder.bind_key(GLFW_KEY_SPACE, "jump");
 	this->keybinder.bind_key(GLFW_KEY_L, "noclip");
