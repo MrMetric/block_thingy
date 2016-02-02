@@ -168,11 +168,12 @@ void Game::add_commands()
 
 	this->commands.emplace_back(console, "save_pos", [game=this](const std::vector<std::string>& args)
 	{
-		std::string save_name = "cam_pos";
-		if(args.size() >= 1)
+		if(args.size() != 1)
 		{
-			save_name = args[0];
+			// print usage
+			return;
 		}
+		std::string save_name = args[0];
 		std::ofstream streem(save_name);
 		streem << game->player.pos.x << " " << game->player.pos.y << " " << game->player.pos.z << " ";
 		streem << game->player.rot.x << " " << game->player.rot.y << " " << game->player.rot.z;
@@ -180,11 +181,12 @@ void Game::add_commands()
 	});
 	this->commands.emplace_back(console, "load_pos", [game=this](const std::vector<std::string>& args)
 	{
-		std::string save_name = "cam_pos";
-		if(args.size() >= 1)
+		if(args.size() != 1)
 		{
-			save_name = args[0];
+			// print usage
+			return;
 		}
+		std::string save_name = args[0];
 		std::ifstream streem(save_name);
 		streem >> game->player.pos.x;
 		streem >> game->player.pos.y;
