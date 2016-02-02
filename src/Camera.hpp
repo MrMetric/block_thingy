@@ -1,5 +1,7 @@
 #pragma once
 
+// based on http://r3dux.org/2012/12/a-c-camera-class-for-simple-opengl-fps-controls/
+
 #include <glm/vec3.hpp>
 
 struct GLFWwindow;
@@ -15,8 +17,7 @@ class Camera
 		glm::dvec3 rotation;
 
 	private:
-		double pitchSensitivity;	// Controls how sensitive mouse movements affect looking up and down
-		double yawSensitivity;		// Controls how sensitive mouse movements affect looking left and right
+		double sensitivity;
 
 		GLFWwindow* window;
 		int window_width;
