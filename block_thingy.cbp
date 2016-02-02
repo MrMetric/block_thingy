@@ -40,9 +40,11 @@
 			<Add option="-Weverything" />
 			<Add option="-fexceptions" />
 			<Add option="-std=c++14" />
-			<Add option="-Werror=delete-incomplete" />
 			<Add option="-isystem lib" />
 			<Add option="-Wno-padded" />
+			<Add option="-Werror=unknown-warning-option" />
+			<Add option="-Werror=delete-incomplete" />
+			<Add option="-Werror=deprecated" />
 			<Add option="-DWEIRD_BUG_FIX" />
 		</Compiler>
 		<Linker>
