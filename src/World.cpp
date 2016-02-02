@@ -13,8 +13,9 @@
 #include "Gfx.hpp"
 #include "Player.hpp"
 
-World::World()
+World::World(GLint vs_cube_pos_mod)
 	:
+	vs_cube_pos_mod(vs_cube_pos_mod),
 	last_key(~uint64_t(0)),
 	last_chunk(nullptr),
 	random_engine(0xFECA1)

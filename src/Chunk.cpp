@@ -7,7 +7,6 @@
 #include "Block.hpp"
 #include "Coords.hpp"
 #include "Cube.hpp"
-#include "Game.hpp"
 #include "World.hpp"
 
 Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
@@ -90,7 +89,7 @@ void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, s
 
 	// TODO: make a separate function for the following stuff
 	// TODO: is it worth it to check if the naybor chunk has a block beside this one? (to avoid updating when the appearance won't change)
-	//std::vector<ChunkInWorld> naybors;
+	//std::vector<Position::ChunkInWorld> naybors;
 	Position::ChunkInWorld** naybors = new Position::ChunkInWorld*[3];
 	int i = 0;
 	if(x == 0)
@@ -185,7 +184,7 @@ void Chunk::render()
 		this->update();
 	}
 
-	glUniform3f(Game::instance->gfx.vs_cube_pos_mod, this->pos.x * CHUNK_SIZE, this->pos.y * CHUNK_SIZE, this->pos.z * CHUNK_SIZE);
+	glUniform3f(this->owner->vs_cube_pos_mod, this->pos.x * CHUNK_SIZE, this->pos.y * CHUNK_SIZE, this->pos.z * CHUNK_SIZE);
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_v);
@@ -193,7 +192,7 @@ void Chunk::render()
 	glDrawArrays(GL_TRIANGLES, 0, this->draw_count);
 	glDisableVertexAttribArray(0);
 
-	glUniform3f(Game::instance->gfx.vs_cube_pos_mod, 0, 0, 0);
+	//glUniform3f(this->owner->vs_cube_pos_mod, 0, 0, 0);
 }
 
 void Chunk::add_vertexes(int x, int y, int z, int offset, std::vector<GLfloat>& vertexes)

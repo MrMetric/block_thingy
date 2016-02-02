@@ -36,6 +36,7 @@ Game::Game(GLFWwindow* window)
 	hovered_block(nullptr),
 	cam(window),
 	gfx(window),
+	world(this->gfx.vs_cube_pos_mod),
 	delta_time(0),
 	fps(144),
 	keybinder(&this->console)

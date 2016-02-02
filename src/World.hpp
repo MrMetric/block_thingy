@@ -6,6 +6,8 @@
 
 #include <boost/unordered/unordered_map.hpp>
 
+#include <GL/glew.h>
+
 #include "Coords.hpp"
 
 class Chunk;
@@ -16,7 +18,7 @@ using map = boost::unordered_map<uint64_t, std::shared_ptr<Chunk>>;
 class World
 {
 	public:
-		World();
+		World(GLint vs_cube_pos_mod);
 		virtual ~World();
 
 		std::shared_ptr<Block> get_block(Position::BlockInWorld bwp) const;
@@ -30,6 +32,8 @@ class World
 
 		void gen_chunk(const Position::ChunkInWorld&);
 		void gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max);
+
+		GLint vs_cube_pos_mod;
 
 	private:
 		map chunks;
