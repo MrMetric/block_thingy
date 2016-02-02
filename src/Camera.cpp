@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/vec3.hpp>
+
 Camera::Camera(GLFWwindow* window)
 	:
 	pitchSensitivity(0.1),
@@ -51,25 +53,4 @@ void Camera::handleMouseMove(double mouseX, double mouseY)
 	}
 
 	glfwSetCursorPos(this->window, this->window_midX, this->window_midY);
-}
-
-void Camera::keypress(int key, int action)
-{
-	bool pressed = action == GLFW_PRESS || action == GLFW_REPEAT;
-
-	switch(key)
-	{
-		case 'Q':
-			if(pressed)
-			{
-				this->rotation.z -= 5;
-			}
-			break;
-		case 'E':
-			if(pressed)
-			{
-				this->rotation.z += 5;
-			}
-			break;
-	}
 }

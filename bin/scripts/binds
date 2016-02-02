@@ -9,4 +9,6 @@ bind l noclip
 bind n nazi
 bind ; save_pos
 bind p load_pos
+bind q 'cam.rot z -5'
+bind e 'cam.rot z +5'
 bind k +test

@@ -93,7 +93,6 @@ void Game::screenshot(const std::string& filename)
 void Game::keypress(int key, int scancode, int action, int mods)
 {
 	this->keybinder.keypress(key, action);
-	this->cam.keypress(key, action);
 }
 
 void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat4& view_matrix)
@@ -207,6 +206,33 @@ void Game::add_commands()
 		while(std::getline(file, line))
 		{
 			console->run_line(line);
+		}
+	});
+
+	this->commands.emplace_back(console, "cam.rot", [cam=&this->cam](const std::vector<std::string>& args)
+	{
+		if(args.size() != 2)
+		{
+			// print usage
+			return;
+		}
+		std::string part = args[0];
+		double value = std::stod(args[1]);
+		if(part == "x")
+		{
+			cam->rotation.x += value;
+		}
+		else if(part == "y")
+		{
+			cam->rotation.y += value;
+		}
+		else if(part == "z")
+		{
+			cam->rotation.z += value;
+		}
+		else
+		{
+			// error
 		}
 	});
 }

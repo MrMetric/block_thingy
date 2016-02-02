@@ -7,8 +7,6 @@ struct GLFWwindow;
 class Camera
 {
 	public:
-		void keypress(int key, int action);
-
 		explicit Camera(GLFWwindow* window);
 
 		void handleMouseMove(double mouseX, double mouseY);
