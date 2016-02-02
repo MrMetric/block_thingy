@@ -112,48 +112,48 @@ void Game::add_commands()
 	Console* console = &this->console;
 
 	// TODO: less copy/paste
-	this->commands.emplace_back(console, "+forward", [game=this](const std::vector<std::string>& args)
+	this->commands.emplace_back(console, "+forward", [game=this]()
 	{
 		game->player.move_forward(true);
 	});
-	this->commands.emplace_back(console, "-forward", [game=this](const std::vector<std::string>& args)
+	this->commands.emplace_back(console, "-forward", [game=this]()
 	{
 		game->player.move_forward(false);
 	});
-	this->commands.emplace_back(console, "+backward", [game=this](const std::vector<std::string>& args)
+	this->commands.emplace_back(console, "+backward", [game=this]()
 	{
 		game->player.move_backward(true);
 	});
-	this->commands.emplace_back(console, "-backward", [game=this](const std::vector<std::string>& args)
+	this->commands.emplace_back(console, "-backward", [game=this]()
 	{
 		game->player.move_backward(false);
 	});
-	this->commands.emplace_back(console, "+left", [game=this](const std::vector<std::string>& args)
+	this->commands.emplace_back(console, "+left", [game=this]()
 	{
 		game->player.move_left(true);
 	});
-	this->commands.emplace_back(console, "-left", [game=this](const std::vector<std::string>& args)
+	this->commands.emplace_back(console, "-left", [game=this]()
 	{
 		game->player.move_left(false);
 	});
-	this->commands.emplace_back(console, "+right", [game=this](const std::vector<std::string>& args)
+	this->commands.emplace_back(console, "+right", [game=this]()
 	{
 		game->player.move_right(true);
 	});
-	this->commands.emplace_back(console, "-right", [game=this](const std::vector<std::string>& args)
+	this->commands.emplace_back(console, "-right", [game=this]()
 	{
 		game->player.move_right(false);
 	});
 
-	this->commands.emplace_back(console, "jump", [game=this](const std::vector<std::string>& args)
+	this->commands.emplace_back(console, "jump", [game=this]()
 	{
 		game->player.jump();
 	});
-	this->commands.emplace_back(console, "noclip", [game=this](const std::vector<std::string>& args)
+	this->commands.emplace_back(console, "noclip", [game=this]()
 	{
 		game->player.toggle_noclip();
 	});
-	this->commands.emplace_back(console, "respawn", [game=this](const std::vector<std::string>& args)
+	this->commands.emplace_back(console, "respawn", [game=this]()
 	{
 		game->player.respawn();
 	});

@@ -14,7 +14,7 @@ KeybindManager::KeybindManager(Console* console)
 	:
 	console(console)
 {
-	console->add_command("bind", [keybinder=this](const std::vector<std::string>& args)
+	console->add_command("bind", {[keybinder=this](const std::vector<std::string>& args)
 	{
 		if(args.size() != 2)
 		{
@@ -22,8 +22,8 @@ KeybindManager::KeybindManager(Console* console)
 			return;
 		}
 		keybinder->bind_key(args[0], args[1]);
-	});
-	console->add_command("unbind", [keybinder=this](const std::vector<std::string>& args)
+	}});
+	console->add_command("unbind", {[keybinder=this](const std::vector<std::string>& args)
 	{
 		if(args.size() != 1)
 		{
@@ -32,12 +32,13 @@ KeybindManager::KeybindManager(Console* console)
 		}
 		int key = KeybindManager::translate_key(args[0]);
 		keybinder->unbind_key(key);
-	});
+	}});
 }
 
 KeybindManager::~KeybindManager()
 {
 	this->console->unadd_command("bind");
+	this->console->unadd_command("unbind");
 }
 
 void KeybindManager::bind_key(int key, const std::string& command)

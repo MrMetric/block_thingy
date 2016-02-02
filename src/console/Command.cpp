@@ -8,6 +8,14 @@ Command::Command(Console* console, const std::string& name, const console_handle
 	this->console->add_command(this->name, handler);
 }
 
+Command::Command(Console* console, const std::string& name, const console_handler_noargs_t& handler)
+	:
+	console(console),
+	name(name)
+{
+	this->console->add_command(this->name, handler);
+}
+
 Command::Command(Command&& that)
 	:
 	console(that.console),

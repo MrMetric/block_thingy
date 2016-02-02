@@ -9,7 +9,33 @@ Console::Console()
 {
 }
 
-void Console::add_command(const std::string& name, const console_handler_t& handler)
+console_handler_wrapper::console_handler_wrapper(console_handler_t handler)
+	:
+	args(true),
+	handler_args(handler)
+{
+}
+
+console_handler_wrapper::console_handler_wrapper(console_handler_noargs_t handler)
+	:
+	args(false),
+	handler_noargs(handler)
+{
+}
+
+void console_handler_wrapper::operator()(const std::vector<std::string>& args) const
+{
+	if(this->args)
+	{
+		this->handler_args(args);
+	}
+	else
+	{
+		this->handler_noargs();
+	}
+}
+
+void Console::add_command(const std::string& name, const console_handler_wrapper& handler)
 {
 	if(!this->handlers.insert({name, handler}).second)
 	{

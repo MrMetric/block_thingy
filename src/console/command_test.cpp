@@ -11,7 +11,7 @@
 
 void add_test_commands(Game* game)
 {
-	game->console.add_command("nazi", [game](const std::vector<std::string>& args)
+	game->console.add_command("nazi", {[game]()
 	{
 		if(game->hovered_block == nullptr)
 		{
@@ -50,14 +50,14 @@ void add_test_commands(Game* game)
 				}
 			}
 		}
-	});
+	}});
 
-	game->console.add_command("+test", [game](const std::vector<std::string>& args)
+	game->console.add_command("+test", {[game]()
 	{
 		std::cout << "+test\n";
-	});
-	game->console.add_command("-test", [game](const std::vector<std::string>& args)
+	}});
+	game->console.add_command("-test", {[game]()
 	{
 		std::cout << "-test\n";
-	});
+	}});
 }
