@@ -7,11 +7,7 @@ Camera::Camera(GLFWwindow* window)
 	:
 	pitchSensitivity(0.1),
 	yawSensitivity(0.1),
-	window(window),
-	holdingForward(false),
-	holdingBackward(false),
-	holdingLeftStrafe(false),
-	holdingRightStrafe(false)
+	window(window)
 {
 	glfwGetWindowSize(window, &window_width, &window_height);
 
@@ -21,7 +17,6 @@ Camera::Camera(GLFWwindow* window)
 	glfwSetCursorPos(window, window_midX, window_midY);
 }
 
-// Function to deal with mouse position changes
 void Camera::handleMouseMove(double mouseX, double mouseY)
 {
 	double horizMovement = (mouseX - this->window_midX+1) * this->yawSensitivity;
@@ -64,18 +59,6 @@ void Camera::keypress(int key, int action)
 
 	switch(key)
 	{
-		case 'W':
-			this->holdingForward = pressed;
-			break;
-		case 'S':
-			this->holdingBackward = pressed;
-			break;
-		case 'A':
-			this->holdingLeftStrafe = pressed;
-			break;
-		case 'D':
-			this->holdingRightStrafe = pressed;
-			break;
 		case 'Q':
 			if(pressed)
 			{

@@ -25,10 +25,4 @@ class Camera
 		int window_height;
 		int window_midX;
 		int window_midY;
-
-		// Holding any keys down?
-		bool holdingForward;
-		bool holdingBackward;
-		bool holdingLeftStrafe;
-		bool holdingRightStrafe;
 };
