@@ -2,10 +2,13 @@
 
 #include <algorithm>		// std::fill_n
 #include <stdexcept>
+#include <string>
 
 #include "Block.hpp"
+#include "Coords.hpp"
 #include "Cube.hpp"
 #include "Game.hpp"
+#include "World.hpp"
 
 Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	:

@@ -1,6 +1,5 @@
 #include "shader_util.hpp"
 
-#include <iostream>
 #include <stdexcept>
 
 #include <GL/glew.h>

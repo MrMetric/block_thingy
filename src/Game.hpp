@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-#include <glm/mat4x4.hpp>
-
 #include "Camera.hpp"
 #include "FPSManager.hpp"
 #include "Gfx.hpp"

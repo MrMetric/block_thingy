@@ -1,9 +1,8 @@
 #include "Util.hpp"
 
-#include <GL/gl.h>
+#include <GL/glew.h>
 
 #include <fstream>
-#include <iostream>
 
 std::string Util::read_file(const std::string& path)
 {

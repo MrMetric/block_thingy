@@ -9,6 +9,7 @@
 #include "Coords.hpp"
 #include "Game.hpp"
 #include "Gfx.hpp"
+#include "Player.hpp"
 
 World::World()
 	:

@@ -1,5 +1,7 @@
 #include "Player.hpp"
 
+#include <cmath>
+
 #include <glm/trigonometric.hpp>	// glm::radians
 #include <glm/common.hpp>			// glm::sign
 
@@ -17,8 +19,8 @@ Player::~Player()
 
 void Player::move(const glm::dvec3& acceleration)
 {
-	double sinY = sin(glm::radians(this->rot.y));
-	double cosY = cos(glm::radians(this->rot.y));
+	double sinY = std::sin(glm::radians(this->rot.y));
+	double cosY = std::cos(glm::radians(this->rot.y));
 	this->velocity += acceleration;
 
 	if(std::abs(this->velocity.x) > this->max_velocity)
@@ -83,7 +85,7 @@ void Player::step(double delta_time)
 		if(this->do_jump)
 		{
 			this->do_jump = false;
-			acceleration.y += 0.30 * sqrt(60 / delta_time);
+			acceleration.y += 0.30 * std::sqrt(60 / delta_time);
 		}
 	}
 	else
@@ -91,7 +93,7 @@ void Player::step(double delta_time)
 		if(this->do_jump && this->on_ground)
 		{
 			this->do_jump = false;
-			acceleration.y += 0.15 * sqrt(60 / delta_time);
+			acceleration.y += 0.15 * std::sqrt(60 / delta_time);
 		}
 
 		// friction

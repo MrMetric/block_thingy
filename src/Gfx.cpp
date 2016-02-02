@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <string>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -13,6 +14,7 @@
 #include <png.h>
 
 #include "Camera.hpp"
+#include "Coords.hpp"
 #include "Cube.hpp"
 #include "shader_util.hpp"
 

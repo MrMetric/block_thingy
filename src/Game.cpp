@@ -10,11 +10,21 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
 #include <glm/gtx/string_cast.hpp>
 
+#include "Camera.hpp"
 #include "Coords.hpp"
+#include "FPSManager.hpp"
 #include "Gfx.hpp"
+#include "Phys.hpp"
+#include "Player.hpp"
+#include "World.hpp"
 #include "console/command_test.hpp"
+#include "console/Console.hpp"
+#include "console/KeybindManager.hpp"
+#include "gui/GUI.hpp"
 #include "physics/Raytracer.hpp"
 #include "physics/RaytraceHit.hpp"
 
