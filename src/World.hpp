@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <random>
 
 #include <boost/unordered/unordered_map.hpp>
 
@@ -34,6 +35,7 @@ class World
 		map chunks;
 		mutable uint64_t last_key;
 		mutable std::shared_ptr<Chunk> last_chunk;
+		std::minstd_rand random_engine;
 
 		__attribute__((const))
 		static uint64_t chunk_key(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z);

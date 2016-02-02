@@ -1,6 +1,8 @@
 #include "World.hpp"
 
+#include <functional>
 #include <memory>
+#include <random>
 
 #include <GL/glew.h>
 
@@ -14,7 +16,8 @@
 World::World()
 	:
 	last_key(~uint64_t(0)),
-	last_chunk(nullptr)
+	last_chunk(nullptr),
+	random_engine(0xFECA1)
 {
 }
 
@@ -108,6 +111,9 @@ void World::gen_chunk(const Position::ChunkInWorld& cp)
 
 void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max)
 {
+	static std::uniform_int_distribution<uint_fast16_t> distribution(0, 999);
+	static auto rand = std::bind(distribution, this->random_engine);
+
 	Position::BlockInWorld block_pos(BlockInWorld_type(0), 0, 0);
 	for(BlockInWorld_type x = min.x; x <= max.x; ++x)
 	{
@@ -128,9 +134,7 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 				}
 				else if(y == -32)
 				{
-					srand(static_cast<unsigned int>(x * z + x + z));
-					int r = rand() % 9999;
-					if(r == 0)
+					if(rand() == 0)
 					{
 						for(BlockInWorld_type y2 = -32; y2 < -24; ++y2)
 						{
