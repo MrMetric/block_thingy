@@ -77,3 +77,7 @@ std::string ArgumentParser::read_string(const char endchar)
 	}
 	return s;
 }
+
+truncated_argument::truncated_argument(const char* what_arg) : std::runtime_error(what_arg){}
+truncated_argument::truncated_argument(const std::string& what_arg) : std::runtime_error(what_arg){}
+truncated_argument::~truncated_argument(){}
