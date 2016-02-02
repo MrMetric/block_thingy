@@ -1,6 +1,5 @@
 #include "Game.hpp"
 
-#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -203,18 +202,7 @@ void Game::add_commands()
 			// print usage
 			return;
 		}
-		std::string filename = args[0];
-		/*
-		std::replace(filename.begin(), filename.end(), '\\', '/'); // for Windows paths
-		if(filename.find("/../") != std::string::npos || filename.substr(0, 3) == "../")
-		{
-			// no
-			return;
-		}
-		*/
-		// I will leave that disabled until I think of a good reason to use it
-
-		std::ifstream file("scripts/" + filename);
+		std::ifstream file("scripts/" + args[0]);
 		std::string line;
 		while(std::getline(file, line))
 		{
