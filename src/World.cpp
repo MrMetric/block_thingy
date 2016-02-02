@@ -145,8 +145,8 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 
 void World::render_chunks()
 {
-	glUseProgram(Gfx::sp_cube);
-	glUniformMatrix4fv(Gfx::vs_cube_matriks, 1, GL_FALSE, Gfx::matriks_ptr);
+	glUseProgram(Game::instance->gfx.sp_cube);
+	glUniformMatrix4fv(Game::instance->gfx.vs_cube_matriks, 1, GL_FALSE, Game::instance->gfx.matriks_ptr);
 
 	const int render_distance = 2;
 

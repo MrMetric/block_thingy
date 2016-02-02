@@ -74,11 +74,11 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 		// TODO: throw exception
 		std::cerr << "invalid framebuffer size: " << width << "×" << height << "\n";
 	}
-	Gfx::width = uint_fast32_t(width);
-	Gfx::height = uint_fast32_t(height);
+	Game::instance->gfx.width = uint_fast32_t(width);
+	Game::instance->gfx.height = uint_fast32_t(height);
 	glViewport(0, 0, width, height);
 
-	Gfx::update_framebuffer_size();
+	Game::instance->gfx.update_framebuffer_size();
 	Game::instance->gui.update_framebuffer_size();
 
 	// TODO: update camera
@@ -161,9 +161,7 @@ int main()
 		std::cout << "INFO: GLEW initialized\n";
 	}
 
-	Game game(window);
-
-	Gfx::opengl_setup(); printOpenGLError();
+	Game game(window); printOpenGLError();
 
 	framebuffer_size_callback(window, width, height); printOpenGLError();
 
@@ -178,7 +176,7 @@ int main()
 	}
 	CALLGRIND_STOP_INSTRUMENTATION;
 	CALLGRIND_DUMP_STATS;
-	Gfx::opengl_cleanup(); printOpenGLError();
+	game.gfx.opengl_cleanup(); printOpenGLError();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 

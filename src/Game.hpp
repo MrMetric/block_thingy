@@ -8,6 +8,7 @@
 
 #include "Camera.hpp"
 #include "FPSManager.hpp"
+#include "Gfx.hpp"
 #include "Phys.hpp"
 #include "Player.hpp"
 #include "World.hpp"
@@ -35,6 +36,7 @@ class Game
 		std::unique_ptr<RaytraceHit> hovered_block;
 
 		Camera cam;
+		Gfx gfx;
 		Phys phys;
 		Player player;
 		World world;

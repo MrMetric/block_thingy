@@ -1,7 +1,10 @@
 #include "Gfx.hpp"
 
 #include <iostream>
-#include <stdexcept>				// std::runtime_error
+#include <stdexcept>
+
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 #include <glm/trigonometric.hpp>	// glm::radians
 #include <glm/gtx/transform.hpp>	// glm::perspective
@@ -13,27 +16,16 @@
 #include "Cube.hpp"
 #include "shader_util.hpp"
 
-GLFWwindow* Gfx::window = nullptr;
-uint_fast32_t Gfx::width = 0;
-uint_fast32_t Gfx::height = 0;
-glm::mat4 Gfx::projection_matrix;
-glm::mat4 Gfx::view_matrix;
-GLuint Gfx::vertex_array = 0;
-glm::mat4 Gfx::matriks;
-GLfloat* Gfx::matriks_ptr = nullptr;
+Gfx::Gfx(GLFWwindow* window)
+	:
+	window(window)
+{
+	this->width = 0;
+	this->height = 0;
+	this->matriks_ptr = nullptr;
 
-GLuint Gfx::sp_cube = ~GLuint(0);
-GLint Gfx::vs_cube_matriks = -1;
-GLint Gfx::vs_cube_pos_mod = -1;
-
-GLuint Gfx::sp_lines = ~GLuint(0);
-GLint Gfx::vs_lines_matriks = -1;
-GLint Gfx::vs_lines_color = -1;
-
-GLuint Gfx::sp_crosshair = ~GLuint(0);
-GLint Gfx::vs_crosshair_matriks = -1;
-
-GLuint Gfx::outline_vbo = 0;
+	this->opengl_setup();
+}
 
 void Gfx::init_glfw()
 {
@@ -56,21 +48,21 @@ void Gfx::opengl_setup()
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
-	glGenVertexArrays(1, &Gfx::vertex_array);
-	glBindVertexArray(Gfx::vertex_array);
+	glGenVertexArrays(1, &this->vertex_array);
+	glBindVertexArray(this->vertex_array);
 
-	Gfx::sp_cube = make_program("shaders/cube");
-	Gfx::vs_cube_matriks = getUniformLocation(Gfx::sp_cube, "matriks");
-	Gfx::vs_cube_pos_mod = getUniformLocation(Gfx::sp_cube, "pos_mod");
+	this->sp_cube = make_program("shaders/cube");
+	this->vs_cube_matriks = getUniformLocation(this->sp_cube, "matriks");
+	this->vs_cube_pos_mod = getUniformLocation(this->sp_cube, "pos_mod");
 
-	Gfx::sp_lines = make_program("shaders/lines");
-	Gfx::vs_lines_matriks = getUniformLocation(Gfx::sp_lines, "matriks");
-	Gfx::vs_lines_color = getUniformLocation(Gfx::sp_lines, "color");
+	this->sp_lines = make_program("shaders/lines");
+	this->vs_lines_matriks = getUniformLocation(this->sp_lines, "matriks");
+	this->vs_lines_color = getUniformLocation(this->sp_lines, "color");
 
-	Gfx::sp_crosshair = make_program("shaders/crosshair");
-	Gfx::vs_crosshair_matriks = getUniformLocation(Gfx::sp_crosshair, "matriks");
+	this->sp_crosshair = make_program("shaders/crosshair");
+	this->vs_crosshair_matriks = getUniformLocation(this->sp_crosshair, "matriks");
 
-	glGenBuffers(1, &Gfx::outline_vbo);
+	glGenBuffers(1, &this->outline_vbo);
 
 	GLfloat lineWidthRange[2];
 	glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, lineWidthRange);
@@ -82,16 +74,16 @@ void Gfx::opengl_setup()
 
 void Gfx::opengl_cleanup()
 {
-	glDeleteVertexArrays(1, &Gfx::vertex_array);
-	glDeleteProgram(Gfx::sp_cube);
-	glDeleteProgram(Gfx::sp_lines);
-	glDeleteProgram(Gfx::sp_crosshair);
-	glDeleteBuffers(1, &Gfx::outline_vbo);
+	glDeleteVertexArrays(1, &this->vertex_array);
+	glDeleteProgram(this->sp_cube);
+	glDeleteProgram(this->sp_lines);
+	glDeleteProgram(this->sp_crosshair);
+	glDeleteBuffers(1, &this->outline_vbo);
 }
 
 void Gfx::update_framebuffer_size()
 {
-	Gfx::update_projection_matrix();
+	this->update_projection_matrix();
 }
 
 void Gfx::update_projection_matrix()
@@ -100,7 +92,7 @@ void Gfx::update_projection_matrix()
 	const GLfloat near = 0.01f;
 	const GLfloat far  = 1500.0f;
 	const GLfloat aspect_ratio = (width > height) ? float(width)/float(height) : float(height)/float(width);
-	Gfx::projection_matrix = glm::perspective(fov, aspect_ratio, near, far);
+	this->projection_matrix = glm::perspective(fov, aspect_ratio, near, far);
 }
 
 void Gfx::set_cam_view(const Camera& cam)
@@ -112,9 +104,9 @@ void Gfx::set_cam_view(const Camera& cam)
 	glm::dvec3 position = cam.position * -1.0;
 	view *= glm::translate(position);
 	glm::mat4 viewf(view);
-	Gfx::matriks = Gfx::projection_matrix * viewf;
-	Gfx::matriks_ptr = glm::value_ptr(Gfx::matriks);
-	Gfx::view_matrix = viewf;
+	this->matriks = this->projection_matrix * viewf;
+	this->matriks_ptr = glm::value_ptr(this->matriks);
+	this->view_matrix = viewf;
 }
 
 // TODO: use GL_LINES
@@ -151,15 +143,15 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 		o1 += 3;
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, Gfx::outline_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, this->outline_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexes), vertexes, GL_STATIC_DRAW);
 
-	glUseProgram(Gfx::sp_lines);
-	glUniformMatrix4fv(Gfx::vs_lines_matriks, 1, GL_FALSE, Gfx::matriks_ptr);
-	glUniform4fv(Gfx::vs_lines_color, 1, glm::value_ptr(color));
+	glUseProgram(this->sp_lines);
+	glUniformMatrix4fv(this->vs_lines_matriks, 1, GL_FALSE, this->matriks_ptr);
+	glUniform4fv(this->vs_lines_color, 1, glm::value_ptr(color));
 
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, Gfx::outline_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, this->outline_vbo);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 	glDrawArrays(GL_LINE_STRIP, 0, 16);
 	glDisableVertexAttribArray(0);

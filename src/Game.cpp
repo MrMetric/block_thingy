@@ -26,6 +26,7 @@ Game::Game(GLFWwindow* window)
 	window(window),
 	hovered_block(nullptr),
 	cam(window),
+	gfx(window),
 	delta_time(0),
 	fps(144),
 	keybinder(&this->console)
@@ -42,7 +43,7 @@ void Game::draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-	Gfx::set_cam_view(this->cam);
+	this->gfx.set_cam_view(this->cam);
 
 	this->player.rot = this->cam.rotation;
 	this->player.step(this->delta_time);
@@ -50,7 +51,7 @@ void Game::draw()
 	this->cam.position.y += this->player.eye_height;
 
 	this->phys.step();
-	this->find_hovered_block(Gfx::projection_matrix, Gfx::view_matrix);
+	this->find_hovered_block(this->gfx.projection_matrix, this->gfx.view_matrix);
 
 	this->world.render_chunks();
 	this->gui.draw();
@@ -75,9 +76,9 @@ void Game::draw()
 void Game::screenshot(const std::string& filename)
 {
 	std::cout << "saving screenshot to " << filename << "\n";
-	std::unique_ptr<GLubyte[]> pixels = std::make_unique<GLubyte[]>(3 * Gfx::width * Gfx::height);
-	glReadPixels(0, 0, Gfx::width, Gfx::height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
-	Gfx::write_png_RGB(filename.c_str(), pixels.get(), Gfx::width, Gfx::height, true);
+	std::unique_ptr<GLubyte[]> pixels = std::make_unique<GLubyte[]>(3 * this->gfx.width * this->gfx.height);
+	glReadPixels(0, 0, this->gfx.width, this->gfx.height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
+	Gfx::write_png_RGB(filename.c_str(), pixels.get(), this->gfx.width, this->gfx.height, true);
 }
 
 void Game::keypress(int key, int scancode, int action, int mods)
@@ -91,8 +92,8 @@ void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat
 	glm::dvec3 out_origin;
 	glm::dvec3 out_direction;
 	Raytracer::ScreenPosToWorldRay(
-		Gfx::width / 2, Gfx::height / 2,
-		Gfx::width, Gfx::height,
+		this->gfx.width / 2, this->gfx.height / 2,
+		this->gfx.width, this->gfx.height,
 		glm::dmat4(view_matrix),
 		glm::dmat4(projection_matrix),
 		out_origin,
@@ -102,7 +103,7 @@ void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat
 	this->hovered_block = Raytracer::raycast(this->world, out_origin, out_direction, 8);
 	if(this->hovered_block != nullptr)
 	{
-		Gfx::draw_cube_outline(this->hovered_block->pos);
+		this->gfx.draw_cube_outline(this->hovered_block->pos);
 	}
 }
 

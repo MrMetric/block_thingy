@@ -6,7 +6,6 @@
 #include "Block.hpp"
 #include "Cube.hpp"
 #include "Game.hpp"
-#include "Gfx.hpp"
 
 Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	:
@@ -157,8 +156,7 @@ void Chunk::update()
 			}
 		}
 	}
-	// TODO: check if vertexes.size() is too big
-	this->draw_count = this->vertexes.size();
+	this->draw_count = static_cast<GLsizei>(this->vertexes.size());
 
 	#ifdef WEIRD_BUG_FIX
 	if(this->vertexes.size() < old_size)
@@ -184,7 +182,7 @@ void Chunk::render()
 		this->update();
 	}
 
-	glUniform3f(Gfx::vs_cube_pos_mod, this->pos.x * CHUNK_SIZE, this->pos.y * CHUNK_SIZE, this->pos.z * CHUNK_SIZE);
+	glUniform3f(Game::instance->gfx.vs_cube_pos_mod, this->pos.x * CHUNK_SIZE, this->pos.y * CHUNK_SIZE, this->pos.z * CHUNK_SIZE);
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_v);
@@ -192,7 +190,7 @@ void Chunk::render()
 	glDrawArrays(GL_TRIANGLES, 0, this->draw_count);
 	glDisableVertexAttribArray(0);
 
-	glUniform3f(Gfx::vs_cube_pos_mod, 0, 0, 0);
+	glUniform3f(Game::instance->gfx.vs_cube_pos_mod, 0, 0, 0);
 }
 
 void Chunk::add_vertexes(int x, int y, int z, int offset, std::vector<GLfloat>& vertexes)
