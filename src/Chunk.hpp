@@ -39,7 +39,7 @@ class Chunk
 		Position::ChunkInWorld pos;
 		GLuint vbo_v;
 		//std::vector<std::pair<GLuint, GLsizei>> sections; // vbo, draw count
-		std::shared_ptr<Block>* blok;
+		std::array<std::shared_ptr<Block>, CHUNK_BLOCK_COUNT> blok;
 		std::vector<GLfloat> vertexes;
 		uint_fast64_t vertexes_i;
 		//GLuint vbo_e;

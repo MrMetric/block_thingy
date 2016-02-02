@@ -1,6 +1,5 @@
 #include "Chunk.hpp"
 
-#include <algorithm>		// std::fill_n
 #include <stdexcept>
 #include <string>
 
@@ -15,32 +14,26 @@ Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	pos(pos)
 {
 	this->init();
-	std::fill_n(this->blok, CHUNK_BLOCK_COUNT, nullptr);
 }
 
 // note: the caller must change the position
 Chunk::Chunk(const Chunk& chunk)
 	:
 	owner(chunk.owner),
-	pos(chunk.pos)
+	pos(chunk.pos),
+	blok(chunk.blok)
 {
 	this->init();
-	for(uint_fast32_t i = 0; i < CHUNK_BLOCK_COUNT; ++i)
-	{
-		this->blok[i] = chunk.blok[i];
-	}
 }
 
 Chunk::~Chunk()
 {
-	delete[] this->blok;
 	glDeleteBuffers(1, &this->vbo_v);
 	//glDeleteBuffers(1, &this->vbo_e);
 }
 
 void Chunk::init()
 {
-	this->blok = new std::shared_ptr<Block>[CHUNK_BLOCK_COUNT];
 	this->changed = true;
 	this->vertexes_i = 0;
 
