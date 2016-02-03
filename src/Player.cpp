@@ -158,7 +158,8 @@ void Player::respawn()
 bool Player::can_place_block_at(const Position::BlockInWorld& bwp)
 {
 	Position::BlockInWorld pos0(this->pos.x, this->pos.y, this->pos.z);
-	if(bwp == pos0)
+	Position::BlockInWorld pos1(this->pos.x, this->pos.y + 1, this->pos.z);
+	if(bwp == pos0 || bwp == pos1)
 	{
 		return false;
 	}
