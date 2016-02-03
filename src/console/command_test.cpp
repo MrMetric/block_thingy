@@ -40,12 +40,11 @@ void add_test_commands(Game* game)
 					block_id_type block_id = nazi[y][x];
 					if(block_id == 0)
 					{
-						game->world.set_block(block_pos, nullptr);
+						game->world.set_block(block_pos, Block());
 					}
 					else
 					{
-						auto block = std::make_shared<Block>(block_id);
-						game->world.set_block(block_pos, block);
+						game->world.set_block(block_pos, Block(block_id));
 					}
 				}
 			}

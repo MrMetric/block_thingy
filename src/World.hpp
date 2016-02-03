@@ -21,8 +21,8 @@ class World
 		World(GLint vs_cube_pos_mod);
 		virtual ~World();
 
-		std::shared_ptr<Block> get_block(Position::BlockInWorld bwp) const;
-		void set_block(Position::BlockInWorld bwp, std::shared_ptr<Block> block);
+		Block get_block(Position::BlockInWorld bwp) const;
+		void set_block(Position::BlockInWorld bwp, Block block);
 
 		void render_chunks();
 

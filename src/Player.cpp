@@ -5,6 +5,7 @@
 #include <glm/trigonometric.hpp>	// glm::radians
 #include <glm/common.hpp>			// glm::sign
 
+#include "Block.hpp"
 #include "Game.hpp"
 
 Player::Player()
@@ -49,7 +50,7 @@ void Player::move(const glm::dvec3& acceleration)
 		if(moveY < 0)
 		{
 			Position::BlockInWorld pos_feet_new(glm::dvec3(this->pos.x, this->pos.y + moveY, this->pos.z));
-			if(Game::instance->world.get_block(pos_feet_new) != nullptr)
+			if(Game::instance->world.get_block(pos_feet_new).type() != 0)
 			{
 				this->pos.y = pos_feet_new.y + 1;
 				this->velocity.y = 0;
@@ -201,7 +202,7 @@ void Player::toggle_noclip()
 bool Player::block_is_at(const double x, const double y, const double z)
 {
 	Position::BlockInWorld block_pos(x, y, z);
-	return (Game::instance->world.get_block(block_pos) != nullptr);
+	return (Game::instance->world.get_block(block_pos).type() != 0);
 }
 
 double Player::move_to(double coord, const double move_var, const double offset, Position::BlockInWorld bwp)

@@ -39,7 +39,7 @@ uint64_t World::chunk_key(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld
 	return key;
 }
 
-void World::set_block(Position::BlockInWorld bwp, std::shared_ptr<Block> block)
+void World::set_block(Position::BlockInWorld bwp, Block block)
 {
 	Position::ChunkInWorld cp(bwp);
 	std::shared_ptr<Chunk> chunk = this->get_or_make_chunk(cp);
@@ -48,13 +48,13 @@ void World::set_block(Position::BlockInWorld bwp, std::shared_ptr<Block> block)
 	chunk->set(bcp.x, bcp.y, bcp.z, block);
 }
 
-std::shared_ptr<Block> World::get_block(Position::BlockInWorld bwp) const
+Block World::get_block(Position::BlockInWorld bwp) const
 {
 	Position::ChunkInWorld cp(bwp);
 	std::shared_ptr<Chunk> chunk = this->get_chunk(cp);
 	if(chunk == nullptr)
 	{
-		return nullptr;
+		return Block();
 	}
 
 	Position::BlockInChunk bcp(bwp);
@@ -127,11 +127,11 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 				block_pos.z = z;
 				if(y == -128 || (y > -64 && y < -32))
 				{
-					this->set_block(block_pos, std::make_shared<Block>(1));
+					this->set_block(block_pos, Block(1));
 				}
 				else if(x == -32 && y < 32)
 				{
-					this->set_block(block_pos, std::make_shared<Block>(1));
+					this->set_block(block_pos, Block(1));
 				}
 				else if(y == -32)
 				{
@@ -140,7 +140,7 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 						for(BlockInWorld_type y2 = -32; y2 < -24; ++y2)
 						{
 							block_pos.y = y2;
-							this->set_block(block_pos, std::make_shared<Block>(1));
+							this->set_block(block_pos, Block(1));
 						}
 					}
 				}

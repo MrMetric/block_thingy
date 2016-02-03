@@ -41,17 +41,17 @@ void Chunk::init()
 	glGenBuffers(1, &this->vbo_v);
 }
 
-std::shared_ptr<Block> Chunk::get_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const
+Block Chunk::get_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const
 {
 	return this->blok[CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x];
 }
 
-std::shared_ptr<Block> Chunk::get_block(Position::BlockInChunk bcp) const
+Block Chunk::get_block(Position::BlockInChunk bcp) const
 {
 	return this->blok[CHUNK_SIZE * CHUNK_SIZE * bcp.y + CHUNK_SIZE * bcp.z + bcp.x];
 }
 
-std::shared_ptr<Block> Chunk::get2(int_fast16_t x, int_fast16_t y, int_fast16_t z) const
+Block Chunk::get2(int_fast16_t x, int_fast16_t y, int_fast16_t z) const
 {
 	if(x < 0 || x >= CHUNK_SIZE
 	|| y < 0 || y >= CHUNK_SIZE
@@ -65,13 +65,13 @@ std::shared_ptr<Block> Chunk::get2(int_fast16_t x, int_fast16_t y, int_fast16_t 
 	return this->blok[CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x];
 }
 
-void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, std::shared_ptr<Block> block)
+void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, Block block)
 {
 	if(x >= CHUNK_SIZE
 	|| y >= CHUNK_SIZE
 	|| z >= CHUNK_SIZE)
 	{
-		std::string set_info = "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ") = " + std::to_string(block->type());
+		std::string set_info = "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ") = " + std::to_string(block.type());
 		throw std::domain_error("position out of bounds in Chunk::set: " + set_info);
 	}
 
@@ -137,7 +137,7 @@ void Chunk::update()
 		{
 			for(BlockInChunk_type z = 0; z < CHUNK_SIZE; ++z)
 			{
-				if(this->get_block(x, y, z) == nullptr)
+				if(this->get_block(x, y, z).type() == 0)
 				{
 					continue;
 				}
@@ -200,32 +200,32 @@ void Chunk::add_vertexes(int x, int y, int z, int offset, std::vector<GLfloat>& 
 void Chunk::draw_cube(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, std::vector<GLfloat>& vertexes)
 {
 	// front
-	if(this->get2(x, y, z - 1) == nullptr)
+	if(this->get2(x, y, z - 1).type() == 0)
 	{
 		add_vertexes(x, y, z, 0, vertexes);
 	}
 	// back
-	if(this->get2(x, y, z + 1) == nullptr)
+	if(this->get2(x, y, z + 1).type() == 0)
 	{
 		add_vertexes(x, y, z, 1, vertexes);
 	}
 	// top
-	if(this->get2(x, y + 1, z) == nullptr)
+	if(this->get2(x, y + 1, z).type() == 0)
 	{
 		add_vertexes(x, y, z, 2, vertexes);
 	}
 	// bottom
-	if(this->get2(x, y - 1, z) == nullptr)
+	if(this->get2(x, y - 1, z).type() == 0)
 	{
 		add_vertexes(x, y, z, 3, vertexes);
 	}
 	// right (?)
-	if(this->get2(x - 1, y, z) == nullptr)
+	if(this->get2(x - 1, y, z).type() == 0)
 	{
 		add_vertexes(x, y, z, 4, vertexes);
 	}
 	// left (?)
-	if(this->get2(x + 1, y, z) == nullptr)
+	if(this->get2(x + 1, y, z).type() == 0)
 	{
 		add_vertexes(x, y, z, 5, vertexes);
 	}

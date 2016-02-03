@@ -8,6 +8,7 @@
 #include <glm/detail/func_matrix.hpp>	// glm::sign, glm::inverse, glm::normalize
 #include <glm/gtc/type_ptr.hpp>			// glm::value_ptr
 
+#include "../Block.hpp"
 #include "../World.hpp"
 
 const double infinity = std::numeric_limits<double>::infinity();
@@ -161,12 +162,11 @@ std::unique_ptr<RaytraceHit> Raytracer::raycast(const World& world, glm::dvec3 o
 			(stepY > 0 ? y < maxY : y > minY) &&
 			(stepZ > 0 ? z < maxZ : z > minZ))
 	{
-		// Invoke the callback, unless we are not *yet* within the bounds of the
-		// world.
+		// Invoke the callback, unless we are not *yet* within the bounds of the world.
 		if(!(x < minX || y < minY || z < minZ || x > maxX || y > maxY || z > maxZ))
 		{
 			Position::BlockInWorld pos(x, y, z);
-			if(world.get_block(pos) != nullptr)
+			if(world.get_block(pos).type() != 0)
 			{
 				return std::make_unique<RaytraceHit>(pos, face);
 			}

@@ -98,7 +98,7 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 			if(Game::instance->hovered_block != nullptr)
 			{
 				auto break_pos = Game::instance->hovered_block->pos;
-				Game::instance->world.set_block(break_pos, nullptr);
+				Game::instance->world.set_block(break_pos, Block());
 				std::cout << "broke " << break_pos << "\n";
 			}
 		}
@@ -109,8 +109,7 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 				Position::BlockInWorld pos = Game::instance->hovered_block->adjacent();
 				if(Game::instance->player.can_place_block_at(pos))
 				{
-					auto block = std::make_shared<Block>(1);
-					Game::instance->world.set_block(pos, block);
+					Game::instance->world.set_block(pos, Block(1));
 				}
 			}
 		}
