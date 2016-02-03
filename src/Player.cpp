@@ -70,7 +70,7 @@ void Player::move(const glm::dvec3& acceleration)
 	}
 }
 
-void Player::step(double delta_time)
+void Player::step(const double delta_time)
 {
 	glm::dvec3 acceleration;
 	acceleration.y -= 0.5; // gravity
@@ -85,14 +85,14 @@ void Player::step(double delta_time)
 		acceleration.y = 0;
 		if(this->do_jump)
 		{
-			acceleration.y += 0.30 * std::sqrt(60 / delta_time);
+			acceleration.y += 18;
 		}
 	}
 	else
 	{
 		if(this->do_jump && this->on_ground)
 		{
-			acceleration.y += 0.15 * std::sqrt(60 / delta_time);
+			acceleration.y += 9;
 		}
 
 		// friction
@@ -113,8 +113,7 @@ void Player::step(double delta_time)
 	}
 	this->do_jump = false;
 
-	acceleration *= delta_time;
-	this->move(acceleration);
+	this->move(acceleration * delta_time);
 }
 
 glm::dvec3 Player::apply_movement_input(glm::dvec3 acceleration, double move_speed)
