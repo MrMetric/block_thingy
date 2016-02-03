@@ -157,7 +157,7 @@ void Chunk::update()
 	#endif
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->mesh_vbo);
-	glBufferData(GL_ARRAY_BUFFER, this->vertexes.size() * sizeof(GLfloat), this->vertexes.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, this->vertexes.size() * sizeof(GLfloat), this->vertexes.data(), GL_DYNAMIC_DRAW);
 
 	this->changed = false;
 }

@@ -36,7 +36,7 @@ void GUI::update_framebuffer_size()
 		midX + 1, midY - 16, 0,
 	};
 	glBindBuffer(GL_ARRAY_BUFFER, this->crosshair_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(crosshair_vertex), crosshair_vertex, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(crosshair_vertex), crosshair_vertex, GL_DYNAMIC_DRAW);
 }
 
 void GUI::draw()

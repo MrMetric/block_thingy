@@ -146,7 +146,7 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->outline_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexes), vertexes, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexes), vertexes, GL_DYNAMIC_DRAW);
 
 	glUseProgram(this->sp_lines);
 	glUniformMatrix4fv(this->vs_lines_matriks, 1, GL_FALSE, this->matriks_ptr);
