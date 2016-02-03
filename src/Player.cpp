@@ -85,7 +85,6 @@ void Player::step(double delta_time)
 		acceleration.y = 0;
 		if(this->do_jump)
 		{
-			this->do_jump = false;
 			acceleration.y += 0.30 * std::sqrt(60 / delta_time);
 		}
 	}
@@ -93,7 +92,6 @@ void Player::step(double delta_time)
 	{
 		if(this->do_jump && this->on_ground)
 		{
-			this->do_jump = false;
 			acceleration.y += 0.15 * std::sqrt(60 / delta_time);
 		}
 
@@ -113,6 +111,7 @@ void Player::step(double delta_time)
 			acceleration.z = 0;
 		}
 	}
+	this->do_jump = false;
 
 	acceleration *= delta_time;
 	this->move(acceleration);
@@ -188,10 +187,7 @@ void Player::move_right(bool do_that)
 
 void Player::jump()
 {
-	if(!this->do_jump)
-	{
-		this->do_jump = true;
-	}
+	this->do_jump = true;
 }
 
 void Player::toggle_noclip()
