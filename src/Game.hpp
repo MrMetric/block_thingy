@@ -26,6 +26,7 @@ class Game
 		void draw();
 		void screenshot(const std::string& filename);
 		void keypress(int key, int scancode, int action, int mods);
+		void mousepress(int button, int action, int mods);
 
 		static Game* instance;
 		static bool debug;

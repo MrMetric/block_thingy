@@ -1,9 +1,12 @@
 #include "Game.hpp"
 
+#include <ctime>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <memory>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 
 #include <GL/glew.h>
@@ -13,6 +16,7 @@
 #include <glm/vec3.hpp>
 #include <glm/gtx/string_cast.hpp>
 
+#include "Block.hpp"
 #include "Camera.hpp"
 #include "Coords.hpp"
 #include "FPSManager.hpp"
@@ -96,6 +100,32 @@ void Game::keypress(int key, int scancode, int action, int mods)
 	this->keybinder.keypress(key, action);
 }
 
+void Game::mousepress(int button, int action, int mods)
+{
+	if(action == GLFW_PRESS)
+	{
+		if(button == GLFW_MOUSE_BUTTON_LEFT)
+		{
+			if(this->hovered_block != nullptr)
+			{
+				auto break_pos = this->hovered_block->pos;
+				this->world.set_block(break_pos, Block());
+			}
+		}
+		else if(button == GLFW_MOUSE_BUTTON_RIGHT)
+		{
+			if(this->hovered_block != nullptr)
+			{
+				Position::BlockInWorld pos = this->hovered_block->adjacent();
+				if(this->player.can_place_block_at(pos))
+				{
+					this->world.set_block(pos, Block(1));
+				}
+			}
+		}
+	}
+}
+
 void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat4& view_matrix)
 {
 	glm::dvec3 out_origin;
@@ -119,6 +149,11 @@ void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat
 void Game::add_commands()
 {
 	Console* console = &this->console;
+
+	this->commands.emplace_back(console, "quit", [window=this->window]()
+	{
+		glfwSetWindowShouldClose(window, GL_TRUE);
+	});
 
 	// TODO: less copy/paste
 	this->commands.emplace_back(console, "+forward", [game=this]()
@@ -236,6 +271,42 @@ void Game::add_commands()
 		else
 		{
 			// error
+		}
+	});
+
+	this->commands.emplace_back(console, "screenshot", [game=this](const std::vector<std::string>& args)
+	{
+		std::string filename;
+		if(args.size() == 0)
+		{
+			std::time_t time = std::time(nullptr);
+			std::tm t = *std::localtime(&time);
+			std::stringstream ss;
+			ss << t.tm_year + 1900 << "-";
+			ss << std::setfill('0') << std::setw(2) << t.tm_mon + 1 << "-";
+			ss << std::setfill('0') << std::setw(2) << t.tm_mday << " ";
+			ss << std::setfill('0') << std::setw(2) << t.tm_hour << ":";
+			ss << std::setfill('0') << std::setw(2) << t.tm_min << ":";
+			ss << std::setfill('0') << std::setw(2) << t.tm_sec;
+			ss << " (" << time << ").png";
+			filename = ss.str();
+		}
+		else if(args.size() == 1)
+		{
+			filename = args[0];
+		}
+		else
+		{
+			// print usage
+			return;
+		}
+		try
+		{
+			game->screenshot(filename);
+		}
+		catch(const std::runtime_error& e)
+		{
+			std::cerr << "error saving screenshot: " << e.what() << "\n";
 		}
 	});
 }

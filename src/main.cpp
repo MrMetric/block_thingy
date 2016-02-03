@@ -1,15 +1,11 @@
 #include <cstdint>
-#include <ctime>
 #include <iostream>
-#include <iomanip>
 #include <memory>
-#include <stdexcept>
 #include <string>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "Block.hpp"
 #include "Coords.hpp"
 #include "Game.hpp"
 #include "Gfx.hpp"
@@ -37,34 +33,6 @@ static void error_callback(int error, const char* description)
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	Game::instance->keypress(key, scancode, action, mods);
-	if(action == GLFW_PRESS)
-	{
-		if(key == GLFW_KEY_ESCAPE)
-		{
-			glfwSetWindowShouldClose(window, GL_TRUE);
-		}
-		else if(key == GLFW_KEY_F2)
-		{
-			std::time_t time = std::time(nullptr);
-			std::tm t = *std::localtime(&time);
-			std::stringstream ss;
-			ss << t.tm_year + 1900 << "-";
-			ss << std::setfill('0') << std::setw(2) << t.tm_mon + 1 << "-";
-			ss << std::setfill('0') << std::setw(2) << t.tm_mday << " ";
-			ss << std::setfill('0') << std::setw(2) << t.tm_hour << ":";
-			ss << std::setfill('0') << std::setw(2) << t.tm_min << ":";
-			ss << std::setfill('0') << std::setw(2) << t.tm_sec;
-			ss << " (" << time << ").png";
-			try
-			{
-				Game::instance->screenshot(ss.str());
-			}
-			catch(const std::runtime_error& e)
-			{
-				std::cerr << "error saving screenshot: " << e.what() << "\n";
-			}
-		}
-	}
 }
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -91,29 +59,7 @@ static void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
 
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	if(action == GLFW_PRESS)
-	{
-		if(button == GLFW_MOUSE_BUTTON_LEFT)
-		{
-			if(Game::instance->hovered_block != nullptr)
-			{
-				auto break_pos = Game::instance->hovered_block->pos;
-				Game::instance->world.set_block(break_pos, Block());
-				std::cout << "broke " << break_pos << "\n";
-			}
-		}
-		else if(button == GLFW_MOUSE_BUTTON_RIGHT)
-		{
-			if(Game::instance->hovered_block != nullptr)
-			{
-				Position::BlockInWorld pos = Game::instance->hovered_block->adjacent();
-				if(Game::instance->player.can_place_block_at(pos))
-				{
-					Game::instance->world.set_block(pos, Block(1));
-				}
-			}
-		}
-	}
+	Game::instance->mousepress(button, action, mods);
 }
 
 int main()
