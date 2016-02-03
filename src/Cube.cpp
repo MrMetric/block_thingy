@@ -15,7 +15,7 @@ GLfloat Cube::cube_vertex[] = {
 };
 
 // note: must be counter-clockwise (relative to front) for back-face culling
-GLuint Cube::cube_elements[] = {
+uint_fast8_t Cube::cube_elements[] = {
 	// back
 	0, 1, 2, // bottom left, top left, bottom right
 	1, 3, 2, // top left, top right, bottom right

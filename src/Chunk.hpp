@@ -44,6 +44,6 @@ class Chunk
 
 		void init();
 
-		void add_vertexes(int x, int y, int z, int offset, std::vector<GLfloat>& vertexes);
+		void add_vertexes(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, uint_fast8_t offset, std::vector<GLfloat>& vertexes);
 		void draw_cube(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, std::vector<GLfloat>& vertexes);
 };

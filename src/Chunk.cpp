@@ -180,18 +180,15 @@ void Chunk::render()
 	//glUniform3f(this->owner->vs_cube_pos_mod, 0, 0, 0);
 }
 
-void Chunk::add_vertexes(int x, int y, int z, int offset, std::vector<GLfloat>& vertexes)
+void Chunk::add_vertexes(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, uint_fast8_t offset, std::vector<GLfloat>& vertexes)
 {
-	int cube_pos[] = { x, y, z };
+	offset *= 6;
 	for(uint_fast8_t i = 0; i < 6; ++i)
 	{
-		GLuint element = Cube::cube_elements[i + offset * 6];
-		for(uint_fast8_t j = 0; j < 3; ++j)
-		{
-			GLfloat v = Cube::cube_vertex[3 * element + j];
-			v += cube_pos[j];
-			vertexes.push_back(v);
-		}
+		uint_fast8_t element = 3 * Cube::cube_elements[offset++];
+		vertexes.push_back(Cube::cube_vertex[element++] + x);
+		vertexes.push_back(Cube::cube_vertex[element++] + y);
+		vertexes.push_back(Cube::cube_vertex[element++] + z);
 	}
 }
 
