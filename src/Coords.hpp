@@ -16,6 +16,7 @@ namespace Position
 
 	struct ChunkInWorld
 	{
+		ChunkInWorld();
 		ChunkInWorld(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z);
 		explicit ChunkInWorld(BlockInWorld bwp);
 
@@ -24,6 +25,7 @@ namespace Position
 
 	struct BlockInWorld
 	{
+		BlockInWorld();
 		BlockInWorld(const BlockInWorld_type x, const BlockInWorld_type y, const BlockInWorld_type z);
 		BlockInWorld(const ChunkInWorld& cp, const BlockInChunk& bcp);
 		explicit BlockInWorld(const glm::dvec3 vec3);
@@ -34,6 +36,7 @@ namespace Position
 
 	struct BlockInChunk
 	{
+		BlockInChunk();
 		BlockInChunk(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z);
 		explicit BlockInChunk(BlockInWorld bwp);
 

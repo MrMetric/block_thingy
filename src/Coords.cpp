@@ -11,6 +11,8 @@
 
 namespace Position
 {
+	ChunkInWorld::ChunkInWorld() : x(0), y(0), z(0) {}
+
 	ChunkInWorld::ChunkInWorld(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z)
 		:
 		x(x),
@@ -26,6 +28,8 @@ namespace Position
 		this->y = t(bwp.y);
 		this->z = t(bwp.z);
 	}
+
+	BlockInWorld::BlockInWorld() : x(0), y(0), z(0) {}
 
 	BlockInWorld::BlockInWorld(const BlockInWorld_type x, const BlockInWorld_type y, const BlockInWorld_type z)
 	{
@@ -58,6 +62,8 @@ namespace Position
 		this->y = t(y);
 		this->z = t(z);
 	}
+
+	BlockInChunk::BlockInChunk() : x(0), y(0), z(0) {}
 
 	BlockInChunk::BlockInChunk(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 	{
