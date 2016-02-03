@@ -1,16 +1,13 @@
 #include <cstdint>
 #include <iostream>
-#include <memory>
 #include <string>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "Coords.hpp"
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "Util.hpp"
-#include "physics/RaytraceHit.hpp"
 
 #include <valgrind/callgrind.h>
 

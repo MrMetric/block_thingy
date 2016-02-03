@@ -1,7 +1,7 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
-#include <memory>
 #include <vector>
 
 #include <GL/glew.h>

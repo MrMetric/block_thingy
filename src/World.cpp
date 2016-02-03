@@ -1,6 +1,5 @@
 #include "World.hpp"
 
-#include <functional>
 #include <memory>
 #include <random>
 
@@ -9,7 +8,6 @@
 #include "Block.hpp"
 #include "Chunk.hpp"
 #include "Coords.hpp"
-#include "Player.hpp"
 
 World::World(GLint vs_cube_pos_mod)
 	:

@@ -1,12 +1,12 @@
 #include "command_test.hpp"
 
 #include <iostream>
-#include <string>
-#include <vector>
 
+#include "Console.hpp"
 #include "../Block.hpp"
 #include "../Coords.hpp"
 #include "../Game.hpp"
+#include "../World.hpp"
 #include "../physics/RaytraceHit.hpp"
 
 void add_test_commands(Game* game)

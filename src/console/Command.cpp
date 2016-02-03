@@ -1,5 +1,7 @@
 #include "Command.hpp"
 
+#include "Console.hpp"
+
 Command::Command(Console* console, const std::string& name, const console_handler_t& handler)
 	:
 	console(console),

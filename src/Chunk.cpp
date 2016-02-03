@@ -1,5 +1,6 @@
 #include "Chunk.hpp"
 
+#include <memory>
 #include <stdexcept>
 #include <string>
 

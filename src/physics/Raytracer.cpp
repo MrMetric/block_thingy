@@ -8,7 +8,9 @@
 #include <glm/detail/func_matrix.hpp>	// glm::sign, glm::inverse, glm::normalize
 #include <glm/gtc/type_ptr.hpp>			// glm::value_ptr
 
+#include "RaytraceHit.hpp"
 #include "../Block.hpp"
+#include "../Coords.hpp"
 #include "../World.hpp"
 
 const double infinity = std::numeric_limits<double>::infinity();

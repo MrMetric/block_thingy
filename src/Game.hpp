@@ -14,9 +14,9 @@
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
 #include "gui/GUI.hpp"
+#include "physics/RaytraceHit.hpp"
 
 struct GLFWwindow;
-struct RaytraceHit;
 
 class Game
 {
