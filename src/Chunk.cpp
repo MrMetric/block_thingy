@@ -82,46 +82,40 @@ void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, s
 
 	// TODO: make a separate function for the following stuff
 	// TODO: is it worth it to check if the naybor chunk has a block beside this one? (to avoid updating when the appearance won't change)
-	//std::vector<Position::ChunkInWorld> naybors;
-	Position::ChunkInWorld** naybors = new Position::ChunkInWorld*[3];
-	int i = 0;
+	std::vector<Position::ChunkInWorld> naybors(3);
 	if(x == 0)
 	{
-		//naybors.push_back(ChunkInWorld(this->pos.x - 1, this->pos.y, this->pos.z));
-		naybors[i++] = new Position::ChunkInWorld(this->pos.x - 1, this->pos.y, this->pos.z);
+		naybors.emplace_back(this->pos.x - 1, this->pos.y, this->pos.z);
 	}
 	else if(x == CHUNK_SIZE - 1)
 	{
-		naybors[i++] = new Position::ChunkInWorld(this->pos.x + 1, this->pos.y, this->pos.z);
+		naybors.emplace_back(this->pos.x + 1, this->pos.y, this->pos.z);
 	}
 	if(y == 0)
 	{
-		naybors[i++] = new Position::ChunkInWorld(this->pos.x, this->pos.y - 1, this->pos.z);
+		naybors.emplace_back(this->pos.x, this->pos.y - 1, this->pos.z);
 	}
 	else if(y == CHUNK_SIZE - 1)
 	{
-		naybors[i++] = new Position::ChunkInWorld(this->pos.x, this->pos.y + 1, this->pos.z);
+		naybors.emplace_back(this->pos.x, this->pos.y + 1, this->pos.z);
 	}
 	if(z == 0)
 	{
-		naybors[i++] = new Position::ChunkInWorld(this->pos.x, this->pos.y, this->pos.z - 1);
+		naybors.emplace_back(this->pos.x, this->pos.y, this->pos.z - 1);
 	}
 	else if(z == CHUNK_SIZE - 1)
 	{
-		naybors[i++] = new Position::ChunkInWorld(this->pos.x, this->pos.y, this->pos.z + 1);
+		naybors.emplace_back(this->pos.x, this->pos.y, this->pos.z + 1);
 	}
 
-	for(int j = 0; j < i; ++j)
+	for(const Position::ChunkInWorld& cp : naybors)
 	{
-		Position::ChunkInWorld* cp = naybors[j];
-		std::shared_ptr<Chunk> chunk = this->owner->get_chunk(*cp);
-		delete cp;
+		std::shared_ptr<Chunk> chunk = this->owner->get_chunk(cp);
 		if(chunk != nullptr)
 		{
 			chunk->changed = true;
 		}
 	}
-	delete[] naybors;
 }
 
 /** TODO: figure out what causes the weird chunk rendering error
