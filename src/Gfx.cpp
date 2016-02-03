@@ -83,8 +83,11 @@ void Gfx::opengl_cleanup()
 	glDeleteBuffers(1, &this->outline_vbo);
 }
 
-void Gfx::update_framebuffer_size()
+void Gfx::update_framebuffer_size(GLsizei width, GLsizei height)
 {
+	this->width = width;
+	this->height = height;
+	glViewport(0, 0, width, height);
 	this->update_projection_matrix();
 }
 

@@ -42,11 +42,8 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 		// TODO: throw exception
 		std::cerr << "invalid framebuffer size: " << width << "×" << height << "\n";
 	}
-	game->gfx.width = uint_fast32_t(width);
-	game->gfx.height = uint_fast32_t(height);
-	glViewport(0, 0, width, height);
 
-	game->gfx.update_framebuffer_size();
+	game->gfx.update_framebuffer_size(width, height);
 	game->gui.update_framebuffer_size();
 
 	// TODO: update camera

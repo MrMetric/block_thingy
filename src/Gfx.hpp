@@ -44,7 +44,7 @@ class Gfx
 		static void init_glfw();
 		void opengl_setup();
 		void opengl_cleanup();
-		void update_framebuffer_size();
+		void update_framebuffer_size(GLsizei width, GLsizei height);
 		void set_cam_view(const Camera& cam);
 
 		void draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color = glm::vec4(1, 1, 1, 1));
