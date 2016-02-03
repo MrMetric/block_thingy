@@ -78,42 +78,7 @@ void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, B
 	this->blok[index] = block;
 	this->changed = true;
 
-	// TODO: make a separate function for the following stuff
-	// TODO: is it worth it to check if the naybor chunk has a block beside this one? (to avoid updating when the appearance won't change)
-	std::vector<Position::ChunkInWorld> naybors(3);
-	if(x == 0)
-	{
-		naybors.emplace_back(this->pos.x - 1, this->pos.y, this->pos.z);
-	}
-	else if(x == CHUNK_SIZE - 1)
-	{
-		naybors.emplace_back(this->pos.x + 1, this->pos.y, this->pos.z);
-	}
-	if(y == 0)
-	{
-		naybors.emplace_back(this->pos.x, this->pos.y - 1, this->pos.z);
-	}
-	else if(y == CHUNK_SIZE - 1)
-	{
-		naybors.emplace_back(this->pos.x, this->pos.y + 1, this->pos.z);
-	}
-	if(z == 0)
-	{
-		naybors.emplace_back(this->pos.x, this->pos.y, this->pos.z - 1);
-	}
-	else if(z == CHUNK_SIZE - 1)
-	{
-		naybors.emplace_back(this->pos.x, this->pos.y, this->pos.z + 1);
-	}
-
-	for(const Position::ChunkInWorld& cp : naybors)
-	{
-		std::shared_ptr<Chunk> chunk = this->owner->get_chunk(cp);
-		if(chunk != nullptr)
-		{
-			chunk->changed = true;
-		}
-	}
+	this->update_neighbors(x, y, z);
 }
 
 /** TODO: figure out what causes the weird chunk rendering error
@@ -178,6 +143,45 @@ void Chunk::render()
 	glDisableVertexAttribArray(0);
 
 	//glUniform3f(this->owner->vs_cube_pos_mod, 0, 0, 0);
+}
+
+void Chunk::update_neighbors(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z)
+{
+	// TODO: check if the neighbor chunk has a block beside this one (to avoid updating when the appearance won't change)
+	if(x == 0)
+	{
+		this->update_neighbor(-1, 0, 0);
+	}
+	else if(x == CHUNK_SIZE - 1)
+	{
+		this->update_neighbor(+1, 0, 0);
+	}
+	if(y == 0)
+	{
+		this->update_neighbor(0, -1, 0);
+	}
+	else if(y == CHUNK_SIZE - 1)
+	{
+		this->update_neighbor(0, +1, 0);
+	}
+	if(z == 0)
+	{
+		this->update_neighbor(0, 0, -1);
+	}
+	else if(z == CHUNK_SIZE - 1)
+	{
+		this->update_neighbor(0, 0, +1);
+	}
+}
+
+void Chunk::update_neighbor(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z)
+{
+	Position::ChunkInWorld cp(x + this->pos.x, y + this->pos.y, z + this->pos.z);
+	std::shared_ptr<Chunk> chunk = this->owner->get_chunk(cp);
+	if(chunk != nullptr)
+	{
+		chunk->changed = true;
+	}
 }
 
 void Chunk::add_vertexes(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, uint_fast8_t offset, std::vector<GLfloat>& vertexes)
