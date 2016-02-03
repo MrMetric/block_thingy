@@ -33,7 +33,6 @@
 #include "physics/RaytraceHit.hpp"
 
 Game* Game::instance = nullptr;
-bool Game::debug = false;
 
 Game::Game(GLFWwindow* window, int width, int height)
 	:

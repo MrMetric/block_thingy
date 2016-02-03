@@ -37,23 +37,11 @@ int main()
 	std::cout << "Compiled with GLFW " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << "\n";
 	std::cout << "Running with GLFW " << glfwGetVersionString() << "\n";
 
-	Gfx::init_glfw();
-
-	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-	int width = mode->width * 3 / 4;
-	int height = mode->height * 3 / 4;
-	std::cout << "window size: " << width << "×" << height << "\n";
-	GLFWwindow* window = glfwCreateWindow(width, height, "Super Chuckward Engine", nullptr, nullptr);
-	if(!window)
+	GLFWwindow* window = Gfx::init_glfw();
+	if(window == nullptr)
 	{
-		glfwTerminate();
 		return 1;
 	}
-
-	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1);
-	glfwGetFramebufferSize(window, &width, &height);
 
 	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height)
 	{
@@ -72,9 +60,6 @@ int main()
 		game->mousemove(x, y);
 	});
 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
-
 	glewExperimental = GL_TRUE;
 	GLenum glew = glewInit(); printOpenGLError();
 	if(glew != GLEW_OK)
@@ -87,11 +72,10 @@ int main()
 		std::cout << "INFO: GLEW initialized\n";
 	}
 
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
 	game = std::make_unique<Game>(window, width, height); printOpenGLError();
 
-	glClearColor(0.0, 0.0, 0.5, 0.0);
-
-	Game::debug = true;
 	std::cout << "starting main loop\n";
 	CALLGRIND_START_INSTRUMENTATION;
 	while(!glfwWindowShouldClose(window))
@@ -100,9 +84,11 @@ int main()
 	}
 	CALLGRIND_STOP_INSTRUMENTATION;
 	CALLGRIND_DUMP_STATS;
-	game->gfx.opengl_cleanup(); printOpenGLError();
-	glfwDestroyWindow(window);
-	glfwTerminate();
+
+	game.reset(); // destruct
+	printOpenGLError();
+
+	Gfx::uninit_glfw(window);
 
 	return 0;
 }

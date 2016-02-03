@@ -17,6 +17,7 @@ class Gfx
 {
 	public:
 		explicit Gfx(GLFWwindow* window);
+		~Gfx();
 
 		GLFWwindow* window;
 		uint_fast32_t width;
@@ -41,7 +42,8 @@ class Gfx
 
 		GLuint outline_vbo;
 
-		static void init_glfw();
+		static GLFWwindow* init_glfw();
+		static void uninit_glfw(GLFWwindow* window);
 		void opengl_setup();
 		void opengl_cleanup();
 		void update_framebuffer_size(GLsizei width, GLsizei height);

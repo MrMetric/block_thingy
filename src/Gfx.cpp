@@ -29,7 +29,12 @@ Gfx::Gfx(GLFWwindow* window)
 	this->opengl_setup();
 }
 
-void Gfx::init_glfw()
+Gfx::~Gfx()
+{
+	this->opengl_cleanup();
+}
+
+GLFWwindow* Gfx::init_glfw()
 {
 	if(!glfwInit())
 	{
@@ -41,10 +46,38 @@ void Gfx::init_glfw()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glEnable(GL_MULTISAMPLE);
+
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	int width = mode->width * 3 / 4;
+	int height = mode->height * 3 / 4;
+	std::cout << "window size: " << width << "×" << height << "\n";
+	GLFWwindow* window = glfwCreateWindow(width, height, "Super Chuckward Engine", nullptr, nullptr);
+	if(!window)
+	{
+		glfwTerminate();
+		return nullptr;
+	}
+
+	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1);
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
+
+	return window;
+}
+
+void Gfx::uninit_glfw(GLFWwindow* window)
+{
+	glfwDestroyWindow(window);
+	glfwTerminate();
 }
 
 void Gfx::opengl_setup()
 {
+	glClearColor(0.0, 0.0, 0.5, 0.0);
+
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);

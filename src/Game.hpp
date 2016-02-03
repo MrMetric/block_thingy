@@ -31,7 +31,6 @@ class Game
 		void mousemove(double x, double y);
 
 		static Game* instance;
-		static bool debug;
 
 		GLFWwindow* window;
 		std::unique_ptr<RaytraceHit> hovered_block;
