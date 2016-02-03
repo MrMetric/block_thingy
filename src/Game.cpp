@@ -18,6 +18,7 @@
 
 #include "Block.hpp"
 #include "Camera.hpp"
+#include "Chunk.hpp"
 #include "Coords.hpp"
 #include "FPSManager.hpp"
 #include "Gfx.hpp"
@@ -67,7 +68,7 @@ void Game::draw()
 	this->phys.step();
 	this->find_hovered_block(this->gfx.projection_matrix, this->gfx.view_matrix);
 
-	this->world.render_chunks();
+	this->draw_world();
 	this->gui.draw();
 
 	glfwSwapBuffers(window);
@@ -85,6 +86,29 @@ void Game::draw()
 	ss << " | chunk" << cp;
 	ss << " | chunkblock" << bcp;
 	glfwSetWindowTitle(window, ss.str().c_str());
+}
+
+void Game::draw_world()
+{
+	glUseProgram(this->gfx.sp_cube);
+	glUniformMatrix4fv(this->gfx.vs_cube_matriks, 1, GL_FALSE, this->gfx.matriks_ptr);
+
+	const int render_distance = 3;
+
+	Position::ChunkInWorld cp(Position::BlockInWorld(this->player.pos));
+	Position::ChunkInWorld min(cp.x - render_distance, cp.y - render_distance, cp.z - render_distance);
+	Position::ChunkInWorld max(cp.x + render_distance, cp.y + render_distance, cp.z + render_distance);
+	for(int x = min.x; x <= max.x; ++x)
+	{
+		for(int y = min.y; y <= max.y; ++y)
+		{
+			for(int z = min.z; z <= max.z; ++z)
+			{
+				std::shared_ptr<Chunk> chunk = this->world.get_or_make_chunk(Position::ChunkInWorld(x, y, z));
+				chunk->render();
+			}
+		}
+	}
 }
 
 void Game::screenshot(const std::string& filename)

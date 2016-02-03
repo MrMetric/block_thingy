@@ -9,8 +9,6 @@
 #include "Block.hpp"
 #include "Chunk.hpp"
 #include "Coords.hpp"
-#include "Game.hpp"
-#include "Gfx.hpp"
 #include "Player.hpp"
 
 World::World(GLint vs_cube_pos_mod)
@@ -112,7 +110,6 @@ void World::gen_chunk(const Position::ChunkInWorld& cp)
 void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max)
 {
 	static std::uniform_int_distribution<uint_fast16_t> distribution(0, 999);
-	static auto rand = std::bind(distribution, this->random_engine);
 
 	Position::BlockInWorld block_pos(BlockInWorld_type(0), 0, 0);
 	for(BlockInWorld_type x = min.x; x <= max.x; ++x)
@@ -134,7 +131,8 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 				}
 				else if(y == -32)
 				{
-					if(rand() == 0)
+					auto r = distribution(this->random_engine);
+					if(r == 0)
 					{
 						for(BlockInWorld_type y2 = -32; y2 < -24; ++y2)
 						{
@@ -143,29 +141,6 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 						}
 					}
 				}
-			}
-		}
-	}
-}
-
-void World::render_chunks()
-{
-	glUseProgram(Game::instance->gfx.sp_cube);
-	glUniformMatrix4fv(Game::instance->gfx.vs_cube_matriks, 1, GL_FALSE, Game::instance->gfx.matriks_ptr);
-
-	const int render_distance = 2;
-
-	Position::ChunkInWorld cp(Position::BlockInWorld(Game::instance->player.pos));
-	Position::ChunkInWorld min(cp.x - render_distance, cp.y - render_distance, cp.z - render_distance);
-	Position::ChunkInWorld max(cp.x + render_distance, cp.y + render_distance, cp.z + render_distance);
-	for(int x = min.x; x <= max.x; ++x)
-	{
-		for(int y = min.y; y <= max.y; ++y)
-		{
-			for(int z = min.z; z <= max.z; ++z)
-			{
-				std::shared_ptr<Chunk> chunk = this->get_or_make_chunk(Position::ChunkInWorld(x, y, z));
-				chunk->render();
 			}
 		}
 	}

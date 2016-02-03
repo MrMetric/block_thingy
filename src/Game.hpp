@@ -46,6 +46,7 @@ class Game
 		double delta_time;
 		FPSManager fps;
 
+		void draw_world();
 		void find_hovered_block(const glm::mat4& projection_matrix, const glm::mat4& view_matrix);
 
 		std::vector<Command> commands;
