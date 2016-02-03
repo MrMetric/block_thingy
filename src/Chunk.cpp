@@ -28,8 +28,7 @@ Chunk::Chunk(const Chunk& chunk)
 
 Chunk::~Chunk()
 {
-	glDeleteBuffers(1, &this->vbo_v);
-	//glDeleteBuffers(1, &this->vbo_e);
+	glDeleteBuffers(1, &this->mesh_vbo);
 }
 
 void Chunk::init()
@@ -37,8 +36,7 @@ void Chunk::init()
 	this->changed = true;
 	this->vertexes_i = 0;
 
-	//glGenBuffers(1, &this->vbo_e);
-	glGenBuffers(1, &this->vbo_v);
+	glGenBuffers(1, &this->mesh_vbo);
 }
 
 Block Chunk::get_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const
@@ -75,7 +73,7 @@ void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, B
 		throw std::domain_error("position out of bounds in Chunk::set: " + set_info);
 	}
 
-	unsigned int index = CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
+	uint_fast32_t index = CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
 
 	this->blok[index] = block;
 	this->changed = true;
@@ -158,7 +156,7 @@ void Chunk::update()
 	}
 	#endif
 
-	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_v);
+	glBindBuffer(GL_ARRAY_BUFFER, this->mesh_vbo);
 	glBufferData(GL_ARRAY_BUFFER, this->vertexes.size() * sizeof(GLfloat), this->vertexes.data(), GL_STATIC_DRAW);
 
 	this->changed = false;
@@ -174,7 +172,7 @@ void Chunk::render()
 	glUniform3f(this->owner->vs_cube_pos_mod, this->pos.x * CHUNK_SIZE, this->pos.y * CHUNK_SIZE, this->pos.z * CHUNK_SIZE);
 
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, this->vbo_v);
+	glBindBuffer(GL_ARRAY_BUFFER, this->mesh_vbo);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 	glDrawArrays(GL_TRIANGLES, 0, this->draw_count);
 	glDisableVertexAttribArray(0);

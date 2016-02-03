@@ -104,7 +104,6 @@ std::shared_ptr<Chunk> World::get_or_make_chunk(Position::ChunkInWorld cp)
 
 void World::gen_chunk(const Position::ChunkInWorld& cp)
 {
-	//std::cout << "INFO: generating chunk: " << cp << "\n";
 	Position::BlockInChunk min(0, 0, 0);
 	Position::BlockInChunk max(CHUNK_SIZE - 1, CHUNK_SIZE - 1, CHUNK_SIZE - 1);
 	this->gen_at(Position::BlockInWorld(cp, min), Position::BlockInWorld(cp, max));

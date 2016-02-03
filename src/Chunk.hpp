@@ -35,12 +35,10 @@ class Chunk
 	private:
 		World* owner;
 		Position::ChunkInWorld pos;
-		GLuint vbo_v;
-		//std::vector<std::pair<GLuint, GLsizei>> sections; // vbo, draw count
+		GLuint mesh_vbo;
 		std::array<Block, CHUNK_BLOCK_COUNT> blok;
 		std::vector<GLfloat> vertexes;
 		uint_fast64_t vertexes_i;
-		//GLuint vbo_e;
 		GLsizei draw_count;
 		bool changed;
 
