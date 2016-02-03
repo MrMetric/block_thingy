@@ -21,12 +21,14 @@ struct GLFWwindow;
 class Game
 {
 	public:
-		explicit Game(GLFWwindow* window);
+		Game(GLFWwindow* window, int width, int height);
 
 		void draw();
 		void screenshot(const std::string& filename);
+		void update_framebuffer_size(int width, int height);
 		void keypress(int key, int scancode, int action, int mods);
 		void mousepress(int button, int action, int mods);
+		void mousemove(double x, double y);
 
 		static Game* instance;
 		static bool debug;

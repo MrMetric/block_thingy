@@ -30,35 +30,6 @@ static void error_callback(int error, const char* description)
 
 static std::unique_ptr<Game> game;
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	game->keypress(key, scancode, action, mods);
-}
-
-static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	if(width < 0 || height < 0)
-	{
-		// TODO: throw exception
-		std::cerr << "invalid framebuffer size: " << width << "×" << height << "\n";
-	}
-
-	game->gfx.update_framebuffer_size(width, height);
-	game->gui.update_framebuffer_size();
-
-	// TODO: update camera
-}
-
-static void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	game->cam.handleMouseMove(xpos, ypos);
-}
-
-static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
-{
-	game->mousepress(button, action, mods);
-}
-
 int main()
 {
 	glfwSetErrorCallback(error_callback);
@@ -82,14 +53,27 @@ int main()
 
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
-	glfwSetKeyCallback(window, key_callback);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwGetFramebufferSize(window, &width, &height);
-	glfwSetCursorPosCallback(window, cursor_pos_callback);
+
+	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height)
+	{
+		game->update_framebuffer_size(width, height);
+	});
+	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		game->keypress(key, scancode, action, mods);
+	});
+	glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods)
+	{
+		game->mousepress(button, action, mods);
+	});
+	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double x, double y)
+	{
+		game->mousemove(x, y);
+	});
+
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
-
-	glfwSetMouseButtonCallback(window, mouse_button_callback);
 
 	glewExperimental = GL_TRUE;
 	GLenum glew = glewInit(); printOpenGLError();
@@ -103,9 +87,7 @@ int main()
 		std::cout << "INFO: GLEW initialized\n";
 	}
 
-	game = std::make_unique<Game>(window); printOpenGLError();
-
-	framebuffer_size_callback(window, width, height); printOpenGLError();
+	game = std::make_unique<Game>(window, width, height); printOpenGLError();
 
 	glClearColor(0.0, 0.0, 0.5, 0.0);
 

@@ -35,7 +35,7 @@
 Game* Game::instance = nullptr;
 bool Game::debug = false;
 
-Game::Game(GLFWwindow* window)
+Game::Game(GLFWwindow* window, int width, int height)
 	:
 	window(window),
 	hovered_block(nullptr),
@@ -52,6 +52,8 @@ Game::Game(GLFWwindow* window)
 	add_test_commands(this);
 	this->add_commands();
 	this->console.run_line("exec binds");
+
+	this->update_framebuffer_size(width, height);
 }
 
 void Game::draw()
@@ -119,6 +121,14 @@ void Game::screenshot(const std::string& filename)
 	Gfx::write_png_RGB(filename.c_str(), pixels.get(), this->gfx.width, this->gfx.height, true);
 }
 
+void Game::update_framebuffer_size(int width, int height)
+{
+	this->gfx.update_framebuffer_size(width, height);
+	this->gui.update_framebuffer_size();
+
+	// TODO: update camera
+}
+
 void Game::keypress(int key, int scancode, int action, int mods)
 {
 	this->keybinder.keypress(key, action);
@@ -148,6 +158,11 @@ void Game::mousepress(int button, int action, int mods)
 			}
 		}
 	}
+}
+
+void Game::mousemove(double x, double y)
+{
+	this->cam.handleMouseMove(x, y);
 }
 
 void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat4& view_matrix)
