@@ -126,31 +126,33 @@ std::unique_ptr<RaytraceHit> Raytracer::raycast(const World& world, glm::dvec3 o
 	BlockInWorld_type x = static_cast<BlockInWorld_type>(std::floor(origin[0]));
 	BlockInWorld_type y = static_cast<BlockInWorld_type>(std::floor(origin[1]));
 	BlockInWorld_type z = static_cast<BlockInWorld_type>(std::floor(origin[2]));
-	// Break out direction vector.
+
 	double dx = direction[0];
 	double dy = direction[1];
 	double dz = direction[2];
-	// Direction to increment x,y,z when stepping.
-	int stepX = int(glm::sign(dx));
-	int stepY = int(glm::sign(dy));
-	int stepZ = int(glm::sign(dz));
-	// See description above. The initial values depend on the fractional
-	// part of the origin.
-	double tMaxX = intbound(origin[0], dx);
-	double tMaxY = intbound(origin[1], dy);
-	double tMaxZ = intbound(origin[2], dz);
-	// The change in t when taking a step (always positive).
-	double tDeltaX = dx == 0 ? infinity : stepX / dx;
-	double tDeltaY = dy == 0 ? infinity : stepY / dy;
-	double tDeltaZ = dz == 0 ? infinity : stepZ / dz;
-	// Buffer for reporting faces to the callback.
-	glm::vec3 face;
 
 	// Avoids an infinite loop.
 	if(dx == 0 && dy == 0 && dz == 0)
 	{
 		throw std::invalid_argument("direction must not be (0, 0, 0)");
 	}
+
+	// Direction to increment x,y,z when stepping.
+	int stepX = int(glm::sign(dx));
+	int stepY = int(glm::sign(dy));
+	int stepZ = int(glm::sign(dz));
+
+	// See description above. The initial values depend on the fractional part of the origin.
+	double tMaxX = intbound(origin[0], dx);
+	double tMaxY = intbound(origin[1], dy);
+	double tMaxZ = intbound(origin[2], dz);
+
+	// The change in t when taking a step (always positive).
+	double tDeltaX = dx == 0 ? infinity : stepX / dx;
+	double tDeltaY = dy == 0 ? infinity : stepY / dy;
+	double tDeltaZ = dz == 0 ? infinity : stepZ / dz;
+
+	glm::vec3 face;
 
 	double minX = origin.x - radius;
 	double minY = origin.y - radius;
