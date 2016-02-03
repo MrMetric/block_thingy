@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <iostream>
+#include <memory>
 #include <string>
 
 #include <GL/glew.h>
@@ -27,9 +28,11 @@ static void error_callback(int error, const char* description)
 	std::cerr << "GLFW error " << error << ": " << description << "\n";
 }
 
+static std::unique_ptr<Game> game;
+
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	Game::instance->keypress(key, scancode, action, mods);
+	game->keypress(key, scancode, action, mods);
 }
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -39,24 +42,24 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 		// TODO: throw exception
 		std::cerr << "invalid framebuffer size: " << width << "×" << height << "\n";
 	}
-	Game::instance->gfx.width = uint_fast32_t(width);
-	Game::instance->gfx.height = uint_fast32_t(height);
+	game->gfx.width = uint_fast32_t(width);
+	game->gfx.height = uint_fast32_t(height);
 	glViewport(0, 0, width, height);
 
-	Game::instance->gfx.update_framebuffer_size();
-	Game::instance->gui.update_framebuffer_size();
+	game->gfx.update_framebuffer_size();
+	game->gui.update_framebuffer_size();
 
 	// TODO: update camera
 }
 
 static void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	Game::instance->cam.handleMouseMove(xpos, ypos);
+	game->cam.handleMouseMove(xpos, ypos);
 }
 
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	Game::instance->mousepress(button, action, mods);
+	game->mousepress(button, action, mods);
 }
 
 int main()
@@ -103,7 +106,7 @@ int main()
 		std::cout << "INFO: GLEW initialized\n";
 	}
 
-	Game game(window); printOpenGLError();
+	game = std::make_unique<Game>(window); printOpenGLError();
 
 	framebuffer_size_callback(window, width, height); printOpenGLError();
 
@@ -114,11 +117,11 @@ int main()
 	CALLGRIND_START_INSTRUMENTATION;
 	while(!glfwWindowShouldClose(window))
 	{
-		game.draw(); printOpenGLError();
+		game->draw(); printOpenGLError();
 	}
 	CALLGRIND_STOP_INSTRUMENTATION;
 	CALLGRIND_DUMP_STATS;
-	game.gfx.opengl_cleanup(); printOpenGLError();
+	game->gfx.opengl_cleanup(); printOpenGLError();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 
