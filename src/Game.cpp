@@ -61,9 +61,9 @@ void Game::draw()
 
 	this->gfx.set_cam_view(this->cam);
 
-	this->player.rot = this->cam.rotation;
+	this->player.rotation = this->cam.rotation;
 	this->player.step(this->delta_time);
-	this->cam.position = this->player.pos;
+	this->cam.position = this->player.position;
 	this->cam.position.y += this->player.eye_height;
 
 	this->phys.step();
@@ -79,10 +79,10 @@ void Game::draw()
 
 	std::stringstream ss;
 	ss << "Baby's First Voxel Engine | " << fps.getFPS() << " fps";
-	Position::BlockInWorld bwp(this->player.pos);
+	Position::BlockInWorld bwp(this->player.position);
 	Position::ChunkInWorld cp(bwp);
 	Position::BlockInChunk bcp(bwp);
-	ss << " | player.pos(" << glm::to_string(this->player.pos) << ")";
+	ss << " | player.pos(" << glm::to_string(this->player.position) << ")";
 	ss << " | block" << bwp;
 	ss << " | chunk" << cp;
 	ss << " | chunkblock" << bcp;
@@ -96,7 +96,7 @@ void Game::draw_world()
 
 	const int render_distance = 3;
 
-	Position::ChunkInWorld cp(Position::BlockInWorld(this->player.pos));
+	Position::ChunkInWorld cp(Position::BlockInWorld(this->player.position));
 	Position::ChunkInWorld min(cp.x - render_distance, cp.y - render_distance, cp.z - render_distance);
 	Position::ChunkInWorld max(cp.x + render_distance, cp.y + render_distance, cp.z + render_distance);
 	for(int x = min.x; x <= max.x; ++x)
@@ -249,8 +249,8 @@ void Game::add_commands()
 		}
 		std::string save_name = args[0];
 		std::ofstream streem(save_name);
-		streem << game->player.pos.x << " " << game->player.pos.y << " " << game->player.pos.z << " ";
-		streem << game->player.rot.x << " " << game->player.rot.y << " " << game->player.rot.z;
+		streem << game->player.position.x << " " << game->player.position.y << " " << game->player.position.z << " ";
+		streem << game->player.rotation.x << " " << game->player.rotation.y << " " << game->player.rotation.z;
 		streem.flush();
 	});
 	this->commands.emplace_back(console, "load_pos", [game=this](const std::vector<std::string>& args)
@@ -262,9 +262,9 @@ void Game::add_commands()
 		}
 		std::string save_name = args[0];
 		std::ifstream streem(save_name);
-		streem >> game->player.pos.x;
-		streem >> game->player.pos.y;
-		streem >> game->player.pos.z;
+		streem >> game->player.position.x;
+		streem >> game->player.position.y;
+		streem >> game->player.position.z;
 		streem >> game->cam.rotation.x;
 		streem >> game->cam.rotation.y;
 		streem >> game->cam.rotation.z;

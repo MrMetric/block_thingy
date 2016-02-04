@@ -33,8 +33,8 @@ class Player
 		void jump();
 		void toggle_noclip();
 
-		glm::dvec3 pos;
-		glm::dvec3 rot;
+		glm::dvec3 position;
+		glm::dvec3 rotation;
 		glm::dvec3 velocity;
 
 	private:

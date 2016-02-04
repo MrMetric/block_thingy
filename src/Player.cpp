@@ -20,8 +20,8 @@ Player::~Player()
 
 void Player::move(const glm::dvec3& acceleration)
 {
-	double sinY = std::sin(glm::radians(this->rot.y));
-	double cosY = std::cos(glm::radians(this->rot.y));
+	double sinY = std::sin(glm::radians(this->rotation.y));
+	double cosY = std::cos(glm::radians(this->rotation.y));
 	this->velocity += acceleration;
 
 	if(std::abs(this->velocity.x) > this->max_velocity)
@@ -36,35 +36,35 @@ void Player::move(const glm::dvec3& acceleration)
 	{
 		double moveX = this->velocity.x * cosY - this->velocity.z * sinY;
 		double offset = moveX < 0 ? -abs_offset : abs_offset;
-		this->pos.x = this->move_to(this->pos.x, moveX, offset, Position::BlockInWorld(this->pos.x + moveX + offset, this->pos.y, this->pos.z));
+		this->position.x = this->move_to(this->position.x, moveX, offset, Position::BlockInWorld(this->position.x + moveX + offset, this->position.y, this->position.z));
 	}
 
 	{
 		double moveZ = this->velocity.z * cosY + this->velocity.x * sinY;
 		double offset = moveZ < 0 ? -abs_offset : abs_offset;
-		this->pos.z = this->move_to(this->pos.z, moveZ, offset, Position::BlockInWorld(this->pos.x, this->pos.y, this->pos.z + moveZ + offset));
+		this->position.z = this->move_to(this->position.z, moveZ, offset, Position::BlockInWorld(this->position.x, this->position.y, this->position.z + moveZ + offset));
 	}
 
 	{
 		double moveY = this->velocity.y;
 		if(moveY < 0)
 		{
-			Position::BlockInWorld pos_feet_new(glm::dvec3(this->pos.x, this->pos.y + moveY, this->pos.z));
+			Position::BlockInWorld pos_feet_new(glm::dvec3(this->position.x, this->position.y + moveY, this->position.z));
 			if(Game::instance->world.get_block(pos_feet_new).type() != 0)
 			{
-				this->pos.y = pos_feet_new.y + 1;
+				this->position.y = pos_feet_new.y + 1;
 				this->velocity.y = 0;
 				this->on_ground = true;
 			}
 			else
 			{
-				this->pos.y += moveY;
+				this->position.y += moveY;
 				this->on_ground = false;
 			}
 		}
 		else
 		{
-			this->pos.y += moveY;
+			this->position.y += moveY;
 			this->on_ground = false;
 		}
 	}
@@ -139,16 +139,16 @@ glm::dvec3 Player::apply_movement_input(glm::dvec3 acceleration, double move_spe
 
 void Player::respawn()
 {
-	this->pos.x = this->pos.y = this->pos.z = 0;
-	this->rot.x = this->rot.y = this->rot.z = 0; // TODO: improve design (this needs to be set in the camera, not here)
+	this->position.x = this->position.y = this->position.z = 0;
+	this->rotation.x = this->rotation.y = this->rotation.z = 0; // TODO: improve design (this needs to be set in the camera, not here)
 
-	while(!this->block_is_at(this->pos.x, this->pos.y, this->pos.z))
+	while(!this->block_is_at(this->position.x, this->position.y, this->position.z))
 	{
-		--this->pos.y;
+		--this->position.y;
 	}
-	while(this->block_is_at(this->pos.x, this->pos.y, this->pos.z))
+	while(this->block_is_at(this->position.x, this->position.y, this->position.z))
 	{
-		++this->pos.y;
+		++this->position.y;
 	}
 
 	this->velocity.x = this->velocity.y = this->velocity.z = 0;
@@ -156,8 +156,8 @@ void Player::respawn()
 
 bool Player::can_place_block_at(const Position::BlockInWorld& bwp)
 {
-	Position::BlockInWorld pos0(this->pos.x, this->pos.y, this->pos.z);
-	Position::BlockInWorld pos1(this->pos.x, this->pos.y + 1, this->pos.z);
+	Position::BlockInWorld pos0(this->position.x, this->position.y, this->position.z);
+	Position::BlockInWorld pos1(this->position.x, this->position.y + 1, this->position.z);
 	if(bwp == pos0 || bwp == pos1)
 	{
 		return false;
