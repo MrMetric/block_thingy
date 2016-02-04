@@ -6,8 +6,8 @@
 #include <GL/glew.h>
 
 #include "Block.hpp"
-#include "Chunk.hpp"
 #include "Coords.hpp"
+#include "chunk/Chunk.hpp"
 
 World::World(GLint vs_cube_pos_mod)
 	:

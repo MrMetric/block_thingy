@@ -13,4 +13,5 @@ bind q 'cam.rot z -5'
 bind e 'cam.rot z +5'
 bind f2 screenshot
 bind esc quit
+bind , wireframe
 bind k +test

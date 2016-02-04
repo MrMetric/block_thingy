@@ -30,16 +30,14 @@
 				<Compiler>
 					<Add option="-fomit-frame-pointer" />
 					<Add option="-O3" />
+					<Add option="-g" />
 				</Compiler>
-				<Linker>
-					<Add option="-s" />
-				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Weverything" />
-			<Add option="-fexceptions" />
 			<Add option="-std=c++14" />
+			<Add option="-fexceptions" />
 			<Add option="-isystem lib" />
 			<Add option="-Wno-padded" />
 			<Add option="-Werror=unknown-warning-option" />
@@ -64,8 +62,6 @@
 		<Unit filename="src/Block.hpp" />
 		<Unit filename="src/Camera.cpp" />
 		<Unit filename="src/Camera.hpp" />
-		<Unit filename="src/Chunk.cpp" />
-		<Unit filename="src/Chunk.hpp" />
 		<Unit filename="src/Coords.cpp" />
 		<Unit filename="src/Coords.hpp" />
 		<Unit filename="src/Cube.cpp" />
@@ -83,6 +79,12 @@
 		<Unit filename="src/Util.hpp" />
 		<Unit filename="src/World.cpp" />
 		<Unit filename="src/World.hpp" />
+		<Unit filename="src/chunk/Chunk.cpp" />
+		<Unit filename="src/chunk/Chunk.hpp" />
+		<Unit filename="src/chunk/mesh/ChunkMesher.cpp" />
+		<Unit filename="src/chunk/mesh/ChunkMesher.hpp" />
+		<Unit filename="src/chunk/mesh/SimpleMesher.cpp" />
+		<Unit filename="src/chunk/mesh/SimpleMesher.hpp" />
 		<Unit filename="src/console/ArgumentParser.cpp" />
 		<Unit filename="src/console/ArgumentParser.hpp" />
 		<Unit filename="src/console/Command.cpp" />
@@ -93,6 +95,9 @@
 		<Unit filename="src/console/KeybindManager.hpp" />
 		<Unit filename="src/console/command_test.cpp" />
 		<Unit filename="src/console/command_test.hpp" />
+		<Unit filename="src/event/Event.hpp" />
+		<Unit filename="src/event/EventManager.cpp" />
+		<Unit filename="src/event/EventManager.hpp" />
 		<Unit filename="src/gui/GUI.cpp" />
 		<Unit filename="src/gui/GUI.hpp" />
 		<Unit filename="src/main.cpp" />

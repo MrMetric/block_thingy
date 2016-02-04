@@ -7,7 +7,7 @@
 
 #include <glm/vec3.hpp>
 
-#include "Chunk.hpp"
+#include "chunk/Chunk.hpp"
 
 namespace Position
 {

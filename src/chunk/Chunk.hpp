@@ -1,44 +1,48 @@
 #pragma once
 
 #include <array>
-#include <cstdint>
+#include <memory>
 #include <vector>
 
 #include <GL/glew.h>
 
-#include "Block.hpp"
-#include "Coords.hpp"
+#include "../Block.hpp"
+#include "../Coords.hpp"
 
 #define CHUNK_SIZE 32
 #define CHUNK_BLOCK_COUNT (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
 
+class ChunkMesher;
 class World;
 
 class Chunk
 {
 	public:
 		Chunk(Position::ChunkInWorld pos, World* owner);
-		Chunk(const Chunk& chunk);
+		Chunk(const Chunk&) = delete;
 		virtual ~Chunk();
 
 		// I will worry about copying later
 		Block get_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
 		Block get_block(Position::BlockInChunk bcp) const;
 
-		Block get2(int_fast16_t x, int_fast16_t y, int_fast16_t z) const;
 		void set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, Block block);
-		bool block_is_hidden(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
+
+		Position::ChunkInWorld get_position() const;
+		World* get_owner() const; // eeh
 
 		void update();
 		void render();
 
+		static GLenum render_mode;
+
 	private:
 		World* owner;
-		Position::ChunkInWorld pos;
+		Position::ChunkInWorld position;
 		GLuint mesh_vbo;
+		std::unique_ptr<ChunkMesher> mesher;
 		std::array<Block, CHUNK_BLOCK_COUNT> blok;
 		std::vector<GLfloat> vertexes;
-		uint_fast64_t vertexes_i;
 		GLsizei draw_count;
 		bool changed;
 
@@ -46,6 +50,4 @@ class Chunk
 
 		void update_neighbors(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z);
 		void update_neighbor(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z);
-		void add_vertexes(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, uint_fast8_t offset, std::vector<GLfloat>& vertexes);
-		void draw_cube(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, std::vector<GLfloat>& vertexes);
 };

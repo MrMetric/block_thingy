@@ -18,13 +18,13 @@
 
 #include "Block.hpp"
 #include "Camera.hpp"
-#include "Chunk.hpp"
 #include "Coords.hpp"
 #include "FPSManager.hpp"
 #include "Gfx.hpp"
 #include "Phys.hpp"
 #include "Player.hpp"
 #include "World.hpp"
+#include "chunk/Chunk.hpp"
 #include "console/command_test.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
@@ -345,6 +345,18 @@ void Game::add_commands()
 		catch(const std::runtime_error& e)
 		{
 			std::cerr << "error saving screenshot: " << e.what() << "\n";
+		}
+	});
+
+	this->commands.emplace_back(console, "wireframe", []()
+	{
+		if(Chunk::render_mode == GL_TRIANGLES)
+		{
+			Chunk::render_mode = GL_LINES;
+		}
+		else
+		{
+			Chunk::render_mode = GL_TRIANGLES;
 		}
 	});
 }
