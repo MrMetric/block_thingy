@@ -13,15 +13,18 @@
 #include "../Coords.hpp"
 #include "../World.hpp"
 
-const double infinity = std::numeric_limits<double>::infinity();
+constexpr double infinity = std::numeric_limits<double>::infinity();
 
-//constexpr
-double mod(double a, double b)
+// like fmod(a, 1), but always returns a positive number
+// equivalent to a - floor(a)
+// which is a - floor(a / 1) * 1
+// but std::floor is not constexpr, so it can not be used here
+constexpr double mod1(const double a)
 {
-	return fmod(fmod(a, b) + b, b);
+	return a - (static_cast<int_fast64_t>(a) - ((a < 0) ? 1 : 0));
 }
 
-constexpr double intbound(double s, double ds)
+constexpr double intbound(double s, const double ds)
 {
 	// Find the smallest positive t such that s+t*ds is an integer.
 	if(ds < 0)
@@ -33,7 +36,7 @@ constexpr double intbound(double s, double ds)
 		return infinity;
 	}
 
-	s = mod(s, 1);
+	s = mod1(s);
 	// problem is now s+t*ds = 1
 	return (1 - s) / ds;
 }
