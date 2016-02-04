@@ -11,7 +11,7 @@
 class SimpleMesher : public ChunkMesher
 {
 	public:
-		SimpleMesher(const Chunk&);
+		explicit SimpleMesher(const Chunk&);
 
 		std::vector<GLfloat> make_mesh();
 

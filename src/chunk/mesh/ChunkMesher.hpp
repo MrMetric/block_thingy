@@ -9,7 +9,7 @@ class Chunk;
 class ChunkMesher
 {
 	public:
-		ChunkMesher(const Chunk&);
+		explicit ChunkMesher(const Chunk&);
 		ChunkMesher(const ChunkMesher&) = delete;
 		virtual ~ChunkMesher();
 
