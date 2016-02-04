@@ -50,9 +50,17 @@ void Console::unadd_command(const std::string& name)
 
 void Console::run_line(const std::string& line)
 {
+	if(line.length() == 0)
+	{
+		return;
+	}
 	std::vector<std::string> args = ArgumentParser().parse_args(line);
+	if(args.size() < 1)
+	{
+		return;
+	}
 	std::string name = args[0];
-	args.erase(args.begin(), args.begin() + 1);
+	args.erase(args.begin());
 	this->run_command(name, args);
 }
 
