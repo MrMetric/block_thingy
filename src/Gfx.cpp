@@ -11,7 +11,9 @@
 #include <glm/gtx/transform.hpp>	// glm::perspective
 #include <glm/gtc/type_ptr.hpp>		// glm::value_ptr
 
+#ifdef USE_LIBPNG
 #include <png.h>
+#endif
 
 #include "Camera.hpp"
 #include "Coords.hpp"
@@ -183,6 +185,7 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 	glDisableVertexAttribArray(0);
 }
 
+#ifdef USE_LIBPNG
 void Gfx::write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint32_t height, bool reverse_rows)
 {
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -226,3 +229,4 @@ void Gfx::write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint
 	png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 }
+#endif

@@ -115,6 +115,7 @@ void Game::draw_world()
 	}
 }
 
+#ifdef USE_LIBPNG
 void Game::screenshot(const std::string& filename)
 {
 	std::cout << "saving screenshot to " << filename << "\n";
@@ -122,6 +123,7 @@ void Game::screenshot(const std::string& filename)
 	glReadPixels(0, 0, this->gfx.width, this->gfx.height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
 	Gfx::write_png_RGB(filename.c_str(), pixels.get(), this->gfx.width, this->gfx.height, true);
 }
+#endif
 
 void Game::update_framebuffer_size(int width, int height)
 {
@@ -317,6 +319,7 @@ void Game::add_commands()
 		}
 	});
 
+	#ifdef USE_LIBPNG
 	this->commands.emplace_back(console, "screenshot", [game=this](const std::vector<std::string>& args)
 	{
 		std::string filename;
@@ -352,6 +355,7 @@ void Game::add_commands()
 			std::cerr << "error saving screenshot: " << e.what() << "\n";
 		}
 	});
+	#endif
 
 	this->commands.emplace_back(console, "wireframe", []()
 	{

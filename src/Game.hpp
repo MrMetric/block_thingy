@@ -25,7 +25,9 @@ class Game
 		Game(GLFWwindow* window, int width, int height);
 
 		void draw();
+		#ifdef USE_LIBPNG
 		void screenshot(const std::string& filename);
+		#endif
 		void update_framebuffer_size(int width, int height);
 		void keypress(int key, int scancode, int action, int mods);
 		void mousepress(int button, int action, int mods);
