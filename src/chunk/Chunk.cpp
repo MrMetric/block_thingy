@@ -134,7 +134,8 @@ void Chunk::update_neighbors(BlockInChunk_type x, BlockInChunk_type y, BlockInCh
 
 void Chunk::update_neighbor(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z)
 {
-	Position::ChunkInWorld cp(x + this->position.x, y + this->position.y, z + this->position.z);
+	Position::ChunkInWorld cp(x, y, z);
+	cp += this->position;
 	std::shared_ptr<Chunk> chunk = this->owner->get_chunk(cp);
 	if(chunk != nullptr)
 	{

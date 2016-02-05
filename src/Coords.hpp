@@ -18,9 +18,10 @@ namespace Position
 	{
 		ChunkInWorld();
 		ChunkInWorld(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z);
-		explicit ChunkInWorld(BlockInWorld bwp);
+		explicit ChunkInWorld(BlockInWorld);
 
-		ChunkInWorld_type operator[](uint_fast8_t i);
+		ChunkInWorld_type operator[](uint_fast8_t);
+		ChunkInWorld& operator+=(const ChunkInWorld&);
 
 		ChunkInWorld_type x, y, z;
 	};
@@ -29,11 +30,12 @@ namespace Position
 	{
 		BlockInWorld();
 		BlockInWorld(const BlockInWorld_type x, const BlockInWorld_type y, const BlockInWorld_type z);
-		BlockInWorld(const ChunkInWorld& cp, const BlockInChunk& bcp);
-		explicit BlockInWorld(const glm::dvec3 vec3);
+		BlockInWorld(const ChunkInWorld&, const BlockInChunk&);
+		explicit BlockInWorld(const glm::dvec3);
 		BlockInWorld(const double x, const double y, const double z);
 
-		BlockInWorld_type operator[](uint_fast8_t i);
+		BlockInWorld_type operator[](uint_fast8_t);
+		BlockInWorld& operator+=(const BlockInWorld&);
 
 		BlockInWorld_type x, y, z;
 	};
@@ -42,9 +44,12 @@ namespace Position
 	{
 		BlockInChunk();
 		BlockInChunk(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z);
-		explicit BlockInChunk(BlockInWorld bwp);
+		explicit BlockInChunk(BlockInWorld);
 
-		BlockInChunk_type operator[](uint_fast8_t i);
+		BlockInChunk_type operator[](uint_fast8_t);
+		BlockInChunk& operator+=(const BlockInChunk&);
+
+		void check_bounds();
 
 		BlockInChunk_type x, y, z;
 	};

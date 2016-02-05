@@ -37,6 +37,14 @@ namespace Position
 		throw std::out_of_range("ChunkInWorld::operator[]: " + std::to_string(i) + " > 2");
 	}
 
+	ChunkInWorld& ChunkInWorld::operator+=(const ChunkInWorld& that)
+	{
+		x += that.x;
+		y += that.y;
+		z += that.z;
+		return *this;
+	}
+
 	BlockInWorld::BlockInWorld() : x(0), y(0), z(0) {}
 
 	BlockInWorld::BlockInWorld(const BlockInWorld_type x, const BlockInWorld_type y, const BlockInWorld_type z)
@@ -79,21 +87,22 @@ namespace Position
 		throw std::out_of_range("BlockInWorld::operator[]: " + std::to_string(i) + " > 2");
 	}
 
+	BlockInWorld& BlockInWorld::operator+=(const BlockInWorld& that)
+	{
+		x += that.x;
+		y += that.y;
+		z += that.z;
+		return *this;
+	}
+
 	BlockInChunk::BlockInChunk() : x(0), y(0), z(0) {}
 
 	BlockInChunk::BlockInChunk(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 	{
-		if(x >= CHUNK_SIZE
-		|| y >= CHUNK_SIZE
-		|| z >= CHUNK_SIZE)
-		{
-			std::ostringstream ss;
-			ss << "Position::BlockInChunk constructed with invalid coordinates: (" << int(x) << "," << int(y) << "," << int(z) << ")";
-			throw std::logic_error(ss.str());
-		}
 		this->x = x;
 		this->y = y;
 		this->z = z;
+		check_bounds();
 	}
 
 	// % can return a negative result, so do it properly here
@@ -113,6 +122,27 @@ namespace Position
 		if(i == 1) return y;
 		if(i == 2) return z;
 		throw std::out_of_range("BlockInChunk::operator[]: " + std::to_string(i) + " > 2");
+	}
+
+	BlockInChunk& BlockInChunk::operator+=(const BlockInChunk& that)
+	{
+		x += that.x;
+		y += that.y;
+		z += that.z;
+		check_bounds();
+		return *this;
+	}
+
+	void BlockInChunk::check_bounds()
+	{
+		if(x >= CHUNK_SIZE
+		|| y >= CHUNK_SIZE
+		|| z >= CHUNK_SIZE)
+		{
+			std::ostringstream ss;
+			ss << "Position::BlockInChunk has invalid coordinates: (" << int(x) << "," << int(y) << "," << int(z) << ")";
+			throw std::logic_error(ss.str());
+		}
 	}
 
 
