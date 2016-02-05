@@ -13,6 +13,7 @@
 #include "console/Command.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
+#include "event/EventManager.hpp"
 #include "gui/GUI.hpp"
 #include "physics/RaytraceHit.hpp"
 
@@ -41,6 +42,7 @@ class Game
 		Player player;
 		World world;
 		Console console;
+		EventManager event_manager;
 		GUI gui;
 
 	private:

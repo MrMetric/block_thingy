@@ -28,6 +28,9 @@
 #include "console/command_test.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
+#include "event/Event.hpp"
+#include "event/EventManager.hpp"
+#include "event/EventType.hpp"
 #include "gui/GUI.hpp"
 #include "physics/Raytracer.hpp"
 #include "physics/RaytraceHit.hpp"
@@ -143,6 +146,8 @@ void Game::mousepress(int button, int action, int mods)
 			{
 				auto break_pos = this->hovered_block->pos;
 				this->world.set_block(break_pos, Block());
+				this->find_hovered_block(this->gfx.projection_matrix, this->gfx.view_matrix);
+				event_manager.do_event(Event(EventType::break_block));
 			}
 		}
 		else if(button == GLFW_MOUSE_BUTTON_RIGHT)
