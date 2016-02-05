@@ -20,6 +20,8 @@ namespace Position
 		ChunkInWorld(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z);
 		explicit ChunkInWorld(BlockInWorld bwp);
 
+		ChunkInWorld_type operator[](uint_fast8_t i);
+
 		ChunkInWorld_type x, y, z;
 	};
 
@@ -41,6 +43,8 @@ namespace Position
 		BlockInChunk();
 		BlockInChunk(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z);
 		explicit BlockInChunk(BlockInWorld bwp);
+
+		BlockInChunk_type operator[](uint_fast8_t i);
 
 		BlockInChunk_type x, y, z;
 	};

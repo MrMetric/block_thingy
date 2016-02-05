@@ -29,6 +29,14 @@ namespace Position
 		this->z = t(bwp.z);
 	}
 
+	ChunkInWorld_type ChunkInWorld::operator[](uint_fast8_t i)
+	{
+		if(i == 0) return x;
+		if(i == 1) return y;
+		if(i == 2) return z;
+		throw std::out_of_range("ChunkInWorld::operator[]: " + std::to_string(i) + " > 2");
+	}
+
 	BlockInWorld::BlockInWorld() : x(0), y(0), z(0) {}
 
 	BlockInWorld::BlockInWorld(const BlockInWorld_type x, const BlockInWorld_type y, const BlockInWorld_type z)
@@ -65,18 +73,9 @@ namespace Position
 
 	BlockInWorld_type BlockInWorld::operator[](uint_fast8_t i)
 	{
-		if(i == 0)
-		{
-			return x;
-		}
-		if(i == 1)
-		{
-			return y;
-		}
-		if(i == 2)
-		{
-			return z;
-		}
+		if(i == 0) return x;
+		if(i == 1) return y;
+		if(i == 2) return z;
 		throw std::out_of_range("BlockInWorld::operator[]: " + std::to_string(i) + " > 2");
 	}
 
@@ -106,6 +105,14 @@ namespace Position
 		this->x = t(bwp.x);
 		this->y = t(bwp.y);
 		this->z = t(bwp.z);
+	}
+
+	BlockInChunk_type BlockInChunk::operator[](uint_fast8_t i)
+	{
+		if(i == 0) return x;
+		if(i == 1) return y;
+		if(i == 2) return z;
+		throw std::out_of_range("BlockInChunk::operator[]: " + std::to_string(i) + " > 2");
 	}
 
 
