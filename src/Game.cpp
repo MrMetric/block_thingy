@@ -350,13 +350,15 @@ void Game::add_commands()
 
 	this->commands.emplace_back(console, "wireframe", []()
 	{
-		if(Chunk::render_mode == GL_TRIANGLES)
+		static bool wireframe = false; // TODO: less static
+		wireframe = !wireframe;
+		if(wireframe)
 		{
-			Chunk::render_mode = GL_LINES;
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
 		else
 		{
-			Chunk::render_mode = GL_TRIANGLES;
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 	});
 }

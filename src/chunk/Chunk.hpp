@@ -34,15 +34,13 @@ class Chunk
 		void update();
 		void render();
 
-		static GLenum render_mode;
-
 	private:
 		World* owner;
 		Position::ChunkInWorld position;
 		GLuint mesh_vbo;
 		std::unique_ptr<ChunkMesher> mesher;
 		std::array<Block, CHUNK_BLOCK_COUNT> blok;
-		std::vector<GLfloat> vertexes;
+		std::vector<GLbyte> vertexes;
 		GLsizei draw_count;
 		bool changed;
 

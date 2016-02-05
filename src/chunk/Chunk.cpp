@@ -96,12 +96,10 @@ void Chunk::update()
 	#endif
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->mesh_vbo);
-	glBufferData(GL_ARRAY_BUFFER, this->vertexes.size() * sizeof(GLfloat), this->vertexes.data(), GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, this->vertexes.size() * sizeof(GLbyte), this->vertexes.data(), GL_DYNAMIC_DRAW);
 
 	this->changed = false;
 }
-
-GLenum Chunk::render_mode = GL_TRIANGLES;
 
 void Chunk::render()
 {
@@ -114,8 +112,8 @@ void Chunk::render()
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->mesh_vbo);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-	glDrawArrays(Chunk::render_mode, 0, this->draw_count);
+	glVertexAttribPointer(0, 3, GL_BYTE, GL_FALSE, 0, nullptr);
+	glDrawArrays(GL_TRIANGLES, 0, this->draw_count);
 	glDisableVertexAttribArray(0);
 
 	//glUniform3f(this->owner->vs_cube_pos_mod, 0, 0, 0);
