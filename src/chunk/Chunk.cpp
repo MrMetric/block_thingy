@@ -69,31 +69,15 @@ World* Chunk::get_owner() const
 	return this->owner;
 }
 
-/** TODO: figure out what causes the weird chunk rendering error
-INFO:
-	it happens on both of my laptop computers (Intel graphics cards, GNU/Linux (3.3) and Windows (3.0))
-	zel says it does not happen with his AMD card (Windows (up to 4.4))
-	zel notes: 'there is a fine difference between fixing a bug and breaking app so the bug does not appear'
-*/
 void Chunk::update()
 {
-	#ifdef WEIRD_BUG_FIX
-	auto old_size = this->vertexes.size();
-	#endif
-
 	this->vertexes = this->mesher->make_mesh();
 	this->draw_count = static_cast<GLsizei>(this->vertexes.size());
-
-	#ifdef WEIRD_BUG_FIX
-	if(this->vertexes.size() < old_size)
+	if(this->draw_count % 3 != 0)
 	{
-		this->vertexes.reserve(old_size);
-		while(this->vertexes.size() < old_size)
-		{
-			this->vertexes.push_back(0);
-		}
+		throw std::logic_error("you buggered something up again!");
 	}
-	#endif
+	this->draw_count /= 3;
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->mesh_vbo);
 	glBufferData(GL_ARRAY_BUFFER, this->vertexes.size() * sizeof(GLbyte), this->vertexes.data(), GL_DYNAMIC_DRAW);

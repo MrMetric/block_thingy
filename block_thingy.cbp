@@ -43,7 +43,6 @@
 			<Add option="-Werror=unknown-warning-option" />
 			<Add option="-Werror=delete-incomplete" />
 			<Add option="-Werror=deprecated" />
-			<Add option="-DWEIRD_BUG_FIX" />
 		</Compiler>
 		<Linker>
 			<Add option="-lglfw3" />
