@@ -1,17 +1,17 @@
 #include "Cube.hpp"
 
-GLfloat Cube::cube_vertex[] = {
+GLbyte Cube::cube_vertex[] = {
 	// back
-	 0.0, 0.0, 0.0, // bottom left
-	 0.0, 1.0, 0.0, // top left
-	 1.0, 0.0, 0.0, // bottom right
-	 1.0, 1.0, 0.0, // top right
+	 0, 0, 0, // bottom left
+	 0, 1, 0, // top left
+	 1, 0, 0, // bottom right
+	 1, 1, 0, // top right
 
 	// front
-	 0.0, 0.0, 1.0, // bottom left
-	 0.0, 1.0, 1.0, // top left
-	 1.0, 0.0, 1.0, // bottom right
-	 1.0, 1.0, 1.0, // top right
+	 0, 0, 1, // bottom left
+	 0, 1, 1, // top left
+	 1, 0, 1, // bottom right
+	 1, 1, 1, // top right
 };
 
 // note: must be counter-clockwise (relative to front) for back-face culling
