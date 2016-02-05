@@ -60,7 +60,7 @@ GLFWwindow* Gfx::init_glfw()
 	}
 
 	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1);
+	glfwSwapInterval(1); // enable vsync
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
@@ -164,19 +164,7 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 		uint_fast32_t o2 = 3 * elements[e];
 		for(uint_fast8_t i = 0; i < 3; ++i)
 		{
-			vertexes[o1 + i] = Cube::cube_vertex[o2 + i];
-			if(i == 0)
-			{
-				vertexes[o1 + i] += pos.x;
-			}
-			else if(i == 1)
-			{
-				vertexes[o1 + i] += pos.y;
-			}
-			else if(i == 2)
-			{
-				vertexes[o1 + i] += pos.z;
-			}
+			vertexes[o1 + i] = Cube::cube_vertex[o2 + i] + pos[i];
 		}
 		o1 += 3;
 	}

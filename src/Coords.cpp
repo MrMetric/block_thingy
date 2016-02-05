@@ -63,6 +63,23 @@ namespace Position
 		this->z = t(z);
 	}
 
+	BlockInWorld_type BlockInWorld::operator[](uint_fast8_t i)
+	{
+		if(i == 0)
+		{
+			return x;
+		}
+		if(i == 1)
+		{
+			return y;
+		}
+		if(i == 2)
+		{
+			return z;
+		}
+		throw std::out_of_range("BlockInWorld::operator[]: " + std::to_string(i) + " > 2");
+	}
+
 	BlockInChunk::BlockInChunk() : x(0), y(0), z(0) {}
 
 	BlockInChunk::BlockInChunk(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
