@@ -13,12 +13,16 @@ ChunkMesher::~ChunkMesher()
 {
 }
 
-bool ChunkMesher::block_is_empty(int_fast16_t x, int_fast16_t y, int_fast16_t z) const
+bool ChunkMesher::block_is_empty(int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds) const
 {
 	if(x < 0 || x >= CHUNK_SIZE
 	|| y < 0 || y >= CHUNK_SIZE
 	|| z < 0 || z >= CHUNK_SIZE)
 	{
+		if(!allow_out_of_bounds)
+		{
+			return true;
+		}
 		auto chunk_pos = chunk.get_position();
 		int64_t bx = chunk_pos.x * CHUNK_SIZE + x;
 		int64_t by = chunk_pos.y * CHUNK_SIZE + y;

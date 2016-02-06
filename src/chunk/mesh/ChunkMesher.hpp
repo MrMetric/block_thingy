@@ -18,5 +18,5 @@ class ChunkMesher
 	protected:
 		const Chunk& chunk;
 
-		bool block_is_empty(int_fast16_t x, int_fast16_t y, int_fast16_t z) const;
+		bool block_is_empty(int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds = true) const;
 };

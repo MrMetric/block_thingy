@@ -6,7 +6,7 @@
 #include <string>
 
 #include "mesh/ChunkMesher.hpp"
-#include "mesh/SimpleMesher.hpp"
+#include "mesh/GreedyMesher.hpp"
 #include "../Block.hpp"
 #include "../Coords.hpp"
 #include "../World.hpp"
@@ -15,7 +15,7 @@ Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	:
 	owner(owner),
 	position(pos),
-	mesher(std::make_unique<SimpleMesher>(*this))
+	mesher(std::make_unique<GreedyMesher>(*this))
 {
 	this->init();
 }

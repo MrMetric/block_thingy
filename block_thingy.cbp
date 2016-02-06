@@ -85,6 +85,8 @@
 		<Unit filename="src/chunk/Chunk.hpp" />
 		<Unit filename="src/chunk/mesh/ChunkMesher.cpp" />
 		<Unit filename="src/chunk/mesh/ChunkMesher.hpp" />
+		<Unit filename="src/chunk/mesh/GreedyMesher.cpp" />
+		<Unit filename="src/chunk/mesh/GreedyMesher.hpp" />
 		<Unit filename="src/chunk/mesh/SimpleMesher.cpp" />
 		<Unit filename="src/chunk/mesh/SimpleMesher.hpp" />
 		<Unit filename="src/console/ArgumentParser.cpp" />
