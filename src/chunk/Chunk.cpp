@@ -73,10 +73,12 @@ void Chunk::update()
 {
 	this->vertexes = this->mesher->make_mesh();
 	this->draw_count = static_cast<GLsizei>(this->vertexes.size());
+	#ifdef COOL_DEBUG_STUFF
 	if(this->draw_count % 3 != 0)
 	{
 		throw std::logic_error("you buggered something up again!");
 	}
+	#endif
 	this->draw_count /= 3;
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->mesh_vbo);

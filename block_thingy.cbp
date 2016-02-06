@@ -16,6 +16,7 @@
 					<Add option="-ftrapv" />
 					<Add option="-g" />
 					<Add option="-fsanitize=undefined,integer" />
+					<Add option="-DCOOL_DEBUG_STUFF" />
 				</Compiler>
 				<Linker>
 					<Add option="-lubsan" />
