@@ -52,7 +52,7 @@ class Gfx
 		void draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color = glm::vec4(1, 1, 1, 1));
 
 		#ifdef USE_LIBPNG
-		static void write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint32_t height, bool reverse_rows = false);
+		static void write_png_RGB(const char* filename, uint8_t* buf, uint_fast32_t width, uint_fast32_t height, bool reverse_rows = false);
 		#endif
 
 	private:

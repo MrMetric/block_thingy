@@ -120,8 +120,8 @@ void Gfx::opengl_cleanup()
 
 void Gfx::update_framebuffer_size(GLsizei width, GLsizei height)
 {
-	this->width = width;
-	this->height = height;
+	this->width = static_cast<uint_fast32_t>(width);
+	this->height = static_cast<uint_fast32_t>(height);
 	glViewport(0, 0, width, height);
 	this->update_projection_matrix();
 }
@@ -186,7 +186,7 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 }
 
 #ifdef USE_LIBPNG
-void Gfx::write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint32_t height, bool reverse_rows)
+void Gfx::write_png_RGB(const char* filename, uint8_t* buf, uint_fast32_t width, uint_fast32_t height, bool reverse_rows)
 {
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if(png_ptr == nullptr)
@@ -207,7 +207,7 @@ void Gfx::write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint
 	}
 	png_init_io(png_ptr, fp);
 	const int bit_depth = 8;
-	png_set_IHDR(png_ptr, info_ptr, width, height, bit_depth, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+	png_set_IHDR(png_ptr, info_ptr, static_cast<png_uint_32>(width), static_cast<png_uint_32>(height), bit_depth, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 	png_write_info(png_ptr, info_ptr);
 	uint_fast32_t rowsize = 3 * width * sizeof(png_byte);
 	if(reverse_rows)
