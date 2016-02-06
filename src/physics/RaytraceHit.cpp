@@ -11,5 +11,5 @@ RaytraceHit::RaytraceHit(Position::BlockInWorld pos, glm::ivec3 face)
 
 Position::BlockInWorld RaytraceHit::adjacent()
 {
-	return this->pos + this->face;
+	return pos + face;
 }

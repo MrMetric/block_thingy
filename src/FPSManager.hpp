@@ -142,6 +142,6 @@ class FPSManager
 
 		double getFPS()
 		{
-			return this->currentFps;
+			return currentFps;
 		}
 };

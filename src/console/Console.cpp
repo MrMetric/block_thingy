@@ -27,17 +27,17 @@ void console_handler_wrapper::operator()(const std::vector<std::string>& args) c
 {
 	if(this->args)
 	{
-		this->handler_args(args);
+		handler_args(args);
 	}
 	else
 	{
-		this->handler_noargs();
+		handler_noargs();
 	}
 }
 
 void Console::add_command(const std::string& name, const console_handler_wrapper& handler)
 {
-	if(!this->handlers.insert({name, handler}).second)
+	if(!handlers.insert({name, handler}).second)
 	{
 		throw std::runtime_error("tried to add duplicate command: "  + name);
 	}
@@ -45,7 +45,7 @@ void Console::add_command(const std::string& name, const console_handler_wrapper
 
 void Console::unadd_command(const std::string& name)
 {
-	this->handlers.erase(name);
+	handlers.erase(name);
 }
 
 void Console::run_line(const std::string& line)
@@ -61,13 +61,13 @@ void Console::run_line(const std::string& line)
 	}
 	std::string name = args[0];
 	args.erase(args.begin());
-	this->run_command(name, args);
+	run_command(name, args);
 }
 
 void Console::run_command(const std::string& name, const std::string& argline) const
 {
 	std::vector<std::string> args = ArgumentParser().parse_args(argline);
-	this->run_command(name, args);
+	run_command(name, args);
 }
 
 void Console::run_command(const std::string& name, const std::vector<std::string>& args) const
@@ -76,8 +76,8 @@ void Console::run_command(const std::string& name, const std::vector<std::string
 	{
 		return;
 	}
-	auto i = this->handlers.find(name);
-	if(i == this->handlers.end())
+	auto i = handlers.find(name);
+	if(i == handlers.end())
 	{
 		throw std::runtime_error("unknown command: " + name);
 	}

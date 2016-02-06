@@ -10,7 +10,6 @@ class __attribute__((__packed__)) Block
 		Block();
 		explicit Block(block_id_type type);
 
-		__attribute__((pure))
 		block_id_type type() const;
 
 	private:

@@ -7,7 +7,7 @@ Command::Command(Console* console, const std::string& name, const console_handle
 	console(console),
 	name(name)
 {
-	this->console->add_command(this->name, handler);
+	console->add_command(name, handler);
 }
 
 Command::Command(Console* console, const std::string& name, const console_handler_noargs_t& handler)
@@ -15,7 +15,7 @@ Command::Command(Console* console, const std::string& name, const console_handle
 	console(console),
 	name(name)
 {
-	this->console->add_command(this->name, handler);
+	console->add_command(name, handler);
 }
 
 Command::Command(Command&& that)
@@ -28,8 +28,8 @@ Command::Command(Command&& that)
 
 Command::~Command()
 {
-	if(this->unadd)
+	if(unadd)
 	{
-		this->console->unadd_command(this->name);
+		console->unadd_command(name);
 	}
 }

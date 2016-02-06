@@ -11,23 +11,23 @@ std::vector<std::string> ArgumentParser::parse_args(const std::string& argline)
 {
 	std::vector<std::string> args;
 
-	this->iterator = argline.begin();
-	this->end = argline.end();
+	iterator = argline.begin();
+	end = argline.end();
 
-	while(this->iterator != this->end)
+	while(iterator != end)
 	{
-		char c = *this->iterator;
-		++this->iterator;
+		char c = *iterator;
+		++iterator;
 		if(c == ' ' || c == '\t')
 		{
 			continue;
 		}
 		if(c == '\'' || c == '"')
 		{
-			args.push_back(this->read_string(c));
+			args.push_back(read_string(c));
 			continue;
 		}
-		args.push_back(c + this->read_string(' '));
+		args.push_back(c + read_string(' '));
 	}
 
 	return args;
@@ -36,18 +36,18 @@ std::vector<std::string> ArgumentParser::parse_args(const std::string& argline)
 std::string ArgumentParser::read_string(const char endchar)
 {
 	std::string s = "";
-	while(this->iterator != this->end)
+	while(iterator != end)
 	{
-		char c = *this->iterator;
+		char c = *iterator;
 		if(c == '\\')
 		{
-			++this->iterator;
-			if(this->iterator == this->end)
+			++iterator;
+			if(iterator == end)
 			{
 				throw truncated_argument("unexpected end of argument string in escape sequence");
 			}
-			c = *this->iterator;
-			++this->iterator;
+			c = *iterator;
+			++iterator;
 			if(c == 'n')
 			{
 				s += '\n';
@@ -65,11 +65,11 @@ std::string ArgumentParser::read_string(const char endchar)
 		}
 		if(c == endchar)
 		{
-			++this->iterator;
+			++iterator;
 			return s;
 		}
 		s += c;
-		++this->iterator;
+		++iterator;
 	}
 	if(endchar != ' ')
 	{

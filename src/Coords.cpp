@@ -24,9 +24,9 @@ namespace Position
 	#define t(a) ChunkInWorld_type(std::floor(a / static_cast<double>(CHUNK_SIZE)))
 	ChunkInWorld::ChunkInWorld(BlockInWorld bwp)
 	{
-		this->x = t(bwp.x);
-		this->y = t(bwp.y);
-		this->z = t(bwp.z);
+		x = t(bwp.x);
+		y = t(bwp.y);
+		z = t(bwp.z);
 	}
 
 	ChunkInWorld_type ChunkInWorld::operator[](uint_fast8_t i)
@@ -58,18 +58,18 @@ namespace Position
 	#define t(a,b) static_cast<BlockInWorld_type>(a) * CHUNK_SIZE + b
 	BlockInWorld::BlockInWorld(const ChunkInWorld& cp, const BlockInChunk& bcp)
 	{
-		this->x = t(cp.x, bcp.x);
-		this->y = t(cp.y, bcp.y);
-		this->z = t(cp.z, bcp.z);
+		x = t(cp.x, bcp.x);
+		y = t(cp.y, bcp.y);
+		z = t(cp.z, bcp.z);
 	}
 
 	#undef t
 	#define t(a) BlockInWorld_type(std::floor(a))
 	BlockInWorld::BlockInWorld(const glm::dvec3 vec3)
 	{
-		this->x = t(vec3.x);
-		this->y = t(vec3.y);
-		this->z = t(vec3.z);
+		x = t(vec3.x);
+		y = t(vec3.y);
+		z = t(vec3.z);
 	}
 
 	BlockInWorld::BlockInWorld(const double x, const double y, const double z)
@@ -111,9 +111,9 @@ namespace Position
 	#define t(a) BlockInChunk_type(a - CHUNK_SIZE * std::floor(a / static_cast<double>(CHUNK_SIZE)))
 	BlockInChunk::BlockInChunk(BlockInWorld bwp)
 	{
-		this->x = t(bwp.x);
-		this->y = t(bwp.y);
-		this->z = t(bwp.z);
+		x = t(bwp.x);
+		y = t(bwp.y);
+		z = t(bwp.z);
 	}
 
 	BlockInChunk_type BlockInChunk::operator[](uint_fast8_t i)

@@ -42,48 +42,48 @@ Game::Game(GLFWwindow* window, int width, int height)
 	hovered_block(nullptr),
 	cam(window),
 	gfx(window),
-	world(this->gfx.vs_cube_pos_mod),
+	world(gfx.vs_cube_pos_mod),
 	delta_time(0),
 	fps(144),
-	keybinder(&this->console)
+	keybinder(&console)
 {
 	Game::instance = this;
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // for screenshots
 
 	add_test_commands(this);
-	this->add_commands();
-	this->console.run_line("exec binds");
+	add_commands();
+	console.run_line("exec binds");
 
-	this->update_framebuffer_size(width, height);
+	update_framebuffer_size(width, height);
 }
 
 void Game::draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-	this->gfx.set_cam_view(this->cam);
+	gfx.set_cam_view(cam);
 
-	this->player.rotation = this->cam.rotation;
-	this->player.step(this->delta_time);
-	this->cam.position = this->player.position;
-	this->cam.position.y += this->player.eye_height;
+	player.rotation = cam.rotation;
+	player.step(delta_time);
+	cam.position = player.position;
+	cam.position.y += player.eye_height;
 
-	this->find_hovered_block(this->gfx.projection_matrix, this->gfx.view_matrix);
+	find_hovered_block(gfx.projection_matrix, gfx.view_matrix);
 
-	this->draw_world();
-	this->gui.draw();
+	draw_world();
+	gui.draw();
 
 	glfwSwapBuffers(window);
 	glfwPollEvents();
 
-	this->delta_time = fps.enforceFPS();
+	delta_time = fps.enforceFPS();
 
 	std::stringstream ss;
 	ss << "Baby's First Voxel Engine | " << fps.getFPS() << " fps";
-	Position::BlockInWorld bwp(this->player.position);
+	Position::BlockInWorld bwp(player.position);
 	Position::ChunkInWorld cp(bwp);
 	Position::BlockInChunk bcp(bwp);
-	ss << " | player.pos(" << glm::to_string(this->player.position) << ")";
+	ss << " | player.pos(" << glm::to_string(player.position) << ")";
 	ss << " | block" << bwp;
 	ss << " | chunk" << cp;
 	ss << " | chunkblock" << bcp;
@@ -92,12 +92,12 @@ void Game::draw()
 
 void Game::draw_world()
 {
-	glUseProgram(this->gfx.sp_cube);
-	glUniformMatrix4fv(this->gfx.vs_cube_matriks, 1, GL_FALSE, this->gfx.matriks_ptr);
+	glUseProgram(gfx.sp_cube);
+	glUniformMatrix4fv(gfx.vs_cube_matriks, 1, GL_FALSE, gfx.matriks_ptr);
 
 	const int render_distance = 5;
 
-	Position::ChunkInWorld cp(Position::BlockInWorld(this->player.position));
+	Position::ChunkInWorld cp(Position::BlockInWorld(player.position));
 	Position::ChunkInWorld min(cp.x - render_distance, cp.y - render_distance, cp.z - render_distance);
 	Position::ChunkInWorld max(cp.x + render_distance, cp.y + render_distance, cp.z + render_distance);
 	for(int x = min.x; x <= max.x; ++x)
@@ -106,7 +106,7 @@ void Game::draw_world()
 		{
 			for(int z = min.z; z <= max.z; ++z)
 			{
-				std::shared_ptr<Chunk> chunk = this->world.get_or_make_chunk(Position::ChunkInWorld(x, y, z));
+				std::shared_ptr<Chunk> chunk = world.get_or_make_chunk(Position::ChunkInWorld(x, y, z));
 				chunk->render();
 			}
 		}
@@ -117,23 +117,23 @@ void Game::draw_world()
 void Game::screenshot(const std::string& filename)
 {
 	std::cout << "saving screenshot to " << filename << "\n";
-	std::unique_ptr<GLubyte[]> pixels = std::make_unique<GLubyte[]>(3 * this->gfx.width * this->gfx.height);
-	glReadPixels(0, 0, this->gfx.width, this->gfx.height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
-	Gfx::write_png_RGB(filename.c_str(), pixels.get(), this->gfx.width, this->gfx.height, true);
+	std::unique_ptr<GLubyte[]> pixels = std::make_unique<GLubyte[]>(3 * gfx.width * gfx.height);
+	glReadPixels(0, 0, gfx.width, gfx.height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
+	Gfx::write_png_RGB(filename.c_str(), pixels.get(), gfx.width, gfx.height, true);
 }
 #endif
 
 void Game::update_framebuffer_size(int width, int height)
 {
-	this->gfx.update_framebuffer_size(width, height);
-	this->gui.update_framebuffer_size();
+	gfx.update_framebuffer_size(width, height);
+	gui.update_framebuffer_size();
 
 	// TODO: update camera
 }
 
 void Game::keypress(int key, int scancode, int action, int mods)
 {
-	this->keybinder.keypress(key, action);
+	keybinder.keypress(key, action);
 }
 
 void Game::mousepress(int button, int action, int mods)
@@ -142,22 +142,22 @@ void Game::mousepress(int button, int action, int mods)
 	{
 		if(button == GLFW_MOUSE_BUTTON_LEFT)
 		{
-			if(this->hovered_block != nullptr)
+			if(hovered_block != nullptr)
 			{
-				auto break_pos = this->hovered_block->pos;
-				this->world.set_block(break_pos, Block());
-				this->find_hovered_block(this->gfx.projection_matrix, this->gfx.view_matrix);
+				auto break_pos = hovered_block->pos;
+				world.set_block(break_pos, Block());
+				find_hovered_block(gfx.projection_matrix, gfx.view_matrix);
 				event_manager.do_event(Event(EventType::break_block));
 			}
 		}
 		else if(button == GLFW_MOUSE_BUTTON_RIGHT)
 		{
-			if(this->hovered_block != nullptr)
+			if(hovered_block != nullptr)
 			{
-				Position::BlockInWorld pos = this->hovered_block->adjacent();
-				if(this->player.can_place_block_at(pos))
+				Position::BlockInWorld pos = hovered_block->adjacent();
+				if(player.can_place_block_at(pos))
 				{
-					this->world.set_block(pos, Block(1));
+					world.set_block(pos, Block(1));
 				}
 			}
 		}
@@ -166,7 +166,7 @@ void Game::mousepress(int button, int action, int mods)
 
 void Game::mousemove(double x, double y)
 {
-	this->cam.handleMouseMove(x, y);
+	cam.handleMouseMove(x, y);
 }
 
 void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat4& view_matrix)
@@ -174,18 +174,18 @@ void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat
 	glm::dvec3 out_origin;
 	glm::dvec3 out_direction;
 	Raytracer::ScreenPosToWorldRay(
-		this->gfx.width / 2, this->gfx.height / 2,
-		this->gfx.width, this->gfx.height,
+		gfx.width / 2, gfx.height / 2,
+		gfx.width, gfx.height,
 		glm::dmat4(view_matrix),
 		glm::dmat4(projection_matrix),
 		out_origin,
 		out_direction
 	);
 
-	this->hovered_block = Raytracer::raycast(this->world, out_origin, out_direction, 8);
-	if(this->hovered_block != nullptr)
+	hovered_block = Raytracer::raycast(world, out_origin, out_direction, 8);
+	if(hovered_block != nullptr)
 	{
-		this->gfx.draw_cube_outline(this->hovered_block->pos);
+		gfx.draw_cube_outline(hovered_block->pos);
 	}
 }
 
@@ -193,59 +193,59 @@ void Game::add_commands()
 {
 	Console* console = &this->console;
 
-	this->commands.emplace_back(console, "quit", [window=this->window]()
+	commands.emplace_back(console, "quit", [window=window]()
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	});
 
 	// TODO: less copy/paste
-	this->commands.emplace_back(console, "+forward", [game=this]()
+	commands.emplace_back(console, "+forward", [game=this]()
 	{
 		game->player.move_forward(true);
 	});
-	this->commands.emplace_back(console, "-forward", [game=this]()
+	commands.emplace_back(console, "-forward", [game=this]()
 	{
 		game->player.move_forward(false);
 	});
-	this->commands.emplace_back(console, "+backward", [game=this]()
+	commands.emplace_back(console, "+backward", [game=this]()
 	{
 		game->player.move_backward(true);
 	});
-	this->commands.emplace_back(console, "-backward", [game=this]()
+	commands.emplace_back(console, "-backward", [game=this]()
 	{
 		game->player.move_backward(false);
 	});
-	this->commands.emplace_back(console, "+left", [game=this]()
+	commands.emplace_back(console, "+left", [game=this]()
 	{
 		game->player.move_left(true);
 	});
-	this->commands.emplace_back(console, "-left", [game=this]()
+	commands.emplace_back(console, "-left", [game=this]()
 	{
 		game->player.move_left(false);
 	});
-	this->commands.emplace_back(console, "+right", [game=this]()
+	commands.emplace_back(console, "+right", [game=this]()
 	{
 		game->player.move_right(true);
 	});
-	this->commands.emplace_back(console, "-right", [game=this]()
+	commands.emplace_back(console, "-right", [game=this]()
 	{
 		game->player.move_right(false);
 	});
 
-	this->commands.emplace_back(console, "jump", [game=this]()
+	commands.emplace_back(console, "jump", [game=this]()
 	{
 		game->player.jump();
 	});
-	this->commands.emplace_back(console, "noclip", [game=this]()
+	commands.emplace_back(console, "noclip", [game=this]()
 	{
 		game->player.toggle_noclip();
 	});
-	this->commands.emplace_back(console, "respawn", [game=this]()
+	commands.emplace_back(console, "respawn", [game=this]()
 	{
 		game->player.respawn();
 	});
 
-	this->commands.emplace_back(console, "save_pos", [game=this](const std::vector<std::string>& args)
+	commands.emplace_back(console, "save_pos", [game=this](const std::vector<std::string>& args)
 	{
 		if(args.size() != 1)
 		{
@@ -258,7 +258,7 @@ void Game::add_commands()
 		streem << game->player.rotation.x << " " << game->player.rotation.y << " " << game->player.rotation.z;
 		streem.flush();
 	});
-	this->commands.emplace_back(console, "load_pos", [game=this](const std::vector<std::string>& args)
+	commands.emplace_back(console, "load_pos", [game=this](const std::vector<std::string>& args)
 	{
 		if(args.size() != 1)
 		{
@@ -275,7 +275,7 @@ void Game::add_commands()
 		streem >> game->cam.rotation.z;
 	});
 
-	this->commands.emplace_back(console, "exec", [console=console](const std::vector<std::string>& args)
+	commands.emplace_back(console, "exec", [console=console](const std::vector<std::string>& args)
 	{
 		if(args.size() != 1)
 		{
@@ -290,7 +290,7 @@ void Game::add_commands()
 		}
 	});
 
-	this->commands.emplace_back(console, "cam.rot", [cam=&this->cam](const std::vector<std::string>& args)
+	commands.emplace_back(console, "cam.rot", [cam=&cam](const std::vector<std::string>& args)
 	{
 		if(args.size() != 2)
 		{
@@ -318,7 +318,7 @@ void Game::add_commands()
 	});
 
 	#ifdef USE_LIBPNG
-	this->commands.emplace_back(console, "screenshot", [game=this](const std::vector<std::string>& args)
+	commands.emplace_back(console, "screenshot", [game=this](const std::vector<std::string>& args)
 	{
 		std::string filename;
 		if(args.size() == 0)
@@ -355,7 +355,7 @@ void Game::add_commands()
 	});
 	#endif
 
-	this->commands.emplace_back(console, "wireframe", []()
+	commands.emplace_back(console, "wireframe", []()
 	{
 		static bool wireframe = false; // TODO: less static
 		wireframe = !wireframe;

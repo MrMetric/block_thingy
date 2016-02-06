@@ -38,7 +38,7 @@ uint64_t World::chunk_key(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld
 void World::set_block(Position::BlockInWorld bwp, Block block)
 {
 	Position::ChunkInWorld cp(bwp);
-	std::shared_ptr<Chunk> chunk = this->get_or_make_chunk(cp);
+	std::shared_ptr<Chunk> chunk = get_or_make_chunk(cp);
 
 	Position::BlockInChunk bcp(bwp);
 	chunk->set(bcp.x, bcp.y, bcp.z, block);
@@ -47,7 +47,7 @@ void World::set_block(Position::BlockInWorld bwp, Block block)
 Block World::get_block(Position::BlockInWorld bwp) const
 {
 	Position::ChunkInWorld cp(bwp);
-	std::shared_ptr<Chunk> chunk = this->get_chunk(cp);
+	std::shared_ptr<Chunk> chunk = get_chunk(cp);
 	if(chunk == nullptr)
 	{
 		return Block();
@@ -60,39 +60,39 @@ Block World::get_block(Position::BlockInWorld bwp) const
 void World::set_chunk(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z, std::shared_ptr<Chunk> chunk)
 {
 	uint64_t key = chunk_key(x, y, z);
-	if(key == this->last_key)
+	if(key == last_key)
 	{
-		this->last_chunk = chunk;
+		last_chunk = chunk;
 	}
-	this->chunks.insert(map::value_type(key, chunk));
+	chunks.insert(map::value_type(key, chunk));
 }
 
 std::shared_ptr<Chunk> World::get_chunk(Position::ChunkInWorld cp) const
 {
 	uint64_t key = chunk_key(cp.x, cp.y, cp.z);
-	if(this->last_chunk != nullptr && key == this->last_key)
+	if(last_chunk != nullptr && key == last_key)
 	{
-		return this->last_chunk;
+		return last_chunk;
 	}
-	auto it = this->chunks.find(key);
-	if(it == this->chunks.end())
+	auto it = chunks.find(key);
+	if(it == chunks.end())
 	{
 		return nullptr;
 	}
 	std::shared_ptr<Chunk> chunk = it->second;
-	this->last_key = key;
-	this->last_chunk = chunk;
+	last_key = key;
+	last_chunk = chunk;
 	return chunk;
 }
 
 std::shared_ptr<Chunk> World::get_or_make_chunk(Position::ChunkInWorld cp)
 {
-	std::shared_ptr<Chunk> chunk = this->get_chunk(cp);
+	std::shared_ptr<Chunk> chunk = get_chunk(cp);
 	if(chunk == nullptr)
 	{
 		chunk = std::make_shared<Chunk>(cp, this);
-		this->set_chunk(cp.x, cp.y, cp.z, chunk);
-		this->gen_chunk(cp); // should this really be here?
+		set_chunk(cp.x, cp.y, cp.z, chunk);
+		gen_chunk(cp); // should this really be here?
 	}
 	// should this set last_key/last_chunk?
 	return chunk;
@@ -102,7 +102,7 @@ void World::gen_chunk(const Position::ChunkInWorld& cp)
 {
 	Position::BlockInChunk min(0, 0, 0);
 	Position::BlockInChunk max(CHUNK_SIZE - 1, CHUNK_SIZE - 1, CHUNK_SIZE - 1);
-	this->gen_at(Position::BlockInWorld(cp, min), Position::BlockInWorld(cp, max));
+	gen_at(Position::BlockInWorld(cp, min), Position::BlockInWorld(cp, max));
 }
 
 void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max)
@@ -121,21 +121,21 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 				block_pos.z = z;
 				if(y == -128 || (y > -64 && y < -32))
 				{
-					this->set_block(block_pos, Block(1));
+					set_block(block_pos, Block(1));
 				}
 				else if(x == -32 && y < 32)
 				{
-					this->set_block(block_pos, Block(1));
+					set_block(block_pos, Block(1));
 				}
 				else if(y == -32)
 				{
-					auto r = distribution(this->random_engine);
+					auto r = distribution(random_engine);
 					if(r == 0)
 					{
-						for(BlockInWorld_type y2 = -32; y2 < -24; ++y2)
+						for(BlockInWorld_type y2 = -32; y2 < -32+8; ++y2)
 						{
 							block_pos.y = y2;
-							this->set_block(block_pos, Block(1));
+							set_block(block_pos, Block(1));
 						}
 					}
 				}

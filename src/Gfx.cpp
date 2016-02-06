@@ -24,16 +24,16 @@ Gfx::Gfx(GLFWwindow* window)
 	:
 	window(window)
 {
-	this->width = 0;
-	this->height = 0;
-	this->matriks_ptr = nullptr;
+	width = 0;
+	height = 0;
+	matriks_ptr = nullptr;
 
-	this->opengl_setup();
+	opengl_setup();
 }
 
 Gfx::~Gfx()
 {
-	this->opengl_cleanup();
+	opengl_cleanup();
 }
 
 GLFWwindow* Gfx::init_glfw()
@@ -85,21 +85,21 @@ void Gfx::opengl_setup()
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
-	glGenVertexArrays(1, &this->vertex_array);
-	glBindVertexArray(this->vertex_array);
+	glGenVertexArrays(1, &vertex_array);
+	glBindVertexArray(vertex_array);
 
-	this->sp_cube = make_program("shaders/cube");
-	this->vs_cube_matriks = getUniformLocation(this->sp_cube, "matriks");
-	this->vs_cube_pos_mod = getUniformLocation(this->sp_cube, "pos_mod");
+	sp_cube = make_program("shaders/cube");
+	vs_cube_matriks = getUniformLocation(sp_cube, "matriks");
+	vs_cube_pos_mod = getUniformLocation(sp_cube, "pos_mod");
 
-	this->sp_lines = make_program("shaders/lines");
-	this->vs_lines_matriks = getUniformLocation(this->sp_lines, "matriks");
-	this->vs_lines_color = getUniformLocation(this->sp_lines, "color");
+	sp_lines = make_program("shaders/lines");
+	vs_lines_matriks = getUniformLocation(sp_lines, "matriks");
+	vs_lines_color = getUniformLocation(sp_lines, "color");
 
-	this->sp_crosshair = make_program("shaders/crosshair");
-	this->vs_crosshair_matriks = getUniformLocation(this->sp_crosshair, "matriks");
+	sp_crosshair = make_program("shaders/crosshair");
+	vs_crosshair_matriks = getUniformLocation(sp_crosshair, "matriks");
 
-	glGenBuffers(1, &this->outline_vbo);
+	glGenBuffers(1, &outline_vbo);
 
 	GLfloat lineWidthRange[2];
 	glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, lineWidthRange);
@@ -111,11 +111,11 @@ void Gfx::opengl_setup()
 
 void Gfx::opengl_cleanup()
 {
-	glDeleteVertexArrays(1, &this->vertex_array);
-	glDeleteProgram(this->sp_cube);
-	glDeleteProgram(this->sp_lines);
-	glDeleteProgram(this->sp_crosshair);
-	glDeleteBuffers(1, &this->outline_vbo);
+	glDeleteVertexArrays(1, &vertex_array);
+	glDeleteProgram(sp_cube);
+	glDeleteProgram(sp_lines);
+	glDeleteProgram(sp_crosshair);
+	glDeleteBuffers(1, &outline_vbo);
 }
 
 void Gfx::update_framebuffer_size(GLsizei width, GLsizei height)
@@ -123,7 +123,7 @@ void Gfx::update_framebuffer_size(GLsizei width, GLsizei height)
 	this->width = static_cast<uint_fast32_t>(width);
 	this->height = static_cast<uint_fast32_t>(height);
 	glViewport(0, 0, width, height);
-	this->update_projection_matrix();
+	update_projection_matrix();
 }
 
 void Gfx::update_projection_matrix()
@@ -132,7 +132,7 @@ void Gfx::update_projection_matrix()
 	const GLfloat near = 0.01f;
 	const GLfloat far  = 1500.0f;
 	const GLfloat aspect_ratio = (width > height) ? float(width)/float(height) : float(height)/float(width);
-	this->projection_matrix = glm::perspective(fov, aspect_ratio, near, far);
+	projection_matrix = glm::perspective(fov, aspect_ratio, near, far);
 }
 
 void Gfx::set_cam_view(const Camera& cam)
@@ -144,9 +144,9 @@ void Gfx::set_cam_view(const Camera& cam)
 	glm::dvec3 position = cam.position * -1.0;
 	view *= glm::translate(position);
 	glm::mat4 viewf(view);
-	this->matriks = this->projection_matrix * viewf;
-	this->matriks_ptr = glm::value_ptr(this->matriks);
-	this->view_matrix = viewf;
+	matriks = projection_matrix * viewf;
+	matriks_ptr = glm::value_ptr(matriks);
+	view_matrix = viewf;
 }
 
 // TODO: use GL_LINES
@@ -171,15 +171,15 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 		o1 += 3;
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, this->outline_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, outline_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexes), vertexes, GL_DYNAMIC_DRAW);
 
-	glUseProgram(this->sp_lines);
-	glUniformMatrix4fv(this->vs_lines_matriks, 1, GL_FALSE, this->matriks_ptr);
-	glUniform4fv(this->vs_lines_color, 1, glm::value_ptr(color));
+	glUseProgram(sp_lines);
+	glUniformMatrix4fv(vs_lines_matriks, 1, GL_FALSE, matriks_ptr);
+	glUniform4fv(vs_lines_color, 1, glm::value_ptr(color));
 
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, this->outline_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, outline_vbo);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 	glDrawArrays(GL_LINE_STRIP, 0, 16);
 	glDisableVertexAttribArray(0);

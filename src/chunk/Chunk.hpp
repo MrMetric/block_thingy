@@ -44,8 +44,6 @@ class Chunk
 		GLsizei draw_count;
 		bool changed;
 
-		void init();
-
 		void update_neighbors(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z);
 		void update_neighbor(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z);
 };

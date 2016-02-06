@@ -10,5 +10,5 @@ Block::Block(block_id_type type)
 
 block_id_type Block::type() const
 {
-	return this->id;
+	return id;
 }

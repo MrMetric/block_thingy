@@ -4,7 +4,7 @@
 #include <memory>
 #include <random>
 
-#include <boost/unordered/unordered_map.hpp>
+#include <unordered_map>
 
 #include <glad/glad.h>
 
@@ -13,7 +13,7 @@
 class Chunk;
 class Block;
 
-using map = boost::unordered_map<uint64_t, std::shared_ptr<Chunk>>;
+using map = std::unordered_map<uint64_t, std::shared_ptr<Chunk>>;
 
 class World
 {
