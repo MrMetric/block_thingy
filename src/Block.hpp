@@ -2,9 +2,9 @@
 
 #include <cstdint>
 
-using block_id_type = uint_fast16_t;
+using block_id_type = uint16_t;
 
-class Block
+class __attribute__((__packed__)) Block
 {
 	public:
 		Block();

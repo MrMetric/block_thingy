@@ -95,7 +95,7 @@ void Game::draw_world()
 	glUseProgram(this->gfx.sp_cube);
 	glUniformMatrix4fv(this->gfx.vs_cube_matriks, 1, GL_FALSE, this->gfx.matriks_ptr);
 
-	const int render_distance = 8;
+	const int render_distance = 5;
 
 	Position::ChunkInWorld cp(Position::BlockInWorld(this->player.position));
 	Position::ChunkInWorld min(cp.x - render_distance, cp.y - render_distance, cp.z - render_distance);
