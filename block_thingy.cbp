@@ -39,10 +39,15 @@
 			<Add option="-std=c++14" />
 			<Add option="-fexceptions" />
 			<Add option="-isystem lib" />
+			<Add option="-Wno-c++98-compat-pedantic" />
+			<Add option="-Wno-newline-eof" />
+			<Add option="-Wno-missing-prototypes" />
+			<Add option="-Wno-shadow" />
 			<Add option="-Wno-padded" />
 			<Add option="-Werror=unknown-warning-option" />
 			<Add option="-Werror=delete-incomplete" />
 			<Add option="-Werror=deprecated" />
+			<Add option="-Werror=return-type" />
 			<Add option="-DUSE_LIBPNG" />
 		</Compiler>
 		<Linker>
