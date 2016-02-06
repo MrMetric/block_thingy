@@ -25,5 +25,7 @@ bool ChunkMesher::block_is_empty(int_fast16_t x, int_fast16_t y, int_fast16_t z)
 		int64_t bz = chunk_pos.z * CHUNK_SIZE + z;
 		return chunk.get_owner()->get_block(Position::BlockInWorld(bx, by, bz)).type() == 0;
 	}
-	return chunk.get_block(x, y, z).type() == 0;
+	#define s(a) static_cast<BlockInChunk_type>(a)
+	return chunk.get_block(s(x), s(y), s(z)).type() == 0;
+	#undef s
 }
