@@ -70,8 +70,6 @@
 		<Unit filename="src/Game.hpp" />
 		<Unit filename="src/Gfx.cpp" />
 		<Unit filename="src/Gfx.hpp" />
-		<Unit filename="src/Phys.cpp" />
-		<Unit filename="src/Phys.hpp" />
 		<Unit filename="src/Player.cpp" />
 		<Unit filename="src/Player.hpp" />
 		<Unit filename="src/Util.cpp" />

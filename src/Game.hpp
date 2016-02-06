@@ -7,7 +7,6 @@
 #include "Camera.hpp"
 #include "FPSManager.hpp"
 #include "Gfx.hpp"
-#include "Phys.hpp"
 #include "Player.hpp"
 #include "World.hpp"
 #include "console/Command.hpp"
@@ -40,7 +39,6 @@ class Game
 
 		Camera cam;
 		Gfx gfx;
-		Phys phys;
 		Player player;
 		World world;
 		Console console;

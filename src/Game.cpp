@@ -21,7 +21,6 @@
 #include "Coords.hpp"
 #include "FPSManager.hpp"
 #include "Gfx.hpp"
-#include "Phys.hpp"
 #include "Player.hpp"
 #include "World.hpp"
 #include "chunk/Chunk.hpp"
@@ -69,7 +68,6 @@ void Game::draw()
 	this->cam.position = this->player.position;
 	this->cam.position.y += this->player.eye_height;
 
-	this->phys.step();
 	this->find_hovered_block(this->gfx.projection_matrix, this->gfx.view_matrix);
 
 	this->draw_world();
