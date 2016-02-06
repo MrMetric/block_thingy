@@ -6,7 +6,7 @@
 
 #include <boost/unordered/unordered_map.hpp>
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 #include "Coords.hpp"
 

@@ -3,7 +3,7 @@
 #include <chrono>
 #include <thread>
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 /** The FpsManager class is designed to work with GLFW and enforces a specified framerate on an application.

@@ -3,7 +3,7 @@
 #include <memory>
 #include <random>
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 #include "Block.hpp"
 #include "Coords.hpp"

@@ -1,6 +1,6 @@
 #include "Util.hpp"
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 #include <fstream>
 
@@ -33,6 +33,7 @@ std::string Util::gl_error_string(const uint_fast32_t code)
 		{
 			return "invalid operation";
 		}
+		/*
 		case GL_STACK_OVERFLOW:
 		{
 			return "stack overflow";
@@ -41,6 +42,7 @@ std::string Util::gl_error_string(const uint_fast32_t code)
 		{
 			return "stack underflow";
 		}
+		*/
 		case GL_OUT_OF_MEMORY:
 		{
 			return "out of memory";
@@ -49,10 +51,12 @@ std::string Util::gl_error_string(const uint_fast32_t code)
 		{
 			return "invalid framebuffer operation";
 		}
+		/*
 		case GL_TABLE_TOO_LARGE:
 		{
 			return "table too large";
 		}
+		*/
 	}
 	return "unknown (" + std::to_string(code) + ")";
 }

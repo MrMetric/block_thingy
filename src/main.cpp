@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "Game.hpp"
@@ -60,17 +60,12 @@ int main()
 		game->mousemove(x, y);
 	});
 
-	glewExperimental = GL_TRUE;
-	GLenum glew = glewInit(); printOpenGLError();
-	if(glew != GLEW_OK)
+	if(!gladLoadGL())
 	{
-		std::cerr << "Error initializing GLEW: " << glewGetErrorString(glew) << "\n";
+		std::cerr << "Error loading GLAD\n";
 		return 1;
 	}
-	else
-	{
-		std::cout << "INFO: GLEW initialized\n";
-	}
+	std::cout << "OpenGL Version " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
 
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);

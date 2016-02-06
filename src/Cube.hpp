@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 class Cube
 {

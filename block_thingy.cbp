@@ -47,7 +47,6 @@
 		</Compiler>
 		<Linker>
 			<Add option="-lglfw3" />
-			<Add option="-lGLEW" />
 			<Add option="-lGL" />
 			<Add option="-lpthread" />
 			<Add option="-lpng" />

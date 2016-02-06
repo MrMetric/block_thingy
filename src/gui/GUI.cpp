@@ -1,5 +1,7 @@
 #include "GUI.hpp"
 
+#include <glad/glad.h>
+
 #include <glm/gtx/transform.hpp> // glm::ortho
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
