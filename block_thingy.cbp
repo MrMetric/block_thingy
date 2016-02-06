@@ -13,7 +13,6 @@
 				<Option type="1" />
 				<Option compiler="clang" />
 				<Compiler>
-					<Add option="-ftrapv" />
 					<Add option="-g" />
 					<Add option="-fsanitize=undefined,integer" />
 					<Add option="-DCOOL_DEBUG_STUFF" />
