@@ -4,7 +4,7 @@
 
 using block_id_type = uint16_t;
 
-class __attribute__((__packed__)) Block
+class Block
 {
 	public:
 		Block();

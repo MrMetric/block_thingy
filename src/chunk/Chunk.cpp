@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include <string>
 
+#include <glad/glad.h>
+
 #include "mesh/ChunkMesher.hpp"
 #include "mesh/GreedyMesher.hpp"
 #include "../Block.hpp"

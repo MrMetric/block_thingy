@@ -53,7 +53,7 @@ GLFWwindow* Gfx::init_glfw()
 	int width = mode->width * 3 / 4;
 	int height = mode->height * 3 / 4;
 	std::cout << "window size: " << width << "×" << height << "\n";
-	GLFWwindow* window = glfwCreateWindow(width, height, "Super Chuckward Engine", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(width, height, "Baby's First Voxel Engine", nullptr, nullptr);
 	if(!window)
 	{
 		glfwTerminate();

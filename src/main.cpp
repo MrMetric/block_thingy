@@ -10,8 +10,6 @@
 #include "Gfx.hpp"
 #include "Util.hpp"
 
-#include <valgrind/callgrind.h>
-
 // http://www.lighthouse3d.com/cg-topics/error-tracking-in-opengl/
 void printOglError(const std::string& file, int line)
 {
@@ -72,13 +70,10 @@ int main()
 	game = std::make_unique<Game>(window, width, height); printOpenGLError();
 
 	std::cout << "starting main loop\n";
-	CALLGRIND_START_INSTRUMENTATION;
 	while(!glfwWindowShouldClose(window))
 	{
 		game->draw(); printOpenGLError();
 	}
-	CALLGRIND_STOP_INSTRUMENTATION;
-	CALLGRIND_DUMP_STATS;
 
 	game.reset(); // destruct
 	printOpenGLError();
