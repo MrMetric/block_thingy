@@ -23,12 +23,12 @@ If you have already cloned it and did not do that, then you need to init and upd
 ### Dependencies
  * glm: included as a submodule
  * glad: included in the repository
- * GLFW 3.1.2: installing it with your distro's package manager might work. I recommend building it from source instead ([glfw-3.1.2.zip](https://github.com/glfw/glfw/releases/download/3.1.2/glfw-3.1.2.zip)).
+ * GLFW 3.1.2: installing it with your distro's package manager _might_ work. I recommend building it from source instead ([glfw-3.1.2.zip](https://github.com/glfw/glfw/releases/download/3.1.2/glfw-3.1.2.zip)).
  * libpng: optional, used for saving screenshots. To enable it, `USE_LIBPNG` must be defined when compiling. Note that compiling without this disables screenshots entirely.
 
 ### Building
- * this can not be compiled with versions of GCC older than 5.3.0
- * clang 3.7 and 3.9 both work fine; older versions are untested
+ * versions of GCC older than 5.3.0 **can not** compile this
+ * clang 3.5 or newer works fine; older versions are untested
  * the linker options in the makefile are specific to my system, so you will likely need to tweak them
 
 ## TODO
