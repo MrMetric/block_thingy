@@ -21,7 +21,7 @@ CXXFLAGS = $(CFLAGS) \
 	-Werror=deprecated \
 	-DUSE_LIBPNG \
 
-# dl is for GLAD
+# dl is for GLFW/GLX
 # X*, pthread is for GLFW
 LDFLAGS = \
 	-ldl \

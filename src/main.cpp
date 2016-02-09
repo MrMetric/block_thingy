@@ -58,7 +58,7 @@ int main()
 		game->mousemove(x, y);
 	});
 
-	if(!gladLoadGL())
+	if(!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
 		std::cerr << "Error loading GLAD\n";
 		return 1;
