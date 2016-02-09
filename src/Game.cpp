@@ -71,7 +71,7 @@ void Game::draw()
 	find_hovered_block(gfx.projection_matrix, gfx.view_matrix);
 
 	draw_world();
-	gui.draw();
+	gui.draw(gfx);
 
 	glfwSwapBuffers(window);
 	glfwPollEvents();
@@ -126,7 +126,7 @@ void Game::screenshot(const std::string& filename)
 void Game::update_framebuffer_size(int width, int height)
 {
 	gfx.update_framebuffer_size(width, height);
-	gui.update_framebuffer_size();
+	gui.update_framebuffer_size(width, height);
 
 	// TODO: update camera
 }

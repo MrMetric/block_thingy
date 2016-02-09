@@ -5,7 +5,6 @@
 #include <glm/gtx/transform.hpp> // glm::ortho
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
-#include "../Game.hpp"
 #include "../Gfx.hpp"
 
 GUI::GUI()
@@ -18,10 +17,10 @@ GUI::~GUI()
 	glDeleteBuffers(1, &crosshair_vbo);
 }
 
-void GUI::update_framebuffer_size()
+void GUI::update_framebuffer_size(uint_fast32_t width, uint_fast32_t height)
 {
-	float midX = Game::instance->gfx.width / 2.0f;
-	float midY = Game::instance->gfx.height / 2.0f;
+	float midX = width / 2.0f;
+	float midY = height / 2.0f;
 	GLfloat crosshair_vertex[] = {
 		midX - 16, midY - 1, 0,
 		midX - 16, midY + 1, 0,
@@ -41,20 +40,20 @@ void GUI::update_framebuffer_size()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(crosshair_vertex), crosshair_vertex, GL_DYNAMIC_DRAW);
 }
 
-void GUI::draw()
+void GUI::draw(const Gfx& gfx)
 {
-	draw_crosshair();
+	draw_crosshair(gfx);
 }
 
-void GUI::draw_crosshair()
+void GUI::draw_crosshair(const Gfx& gfx)
 {
 	glDisable(GL_DEPTH_TEST);
 
-	glUseProgram(Game::instance->gfx.sp_crosshair);
-	glUniformMatrix4fv(Game::instance->gfx.vs_crosshair_matriks, 1, GL_FALSE, Game::instance->gfx.matriks_ptr);
+	glUseProgram(gfx.sp_crosshair);
+	glUniformMatrix4fv(gfx.vs_crosshair_matriks, 1, GL_FALSE, gfx.matriks_ptr);
 
-	glm::mat4 crosshair_matrix = glm::ortho(0.0f, float(Game::instance->gfx.width), float(Game::instance->gfx.height), 0.0f, -1.0f, 1.0f);
-	glUniformMatrix4fv(Game::instance->gfx.vs_crosshair_matriks, 1, GL_FALSE, glm::value_ptr(crosshair_matrix));
+	glm::mat4 crosshair_matrix = glm::ortho(0.0f, static_cast<float>(gfx.width), static_cast<float>(gfx.height), 0.0f, -1.0f, 1.0f);
+	glUniformMatrix4fv(gfx.vs_crosshair_matriks, 1, GL_FALSE, glm::value_ptr(crosshair_matrix));
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, crosshair_vbo);
