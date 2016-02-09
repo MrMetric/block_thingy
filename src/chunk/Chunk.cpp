@@ -8,7 +8,7 @@
 #include <glad/glad.h>
 
 #include "mesh/ChunkMesher.hpp"
-#include "mesh/GreedyMesher.hpp"
+#include "mesh/SimpleMesher.hpp"
 #include "../Block.hpp"
 #include "../Coords.hpp"
 #include "../World.hpp"
@@ -17,7 +17,7 @@ Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	:
 	owner(owner),
 	position(pos),
-	mesher(std::make_unique<GreedyMesher>(*this)),
+	mesher(std::make_unique<SimpleMesher>(*this)),
 	changed(true)
 {
 	glGenBuffers(1, &mesh_vbo);
