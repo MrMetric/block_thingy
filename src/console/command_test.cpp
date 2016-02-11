@@ -17,8 +17,8 @@ void add_test_commands(Game* game)
 		{
 			return;
 		}
-		Position::BlockInWorld bwp = game->hovered_block->adjacent();
-		block_id_type nazi[9][9]
+		Position::BlockInWorld start_pos = game->hovered_block->adjacent();
+		block_type_id_t nazi[9][9]
 		{
 			{ 2, 1, 1, 1, 2, 2, 2, 2, 2, },
 			{ 2, 1, 1, 1, 2, 1, 1, 1, 1, },
@@ -36,20 +36,12 @@ void add_test_commands(Game* game)
 			{
 				for(BlockInWorld_type z = 0; z < 1; ++z)
 				{
-					Position::BlockInWorld block_pos(bwp.x + x, bwp.y + y, bwp.z + z);
-					block_id_type block_id = nazi[y][x];
+					Position::BlockInWorld block_pos(x, y, z);
+					block_pos += start_pos;
+					block_type_id_t block_id = nazi[y][x];
 					game->world.set_block(block_pos, Block(block_id));
 				}
 			}
 		}
-	}});
-
-	game->console.add_command("+test", {[game]()
-	{
-		std::cout << "+test\n";
-	}});
-	game->console.add_command("-test", {[game]()
-	{
-		std::cout << "-test\n";
 	}});
 }

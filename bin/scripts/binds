@@ -15,4 +15,3 @@ bind f2 screenshot
 bind esc quit
 bind , wireframe
 bind c toggle_cull_face
-bind k +test

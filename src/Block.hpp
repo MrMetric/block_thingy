@@ -2,9 +2,9 @@
 
 #include <cstdint>
 
-using block_id_type = uint16_t;
+using block_type_id_t = uint16_t;
 
-enum class BlockType : block_id_type
+enum class BlockType : block_type_id_t
 {
 	none = 0,
 	air = 1,
@@ -15,10 +15,10 @@ class Block
 {
 	public:
 		Block();
-		explicit Block(block_id_type type);
-		explicit Block(BlockType type);
+		explicit Block(block_type_id_t);
+		explicit Block(BlockType);
 
-		block_id_type type_id() const;
+		block_type_id_t type_id() const;
 		BlockType type() const;
 		bool is_invisible() const;
 		bool is_solid() const;

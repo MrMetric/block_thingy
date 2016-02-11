@@ -104,7 +104,7 @@ void Chunk::render()
 	//glUniform3f(owner->vs_cube_pos_mod, 0, 0, 0);
 }
 
-void Chunk::update_neighbors(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z)
+void Chunk::update_neighbors(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
 	// TODO: check if the neighbor chunk has a block beside this one (to avoid updating when the appearance won't change)
 	if(x == 0)
@@ -133,7 +133,7 @@ void Chunk::update_neighbors(BlockInChunk_type x, BlockInChunk_type y, BlockInCh
 	}
 }
 
-void Chunk::update_neighbor(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z)
+void Chunk::update_neighbor(const ChunkInWorld_type x, const ChunkInWorld_type y, const ChunkInWorld_type z)
 {
 	Position::ChunkInWorld cp(x, y, z);
 	cp += position;

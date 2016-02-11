@@ -67,7 +67,7 @@ void World::set_chunk(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_typ
 	chunks.insert(map::value_type(key, chunk));
 }
 
-std::shared_ptr<Chunk> World::get_chunk(Position::ChunkInWorld cp) const
+std::shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld cp) const
 {
 	uint64_t key = chunk_key(cp.x, cp.y, cp.z);
 	if(last_chunk != nullptr && key == last_key)
@@ -85,7 +85,7 @@ std::shared_ptr<Chunk> World::get_chunk(Position::ChunkInWorld cp) const
 	return chunk;
 }
 
-std::shared_ptr<Chunk> World::get_or_make_chunk(Position::ChunkInWorld cp)
+std::shared_ptr<Chunk> World::get_or_make_chunk(const Position::ChunkInWorld cp)
 {
 	std::shared_ptr<Chunk> chunk = get_chunk(cp);
 	if(chunk == nullptr)

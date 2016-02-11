@@ -39,7 +39,7 @@ class Player
 
 	private:
 		bool block_is_at(const double x, const double y, const double z);
-		double move_to(double coord, const double move_var, const double offset, Position::BlockInWorld bwp);
+		double move_to(double coord, const double move_var, const double offset, const Position::BlockInWorld);
 
 		bool moving_forward = false;
 		bool moving_backward = false;

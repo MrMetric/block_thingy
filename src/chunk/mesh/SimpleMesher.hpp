@@ -16,6 +16,6 @@ class SimpleMesher : public ChunkMesher
 		std::vector<GLubyte> make_mesh();
 
 	private:
-		void draw_cube(std::vector<GLubyte>&, BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z);
-		void draw_face(std::vector<GLubyte>&, BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, uint_fast8_t face);
+		void draw_cube(std::vector<GLubyte>&, BlockInChunk_type, BlockInChunk_type, BlockInChunk_type);
+		void draw_face(std::vector<GLubyte>&, BlockInChunk_type, BlockInChunk_type, BlockInChunk_type, uint_fast8_t face);
 };

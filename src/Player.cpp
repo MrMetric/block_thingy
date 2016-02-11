@@ -201,7 +201,7 @@ bool Player::block_is_at(const double x, const double y, const double z)
 	return Game::instance->world.get_block(block_pos).is_solid();
 }
 
-double Player::move_to(double coord, const double move_var, const double offset, Position::BlockInWorld bwp)
+double Player::move_to(double coord, const double move_var, const double offset, const Position::BlockInWorld bwp)
 {
 	if(noclip)
 	{

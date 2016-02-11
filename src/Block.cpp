@@ -2,7 +2,7 @@
 
 Block::Block() : type_(BlockType::none) {}
 
-Block::Block(block_id_type type_id)
+Block::Block(block_type_id_t type_id)
 	:
 	type_(static_cast<BlockType>(type_id))
 {
@@ -14,9 +14,9 @@ Block::Block(BlockType type)
 {
 }
 
-block_id_type Block::type_id() const
+block_type_id_t Block::type_id() const
 {
-	return static_cast<block_id_type>(type_);
+	return static_cast<block_type_id_t>(type_);
 }
 
 BlockType Block::type() const

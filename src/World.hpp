@@ -21,11 +21,11 @@ class World
 		World(GLint vs_cube_pos_mod);
 		virtual ~World();
 
-		Block get_block(Position::BlockInWorld bwp) const;
-		void set_block(Position::BlockInWorld bwp, Block block);
+		Block get_block(const Position::BlockInWorld) const;
+		void set_block(const Position::BlockInWorld, Block);
 
-		std::shared_ptr<Chunk> get_chunk(Position::ChunkInWorld cp) const;
-		std::shared_ptr<Chunk> get_or_make_chunk(Position::ChunkInWorld cp);
+		std::shared_ptr<Chunk> get_chunk(const Position::ChunkInWorld) const;
+		std::shared_ptr<Chunk> get_or_make_chunk(const Position::ChunkInWorld);
 		void set_chunk(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z, std::shared_ptr<Chunk> chunk);
 
 		void gen_chunk(const Position::ChunkInWorld&);

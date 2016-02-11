@@ -69,10 +69,10 @@ Rectangle GreedyMesher::yield_rectangle()
 	uint8_t h = 0;
 	for(uint_fast32_t z = 0; z < surface.size(); ++z)
 	{
-		std::vector<block_id_type>& row = surface[z];
+		std::vector<block_type_id_t>& row = surface[z];
 		for(uint_fast32_t x = 0; x < row.size(); ++x)
 		{
-			block_id_type point = row[x];
+			block_type_id_t point = row[x];
 			if(point != 0)
 			{
 				start_z = z;
@@ -91,9 +91,9 @@ Rectangle GreedyMesher::yield_rectangle()
 				while(z < surface.size())
 				{
 					x = start_x;
-					std::vector<block_id_type>& row2 = surface[z];
+					std::vector<block_type_id_t>& row2 = surface[z];
 
-					block_id_type point = row2[x];
+					block_type_id_t point = row2[x];
 					if(point == 0)
 					{
 						break;

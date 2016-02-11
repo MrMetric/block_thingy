@@ -18,7 +18,7 @@ class World;
 class Chunk
 {
 	public:
-		Chunk(Position::ChunkInWorld pos, World* owner);
+		Chunk(Position::ChunkInWorld, World* owner);
 		Chunk(const Chunk&) = delete;
 		virtual ~Chunk();
 
@@ -44,6 +44,6 @@ class Chunk
 		GLsizei draw_count;
 		bool changed;
 
-		void update_neighbors(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z);
-		void update_neighbor(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z);
+		void update_neighbors(const BlockInChunk_type, const BlockInChunk_type, const BlockInChunk_type);
+		void update_neighbor(const ChunkInWorld_type, const ChunkInWorld_type, const ChunkInWorld_type);
 };

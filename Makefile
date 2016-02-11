@@ -7,6 +7,7 @@ CFLAGS = \
 	-isystem lib \
 	-Weverything \
 	-Wno-missing-braces \
+	-Wno-missing-prototypes \
 	-Wno-padded \
 	-Werror=return-type \
 	-Werror=unknown-warning-option \
@@ -15,7 +16,6 @@ CXXFLAGS = $(CFLAGS) \
 	-std=c++14 \
 	-fexceptions \
 	-Wno-c++98-compat-pedantic \
-	-Wno-missing-prototypes \
 	-Wno-shadow \
 	-Werror=delete-incomplete \
 	-Werror=deprecated \
@@ -38,7 +38,7 @@ LDFLAGS = \
 
 CFLAGS_DEBUG = $(CFLAGS) -g
 CXXFLAGS_DEBUG = $(CXXFLAGS) -g -fsanitize=undefined,integer -DCOOL_DEBUG_STUFF
-LDFLAGS_DEBUG = $(LDFLAGS) -lubsan
+LDFLAGS_DEBUG = $(LDFLAGS) -fsanitize=undefined,integer
 OBJDIR_DEBUG = obj/Debug
 OUT_DEBUG = bin/block_thingy_d
 

@@ -11,8 +11,8 @@ using console_handler_noargs_t = std::function<void()>;
 class console_handler_wrapper
 {
 	public:
-		console_handler_wrapper(console_handler_t handler);
-		console_handler_wrapper(console_handler_noargs_t handler);
+		console_handler_wrapper(console_handler_t);
+		console_handler_wrapper(console_handler_noargs_t);
 
 		void operator()(const std::vector<std::string>& args) const;
 
@@ -36,7 +36,7 @@ class Console
 		void run_command(const std::string& name, const std::vector<std::string>& args) const;
 
 	private:
-		std::vector<std::string> parse_args(const std::string& argline);
+		std::vector<std::string> parse_args(const std::string&);
 
 		std::unordered_map<std::string, console_handler_wrapper> handlers;
 };
