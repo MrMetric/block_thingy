@@ -368,4 +368,9 @@ void Game::add_commands()
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 	});
+	commands.emplace_back(console, "toggle_cull_face", [game=this]()
+	{
+		game->gfx.toggle_cull_face();
+		std::cout << "cull face: " << (game->gfx.cull_face ? "true" : "false") << "\n";
+	});
 }

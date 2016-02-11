@@ -42,9 +42,12 @@ class Gfx
 
 		GLuint outline_vbo;
 
+		bool cull_face;
+
 		static GLFWwindow* init_glfw();
 		static void uninit_glfw(GLFWwindow* window);
 		void opengl_setup();
+		void toggle_cull_face();
 		void opengl_cleanup();
 		void update_framebuffer_size(GLsizei width, GLsizei height);
 		void set_cam_view(const Camera& cam);

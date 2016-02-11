@@ -83,6 +83,7 @@ void Gfx::opengl_setup()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
+	cull_face = true;
 	glCullFace(GL_BACK);
 
 	glGenVertexArrays(1, &vertex_array);
@@ -107,6 +108,19 @@ void Gfx::opengl_setup()
 
 	glGetFloatv(GL_SMOOTH_LINE_WIDTH_RANGE, lineWidthRange);
 	std::cout << "OpenGL smooth line width range: " << lineWidthRange[0] << "," << lineWidthRange[1] << "\n";
+}
+
+void Gfx::toggle_cull_face()
+{
+	cull_face = !cull_face;
+	if(cull_face)
+	{
+		glEnable(GL_CULL_FACE);
+	}
+	else
+	{
+		glDisable(GL_CULL_FACE);
+	}
 }
 
 void Gfx::opengl_cleanup()
