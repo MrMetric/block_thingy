@@ -13,7 +13,7 @@ class ChunkMesher
 		ChunkMesher(const ChunkMesher&) = delete;
 		virtual ~ChunkMesher();
 
-		virtual std::vector<GLbyte> make_mesh() = 0;
+		virtual std::vector<GLubyte> make_mesh() = 0;
 
 	protected:
 		const Chunk& chunk;

@@ -13,9 +13,9 @@ SimpleMesher::SimpleMesher(const Chunk& chunk)
 {
 }
 
-std::vector<GLbyte> SimpleMesher::make_mesh()
+std::vector<GLubyte> SimpleMesher::make_mesh()
 {
-	std::vector<GLbyte> vertexes;
+	std::vector<GLubyte> vertexes;
 	for(BlockInChunk_type x = 0; x < CHUNK_SIZE; ++x)
 	{
 		for(BlockInChunk_type y = 0; y < CHUNK_SIZE; ++y)
@@ -33,7 +33,7 @@ std::vector<GLbyte> SimpleMesher::make_mesh()
 	return vertexes;
 }
 
-void SimpleMesher::draw_cube(std::vector<GLbyte>& vertexes, BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z)
+void SimpleMesher::draw_cube(std::vector<GLubyte>& vertexes, BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z)
 {
 	// front
 	if(block_is_empty(x, y, z - 1))
@@ -67,7 +67,7 @@ void SimpleMesher::draw_cube(std::vector<GLbyte>& vertexes, BlockInChunk_type x,
 	}
 }
 
-void SimpleMesher::draw_face(std::vector<GLbyte>& vertexes, BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, uint_fast8_t face)
+void SimpleMesher::draw_face(std::vector<GLubyte>& vertexes, BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, uint_fast8_t face)
 {
 	auto offset = face * 6;
 	for(uint_fast8_t i = 0; i < 6; ++i)

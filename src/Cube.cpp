@@ -1,6 +1,6 @@
 #include "Cube.hpp"
 
-GLbyte Cube::cube_vertex[] = {
+GLubyte Cube::cube_vertex[] = {
 	// back
 	 0, 0, 0, // bottom left
 	 0, 1, 0, // top left

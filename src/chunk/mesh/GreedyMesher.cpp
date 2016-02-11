@@ -12,7 +12,7 @@ GreedyMesher::GreedyMesher(const Chunk& chunk)
 {
 }
 
-void add_face(std::array<GLbyte, 3> p1, std::array<GLbyte, 3> p2, std::array<GLbyte, 3> p3, std::array<GLbyte, 3> p4, std::vector<GLbyte>& vertexes)
+static void add_face(std::array<GLubyte, 3> p1, std::array<GLubyte, 3> p2, std::array<GLubyte, 3> p3, std::array<GLubyte, 3> p4, std::vector<GLubyte>& vertexes)
 {
 	vertexes.push_back(p1[0]);
 	vertexes.push_back(p1[1]);
@@ -37,9 +37,9 @@ void add_face(std::array<GLbyte, 3> p1, std::array<GLbyte, 3> p2, std::array<GLb
 
 // derived from https://github.com/mikolalysenko/mikolalysenko.github.com/blob/gh-pages/MinecraftMeshes/js/greedy.js
 // for details, see http://0fps.net/2012/06/30/meshing-in-a-minecraft-game/
-std::vector<GLbyte> GreedyMesher::make_mesh()
+std::vector<GLubyte> GreedyMesher::make_mesh()
 {
-	std::vector<GLbyte> vertexes;
+	std::vector<GLubyte> vertexes;
 
 	std::unique_ptr<block_id_type[]> map = std::make_unique<block_id_type[]>(CHUNK_SIZE * CHUNK_SIZE);
 
@@ -110,11 +110,11 @@ std::vector<GLbyte> GreedyMesher::make_mesh()
 						uint_fast8_t du[] = {0,0,0}; du[u] = width;
 						uint_fast8_t dv[] = {0,0,0}; dv[v] = height;
 
-						#define s(a) static_cast<GLbyte>(a)
-						std::array<GLbyte, 3> vert1 { s(pos[0]            ), s(pos[1]            ), s(pos[2]            ) };
-						std::array<GLbyte, 3> vert2 { s(pos[0]+du[0]      ), s(pos[1]+du[1]      ), s(pos[2]+du[2]      ) };
-						std::array<GLbyte, 3> vert3 { s(pos[0]+du[0]+dv[0]), s(pos[1]+du[1]+dv[1]), s(pos[2]+du[2]+dv[2]) };
-						std::array<GLbyte, 3> vert4 { s(pos[0]      +dv[0]), s(pos[1]      +dv[1]), s(pos[2]      +dv[2]) };
+						#define s(a) static_cast<GLubyte>(a)
+						std::array<GLubyte, 3> vert1 { s(pos[0]            ), s(pos[1]            ), s(pos[2]            ) };
+						std::array<GLubyte, 3> vert2 { s(pos[0]+du[0]      ), s(pos[1]+du[1]      ), s(pos[2]+du[2]      ) };
+						std::array<GLubyte, 3> vert3 { s(pos[0]+du[0]+dv[0]), s(pos[1]+du[1]+dv[1]), s(pos[2]+du[2]+dv[2]) };
+						std::array<GLubyte, 3> vert4 { s(pos[0]      +dv[0]), s(pos[1]      +dv[1]), s(pos[2]      +dv[2]) };
 						#undef s
 
 						// keep the faces the right way around for back-face culling

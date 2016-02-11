@@ -40,7 +40,7 @@ class Chunk
 		GLuint mesh_vbo;
 		std::unique_ptr<ChunkMesher> mesher;
 		std::array<Block, CHUNK_BLOCK_COUNT> blok;
-		std::vector<GLbyte> vertexes;
+		std::vector<GLubyte> vertexes;
 		GLsizei draw_count;
 		bool changed;
 

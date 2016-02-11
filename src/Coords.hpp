@@ -54,9 +54,9 @@ namespace Position
 		BlockInChunk_type x, y, z;
 	};
 
-	std::ostream& operator<<(std::ostream& os, const ChunkInWorld& cp);
-	std::ostream& operator<<(std::ostream& os, const BlockInWorld& cp);
-	std::ostream& operator<<(std::ostream& os, const BlockInChunk& cp);
-	BlockInWorld& operator+(BlockInWorld& bwp, const glm::ivec3& vec3);
-	bool operator==(const BlockInWorld& bwp1, const BlockInWorld& bwp2);
+	std::ostream& operator<<(std::ostream&, const ChunkInWorld&);
+	std::ostream& operator<<(std::ostream&, const BlockInWorld&);
+	std::ostream& operator<<(std::ostream&, const BlockInChunk&);
+	BlockInWorld& operator+(BlockInWorld&, const glm::ivec3&);
+	bool operator==(const BlockInWorld&, const BlockInWorld&);
 }
