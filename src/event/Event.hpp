@@ -5,7 +5,7 @@
 class Event
 {
 	public:
-		Event(EventType);
+		explicit Event(EventType);
 
 		EventType type() const;
 
