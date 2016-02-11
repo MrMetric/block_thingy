@@ -20,15 +20,15 @@ void add_test_commands(Game* game)
 		Position::BlockInWorld bwp = game->hovered_block->adjacent();
 		block_id_type nazi[9][9]
 		{
-			{ 1, 0, 0, 0, 1, 1, 1, 1, 1, },
-			{ 1, 0, 0, 0, 1, 0, 0, 0, 0, },
-			{ 1, 0, 0, 0, 1, 0, 0, 0, 0, },
-			{ 1, 0, 0, 0, 1, 0, 0, 0, 0, },
-			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, },
-			{ 0, 0, 0, 0, 1, 0, 0, 0, 1, },
-			{ 0, 0, 0, 0, 1, 0, 0, 0, 1, },
-			{ 0, 0, 0, 0, 1, 0, 0, 0, 1, },
-			{ 1, 1, 1, 1, 1, 0, 0, 0, 1, },
+			{ 2, 1, 1, 1, 2, 2, 2, 2, 2, },
+			{ 2, 1, 1, 1, 2, 1, 1, 1, 1, },
+			{ 2, 1, 1, 1, 2, 1, 1, 1, 1, },
+			{ 2, 1, 1, 1, 2, 1, 1, 1, 1, },
+			{ 2, 2, 2, 2, 2, 2, 2, 2, 2, },
+			{ 1, 1, 1, 1, 2, 1, 1, 1, 2, },
+			{ 1, 1, 1, 1, 2, 1, 1, 1, 2, },
+			{ 1, 1, 1, 1, 2, 1, 1, 1, 2, },
+			{ 2, 2, 2, 2, 2, 1, 1, 1, 2, },
 		};
 		for(BlockInWorld_type x = 0; x < 9; ++x)
 		{
@@ -38,14 +38,7 @@ void add_test_commands(Game* game)
 				{
 					Position::BlockInWorld block_pos(bwp.x + x, bwp.y + y, bwp.z + z);
 					block_id_type block_id = nazi[y][x];
-					if(block_id == 0)
-					{
-						game->world.set_block(block_pos, Block());
-					}
-					else
-					{
-						game->world.set_block(block_pos, Block(block_id));
-					}
+					game->world.set_block(block_pos, Block(block_id));
 				}
 			}
 		}

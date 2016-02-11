@@ -8,7 +8,7 @@
 #include <glad/glad.h>
 
 #include "mesh/ChunkMesher.hpp"
-#include "mesh/SimpleMesher.hpp"
+#include "mesh/GreedyMesher.hpp"
 #include "../Block.hpp"
 #include "../Coords.hpp"
 #include "../World.hpp"
@@ -17,10 +17,13 @@ Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	:
 	owner(owner),
 	position(pos),
-	mesher(std::make_unique<SimpleMesher>(*this)),
+	mesher(std::make_unique<GreedyMesher>(*this)),
 	changed(true)
 {
 	glGenBuffers(1, &mesh_vbo);
+
+	// a useful default for now
+	blok.fill(Block(BlockType::air));
 }
 
 Chunk::~Chunk()
@@ -44,7 +47,7 @@ void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, B
 	|| y >= CHUNK_SIZE
 	|| z >= CHUNK_SIZE)
 	{
-		std::string set_info = "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ") = " + std::to_string(block.type());
+		std::string set_info = "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ") = " + std::to_string(block.type_id());
 		throw std::domain_error("position out of bounds in Chunk::set: " + set_info);
 	}
 

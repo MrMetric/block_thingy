@@ -173,7 +173,7 @@ std::unique_ptr<RaytraceHit> Raytracer::raycast(const World& world, glm::dvec3 o
 		if(!(x < minX || y < minY || z < minZ || x > maxX || y > maxY || z > maxZ))
 		{
 			Position::BlockInWorld pos(x, y, z);
-			if(world.get_block(pos).type() != 0)
+			if(world.get_block(pos).is_solid())
 			{
 				return std::make_unique<RaytraceHit>(pos, face);
 			}

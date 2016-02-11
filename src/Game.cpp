@@ -145,7 +145,7 @@ void Game::mousepress(int button, int action, int mods)
 			if(hovered_block != nullptr)
 			{
 				auto break_pos = hovered_block->pos;
-				world.set_block(break_pos, Block());
+				world.set_block(break_pos, Block(BlockType::air));
 				find_hovered_block(gfx.projection_matrix, gfx.view_matrix);
 				event_manager.do_event(Event(EventType::break_block));
 			}
@@ -157,7 +157,7 @@ void Game::mousepress(int button, int action, int mods)
 				Position::BlockInWorld pos = hovered_block->adjacent();
 				if(player.can_place_block_at(pos))
 				{
-					world.set_block(pos, Block(1));
+					world.set_block(pos, Block(BlockType::test));
 				}
 			}
 		}

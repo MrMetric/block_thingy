@@ -50,7 +50,7 @@ Block World::get_block(Position::BlockInWorld bwp) const
 	std::shared_ptr<Chunk> chunk = get_chunk(cp);
 	if(chunk == nullptr)
 	{
-		return Block();
+		return Block(BlockType::none);
 	}
 
 	Position::BlockInChunk bcp(bwp);
@@ -121,11 +121,11 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 				block_pos.z = z;
 				if(y == -128 || (y > -64 && y < -32))
 				{
-					set_block(block_pos, Block(1));
+					set_block(block_pos, Block(BlockType::test));
 				}
 				else if(x == -32 && y < 32)
 				{
-					set_block(block_pos, Block(1));
+					set_block(block_pos, Block(BlockType::test));
 				}
 				else if(y == -32)
 				{
@@ -135,7 +135,7 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 						for(BlockInWorld_type y2 = -32; y2 < -32+8; ++y2)
 						{
 							block_pos.y = y2;
-							set_block(block_pos, Block(1));
+							set_block(block_pos, Block(BlockType::test));
 						}
 					}
 				}
