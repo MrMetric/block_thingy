@@ -10,6 +10,7 @@ namespace GreedyMesherPrivate
 {
 	struct Rectangle
 	{
+		BlockType type;
 		uint8_t x, z, w, h;
 	};
 
@@ -69,32 +70,31 @@ Rectangle GreedyMesher::yield_rectangle()
 	uint8_t h = 0;
 	for(uint_fast32_t z = 0; z < surface.size(); ++z)
 	{
-		std::vector<block_type_id_t>& row = surface[z];
+		std::vector<BlockType>& row = surface[z];
 		for(uint_fast32_t x = 0; x < row.size(); ++x)
 		{
-			block_type_id_t point = row[x];
-			if(point != 0)
+			const BlockType type = row[x];
+			if(type != BlockType::none)
 			{
 				start_z = z;
 				start_x = x;
 				w = 1;
 				h = 1;
-				row[x] = 0;
+				row[x] = BlockType::none;
 				++x;
-				while(x < row.size() && (point = row[x]) != 0)
+				while(x < row.size() && row[x] == type)
 				{
 					w += 1;
-					row[x] = 0;
+					row[x] = BlockType::none;
 					++x;
 				}
 				++z;
 				while(z < surface.size())
 				{
 					x = start_x;
-					std::vector<block_type_id_t>& row2 = surface[z];
+					std::vector<BlockType>& row2 = surface[z];
 
-					block_type_id_t point = row2[x];
-					if(point == 0)
+					if(row2[x] != type)
 					{
 						break;
 					}
@@ -104,13 +104,13 @@ Rectangle GreedyMesher::yield_rectangle()
 						w2 += 1;
 						++x;
 					}
-					while(x < row2.size() && w2 < w && (point = row2[x]) != 0);
+					while(x < row2.size() && w2 < w && row2[x] == type);
 
 					if(w2 == w)
 					{
 						for(uint_fast32_t x2 = start_x; x2 < start_x + w2; ++x2)
 						{
-							row2[x2] = 0;
+							row2[x2] = BlockType::none;
 						}
 					}
 					else
@@ -121,12 +121,12 @@ Rectangle GreedyMesher::yield_rectangle()
 					++z;
 					h += 1;
 				}
-				return { start_x, start_z, w, h };
+				return { type, start_x, start_z, w, h };
 			}
 		}
 	}
 
-	return { 0, 0, 0, 0 };
+	return { BlockType::none, 0, 0, 0, 0 };
 }
 
 void GreedyMesher::add_surface(std::vector<GLubyte>& vertexes, Plane plane, Side side)
@@ -168,11 +168,11 @@ void GreedyMesher::add_surface(std::vector<GLubyte>& vertexes, Plane plane, Side
 				bool empty = block_is_invisible_not_none(x + o[0], y + o[1], z + o[2]);
 				if(empty && !block_is_invisible(x, y, z))
 				{
-					surface[xyz[2]][xyz[0]] = chunk.get_block(x, y, z).type_id();
+					surface[xyz[2]][xyz[0]] = chunk.get_block(x, y, z).type();
 				}
 				else
 				{
-					surface[xyz[2]][xyz[0]] = 0;
+					surface[xyz[2]][xyz[0]] = BlockType::none;
 				}
 			}
 		}

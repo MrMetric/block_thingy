@@ -19,7 +19,7 @@ class GreedyMesher : public ChunkMesher
 		std::vector<GLubyte> make_mesh();
 
 	private:
-		std::vector<std::vector<block_type_id_t>> surface;
+		std::vector<std::vector<BlockType>> surface;
 
 		GreedyMesherPrivate::Rectangle yield_rectangle();
 		void add_surface(std::vector<GLubyte>&, const GreedyMesherPrivate::Plane, const GreedyMesherPrivate::Side);
