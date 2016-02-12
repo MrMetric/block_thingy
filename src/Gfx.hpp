@@ -52,7 +52,7 @@ class Gfx
 		void update_framebuffer_size(GLsizei width, GLsizei height);
 		void set_cam_view(const Camera& cam);
 
-		void draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color = glm::vec4(1, 1, 1, 1));
+		void draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color);
 
 		#ifdef USE_LIBPNG
 		static void write_png_RGB(const char* filename, uint8_t* buf, uint_fast32_t width, uint_fast32_t height, bool reverse_rows = false);

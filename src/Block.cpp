@@ -31,5 +31,5 @@ bool Block::is_invisible() const
 
 bool Block::is_solid() const
 {
-	return type_ != BlockType::none && type_ != BlockType::air;
+	return type_ != BlockType::air;
 }
