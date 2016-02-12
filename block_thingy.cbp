@@ -18,7 +18,8 @@
 					<Add option="-DCOOL_DEBUG_STUFF" />
 				</Compiler>
 				<Linker>
-					<Add option="-lubsan" />
+					<Add option="-fsanitize=undefined,integer" />
+					<Add library="obj/Debug/glad.o" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -32,6 +33,9 @@
 					<Add option="-O3" />
 					<Add option="-g" />
 				</Compiler>
+				<Linker>
+					<Add library="obj/Release/glad.o" />
+				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
