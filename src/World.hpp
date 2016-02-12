@@ -21,12 +21,12 @@ class World
 		World(GLint vs_cube_pos_mod);
 		virtual ~World();
 
-		Block get_block(const Position::BlockInWorld) const;
-		void set_block(const Position::BlockInWorld, Block);
+		Block get_block(const Position::BlockInWorld&) const;
+		void set_block(const Position::BlockInWorld&, Block);
 
-		std::shared_ptr<Chunk> get_chunk(const Position::ChunkInWorld) const;
-		std::shared_ptr<Chunk> get_or_make_chunk(const Position::ChunkInWorld);
-		void set_chunk(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z, std::shared_ptr<Chunk> chunk);
+		std::shared_ptr<Chunk> get_chunk(const Position::ChunkInWorld&) const;
+		std::shared_ptr<Chunk> get_or_make_chunk(const Position::ChunkInWorld&);
+		void set_chunk(const Position::ChunkInWorld&, std::shared_ptr<Chunk> chunk);
 
 		void gen_chunk(const Position::ChunkInWorld&);
 		void gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max);
@@ -39,5 +39,5 @@ class World
 		mutable std::shared_ptr<Chunk> last_chunk;
 		std::minstd_rand random_engine;
 
-		static uint64_t chunk_key(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z);
+		static uint64_t chunk_key(const Position::ChunkInWorld&);
 };

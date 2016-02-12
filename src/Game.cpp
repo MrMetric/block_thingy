@@ -80,13 +80,11 @@ void Game::draw()
 
 	std::stringstream ss;
 	ss << "Baby's First Voxel Engine | " << fps.getFPS() << " fps";
-	Position::BlockInWorld bwp(player.position);
-	Position::ChunkInWorld cp(bwp);
-	Position::BlockInChunk bcp(bwp);
 	ss << " | player.pos(" << glm::to_string(player.position) << ")";
-	ss << " | block" << bwp;
-	ss << " | chunk" << cp;
-	ss << " | chunkblock" << bcp;
+	Position::BlockInWorld player_block_pos(player.position);
+	ss << " | block" << player_block_pos;
+	ss << " | chunk" << Position::ChunkInWorld(player_block_pos);
+	ss << " | chunkblock" << Position::BlockInChunk(player_block_pos);
 	glfwSetWindowTitle(window, ss.str().c_str());
 }
 
@@ -97,9 +95,9 @@ void Game::draw_world()
 
 	const int render_distance = 5;
 
-	Position::ChunkInWorld cp(Position::BlockInWorld(player.position));
-	Position::ChunkInWorld min(cp.x - render_distance, cp.y - render_distance, cp.z - render_distance);
-	Position::ChunkInWorld max(cp.x + render_distance, cp.y + render_distance, cp.z + render_distance);
+	Position::ChunkInWorld chunk_pos(Position::BlockInWorld(player.position));
+	Position::ChunkInWorld min = chunk_pos - render_distance;
+	Position::ChunkInWorld max = chunk_pos + render_distance;
 	for(int x = min.x; x <= max.x; ++x)
 	{
 		for(int y = min.y; y <= max.y; ++y)

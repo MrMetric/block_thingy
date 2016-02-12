@@ -23,10 +23,11 @@ class Chunk
 		virtual ~Chunk();
 
 		// I will worry about copying later
-		Block get_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
-		Block get_block(Position::BlockInChunk bcp) const;
+		Block get_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const;
+		Block get_block(const Position::BlockInChunk&) const;
 
-		void set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, Block block);
+		void set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, Block);
+		void set_block(const Position::BlockInChunk&, Block);
 
 		Position::ChunkInWorld get_position() const;
 		World* get_owner() const; // eeh

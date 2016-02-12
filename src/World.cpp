@@ -22,12 +22,12 @@ World::~World()
 {
 }
 
-uint64_t World::chunk_key(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z)
+uint64_t World::chunk_key(const Position::ChunkInWorld& chunk_pos)
 {
 	static_assert(sizeof(ChunkInWorld_type) <= 4, "update chunk_key for new ChunkInWorld_type size");
-	uint32_t x_ = x & 0xFFFFF;
-	uint32_t y_ = y & 0xFFFFF;
-	uint32_t z_ = z & 0xFFFFF;
+	uint32_t x_ = chunk_pos.x & 0xFFFFF;
+	uint32_t y_ = chunk_pos.y & 0xFFFFF;
+	uint32_t z_ = chunk_pos.z & 0xFFFFF;
 	uint64_t key =	  (uint64_t(x_) << 40)
 					| (uint64_t(y_) << 20)
 					| (uint64_t(z_))
@@ -35,31 +35,31 @@ uint64_t World::chunk_key(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld
 	return key;
 }
 
-void World::set_block(Position::BlockInWorld bwp, Block block)
+void World::set_block(const Position::BlockInWorld& block_pos, Block block)
 {
-	Position::ChunkInWorld cp(bwp);
-	std::shared_ptr<Chunk> chunk = get_or_make_chunk(cp);
+	Position::ChunkInWorld chunk_pos(block_pos);
+	std::shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
 
-	Position::BlockInChunk bcp(bwp);
-	chunk->set(bcp.x, bcp.y, bcp.z, block);
+	Position::BlockInChunk pos(block_pos);
+	chunk->set_block(pos, block);
 }
 
-Block World::get_block(Position::BlockInWorld bwp) const
+Block World::get_block(const Position::BlockInWorld& block_pos) const
 {
-	Position::ChunkInWorld cp(bwp);
-	std::shared_ptr<Chunk> chunk = get_chunk(cp);
+	Position::ChunkInWorld chunk_pos(block_pos);
+	std::shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
 		return Block(BlockType::none);
 	}
 
-	Position::BlockInChunk bcp(bwp);
-	return chunk->get_block(bcp);
+	Position::BlockInChunk pos(block_pos);
+	return chunk->get_block(pos);
 }
 
-void World::set_chunk(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z, std::shared_ptr<Chunk> chunk)
+void World::set_chunk(const Position::ChunkInWorld& chunk_pos, std::shared_ptr<Chunk> chunk)
 {
-	uint64_t key = chunk_key(x, y, z);
+	uint64_t key = chunk_key(chunk_pos);
 	if(key == last_key)
 	{
 		last_chunk = chunk;
@@ -67,9 +67,9 @@ void World::set_chunk(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_typ
 	chunks.insert(map::value_type(key, chunk));
 }
 
-std::shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld cp) const
+std::shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld& chunk_pos) const
 {
-	uint64_t key = chunk_key(cp.x, cp.y, cp.z);
+	uint64_t key = chunk_key(chunk_pos);
 	if(last_chunk != nullptr && key == last_key)
 	{
 		return last_chunk;
@@ -85,24 +85,24 @@ std::shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld cp) const
 	return chunk;
 }
 
-std::shared_ptr<Chunk> World::get_or_make_chunk(const Position::ChunkInWorld cp)
+std::shared_ptr<Chunk> World::get_or_make_chunk(const Position::ChunkInWorld& chunk_pos)
 {
-	std::shared_ptr<Chunk> chunk = get_chunk(cp);
+	std::shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		chunk = std::make_shared<Chunk>(cp, this);
-		set_chunk(cp.x, cp.y, cp.z, chunk);
-		gen_chunk(cp); // should this really be here?
+		chunk = std::make_shared<Chunk>(chunk_pos, this);
+		set_chunk(chunk_pos, chunk);
+		gen_chunk(chunk_pos); // should this really be here?
 	}
 	// should this set last_key/last_chunk?
 	return chunk;
 }
 
-void World::gen_chunk(const Position::ChunkInWorld& cp)
+void World::gen_chunk(const Position::ChunkInWorld& chunk_pos)
 {
 	Position::BlockInChunk min(0, 0, 0);
 	Position::BlockInChunk max(CHUNK_SIZE - 1, CHUNK_SIZE - 1, CHUNK_SIZE - 1);
-	gen_at(Position::BlockInWorld(cp, min), Position::BlockInWorld(cp, max));
+	gen_at(Position::BlockInWorld(chunk_pos, min), Position::BlockInWorld(chunk_pos, max));
 }
 
 void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max)

@@ -24,7 +24,7 @@ class Player
 		glm::dvec3 apply_movement_input(glm::dvec3 acceleration, double move_speed);
 		void respawn();
 
-		bool can_place_block_at(const Position::BlockInWorld& bwp);
+		bool can_place_block_at(const Position::BlockInWorld&);
 
 		void move_forward(bool);
 		void move_backward(bool);
@@ -39,7 +39,7 @@ class Player
 
 	private:
 		bool block_is_at(const double x, const double y, const double z);
-		double move_to(double coord, const double move_var, const double offset, const Position::BlockInWorld);
+		double move_to(double coord, const double move_var, const double offset, const Position::BlockInWorld&);
 
 		bool moving_forward = false;
 		bool moving_backward = false;

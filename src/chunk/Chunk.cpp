@@ -31,17 +31,17 @@ Chunk::~Chunk()
 	glDeleteBuffers(1, &mesh_vbo);
 }
 
-Block Chunk::get_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const
+Block Chunk::get_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const
 {
 	return blok[CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x];
 }
 
-Block Chunk::get_block(Position::BlockInChunk bcp) const
+Block Chunk::get_block(const Position::BlockInChunk& block_pos) const
 {
-	return blok[CHUNK_SIZE * CHUNK_SIZE * bcp.y + CHUNK_SIZE * bcp.z + bcp.x];
+	return get_block(block_pos.x, block_pos.y, block_pos.z);
 }
 
-void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, Block block)
+void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, Block block)
 {
 	if(x >= CHUNK_SIZE
 	|| y >= CHUNK_SIZE
@@ -56,6 +56,11 @@ void Chunk::set(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, B
 	changed = true;
 
 	update_neighbors(x, y, z);
+}
+
+void Chunk::set_block(const Position::BlockInChunk& block_pos, Block block)
+{
+	set_block(block_pos.x, block_pos.y, block_pos.z, block);
 }
 
 Position::ChunkInWorld Chunk::get_position() const
@@ -135,9 +140,9 @@ void Chunk::update_neighbors(const BlockInChunk_type x, const BlockInChunk_type 
 
 void Chunk::update_neighbor(const ChunkInWorld_type x, const ChunkInWorld_type y, const ChunkInWorld_type z)
 {
-	Position::ChunkInWorld cp(x, y, z);
-	cp += position;
-	std::shared_ptr<Chunk> chunk = owner->get_chunk(cp);
+	Position::ChunkInWorld chunk_pos(x, y, z);
+	chunk_pos += position;
+	std::shared_ptr<Chunk> chunk = owner->get_chunk(chunk_pos);
 	if(chunk != nullptr)
 	{
 		chunk->changed = true;

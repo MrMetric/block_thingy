@@ -22,11 +22,11 @@ namespace Position
 	}
 
 	#define t(a) ChunkInWorld_type(std::floor(a / static_cast<double>(CHUNK_SIZE)))
-	ChunkInWorld::ChunkInWorld(BlockInWorld bwp)
+	ChunkInWorld::ChunkInWorld(const BlockInWorld& pos)
 	{
-		x = t(bwp.x);
-		y = t(bwp.y);
-		z = t(bwp.z);
+		x = t(pos.x);
+		y = t(pos.y);
+		z = t(pos.z);
 	}
 
 	ChunkInWorld_type ChunkInWorld::operator[](uint_fast8_t i)
@@ -45,6 +45,16 @@ namespace Position
 		return *this;
 	}
 
+	ChunkInWorld operator-(const ChunkInWorld& chunk_pos, const ChunkInWorld_type a)
+	{
+		return ChunkInWorld(chunk_pos.x - a, chunk_pos.y - a, chunk_pos.z - a);
+	}
+
+	ChunkInWorld operator+(const ChunkInWorld& chunk_pos, const ChunkInWorld_type a)
+	{
+		return ChunkInWorld(chunk_pos.x + a, chunk_pos.y + a, chunk_pos.z + a);
+	}
+
 	BlockInWorld::BlockInWorld() : x(0), y(0), z(0) {}
 
 	BlockInWorld::BlockInWorld(const BlockInWorld_type x, const BlockInWorld_type y, const BlockInWorld_type z)
@@ -56,20 +66,20 @@ namespace Position
 
 	#undef t
 	#define t(a,b) static_cast<BlockInWorld_type>(a) * CHUNK_SIZE + b
-	BlockInWorld::BlockInWorld(const ChunkInWorld& cp, const BlockInChunk& bcp)
+	BlockInWorld::BlockInWorld(const ChunkInWorld& chunk_pos, const BlockInChunk& block_pos)
 	{
-		x = t(cp.x, bcp.x);
-		y = t(cp.y, bcp.y);
-		z = t(cp.z, bcp.z);
+		x = t(chunk_pos.x, block_pos.x);
+		y = t(chunk_pos.y, block_pos.y);
+		z = t(chunk_pos.z, block_pos.z);
 	}
 
 	#undef t
 	#define t(a) BlockInWorld_type(std::floor(a))
-	BlockInWorld::BlockInWorld(const glm::dvec3 vec3)
+	BlockInWorld::BlockInWorld(const glm::dvec3& vec)
 	{
-		x = t(vec3.x);
-		y = t(vec3.y);
-		z = t(vec3.z);
+		x = t(vec.x);
+		y = t(vec.y);
+		z = t(vec.z);
 	}
 
 	BlockInWorld::BlockInWorld(const double x, const double y, const double z)
@@ -95,6 +105,11 @@ namespace Position
 		return *this;
 	}
 
+	BlockInWorld operator+(const BlockInWorld& pos, const glm::ivec3& vec)
+	{
+		return Position::BlockInWorld(pos.x + vec.x, pos.y + vec.y, pos.z + vec.z);
+	}
+
 	BlockInChunk::BlockInChunk() : x(0), y(0), z(0) {}
 
 	BlockInChunk::BlockInChunk(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
@@ -109,11 +124,11 @@ namespace Position
 	// TODO: find out if std::mod works instead
 	#undef t
 	#define t(a) BlockInChunk_type(a - CHUNK_SIZE * std::floor(a / static_cast<double>(CHUNK_SIZE)))
-	BlockInChunk::BlockInChunk(BlockInWorld bwp)
+	BlockInChunk::BlockInChunk(const BlockInWorld& pos)
 	{
-		x = t(bwp.x);
-		y = t(bwp.y);
-		z = t(bwp.z);
+		x = t(pos.x);
+		y = t(pos.y);
+		z = t(pos.z);
 	}
 
 	BlockInChunk_type BlockInChunk::operator[](uint_fast8_t i)
@@ -146,34 +161,26 @@ namespace Position
 	}
 
 
-	std::ostream& operator<<(std::ostream& os, const ChunkInWorld& cp)
+	std::ostream& operator<<(std::ostream& os, const ChunkInWorld& pos)
 	{
-		os << "(" << cp.x << "," << cp.y << "," << cp.z << ")";
+		os << "(" << pos.x << "," << pos.y << "," << pos.z << ")";
 		return os;
 	}
 
-	std::ostream& operator<<(std::ostream& os, const BlockInWorld& bwp)
+	std::ostream& operator<<(std::ostream& os, const BlockInWorld& pos)
 	{
-		os << "(" << bwp.x << "," << bwp.y << "," << bwp.z << ")";
+		os << "(" << pos.x << "," << pos.y << "," << pos.z << ")";
 		return os;
 	}
 
-	std::ostream& operator<<(std::ostream& os, const BlockInChunk& bcp)
+	std::ostream& operator<<(std::ostream& os, const BlockInChunk& pos)
 	{
-		os << "(" << int(bcp.x) << "," << int(bcp.y) << "," << int(bcp.z) << ")";
+		os << "(" << int(pos.x) << "," << int(pos.y) << "," << int(pos.z) << ")";
 		return os;
 	}
 
-	BlockInWorld& operator+(BlockInWorld& bwp, const glm::ivec3& vec3)
+	bool operator==(const BlockInWorld& pos1, const BlockInWorld& pos2)
 	{
-		bwp.x += vec3.x;
-		bwp.y += vec3.y;
-		bwp.z += vec3.z;
-		return bwp;
-	}
-
-	bool operator==(const BlockInWorld& bwp1, const BlockInWorld& bwp2)
-	{
-		return (bwp1.x == bwp2.x) && (bwp1.y == bwp2.y) && (bwp1.z == bwp2.z);
+		return (pos1.x == pos2.x) && (pos1.y == pos2.y) && (pos1.z == pos2.z);
 	}
 }

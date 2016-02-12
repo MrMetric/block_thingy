@@ -154,11 +154,11 @@ void Player::respawn()
 	velocity.x = velocity.y = velocity.z = 0;
 }
 
-bool Player::can_place_block_at(const Position::BlockInWorld& bwp)
+bool Player::can_place_block_at(const Position::BlockInWorld& block_pos)
 {
 	Position::BlockInWorld pos0(position.x, position.y, position.z);
 	Position::BlockInWorld pos1(position.x, position.y + 1, position.z);
-	if(bwp == pos0 || bwp == pos1)
+	if(block_pos == pos0 || block_pos == pos1)
 	{
 		return false;
 	}
@@ -197,18 +197,19 @@ void Player::toggle_noclip()
 
 bool Player::block_is_at(const double x, const double y, const double z)
 {
-	Position::BlockInWorld block_pos(x, y, z);
-	return Game::instance->world.get_block(block_pos).is_solid();
+	const Position::BlockInWorld block_pos(x, y, z);
+	const Block block = Game::instance->world.get_block(block_pos);
+	return block.is_solid();
 }
 
-double Player::move_to(double coord, const double move_var, const double offset, const Position::BlockInWorld bwp)
+double Player::move_to(double coord, const double move_var, const double offset, const Position::BlockInWorld& block_pos)
 {
 	if(noclip)
 	{
 		return coord + move_var;
 	}
 
-	if(block_is_at(bwp.x, bwp.y, bwp.z) || block_is_at(bwp.x, bwp.y + 1, bwp.z))
+	if(block_is_at(block_pos.x, block_pos.y, block_pos.z) || block_is_at(block_pos.x, block_pos.y + 1, block_pos.z))
 	{
 		if(move_var > 0)
 		{
