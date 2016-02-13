@@ -6,8 +6,7 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 
-#include "RaytraceHit.hpp"
-
+struct RaytraceHit;
 class World;
 
 class Raytracer

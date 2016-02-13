@@ -6,6 +6,7 @@
 #include <glm/common.hpp>			// glm::sign
 
 #include "Block.hpp"
+#include "Coords.hpp"
 #include "Game.hpp"
 
 Player::Player()

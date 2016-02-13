@@ -1,3 +1,4 @@
+#pragma once
 #include "ChunkMesher.hpp"
 
 #include <vector>

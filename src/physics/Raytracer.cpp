@@ -5,7 +5,9 @@
 #include <limits>
 #include <stdexcept>
 
-#include <glm/detail/func_matrix.hpp>	// glm::sign, glm::inverse, glm::normalize
+#include <glm/common.hpp>				// glm::sign
+#include <glm/geometric.hpp>			// glm::normalize
+#include <glm/gtx/transform.hpp>		// glm::inverse
 #include <glm/gtc/type_ptr.hpp>			// glm::value_ptr
 
 #include "RaytraceHit.hpp"

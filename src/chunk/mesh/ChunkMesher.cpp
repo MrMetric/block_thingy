@@ -1,6 +1,11 @@
 #include "ChunkMesher.hpp"
 
+#include <cstdint>
+
 #include "../Chunk.hpp"
+#include "../../Block.hpp"
+#include "../../BlockType.hpp"
+#include "../../Coords.hpp"
 #include "../../World.hpp"
 
 ChunkMesher::ChunkMesher(const Chunk& chunk)

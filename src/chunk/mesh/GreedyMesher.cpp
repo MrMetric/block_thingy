@@ -1,10 +1,12 @@
 #include "GreedyMesher.hpp"
 
-#include <iostream>
+#include <array>
+#include <cstdint>
+
+#include <glad/glad.h>
 
 #include "../Chunk.hpp"
 #include "../../Block.hpp"
-#include "../../World.hpp"
 
 namespace GreedyMesherPrivate
 {

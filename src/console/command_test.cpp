@@ -1,7 +1,5 @@
 #include "command_test.hpp"
 
-#include <iostream>
-
 #include "Console.hpp"
 #include "../Block.hpp"
 #include "../Coords.hpp"

@@ -1,5 +1,7 @@
 #include "Block.hpp"
 
+#include "BlockType.hpp"
+
 Block::Block() : type_(BlockType::none) {}
 
 Block::Block(block_type_id_t type_id)
