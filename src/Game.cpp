@@ -17,6 +17,7 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include "Block.hpp"
+#include "BlockType.hpp"
 #include "Camera.hpp"
 #include "Coords.hpp"
 #include "FPSManager.hpp"
