@@ -30,7 +30,7 @@ namespace Position
 		z = t(pos.z);
 	}
 
-	ChunkInWorld_type ChunkInWorld::operator[](uint_fast8_t i)
+	ChunkInWorld_type& ChunkInWorld::operator[](uint_fast8_t i)
 	{
 		if(i == 0) return x;
 		if(i == 1) return y;
@@ -90,7 +90,7 @@ namespace Position
 		this->z = t(z);
 	}
 
-	BlockInWorld_type BlockInWorld::operator[](uint_fast8_t i)
+	BlockInWorld_type& BlockInWorld::operator[](uint_fast8_t i)
 	{
 		if(i == 0) return x;
 		if(i == 1) return y;
@@ -132,7 +132,7 @@ namespace Position
 		z = t(pos.z);
 	}
 
-	BlockInChunk_type BlockInChunk::operator[](uint_fast8_t i)
+	BlockInChunk_type& BlockInChunk::operator[](uint_fast8_t i)
 	{
 		if(i == 0) return x;
 		if(i == 1) return y;

@@ -20,7 +20,7 @@ namespace Position
 		ChunkInWorld(const ChunkInWorld_type x, const ChunkInWorld_type y, const ChunkInWorld_type z);
 		explicit ChunkInWorld(const BlockInWorld&);
 
-		ChunkInWorld_type operator[](uint_fast8_t);
+		ChunkInWorld_type& operator[](uint_fast8_t);
 		ChunkInWorld& operator+=(const ChunkInWorld&);
 
 		ChunkInWorld_type x, y, z;
@@ -37,7 +37,7 @@ namespace Position
 		explicit BlockInWorld(const glm::dvec3&);
 		BlockInWorld(const double x, const double y, const double z);
 
-		BlockInWorld_type operator[](uint_fast8_t);
+		BlockInWorld_type& operator[](uint_fast8_t);
 		BlockInWorld& operator+=(const BlockInWorld&);
 
 		BlockInWorld_type x, y, z;
@@ -51,7 +51,7 @@ namespace Position
 		BlockInChunk(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z);
 		explicit BlockInChunk(const BlockInWorld&);
 
-		BlockInChunk_type operator[](uint_fast8_t);
+		BlockInChunk_type& operator[](uint_fast8_t);
 		BlockInChunk& operator+=(const BlockInChunk&);
 
 		void check_bounds();
