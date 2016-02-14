@@ -37,7 +37,6 @@ If you have already cloned it and did not do that, then you need to init and upd
  * allow saving screenshots to a format other than PNG (for when the libpng dependency is not enabled)
  * make physics framerate-independent
  * split Game into separate thingies
- * make an actual working greedy mesher
  * add other meshing methods [[1]](http://0fps.net/2012/07/07/meshing-minecraft-part-2/) [[2]](https://blackflux.wordpress.com/2014/02/23/meshing-in-voxel-engines-part-1/)
  * add texturing
  * add frustum culling
