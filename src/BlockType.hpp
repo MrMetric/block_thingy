@@ -9,4 +9,5 @@ enum class BlockType : block_type_id_t
 	none = 0,
 	air = 1,
 	test = 2,
+	dots = 3,
 };

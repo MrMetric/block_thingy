@@ -1,10 +1,14 @@
 #pragma once
 
 #include <cstdint>
+#include <map>
 
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>
 #include <glm/vec4.hpp>
+
+#include "BlockType.hpp"
+#include "graphics/BlockShader.hpp"
 
 struct GLFWwindow;
 class Camera;
@@ -29,9 +33,7 @@ class Gfx
 		glm::mat4 matriks;
 		GLfloat* matriks_ptr;
 
-		GLuint sp_cube;
-		GLint vs_cube_matriks;
-		GLint vs_cube_pos_mod;
+		std::map<BlockType, BlockShader> block_shaders;
 
 		GLuint sp_lines;
 		GLint vs_lines_matriks;

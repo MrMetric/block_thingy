@@ -13,24 +13,27 @@ SimpleMesher::SimpleMesher(const Chunk& chunk)
 {
 }
 
-std::vector<GLubyte> SimpleMesher::make_mesh()
+mesh_t SimpleMesher::make_mesh()
 {
-	std::vector<GLubyte> vertexes;
+	mesh_t meshes;
 	for(BlockInChunk_type x = 0; x < CHUNK_SIZE; ++x)
 	{
 		for(BlockInChunk_type y = 0; y < CHUNK_SIZE; ++y)
 		{
 			for(BlockInChunk_type z = 0; z < CHUNK_SIZE; ++z)
 			{
-				if(block_is_invisible(x, y, z))
+				Block block = block_at(x, y, z);
+				if(block.is_invisible())
 				{
 					continue;
 				}
+				BlockType type = block.type();
+				std::vector<GLubyte>& vertexes = meshes[type];
 				draw_cube(vertexes, x, y, z);
 			}
 		}
 	}
-	return vertexes;
+	return meshes;
 }
 
 void SimpleMesher::draw_cube(std::vector<GLubyte>& vertexes, BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z)

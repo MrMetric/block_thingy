@@ -31,6 +31,7 @@
 #include "event/Event.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
+#include "graphics/BlockShader.hpp"
 #include "gui/GUI.hpp"
 #include "physics/Raytracer.hpp"
 #include "physics/RaytraceHit.hpp"
@@ -43,7 +44,6 @@ Game::Game(GLFWwindow* window, int width, int height)
 	hovered_block(nullptr),
 	cam(window),
 	gfx(window),
-	world(gfx.vs_cube_pos_mod),
 	delta_time(0),
 	fps(144),
 	keybinder(&console)
@@ -91,8 +91,12 @@ void Game::draw()
 
 void Game::draw_world()
 {
-	glUseProgram(gfx.sp_cube);
-	glUniformMatrix4fv(gfx.vs_cube_matriks, 1, GL_FALSE, gfx.matriks_ptr);
+	for(const auto& p : gfx.block_shaders)
+	{
+		const BlockShader& shader = p.second;
+		glUseProgram(shader.program);
+		glUniformMatrix4fv(shader.u_matriks, 1, GL_FALSE, gfx.matriks_ptr);
+	}
 
 	const int render_distance = 5;
 

@@ -109,6 +109,8 @@
 		<Unit filename="src/event/EventManager.cpp" />
 		<Unit filename="src/event/EventManager.hpp" />
 		<Unit filename="src/event/EventType.hpp" />
+		<Unit filename="src/graphics/BlockShader.cpp" />
+		<Unit filename="src/graphics/BlockShader.hpp" />
 		<Unit filename="src/gui/GUI.cpp" />
 		<Unit filename="src/gui/GUI.hpp" />
 		<Unit filename="src/main.cpp" />

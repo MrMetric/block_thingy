@@ -10,8 +10,12 @@
 #include "mesh/ChunkMesher.hpp"
 #include "mesh/GreedyMesher.hpp"
 #include "../Block.hpp"
+#include "../BlockType.hpp"
 #include "../Coords.hpp"
+#include "../Game.hpp"
+#include "../Gfx.hpp"
 #include "../World.hpp"
+#include "../graphics/BlockShader.hpp"
 
 Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	:
@@ -20,15 +24,13 @@ Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	mesher(std::make_unique<GreedyMesher>(*this)),
 	changed(true)
 {
-	glGenBuffers(1, &mesh_vbo);
-
 	// a useful default for now
 	blok.fill(Block(BlockType::air));
 }
 
 Chunk::~Chunk()
 {
-	glDeleteBuffers(1, &mesh_vbo);
+	glDeleteBuffers(mesh_vbos.size(), &mesh_vbos[0]);
 }
 
 Block Chunk::get_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const
@@ -75,18 +77,27 @@ World* Chunk::get_owner() const
 
 void Chunk::update()
 {
-	vertexes = mesher->make_mesh();
-	draw_count = static_cast<GLsizei>(vertexes.size());
-	#ifdef COOL_DEBUG_STUFF
-	if(draw_count % 3 != 0)
-	{
-		throw std::logic_error("you buggered something up again!");
-	}
-	#endif
-	draw_count /= 3;
+	meshes = mesher->make_mesh();
 
-	glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo);
-	glBufferData(GL_ARRAY_BUFFER, vertexes.size() * sizeof(GLubyte), vertexes.data(), GL_DYNAMIC_DRAW);
+	if(mesh_vbos.size() < meshes.size())
+	{
+		size_t to_add = meshes.size() - mesh_vbos.size();
+		for(size_t i = 0; i < to_add; ++i)
+		{
+			GLuint vbo;
+			glGenBuffers(1, &vbo);
+			mesh_vbos.push_back(vbo);
+		}
+	}
+
+	size_t i = 0;
+	for(auto mesh : meshes)
+	{
+		const std::vector<GLubyte>& vertexes = mesh.second;
+		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i]);
+		glBufferData(GL_ARRAY_BUFFER, vertexes.size() * sizeof(GLubyte), vertexes.data(), GL_DYNAMIC_DRAW);
+		++i;
+	}
 
 	changed = false;
 }
@@ -98,15 +109,21 @@ void Chunk::render()
 		update();
 	}
 
-	glUniform3f(owner->vs_cube_pos_mod, position.x * CHUNK_SIZE, position.y * CHUNK_SIZE, position.z * CHUNK_SIZE);
-
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh_vbo);
-	glVertexAttribPointer(0, 3, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
-	glDrawArrays(GL_TRIANGLES, 0, draw_count);
-	glDisableVertexAttribArray(0);
-
-	//glUniform3f(owner->vs_cube_pos_mod, 0, 0, 0);
+	size_t i = 0;
+	for(auto mesh : meshes)
+	{
+		const BlockType type = mesh.first;
+		const BlockShader& shader = Game::instance->gfx.block_shaders[type];
+		glUseProgram(shader.program);
+		glEnableVertexAttribArray(0);
+		glUniform3f(shader.u_pos_mod, position.x * CHUNK_SIZE, position.y * CHUNK_SIZE, position.z * CHUNK_SIZE);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i]);
+		glVertexAttribPointer(0, 3, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
+		size_t draw_count = mesh.second.size() / 3;
+		glDrawArrays(GL_TRIANGLES, 0, draw_count);
+		glDisableVertexAttribArray(0);
+		++i;
+	}
 }
 
 void Chunk::update_neighbors(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)

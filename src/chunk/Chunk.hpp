@@ -6,13 +6,13 @@
 
 #include <glad/glad.h>
 
+#include "mesh/ChunkMesher.hpp"
 #include "../Block.hpp"
 #include "../Coords.hpp"
 
 #define CHUNK_SIZE 32
 #define CHUNK_BLOCK_COUNT (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
 
-class ChunkMesher;
 class World;
 
 class Chunk
@@ -38,12 +38,11 @@ class Chunk
 	private:
 		World* owner;
 		Position::ChunkInWorld position;
-		GLuint mesh_vbo;
-		std::unique_ptr<ChunkMesher> mesher;
 		std::array<Block, CHUNK_BLOCK_COUNT> blok;
-		std::vector<GLubyte> vertexes;
-		GLsizei draw_count;
 		bool changed;
+		std::unique_ptr<ChunkMesher> mesher;
+		mesh_t meshes;
+		std::vector<GLuint> mesh_vbos;
 
 		void update_neighbors(const BlockInChunk_type, const BlockInChunk_type, const BlockInChunk_type);
 		void update_neighbor(const ChunkInWorld_type, const ChunkInWorld_type, const ChunkInWorld_type);

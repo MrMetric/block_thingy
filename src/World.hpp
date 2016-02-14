@@ -3,22 +3,22 @@
 #include <cstdint>
 #include <memory>
 #include <random>
-
 #include <unordered_map>
-
-#include <glad/glad.h>
-
-#include "Coords.hpp"
 
 class Chunk;
 class Block;
+namespace Position
+{
+	struct BlockInWorld;
+	struct ChunkInWorld;
+}
 
 using map = std::unordered_map<uint64_t, std::shared_ptr<Chunk>>;
 
 class World
 {
 	public:
-		World(GLint vs_cube_pos_mod);
+		World();
 		virtual ~World();
 
 		Block get_block(const Position::BlockInWorld&) const;
@@ -30,8 +30,6 @@ class World
 
 		void gen_chunk(const Position::ChunkInWorld&);
 		void gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max);
-
-		GLint vs_cube_pos_mod;
 
 	private:
 		map chunks;

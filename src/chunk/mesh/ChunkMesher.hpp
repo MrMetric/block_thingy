@@ -1,11 +1,16 @@
 #pragma once
 
+#include <map>
 #include <vector>
 
 #include <glad/glad.h>
 
+#include "../../BlockType.hpp"
+
 class Block;
 class Chunk;
+
+using mesh_t = std::map<BlockType, std::vector<GLubyte>>;
 
 class ChunkMesher
 {
@@ -14,7 +19,7 @@ class ChunkMesher
 		ChunkMesher(const ChunkMesher&) = delete;
 		virtual ~ChunkMesher();
 
-		virtual std::vector<GLubyte> make_mesh() = 0;
+		virtual mesh_t make_mesh() = 0;
 
 	protected:
 		const Chunk& chunk;

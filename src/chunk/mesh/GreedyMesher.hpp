@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "../../Block.hpp"
+#include "../../BlockType.hpp"
 
 namespace GreedyMesherPrivate
 {
@@ -17,11 +17,11 @@ class GreedyMesher : public ChunkMesher
 	public:
 		explicit GreedyMesher(const Chunk&);
 
-		std::vector<GLubyte> make_mesh();
+		mesh_t make_mesh();
 
 	private:
 		std::vector<std::vector<BlockType>> surface;
 
 		GreedyMesherPrivate::Rectangle yield_rectangle();
-		void add_surface(std::vector<GLubyte>&, const GreedyMesherPrivate::Plane, const GreedyMesherPrivate::Side);
+		void add_surface(mesh_t&, const GreedyMesherPrivate::Plane, const GreedyMesherPrivate::Side);
 };

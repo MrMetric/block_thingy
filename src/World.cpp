@@ -3,15 +3,13 @@
 #include <memory>
 #include <random>
 
-#include <glad/glad.h>
-
 #include "Block.hpp"
+#include "BlockType.hpp"
 #include "Coords.hpp"
 #include "chunk/Chunk.hpp"
 
-World::World(GLint vs_cube_pos_mod)
+World::World()
 	:
-	vs_cube_pos_mod(vs_cube_pos_mod),
 	last_key(~uint64_t(0)),
 	last_chunk(nullptr),
 	random_engine(0xFECA1)
@@ -135,7 +133,7 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 						for(BlockInWorld_type y2 = -32; y2 < -32+8; ++y2)
 						{
 							block_pos.y = y2;
-							set_block(block_pos, Block(BlockType::test));
+							set_block(block_pos, Block(BlockType::dots));
 						}
 					}
 				}

@@ -15,10 +15,12 @@
 #include <png.h>
 #endif
 
+#include "BlockType.hpp"
 #include "Camera.hpp"
 #include "Coords.hpp"
 #include "Cube.hpp"
 #include "shader_util.hpp"
+#include "graphics/BlockShader.hpp"
 
 Gfx::Gfx(GLFWwindow* window)
 	:
@@ -89,9 +91,8 @@ void Gfx::opengl_setup()
 	glGenVertexArrays(1, &vertex_array);
 	glBindVertexArray(vertex_array);
 
-	sp_cube = make_program("shaders/cube");
-	vs_cube_matriks = getUniformLocation(sp_cube, "matriks");
-	vs_cube_pos_mod = getUniformLocation(sp_cube, "pos_mod");
+	block_shaders.emplace(BlockType::test, "shaders/block/test");
+	block_shaders.emplace(BlockType::dots, "shaders/block/dots");
 
 	sp_lines = make_program("shaders/lines");
 	vs_lines_matriks = getUniformLocation(sp_lines, "matriks");
@@ -126,7 +127,6 @@ void Gfx::toggle_cull_face()
 void Gfx::opengl_cleanup()
 {
 	glDeleteVertexArrays(1, &vertex_array);
-	glDeleteProgram(sp_cube);
 	glDeleteProgram(sp_lines);
 	glDeleteProgram(sp_crosshair);
 	glDeleteBuffers(1, &outline_vbo);

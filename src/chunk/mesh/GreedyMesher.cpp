@@ -131,7 +131,7 @@ Rectangle GreedyMesher::yield_rectangle()
 	return { BlockType::none, 0, 0, 0, 0 };
 }
 
-void GreedyMesher::add_surface(std::vector<GLubyte>& vertexes, Plane plane, Side side)
+void GreedyMesher::add_surface(mesh_t& meshes, Plane plane, Side side)
 {
 	uint_fast8_t ix, iy, iz;
 	if(plane == Plane::XY)
@@ -216,6 +216,7 @@ void GreedyMesher::add_surface(std::vector<GLubyte>& vertexes, Plane plane, Side
 			v4[iz] = s(rekt.z + rekt.h);
 			#undef s
 
+			std::vector<GLubyte>& vertexes = meshes[rekt.type];
 			if((plane == Plane::XZ && side == Side::top)
 			|| (plane == Plane::XY && side == Side::bottom)
 			|| (plane == Plane::YZ && side == Side::bottom))
@@ -230,16 +231,16 @@ void GreedyMesher::add_surface(std::vector<GLubyte>& vertexes, Plane plane, Side
 	}
 }
 
-std::vector<GLubyte> GreedyMesher::make_mesh()
+mesh_t GreedyMesher::make_mesh()
 {
-	std::vector<GLubyte> vertexes;
+	mesh_t meshes;
 
-	add_surface(vertexes, Plane::XY, Side::top);
-	add_surface(vertexes, Plane::XY, Side::bottom);
-	add_surface(vertexes, Plane::XZ, Side::top);
-	add_surface(vertexes, Plane::XZ, Side::bottom);
-	add_surface(vertexes, Plane::YZ, Side::top);
-	add_surface(vertexes, Plane::YZ, Side::bottom);
+	add_surface(meshes, Plane::XY, Side::top);
+	add_surface(meshes, Plane::XY, Side::bottom);
+	add_surface(meshes, Plane::XZ, Side::top);
+	add_surface(meshes, Plane::XZ, Side::bottom);
+	add_surface(meshes, Plane::YZ, Side::top);
+	add_surface(meshes, Plane::YZ, Side::bottom);
 
-	return vertexes;
+	return meshes;
 }
