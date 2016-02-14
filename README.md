@@ -28,12 +28,33 @@ If you have already cloned it and did not do that, then you need to init and upd
 
 ### Building
  * versions of GCC older than 5.3.0 **can not** compile this
- * clang 3.5 or newer works fine; older versions are untested
- * the linker options in the makefile are specific to my system, so you will likely need to tweak them
+ * clang 3.7 and 3.9 both work fine; older versions are untested, although 3.5 is reported to work
+
+If you are unfamiliar with CMake: Make a directory to build in, and run `cmake <repo root path>`, along with whatever options you want CMake to use.
+For example, in the repo root:
+
+```shell
+mkdir build
+cmake ..
+make
+```
+
+Or, to specify a different compiler:
+
+```shell
+$ cmake .. -DCMAKE_C_COMPILER="/usr/local/bin/clang" -DCMAKE_CXX_COMPILER="/usr/local/bin/clang++"
+```
+
+To run, `block_thingy` needs to be executed from the `bin` directory. So, following from the example above:
+
+```shell
+cd ../bin
+../build/block_thingy
+```
 
 ## TODO
- * use something nicer than the current makefile (portability is a concern)
  * improve build instructions
+ * fix dependency on running in the `bin` directory
  * allow saving screenshots to a format other than PNG (for when the libpng dependency is not enabled)
  * make physics framerate-independent
  * split Game into separate thingies
