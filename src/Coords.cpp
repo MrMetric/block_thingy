@@ -46,14 +46,19 @@ namespace Position
 		return *this;
 	}
 
-	ChunkInWorld operator-(const ChunkInWorld& chunk_pos, const ChunkInWorld_type a)
+	ChunkInWorld operator-(const ChunkInWorld& pos, const ChunkInWorld_type a)
 	{
-		return ChunkInWorld(chunk_pos.x - a, chunk_pos.y - a, chunk_pos.z - a);
+		return ChunkInWorld(pos.x - a, pos.y - a, pos.z - a);
 	}
 
-	ChunkInWorld operator+(const ChunkInWorld& chunk_pos, const ChunkInWorld_type a)
+	ChunkInWorld operator+(const ChunkInWorld& pos, const ChunkInWorld_type a)
 	{
-		return ChunkInWorld(chunk_pos.x + a, chunk_pos.y + a, chunk_pos.z + a);
+		return ChunkInWorld(pos.x + a, pos.y + a, pos.z + a);
+	}
+
+	ChunkInWorld operator*(const ChunkInWorld& pos, const ChunkInWorld_type a)
+	{
+		return ChunkInWorld(pos.x * a, pos.y * a, pos.z * a);
 	}
 
 	BlockInWorld::BlockInWorld() : x(0), y(0), z(0) {}

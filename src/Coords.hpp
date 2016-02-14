@@ -28,6 +28,7 @@ namespace Position
 
 	ChunkInWorld operator-(const ChunkInWorld&, const ChunkInWorld_type);
 	ChunkInWorld operator+(const ChunkInWorld&, const ChunkInWorld_type);
+	ChunkInWorld operator*(const ChunkInWorld&, const ChunkInWorld_type);
 
 	struct BlockInWorld
 	{

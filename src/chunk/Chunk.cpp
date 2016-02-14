@@ -116,7 +116,8 @@ void Chunk::render()
 		const BlockShader& shader = Game::instance->gfx.block_shaders[type];
 		glUseProgram(shader.program);
 		glEnableVertexAttribArray(0);
-		glUniform3f(shader.u_pos_mod, position.x * CHUNK_SIZE, position.y * CHUNK_SIZE, position.z * CHUNK_SIZE);
+		Position::ChunkInWorld pos_mod = position * CHUNK_SIZE;
+		glUniform3f(shader.u_pos_mod, pos_mod.x, pos_mod.y, pos_mod.z);
 		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i]);
 		glVertexAttribPointer(0, 3, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
 		size_t draw_count = mesh.second.size() / 3;
