@@ -16,8 +16,10 @@ class ChunkMesher
 {
 	public:
 		explicit ChunkMesher(const Chunk&);
-		ChunkMesher(const ChunkMesher&) = delete;
 		virtual ~ChunkMesher();
+
+		ChunkMesher(const ChunkMesher&) = delete;
+		ChunkMesher& operator=(const ChunkMesher&) = delete;
 
 		virtual mesh_t make_mesh() = 0;
 

@@ -13,7 +13,7 @@ class SimpleMesher : public ChunkMesher
 	public:
 		explicit SimpleMesher(const Chunk&);
 
-		mesh_t make_mesh();
+		mesh_t make_mesh() override;
 
 	private:
 		void draw_cube(std::vector<GLubyte>&, BlockInChunk_type, BlockInChunk_type, BlockInChunk_type);

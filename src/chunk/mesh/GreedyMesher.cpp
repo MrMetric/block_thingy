@@ -13,7 +13,7 @@ namespace GreedyMesherPrivate
 	struct Rectangle
 	{
 		BlockType type;
-		uint8_t x, z, w, h;
+		BlockInChunk_type x, z, w, h;
 	};
 
 	enum class Plane
@@ -23,7 +23,7 @@ namespace GreedyMesherPrivate
 		YZ,
 	};
 
-	enum class Side
+	enum class Side : int_fast8_t
 	{
 		top = 1,
 		bottom = -1,
@@ -66,14 +66,14 @@ static void add_face(std::array<GLubyte, 3> p1, std::array<GLubyte, 3> p2, std::
 
 Rectangle GreedyMesher::yield_rectangle()
 {
-	uint8_t start_z;
-	uint8_t start_x;
-	uint8_t w = 0;
-	uint8_t h = 0;
-	for(uint_fast32_t z = 0; z < surface.size(); ++z)
+	BlockInChunk_type start_z;
+	BlockInChunk_type start_x;
+	BlockInChunk_type w = 0;
+	BlockInChunk_type h = 0;
+	for(BlockInChunk_type z = 0; z < surface.size(); ++z)
 	{
 		std::vector<BlockType>& row = surface[z];
-		for(uint_fast32_t x = 0; x < row.size(); ++x)
+		for(BlockInChunk_type x = 0; x < row.size(); ++x)
 		{
 			const BlockType type = row[x];
 			if(type != BlockType::none)
@@ -100,7 +100,7 @@ Rectangle GreedyMesher::yield_rectangle()
 					{
 						break;
 					}
-					uint_fast32_t w2 = 0;
+					BlockInChunk_type w2 = 0;
 					do
 					{
 						w2 += 1;
@@ -110,7 +110,7 @@ Rectangle GreedyMesher::yield_rectangle()
 
 					if(w2 == w)
 					{
-						for(uint_fast32_t x2 = start_x; x2 < start_x + w2; ++x2)
+						for(BlockInChunk_type x2 = start_x; x2 < start_x + w2; ++x2)
 						{
 							row2[x2] = BlockType::none;
 						}
@@ -163,7 +163,7 @@ void GreedyMesher::add_surface(mesh_t& meshes, Plane plane, Side side)
 				uint_fast8_t x = xyz[ix];
 				uint_fast8_t y = xyz[iy];
 				uint_fast8_t z = xyz[iz];
-				int offset = static_cast<int>(side);
+				int_fast8_t offset = static_cast<int_fast8_t>(side);
 				int_fast8_t o[] = {0, 0, 0};
 				o[iy] = offset;
 
