@@ -23,11 +23,11 @@ World::~World()
 uint64_t World::chunk_key(const Position::ChunkInWorld& chunk_pos)
 {
 	static_assert(sizeof(ChunkInWorld_type) <= 4, "update chunk_key for new ChunkInWorld_type size");
-	uint32_t x_ = chunk_pos.x & 0xFFFFF;
-	uint32_t y_ = chunk_pos.y & 0xFFFFF;
-	uint32_t z_ = chunk_pos.z & 0xFFFFF;
-	uint64_t key =	  (uint64_t(x_) << 40)
-					| (uint64_t(y_) << 20)
+	uint32_t x_ = chunk_pos.x & 0x1FFFFF;
+	uint32_t y_ = chunk_pos.y & 0x1FFFFF;
+	uint32_t z_ = chunk_pos.z & 0x1FFFFF;
+	uint64_t key =	  (uint64_t(x_) << 42)
+					| (uint64_t(y_) << 21)
 					| (uint64_t(z_))
 				;
 	return key;
