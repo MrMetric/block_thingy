@@ -113,7 +113,7 @@ void Chunk::render()
 	for(auto mesh : meshes)
 	{
 		const BlockType type = mesh.first;
-		const BlockShader& shader = Game::instance->gfx.block_shaders[type];
+		const BlockShader& shader = Game::instance->gfx.get_block_shader(type);
 		glUseProgram(shader.program);
 		glEnableVertexAttribArray(0);
 		Position::ChunkInWorld pos_mod = position * CHUNK_SIZE;

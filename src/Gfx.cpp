@@ -199,6 +199,16 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 	glDisableVertexAttribArray(0);
 }
 
+const BlockShader& Gfx::get_block_shader(BlockType type) const
+{
+	auto i = block_shaders.find(type);
+	if(i != block_shaders.end())
+	{
+		return i->second;
+	}
+	return block_shaders.at(BlockType::test);
+}
+
 #ifdef USE_LIBPNG
 void Gfx::write_png_RGB(const char* filename, uint8_t* buf, uint_fast32_t width, uint_fast32_t height, bool reverse_rows)
 {
