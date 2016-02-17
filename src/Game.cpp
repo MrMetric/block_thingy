@@ -69,9 +69,8 @@ void Game::draw()
 	cam.position = player.position;
 	cam.position.y += player.eye_height;
 
-	find_hovered_block(gfx.projection_matrix, gfx.view_matrix);
-
 	draw_world();
+	find_hovered_block(gfx.projection_matrix, gfx.view_matrix);
 	gui.draw(gfx);
 
 	glfwSwapBuffers(window);
@@ -89,6 +88,7 @@ void Game::draw()
 	glfwSetWindowTitle(window, ss.str().c_str());
 }
 
+static bool froxx = false;
 void Game::draw_world()
 {
 	for(const auto& p : gfx.block_shaders)
@@ -98,9 +98,13 @@ void Game::draw_world()
 		glUniformMatrix4fv(shader.u_matriks, 1, GL_FALSE, gfx.matriks_ptr);
 	}
 
-	const int render_distance = 5;
+	const ChunkInWorld_type render_distance = 3;
 
 	Position::ChunkInWorld chunk_pos(Position::BlockInWorld(player.position));
+	if(froxx)
+	{
+		chunk_pos.x = chunk_pos.y = chunk_pos.z = 0;
+	}
 	Position::ChunkInWorld min = chunk_pos - render_distance;
 	Position::ChunkInWorld max = chunk_pos + render_distance;
 	for(int x = min.x; x <= max.x; ++x)
@@ -139,6 +143,7 @@ void Game::keypress(int key, int scancode, int action, int mods)
 	keybinder.keypress(key, action);
 }
 
+static BlockType block_type = BlockType::test;
 void Game::mousepress(int button, int action, int mods)
 {
 	if(action == GLFW_PRESS)
@@ -160,7 +165,7 @@ void Game::mousepress(int button, int action, int mods)
 				Position::BlockInWorld pos = hovered_block->adjacent();
 				if(player.can_place_block_at(pos))
 				{
-					world.set_block(pos, Block(BlockType::test));
+					world.set_block(pos, Block(block_type));
 				}
 			}
 		}
@@ -378,4 +383,22 @@ void Game::add_commands()
 		game->gfx.toggle_cull_face();
 		std::cout << "cull face: " << (game->gfx.cull_face ? "true" : "false") << "\n";
 	});
+	commands.emplace_back(console, "froxx", []()
+	{
+		froxx = !froxx;
+	});
+	console->run_line("bind f froxx");
+	commands.emplace_back(console, "change_block_type", []()
+	{
+		if(block_type == BlockType::test)
+		{
+			block_type = BlockType::dots;
+		}
+		else
+		{
+			block_type = BlockType::test;
+		}
+		std::cout << "block type: " << static_cast<block_type_id_t>(block_type) << "\n";
+	});
+	console->run_line("bind j change_block_type");
 }
