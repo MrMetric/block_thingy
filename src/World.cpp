@@ -8,9 +8,21 @@
 #include "Coords.hpp"
 #include "chunk/Chunk.hpp"
 
+uint64_t key_hasher(const Position::ChunkInWorld& chunk_pos)
+{
+	uint32_t x_ = chunk_pos.x & 0x1FFFFF;
+	uint32_t y_ = chunk_pos.y & 0x1FFFFF;
+	uint32_t z_ = chunk_pos.z & 0x1FFFFF;
+	uint64_t key =	  (static_cast<uint64_t>(x_) << 42)
+					| (static_cast<uint64_t>(y_) << 21)
+					| (static_cast<uint64_t>(z_))
+				;
+	return key;
+}
+
 World::World()
 	:
-	last_key(~uint64_t(0)),
+	chunks(0, key_hasher),
 	last_chunk(nullptr),
 	random_engine(0xFECA1)
 {
@@ -18,19 +30,6 @@ World::World()
 
 World::~World()
 {
-}
-
-uint64_t World::chunk_key(const Position::ChunkInWorld& chunk_pos)
-{
-	static_assert(sizeof(ChunkInWorld_type) <= 4, "update chunk_key for new ChunkInWorld_type size");
-	uint32_t x_ = chunk_pos.x & 0x1FFFFF;
-	uint32_t y_ = chunk_pos.y & 0x1FFFFF;
-	uint32_t z_ = chunk_pos.z & 0x1FFFFF;
-	uint64_t key =	  (uint64_t(x_) << 42)
-					| (uint64_t(y_) << 21)
-					| (uint64_t(z_))
-				;
-	return key;
 }
 
 void World::set_block(const Position::BlockInWorld& block_pos, Block block)
@@ -57,28 +56,26 @@ Block World::get_block(const Position::BlockInWorld& block_pos) const
 
 void World::set_chunk(const Position::ChunkInWorld& chunk_pos, std::shared_ptr<Chunk> chunk)
 {
-	uint64_t key = chunk_key(chunk_pos);
-	if(key == last_key)
+	if(last_chunk != nullptr && chunk_pos == last_key)
 	{
 		last_chunk = chunk;
 	}
-	chunks.insert(map::value_type(key, chunk));
+	chunks.insert(map::value_type(chunk_pos, chunk));
 }
 
 std::shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld& chunk_pos) const
 {
-	uint64_t key = chunk_key(chunk_pos);
-	if(last_chunk != nullptr && key == last_key)
+	if(last_chunk != nullptr && chunk_pos == last_key)
 	{
 		return last_chunk;
 	}
-	auto it = chunks.find(key);
+	auto it = chunks.find(chunk_pos);
 	if(it == chunks.end())
 	{
 		return nullptr;
 	}
 	std::shared_ptr<Chunk> chunk = it->second;
-	last_key = key;
+	last_key = chunk_pos;
 	last_chunk = chunk;
 	return chunk;
 }

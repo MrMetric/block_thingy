@@ -5,15 +5,12 @@
 #include <random>
 #include <unordered_map>
 
+#include "Coords.hpp"
+
 class Chunk;
 class Block;
-namespace Position
-{
-	struct BlockInWorld;
-	struct ChunkInWorld;
-}
 
-using map = std::unordered_map<uint64_t, std::shared_ptr<Chunk>>;
+using map = std::unordered_map<Position::ChunkInWorld, std::shared_ptr<Chunk>, std::function<uint_fast64_t(Position::ChunkInWorld)>>;
 
 class World
 {
@@ -33,9 +30,7 @@ class World
 
 	private:
 		map chunks;
-		mutable uint64_t last_key;
+		mutable Position::ChunkInWorld last_key;
 		mutable std::shared_ptr<Chunk> last_chunk;
 		std::minstd_rand random_engine;
-
-		static uint64_t chunk_key(const Position::ChunkInWorld&);
 };
