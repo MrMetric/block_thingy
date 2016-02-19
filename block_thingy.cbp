@@ -49,6 +49,7 @@
 			<Add option="-Wno-shadow" />
 			<Add option="-Wno-padded" />
 			<Add option="-Werror=unknown-warning-option" />
+			<Add option="-Werror=unknown-pragmas" />
 			<Add option="-Werror=delete-incomplete" />
 			<Add option="-Werror=deprecated" />
 			<Add option="-Werror=return-type" />

@@ -11,6 +11,7 @@ CFLAGS = \
 	-Wno-padded \
 	-Werror=return-type \
 	-Werror=unknown-warning-option \
+	-Werror=unknown-pragmas \
 
 CXXFLAGS = $(CFLAGS) \
 	-std=c++14 \

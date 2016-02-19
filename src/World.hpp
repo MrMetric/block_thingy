@@ -10,7 +10,8 @@
 class Chunk;
 class Block;
 
-using map = std::unordered_map<Position::ChunkInWorld, std::shared_ptr<Chunk>, std::function<uint_fast64_t(Position::ChunkInWorld)>>;
+using world_map_keyhasher_t = std::function<uint_fast64_t(Position::ChunkInWorld)>;
+using world_map_t = std::unordered_map<Position::ChunkInWorld, std::shared_ptr<Chunk>, world_map_keyhasher_t>;
 
 class World
 {
@@ -29,7 +30,7 @@ class World
 		void gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max);
 
 	private:
-		map chunks;
+		world_map_t chunks;
 		mutable Position::ChunkInWorld last_key;
 		mutable std::shared_ptr<Chunk> last_chunk;
 		std::minstd_rand random_engine;

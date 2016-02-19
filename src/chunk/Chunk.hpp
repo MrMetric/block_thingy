@@ -39,10 +39,10 @@ class Chunk
 		World* owner;
 		Position::ChunkInWorld position;
 		std::array<Block, CHUNK_BLOCK_COUNT> blok;
-		bool changed;
 		std::unique_ptr<ChunkMesher> mesher;
 		mesh_t meshes;
 		std::vector<GLuint> mesh_vbos;
+		bool changed;
 
 		void update_neighbors(const BlockInChunk_type, const BlockInChunk_type, const BlockInChunk_type);
 		void update_neighbor(const ChunkInWorld_type, const ChunkInWorld_type, const ChunkInWorld_type);

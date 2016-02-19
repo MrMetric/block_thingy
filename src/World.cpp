@@ -60,7 +60,7 @@ void World::set_chunk(const Position::ChunkInWorld& chunk_pos, std::shared_ptr<C
 	{
 		last_chunk = chunk;
 	}
-	chunks.insert(map::value_type(chunk_pos, chunk));
+	chunks.insert({ chunk_pos, chunk });
 }
 
 std::shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld& chunk_pos) const
@@ -89,7 +89,9 @@ std::shared_ptr<Chunk> World::get_or_make_chunk(const Position::ChunkInWorld& ch
 		set_chunk(chunk_pos, chunk);
 		gen_chunk(chunk_pos); // should this really be here?
 	}
-	// should this set last_key/last_chunk?
+	// this does not set last_chunk/last_key because:
+	// if the chunk is not null, get_chunk does it
+	// if the chunk is null, set_chunk does it
 	return chunk;
 }
 
