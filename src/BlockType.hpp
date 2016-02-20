@@ -10,4 +10,7 @@ enum class BlockType : block_type_id_t
 	air = 1,
 	test = 2,
 	dots = 3,
+	COUNT,
 };
+
+#define BlockType_COUNT static_cast<block_type_id_t>(BlockType::COUNT)

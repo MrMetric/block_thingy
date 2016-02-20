@@ -390,15 +390,10 @@ void Game::add_commands()
 	console->run_line("bind f froxx");
 	commands.emplace_back(console, "change_block_type", []()
 	{
-		if(block_type == BlockType::test)
-		{
-			block_type = BlockType::dots;
-		}
-		else
-		{
-			block_type = BlockType::test;
-		}
-		std::cout << "block type: " << static_cast<block_type_id_t>(block_type) << "\n";
+		block_type_id_t i = static_cast<block_type_id_t>(block_type);
+		i = (i + 1) % BlockType_COUNT;
+		block_type = static_cast<BlockType>(i);
+		std::cout << "block type: " << i << "\n";
 	});
 	console->run_line("bind j change_block_type");
 }
