@@ -117,7 +117,7 @@ void Chunk::render()
 		glUseProgram(shader.program);
 		glEnableVertexAttribArray(0);
 		Position::ChunkInWorld pos_mod = position * CHUNK_SIZE;
-		glUniform3f(shader.u_pos_mod, pos_mod.x, pos_mod.y, pos_mod.z);
+		shader.uniform3f("pos_mod", pos_mod.x, pos_mod.y, pos_mod.z);
 		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i]);
 		glVertexAttribPointer(0, 3, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
 		size_t draw_count = mesh.second.size() / 3;

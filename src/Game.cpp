@@ -95,7 +95,7 @@ void Game::draw_world()
 	{
 		const BlockShader& shader = p.second;
 		glUseProgram(shader.program);
-		glUniformMatrix4fv(shader.u_matriks, 1, GL_FALSE, gfx.matriks_ptr);
+		shader.uniformMatrix4fv("matriks", gfx.matriks_ptr);
 	}
 
 	const ChunkInWorld_type render_distance = 3;

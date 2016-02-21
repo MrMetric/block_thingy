@@ -1,5 +1,6 @@
 #pragma once
 
+#include <unordered_map>
 #include <string>
 
 #include <glad/glad.h>
@@ -16,10 +17,13 @@ class BlockShader
 
 		BlockShader& operator=(const BlockShader&) = delete;
 
+		GLint get_uniform_location(const std::string&) const;
+		void uniform3f(const std::string&, float, float, float) const;
+		void uniformMatrix4fv(const std::string&, const float*) const;
+
 		GLuint program;
-		GLint u_matriks;
-		GLint u_pos_mod;
 
 	private:
 		bool inited;
+		std::unordered_map<std::string, GLint> uniforms;
 };
