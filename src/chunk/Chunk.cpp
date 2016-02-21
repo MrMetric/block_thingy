@@ -91,11 +91,11 @@ void Chunk::update()
 	}
 
 	size_t i = 0;
-	for(auto mesh : meshes)
+	for(auto p : meshes)
 	{
-		const std::vector<GLubyte>& vertexes = mesh.second;
+		const mesh_t& mesh = p.second;
 		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i]);
-		glBufferData(GL_ARRAY_BUFFER, vertexes.size() * sizeof(GLubyte), vertexes.data(), GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(mesh_t::value_type), mesh.data(), GL_DYNAMIC_DRAW);
 		++i;
 	}
 
@@ -110,9 +110,9 @@ void Chunk::render()
 	}
 
 	size_t i = 0;
-	for(auto mesh : meshes)
+	for(auto p : meshes)
 	{
-		const BlockType type = mesh.first;
+		const BlockType type = p.first;
 		const BlockShader& shader = Game::instance->gfx.get_block_shader(type);
 		glUseProgram(shader.program);
 		glEnableVertexAttribArray(0);
@@ -120,7 +120,7 @@ void Chunk::render()
 		shader.uniform3f("pos_mod", pos_mod.x, pos_mod.y, pos_mod.z);
 		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i]);
 		glVertexAttribPointer(0, 3, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
-		size_t draw_count = mesh.second.size() / 3;
+		size_t draw_count = p.second.size() / 3;
 		glDrawArrays(GL_TRIANGLES, 0, draw_count);
 		glDisableVertexAttribArray(0);
 		++i;

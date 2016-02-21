@@ -10,7 +10,8 @@
 class Block;
 class Chunk;
 
-using mesh_t = std::map<BlockType, std::vector<GLubyte>>;
+using mesh_t = std::vector<GLubyte>;
+using meshmap_t = std::map<BlockType, mesh_t>;
 
 class ChunkMesher
 {
@@ -21,7 +22,7 @@ class ChunkMesher
 		ChunkMesher(const ChunkMesher&) = delete;
 		ChunkMesher& operator=(const ChunkMesher&) = delete;
 
-		virtual mesh_t make_mesh() = 0;
+		virtual meshmap_t make_mesh() = 0;
 
 	protected:
 		const Chunk& chunk;

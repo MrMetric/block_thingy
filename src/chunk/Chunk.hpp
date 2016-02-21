@@ -40,7 +40,7 @@ class Chunk
 		Position::ChunkInWorld position;
 		std::array<Block, CHUNK_BLOCK_COUNT> blok;
 		std::unique_ptr<ChunkMesher> mesher;
-		mesh_t meshes;
+		meshmap_t meshes;
 		std::vector<GLuint> mesh_vbos;
 		bool changed;
 
