@@ -41,27 +41,10 @@ GreedyMesher::GreedyMesher(const Chunk& chunk)
 	}
 }
 
-static void add_face(std::array<GLubyte, 3> p1, std::array<GLubyte, 3> p2, std::array<GLubyte, 3> p3, std::array<GLubyte, 3> p4, mesh_t& vertexes)
+static void add_face(const mesh_vertex_coord_t& p1, const mesh_vertex_coord_t& p2, const mesh_vertex_coord_t& p3, const mesh_vertex_coord_t& p4, mesh_t& vertexes)
 {
-	vertexes.push_back(p1[0]);
-	vertexes.push_back(p1[1]);
-	vertexes.push_back(p1[2]);
-	vertexes.push_back(p2[0]);
-	vertexes.push_back(p2[1]);
-	vertexes.push_back(p2[2]);
-	vertexes.push_back(p3[0]);
-	vertexes.push_back(p3[1]);
-	vertexes.push_back(p3[2]);
-
-	vertexes.push_back(p3[0]);
-	vertexes.push_back(p3[1]);
-	vertexes.push_back(p3[2]);
-	vertexes.push_back(p4[0]);
-	vertexes.push_back(p4[1]);
-	vertexes.push_back(p4[2]);
-	vertexes.push_back(p1[0]);
-	vertexes.push_back(p1[1]);
-	vertexes.push_back(p1[2]);
+	vertexes.emplace_back(p1, p2, p3);
+	vertexes.emplace_back(p3, p4, p1);
 }
 
 Rectangle GreedyMesher::yield_rectangle()
@@ -187,10 +170,10 @@ void GreedyMesher::add_surface(meshmap_t& meshes, Plane plane, Side side)
 				break;
 			}
 
-			std::array<GLubyte, 3> v1;
-			std::array<GLubyte, 3> v2;
-			std::array<GLubyte, 3> v3;
-			std::array<GLubyte, 3> v4;
+			mesh_vertex_coord_t v1;
+			mesh_vertex_coord_t v2;
+			mesh_vertex_coord_t v3;
+			mesh_vertex_coord_t v4;
 
 			uint8_t y1 = xyz[1];
 			if(side == Side::top)

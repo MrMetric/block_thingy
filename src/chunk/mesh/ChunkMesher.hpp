@@ -5,12 +5,16 @@
 
 #include <glad/glad.h>
 
+#include <glm/vec3.hpp>
+
 #include "../../BlockType.hpp"
 
 class Block;
 class Chunk;
 
-using mesh_t = std::vector<GLubyte>;
+using mesh_vertex_coord_t = glm::tvec3<GLubyte>;
+using mesh_triangle_t = glm::tvec3<mesh_vertex_coord_t>;
+using mesh_t = std::vector<mesh_triangle_t>;
 using meshmap_t = std::map<BlockType, mesh_t>;
 
 class ChunkMesher

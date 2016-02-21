@@ -120,7 +120,7 @@ void Chunk::render()
 		shader.uniform3f("pos_mod", pos_mod.x, pos_mod.y, pos_mod.z);
 		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i]);
 		glVertexAttribPointer(0, 3, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
-		size_t draw_count = p.second.size() / 3;
+		size_t draw_count = p.second.size() * 3;
 		glDrawArrays(GL_TRIANGLES, 0, draw_count);
 		glDisableVertexAttribArray(0);
 		++i;
