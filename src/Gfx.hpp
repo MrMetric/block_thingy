@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>
 #include <glm/vec4.hpp>
+#include <graphics/OpenGL/VertexBuffer.hpp>
 
 #include "BlockType.hpp"
 #include "graphics/BlockShader.hpp"
@@ -42,7 +43,7 @@ class Gfx
 		GLuint sp_crosshair;
 		GLint vs_crosshair_matriks;
 
-		GLuint outline_vbo;
+		VertexBuffer outline_vbo;
 
 		bool cull_face;
 

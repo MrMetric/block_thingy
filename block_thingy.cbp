@@ -54,6 +54,7 @@
 			<Add option="-Werror=deprecated" />
 			<Add option="-Werror=return-type" />
 			<Add option="-DUSE_LIBPNG" />
+			<Add directory="src" />
 		</Compiler>
 		<Linker>
 			<Add option="-lglfw3" />
@@ -112,6 +113,8 @@
 		<Unit filename="src/event/EventType.hpp" />
 		<Unit filename="src/graphics/BlockShader.cpp" />
 		<Unit filename="src/graphics/BlockShader.hpp" />
+		<Unit filename="src/graphics/OpenGL/VertexBuffer.cpp" />
+		<Unit filename="src/graphics/OpenGL/VertexBuffer.hpp" />
 		<Unit filename="src/gui/GUI.cpp" />
 		<Unit filename="src/gui/GUI.hpp" />
 		<Unit filename="src/main.cpp" />

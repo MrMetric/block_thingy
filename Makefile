@@ -16,6 +16,7 @@ CFLAGS = \
 CXXFLAGS = $(CFLAGS) \
 	-std=c++14 \
 	-fexceptions \
+	-Isrc \
 	-Wno-c++98-compat-pedantic \
 	-Wno-shadow \
 	-Werror=delete-incomplete \
@@ -74,6 +75,7 @@ OBJ_DEBUG = \
 	$(OBJDIR_DEBUG)/src/event/Event.o \
 	$(OBJDIR_DEBUG)/src/event/EventManager.o \
 	$(OBJDIR_DEBUG)/src/graphics/BlockShader.o \
+	$(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexBuffer.o \
 	$(OBJDIR_DEBUG)/src/gui/GUI.o \
 	$(OBJDIR_DEBUG)/src/physics/RaytraceHit.o \
 	$(OBJDIR_DEBUG)/src/physics/Raytracer.o \
@@ -103,6 +105,7 @@ OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/src/event/Event.o \
 	$(OBJDIR_RELEASE)/src/event/EventManager.o \
 	$(OBJDIR_RELEASE)/src/graphics/BlockShader.o \
+	$(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexBuffer.o \
 	$(OBJDIR_RELEASE)/src/gui/GUI.o \
 	$(OBJDIR_RELEASE)/src/physics/RaytraceHit.o \
 	$(OBJDIR_RELEASE)/src/physics/Raytracer.o \
@@ -117,6 +120,7 @@ before_debug:
 	test -d $(OBJDIR_DEBUG)/src/console || mkdir -p $(OBJDIR_DEBUG)/src/console
 	test -d $(OBJDIR_DEBUG)/src/event || mkdir -p $(OBJDIR_DEBUG)/src/event
 	test -d $(OBJDIR_DEBUG)/src/graphics || mkdir -p $(OBJDIR_DEBUG)/src/graphics
+	test -d $(OBJDIR_DEBUG)/src/graphics/OpenGL || mkdir -p $(OBJDIR_DEBUG)/src/graphics/OpenGL
 	test -d $(OBJDIR_DEBUG)/src/gui || mkdir -p $(OBJDIR_DEBUG)/src/gui
 	test -d $(OBJDIR_DEBUG)/src || mkdir -p $(OBJDIR_DEBUG)/src
 	test -d $(OBJDIR_DEBUG)/src/physics || mkdir -p $(OBJDIR_DEBUG)/src/physics
@@ -199,6 +203,9 @@ $(OBJDIR_DEBUG)/src/event/EventManager.o: src/event/EventManager.cpp
 $(OBJDIR_DEBUG)/src/graphics/BlockShader.o: src/graphics/BlockShader.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/graphics/BlockShader.cpp -o $(OBJDIR_DEBUG)/src/graphics/BlockShader.o
 
+$(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexBuffer.o: src/graphics/OpenGL/VertexBuffer.cpp
+	$(CXX) $(CXXFLAGS_DEBUG) -c src/graphics/OpenGL/VertexBuffer.cpp -o $(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexBuffer.o
+
 $(OBJDIR_DEBUG)/src/gui/GUI.o: src/gui/GUI.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/gui/GUI.cpp -o $(OBJDIR_DEBUG)/src/gui/GUI.o
 
@@ -220,6 +227,7 @@ before_release:
 	test -d $(OBJDIR_RELEASE)/src/console || mkdir -p $(OBJDIR_RELEASE)/src/console
 	test -d $(OBJDIR_RELEASE)/src/event || mkdir -p $(OBJDIR_RELEASE)/src/event
 	test -d $(OBJDIR_RELEASE)/src/graphics || mkdir -p $(OBJDIR_RELEASE)/src/graphics
+	test -d $(OBJDIR_RELEASE)/src/graphics/OpenGL || mkdir -p $(OBJDIR_RELEASE)/src/graphics/OpenGL
 	test -d $(OBJDIR_RELEASE)/src/gui || mkdir -p $(OBJDIR_RELEASE)/src/gui
 	test -d $(OBJDIR_RELEASE)/src/physics || mkdir -p $(OBJDIR_RELEASE)/src/physics
 
@@ -299,6 +307,9 @@ $(OBJDIR_RELEASE)/src/event/EventManager.o: src/event/EventManager.cpp
 
 $(OBJDIR_RELEASE)/src/graphics/BlockShader.o: src/graphics/BlockShader.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/graphics/BlockShader.cpp -o $(OBJDIR_RELEASE)/src/graphics/BlockShader.o
+
+$(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexBuffer.o: src/graphics/OpenGL/VertexBuffer.cpp
+	$(CXX) $(CXXFLAGS_RELEASE) -c src/graphics/OpenGL/VertexBuffer.cpp -o $(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexBuffer.o
 
 $(OBJDIR_RELEASE)/src/gui/GUI.o: src/gui/GUI.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/gui/GUI.cpp -o $(OBJDIR_RELEASE)/src/gui/GUI.o

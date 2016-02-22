@@ -101,8 +101,6 @@ void Gfx::opengl_setup()
 	sp_crosshair = make_program("shaders/crosshair");
 	vs_crosshair_matriks = getUniformLocation(sp_crosshair, "matriks");
 
-	glGenBuffers(1, &outline_vbo);
-
 	GLfloat lineWidthRange[2];
 	glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, lineWidthRange);
 	std::cout << "OpenGL aliased line width range: " << lineWidthRange[0] << "," << lineWidthRange[1] << "\n";
@@ -129,7 +127,6 @@ void Gfx::opengl_cleanup()
 	glDeleteVertexArrays(1, &vertex_array);
 	glDeleteProgram(sp_lines);
 	glDeleteProgram(sp_crosshair);
-	glDeleteBuffers(1, &outline_vbo);
 }
 
 void Gfx::update_framebuffer_size(GLsizei width, GLsizei height)
@@ -185,15 +182,14 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 		o1 += 3;
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, outline_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexes), vertexes, GL_DYNAMIC_DRAW);
+	outline_vbo.data(sizeof(vertexes), vertexes, GL_DYNAMIC_DRAW);
 
 	glUseProgram(sp_lines);
 	glUniformMatrix4fv(vs_lines_matriks, 1, GL_FALSE, matriks_ptr);
 	glUniform4fv(vs_lines_color, 1, glm::value_ptr(color));
 
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, outline_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, outline_vbo.get_name());
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 	glDrawArrays(GL_LINE_STRIP, 0, 16);
 	glDisableVertexAttribArray(0);

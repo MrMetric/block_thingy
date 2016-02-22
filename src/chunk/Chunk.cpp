@@ -28,11 +28,6 @@ Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	blok.fill(Block(BlockType::air));
 }
 
-Chunk::~Chunk()
-{
-	glDeleteBuffers(mesh_vbos.size(), &mesh_vbos[0]);
-}
-
 Block Chunk::get_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const
 {
 	return blok[CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x];
@@ -84,9 +79,7 @@ void Chunk::update()
 		size_t to_add = meshes.size() - mesh_vbos.size();
 		for(size_t i = 0; i < to_add; ++i)
 		{
-			GLuint vbo;
-			glGenBuffers(1, &vbo);
-			mesh_vbos.push_back(vbo);
+			mesh_vbos.emplace_back();
 		}
 	}
 
@@ -94,8 +87,7 @@ void Chunk::update()
 	for(auto p : meshes)
 	{
 		const mesh_t& mesh = p.second;
-		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i]);
-		glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(mesh_t::value_type), mesh.data(), GL_DYNAMIC_DRAW);
+		mesh_vbos[i].data(mesh.size() * sizeof(mesh_t::value_type), mesh.data(), GL_DYNAMIC_DRAW);
 		++i;
 	}
 
@@ -118,7 +110,7 @@ void Chunk::render()
 		glEnableVertexAttribArray(0);
 		Position::ChunkInWorld pos_mod = position * CHUNK_SIZE;
 		shader.uniform3f("pos_mod", pos_mod.x, pos_mod.y, pos_mod.z);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i]);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i].get_name());
 		glVertexAttribPointer(0, 3, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
 		size_t draw_count = p.second.size() * 3;
 		glDrawArrays(GL_TRIANGLES, 0, draw_count);

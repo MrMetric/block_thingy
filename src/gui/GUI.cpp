@@ -9,12 +9,6 @@
 
 GUI::GUI()
 {
-	glGenBuffers(1, &crosshair_vbo);
-}
-
-GUI::~GUI()
-{
-	glDeleteBuffers(1, &crosshair_vbo);
 }
 
 void GUI::update_framebuffer_size(uint_fast32_t width, uint_fast32_t height)
@@ -36,8 +30,7 @@ void GUI::update_framebuffer_size(uint_fast32_t width, uint_fast32_t height)
 		midX + 1, midY + 16, 0,
 		midX + 1, midY - 16, 0,
 	};
-	glBindBuffer(GL_ARRAY_BUFFER, crosshair_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(crosshair_vertex), crosshair_vertex, GL_DYNAMIC_DRAW);
+	crosshair_vbo.data(sizeof(crosshair_vertex), crosshair_vertex, GL_DYNAMIC_DRAW);
 }
 
 void GUI::draw(const Gfx& gfx)
@@ -56,7 +49,7 @@ void GUI::draw_crosshair(const Gfx& gfx)
 	glUniformMatrix4fv(gfx.vs_crosshair_matriks, 1, GL_FALSE, glm::value_ptr(crosshair_matrix));
 
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, crosshair_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, crosshair_vbo.get_name());
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 	glDrawArrays(GL_TRIANGLES, 0, 12);
 	glDisableVertexAttribArray(0);

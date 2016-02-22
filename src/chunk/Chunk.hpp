@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <glad/glad.h>
+#include <graphics/OpenGL/VertexBuffer.hpp>
 
 #include "mesh/ChunkMesher.hpp"
 #include "../Block.hpp"
@@ -20,7 +21,6 @@ class Chunk
 	public:
 		Chunk(Position::ChunkInWorld, World* owner);
 		Chunk(const Chunk&) = delete;
-		virtual ~Chunk();
 
 		// I will worry about copying later
 		Block get_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const;
@@ -41,7 +41,7 @@ class Chunk
 		std::array<Block, CHUNK_BLOCK_COUNT> blok;
 		std::unique_ptr<ChunkMesher> mesher;
 		meshmap_t meshes;
-		std::vector<GLuint> mesh_vbos;
+		std::vector<VertexBuffer> mesh_vbos;
 		bool changed;
 
 		void update_neighbors(const BlockInChunk_type, const BlockInChunk_type, const BlockInChunk_type);
