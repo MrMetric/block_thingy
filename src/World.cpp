@@ -69,12 +69,12 @@ std::shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld& chunk_pos)
 	{
 		return last_chunk;
 	}
-	auto it = chunks.find(chunk_pos);
-	if(it == chunks.end())
+	auto i = chunks.find(chunk_pos);
+	if(i == chunks.end())
 	{
 		return nullptr;
 	}
-	std::shared_ptr<Chunk> chunk = it->second;
+	std::shared_ptr<Chunk> chunk = i->second;
 	last_key = chunk_pos;
 	last_chunk = chunk;
 	return chunk;

@@ -8,8 +8,8 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/trigonometric.hpp>	// glm::radians
-#include <glm/gtx/transform.hpp>	// glm::perspective
 #include <glm/gtc/type_ptr.hpp>		// glm::value_ptr
+#include <glm/gtx/transform.hpp>	// glm::perspective
 
 #ifdef USE_LIBPNG
 #include <png.h>
@@ -35,7 +35,9 @@ Gfx::Gfx(GLFWwindow* window)
 
 Gfx::~Gfx()
 {
-	opengl_cleanup();
+	glDeleteVertexArrays(1, &vertex_array);
+	glDeleteProgram(sp_lines);
+	glDeleteProgram(sp_crosshair);
 }
 
 GLFWwindow* Gfx::init_glfw()
@@ -120,13 +122,6 @@ void Gfx::toggle_cull_face()
 	{
 		glDisable(GL_CULL_FACE);
 	}
-}
-
-void Gfx::opengl_cleanup()
-{
-	glDeleteVertexArrays(1, &vertex_array);
-	glDeleteProgram(sp_lines);
-	glDeleteProgram(sp_crosshair);
 }
 
 void Gfx::update_framebuffer_size(GLsizei width, GLsizei height)

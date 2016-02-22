@@ -22,7 +22,7 @@ class Chunk
 		Chunk(Position::ChunkInWorld, World* owner);
 		Chunk(const Chunk&) = delete;
 
-		// I will worry about copying later
+		// I will worry about Block copying later
 		Block get_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const;
 		Block get_block(const Position::BlockInChunk&) const;
 

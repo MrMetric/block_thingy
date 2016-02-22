@@ -101,20 +101,23 @@ void Chunk::render()
 		update();
 	}
 
+	const Position::ChunkInWorld pos_mod = position * CHUNK_SIZE;
 	size_t i = 0;
 	for(auto p : meshes)
 	{
 		const BlockType type = p.first;
 		const BlockShader& shader = Game::instance->gfx.get_block_shader(type);
 		glUseProgram(shader.program);
-		glEnableVertexAttribArray(0);
-		Position::ChunkInWorld pos_mod = position * CHUNK_SIZE;
+
 		shader.uniform3f("pos_mod", pos_mod.x, pos_mod.y, pos_mod.z);
+
+		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i].get_name());
 		glVertexAttribPointer(0, 3, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
 		size_t draw_count = p.second.size() * 3;
 		glDrawArrays(GL_TRIANGLES, 0, draw_count);
 		glDisableVertexAttribArray(0);
+
 		++i;
 	}
 }

@@ -9,7 +9,6 @@
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
 #include "BlockType.hpp"
-#include "graphics/BlockShader.hpp"
 
 struct GLFWwindow;
 class Camera;
@@ -17,6 +16,7 @@ namespace Position
 {
 	struct BlockInWorld;
 }
+class BlockShader;
 
 class Gfx
 {
@@ -51,7 +51,6 @@ class Gfx
 		static void uninit_glfw(GLFWwindow* window);
 		void opengl_setup();
 		void toggle_cull_face();
-		void opengl_cleanup();
 		void update_framebuffer_size(GLsizei width, GLsizei height);
 		void set_cam_view(const Camera& cam);
 		void draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color);

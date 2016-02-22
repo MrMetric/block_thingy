@@ -1,5 +1,7 @@
 #include "VertexBuffer.hpp"
 
+#include <glad/glad.h>
+
 VertexBuffer::VertexBuffer()
 {
 	glCreateBuffers(1, &vbo);

@@ -1,6 +1,6 @@
 #version 330
 
-layout (location = 0) in vec3 position;
+layout(location = 0) in vec3 position;
 uniform mat4 matriks;
 uniform vec3 pos_mod;
 out vec3 vPos;

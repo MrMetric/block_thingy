@@ -1,5 +1,6 @@
 #include "shader_util.hpp"
 
+#include <iostream>
 #include <stdexcept>
 
 #include <glad/glad.h>
@@ -61,6 +62,8 @@ GLuint compile_shader(const std::string& filename, GLenum type)
 
 GLuint make_program(const std::string& path)
 {
+	std::cout << "compiling shader: " << path << "\n";
+
 	GLuint vs = compile_shader(path + ".vs", GL_VERTEX_SHADER);
 	GLuint fs = compile_shader(path + ".fs", GL_FRAGMENT_SHADER);
 
