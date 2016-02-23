@@ -60,7 +60,6 @@ OBJ_DEBUG = \
 	$(OBJDIR_DEBUG)/src/Gfx.o \
 	$(OBJDIR_DEBUG)/src/main.o \
 	$(OBJDIR_DEBUG)/src/Player.o \
-	$(OBJDIR_DEBUG)/src/shader_util.o \
 	$(OBJDIR_DEBUG)/src/Util.o \
 	$(OBJDIR_DEBUG)/src/World.o \
 	$(OBJDIR_DEBUG)/src/chunk/Chunk.o \
@@ -74,7 +73,7 @@ OBJ_DEBUG = \
 	$(OBJDIR_DEBUG)/src/console/KeybindManager.o \
 	$(OBJDIR_DEBUG)/src/event/Event.o \
 	$(OBJDIR_DEBUG)/src/event/EventManager.o \
-	$(OBJDIR_DEBUG)/src/graphics/BlockShader.o \
+	$(OBJDIR_DEBUG)/src/graphics/OpenGL/Shader.o \
 	$(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexBuffer.o \
 	$(OBJDIR_DEBUG)/src/gui/GUI.o \
 	$(OBJDIR_DEBUG)/src/physics/RaytraceHit.o \
@@ -90,7 +89,6 @@ OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/src/Gfx.o \
 	$(OBJDIR_RELEASE)/src/main.o \
 	$(OBJDIR_RELEASE)/src/Player.o \
-	$(OBJDIR_RELEASE)/src/shader_util.o \
 	$(OBJDIR_RELEASE)/src/Util.o \
 	$(OBJDIR_RELEASE)/src/World.o \
 	$(OBJDIR_RELEASE)/src/chunk/Chunk.o \
@@ -104,7 +102,7 @@ OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/src/console/KeybindManager.o \
 	$(OBJDIR_RELEASE)/src/event/Event.o \
 	$(OBJDIR_RELEASE)/src/event/EventManager.o \
-	$(OBJDIR_RELEASE)/src/graphics/BlockShader.o \
+	$(OBJDIR_RELEASE)/src/graphics/OpenGL/Shader.o \
 	$(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexBuffer.o \
 	$(OBJDIR_RELEASE)/src/gui/GUI.o \
 	$(OBJDIR_RELEASE)/src/physics/RaytraceHit.o \
@@ -158,9 +156,6 @@ $(OBJDIR_DEBUG)/src/main.o: src/main.cpp
 $(OBJDIR_DEBUG)/src/Player.o: src/Player.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/Player.cpp -o $(OBJDIR_DEBUG)/src/Player.o
 
-$(OBJDIR_DEBUG)/src/shader_util.o: src/shader_util.cpp
-	$(CXX) $(CXXFLAGS_DEBUG) -c src/shader_util.cpp -o $(OBJDIR_DEBUG)/src/shader_util.o
-
 $(OBJDIR_DEBUG)/src/Util.o: src/Util.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/Util.cpp -o $(OBJDIR_DEBUG)/src/Util.o
 
@@ -200,8 +195,8 @@ $(OBJDIR_DEBUG)/src/event/Event.o: src/event/Event.cpp
 $(OBJDIR_DEBUG)/src/event/EventManager.o: src/event/EventManager.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/event/EventManager.cpp -o $(OBJDIR_DEBUG)/src/event/EventManager.o
 
-$(OBJDIR_DEBUG)/src/graphics/BlockShader.o: src/graphics/BlockShader.cpp
-	$(CXX) $(CXXFLAGS_DEBUG) -c src/graphics/BlockShader.cpp -o $(OBJDIR_DEBUG)/src/graphics/BlockShader.o
+$(OBJDIR_DEBUG)/src/graphics/OpenGL/Shader.o: src/graphics/OpenGL/Shader.cpp
+	$(CXX) $(CXXFLAGS_DEBUG) -c src/graphics/OpenGL/Shader.cpp -o $(OBJDIR_DEBUG)/src/graphics/OpenGL/Shader.o
 
 $(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexBuffer.o: src/graphics/OpenGL/VertexBuffer.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/graphics/OpenGL/VertexBuffer.cpp -o $(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexBuffer.o
@@ -263,9 +258,6 @@ $(OBJDIR_RELEASE)/src/main.o: src/main.cpp
 $(OBJDIR_RELEASE)/src/Player.o: src/Player.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/Player.cpp -o $(OBJDIR_RELEASE)/src/Player.o
 
-$(OBJDIR_RELEASE)/src/shader_util.o: src/shader_util.cpp
-	$(CXX) $(CXXFLAGS_RELEASE) -c src/shader_util.cpp -o $(OBJDIR_RELEASE)/src/shader_util.o
-
 $(OBJDIR_RELEASE)/src/Util.o: src/Util.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/Util.cpp -o $(OBJDIR_RELEASE)/src/Util.o
 
@@ -305,8 +297,8 @@ $(OBJDIR_RELEASE)/src/event/Event.o: src/event/Event.cpp
 $(OBJDIR_RELEASE)/src/event/EventManager.o: src/event/EventManager.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/event/EventManager.cpp -o $(OBJDIR_RELEASE)/src/event/EventManager.o
 
-$(OBJDIR_RELEASE)/src/graphics/BlockShader.o: src/graphics/BlockShader.cpp
-	$(CXX) $(CXXFLAGS_RELEASE) -c src/graphics/BlockShader.cpp -o $(OBJDIR_RELEASE)/src/graphics/BlockShader.o
+$(OBJDIR_RELEASE)/src/graphics/OpenGL/Shader.o: src/graphics/OpenGL/Shader.cpp
+	$(CXX) $(CXXFLAGS_RELEASE) -c src/graphics/OpenGL/Shader.cpp -o $(OBJDIR_RELEASE)/src/graphics/OpenGL/Shader.o
 
 $(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexBuffer.o: src/graphics/OpenGL/VertexBuffer.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/graphics/OpenGL/VertexBuffer.cpp -o $(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexBuffer.o

@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>
 #include <glm/vec4.hpp>
+#include <graphics/OpenGL/Shader.hpp>
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
 #include "BlockType.hpp"
@@ -16,7 +17,6 @@ namespace Position
 {
 	struct BlockInWorld;
 }
-class BlockShader;
 
 class Gfx
 {
@@ -34,14 +34,10 @@ class Gfx
 		glm::mat4 matriks;
 		GLfloat* matriks_ptr;
 
-		std::map<BlockType, BlockShader> block_shaders;
+		std::map<BlockType, Shader> block_shaders;
 
-		GLuint sp_lines;
-		GLint vs_lines_matriks;
-		GLint vs_lines_color;
-
-		GLuint sp_crosshair;
-		GLint vs_crosshair_matriks;
+		Shader s_lines;
+		Shader s_crosshair;
 
 		VertexBuffer outline_vbo;
 
@@ -54,7 +50,7 @@ class Gfx
 		void update_framebuffer_size(GLsizei width, GLsizei height);
 		void set_cam_view(const Camera& cam);
 		void draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color);
-		const BlockShader& get_block_shader(BlockType) const;
+		const Shader& get_block_shader(BlockType) const;
 
 		#ifdef USE_LIBPNG
 		static void write_png_RGB(const char* filename, uint8_t* buf, uint_fast32_t width, uint_fast32_t height, bool reverse_rows = false);

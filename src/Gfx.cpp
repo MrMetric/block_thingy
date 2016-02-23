@@ -19,11 +19,11 @@
 #include "Camera.hpp"
 #include "Coords.hpp"
 #include "Cube.hpp"
-#include "shader_util.hpp"
-#include "graphics/BlockShader.hpp"
 
 Gfx::Gfx(GLFWwindow* window)
 	:
+	s_lines("shaders/lines"),
+	s_crosshair("shaders/crosshair"),
 	window(window)
 {
 	width = 0;
@@ -36,8 +36,6 @@ Gfx::Gfx(GLFWwindow* window)
 Gfx::~Gfx()
 {
 	glDeleteVertexArrays(1, &vertex_array);
-	glDeleteProgram(sp_lines);
-	glDeleteProgram(sp_crosshair);
 }
 
 GLFWwindow* Gfx::init_glfw()
@@ -95,13 +93,6 @@ void Gfx::opengl_setup()
 
 	block_shaders.emplace(BlockType::test, "shaders/block/test");
 	block_shaders.emplace(BlockType::dots, "shaders/block/dots");
-
-	sp_lines = make_program("shaders/lines");
-	vs_lines_matriks = getUniformLocation(sp_lines, "matriks");
-	vs_lines_color = getUniformLocation(sp_lines, "color");
-
-	sp_crosshair = make_program("shaders/crosshair");
-	vs_crosshair_matriks = getUniformLocation(sp_crosshair, "matriks");
 
 	GLfloat lineWidthRange[2];
 	glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, lineWidthRange);
@@ -179,9 +170,9 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 
 	outline_vbo.data(sizeof(vertexes), vertexes, GL_DYNAMIC_DRAW);
 
-	glUseProgram(sp_lines);
-	glUniformMatrix4fv(vs_lines_matriks, 1, GL_FALSE, matriks_ptr);
-	glUniform4fv(vs_lines_color, 1, glm::value_ptr(color));
+	glUseProgram(s_lines.get_name());
+	s_lines.uniformMatrix4fv("matriks", matriks_ptr);
+	s_lines.uniform4fv("color", glm::value_ptr(color));
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, outline_vbo.get_name());
@@ -190,7 +181,7 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 	glDisableVertexAttribArray(0);
 }
 
-const BlockShader& Gfx::get_block_shader(BlockType type) const
+const Shader& Gfx::get_block_shader(BlockType type) const
 {
 	auto i = block_shaders.find(type);
 	if(i != block_shaders.end())

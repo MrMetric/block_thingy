@@ -15,7 +15,6 @@
 #include "../Game.hpp"
 #include "../Gfx.hpp"
 #include "../World.hpp"
-#include "../graphics/BlockShader.hpp"
 
 Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	:
@@ -106,8 +105,8 @@ void Chunk::render()
 	for(auto p : meshes)
 	{
 		const BlockType type = p.first;
-		const BlockShader& shader = Game::instance->gfx.get_block_shader(type);
-		glUseProgram(shader.program);
+		const Shader& shader = Game::instance->gfx.get_block_shader(type);
+		glUseProgram(shader.get_name());
 
 		shader.uniform3f("pos_mod", pos_mod.x, pos_mod.y, pos_mod.z);
 

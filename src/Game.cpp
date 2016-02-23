@@ -31,7 +31,6 @@
 #include "event/Event.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
-#include "graphics/BlockShader.hpp"
 #include "gui/GUI.hpp"
 #include "physics/Raytracer.hpp"
 #include "physics/RaytraceHit.hpp"
@@ -93,8 +92,8 @@ void Game::draw_world()
 {
 	for(const auto& p : gfx.block_shaders)
 	{
-		const BlockShader& shader = p.second;
-		glUseProgram(shader.program);
+		const Shader& shader = p.second;
+		glUseProgram(shader.get_name());
 		shader.uniformMatrix4fv("matriks", gfx.matriks_ptr);
 	}
 
