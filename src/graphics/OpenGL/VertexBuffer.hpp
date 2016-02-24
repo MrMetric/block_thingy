@@ -7,7 +7,7 @@ class VertexBuffer
 	public:
 		VertexBuffer();
 		VertexBuffer(const VertexBuffer&) = delete;
-		VertexBuffer(VertexBuffer&& that);
+		VertexBuffer(VertexBuffer&&);
 		~VertexBuffer();
 
 		VertexBuffer& operator=(const VertexBuffer&) = delete;
@@ -18,5 +18,5 @@ class VertexBuffer
 
 	private:
 		bool inited;
-		GLuint vbo;
+		GLuint name;
 };

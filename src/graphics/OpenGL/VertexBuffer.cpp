@@ -4,7 +4,7 @@
 
 VertexBuffer::VertexBuffer()
 {
-	glCreateBuffers(1, &vbo);
+	glCreateBuffers(1, &name);
 	inited = true;
 }
 
@@ -13,7 +13,7 @@ VertexBuffer::VertexBuffer(VertexBuffer&& that)
 	inited = that.inited;
 	if(inited)
 	{
-		vbo = that.vbo;
+		name = that.name;
 		that.inited = false;
 	}
 }
@@ -22,16 +22,17 @@ VertexBuffer::~VertexBuffer()
 {
 	if(inited)
 	{
-		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &name);
+		inited = false;
 	}
 }
 
 void VertexBuffer::data(GLsizei size, const void* data, GLenum usage)
 {
-	glNamedBufferData(vbo, size, data, usage);
+	glNamedBufferData(name, size, data, usage);
 }
 
 GLuint VertexBuffer::get_name() const
 {
-	return vbo;
+	return name;
 }
