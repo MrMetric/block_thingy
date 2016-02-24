@@ -37,7 +37,6 @@ class Gfx
 		std::map<BlockType, Shader> block_shaders;
 
 		Shader s_lines;
-		Shader s_crosshair;
 
 		VertexBuffer outline_vbo;
 

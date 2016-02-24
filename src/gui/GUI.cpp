@@ -8,6 +8,8 @@
 #include "../Gfx.hpp"
 
 GUI::GUI()
+	:
+	s_crosshair("shaders/crosshair")
 {
 }
 
@@ -42,11 +44,11 @@ void GUI::draw_crosshair(const Gfx& gfx)
 {
 	glDisable(GL_DEPTH_TEST);
 
-	glUseProgram(gfx.s_crosshair.get_name());
-	gfx.s_crosshair.uniformMatrix4fv("matriks", gfx.matriks_ptr);
+	glUseProgram(s_crosshair.get_name());
+	s_crosshair.uniformMatrix4fv("matriks", gfx.matriks_ptr);
 
 	glm::mat4 crosshair_matrix = glm::ortho(0.0f, static_cast<float>(gfx.width), static_cast<float>(gfx.height), 0.0f, -1.0f, 1.0f);
-	gfx.s_crosshair.uniformMatrix4fv("matriks", glm::value_ptr(crosshair_matrix));
+	s_crosshair.uniformMatrix4fv("matriks", glm::value_ptr(crosshair_matrix));
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, crosshair_vbo.get_name());

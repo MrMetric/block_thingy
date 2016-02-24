@@ -23,7 +23,6 @@
 Gfx::Gfx(GLFWwindow* window)
 	:
 	s_lines("shaders/lines"),
-	s_crosshair("shaders/crosshair"),
 	window(window)
 {
 	width = 0;
