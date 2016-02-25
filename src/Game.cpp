@@ -93,7 +93,6 @@ void Game::draw_world()
 	for(const auto& p : gfx.block_shaders)
 	{
 		const Shader& shader = p.second;
-		glUseProgram(shader.get_name());
 		shader.uniformMatrix4fv("matriks", gfx.matriks);
 	}
 
