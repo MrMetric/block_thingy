@@ -32,7 +32,6 @@ class Gfx
 
 		VertexArray vertex_array;
 		glm::mat4 matriks;
-		GLfloat* matriks_ptr;
 
 		std::map<BlockType, Shader> block_shaders;
 

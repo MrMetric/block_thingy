@@ -27,7 +27,6 @@ Gfx::Gfx(GLFWwindow* window)
 {
 	width = 0;
 	height = 0;
-	matriks_ptr = nullptr;
 
 	opengl_setup();
 }
@@ -135,7 +134,6 @@ void Gfx::set_cam_view(const Camera& cam)
 	view *= glm::translate(position);
 	glm::mat4 viewf(view);
 	matriks = projection_matrix * viewf;
-	matriks_ptr = glm::value_ptr(matriks);
 	view_matrix = viewf;
 }
 
@@ -164,7 +162,7 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 	outline_vbo.data(sizeof(vertexes), vertexes, GL_DYNAMIC_DRAW);
 
 	glUseProgram(s_lines.get_name());
-	s_lines.uniformMatrix4fv("matriks", matriks_ptr);
+	s_lines.uniformMatrix4fv("matriks", glm::value_ptr(matriks));
 	s_lines.uniform4fv("color", glm::value_ptr(color));
 
 	vertex_array.attrib(0, true);
