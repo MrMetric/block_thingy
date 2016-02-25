@@ -7,6 +7,7 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec4.hpp>
 #include <graphics/OpenGL/Shader.hpp>
+#include <graphics/OpenGL/VertexArray.hpp>
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
 #include "BlockType.hpp"
@@ -22,7 +23,6 @@ class Gfx
 {
 	public:
 		explicit Gfx(GLFWwindow* window);
-		~Gfx();
 
 		GLFWwindow* window;
 		uint_fast32_t width;
@@ -30,7 +30,7 @@ class Gfx
 		glm::mat4 projection_matrix;
 		glm::mat4 view_matrix;
 
-		GLuint vertex_array;
+		VertexArray vertex_array;
 		glm::mat4 matriks;
 		GLfloat* matriks_ptr;
 

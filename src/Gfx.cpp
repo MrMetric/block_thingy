@@ -32,11 +32,6 @@ Gfx::Gfx(GLFWwindow* window)
 	opengl_setup();
 }
 
-Gfx::~Gfx()
-{
-	glDeleteVertexArrays(1, &vertex_array);
-}
-
 GLFWwindow* Gfx::init_glfw()
 {
 	if(!glfwInit())
@@ -87,8 +82,7 @@ void Gfx::opengl_setup()
 	cull_face = true;
 	glCullFace(GL_BACK);
 
-	glGenVertexArrays(1, &vertex_array);
-	glBindVertexArray(vertex_array);
+	glBindVertexArray(vertex_array.get_name());
 
 	block_shaders.emplace(BlockType::test, "shaders/block/test");
 	block_shaders.emplace(BlockType::dots, "shaders/block/dots");
@@ -173,11 +167,11 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 	s_lines.uniformMatrix4fv("matriks", matriks_ptr);
 	s_lines.uniform4fv("color", glm::value_ptr(color));
 
-	glEnableVertexAttribArray(0);
+	vertex_array.attrib(0, true);
 	glBindBuffer(GL_ARRAY_BUFFER, outline_vbo.get_name());
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glDrawArrays(GL_LINE_STRIP, 0, 16);
-	glDisableVertexAttribArray(0);
+	vertex_array.attrib(0, false);
 }
 
 const Shader& Gfx::get_block_shader(BlockType type) const

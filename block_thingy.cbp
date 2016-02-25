@@ -113,6 +113,8 @@
 		<Unit filename="src/event/EventType.hpp" />
 		<Unit filename="src/graphics/OpenGL/Shader.cpp" />
 		<Unit filename="src/graphics/OpenGL/Shader.hpp" />
+		<Unit filename="src/graphics/OpenGL/VertexArray.cpp" />
+		<Unit filename="src/graphics/OpenGL/VertexArray.hpp" />
 		<Unit filename="src/graphics/OpenGL/VertexBuffer.cpp" />
 		<Unit filename="src/graphics/OpenGL/VertexBuffer.hpp" />
 		<Unit filename="src/gui/GUI.cpp" />

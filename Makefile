@@ -74,6 +74,7 @@ OBJ_DEBUG = \
 	$(OBJDIR_DEBUG)/src/event/Event.o \
 	$(OBJDIR_DEBUG)/src/event/EventManager.o \
 	$(OBJDIR_DEBUG)/src/graphics/OpenGL/Shader.o \
+	$(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexArray.o \
 	$(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexBuffer.o \
 	$(OBJDIR_DEBUG)/src/gui/GUI.o \
 	$(OBJDIR_DEBUG)/src/physics/RaytraceHit.o \
@@ -103,6 +104,7 @@ OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/src/event/Event.o \
 	$(OBJDIR_RELEASE)/src/event/EventManager.o \
 	$(OBJDIR_RELEASE)/src/graphics/OpenGL/Shader.o \
+	$(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexArray.o \
 	$(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexBuffer.o \
 	$(OBJDIR_RELEASE)/src/gui/GUI.o \
 	$(OBJDIR_RELEASE)/src/physics/RaytraceHit.o \
@@ -197,6 +199,9 @@ $(OBJDIR_DEBUG)/src/event/EventManager.o: src/event/EventManager.cpp
 
 $(OBJDIR_DEBUG)/src/graphics/OpenGL/Shader.o: src/graphics/OpenGL/Shader.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/graphics/OpenGL/Shader.cpp -o $(OBJDIR_DEBUG)/src/graphics/OpenGL/Shader.o
+
+$(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexArray.o: src/graphics/OpenGL/VertexArray.cpp
+	$(CXX) $(CXXFLAGS_DEBUG) -c src/graphics/OpenGL/VertexArray.cpp -o $(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexArray.o
 
 $(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexBuffer.o: src/graphics/OpenGL/VertexBuffer.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/graphics/OpenGL/VertexBuffer.cpp -o $(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexBuffer.o
@@ -299,6 +304,9 @@ $(OBJDIR_RELEASE)/src/event/EventManager.o: src/event/EventManager.cpp
 
 $(OBJDIR_RELEASE)/src/graphics/OpenGL/Shader.o: src/graphics/OpenGL/Shader.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/graphics/OpenGL/Shader.cpp -o $(OBJDIR_RELEASE)/src/graphics/OpenGL/Shader.o
+
+$(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexArray.o: src/graphics/OpenGL/VertexArray.cpp
+	$(CXX) $(CXXFLAGS_RELEASE) -c src/graphics/OpenGL/VertexArray.cpp -o $(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexArray.o
 
 $(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexBuffer.o: src/graphics/OpenGL/VertexBuffer.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/graphics/OpenGL/VertexBuffer.cpp -o $(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexBuffer.o
