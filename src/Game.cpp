@@ -14,7 +14,6 @@
 
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
 #include "Block.hpp"
@@ -95,7 +94,7 @@ void Game::draw_world()
 	{
 		const Shader& shader = p.second;
 		glUseProgram(shader.get_name());
-		shader.uniformMatrix4fv("matriks", glm::value_ptr(gfx.matriks));
+		shader.uniformMatrix4fv("matriks", gfx.matriks);
 	}
 
 	const ChunkInWorld_type render_distance = 3;

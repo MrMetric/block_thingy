@@ -7,6 +7,7 @@
 #include <vector>
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "../../Util.hpp"
 
@@ -85,15 +86,17 @@ void Shader::uniform3f(const std::string& uniform_name, const float x, const flo
 	glProgramUniform3f(name, u, x, y, z);
 }
 
-void Shader::uniform4fv(const std::string& uniform_name, const float* ptr) const
+void Shader::uniform4fv(const std::string& uniform_name, const glm::vec4& vec) const
 {
 	const GLint u = get_uniform_location(uniform_name);
+	const float* ptr = glm::value_ptr(vec);
 	glProgramUniform4fv(name, u, 1, ptr);
 }
 
-void Shader::uniformMatrix4fv(const std::string& uniform_name, const float* ptr) const
+void Shader::uniformMatrix4fv(const std::string& uniform_name, const glm::mat4& matrix) const
 {
 	const GLint u = get_uniform_location(uniform_name);
+	const float* ptr = glm::value_ptr(matrix);
 	glProgramUniformMatrix4fv(name, u, 1, GL_FALSE, ptr);
 }
 

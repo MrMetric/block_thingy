@@ -1,5 +1,6 @@
 #include "Gfx.hpp"
 
+#include <cstring>					// strerror
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -8,7 +9,6 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/trigonometric.hpp>	// glm::radians
-#include <glm/gtc/type_ptr.hpp>		// glm::value_ptr
 #include <glm/gtx/transform.hpp>	// glm::perspective
 
 #ifdef USE_LIBPNG
@@ -162,8 +162,8 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 	outline_vbo.data(sizeof(vertexes), vertexes, GL_DYNAMIC_DRAW);
 
 	glUseProgram(s_lines.get_name());
-	s_lines.uniformMatrix4fv("matriks", glm::value_ptr(matriks));
-	s_lines.uniform4fv("color", glm::value_ptr(color));
+	s_lines.uniformMatrix4fv("matriks", matriks);
+	s_lines.uniform4fv("color", color);
 
 	vertex_array.attrib(0, true);
 	glBindBuffer(GL_ARRAY_BUFFER, outline_vbo.get_name());

@@ -3,7 +3,6 @@
 #include <glad/glad.h>
 
 #include <glm/gtx/transform.hpp> // glm::ortho
-#include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
 #include "../Gfx.hpp"
 
@@ -45,10 +44,10 @@ void GUI::draw_crosshair(const Gfx& gfx)
 	glDisable(GL_DEPTH_TEST);
 
 	glUseProgram(s_crosshair.get_name());
-	s_crosshair.uniformMatrix4fv("matriks", glm::value_ptr(gfx.matriks));
+	s_crosshair.uniformMatrix4fv("matriks", gfx.matriks);
 
 	glm::mat4 crosshair_matrix = glm::ortho(0.0f, static_cast<float>(gfx.width), static_cast<float>(gfx.height), 0.0f, -1.0f, 1.0f);
-	s_crosshair.uniformMatrix4fv("matriks", glm::value_ptr(crosshair_matrix));
+	s_crosshair.uniformMatrix4fv("matriks", crosshair_matrix);
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, crosshair_vbo.get_name());
