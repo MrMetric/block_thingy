@@ -1,12 +1,13 @@
 #include "GreedyMesher.hpp"
 
-#include <array>
 #include <cstdint>
 
 #include <glad/glad.h>
+#include <glm/vec3.hpp>
 
 #include "../Chunk.hpp"
 #include "../../Block.hpp"
+#include "../../Coords.hpp"
 
 namespace GreedyMesherPrivate
 {

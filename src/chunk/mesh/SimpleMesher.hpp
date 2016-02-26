@@ -2,7 +2,6 @@
 #include "ChunkMesher.hpp"
 
 #include <cstdint>
-#include <vector>
 
 #include <glad/glad.h>
 

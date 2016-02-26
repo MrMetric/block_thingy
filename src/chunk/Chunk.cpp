@@ -4,8 +4,11 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 #include <glad/glad.h>
+#include <graphics/OpenGL/Shader.hpp>
+#include <graphics/OpenGL/VertexBuffer.hpp>
 
 #include "mesh/ChunkMesher.hpp"
 #include "mesh/GreedyMesher.hpp"

@@ -1,9 +1,8 @@
 #include "SimpleMesher.hpp"
 
-#include <vector>
-
 #include "../Chunk.hpp"
 #include "../../Block.hpp"
+#include "../../BlockType.hpp"
 #include "../../Coords.hpp"
 #include "../../Cube.hpp"
 

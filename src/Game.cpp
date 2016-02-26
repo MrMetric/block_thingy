@@ -8,13 +8,17 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include <glm/gtx/string_cast.hpp>
+
+#include <graphics/OpenGL/Shader.hpp>
 
 #include "Block.hpp"
 #include "BlockType.hpp"

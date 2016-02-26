@@ -5,9 +5,12 @@
 #include <limits>
 #include <stdexcept>
 
-#include <glm/common.hpp>				// glm::sign
-#include <glm/geometric.hpp>			// glm::normalize
-#include <glm/gtx/transform.hpp>		// glm::inverse
+#include <glm/common.hpp>		// glm::sign
+#include <glm/geometric.hpp>	// glm::normalize
+#include <glm/mat4x4.hpp>
+#include <glm/matrix.hpp>		// glm::inverse
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 
 #include "RaytraceHit.hpp"
 #include "../Block.hpp"

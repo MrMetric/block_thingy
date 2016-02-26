@@ -2,6 +2,7 @@
 
 #include "Console.hpp"
 #include "../Block.hpp"
+#include "../BlockType.hpp"
 #include "../Coords.hpp"
 #include "../Game.hpp"
 #include "../World.hpp"

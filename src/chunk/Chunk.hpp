@@ -4,7 +4,6 @@
 #include <memory>
 #include <vector>
 
-#include <glad/glad.h>
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
 #include "mesh/ChunkMesher.hpp"

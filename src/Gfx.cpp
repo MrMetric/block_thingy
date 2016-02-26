@@ -4,11 +4,18 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <graphics/OpenGL/Shader.hpp>
+#include <graphics/OpenGL/VertexArray.hpp>
+#include <graphics/OpenGL/VertexBuffer.hpp>
 
+#include <glm/mat4x4.hpp>
 #include <glm/trigonometric.hpp>	// glm::radians
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include <glm/gtx/transform.hpp>	// glm::perspective
 
 #ifdef USE_LIBPNG

@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 #include "Event.hpp"
 #include "EventType.hpp"

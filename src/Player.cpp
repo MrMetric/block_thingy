@@ -2,8 +2,9 @@
 
 #include <cmath>
 
-#include <glm/trigonometric.hpp>	// glm::radians
 #include <glm/common.hpp>			// glm::sign
+#include <glm/trigonometric.hpp>	// glm::radians
+#include <glm/vec3.hpp>
 
 #include "Block.hpp"
 #include "Coords.hpp"
