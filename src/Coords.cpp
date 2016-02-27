@@ -22,7 +22,7 @@ namespace Position
 	{
 	}
 
-	#define t(a) ChunkInWorld_type(std::floor(a / static_cast<double>(CHUNK_SIZE)))
+	#define t(a) static_cast<ChunkInWorld_type>(std::floor(a / static_cast<double>(CHUNK_SIZE)))
 	ChunkInWorld::ChunkInWorld(const BlockInWorld& pos)
 	{
 		x = t(pos.x);
@@ -35,7 +35,7 @@ namespace Position
 		if(i == 0) return x;
 		if(i == 1) return y;
 		if(i == 2) return z;
-		throw std::out_of_range("ChunkInWorld::operator[]: " + std::to_string(i) + " > 2");
+		throw std::out_of_range("Position::ChunkInWorld::operator[]: " + std::to_string(i) + " > 2");
 	}
 
 	ChunkInWorld& ChunkInWorld::operator+=(const ChunkInWorld& that)
@@ -85,7 +85,7 @@ namespace Position
 	}
 
 	#undef t
-	#define t(a) BlockInWorld_type(std::floor(a))
+	#define t(a) static_cast<BlockInWorld_type>(std::floor(a))
 	BlockInWorld::BlockInWorld(const glm::dvec3& vec)
 	{
 		x = t(vec.x);
@@ -105,7 +105,7 @@ namespace Position
 		if(i == 0) return x;
 		if(i == 1) return y;
 		if(i == 2) return z;
-		throw std::out_of_range("BlockInWorld::operator[]: " + std::to_string(i) + " > 2");
+		throw std::out_of_range("Position::BlockInWorld::operator[]: " + std::to_string(i) + " > 2");
 	}
 
 	BlockInWorld& BlockInWorld::operator+=(const BlockInWorld& that)
@@ -134,7 +134,7 @@ namespace Position
 	// % can return a negative result, so do it properly here
 	// TODO: find out if std::mod works instead
 	#undef t
-	#define t(a) BlockInChunk_type(a - CHUNK_SIZE * std::floor(a / static_cast<double>(CHUNK_SIZE)))
+	#define t(a) static_cast<BlockInChunk_type>(a - CHUNK_SIZE * std::floor(a / static_cast<double>(CHUNK_SIZE)))
 	BlockInChunk::BlockInChunk(const BlockInWorld& pos)
 	{
 		x = t(pos.x);
@@ -147,7 +147,7 @@ namespace Position
 		if(i == 0) return x;
 		if(i == 1) return y;
 		if(i == 2) return z;
-		throw std::out_of_range("BlockInChunk::operator[]: " + std::to_string(i) + " > 2");
+		throw std::out_of_range("Position::BlockInChunk::operator[]: " + std::to_string(i) + " > 2");
 	}
 
 	BlockInChunk& BlockInChunk::operator+=(const BlockInChunk& that)
