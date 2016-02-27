@@ -54,10 +54,12 @@ Rectangle GreedyMesher::yield_rectangle()
 	BlockInChunk_type start_x;
 	BlockInChunk_type w = 0;
 	BlockInChunk_type h = 0;
-	for(BlockInChunk_type z = 0; z < surface.size(); ++z)
+	const size_t surface_size = surface.size();
+	for(BlockInChunk_type z = 0; z < surface_size; ++z)
 	{
 		std::vector<BlockType>& row = surface[z];
-		for(BlockInChunk_type x = 0; x < row.size(); ++x)
+		const size_t row_size = row.size();
+		for(BlockInChunk_type x = 0; x < row_size; ++x)
 		{
 			const BlockType type = row[x];
 			if(type != BlockType::none)
@@ -68,14 +70,14 @@ Rectangle GreedyMesher::yield_rectangle()
 				h = 1;
 				row[x] = BlockType::none;
 				++x;
-				while(x < row.size() && row[x] == type)
+				while(x < row_size && row[x] == type)
 				{
 					w += 1;
 					row[x] = BlockType::none;
 					++x;
 				}
 				++z;
-				while(z < surface.size())
+				while(z < surface_size)
 				{
 					x = start_x;
 					std::vector<BlockType>& row2 = surface[z];
@@ -85,12 +87,13 @@ Rectangle GreedyMesher::yield_rectangle()
 						break;
 					}
 					BlockInChunk_type w2 = 0;
+					const size_t row2_size = row2.size();
 					do
 					{
 						w2 += 1;
 						++x;
 					}
-					while(x < row2.size() && w2 < w && row2[x] == type);
+					while(x < row2_size && w2 < w && row2[x] == type);
 
 					if(w2 == w)
 					{
@@ -166,7 +169,7 @@ void GreedyMesher::add_surface(meshmap_t& meshes, Plane plane, Side side)
 		while(true)
 		{
 			Rectangle rekt = yield_rectangle();
-			if(rekt.x == 0 && rekt.z == 0 && rekt.w == 0 && rekt.h == 0)
+			if(rekt.type == BlockType::none)
 			{
 				break;
 			}
