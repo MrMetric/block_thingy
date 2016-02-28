@@ -5,7 +5,7 @@
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
 #include <glm/mat4x4.hpp>
-#include <glm/gtx/transform.hpp> // glm::ortho
+#include <glm/gtc/matrix_transform.hpp> // glm::ortho
 
 #include "../Gfx.hpp"
 

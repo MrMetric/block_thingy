@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <functional>
 #include <unordered_map>
+#include <utility>			// std::pair
 
 class Event;
 enum class EventType;

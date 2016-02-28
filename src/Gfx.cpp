@@ -1,6 +1,7 @@
 #include "Gfx.hpp"
 
-#include <cstring>					// strerror
+#include <cstdio>							// C FILE stuff (for libpng use)
+#include <cstring>							// strerror
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -13,10 +14,11 @@
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
 #include <glm/mat4x4.hpp>
-#include <glm/trigonometric.hpp>	// glm::radians
+#include <glm/trigonometric.hpp>			// glm::radians
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
-#include <glm/gtx/transform.hpp>	// glm::perspective
+#include <glm/gtc/matrix_transform.hpp>		// glm::perspective
+#include <glm/gtx/transform.hpp>			// glm::rotate, glm::translate
 
 #ifdef USE_LIBPNG
 #include <png.h>
