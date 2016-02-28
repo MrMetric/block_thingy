@@ -8,7 +8,6 @@
 
 #include "mesh/ChunkMesher.hpp"
 #include "../Block.hpp"
-#include "../BlockType.hpp"
 #include "../Coords.hpp"
 
 #define CHUNK_SIZE 32
@@ -27,8 +26,8 @@ class Chunk
 		Block& get_block_mutable(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z);
 		Block& get_block_mutable(const Position::BlockInChunk&);
 
-		void set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, Block);
-		void set_block(const Position::BlockInChunk&, Block);
+		void set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, const Block&);
+		void set_block(const Position::BlockInChunk&, const Block&);
 
 		Position::ChunkInWorld get_position() const;
 		World* get_owner() const; // eeh

@@ -50,7 +50,7 @@ Block& Chunk::get_block_mutable(const Position::BlockInChunk& pos)
 	return get_block_mutable(pos.x, pos.y, pos.z);
 }
 
-void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, Block block)
+void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, const Block& block)
 {
 	if(x >= CHUNK_SIZE
 	|| y >= CHUNK_SIZE
@@ -67,7 +67,7 @@ void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, cons
 	update_neighbors(x, y, z);
 }
 
-void Chunk::set_block(const Position::BlockInChunk& block_pos, Block block)
+void Chunk::set_block(const Position::BlockInChunk& block_pos, const Block& block)
 {
 	set_block(block_pos.x, block_pos.y, block_pos.z, block);
 }

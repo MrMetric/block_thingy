@@ -23,7 +23,7 @@ class World
 		const Block& get_block_const(const Position::BlockInWorld&) const;
 		Block& get_block_mutable(const Position::BlockInWorld&);
 
-		void set_block(const Position::BlockInWorld&, Block);
+		void set_block(const Position::BlockInWorld&, const Block&);
 
 		std::shared_ptr<Chunk> get_chunk(const Position::ChunkInWorld&) const;
 		std::shared_ptr<Chunk> get_or_make_chunk(const Position::ChunkInWorld&);

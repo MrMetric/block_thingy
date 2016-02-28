@@ -33,7 +33,7 @@ World::~World()
 {
 }
 
-void World::set_block(const Position::BlockInWorld& block_pos, Block block)
+void World::set_block(const Position::BlockInWorld& block_pos, const Block& block)
 {
 	Position::ChunkInWorld chunk_pos(block_pos);
 	std::shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
