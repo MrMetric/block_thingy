@@ -8,6 +8,7 @@
 
 #include "mesh/ChunkMesher.hpp"
 #include "../Block.hpp"
+#include "../BlockType.hpp"
 #include "../Coords.hpp"
 
 #define CHUNK_SIZE 32
@@ -21,9 +22,10 @@ class Chunk
 		Chunk(Position::ChunkInWorld, World* owner);
 		Chunk(const Chunk&) = delete;
 
-		// I will worry about Block copying later
-		Block get_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const;
-		Block get_block(const Position::BlockInChunk&) const;
+		const Block& get_block_const(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const;
+		const Block& get_block_const(const Position::BlockInChunk&) const;
+		Block& get_block_mutable(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z);
+		Block& get_block_mutable(const Position::BlockInChunk&);
 
 		void set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, Block);
 		void set_block(const Position::BlockInChunk&, Block);

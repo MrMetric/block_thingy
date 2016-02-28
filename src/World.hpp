@@ -20,7 +20,9 @@ class World
 		World();
 		virtual ~World();
 
-		Block get_block(const Position::BlockInWorld&) const;
+		const Block& get_block_const(const Position::BlockInWorld&) const;
+		Block& get_block_mutable(const Position::BlockInWorld&);
+
 		void set_block(const Position::BlockInWorld&, Block);
 
 		std::shared_ptr<Chunk> get_chunk(const Position::ChunkInWorld&) const;

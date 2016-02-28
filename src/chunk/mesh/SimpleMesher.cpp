@@ -21,7 +21,7 @@ meshmap_t SimpleMesher::make_mesh()
 		{
 			for(BlockInChunk_type z = 0; z < CHUNK_SIZE; ++z)
 			{
-				Block block = block_at(x, y, z);
+				const Block& block = block_at(x, y, z);
 				if(block.is_invisible())
 				{
 					continue;

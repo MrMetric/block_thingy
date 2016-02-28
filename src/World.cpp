@@ -42,17 +42,32 @@ void World::set_block(const Position::BlockInWorld& block_pos, Block block)
 	chunk->set_block(pos, block);
 }
 
-Block World::get_block(const Position::BlockInWorld& block_pos) const
+const Block& World::get_block_const(const Position::BlockInWorld& block_pos) const
 {
 	Position::ChunkInWorld chunk_pos(block_pos);
 	std::shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		return Block(BlockType::none);
+		static const Block none = Block(BlockType::none);
+		return none;
 	}
 
 	Position::BlockInChunk pos(block_pos);
-	return chunk->get_block(pos);
+	return chunk->get_block_const(pos);
+}
+
+Block& World::get_block_mutable(const Position::BlockInWorld& block_pos)
+{
+	Position::ChunkInWorld chunk_pos(block_pos);
+	std::shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
+	if(chunk == nullptr)
+	{
+		static Block none = Block(BlockType::none); // TODO: this should be immutable
+		return none;
+	}
+
+	Position::BlockInChunk pos(block_pos);
+	return chunk->get_block_mutable(pos);
 }
 
 void World::set_chunk(const Position::ChunkInWorld& chunk_pos, std::shared_ptr<Chunk> chunk)

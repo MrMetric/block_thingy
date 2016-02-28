@@ -18,7 +18,7 @@ ChunkMesher::~ChunkMesher()
 {
 }
 
-const Block ChunkMesher::block_at(int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds) const
+const Block& ChunkMesher::block_at(int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds) const
 {
 	if(x < 0 || x >= CHUNK_SIZE
 	|| y < 0 || y >= CHUNK_SIZE
@@ -26,16 +26,17 @@ const Block ChunkMesher::block_at(int_fast16_t x, int_fast16_t y, int_fast16_t z
 	{
 		if(!allow_out_of_bounds)
 		{
-			return Block(BlockType::none);
+			static const Block none = Block(BlockType::none);
+			return none;
 		}
 		auto chunk_pos = chunk.get_position();
-		int64_t bx = chunk_pos.x * CHUNK_SIZE + x;
-		int64_t by = chunk_pos.y * CHUNK_SIZE + y;
-		int64_t bz = chunk_pos.z * CHUNK_SIZE + z;
-		return chunk.get_owner()->get_block(Position::BlockInWorld(bx, by, bz));
+		BlockInWorld_type bx = chunk_pos.x * CHUNK_SIZE + x;
+		BlockInWorld_type by = chunk_pos.y * CHUNK_SIZE + y;
+		BlockInWorld_type bz = chunk_pos.z * CHUNK_SIZE + z;
+		return chunk.get_owner()->get_block_const({bx, by, bz});
 	}
 	#define s(a) static_cast<BlockInChunk_type>(a)
-	return chunk.get_block(s(x), s(y), s(z));
+	return chunk.get_block_const(s(x), s(y), s(z));
 	#undef s
 }
 

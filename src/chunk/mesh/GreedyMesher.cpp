@@ -157,7 +157,7 @@ void GreedyMesher::add_surface(meshmap_t& meshes, Plane plane, Side side)
 				bool empty = block_is_invisible_not_none(x + o[0], y + o[1], z + o[2]);
 				if(empty && !block_is_invisible(x, y, z))
 				{
-					surface[xyz[2]][xyz[0]] = chunk.get_block(x, y, z).type();
+					surface[xyz[2]][xyz[0]] = chunk.get_block_const({x, y, z}).type();
 				}
 				else
 				{

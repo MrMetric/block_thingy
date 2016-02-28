@@ -200,7 +200,7 @@ void Player::toggle_noclip()
 bool Player::block_is_at(const double x, const double y, const double z)
 {
 	const Position::BlockInWorld block_pos(x, y, z);
-	const Block block = Game::instance->world.get_block(block_pos);
+	const Block& block = Game::instance->world.get_block_const(block_pos);
 	return block.is_solid();
 }
 

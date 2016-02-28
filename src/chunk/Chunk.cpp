@@ -30,14 +30,24 @@ Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	blok.fill(Block(BlockType::air));
 }
 
-Block Chunk::get_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const
+const Block& Chunk::get_block_const(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const
 {
 	return blok[CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x];
 }
 
-Block Chunk::get_block(const Position::BlockInChunk& block_pos) const
+const Block& Chunk::get_block_const(const Position::BlockInChunk& pos) const
 {
-	return get_block(block_pos.x, block_pos.y, block_pos.z);
+	return get_block_const(pos.x, pos.y, pos.z);
+}
+
+Block& Chunk::get_block_mutable(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+{
+	return blok[CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x];
+}
+
+Block& Chunk::get_block_mutable(const Position::BlockInChunk& pos)
+{
+	return get_block_mutable(pos.x, pos.y, pos.z);
 }
 
 void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, Block block)

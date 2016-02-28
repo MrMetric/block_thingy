@@ -152,7 +152,7 @@ void Game::mousepress(int button, int action, int mods)
 	{
 		if(button == GLFW_MOUSE_BUTTON_LEFT)
 		{
-			if(hovered_block != nullptr && world.get_block(hovered_block->pos).type() != BlockType::none)
+			if(hovered_block != nullptr && world.get_block_const(hovered_block->pos).type() != BlockType::none)
 			{
 				auto break_pos = hovered_block->pos;
 				world.set_block(break_pos, Block(BlockType::air));
@@ -195,7 +195,7 @@ void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat
 	hovered_block = Raytracer::raycast(world, out_origin, out_direction, 8);
 	if(hovered_block != nullptr)
 	{
-		bool block_is_none = world.get_block(hovered_block->pos).type() == BlockType::none;
+		bool block_is_none = world.get_block_const(hovered_block->pos).type() == BlockType::none;
 		glm::vec4 color = block_is_none ? glm::vec4(1, 0, 0, 1) : glm::vec4(1, 1, 1, 1);
 		gfx.draw_cube_outline(hovered_block->pos, color);
 	}
