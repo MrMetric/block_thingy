@@ -30,24 +30,29 @@ Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	blok.fill(Block(BlockType::air));
 }
 
+inline static std::array<Block, CHUNK_BLOCK_COUNT>::size_type blok_index(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+{
+	return CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
+}
+
 const Block& Chunk::get_block_const(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const
 {
-	return blok[CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x];
+	return blok[blok_index(x, y, z)];
 }
 
 const Block& Chunk::get_block_const(const Position::BlockInChunk& pos) const
 {
-	return get_block_const(pos.x, pos.y, pos.z);
+	return blok[blok_index(pos.x, pos.y, pos.z)];
 }
 
 Block& Chunk::get_block_mutable(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
-	return blok[CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x];
+	return blok[blok_index(x, y, z)];
 }
 
 Block& Chunk::get_block_mutable(const Position::BlockInChunk& pos)
 {
-	return get_block_mutable(pos.x, pos.y, pos.z);
+	return blok[blok_index(pos.x, pos.y, pos.z)];
 }
 
 void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, const Block& block)
@@ -60,8 +65,7 @@ void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, cons
 		throw std::domain_error("position out of bounds in Chunk::set: " + set_info);
 	}
 
-	uint_fast32_t index = CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
-	blok[index] = block;
+	blok[blok_index(x, y, z)] = block;
 	changed = true;
 
 	update_neighbors(x, y, z);
