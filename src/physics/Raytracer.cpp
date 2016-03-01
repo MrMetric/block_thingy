@@ -45,11 +45,27 @@ constexpr double intbound(double s, const double ds)
 	return (1 - s) / ds;
 }
 
+static glm::dvec3 intbound(const glm::dvec3& origin, const glm::dvec3& direction)
+{
+	return { intbound(origin.x, direction.x), intbound(origin.y, direction.y), intbound(origin.z, direction.z) };
+}
+
+static constexpr double delta(const double x)
+{
+	// TODO: profile vs (1.0 / glm::abs(x))
+	return (x == 0) ? infinity : (glm::sign(x) / x);
+}
+
+static glm::dvec3 delta(const glm::dvec3& direction)
+{
+	return { delta(direction.x), delta(direction.y), delta(direction.z) };
+}
+
 void Raytracer::ScreenPosToWorldRay(
 	uint_fast32_t mouseX, uint_fast32_t mouseY,             // Mouse position, in pixels, from bottom-left corner of the window
 	uint_fast32_t screenWidth, uint_fast32_t screenHeight,  // Window size, in pixels
-	glm::dmat4 ViewMatrix,              // Camera position and orientation
-	glm::dmat4 ProjectionMatrix,        // Camera parameters (ratio, field of view, near and far planes)
+	glm::dmat4 view_matrix,             // Camera position and orientation
+	glm::dmat4 projection_matrix,       // Camera parameters (ratio, field of view, near and far planes)
 	glm::dvec3& out_origin,             // Ouput : Origin of the ray. /!\ Starts at the near plane, so if you want the ray to start at the camera's position instead, ignore this.
 	glm::dvec3& out_direction           // Ouput : Direction, in world space, of the ray that goes "through" the mouse.
 )
@@ -70,12 +86,12 @@ void Raytracer::ScreenPosToWorldRay(
 
 
 	// The Projection matrix goes from Camera Space to NDC.
-	// So inverse(ProjectionMatrix) goes from NDC to Camera Space.
-	glm::dmat4 InverseProjectionMatrix = glm::inverse(ProjectionMatrix);
+	// So inverse(projection_matrix) goes from NDC to Camera Space.
+	glm::dmat4 InverseProjectionMatrix = glm::inverse(projection_matrix);
 
 	// The View Matrix goes from World Space to Camera Space.
-	// So inverse(ViewMatrix) goes from Camera Space to World Space.
-	glm::dmat4 InverseViewMatrix = glm::inverse(ViewMatrix);
+	// So inverse(view_matrix) goes from Camera Space to World Space.
+	glm::dmat4 InverseViewMatrix = glm::inverse(view_matrix);
 
 	glm::dvec4 lRayStart_camera = InverseProjectionMatrix * lRayStart_NDC;    lRayStart_camera /= lRayStart_camera.w;
 	glm::dvec4 lRayStart_world  = InverseViewMatrix       * lRayStart_camera; lRayStart_world  /= lRayStart_world .w;
@@ -129,57 +145,39 @@ std::unique_ptr<RaytraceHit> Raytracer::raycast(const World& world, glm::dvec3 o
 	// (i.e. change the integer part of the coordinate) in the variables
 	// tMaxX, tMaxY, and tMaxZ.
 
-	// Cube containing origin point.
-	BlockInWorld_type x = static_cast<BlockInWorld_type>(std::floor(origin[0]));
-	BlockInWorld_type y = static_cast<BlockInWorld_type>(std::floor(origin[1]));
-	BlockInWorld_type z = static_cast<BlockInWorld_type>(std::floor(origin[2]));
-
-	double dx = direction[0];
-	double dy = direction[1];
-	double dz = direction[2];
-
 	// Avoids an infinite loop.
-	if(dx == 0 && dy == 0 && dz == 0)
+	if(direction.x == 0 && direction.y == 0 && direction.z == 0)
 	{
 		throw std::invalid_argument("direction must not be (0, 0, 0)");
 	}
 
+	Position::BlockInWorld cube_pos(origin);
+
 	// Direction to increment x,y,z when stepping.
-	int stepX = int(glm::sign(dx));
-	int stepY = int(glm::sign(dy));
-	int stepZ = int(glm::sign(dz));
+	const glm::ivec3 step = glm::sign(direction);
 
 	// See description above. The initial values depend on the fractional part of the origin.
-	double tMaxX = intbound(origin[0], dx);
-	double tMaxY = intbound(origin[1], dy);
-	double tMaxZ = intbound(origin[2], dz);
+	glm::dvec3 tMax = intbound(origin, direction);
 
 	// The change in t when taking a step (always positive).
-	double tDeltaX = dx == 0 ? infinity : stepX / dx;
-	double tDeltaY = dy == 0 ? infinity : stepY / dy;
-	double tDeltaZ = dz == 0 ? infinity : stepZ / dz;
+	const glm::dvec3 tDelta = delta(direction);
 
-	glm::vec3 face;
+	glm::ivec3 face;
 
-	double minX = origin.x - radius;
-	double minY = origin.y - radius;
-	double minZ = origin.z - radius;
-	double maxX = origin.x + radius;
-	double maxY = origin.y + radius;
-	double maxZ = origin.z + radius;
+	const glm::dvec3 min = origin - radius;
+	const glm::dvec3 max = origin + radius;
 
 	while(/* ray has not gone past bounds of world */
-			(stepX > 0 ? x < maxX : x > minX) &&
-			(stepY > 0 ? y < maxY : y > minY) &&
-			(stepZ > 0 ? z < maxZ : z > minZ))
+			(step.x > 0 ? cube_pos.x < max.x : cube_pos.x > min.x) &&
+			(step.y > 0 ? cube_pos.y < max.y : cube_pos.y > min.y) &&
+			(step.z > 0 ? cube_pos.z < max.z : cube_pos.z > min.z))
 	{
 		// Invoke the callback, unless we are not *yet* within the bounds of the world.
-		if(!(x < minX || y < minY || z < minZ || x > maxX || y > maxY || z > maxZ))
+		if(!(cube_pos.x < min.x || cube_pos.y < min.y || cube_pos.z < min.z || cube_pos.x > max.x || cube_pos.y > max.y || cube_pos.z > max.z))
 		{
-			Position::BlockInWorld pos(x, y, z);
-			if(world.get_block_const(pos).is_solid())
+			if(world.get_block_const(cube_pos).is_solid())
 			{
-				return std::make_unique<RaytraceHit>(pos, face);
+				return std::make_unique<RaytraceHit>(cube_pos, face);
 			}
 		}
 
@@ -187,45 +185,44 @@ std::unique_ptr<RaytraceHit> Raytracer::raycast(const World& world, glm::dvec3 o
 		// X axis, and similarly for Y and Z. Therefore, choosing the least tMax
 		// chooses the closest cube boundary. Only the first case of the four
 		// has been commented in detail.
-		if(tMaxX < tMaxY)
+		if(tMax.x < tMax.y)
 		{
-			if(tMaxX < tMaxZ)
+			if(tMax.x < tMax.z)
 			{
-				// Update which cube we are now in.
-				x += stepX;
+				cube_pos.x += step.x;
 				// Adjust tMaxX to the next X-oriented boundary crossing.
-				tMaxX += tDeltaX;
+				tMax.x += tDelta.x;
 				// Record the normal vector of the cube face we entered.
-				face[0] = -stepX;
-				face[1] = 0;
-				face[2] = 0;
+				face.x = -step.x;
+				face.y = 0;
+				face.z = 0;
 			}
 			else
 			{
-				z += stepZ;
-				tMaxZ += tDeltaZ;
-				face[0] = 0;
-				face[1] = 0;
-				face[2] = -stepZ;
+				cube_pos.z += step.z;
+				tMax.z += tDelta.z;
+				face.x = 0;
+				face.y = 0;
+				face.z = -step.z;
 			}
 		}
 		else
 		{
-			if(tMaxY < tMaxZ)
+			if(tMax.y < tMax.z)
 			{
-				y += stepY;
-				tMaxY += tDeltaY;
-				face[0] = 0;
-				face[1] = -stepY;
-				face[2] = 0;
+				cube_pos.y += step.y;
+				tMax.y += tDelta.y;
+				face.x = 0;
+				face.y = -step.y;
+				face.z = 0;
 			}
 			else
 			{
-				z += stepZ;
-				tMaxZ += tDeltaZ;
-				face[0] = 0;
-				face[1] = 0;
-				face[2] = -stepZ;
+				cube_pos.z += step.z;
+				tMax.z += tDelta.z;
+				face.x = 0;
+				face.y = 0;
+				face.z = -step.z;
 			}
 		}
 	}
