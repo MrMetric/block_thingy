@@ -3,10 +3,10 @@
 #include "Console.hpp"
 #include "../Block.hpp"
 #include "../BlockType.hpp"
-#include "../Coords.hpp"
 #include "../Game.hpp"
 #include "../World.hpp"
 #include "../physics/RaytraceHit.hpp"
+#include "../position/BlockInWorld.hpp"
 
 void add_test_commands(Game* game)
 {

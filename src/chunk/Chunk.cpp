@@ -1,6 +1,5 @@
 #include "Chunk.hpp"
 
-#include <cstdint>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -14,10 +13,11 @@
 #include "mesh/GreedyMesher.hpp"
 #include "../Block.hpp"
 #include "../BlockType.hpp"
-#include "../Coords.hpp"
 #include "../Game.hpp"
 #include "../Gfx.hpp"
 #include "../World.hpp"
+#include "../position/BlockInChunk.hpp"
+#include "../position/ChunkInWorld.hpp"
 
 Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	:

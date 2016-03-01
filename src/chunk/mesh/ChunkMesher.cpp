@@ -5,8 +5,10 @@
 #include "../Chunk.hpp"
 #include "../../Block.hpp"
 #include "../../BlockType.hpp"
-#include "../../Coords.hpp"
 #include "../../World.hpp"
+#include "../../position/BlockInChunk.hpp"
+#include "../../position/BlockInWorld.hpp"
+#include "../../position/ChunkInWorld.hpp"
 
 ChunkMesher::ChunkMesher(const Chunk& chunk)
 	:
@@ -29,7 +31,7 @@ const Block& ChunkMesher::block_at(int_fast16_t x, int_fast16_t y, int_fast16_t 
 			static const Block none = Block(BlockType::none);
 			return none;
 		}
-		auto chunk_pos = chunk.get_position();
+		Position::ChunkInWorld chunk_pos = chunk.get_position();
 		BlockInWorld_type bx = chunk_pos.x * CHUNK_SIZE + x;
 		BlockInWorld_type by = chunk_pos.y * CHUNK_SIZE + y;
 		BlockInWorld_type bz = chunk_pos.z * CHUNK_SIZE + z;

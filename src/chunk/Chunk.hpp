@@ -8,7 +8,8 @@
 
 #include "mesh/ChunkMesher.hpp"
 #include "../Block.hpp"
-#include "../Coords.hpp"
+#include "../position/BlockInChunk.hpp"
+#include "../position/ChunkInWorld.hpp"
 
 #define CHUNK_SIZE 32
 #define CHUNK_BLOCK_COUNT (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)

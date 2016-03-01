@@ -7,7 +7,7 @@
 
 #include "../Chunk.hpp"
 #include "../../Block.hpp"
-#include "../../Coords.hpp"
+#include "../../position/BlockInChunk.hpp"
 
 namespace GreedyMesherPrivate
 {

@@ -73,8 +73,6 @@
 		<Unit filename="src/BlockType.hpp" />
 		<Unit filename="src/Camera.cpp" />
 		<Unit filename="src/Camera.hpp" />
-		<Unit filename="src/Coords.cpp" />
-		<Unit filename="src/Coords.hpp" />
 		<Unit filename="src/Cube.cpp" />
 		<Unit filename="src/Cube.hpp" />
 		<Unit filename="src/FPSManager.hpp" />
@@ -124,6 +122,12 @@
 		<Unit filename="src/physics/RaytraceHit.hpp" />
 		<Unit filename="src/physics/Raytracer.cpp" />
 		<Unit filename="src/physics/Raytracer.hpp" />
+		<Unit filename="src/position/BlockInChunk.cpp" />
+		<Unit filename="src/position/BlockInChunk.hpp" />
+		<Unit filename="src/position/BlockInWorld.cpp" />
+		<Unit filename="src/position/BlockInWorld.hpp" />
+		<Unit filename="src/position/ChunkInWorld.cpp" />
+		<Unit filename="src/position/ChunkInWorld.hpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

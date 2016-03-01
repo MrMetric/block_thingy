@@ -23,7 +23,6 @@
 #include "Block.hpp"
 #include "BlockType.hpp"
 #include "Camera.hpp"
-#include "Coords.hpp"
 #include "FPSManager.hpp"
 #include "Gfx.hpp"
 #include "Player.hpp"
@@ -38,6 +37,9 @@
 #include "gui/GUI.hpp"
 #include "physics/Raytracer.hpp"
 #include "physics/RaytraceHit.hpp"
+#include "position/BlockInChunk.hpp"
+#include "position/BlockInWorld.hpp"
+#include "position/ChunkInWorld.hpp"
 
 Game* Game::instance = nullptr;
 

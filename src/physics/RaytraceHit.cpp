@@ -1,8 +1,8 @@
 #include "RaytraceHit.hpp"
 
-#include "../Coords.hpp"
+#include "../position/BlockInWorld.hpp"
 
-RaytraceHit::RaytraceHit(Position::BlockInWorld pos, glm::ivec3 face)
+RaytraceHit::RaytraceHit(const Position::BlockInWorld& pos, glm::ivec3 face)
 	:
 	pos(pos),
 	face(face)

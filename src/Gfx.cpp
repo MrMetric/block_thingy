@@ -26,8 +26,8 @@
 
 #include "BlockType.hpp"
 #include "Camera.hpp"
-#include "Coords.hpp"
 #include "Cube.hpp"
+#include "position/BlockInWorld.hpp"
 
 Gfx::Gfx(GLFWwindow* window)
 	:

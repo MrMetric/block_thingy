@@ -5,7 +5,7 @@
 
 #include <glad/glad.h>
 
-#include "../../Coords.hpp"
+#include "../../position/BlockInChunk.hpp"
 
 class SimpleMesher : public ChunkMesher
 {

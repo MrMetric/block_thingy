@@ -3,8 +3,8 @@
 #include "../Chunk.hpp"
 #include "../../Block.hpp"
 #include "../../BlockType.hpp"
-#include "../../Coords.hpp"
 #include "../../Cube.hpp"
+#include "../../position/BlockInChunk.hpp"
 
 SimpleMesher::SimpleMesher(const Chunk& chunk)
 	:

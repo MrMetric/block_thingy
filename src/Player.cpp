@@ -7,8 +7,8 @@
 #include <glm/vec3.hpp>
 
 #include "Block.hpp"
-#include "Coords.hpp"
 #include "Game.hpp"
+#include "position/BlockInWorld.hpp"
 
 Player::Player()
 	:

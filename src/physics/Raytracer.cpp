@@ -14,8 +14,8 @@
 
 #include "RaytraceHit.hpp"
 #include "../Block.hpp"
-#include "../Coords.hpp"
 #include "../World.hpp"
+#include "../position/BlockInWorld.hpp"
 
 constexpr double infinity = std::numeric_limits<double>::infinity();
 

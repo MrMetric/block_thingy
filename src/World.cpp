@@ -6,8 +6,10 @@
 
 #include "Block.hpp"
 #include "BlockType.hpp"
-#include "Coords.hpp"
 #include "chunk/Chunk.hpp"
+#include "position/BlockInChunk.hpp"
+#include "position/BlockInWorld.hpp"
+#include "position/ChunkInWorld.hpp"
 
 uint64_t key_hasher(const Position::ChunkInWorld& chunk_pos)
 {

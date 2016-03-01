@@ -54,7 +54,6 @@ OBJ_DEBUG = \
 	$(OBJDIR_DEBUG)/glad.o \
 	$(OBJDIR_DEBUG)/src/Block.o \
 	$(OBJDIR_DEBUG)/src/Camera.o \
-	$(OBJDIR_DEBUG)/src/Coords.o \
 	$(OBJDIR_DEBUG)/src/Cube.o \
 	$(OBJDIR_DEBUG)/src/Game.o \
 	$(OBJDIR_DEBUG)/src/Gfx.o \
@@ -79,12 +78,14 @@ OBJ_DEBUG = \
 	$(OBJDIR_DEBUG)/src/gui/GUI.o \
 	$(OBJDIR_DEBUG)/src/physics/RaytraceHit.o \
 	$(OBJDIR_DEBUG)/src/physics/Raytracer.o \
+	$(OBJDIR_DEBUG)/src/position/BlockInChunk.o \
+	$(OBJDIR_DEBUG)/src/position/BlockInWorld.o \
+	$(OBJDIR_DEBUG)/src/position/ChunkInWorld.o \
 
 OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/glad.o \
 	$(OBJDIR_RELEASE)/src/Block.o \
 	$(OBJDIR_RELEASE)/src/Camera.o \
-	$(OBJDIR_RELEASE)/src/Coords.o \
 	$(OBJDIR_RELEASE)/src/Cube.o \
 	$(OBJDIR_RELEASE)/src/Game.o \
 	$(OBJDIR_RELEASE)/src/Gfx.o \
@@ -109,6 +110,9 @@ OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/src/gui/GUI.o \
 	$(OBJDIR_RELEASE)/src/physics/RaytraceHit.o \
 	$(OBJDIR_RELEASE)/src/physics/Raytracer.o \
+	$(OBJDIR_RELEASE)/src/position/BlockInChunk.o \
+	$(OBJDIR_RELEASE)/src/position/BlockInWorld.o \
+	$(OBJDIR_RELEASE)/src/position/ChunkInWorld.o \
 
 all: debug release
 
@@ -116,15 +120,16 @@ clean: clean_debug clean_release
 
 before_debug:
 	test -d bin || mkdir -p bin
+	test -d $(OBJDIR_DEBUG)/src || mkdir -p $(OBJDIR_DEBUG)/src
+	test -d $(OBJDIR_DEBUG)/src/chunk || mkdir -p $(OBJDIR_DEBUG)/src/chunk
 	test -d $(OBJDIR_DEBUG)/src/chunk/mesh || mkdir -p $(OBJDIR_DEBUG)/src/chunk/mesh
 	test -d $(OBJDIR_DEBUG)/src/console || mkdir -p $(OBJDIR_DEBUG)/src/console
 	test -d $(OBJDIR_DEBUG)/src/event || mkdir -p $(OBJDIR_DEBUG)/src/event
 	test -d $(OBJDIR_DEBUG)/src/graphics || mkdir -p $(OBJDIR_DEBUG)/src/graphics
 	test -d $(OBJDIR_DEBUG)/src/graphics/OpenGL || mkdir -p $(OBJDIR_DEBUG)/src/graphics/OpenGL
 	test -d $(OBJDIR_DEBUG)/src/gui || mkdir -p $(OBJDIR_DEBUG)/src/gui
-	test -d $(OBJDIR_DEBUG)/src || mkdir -p $(OBJDIR_DEBUG)/src
 	test -d $(OBJDIR_DEBUG)/src/physics || mkdir -p $(OBJDIR_DEBUG)/src/physics
-	test -d $(OBJDIR_DEBUG)/src/chunk || mkdir -p $(OBJDIR_DEBUG)/src/chunk
+	test -d $(OBJDIR_DEBUG)/src/position || mkdir -p $(OBJDIR_DEBUG)/src/position
 
 debug: before_debug out_debug
 
@@ -139,9 +144,6 @@ $(OBJDIR_DEBUG)/src/Block.o: src/Block.cpp
 
 $(OBJDIR_DEBUG)/src/Camera.o: src/Camera.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/Camera.cpp -o $(OBJDIR_DEBUG)/src/Camera.o
-
-$(OBJDIR_DEBUG)/src/Coords.o: src/Coords.cpp
-	$(CXX) $(CXXFLAGS_DEBUG) -c src/Coords.cpp -o $(OBJDIR_DEBUG)/src/Coords.o
 
 $(OBJDIR_DEBUG)/src/Cube.o: src/Cube.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/Cube.cpp -o $(OBJDIR_DEBUG)/src/Cube.o
@@ -215,6 +217,15 @@ $(OBJDIR_DEBUG)/src/physics/RaytraceHit.o: src/physics/RaytraceHit.cpp
 $(OBJDIR_DEBUG)/src/physics/Raytracer.o: src/physics/Raytracer.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/physics/Raytracer.cpp -o $(OBJDIR_DEBUG)/src/physics/Raytracer.o
 
+$(OBJDIR_DEBUG)/src/position/BlockInChunk.o: src/position/BlockInChunk.cpp
+	$(CXX) $(CXXFLAGS_DEBUG) -c src/position/BlockInChunk.cpp -o $(OBJDIR_DEBUG)/src/position/BlockInChunk.o
+
+$(OBJDIR_DEBUG)/src/position/BlockInWorld.o: src/position/BlockInWorld.cpp
+	$(CXX) $(CXXFLAGS_DEBUG) -c src/position/BlockInWorld.cpp -o $(OBJDIR_DEBUG)/src/position/BlockInWorld.o
+
+$(OBJDIR_DEBUG)/src/position/ChunkInWorld.o: src/position/ChunkInWorld.cpp
+	$(CXX) $(CXXFLAGS_DEBUG) -c src/position/ChunkInWorld.cpp -o $(OBJDIR_DEBUG)/src/position/ChunkInWorld.o
+
 clean_debug:
 	rm -f $(OUT_DEBUG)
 	rm -rf $(OBJDIR_DEBUG)
@@ -230,6 +241,7 @@ before_release:
 	test -d $(OBJDIR_RELEASE)/src/graphics/OpenGL || mkdir -p $(OBJDIR_RELEASE)/src/graphics/OpenGL
 	test -d $(OBJDIR_RELEASE)/src/gui || mkdir -p $(OBJDIR_RELEASE)/src/gui
 	test -d $(OBJDIR_RELEASE)/src/physics || mkdir -p $(OBJDIR_RELEASE)/src/physics
+	test -d $(OBJDIR_RELEASE)/src/position || mkdir -p $(OBJDIR_RELEASE)/src/position
 
 release: before_release out_release
 
@@ -244,9 +256,6 @@ $(OBJDIR_RELEASE)/src/Block.o: src/Block.cpp
 
 $(OBJDIR_RELEASE)/src/Camera.o: src/Camera.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/Camera.cpp -o $(OBJDIR_RELEASE)/src/Camera.o
-
-$(OBJDIR_RELEASE)/src/Coords.o: src/Coords.cpp
-	$(CXX) $(CXXFLAGS_RELEASE) -c src/Coords.cpp -o $(OBJDIR_RELEASE)/src/Coords.o
 
 $(OBJDIR_RELEASE)/src/Cube.o: src/Cube.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/Cube.cpp -o $(OBJDIR_RELEASE)/src/Cube.o
@@ -319,6 +328,15 @@ $(OBJDIR_RELEASE)/src/physics/RaytraceHit.o: src/physics/RaytraceHit.cpp
 
 $(OBJDIR_RELEASE)/src/physics/Raytracer.o: src/physics/Raytracer.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/physics/Raytracer.cpp -o $(OBJDIR_RELEASE)/src/physics/Raytracer.o
+
+$(OBJDIR_RELEASE)/src/position/BlockInChunk.o: src/position/BlockInChunk.cpp
+	$(CXX) $(CXXFLAGS_RELEASE) -c src/position/BlockInChunk.cpp -o $(OBJDIR_RELEASE)/src/position/BlockInChunk.o
+
+$(OBJDIR_RELEASE)/src/position/BlockInWorld.o: src/position/BlockInWorld.cpp
+	$(CXX) $(CXXFLAGS_RELEASE) -c src/position/BlockInWorld.cpp -o $(OBJDIR_RELEASE)/src/position/BlockInWorld.o
+
+$(OBJDIR_RELEASE)/src/position/ChunkInWorld.o: src/position/ChunkInWorld.cpp
+	$(CXX) $(CXXFLAGS_RELEASE) -c src/position/ChunkInWorld.cpp -o $(OBJDIR_RELEASE)/src/position/ChunkInWorld.o
 
 clean_release:
 	rm -f $(OUT_RELEASE)
