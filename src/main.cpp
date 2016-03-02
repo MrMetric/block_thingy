@@ -9,6 +9,8 @@
 #include "Gfx.hpp"
 #include "Util.hpp"
 
+#include "std_make_unique.hpp"
+
 // http://www.lighthouse3d.com/cg-topics/error-tracking-in-opengl/
 void printOglError(const std::string& file, int line)
 {

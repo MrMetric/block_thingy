@@ -17,6 +17,8 @@
 #include "../World.hpp"
 #include "../position/BlockInWorld.hpp"
 
+#include "std_make_unique.hpp"
+
 constexpr double infinity = std::numeric_limits<double>::infinity();
 
 // like fmod(a, 1), but always returns a positive number

@@ -6,6 +6,8 @@
 #include <iostream>
 #include <memory>
 
+#include "std_make_unique.hpp"
+
 std::string Util::read_file(const std::string& path)
 {
 	try

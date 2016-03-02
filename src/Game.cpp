@@ -41,6 +41,8 @@
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 
+#include "std_make_unique.hpp"
+
 Game* Game::instance = nullptr;
 
 Game::Game(GLFWwindow* window, int width, int height)

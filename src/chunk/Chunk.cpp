@@ -19,6 +19,8 @@
 #include "../position/BlockInChunk.hpp"
 #include "../position/ChunkInWorld.hpp"
 
+#include "std_make_unique.hpp"
+
 Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
 	:
 	owner(owner),

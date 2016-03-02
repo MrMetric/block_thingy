@@ -11,6 +11,8 @@
 
 #include "../../Util.hpp"
 
+#include "std_make_unique.hpp"
+
 static GLuint make_program(const std::string& path);
 static GLuint compile_shader(const std::string& filename, GLenum type);
 static std::string get_log(const GLuint object);
