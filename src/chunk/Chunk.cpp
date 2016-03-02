@@ -6,6 +6,7 @@
 #include <utility>
 
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <graphics/OpenGL/Shader.hpp>
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
@@ -128,6 +129,7 @@ void Chunk::render()
 		glUseProgram(shader.get_name());
 
 		shader.uniform3f("pos_mod", pos_mod.x, pos_mod.y, pos_mod.z);
+		shader.uniform1f("global_time", glfwGetTime());
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i].get_name());

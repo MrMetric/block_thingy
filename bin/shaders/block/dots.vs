@@ -7,6 +7,6 @@ out vec3 vPos;
 
 void main()
 {
-	vPos = position;
-	gl_Position = matriks * vec4(position + pos_mod, 1.0);
+	vPos = position + pos_mod;
+	gl_Position = matriks * vec4(vPos, 1.0);
 }

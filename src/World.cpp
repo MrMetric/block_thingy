@@ -140,7 +140,7 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 				}
 				else if(x == -32 && y < 32)
 				{
-					set_block(block_pos, Block(BlockType::test));
+					set_block(block_pos, Block(BlockType::dots));
 				}
 				else if(y == -32)
 				{
