@@ -4,6 +4,11 @@ out vec4 FragColor;
 in vec3 vPos;
 uniform float global_time;
 
+float discretestep(float split, float x)
+{
+	return (sign(x - split) + 1.0) / 2.0;
+}
+
 float radius = 0.3 * (sin(4.0 * global_time + length(vPos))/4.0 + 1.0);
 const float radius_max = 0.3 * (1 / 4.0 + 1.0);
 float radius_scaled = radius / radius_max;
@@ -18,7 +23,7 @@ vec3 hsv2rgb(vec3 c)
 
 float color(vec2 vec)
 {
-	return 1.0 - ((sign(length(fract(vec) - 0.5) - radius) + 1.0) / 2.0);
+	return 1.0 - discretestep(radius, length(fract(vec) - 0.5));
 }
 
 void main()
