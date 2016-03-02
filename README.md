@@ -8,6 +8,7 @@ I mek GAme
  * has no bugs (that I know of)
  * never gonna give you up
  * Y2K-compliant
+ * has a license (GPL v3)
 
 ## hoa 2 get dis shizzle
 ### Cloning
