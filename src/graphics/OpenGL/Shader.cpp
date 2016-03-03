@@ -20,6 +20,7 @@ static std::vector<std::string> get_uniform_names(GLuint name);
 
 Shader::Shader()
 	:
+	name(0),
 	inited(false)
 {
 }
@@ -50,10 +51,11 @@ Shader::Shader(const std::string& path)
 
 Shader::Shader(Shader&& that)
 {
+	name = that.name;
 	inited = that.inited;
 	if(inited)
 	{
-		name = that.name;
+		that.name = 0;
 		uniforms = std::move(that.uniforms);
 		that.inited = false;
 	}

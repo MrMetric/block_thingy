@@ -10,10 +10,11 @@ VertexBuffer::VertexBuffer()
 
 VertexBuffer::VertexBuffer(VertexBuffer&& that)
 {
+	name = that.name;
 	inited = that.inited;
 	if(inited)
 	{
-		name = that.name;
+		that.name = 0;
 		that.inited = false;
 	}
 }
