@@ -30,7 +30,7 @@ void main()
 {
 	float c = color(vPos.xy) + color(vPos.xz) + color(vPos.yz);
 	vec3 vColor = vec3(c, c, c);
-	vColor *= hsv2rgb(vec3(global_time * radius_scaled, 1.0, 1.0));
+	vColor *= hsv2rgb(vec3(global_time + radius_scaled, 1.0, 1.0));
 	vColor *= radius_scaled;
 	FragColor = vec4(vColor, 1.0);
 }
