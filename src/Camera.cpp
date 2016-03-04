@@ -10,18 +10,23 @@ Camera::Camera(GLFWwindow* window)
 	sensitivity(0.1),
 	window(window)
 {
-	glfwGetWindowSize(window, &window_width, &window_height);
+	int width;
+	int height;
+	glfwGetWindowSize(window, &width, &height);
+	update_framebuffer_size(width, height);
+}
 
-	window_midX = window_width / 2;
-	window_midY = window_height / 2;
-
-	glfwSetCursorPos(window, window_midX, window_midY);
+void Camera::update_framebuffer_size(int width, int height)
+{
+	window_mid.x = width / 2;
+	window_mid.y = height / 2;
+	glfwSetCursorPos(window, window_mid.x, window_mid.y);
 }
 
 void Camera::handleMouseMove(double mouseX, double mouseY)
 {
-	rotation.x += (mouseY - window_midY) * sensitivity;
-	rotation.y += (mouseX - window_midX) * sensitivity;
+	rotation.x += (mouseY - window_mid.y) * sensitivity;
+	rotation.y += (mouseX - window_mid.x) * sensitivity;
 
 	if(rotation.x < -90) // limit looking up to vertically up
 	{
@@ -45,5 +50,5 @@ void Camera::handleMouseMove(double mouseX, double mouseY)
 		rotation.y -= 360;
 	}
 
-	glfwSetCursorPos(window, window_midX, window_midY);
+	glfwSetCursorPos(window, window_mid.x, window_mid.y);
 }

@@ -138,10 +138,10 @@ void Game::screenshot(const std::string& filename)
 
 void Game::update_framebuffer_size(int width, int height)
 {
+	// TODO: use events to do this
 	gfx.update_framebuffer_size(width, height);
 	gui.update_framebuffer_size(width, height);
-
-	// TODO: update camera
+	cam.update_framebuffer_size(width, height);
 }
 
 void Game::keypress(int key, int scancode, int action, int mods)
