@@ -39,12 +39,14 @@ class Game
 		GLFWwindow* window;
 		std::unique_ptr<RaytraceHit> hovered_block;
 
+		// event_manager must be initialized before others!
+		EventManager event_manager;
+
 		Camera cam;
 		Gfx gfx;
 		Player player;
 		World world;
 		Console console;
-		EventManager event_manager;
 		GUI gui;
 
 	private:

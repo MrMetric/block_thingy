@@ -72,6 +72,7 @@ OBJ_DEBUG = \
 	$(OBJDIR_DEBUG)/src/console/KeybindManager.o \
 	$(OBJDIR_DEBUG)/src/event/Event.o \
 	$(OBJDIR_DEBUG)/src/event/EventManager.o \
+	$(OBJDIR_DEBUG)/src/event/type/Event_window_size_change.o \
 	$(OBJDIR_DEBUG)/src/graphics/OpenGL/Shader.o \
 	$(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexArray.o \
 	$(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexBuffer.o \
@@ -104,6 +105,7 @@ OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/src/console/KeybindManager.o \
 	$(OBJDIR_RELEASE)/src/event/Event.o \
 	$(OBJDIR_RELEASE)/src/event/EventManager.o \
+	$(OBJDIR_RELEASE)/src/event/type/Event_window_size_change.o \
 	$(OBJDIR_RELEASE)/src/graphics/OpenGL/Shader.o \
 	$(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexArray.o \
 	$(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexBuffer.o \
@@ -125,6 +127,7 @@ before_debug:
 	test -d $(OBJDIR_DEBUG)/src/chunk/mesh || mkdir -p $(OBJDIR_DEBUG)/src/chunk/mesh
 	test -d $(OBJDIR_DEBUG)/src/console || mkdir -p $(OBJDIR_DEBUG)/src/console
 	test -d $(OBJDIR_DEBUG)/src/event || mkdir -p $(OBJDIR_DEBUG)/src/event
+	test -d $(OBJDIR_DEBUG)/src/event/type || mkdir -p $(OBJDIR_DEBUG)/src/event/type
 	test -d $(OBJDIR_DEBUG)/src/graphics || mkdir -p $(OBJDIR_DEBUG)/src/graphics
 	test -d $(OBJDIR_DEBUG)/src/graphics/OpenGL || mkdir -p $(OBJDIR_DEBUG)/src/graphics/OpenGL
 	test -d $(OBJDIR_DEBUG)/src/gui || mkdir -p $(OBJDIR_DEBUG)/src/gui
@@ -199,6 +202,9 @@ $(OBJDIR_DEBUG)/src/event/Event.o: src/event/Event.cpp
 $(OBJDIR_DEBUG)/src/event/EventManager.o: src/event/EventManager.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/event/EventManager.cpp -o $(OBJDIR_DEBUG)/src/event/EventManager.o
 
+$(OBJDIR_DEBUG)/src/event/type/Event_window_size_change.o: src/event/type/Event_window_size_change.cpp
+	$(CXX) $(CXXFLAGS_DEBUG) -c src/event/type/Event_window_size_change.cpp -o $(OBJDIR_DEBUG)/src/event/type/Event_window_size_change.o
+
 $(OBJDIR_DEBUG)/src/graphics/OpenGL/Shader.o: src/graphics/OpenGL/Shader.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/graphics/OpenGL/Shader.cpp -o $(OBJDIR_DEBUG)/src/graphics/OpenGL/Shader.o
 
@@ -237,6 +243,7 @@ before_release:
 	test -d $(OBJDIR_RELEASE)/src/chunk/mesh || mkdir -p $(OBJDIR_RELEASE)/src/chunk/mesh
 	test -d $(OBJDIR_RELEASE)/src/console || mkdir -p $(OBJDIR_RELEASE)/src/console
 	test -d $(OBJDIR_RELEASE)/src/event || mkdir -p $(OBJDIR_RELEASE)/src/event
+	test -d $(OBJDIR_RELEASE)/src/event/type || mkdir -p $(OBJDIR_RELEASE)/src/event/type
 	test -d $(OBJDIR_RELEASE)/src/graphics || mkdir -p $(OBJDIR_RELEASE)/src/graphics
 	test -d $(OBJDIR_RELEASE)/src/graphics/OpenGL || mkdir -p $(OBJDIR_RELEASE)/src/graphics/OpenGL
 	test -d $(OBJDIR_RELEASE)/src/gui || mkdir -p $(OBJDIR_RELEASE)/src/gui
@@ -310,6 +317,9 @@ $(OBJDIR_RELEASE)/src/event/Event.o: src/event/Event.cpp
 
 $(OBJDIR_RELEASE)/src/event/EventManager.o: src/event/EventManager.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/event/EventManager.cpp -o $(OBJDIR_RELEASE)/src/event/EventManager.o
+
+$(OBJDIR_RELEASE)/src/event/type/Event_window_size_change.o: src/event/type/Event_window_size_change.cpp
+	$(CXX) $(CXXFLAGS_RELEASE) -c src/event/type/Event_window_size_change.cpp -o $(OBJDIR_RELEASE)/src/event/type/Event_window_size_change.o
 
 $(OBJDIR_RELEASE)/src/graphics/OpenGL/Shader.o: src/graphics/OpenGL/Shader.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/graphics/OpenGL/Shader.cpp -o $(OBJDIR_RELEASE)/src/graphics/OpenGL/Shader.o

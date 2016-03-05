@@ -34,6 +34,7 @@
 #include "event/Event.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
+#include "event/type/Event_window_size_change.hpp"
 #include "gui/GUI.hpp"
 #include "physics/Raytracer.hpp"
 #include "physics/RaytraceHit.hpp"
@@ -49,8 +50,9 @@ Game::Game(GLFWwindow* window, int width, int height)
 	:
 	window(window),
 	hovered_block(nullptr),
-	cam(window),
-	gfx(window),
+	cam(window, event_manager),
+	gfx(window, event_manager),
+	gui(event_manager),
 	delta_time(0),
 	fps(144),
 	keybinder(&console)
@@ -138,10 +140,7 @@ void Game::screenshot(const std::string& filename)
 
 void Game::update_framebuffer_size(int width, int height)
 {
-	// TODO: use events to do this
-	gfx.update_framebuffer_size(width, height);
-	gui.update_framebuffer_size(width, height);
-	cam.update_framebuffer_size(width, height);
+	event_manager.do_event(Event_window_size_change(width, height));
 }
 
 void Game::keypress(int key, int scancode, int action, int mods)

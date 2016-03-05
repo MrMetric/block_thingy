@@ -6,11 +6,12 @@
 #include <glm/vec3.hpp>
 
 struct GLFWwindow;
+class EventManager;
 
 class Camera
 {
 	public:
-		explicit Camera(GLFWwindow* window);
+		Camera(GLFWwindow* window, EventManager& event_manager);
 
 		void update_framebuffer_size(int width, int height);
 		void handleMouseMove(double mouseX, double mouseY);

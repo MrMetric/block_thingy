@@ -27,9 +27,12 @@
 #include "BlockType.hpp"
 #include "Camera.hpp"
 #include "Cube.hpp"
+#include "event/EventManager.hpp"
+#include "event/EventType.hpp"
+#include "event/type/Event_window_size_change.hpp"
 #include "position/BlockInWorld.hpp"
 
-Gfx::Gfx(GLFWwindow* window)
+Gfx::Gfx(GLFWwindow* window, EventManager& event_manager)
 	:
 	s_lines("shaders/lines"),
 	window(window)
@@ -38,6 +41,12 @@ Gfx::Gfx(GLFWwindow* window)
 	height = 0;
 
 	opengl_setup();
+
+	event_manager.add_handler(EventType::window_size_change, [self=this](const Event& event)
+	{
+		auto e = static_cast<const Event_window_size_change&>(event);
+		self->update_framebuffer_size(e.width, e.height);
+	});
 }
 
 GLFWwindow* Gfx::init_glfw()

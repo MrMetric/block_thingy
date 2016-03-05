@@ -8,11 +8,19 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::ortho
 
 #include "../Gfx.hpp"
+#include "../event/EventManager.hpp"
+#include "../event/EventType.hpp"
+#include "../event/type/Event_window_size_change.hpp"
 
-GUI::GUI()
+GUI::GUI(EventManager& event_manager)
 	:
 	s_crosshair("shaders/crosshair")
 {
+	event_manager.add_handler(EventType::window_size_change, [self=this](const Event& event)
+	{
+		auto e = static_cast<const Event_window_size_change&>(event);
+		self->update_framebuffer_size(e.width, e.height);
+	});
 }
 
 void GUI::update_framebuffer_size(uint_fast32_t width, uint_fast32_t height)

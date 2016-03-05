@@ -6,11 +6,12 @@
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
 class Gfx;
+class EventManager;
 
 class GUI
 {
 	public:
-		GUI();
+		GUI(EventManager& event_manager);
 
 		void update_framebuffer_size(uint_fast32_t width, uint_fast32_t height);
 		void draw(const Gfx&);

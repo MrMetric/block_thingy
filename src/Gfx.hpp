@@ -13,7 +13,9 @@
 #include "BlockType.hpp"
 
 struct GLFWwindow;
+
 class Camera;
+class EventManager;
 namespace Position
 {
 	struct BlockInWorld;
@@ -22,7 +24,7 @@ namespace Position
 class Gfx
 {
 	public:
-		explicit Gfx(GLFWwindow* window);
+		Gfx(GLFWwindow* window, EventManager& event_manager);
 
 		GLFWwindow* window;
 		uint_fast32_t width;

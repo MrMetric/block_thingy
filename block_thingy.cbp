@@ -109,6 +109,8 @@
 		<Unit filename="src/event/EventManager.cpp" />
 		<Unit filename="src/event/EventManager.hpp" />
 		<Unit filename="src/event/EventType.hpp" />
+		<Unit filename="src/event/type/Event_window_size_change.cpp" />
+		<Unit filename="src/event/type/Event_window_size_change.hpp" />
 		<Unit filename="src/graphics/OpenGL/Shader.cpp" />
 		<Unit filename="src/graphics/OpenGL/Shader.hpp" />
 		<Unit filename="src/graphics/OpenGL/VertexArray.cpp" />
