@@ -53,6 +53,8 @@
 			<Add option="-Werror=delete-incomplete" />
 			<Add option="-Werror=deprecated" />
 			<Add option="-Werror=return-type" />
+			<Add option="-Werror=extra-tokens" />
+			<Add option="-Werror=invalid-pp-token" />
 			<Add option="-DUSE_LIBPNG" />
 			<Add directory="src" />
 		</Compiler>

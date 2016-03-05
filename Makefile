@@ -9,6 +9,8 @@ CFLAGS = \
 	-Wno-missing-braces \
 	-Wno-missing-prototypes \
 	-Wno-padded \
+	-Werror=extra-tokens \
+	-Werror=invalid-pp-token \
 	-Werror=return-type \
 	-Werror=unknown-warning-option \
 	-Werror=unknown-pragmas \
