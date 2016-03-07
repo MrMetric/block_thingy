@@ -25,20 +25,9 @@ CXXFLAGS = $(CFLAGS) \
 	-Werror=deprecated \
 	-DUSE_LIBPNG \
 
-# dl is for GLFW/GLX
-# X*, pthread is for GLFW
 LDFLAGS = \
-	-ldl \
-	-lglfw3 \
-	-lGL \
-	-lpthread \
+	`pkg-config --static --libs glfw3` \
 	-lpng \
-	-lX11 \
-	-lXxf86vm \
-	-lXrandr \
-	-lXi \
-	-lXcursor \
-	-lXinerama \
 
 CFLAGS_DEBUG = $(CFLAGS) -g
 CXXFLAGS_DEBUG = $(CXXFLAGS) -g -fsanitize=undefined,integer -DCOOL_DEBUG_STUFF

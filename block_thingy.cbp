@@ -59,16 +59,8 @@
 			<Add directory="src" />
 		</Compiler>
 		<Linker>
-			<Add option="-lglfw3" />
-			<Add option="-lGL" />
-			<Add option="-lpthread" />
+			<Add option="`pkg-config --static --libs glfw3`" />
 			<Add option="-lpng" />
-			<Add option="-lX11" />
-			<Add option="-lXxf86vm" />
-			<Add option="-lXrandr" />
-			<Add option="-lXi" />
-			<Add option="-lXcursor" />
-			<Add option="-lXinerama" />
 		</Linker>
 		<Unit filename="src/Block.cpp" />
 		<Unit filename="src/Block.hpp" />
