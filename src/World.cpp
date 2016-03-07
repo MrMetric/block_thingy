@@ -150,7 +150,7 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 						for(BlockInWorld_type y2 = -32; y2 < -32+8; ++y2)
 						{
 							block_pos.y = y2;
-							set_block(block_pos, Block(BlockType::dots));
+							set_block(block_pos, Block(BlockType::eye));
 						}
 					}
 				}
