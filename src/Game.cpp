@@ -55,6 +55,7 @@ Game::Game(GLFWwindow* window, int width, int height)
 	gui(event_manager),
 	delta_time(0),
 	fps(144),
+	render_distance(3),
 	keybinder(&console)
 {
 	Game::instance = this;
@@ -105,8 +106,6 @@ void Game::draw_world()
 		const Shader& shader = p.second;
 		shader.uniformMatrix4fv("matriks", gfx.matriks);
 	}
-
-	const ChunkInWorld_type render_distance = 3;
 
 	Position::ChunkInWorld chunk_pos(Position::BlockInWorld(player.position));
 	if(froxx)
@@ -388,6 +387,16 @@ void Game::add_commands()
 		game->gfx.toggle_cull_face();
 		std::cout << "cull face: " << (game->gfx.cull_face ? "true" : "false") << "\n";
 	});
+
+	commands.emplace_back(console, "render_distance++", [game=this]()
+	{
+		game->render_distance += 1;
+	});
+	commands.emplace_back(console, "render_distance--", [game=this]()
+	{
+		game->render_distance -= 1;
+	});
+
 	commands.emplace_back(console, "froxx", []()
 	{
 		froxx = !froxx;
