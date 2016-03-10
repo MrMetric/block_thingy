@@ -35,7 +35,7 @@ vec2 get_side_coords()
 	if(side == 0) return vPos.xy;
 	if(side == 1) return vPos.xz;
 	if(side == 2) return vPos.yz;
-	return vec2(0);
+	return vec2(0.0);
 }
 
 vec3 color(vec2 vec)

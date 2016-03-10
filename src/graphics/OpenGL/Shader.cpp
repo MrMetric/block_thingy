@@ -13,10 +13,10 @@
 
 #include "std_make_unique.hpp"
 
-static GLuint make_program(const std::string& path);
-static GLuint compile_shader(const std::string& filename, GLenum type);
+static GLuint make_program(const std::vector<std::string>& files);
+static GLuint compile_shader(const std::string& filename, const GLenum type);
 static std::string get_log(const GLuint object);
-static std::vector<std::string> get_uniform_names(GLuint name);
+static std::vector<std::string> get_uniform_names(const GLuint name);
 
 Shader::Shader()
 	:
@@ -32,8 +32,14 @@ Shader::Shader(const char* path)
 }
 
 Shader::Shader(const std::string& path)
+	:
+	Shader({ path + ".vs", path + ".fs" }, path)
 {
-	name = make_program(path);
+}
+
+Shader::Shader(const std::vector<std::string>& files, const std::string& debug_name)
+{
+	name = make_program(files);
 
 	std::vector<std::string> uniform_names = get_uniform_names(name);
 	for(const std::string& s : uniform_names)
@@ -41,7 +47,7 @@ Shader::Shader(const std::string& path)
 		GLint location = glGetUniformLocation(name, s.c_str());
 		if(location == -1)
 		{
-			throw std::runtime_error("glGetUniformLocation returned -1 for " + s + " in " + path);
+			throw std::runtime_error("glGetUniformLocation returned -1 for " + s + " in " + debug_name);
 		}
 		uniforms.emplace(s, location);
 	}
@@ -110,16 +116,40 @@ void Shader::uniformMatrix4fv(const std::string& uniform_name, const glm::mat4& 
 	glProgramUniformMatrix4fv(name, u, 1, GL_FALSE, ptr);
 }
 
-static GLuint make_program(const std::string& path)
+static GLuint make_program(const std::vector<std::string>& files)
 {
-	std::cout << "compiling shader: " << path << "\n";
+	std::vector<GLuint> objects;
+	for(std::string path : files)
+	{
+		GLenum type;
+		Util::path path_parts = Util::split_path(path);
+		if(path_parts.ext == "vs")
+		{
+			type = GL_VERTEX_SHADER;
+		}
+		else if(path_parts.ext ==  "fs")
+		{
+			type = GL_FRAGMENT_SHADER;
+		}
+		else
+		{
+			throw std::invalid_argument("bad shader path: " + path);
+		}
+		if(!Util::file_is_openable(path))
+		{
+			path_parts.file = "default";
+			path = Util::join_path(path_parts);
+		}
+		GLuint object = compile_shader(path, type);
+		objects.push_back(object);
+	}
 
-	GLuint vs = compile_shader(path + ".vs", GL_VERTEX_SHADER);
-	GLuint fs = compile_shader(path + ".fs", GL_FRAGMENT_SHADER);
-
+	// TODO: attach in previous loop (see next TODO)
 	GLuint program = glCreateProgram();
-	glAttachShader(program, vs);
-	glAttachShader(program, fs);
+	for(GLuint object : objects)
+	{
+		glAttachShader(program, object);
+	}
 
 	GLint izgud;
 
@@ -128,17 +158,21 @@ static GLuint make_program(const std::string& path)
 	if(!izgud)
 	{
 		std::string log = get_log(program);
-		glDeleteShader(vs);
-		glDeleteShader(fs);
+		// TODO: rename this (Shader) to ShaderProgram, and make Shader so that this deletion happens in destructor
+		for(GLuint object : objects)
+		{
+			glDeleteShader(object);
+		}
 		glDeleteProgram(program);
 		throw std::runtime_error("error linking program:\n" + log);
 	}
 
 	// shader objects are not needed after linking, so memory can be freed by deleting them
-	glDetachShader(program, vs);
-	glDeleteShader(vs);
-	glDetachShader(program, fs);
-	glDeleteShader(fs);
+	for(GLuint object : objects)
+	{
+		glDetachShader(program, object);
+		glDeleteShader(object);
+	}
 
 	glValidateProgram(program);
 	glGetProgramiv(program, GL_VALIDATE_STATUS, &izgud);
@@ -152,8 +186,9 @@ static GLuint make_program(const std::string& path)
 	return program;
 }
 
-static GLuint compile_shader(const std::string& filename, GLenum type)
+static GLuint compile_shader(const std::string& filename, const GLenum type)
 {
+	std::cout << "compiling shader: " << filename << "\n";
 	const std::string source = Util::read_file(filename);
 	const char* source_c = source.c_str();
 	const GLint source_len = GLint(source.length()); // I don't think the length will ever be that large (2 GiB) anyway
@@ -205,7 +240,7 @@ static std::string get_log(const GLuint object)
 	return log_string;
 }
 
-static std::vector<std::string> get_uniform_names(GLuint program)
+static std::vector<std::string> get_uniform_names(const GLuint program)
 {
 	GLint uniform_count;
 	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &uniform_count);

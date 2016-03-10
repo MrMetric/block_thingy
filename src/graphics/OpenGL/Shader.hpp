@@ -2,6 +2,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>
@@ -13,6 +14,7 @@ class Shader
 		Shader();
 		Shader(const char* path);
 		Shader(const std::string& path);
+		Shader(const std::vector<std::string>&, const std::string& name);
 		Shader(const Shader&) = delete;
 		Shader(Shader&&);
 		~Shader();

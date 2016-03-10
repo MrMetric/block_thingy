@@ -37,7 +37,7 @@ vec2 get_side_coords()
 }
 
 float radius = 0.3 * (sin(4.0 * global_time + length(vPos))/4.0 + 1.0);
-const float radius_max = 0.3 * (1 / 4.0 + 1.0);
+const float radius_max = 0.3 * (1.0 / 4.0 + 1.0);
 float radius_scaled = radius / radius_max;
 
 // http://lolengine.net/blog/2013/07/27/rgb-to-hsv-in-glsl

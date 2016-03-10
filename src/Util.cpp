@@ -5,8 +5,14 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <vector>
 
 #include "std_make_unique.hpp"
+
+bool Util::file_is_openable(const std::string& path)
+{
+	return std::ifstream(path).is_open();
+}
 
 std::string Util::read_file(const std::string& path)
 {
@@ -70,4 +76,24 @@ std::string Util::gl_error_string(const uint_fast32_t code)
 		*/
 	}
 	return "unknown (" + std::to_string(code) + ")";
+}
+
+Util::path Util::split_path(const std::string& path)
+{
+	auto slash_pos = path.find_last_of('/');
+	auto dot_pos = path.find_last_of('.');
+	std::string folder = path.substr(0, slash_pos);
+	std::string file = path.substr(slash_pos + 1, dot_pos - slash_pos - 1);
+	std::string ext = path.substr(dot_pos + 1);
+	return { folder, file, ext };
+}
+
+std::string Util::join_path(const Util::path& path_parts)
+{
+	std::string path = path_parts.folder + "/" + path_parts.file;
+	if(path_parts.ext != "")
+	{
+		path += "." + path_parts.ext;
+	}
+	return path;
 }
