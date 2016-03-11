@@ -29,8 +29,8 @@ class Gfx
 		GLFWwindow* window;
 		uint_fast32_t width;
 		uint_fast32_t height;
-		glm::mat4 projection_matrix;
-		glm::mat4 view_matrix;
+		glm::dmat4 projection_matrix;
+		glm::dmat4 view_matrix;
 
 		VertexArray vertex_array;
 		glm::mat4 matriks;

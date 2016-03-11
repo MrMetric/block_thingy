@@ -1,4 +1,4 @@
-#include "Raytracer.hpp"
+#include "PhysicsUtil.hpp"
 
 #include <cmath>
 #include <cstdint>
@@ -63,25 +63,25 @@ static glm::dvec3 delta(const glm::dvec3& direction)
 	return { delta(direction.x), delta(direction.y), delta(direction.z) };
 }
 
-void Raytracer::ScreenPosToWorldRay(
-	uint_fast32_t mouseX, uint_fast32_t mouseY,             // Mouse position, in pixels, from bottom-left corner of the window
-	uint_fast32_t screenWidth, uint_fast32_t screenHeight,  // Window size, in pixels
-	glm::dmat4 view_matrix,             // Camera position and orientation
-	glm::dmat4 projection_matrix,       // Camera parameters (ratio, field of view, near and far planes)
-	glm::dvec3& out_origin,             // Ouput : Origin of the ray. /!\ Starts at the near plane, so if you want the ray to start at the camera's position instead, ignore this.
-	glm::dvec3& out_direction           // Ouput : Direction, in world space, of the ray that goes "through" the mouse.
+void PhysicsUtil::ScreenPosToWorldRay(
+	const glm::dvec2& mouse,              // Mouse position, in pixels, from bottom-left corner of the window
+	const glm::uvec2& screen_size,        // Window size, in pixels
+	const glm::dmat4& view_matrix,        // Camera position and orientation
+	const glm::dmat4& projection_matrix,  // Camera parameters (ratio, field of view, near and far planes)
+	glm::dvec3& out_origin,               // Ouput : Origin of the ray. /!\ Starts at the near plane, so if you want the ray to start at the camera's position instead, ignore this.
+	glm::dvec3& out_direction             // Ouput : Direction, in world space, of the ray that goes "through" the mouse.
 )
 {
 	// The ray Start and End positions, in Normalized Device Coordinates (Have you read Tutorial 4 ?)
 	glm::dvec4 lRayStart_NDC(
-		(double(mouseX) / screenWidth  - 0.5) * 2, // [0,1024] -> [-1,1]
-		(double(mouseY) / screenHeight - 0.5) * 2, // [0, 768] -> [-1,1]
+		(mouse.x / screen_size.x - 0.5) * 2, // [0,1024] -> [-1,1]
+		(mouse.y / screen_size.y - 0.5) * 2, // [0, 768] -> [-1,1]
 		-1, // The near plane maps to Z=-1 in Normalized Device Coordinates
 		1
 	);
 	glm::dvec4 lRayEnd_NDC(
-		(double(mouseX) / screenWidth  - 0.5) * 2,
-		(double(mouseY) / screenHeight - 0.5) * 2,
+		(mouse.x / screen_size.x - 0.5) * 2,
+		(mouse.y / screen_size.y - 0.5) * 2,
 		0,
 		1
 	);
@@ -102,7 +102,7 @@ void Raytracer::ScreenPosToWorldRay(
 
 
 	// Faster way (just one inverse)
-	//glm::mat4 M = glm::inverse(ProjectionMatrix * ViewMatrix);
+	//glm::dmat4 M = glm::inverse(ProjectionMatrix * ViewMatrix);
 	//glm::vec4 lRayStart_world = M * lRayStart_NDC; lRayStart_world/=lRayStart_world.w;
 	//glm::vec4 lRayEnd_world   = M * lRayEnd_NDC  ; lRayEnd_world  /=lRayEnd_world.w;
 
@@ -127,7 +127,7 @@ void Raytracer::ScreenPosToWorldRay(
  *
  * If the callback returns a true value, the traversal will be stopped.
  */
-std::unique_ptr<RaytraceHit> Raytracer::raycast(const World& world, glm::dvec3 origin, glm::dvec3 direction, double radius)
+std::unique_ptr<RaytraceHit> PhysicsUtil::raycast(const World& world, const glm::dvec3& origin, const glm::dvec3& direction, const double radius)
 {
 	// From "A Fast Voxel Traversal Algorithm for Ray Tracing"
 	// by John Amanatides and Andrew Woo, 1987

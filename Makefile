@@ -68,8 +68,8 @@ OBJ_DEBUG = \
 	$(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexArray.o \
 	$(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexBuffer.o \
 	$(OBJDIR_DEBUG)/src/gui/GUI.o \
+	$(OBJDIR_DEBUG)/src/physics/PhysicsUtil.o \
 	$(OBJDIR_DEBUG)/src/physics/RaytraceHit.o \
-	$(OBJDIR_DEBUG)/src/physics/Raytracer.o \
 	$(OBJDIR_DEBUG)/src/position/BlockInChunk.o \
 	$(OBJDIR_DEBUG)/src/position/BlockInWorld.o \
 	$(OBJDIR_DEBUG)/src/position/ChunkInWorld.o \
@@ -101,8 +101,8 @@ OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexArray.o \
 	$(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexBuffer.o \
 	$(OBJDIR_RELEASE)/src/gui/GUI.o \
+	$(OBJDIR_RELEASE)/src/physics/PhysicsUtil.o \
 	$(OBJDIR_RELEASE)/src/physics/RaytraceHit.o \
-	$(OBJDIR_RELEASE)/src/physics/Raytracer.o \
 	$(OBJDIR_RELEASE)/src/position/BlockInChunk.o \
 	$(OBJDIR_RELEASE)/src/position/BlockInWorld.o \
 	$(OBJDIR_RELEASE)/src/position/ChunkInWorld.o \
@@ -208,11 +208,11 @@ $(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexBuffer.o: src/graphics/OpenGL/VertexBu
 $(OBJDIR_DEBUG)/src/gui/GUI.o: src/gui/GUI.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/gui/GUI.cpp -o $(OBJDIR_DEBUG)/src/gui/GUI.o
 
+$(OBJDIR_DEBUG)/src/physics/PhysicsUtil.o: src/physics/PhysicsUtil.cpp
+	$(CXX) $(CXXFLAGS_DEBUG) -c src/physics/PhysicsUtil.cpp -o $(OBJDIR_DEBUG)/src/physics/PhysicsUtil.o
+
 $(OBJDIR_DEBUG)/src/physics/RaytraceHit.o: src/physics/RaytraceHit.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/physics/RaytraceHit.cpp -o $(OBJDIR_DEBUG)/src/physics/RaytraceHit.o
-
-$(OBJDIR_DEBUG)/src/physics/Raytracer.o: src/physics/Raytracer.cpp
-	$(CXX) $(CXXFLAGS_DEBUG) -c src/physics/Raytracer.cpp -o $(OBJDIR_DEBUG)/src/physics/Raytracer.o
 
 $(OBJDIR_DEBUG)/src/position/BlockInChunk.o: src/position/BlockInChunk.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/position/BlockInChunk.cpp -o $(OBJDIR_DEBUG)/src/position/BlockInChunk.o
@@ -324,11 +324,11 @@ $(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexBuffer.o: src/graphics/OpenGL/Vertex
 $(OBJDIR_RELEASE)/src/gui/GUI.o: src/gui/GUI.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/gui/GUI.cpp -o $(OBJDIR_RELEASE)/src/gui/GUI.o
 
+$(OBJDIR_RELEASE)/src/physics/PhysicsUtil.o: src/physics/PhysicsUtil.cpp
+	$(CXX) $(CXXFLAGS_RELEASE) -c src/physics/PhysicsUtil.cpp -o $(OBJDIR_RELEASE)/src/physics/PhysicsUtil.o
+
 $(OBJDIR_RELEASE)/src/physics/RaytraceHit.o: src/physics/RaytraceHit.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/physics/RaytraceHit.cpp -o $(OBJDIR_RELEASE)/src/physics/RaytraceHit.o
-
-$(OBJDIR_RELEASE)/src/physics/Raytracer.o: src/physics/Raytracer.cpp
-	$(CXX) $(CXXFLAGS_RELEASE) -c src/physics/Raytracer.cpp -o $(OBJDIR_RELEASE)/src/physics/Raytracer.o
 
 $(OBJDIR_RELEASE)/src/position/BlockInChunk.o: src/position/BlockInChunk.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/position/BlockInChunk.cpp -o $(OBJDIR_RELEASE)/src/position/BlockInChunk.o

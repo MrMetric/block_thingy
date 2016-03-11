@@ -145,15 +145,12 @@ void Gfx::update_projection_matrix()
 
 void Gfx::set_cam_view(const Camera& cam)
 {
-	glm::dmat4 view;
-	view *= glm::rotate(glm::radians(cam.rotation.x), glm::dvec3(1, 0, 0));
-	view *= glm::rotate(glm::radians(cam.rotation.y), glm::dvec3(0, 1, 0));
-	view *= glm::rotate(glm::radians(cam.rotation.z), glm::dvec3(0, 0, 1));
-	glm::dvec3 position = cam.position * -1.0;
-	view *= glm::translate(position);
-	glm::mat4 viewf(view);
-	matriks = projection_matrix * viewf;
-	view_matrix = viewf;
+	view_matrix = glm::dmat4(1);
+	view_matrix *= glm::rotate(glm::radians(cam.rotation.x), glm::dvec3(1, 0, 0));
+	view_matrix *= glm::rotate(glm::radians(cam.rotation.y), glm::dvec3(0, 1, 0));
+	view_matrix *= glm::rotate(glm::radians(cam.rotation.z), glm::dvec3(0, 0, 1));
+	view_matrix *= glm::translate(-1.0 * cam.position);
+	matriks = glm::mat4(projection_matrix * view_matrix);
 }
 
 // TODO: use GL_LINES

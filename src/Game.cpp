@@ -36,7 +36,7 @@
 #include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"
 #include "gui/GUI.hpp"
-#include "physics/Raytracer.hpp"
+#include "physics/PhysicsUtil.hpp"
 #include "physics/RaytraceHit.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
@@ -181,20 +181,20 @@ void Game::mousemove(double x, double y)
 	cam.handleMouseMove(x, y);
 }
 
-void Game::find_hovered_block(const glm::mat4& projection_matrix, const glm::mat4& view_matrix)
+void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dmat4& view_matrix)
 {
 	glm::dvec3 out_origin;
 	glm::dvec3 out_direction;
-	Raytracer::ScreenPosToWorldRay(
-		gfx.width / 2, gfx.height / 2,
-		gfx.width, gfx.height,
-		glm::dmat4(view_matrix),
-		glm::dmat4(projection_matrix),
+	PhysicsUtil::ScreenPosToWorldRay(
+		glm::vec2(gfx.width / 2.0, gfx.height / 2.0),
+		glm::uvec2(gfx.width, gfx.height),
+		view_matrix,
+		projection_matrix,
 		out_origin,
 		out_direction
 	);
 
-	hovered_block = Raytracer::raycast(world, out_origin, out_direction, 8);
+	hovered_block = PhysicsUtil::raycast(world, out_origin, out_direction, 8);
 	if(hovered_block != nullptr)
 	{
 		bool block_is_none = world.get_block_const(hovered_block->pos).type() == BlockType::none;

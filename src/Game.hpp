@@ -55,7 +55,7 @@ class Game
 		ChunkInWorld_type render_distance;
 
 		void draw_world();
-		void find_hovered_block(const glm::mat4& projection_matrix, const glm::mat4& view_matrix);
+		void find_hovered_block(const glm::dmat4& projection_matrix, const glm::dmat4& view_matrix);
 
 		std::vector<Command> commands;
 		void add_commands();

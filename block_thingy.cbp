@@ -114,10 +114,10 @@
 		<Unit filename="src/gui/GUI.cpp" />
 		<Unit filename="src/gui/GUI.hpp" />
 		<Unit filename="src/main.cpp" />
+		<Unit filename="src/physics/PhysicsUtil.cpp" />
+		<Unit filename="src/physics/PhysicsUtil.hpp" />
 		<Unit filename="src/physics/RaytraceHit.cpp" />
 		<Unit filename="src/physics/RaytraceHit.hpp" />
-		<Unit filename="src/physics/Raytracer.cpp" />
-		<Unit filename="src/physics/Raytracer.hpp" />
 		<Unit filename="src/position/BlockInChunk.cpp" />
 		<Unit filename="src/position/BlockInChunk.hpp" />
 		<Unit filename="src/position/BlockInWorld.cpp" />
