@@ -1,11 +1,11 @@
 #include "Util.hpp"
 
-#include <glad/glad.h>
-
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <memory>
-#include <vector>
+
+#include <glad/glad.h>
 
 #include "std_make_unique.hpp"
 

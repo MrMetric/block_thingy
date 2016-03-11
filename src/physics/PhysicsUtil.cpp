@@ -1,6 +1,5 @@
 #include "PhysicsUtil.hpp"
 
-#include <cmath>
 #include <cstdint>
 #include <limits>
 #include <stdexcept>
@@ -9,6 +8,7 @@
 #include <glm/geometric.hpp>	// glm::normalize
 #include <glm/mat4x4.hpp>
 #include <glm/matrix.hpp>		// glm::inverse
+#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 

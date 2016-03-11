@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstdint>
 #include <memory>
 
 #include <glm/mat4x4.hpp>

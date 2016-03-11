@@ -17,6 +17,7 @@
 #include "event/EventManager.hpp"
 #include "gui/GUI.hpp"
 #include "physics/RaytraceHit.hpp"
+#include "position/ChunkInWorld.hpp"
 
 struct GLFWwindow;
 

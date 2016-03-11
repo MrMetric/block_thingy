@@ -1,7 +1,10 @@
 #pragma once
 #include "ChunkMesher.hpp"
 
+#include <cstdint>
 #include <vector>
+
+#include <glm/vec3.hpp>
 
 #include "../../BlockType.hpp"
 
