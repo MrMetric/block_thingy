@@ -23,7 +23,7 @@ GUI::GUI(EventManager& event_manager)
 	});
 }
 
-void GUI::update_framebuffer_size(uint_fast32_t width, uint_fast32_t height)
+void GUI::update_framebuffer_size(const uint_fast32_t width, const uint_fast32_t height)
 {
 	float midX = width / 2.0f;
 	float midY = height / 2.0f;

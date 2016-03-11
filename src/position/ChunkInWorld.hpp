@@ -12,7 +12,7 @@ namespace Position
 	struct ChunkInWorld
 	{
 		ChunkInWorld();
-		ChunkInWorld(const ChunkInWorld_type x, const ChunkInWorld_type y, const ChunkInWorld_type z);
+		ChunkInWorld(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z);
 		explicit ChunkInWorld(const BlockInWorld&);
 
 		ChunkInWorld_type& operator[](uint_fast8_t);
@@ -22,9 +22,9 @@ namespace Position
 		ChunkInWorld_type x, y, z;
 	};
 
-	ChunkInWorld operator-(const ChunkInWorld&, const ChunkInWorld_type);
-	ChunkInWorld operator+(const ChunkInWorld&, const ChunkInWorld_type);
-	ChunkInWorld operator*(const ChunkInWorld&, const ChunkInWorld_type);
+	ChunkInWorld operator-(const ChunkInWorld&, ChunkInWorld_type);
+	ChunkInWorld operator+(const ChunkInWorld&, ChunkInWorld_type);
+	ChunkInWorld operator*(const ChunkInWorld&, ChunkInWorld_type);
 
 	std::ostream& operator<<(std::ostream&, const ChunkInWorld&);
 }

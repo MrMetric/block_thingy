@@ -56,7 +56,7 @@ meshmap_t GreedyMesher::make_mesh()
 	return meshes;
 }
 
-void GreedyMesher::add_surface(meshmap_t& meshes, Plane plane, Side side)
+void GreedyMesher::add_surface(meshmap_t& meshes, const Plane plane, const Side side)
 {
 	uint_fast8_t ix, iy, iz;
 	if(plane == Plane::XY)

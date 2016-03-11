@@ -126,7 +126,7 @@ void Gfx::toggle_cull_face()
 	}
 }
 
-void Gfx::update_framebuffer_size(GLsizei width, GLsizei height)
+void Gfx::update_framebuffer_size(const GLsizei width, const GLsizei height)
 {
 	this->width = static_cast<uint_fast32_t>(width);
 	this->height = static_cast<uint_fast32_t>(height);
@@ -188,7 +188,7 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 	vertex_array.attrib(0, false);
 }
 
-const Shader& Gfx::get_block_shader(BlockType type) const
+const Shader& Gfx::get_block_shader(const BlockType type) const
 {
 	auto i = block_shaders.find(type);
 	if(i != block_shaders.end())
@@ -199,7 +199,7 @@ const Shader& Gfx::get_block_shader(BlockType type) const
 }
 
 #ifdef USE_LIBPNG
-void Gfx::write_png_RGB(const char* filename, uint8_t* buf, uint_fast32_t width, uint_fast32_t height, bool reverse_rows)
+void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint_fast32_t width, const uint_fast32_t height, const bool reverse_rows)
 {
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if(png_ptr == nullptr)

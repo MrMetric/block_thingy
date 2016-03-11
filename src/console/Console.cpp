@@ -10,14 +10,14 @@ Console::Console()
 {
 }
 
-console_handler_wrapper::console_handler_wrapper(console_handler_t handler)
+console_handler_wrapper::console_handler_wrapper(const console_handler_t& handler)
 	:
 	args(true),
 	handler_args(handler)
 {
 }
 
-console_handler_wrapper::console_handler_wrapper(console_handler_noargs_t handler)
+console_handler_wrapper::console_handler_wrapper(const console_handler_noargs_t& handler)
 	:
 	args(false),
 	handler_noargs(handler)

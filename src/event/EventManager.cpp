@@ -13,19 +13,19 @@ EventManager::EventManager()
 {
 }
 
-event_handler_id_t EventManager::add_handler(event_handler_t handler)
+event_handler_id_t EventManager::add_handler(const event_handler_t& handler)
 {
 	return add_handler(EventType::any, handler);
 }
 
-event_handler_id_t EventManager::add_handler(EventType type, event_handler_t handler)
+event_handler_id_t EventManager::add_handler(const EventType type, const event_handler_t& handler)
 {
 	auto id = max_id++;
 	handlers[id] = std::make_pair(type, handler);
 	return id;
 }
 
-void EventManager::unadd_handler(event_handler_id_t event_id)
+void EventManager::unadd_handler(const event_handler_id_t event_id)
 {
 	auto i = handlers.find(event_id);
 	if(i == handlers.end())

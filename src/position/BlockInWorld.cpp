@@ -45,7 +45,7 @@ namespace Position
 		this->z = t(z);
 	}
 
-	BlockInWorld_type& BlockInWorld::operator[](uint_fast8_t i)
+	BlockInWorld_type& BlockInWorld::operator[](const uint_fast8_t i)
 	{
 		if(i == 0) return x;
 		if(i == 1) return y;

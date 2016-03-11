@@ -21,14 +21,14 @@ Camera::Camera(GLFWwindow* window, EventManager& event_manager)
 	});
 }
 
-void Camera::update_framebuffer_size(int width, int height)
+void Camera::update_framebuffer_size(const int width, const int height)
 {
 	window_mid.x = width / 2;
 	window_mid.y = height / 2;
 	glfwSetCursorPos(window, window_mid.x, window_mid.y);
 }
 
-void Camera::handleMouseMove(double mouseX, double mouseY)
+void Camera::handleMouseMove(const double mouseX, const double mouseY)
 {
 	rotation.x += (mouseY - window_mid.y) * sensitivity;
 	rotation.y += (mouseX - window_mid.x) * sensitivity;

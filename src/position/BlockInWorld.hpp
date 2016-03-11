@@ -15,10 +15,10 @@ namespace Position
 	struct BlockInWorld
 	{
 		BlockInWorld();
-		BlockInWorld(const BlockInWorld_type x, const BlockInWorld_type y, const BlockInWorld_type z);
+		BlockInWorld(BlockInWorld_type x, BlockInWorld_type y, BlockInWorld_type z);
 		BlockInWorld(const ChunkInWorld&, const BlockInChunk&);
 		explicit BlockInWorld(const glm::dvec3&);
-		BlockInWorld(const double x, const double y, const double z);
+		BlockInWorld(double x, double y, double z);
 
 		BlockInWorld_type& operator[](uint_fast8_t);
 		BlockInWorld& operator+=(const BlockInWorld&);

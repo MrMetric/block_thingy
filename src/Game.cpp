@@ -46,7 +46,7 @@
 
 Game* Game::instance = nullptr;
 
-Game::Game(GLFWwindow* window, int width, int height)
+Game::Game(GLFWwindow* window, const int width, const int height)
 	:
 	window(window),
 	hovered_block(nullptr),
@@ -137,18 +137,18 @@ void Game::screenshot(const std::string& filename)
 }
 #endif
 
-void Game::update_framebuffer_size(int width, int height)
+void Game::update_framebuffer_size(const int width, const int height)
 {
 	event_manager.do_event(Event_window_size_change(width, height));
 }
 
-void Game::keypress(int key, int scancode, int action, int mods)
+void Game::keypress(const int key, const int scancode, const int action, const int mods)
 {
 	keybinder.keypress(key, action);
 }
 
 static BlockType block_type = BlockType::test;
-void Game::mousepress(int button, int action, int mods)
+void Game::mousepress(const int button, const int action, const int mods)
 {
 	if(action == GLFW_PRESS)
 	{
@@ -176,7 +176,7 @@ void Game::mousepress(int button, int action, int mods)
 	}
 }
 
-void Game::mousemove(double x, double y)
+void Game::mousemove(const double x, const double y)
 {
 	cam.handleMouseMove(x, y);
 }

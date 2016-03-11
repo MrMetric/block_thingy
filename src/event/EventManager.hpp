@@ -17,8 +17,8 @@ class EventManager
 	public:
 		EventManager();
 
-		event_handler_id_t add_handler(event_handler_t);
-		event_handler_id_t add_handler(EventType, event_handler_t);
+		event_handler_id_t add_handler(const event_handler_t&);
+		event_handler_id_t add_handler(EventType, const event_handler_t&);
 		void unadd_handler(event_handler_id_t);
 		void do_event(const Event&) const;
 

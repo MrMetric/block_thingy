@@ -2,7 +2,7 @@
 
 #include "../position/BlockInWorld.hpp"
 
-RaytraceHit::RaytraceHit(const Position::BlockInWorld& pos, glm::ivec3 face)
+RaytraceHit::RaytraceHit(const Position::BlockInWorld& pos, const glm::ivec3& face)
 	:
 	pos(pos),
 	face(face)

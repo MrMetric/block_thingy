@@ -20,7 +20,7 @@ class Player
 		double max_velocity = 1;
 
 		void move(const glm::dvec3& acceleration);
-		void step(const double delta_time);
+		void step(double delta_time);
 		glm::dvec3 apply_movement_input(glm::dvec3 acceleration, double move_speed);
 		void respawn();
 
@@ -38,8 +38,8 @@ class Player
 		glm::dvec3 velocity;
 
 	private:
-		bool block_is_at(const double x, const double y, const double z);
-		double move_to(double coord, const double move_var, const double offset, const Position::BlockInWorld&);
+		bool block_is_at(double x, double y, double z);
+		double move_to(double coord, double move_var, double offset, const Position::BlockInWorld&);
 
 		bool moving_forward = false;
 		bool moving_backward = false;

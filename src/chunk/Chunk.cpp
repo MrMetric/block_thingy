@@ -22,7 +22,7 @@
 
 #include "std_make_unique.hpp"
 
-Chunk::Chunk(Position::ChunkInWorld pos, World* owner)
+Chunk::Chunk(const Position::ChunkInWorld& pos, World* owner)
 	:
 	owner(owner),
 	position(pos),

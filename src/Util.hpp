@@ -18,7 +18,7 @@ namespace Util
 
 	bool file_is_openable(const std::string& path);
 	std::string read_file(const std::string& path);
-	std::string gl_error_string(const uint_fast32_t code);
+	std::string gl_error_string(uint_fast32_t code);
 
 	struct path
 	{

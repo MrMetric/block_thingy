@@ -42,7 +42,7 @@ KeybindManager::~KeybindManager()
 	console->unadd_command("unbind");
 }
 
-void KeybindManager::bind_key(int key, const std::string& command)
+void KeybindManager::bind_key(const int key, const std::string& command)
 {
 	keybinds[key] = command;
 }
@@ -57,12 +57,12 @@ void KeybindManager::bind_key(const std::string& key_string, const std::string& 
 	bind_key(key, command);
 }
 
-void KeybindManager::unbind_key(int key)
+void KeybindManager::unbind_key(const int key)
 {
 	keybinds.erase(key);
 }
 
-void KeybindManager::keypress(int key, int action)
+void KeybindManager::keypress(const int key, const int action)
 {
 	if(action == GLFW_PRESS || action == GLFW_REPEAT)
 	{

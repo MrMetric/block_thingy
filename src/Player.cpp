@@ -118,7 +118,7 @@ void Player::step(const double delta_time)
 	move(acceleration * delta_time);
 }
 
-glm::dvec3 Player::apply_movement_input(glm::dvec3 acceleration, double move_speed)
+glm::dvec3 Player::apply_movement_input(glm::dvec3 acceleration, const double move_speed)
 {
 	if(moving_forward)
 	{
@@ -167,22 +167,22 @@ bool Player::can_place_block_at(const Position::BlockInWorld& block_pos)
 	return true;
 }
 
-void Player::move_forward(bool do_that)
+void Player::move_forward(const bool do_that)
 {
 	moving_forward = do_that;
 }
 
-void Player::move_backward(bool do_that)
+void Player::move_backward(const bool do_that)
 {
 	moving_backward = do_that;
 }
 
-void Player::move_left(bool do_that)
+void Player::move_left(const bool do_that)
 {
 	moving_left = do_that;
 }
 
-void Player::move_right(bool do_that)
+void Player::move_right(const bool do_that)
 {
 	moving_right = do_that;
 }

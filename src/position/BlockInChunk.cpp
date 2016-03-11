@@ -31,7 +31,7 @@ namespace Position
 		z = t(pos.z);
 	}
 
-	BlockInChunk_type& BlockInChunk::operator[](uint_fast8_t i)
+	BlockInChunk_type& BlockInChunk::operator[](const uint_fast8_t i)
 	{
 		if(i == 0) return x;
 		if(i == 1) return y;

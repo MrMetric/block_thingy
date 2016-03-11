@@ -31,7 +31,7 @@ GLuint VertexArray::get_name() const
 	return name;
 }
 
-void VertexArray::attrib(GLuint index, bool enabled)
+void VertexArray::attrib(const GLuint index, const bool enabled)
 {
 	if(enabled)
 	{

@@ -13,7 +13,7 @@ class ArgumentParser
 		std::string::const_iterator iterator;
 		std::string::const_iterator end;
 
-		std::string read_string(const char endchar);
+		std::string read_string(char endchar);
 };
 
 class truncated_argument : public std::runtime_error

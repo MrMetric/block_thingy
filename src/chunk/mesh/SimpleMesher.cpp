@@ -35,7 +35,7 @@ meshmap_t SimpleMesher::make_mesh()
 	return meshes;
 }
 
-void SimpleMesher::draw_cube(mesh_t& mesh, BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z)
+void SimpleMesher::draw_cube(mesh_t& mesh, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
 	// front
 	if(block_is_invisible(x, y, z - 1))
@@ -69,7 +69,7 @@ void SimpleMesher::draw_cube(mesh_t& mesh, BlockInChunk_type x, BlockInChunk_typ
 	}
 }
 
-void SimpleMesher::draw_face(mesh_t& mesh, BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, uint_fast8_t face)
+void SimpleMesher::draw_face(mesh_t& mesh, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, const uint_fast8_t face)
 {
 	auto offset = face * 6;
 	for(uint_fast8_t i = 0; i < 2; ++i)

@@ -11,8 +11,8 @@ using console_handler_noargs_t = std::function<void()>;
 class console_handler_wrapper
 {
 	public:
-		console_handler_wrapper(console_handler_t);
-		console_handler_wrapper(console_handler_noargs_t);
+		console_handler_wrapper(const console_handler_t&);
+		console_handler_wrapper(const console_handler_noargs_t&);
 
 		void operator()(const std::vector<std::string>& args) const;
 

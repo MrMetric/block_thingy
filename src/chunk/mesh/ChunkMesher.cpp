@@ -20,7 +20,7 @@ ChunkMesher::~ChunkMesher()
 {
 }
 
-const Block& ChunkMesher::block_at(int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds) const
+const Block& ChunkMesher::block_at(const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds) const
 {
 	if(x < 0 || x >= CHUNK_SIZE
 	|| y < 0 || y >= CHUNK_SIZE
@@ -42,12 +42,12 @@ const Block& ChunkMesher::block_at(int_fast16_t x, int_fast16_t y, int_fast16_t 
 	#undef s
 }
 
-bool ChunkMesher::block_is_invisible(int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds) const
+bool ChunkMesher::block_is_invisible(const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds) const
 {
 	return block_at(x, y, z, allow_out_of_bounds).is_invisible();
 }
 
-bool ChunkMesher::block_is_invisible_not_none(int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds) const
+bool ChunkMesher::block_is_invisible_not_none(const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds) const
 {
 	const Block& block = block_at(x, y, z, allow_out_of_bounds);
 	return block.is_invisible() && (block.type() != BlockType::none);

@@ -12,7 +12,7 @@ namespace Position
 {
 	ChunkInWorld::ChunkInWorld() : x(0), y(0), z(0) {}
 
-	ChunkInWorld::ChunkInWorld(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z)
+	ChunkInWorld::ChunkInWorld(const ChunkInWorld_type x, const ChunkInWorld_type y, const ChunkInWorld_type z)
 		:
 		x(x),
 		y(y),
@@ -28,7 +28,7 @@ namespace Position
 		z = t(pos.z);
 	}
 
-	ChunkInWorld_type& ChunkInWorld::operator[](uint_fast8_t i)
+	ChunkInWorld_type& ChunkInWorld::operator[](const uint_fast8_t i)
 	{
 		if(i == 0) return x;
 		if(i == 1) return y;

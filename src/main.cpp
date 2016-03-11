@@ -12,7 +12,7 @@
 #include "std_make_unique.hpp"
 
 // http://www.lighthouse3d.com/cg-topics/error-tracking-in-opengl/
-void printOglError(const std::string& file, int line)
+void printOglError(const std::string& file, const int line)
 {
 	GLenum glErr = glGetError();
 	if(glErr != GL_NO_ERROR)
@@ -22,7 +22,7 @@ void printOglError(const std::string& file, int line)
 }
 #define printOpenGLError() printOglError(__FILE__, __LINE__)
 
-static void error_callback(int error, const char* description)
+static void error_callback(const int error, const char* description)
 {
 	std::cerr << "GLFW error " << error << ": " << description << "\n";
 }

@@ -12,7 +12,7 @@ namespace Position
 	struct BlockInChunk
 	{
 		BlockInChunk();
-		BlockInChunk(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z);
+		BlockInChunk(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z);
 		explicit BlockInChunk(const BlockInWorld&);
 
 		BlockInChunk_type& operator[](uint_fast8_t);
