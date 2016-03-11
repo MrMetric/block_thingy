@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include <glad/glad.h>
+
 namespace Util
 {
 	// http://stackoverflow.com/a/2072890/1578318
@@ -18,7 +20,7 @@ namespace Util
 
 	bool file_is_openable(const std::string& path);
 	std::string read_file(const std::string& path);
-	std::string gl_error_string(uint_fast32_t code);
+	std::string gl_error_string(GLenum code);
 
 	struct path
 	{

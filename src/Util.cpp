@@ -34,7 +34,7 @@ std::string Util::read_file(const std::string& path)
 	}
 }
 
-std::string Util::gl_error_string(const uint_fast32_t code)
+std::string Util::gl_error_string(const GLenum code)
 {
 	switch(code)
 	{
@@ -50,16 +50,18 @@ std::string Util::gl_error_string(const uint_fast32_t code)
 		{
 			return "invalid operation";
 		}
-		/*
+		#ifdef GL_STACK_OVERFLOW
 		case GL_STACK_OVERFLOW:
 		{
 			return "stack overflow";
 		}
+		#endif
+		#ifdef GL_STACK_UNDERFLOW
 		case GL_STACK_UNDERFLOW:
 		{
 			return "stack underflow";
 		}
-		*/
+		#endif
 		case GL_OUT_OF_MEMORY:
 		{
 			return "out of memory";
@@ -68,12 +70,18 @@ std::string Util::gl_error_string(const uint_fast32_t code)
 		{
 			return "invalid framebuffer operation";
 		}
-		/*
+		#ifdef GL_CONTEXT_LOST
+		case GL_CONTEXT_LOST:
+		{
+			return "context lost";
+		}
+		#endif
+		#ifdef GL_TABLE_TOO_LARGE
 		case GL_TABLE_TOO_LARGE:
 		{
 			return "table too large";
 		}
-		*/
+		#endif
 	}
 	return "unknown (" + std::to_string(code) + ")";
 }
