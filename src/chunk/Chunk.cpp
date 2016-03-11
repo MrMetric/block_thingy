@@ -7,7 +7,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <graphics/OpenGL/Shader.hpp>
+#include <graphics/OpenGL/ShaderProgram.hpp>
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
 #include "mesh/ChunkMesher.hpp"
@@ -125,7 +125,7 @@ void Chunk::render()
 	for(auto p : meshes)
 	{
 		const BlockType type = p.first;
-		const Shader& shader = Game::instance->gfx.get_block_shader(type);
+		const ShaderProgram& shader = Game::instance->gfx.get_block_shader(type);
 		glUseProgram(shader.get_name());
 
 		shader.uniform3f("pos_mod", pos_mod.x, pos_mod.y, pos_mod.z);

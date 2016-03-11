@@ -19,7 +19,7 @@
 #include <glm/vec4.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include <graphics/OpenGL/Shader.hpp>
+#include <graphics/OpenGL/ShaderProgram.hpp>
 
 #include "Block.hpp"
 #include "BlockType.hpp"
@@ -104,7 +104,7 @@ void Game::draw_world()
 {
 	for(const auto& p : gfx.block_shaders)
 	{
-		const Shader& shader = p.second;
+		const ShaderProgram& shader = p.second;
 		shader.uniformMatrix4fv("matriks", gfx.matriks);
 	}
 

@@ -1,4 +1,4 @@
-#include "Shader.hpp"
+#include "ShaderProgram.hpp"
 
 #include <iostream>
 #include <memory>
@@ -18,26 +18,26 @@ static GLuint compile_shader(const std::string& filename, const GLenum type);
 static std::string get_log(const GLuint object);
 static std::vector<std::string> get_uniform_names(const GLuint name);
 
-Shader::Shader()
+ShaderProgram::ShaderProgram()
 	:
 	name(0),
 	inited(false)
 {
 }
 
-Shader::Shader(const char* path)
+ShaderProgram::ShaderProgram(const char* path)
 	:
-	Shader(std::string(path))
+	ShaderProgram(std::string(path))
 {
 }
 
-Shader::Shader(const std::string& path)
+ShaderProgram::ShaderProgram(const std::string& path)
 	:
-	Shader({ path + ".vs", path + ".fs" }, path)
+	ShaderProgram({ path + ".vs", path + ".fs" }, path)
 {
 }
 
-Shader::Shader(const std::vector<std::string>& files, const std::string& debug_name)
+ShaderProgram::ShaderProgram(const std::vector<std::string>& files, const std::string& debug_name)
 {
 	name = make_program(files);
 
@@ -55,7 +55,7 @@ Shader::Shader(const std::vector<std::string>& files, const std::string& debug_n
 	inited = true;
 }
 
-Shader::Shader(Shader&& that)
+ShaderProgram::ShaderProgram(ShaderProgram&& that)
 {
 	name = that.name;
 	inited = that.inited;
@@ -67,7 +67,7 @@ Shader::Shader(Shader&& that)
 	}
 }
 
-Shader::~Shader()
+ShaderProgram::~ShaderProgram()
 {
 	if(inited)
 	{
@@ -75,12 +75,12 @@ Shader::~Shader()
 	}
 }
 
-GLuint Shader::get_name() const
+GLuint ShaderProgram::get_name() const
 {
 	return name;
 }
 
-GLint Shader::get_uniform_location(const std::string& name) const
+GLint ShaderProgram::get_uniform_location(const std::string& name) const
 {
 	auto i = uniforms.find(name);
 	if(i == uniforms.end())
@@ -90,26 +90,26 @@ GLint Shader::get_uniform_location(const std::string& name) const
 	return i->second;
 }
 
-void Shader::uniform1f(const std::string& uniform_name, const float x) const
+void ShaderProgram::uniform1f(const std::string& uniform_name, const float x) const
 {
 	const GLint u = get_uniform_location(uniform_name);
 	glProgramUniform1f(name, u, x);
 }
 
-void Shader::uniform3f(const std::string& uniform_name, const float x, const float y, const float z) const
+void ShaderProgram::uniform3f(const std::string& uniform_name, const float x, const float y, const float z) const
 {
 	const GLint u = get_uniform_location(uniform_name);
 	glProgramUniform3f(name, u, x, y, z);
 }
 
-void Shader::uniform4fv(const std::string& uniform_name, const glm::vec4& vec) const
+void ShaderProgram::uniform4fv(const std::string& uniform_name, const glm::vec4& vec) const
 {
 	const GLint u = get_uniform_location(uniform_name);
 	const float* ptr = glm::value_ptr(vec);
 	glProgramUniform4fv(name, u, 1, ptr);
 }
 
-void Shader::uniformMatrix4fv(const std::string& uniform_name, const glm::mat4& matrix) const
+void ShaderProgram::uniformMatrix4fv(const std::string& uniform_name, const glm::mat4& matrix) const
 {
 	const GLint u = get_uniform_location(uniform_name);
 	const float* ptr = glm::value_ptr(matrix);
@@ -158,7 +158,7 @@ static GLuint make_program(const std::vector<std::string>& files)
 	if(!izgud)
 	{
 		std::string log = get_log(program);
-		// TODO: rename this (Shader) to ShaderProgram, and make Shader so that this deletion happens in destructor
+		// TODO: make ShaderObject so that this deletion happens in destructor
 		for(GLuint object : objects)
 		{
 			glDeleteShader(object);

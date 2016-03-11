@@ -8,18 +8,18 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec4.hpp>
 
-class Shader
+class ShaderProgram
 {
 	public:
-		Shader();
-		Shader(const char* path);
-		Shader(const std::string& path);
-		Shader(const std::vector<std::string>&, const std::string& name);
-		Shader(const Shader&) = delete;
-		Shader(Shader&&);
-		~Shader();
+		ShaderProgram();
+		ShaderProgram(const char* path);
+		ShaderProgram(const std::string& path);
+		ShaderProgram(const std::vector<std::string>&, const std::string& name);
+		ShaderProgram(const ShaderProgram&) = delete;
+		ShaderProgram(ShaderProgram&&);
+		~ShaderProgram();
 
-		Shader& operator=(const Shader&) = delete;
+		ShaderProgram& operator=(const ShaderProgram&) = delete;
 
 		GLuint get_name() const;
 		GLint get_uniform_location(const std::string&) const;

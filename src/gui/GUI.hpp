@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include <graphics/OpenGL/Shader.hpp>
+#include <graphics/OpenGL/ShaderProgram.hpp>
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
 class Gfx;
@@ -17,7 +17,7 @@ class GUI
 		void draw(const Gfx&);
 
 	private:
-		Shader s_crosshair;
+		ShaderProgram s_crosshair;
 		VertexBuffer crosshair_vbo;
 
 		void draw_crosshair(const Gfx&);

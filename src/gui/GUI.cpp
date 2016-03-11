@@ -1,7 +1,7 @@
 #include "GUI.hpp"
 
 #include <glad/glad.h>
-#include <graphics/OpenGL/Shader.hpp>
+#include <graphics/OpenGL/ShaderProgram.hpp>
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
 #include <glm/mat4x4.hpp>

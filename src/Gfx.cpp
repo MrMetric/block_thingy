@@ -9,7 +9,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <graphics/OpenGL/Shader.hpp>
+#include <graphics/OpenGL/ShaderProgram.hpp>
 #include <graphics/OpenGL/VertexArray.hpp>
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
@@ -187,7 +187,7 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 	vertex_array.attrib(0, false);
 }
 
-const Shader& Gfx::get_block_shader(const BlockType type) const
+const ShaderProgram& Gfx::get_block_shader(const BlockType type) const
 {
 	auto i = block_shaders.find(type);
 	if(i != block_shaders.end())
