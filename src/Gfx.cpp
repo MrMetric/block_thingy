@@ -30,6 +30,7 @@
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"
+#include "graphics/primitive.hpp"
 #include "position/BlockInWorld.hpp"
 
 Gfx::Gfx(GLFWwindow* window, EventManager& event_manager)
@@ -156,8 +157,7 @@ void Gfx::set_cam_view(const Camera& cam)
 // TODO: use GL_LINES
 void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 {
-	GLfloat vertexes[16 * 3];
-	uint_fast16_t o1 = 0;
+	vertex_coord_t<GLfloat> vertexes[16];
 	// damn thing is not Eulerian
 	// TODO: determine shortest path
 	GLuint elements[] = {
@@ -170,9 +170,8 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 		uint_fast32_t o2 = 3 * elements[e];
 		for(uint_fast8_t i = 0; i < 3; ++i)
 		{
-			vertexes[o1 + i] = Cube::cube_vertex[o2 + i] + pos[i];
+			vertexes[e][i] = Cube::cube_vertex[o2 + i] + pos[i];
 		}
-		o1 += 3;
 	}
 
 	outline_vbo.data(sizeof(vertexes), vertexes, GL_DYNAMIC_DRAW);

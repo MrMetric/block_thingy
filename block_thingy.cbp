@@ -111,6 +111,7 @@
 		<Unit filename="src/graphics/OpenGL/VertexArray.hpp" />
 		<Unit filename="src/graphics/OpenGL/VertexBuffer.cpp" />
 		<Unit filename="src/graphics/OpenGL/VertexBuffer.hpp" />
+		<Unit filename="src/graphics/primitive.hpp" />
 		<Unit filename="src/gui/GUI.cpp" />
 		<Unit filename="src/gui/GUI.hpp" />
 		<Unit filename="src/main.cpp" />
