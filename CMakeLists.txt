@@ -5,7 +5,10 @@ file(GLOB_RECURSE block_thingy_SRC
 	"src/*.cpp"
 	"lib/glad/glad.c"
 )
-include_directories("lib")
+include_directories(
+	"lib"
+	"src"
+)
 add_executable(block_thingy ${block_thingy_SRC})
 
 set_property(TARGET block_thingy PROPERTY CXX_STANDARD 14)
