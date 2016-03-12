@@ -53,11 +53,14 @@ To run, `block_thingy` needs to know where the game files are. It defaults to `.
 ```
 
 ## TODO
- * improve build instructions
- * allow saving screenshots to a format other than PNG (for when the libpng dependency is not enabled)
- * make physics framerate-independent
- * split Game into separate thingies
+ * add a more useful error message for when game files are not found
+ * add frustum culling
  * add other meshing methods [[1]](http://0fps.net/2012/07/07/meshing-minecraft-part-2/) [[2]](https://blackflux.wordpress.com/2014/02/23/meshing-in-voxel-engines-part-1/)
  * add texturing
- * add frustum culling
+ * allow saving screenshots to a format other than PNG (for when the libpng dependency is not enabled)
+ * improve build instructions
+ * make physics framerate-independent
+ * move the commands from `Game` and `command_test` to somewhere else
+ * separate chunk data / rendering (this decouples meshing from chunking, and has the side benefit of allowing mesh dimensions to not match chunks)
+ * use events more (look at: keypress, mousemove, …)
  * other stuff that I am too lazy to say here
