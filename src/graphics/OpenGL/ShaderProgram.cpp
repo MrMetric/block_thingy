@@ -1,6 +1,5 @@
 #include "ShaderProgram.hpp"
 
-#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <utility>
@@ -9,19 +8,18 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "ShaderObject.hpp"
 #include "../../Util.hpp"
 
 #include "std_make_unique.hpp"
 
-static GLuint make_program(const std::vector<std::string>& files);
-static GLuint compile_shader(const std::string& filename, const GLenum type);
-static std::string get_log(const GLuint object);
+static GLuint make_program(const std::vector<std::string>& files, const std::string& debug_name);
 static std::vector<std::string> get_uniform_names(const GLuint name);
 
 ShaderProgram::ShaderProgram()
 	:
-	name(0),
-	inited(false)
+	inited(false),
+	name(0)
 {
 }
 
@@ -39,7 +37,7 @@ ShaderProgram::ShaderProgram(const std::string& path)
 
 ShaderProgram::ShaderProgram(const std::vector<std::string>& files, const std::string& debug_name)
 {
-	name = make_program(files);
+	name = make_program(files, debug_name);
 
 	std::vector<std::string> uniform_names = get_uniform_names(name);
 	for(const std::string& s : uniform_names)
@@ -116,9 +114,9 @@ void ShaderProgram::uniformMatrix4fv(const std::string& uniform_name, const glm:
 	glProgramUniformMatrix4fv(name, u, 1, GL_FALSE, ptr);
 }
 
-static GLuint make_program(const std::vector<std::string>& files)
+static GLuint make_program(const std::vector<std::string>& files, const std::string& debug_name)
 {
-	std::vector<GLuint> objects;
+	std::vector<ShaderObject> objects;
 	for(std::string path : files)
 	{
 		GLenum type;
@@ -140,104 +138,44 @@ static GLuint make_program(const std::vector<std::string>& files)
 			path_parts.file = "default";
 			path = Util::join_path(path_parts);
 		}
-		GLuint object = compile_shader(path, type);
-		objects.push_back(object);
+		objects.emplace_back(path, type);
 	}
 
-	// TODO: attach in previous loop (see next TODO)
+	// TODO: attach in previous loop?
 	GLuint program = glCreateProgram();
-	for(GLuint object : objects)
+	for(const ShaderObject& object : objects)
 	{
-		glAttachShader(program, object);
+		glAttachShader(program, object.get_name());
 	}
 
 	GLint izgud;
 
 	glLinkProgram(program);
 	glGetProgramiv(program, GL_LINK_STATUS, &izgud);
-	if(!izgud)
+	if(izgud == GL_FALSE)
 	{
-		std::string log = get_log(program);
-		// TODO: make ShaderObject so that this deletion happens in destructor
-		for(GLuint object : objects)
-		{
-			glDeleteShader(object);
-		}
+		std::string log = Util::gl_object_log(program);
 		glDeleteProgram(program);
-		throw std::runtime_error("error linking program:\n" + log);
-	}
-
-	// shader objects are not needed after linking, so memory can be freed by deleting them
-	for(GLuint object : objects)
-	{
-		glDetachShader(program, object);
-		glDeleteShader(object);
+		throw std::runtime_error("error linking program " + debug_name + ":\n" + log);
 	}
 
 	glValidateProgram(program);
 	glGetProgramiv(program, GL_VALIDATE_STATUS, &izgud);
-	if(!izgud)
+	if(izgud == GL_FALSE)
 	{
-		std::string log = get_log(program);
+		std::string log = Util::gl_object_log(program);
 		glDeleteProgram(program);
-		throw std::runtime_error("program validation failed:\n" + log);
+		throw std::runtime_error("program validation failed in " + debug_name + ":\n" + log);
+	}
+
+	// shader objects are not needed after linking, so memory can be freed by deleting them
+	// but a shader object will not be deleted until it is detached
+	for(const ShaderObject& object : objects)
+	{
+		glDetachShader(program, object.get_name());
 	}
 
 	return program;
-}
-
-static GLuint compile_shader(const std::string& filename, const GLenum type)
-{
-	std::cout << "compiling shader: " << filename << "\n";
-	const std::string source = Util::read_file(filename);
-	const char* source_c = source.c_str();
-	const GLint source_len = GLint(source.length()); // I don't think the length will ever be that large (2 GiB) anyway
-	GLuint res = glCreateShader(type);
-	glShaderSource(res, 1, &source_c, &source_len);
-
-	glCompileShader(res);
-	GLint compile_ok = GL_FALSE;
-	glGetShaderiv(res, GL_COMPILE_STATUS, &compile_ok);
-	if(compile_ok == GL_FALSE)
-	{
-		std::string log = get_log(res);
-		glDeleteShader(res);
-		throw std::runtime_error("error compiling " + filename + ":\n" + log);
-	}
-
-	return res;
-}
-
-static std::string get_log(const GLuint object)
-{
-	GLuint log_length = 0;
-	if(glIsShader(object))
-	{
-		glGetShaderiv(object, GL_INFO_LOG_LENGTH, reinterpret_cast<GLint*>(&log_length));
-	}
-	else if(glIsProgram(object))
-	{
-		glGetProgramiv(object, GL_INFO_LOG_LENGTH, reinterpret_cast<GLint*>(&log_length));
-	}
-	else
-	{
-		throw std::runtime_error("Error printing log: object is not a shader or a program\n");
-	}
-
-	char* log = new char[log_length];
-
-	if(glIsShader(object))
-	{
-		glGetShaderInfoLog(object, log_length, nullptr, log);
-	}
-	else if(glIsProgram(object))
-	{
-		glGetProgramInfoLog(object, log_length, nullptr, log);
-	}
-
-	std::string log_string(log);
-	delete[] log;
-	return log_string;
 }
 
 static std::vector<std::string> get_uniform_names(const GLuint program)

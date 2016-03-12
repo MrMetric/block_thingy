@@ -19,7 +19,9 @@ namespace Util
 
 	bool file_is_openable(const std::string& path);
 	std::string read_file(const std::string& path);
+
 	std::string gl_error_string(GLenum code);
+	std::string gl_object_log(GLuint object);
 
 	struct path
 	{

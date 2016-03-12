@@ -86,6 +86,37 @@ std::string Util::gl_error_string(const GLenum code)
 	return "unknown (" + std::to_string(code) + ")";
 }
 
+std::string Util::gl_object_log(const GLuint object)
+{
+	GLint log_length = 0;
+	if(glIsShader(object))
+	{
+		glGetShaderiv(object, GL_INFO_LOG_LENGTH, &log_length);
+	}
+	else if(glIsProgram(object))
+	{
+		glGetProgramiv(object, GL_INFO_LOG_LENGTH, &log_length);
+	}
+	else
+	{
+		throw std::runtime_error("Error printing log: object is not a shader or a program\n");
+	}
+
+	std::unique_ptr<char[]> log = std::make_unique<char[]>(log_length);
+
+	if(glIsShader(object))
+	{
+		glGetShaderInfoLog(object, log_length, nullptr, log.get());
+	}
+	else if(glIsProgram(object))
+	{
+		glGetProgramInfoLog(object, log_length, nullptr, log.get());
+	}
+
+	std::string log_string(log.get());
+	return log_string;
+}
+
 Util::path Util::split_path(const std::string& path)
 {
 	auto slash_pos = path.find_last_of('/');
