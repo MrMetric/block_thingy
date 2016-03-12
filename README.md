@@ -46,16 +46,14 @@ Or, to specify a different compiler:
 $ cmake .. -DCMAKE_C_COMPILER="/usr/local/bin/clang" -DCMAKE_CXX_COMPILER="/usr/local/bin/clang++"
 ```
 
-To run, `block_thingy` needs to be executed from the `bin` directory. So, following from the example above:
+To run, `block_thingy` needs to know where the game files are. It defaults to `.`, which is incorrect here—the folder is `<repo root>/bin`. Following from the example above, simply do this:
 
 ```shell
-cd ../bin
-../build/block_thingy
+./block_thingy ../bin
 ```
 
 ## TODO
  * improve build instructions
- * fix dependency on running in the `bin` directory
  * allow saving screenshots to a format other than PNG (for when the libpng dependency is not enabled)
  * make physics framerate-independent
  * split Game into separate thingies

@@ -1,9 +1,11 @@
 #include "Util.hpp"
 
 #include <cstdint>
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <unistd.h>
 
 #include <glad/glad.h>
 
@@ -135,4 +137,13 @@ std::string Util::join_path(const Util::path& path_parts)
 		path += "." + path_parts.ext;
 	}
 	return path;
+}
+
+void Util::change_directory(const std::string& path)
+{
+	// TODO: find out what Wandows uses
+	if(chdir(path.c_str()) == -1)
+	{
+		std::cout << "error changing directory to " << path << ": " << strerror(errno) << "\n";
+	}
 }

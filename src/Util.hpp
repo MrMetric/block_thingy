@@ -32,4 +32,6 @@ namespace Util
 
 	path split_path(const std::string&);
 	std::string join_path(const path&);
+
+	void change_directory(const std::string&);
 };

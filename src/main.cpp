@@ -29,8 +29,13 @@ static void error_callback(const int error, const char* description)
 
 static std::unique_ptr<Game> game;
 
-int main()
+int main(int argc, char** argv)
 {
+	if(argc > 1)
+	{
+		Util::change_directory(argv[1]);
+	}
+
 	glfwSetErrorCallback(error_callback);
 
 	std::cout << "Compiled with GLFW " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << "\n";
