@@ -7,6 +7,7 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp> // glm::ortho
 
+#include "../Game.hpp"
 #include "../Gfx.hpp"
 #include "../event/EventManager.hpp"
 #include "../event/EventType.hpp"
@@ -52,6 +53,13 @@ void GUI::draw(const Gfx& gfx)
 
 void GUI::draw_crosshair(const Gfx& gfx)
 {
+	bool wireframe = Game::instance->wireframe();
+
+	if(wireframe)
+	{
+		Game::instance->wireframe = false;
+	}
+
 	glDisable(GL_DEPTH_TEST);
 
 	glUseProgram(s_crosshair.get_name());
@@ -67,4 +75,9 @@ void GUI::draw_crosshair(const Gfx& gfx)
 	glDisableVertexAttribArray(0);
 
 	glEnable(GL_DEPTH_TEST);
+
+	if(wireframe)
+	{
+		Game::instance->wireframe = true;
+	}
 }

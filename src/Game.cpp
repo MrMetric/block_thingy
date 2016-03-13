@@ -57,6 +57,10 @@ Game::Game(GLFWwindow* window, const int width, const int height)
 	delta_time(0),
 	fps(144),
 	render_distance(3),
+	wireframe(false, [](bool wireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+	}),
 	keybinder(&console)
 {
 	Game::instance = this;
@@ -370,18 +374,9 @@ void Game::add_commands()
 	});
 	#endif
 
-	commands.emplace_back(console, "wireframe", []()
+	commands.emplace_back(console, "wireframe", [game=this]()
 	{
-		static bool wireframe = false; // TODO: less static
-		wireframe = !wireframe;
-		if(wireframe)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		}
-		else
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
+		game->wireframe = !game->wireframe();
 	});
 	commands.emplace_back(console, "toggle_cull_face", [game=this]()
 	{

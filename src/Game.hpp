@@ -18,6 +18,7 @@
 #include "gui/GUI.hpp"
 #include "physics/RaytraceHit.hpp"
 #include "position/ChunkInWorld.hpp"
+#include "util/Property.hpp"
 
 struct GLFWwindow;
 
@@ -50,9 +51,12 @@ class Game
 		Console console;
 		GUI gui;
 
+		Property<bool> wireframe;
+
 	private:
 		double delta_time;
 		FPSManager fps;
+
 		ChunkInWorld_type render_distance;
 
 		void draw_world();
