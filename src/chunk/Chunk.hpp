@@ -39,11 +39,15 @@ class Chunk
 	private:
 		World* owner;
 		Position::ChunkInWorld position;
-		std::array<Block, CHUNK_BLOCK_COUNT> blok;
+		std::unique_ptr<std::array<Block, CHUNK_BLOCK_COUNT>> blok;
 		std::unique_ptr<ChunkMesher> mesher;
 		meshmap_t meshes;
 		std::vector<VertexBuffer> mesh_vbos;
 		bool changed;
+
+		bool is_solid;
+		Block solid_block;
+		void init_blok();
 
 		void update_neighbors(BlockInChunk_type, BlockInChunk_type, BlockInChunk_type);
 		void update_neighbor(ChunkInWorld_type, ChunkInWorld_type, ChunkInWorld_type);

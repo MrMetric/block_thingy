@@ -27,10 +27,10 @@ Chunk::Chunk(const Position::ChunkInWorld& pos, World* owner)
 	owner(owner),
 	position(pos),
 	mesher(std::make_unique<GreedyMesher>(*this)),
-	changed(true)
+	changed(true),
+	is_solid(true),
+	solid_block(BlockType::air) // a useful default for now
 {
-	// a useful default for now
-	blok.fill(Block(BlockType::air));
 }
 
 inline static std::array<Block, CHUNK_BLOCK_COUNT>::size_type blok_index(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
@@ -40,22 +40,32 @@ inline static std::array<Block, CHUNK_BLOCK_COUNT>::size_type blok_index(const B
 
 const Block& Chunk::get_block_const(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const
 {
-	return blok[blok_index(x, y, z)];
+	if(is_solid)
+	{
+		return solid_block;
+	}
+	return (*blok)[blok_index(x, y, z)];
 }
 
 const Block& Chunk::get_block_const(const Position::BlockInChunk& pos) const
 {
-	return blok[blok_index(pos.x, pos.y, pos.z)];
+	if(is_solid)
+	{
+		return solid_block;
+	}
+	return (*blok)[blok_index(pos.x, pos.y, pos.z)];
 }
 
 Block& Chunk::get_block_mutable(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
-	return blok[blok_index(x, y, z)];
+	init_blok();
+	return (*blok)[blok_index(x, y, z)];
 }
 
 Block& Chunk::get_block_mutable(const Position::BlockInChunk& pos)
 {
-	return blok[blok_index(pos.x, pos.y, pos.z)];
+	init_blok();
+	return (*blok)[blok_index(pos.x, pos.y, pos.z)];
 }
 
 void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, const Block& block)
@@ -68,7 +78,8 @@ void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, cons
 		throw std::domain_error("position out of bounds in Chunk::set: " + set_info);
 	}
 
-	blok[blok_index(x, y, z)] = block;
+	init_blok();
+	(*blok)[blok_index(x, y, z)] = block;
 	changed = true;
 
 	update_neighbors(x, y, z);
@@ -140,6 +151,18 @@ void Chunk::render()
 
 		++i;
 	}
+}
+
+void Chunk::init_blok()
+{
+	if(blok != nullptr)
+	{
+		return;
+	}
+
+	blok = std::make_unique<std::array<Block, CHUNK_BLOCK_COUNT>>();
+	blok->fill(solid_block);
+	is_solid = false;
 }
 
 void Chunk::update_neighbors(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
