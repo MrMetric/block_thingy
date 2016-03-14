@@ -28,7 +28,6 @@ Chunk::Chunk(const Position::ChunkInWorld& pos, World* owner)
 	position(pos),
 	mesher(std::make_unique<GreedyMesher>(*this)),
 	changed(true),
-	is_solid(true),
 	solid_block(BlockType::air) // a useful default for now
 {
 }
@@ -40,7 +39,7 @@ inline static std::array<Block, CHUNK_BLOCK_COUNT>::size_type blok_index(const B
 
 const Block& Chunk::get_block_const(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const
 {
-	if(is_solid)
+	if(blok == nullptr)
 	{
 		return solid_block;
 	}
@@ -49,7 +48,7 @@ const Block& Chunk::get_block_const(const BlockInChunk_type x, const BlockInChun
 
 const Block& Chunk::get_block_const(const Position::BlockInChunk& pos) const
 {
-	if(is_solid)
+	if(blok == nullptr)
 	{
 		return solid_block;
 	}
@@ -162,7 +161,6 @@ void Chunk::init_blok()
 
 	blok = std::make_unique<std::array<Block, CHUNK_BLOCK_COUNT>>();
 	blok->fill(solid_block);
-	is_solid = false;
 }
 
 void Chunk::update_neighbors(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)

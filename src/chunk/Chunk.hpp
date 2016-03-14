@@ -45,7 +45,6 @@ class Chunk
 		std::vector<VertexBuffer> mesh_vbos;
 		bool changed;
 
-		bool is_solid;
 		Block solid_block;
 		void init_blok();
 
