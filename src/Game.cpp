@@ -2,13 +2,13 @@
 
 #include <ctime>
 #include <fstream>
+#include <functional>
 #include <iomanip>
 #include <iostream>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#include <utility>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -19,7 +19,6 @@
 #include <glm/vec4.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include <graphics/OpenGL/ShaderProgram.hpp>
 #include <Poco/BinaryReader.h>
 using Poco::BinaryReader;
 #include <Poco/BinaryWriter.h>
@@ -33,7 +32,6 @@ using Poco::BinaryWriter;
 #include "Gfx.hpp"
 #include "Player.hpp"
 #include "World.hpp"
-#include "chunk/Chunk.hpp"
 #include "console/command_test.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
@@ -41,6 +39,7 @@ using Poco::BinaryWriter;
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"
+#include "graphics/RenderWorld.hpp"
 #include "gui/GUI.hpp"
 #include "physics/PhysicsUtil.hpp"
 #include "physics/RaytraceHit.hpp"
@@ -90,7 +89,8 @@ void Game::draw()
 	cam.position = player.position;
 	cam.position.y += player.eye_height;
 
-	draw_world();
+	Position::BlockInWorld render_origin(player.position);
+	RenderWorld::draw_world(world, gfx.block_shaders, gfx.matriks, render_origin, render_distance);
 	find_hovered_block(gfx.projection_matrix, gfx.view_matrix);
 	gui.draw(gfx);
 
@@ -107,35 +107,6 @@ void Game::draw()
 	ss << " | chunk" << Position::ChunkInWorld(player_block_pos);
 	ss << " | chunkblock" << Position::BlockInChunk(player_block_pos);
 	glfwSetWindowTitle(window, ss.str().c_str());
-}
-
-static bool froxx = false;
-void Game::draw_world()
-{
-	for(const auto& p : gfx.block_shaders)
-	{
-		const ShaderProgram& shader = p.second;
-		shader.uniformMatrix4fv("matriks", gfx.matriks);
-	}
-
-	Position::ChunkInWorld chunk_pos(Position::BlockInWorld(player.position));
-	if(froxx)
-	{
-		chunk_pos.x = chunk_pos.y = chunk_pos.z = 0;
-	}
-	Position::ChunkInWorld min = chunk_pos - render_distance;
-	Position::ChunkInWorld max = chunk_pos + render_distance;
-	for(int x = min.x; x <= max.x; ++x)
-	{
-		for(int y = min.y; y <= max.y; ++y)
-		{
-			for(int z = min.z; z <= max.z; ++z)
-			{
-				std::shared_ptr<Chunk> chunk = world.get_or_make_chunk(Position::ChunkInWorld(x, y, z));
-				chunk->render();
-			}
-		}
-	}
 }
 
 #ifdef USE_LIBPNG
@@ -403,11 +374,6 @@ void Game::add_commands()
 		game->render_distance -= 1;
 	});
 
-	commands.emplace_back(console, "froxx", []()
-	{
-		froxx = !froxx;
-	});
-	console->run_line("bind f froxx");
 	commands.emplace_back(console, "change_block_type", []()
 	{
 		block_type_id_t i = static_cast<block_type_id_t>(block_type);

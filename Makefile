@@ -65,6 +65,7 @@ OBJ_DEBUG = \
 	$(OBJDIR_DEBUG)/src/event/Event.o \
 	$(OBJDIR_DEBUG)/src/event/EventManager.o \
 	$(OBJDIR_DEBUG)/src/event/type/Event_window_size_change.o \
+	$(OBJDIR_DEBUG)/src/graphics/RenderWorld.o \
 	$(OBJDIR_DEBUG)/src/graphics/OpenGL/ShaderObject.o \
 	$(OBJDIR_DEBUG)/src/graphics/OpenGL/ShaderProgram.o \
 	$(OBJDIR_DEBUG)/src/graphics/OpenGL/VertexArray.o \
@@ -99,6 +100,7 @@ OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/src/event/Event.o \
 	$(OBJDIR_RELEASE)/src/event/EventManager.o \
 	$(OBJDIR_RELEASE)/src/event/type/Event_window_size_change.o \
+	$(OBJDIR_RELEASE)/src/graphics/RenderWorld.o \
 	$(OBJDIR_RELEASE)/src/graphics/OpenGL/ShaderObject.o \
 	$(OBJDIR_RELEASE)/src/graphics/OpenGL/ShaderProgram.o \
 	$(OBJDIR_RELEASE)/src/graphics/OpenGL/VertexArray.o \
@@ -198,6 +200,9 @@ $(OBJDIR_DEBUG)/src/event/EventManager.o: src/event/EventManager.cpp
 
 $(OBJDIR_DEBUG)/src/event/type/Event_window_size_change.o: src/event/type/Event_window_size_change.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/event/type/Event_window_size_change.cpp -o $(OBJDIR_DEBUG)/src/event/type/Event_window_size_change.o
+
+$(OBJDIR_DEBUG)/src/graphics/RenderWorld.o: src/graphics/RenderWorld.cpp
+	$(CXX) $(CXXFLAGS_DEBUG) -c src/graphics/RenderWorld.cpp -o $(OBJDIR_DEBUG)/src/graphics/RenderWorld.o
 
 $(OBJDIR_DEBUG)/src/graphics/OpenGL/ShaderObject.o: src/graphics/OpenGL/ShaderObject.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/graphics/OpenGL/ShaderObject.cpp -o $(OBJDIR_DEBUG)/src/graphics/OpenGL/ShaderObject.o
@@ -317,6 +322,9 @@ $(OBJDIR_RELEASE)/src/event/EventManager.o: src/event/EventManager.cpp
 
 $(OBJDIR_RELEASE)/src/event/type/Event_window_size_change.o: src/event/type/Event_window_size_change.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/event/type/Event_window_size_change.cpp -o $(OBJDIR_RELEASE)/src/event/type/Event_window_size_change.o
+
+$(OBJDIR_RELEASE)/src/graphics/RenderWorld.o: src/graphics/RenderWorld.cpp
+	$(CXX) $(CXXFLAGS_RELEASE) -c src/graphics/RenderWorld.cpp -o $(OBJDIR_RELEASE)/src/graphics/RenderWorld.o
 
 $(OBJDIR_RELEASE)/src/graphics/OpenGL/ShaderObject.o: src/graphics/OpenGL/ShaderObject.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/graphics/OpenGL/ShaderObject.cpp -o $(OBJDIR_RELEASE)/src/graphics/OpenGL/ShaderObject.o
