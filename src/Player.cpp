@@ -12,7 +12,10 @@
 
 Player::Player()
 	:
-	on_ground(false)
+	abs_offset(0.4),
+	eye_height(1.7),
+	walk_speed(2),
+	max_velocity(1)
 {
 }
 
@@ -63,18 +66,18 @@ void Player::move(const glm::dvec3& acceleration)
 			{
 				position.y = pos_feet_new.y + 1;
 				velocity.y = 0;
-				on_ground = true;
+				flags.on_ground = true;
 			}
 			else
 			{
 				position.y += moveY;
-				on_ground = false;
+				flags.on_ground = false;
 			}
 		}
 		else
 		{
 			position.y += moveY;
-			on_ground = false;
+			flags.on_ground = false;
 		}
 	}
 }
@@ -85,32 +88,32 @@ void Player::step(const double delta_time)
 	acceleration.y -= 0.5; // gravity
 
 	double move_speed = walk_speed;
-	if(going_faster)
+	if(flags.going_faster)
 	{
 		move_speed *= 4;
 	}
 	acceleration = apply_movement_input(acceleration, move_speed);
 
-	if(noclip)
+	if(flags.noclip)
 	{
 		velocity.x *= 0.75;
 		velocity.y *= 0.75;
 		velocity.z *= 0.75;
 		acceleration.y = 0;
-		if(do_jump)
+		if(flags.do_jump)
 		{
 			acceleration.y += 18;
 		}
 	}
 	else
 	{
-		if(do_jump && on_ground)
+		if(flags.do_jump && flags.on_ground)
 		{
 			acceleration.y += 9;
 		}
 
 		// friction
-		if(on_ground)
+		if(flags.on_ground)
 		{
 			velocity.x *= 0.75;
 			velocity.z *= 0.75;
@@ -125,26 +128,26 @@ void Player::step(const double delta_time)
 			acceleration.z = 0;
 		}
 	}
-	do_jump = false;
+	flags.do_jump = false;
 
 	move(acceleration * delta_time);
 }
 
 glm::dvec3 Player::apply_movement_input(glm::dvec3 acceleration, const double move_speed)
 {
-	if(moving_forward)
+	if(flags.moving_forward)
 	{
 		acceleration.z -= move_speed;
 	}
-	if(moving_backward)
+	if(flags.moving_backward)
 	{
 		acceleration.z += move_speed;
 	}
-	if(moving_left)
+	if(flags.moving_left)
 	{
 		acceleration.x -= move_speed;
 	}
-	if(moving_right)
+	if(flags.moving_right)
 	{
 		acceleration.x += move_speed;
 	}
@@ -181,37 +184,37 @@ bool Player::can_place_block_at(const Position::BlockInWorld& block_pos)
 
 void Player::move_forward(const bool do_that)
 {
-	moving_forward = do_that;
+	flags.moving_forward = do_that;
 }
 
 void Player::move_backward(const bool do_that)
 {
-	moving_backward = do_that;
+	flags.moving_backward = do_that;
 }
 
 void Player::move_left(const bool do_that)
 {
-	moving_left = do_that;
+	flags.moving_left = do_that;
 }
 
 void Player::move_right(const bool do_that)
 {
-	moving_right = do_that;
+	flags.moving_right = do_that;
 }
 
 void Player::go_faster(const bool do_that)
 {
-	going_faster = do_that;
+	flags.going_faster = do_that;
 }
 
 void Player::jump()
 {
-	do_jump = true;
+	flags.do_jump = true;
 }
 
 void Player::toggle_noclip()
 {
-	noclip = !noclip;
+	flags.noclip = !flags.noclip;
 }
 
 bool Player::block_is_at(const double x, const double y, const double z)
@@ -223,7 +226,7 @@ bool Player::block_is_at(const double x, const double y, const double z)
 
 double Player::move_to(double coord, const double move_var, const double offset, const Position::BlockInWorld& block_pos)
 {
-	if(noclip)
+	if(flags.noclip)
 	{
 		return coord + move_var;
 	}
@@ -252,8 +255,8 @@ void Player::serialize(BinaryWriter& writer)
 	writer << position.x << position.y << position.z;
 	writer << rotation.x << rotation.y << rotation.z;
 	writer << velocity.x << velocity.y << velocity.z;
-	writer << on_ground;
-	writer << noclip;
+	writer << flags.on_ground;
+	writer << flags.noclip;
 }
 
 void Player::deserialize(BinaryReader& reader)
@@ -271,6 +274,6 @@ void Player::deserialize(BinaryReader& reader)
 	reader >> velocity.y;
 	reader >> velocity.z;
 
-	reader >> on_ground;
-	reader >> noclip;
+	reader >> flags.on_ground;
+	reader >> flags.noclip;
 }

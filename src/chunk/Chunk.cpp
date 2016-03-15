@@ -57,7 +57,7 @@ const Block& Chunk::get_block_const(const BlockInChunk_type x, const BlockInChun
 	{
 		return solid_block;
 	}
-	return (*blok)[blok_index(x, y, z)];
+	return blok->at(blok_index(x, y, z));
 }
 
 const Block& Chunk::get_block_const(const Position::BlockInChunk& pos) const
@@ -66,19 +66,19 @@ const Block& Chunk::get_block_const(const Position::BlockInChunk& pos) const
 	{
 		return solid_block;
 	}
-	return (*blok)[blok_index(pos.x, pos.y, pos.z)];
+	return blok->at(blok_index(pos.x, pos.y, pos.z));
 }
 
 Block& Chunk::get_block_mutable(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
 	init_blok();
-	return (*blok)[blok_index(x, y, z)];
+	return blok->at(blok_index(x, y, z));
 }
 
 Block& Chunk::get_block_mutable(const Position::BlockInChunk& pos)
 {
 	init_blok();
-	return (*blok)[blok_index(pos.x, pos.y, pos.z)];
+	return blok->at(blok_index(pos.x, pos.y, pos.z));
 }
 
 void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, const Block& block)
@@ -92,7 +92,7 @@ void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, cons
 	}
 
 	init_blok();
-	(*blok)[blok_index(x, y, z)] = block;
+	blok->at(blok_index(x, y, z)) = block;
 	changed = true;
 
 	update_neighbors(x, y, z);
@@ -231,7 +231,7 @@ void Chunk::serialize(BinaryWriter& writer)
 		writer << false;
 		for(uint_fast32_t i = 0; i < blok->size(); ++i)
 		{
-			(*blok)[i].serialize(writer);
+			blok->at(i).serialize(writer);
 		}
 	}
 }
@@ -256,7 +256,7 @@ void Chunk::deserialize(BinaryReader& reader)
 		blok = std::make_unique<std::array<Block, CHUNK_BLOCK_COUNT>>();
 		for(uint_fast32_t i = 0; i < blok->size(); ++i)
 		{
-			(*blok)[i] = Block(reader);
+			blok->at(i) = Block(reader);
 		}
 	}
 }

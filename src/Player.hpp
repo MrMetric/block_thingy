@@ -20,11 +20,11 @@ class Player
 		Player(const Player&) = delete;
 		virtual ~Player();
 
-		const double abs_offset = 0.4;
+		const double abs_offset;
 
-		double eye_height = 1.7;
-		double walk_speed = 2;
-		double max_velocity = 1;
+		double eye_height;
+		double walk_speed;
+		double max_velocity;
 
 		void move(const glm::dvec3& acceleration);
 		void step(double delta_time);
@@ -51,14 +51,17 @@ class Player
 		bool block_is_at(double x, double y, double z);
 		double move_to(double coord, double move_var, double offset, const Position::BlockInWorld&);
 
-		bool moving_forward = false;
-		bool moving_backward = false;
-		bool moving_left = false;
-		bool moving_right = false;
-		bool going_faster = false;
-		bool on_ground;
-		bool do_jump = false;
-		bool noclip = false;
+		struct
+		{
+			bool moving_forward = false;
+			bool moving_backward = false;
+			bool moving_left = false;
+			bool moving_right = false;
+			bool going_faster = false;
+			bool on_ground = false;
+			bool do_jump = false;
+			bool noclip = false;
+		} flags;
 
 		void deserialize(BinaryReader&);
 };
