@@ -37,6 +37,7 @@ class Player
 		void move_backward(bool);
 		void move_left(bool);
 		void move_right(bool);
+		void go_faster(bool);
 		void jump();
 		void toggle_noclip();
 
@@ -54,6 +55,7 @@ class Player
 		bool moving_backward = false;
 		bool moving_left = false;
 		bool moving_right = false;
+		bool going_faster = false;
 		bool on_ground;
 		bool do_jump = false;
 		bool noclip = false;

@@ -255,6 +255,14 @@ void Game::add_commands()
 	{
 		game->player.move_right(false);
 	});
+	commands.emplace_back(console, "+sprint", [game=this]()
+	{
+		game->player.go_faster(true);
+	});
+	commands.emplace_back(console, "-sprint", [game=this]()
+	{
+		game->player.go_faster(false);
+	});
 
 	commands.emplace_back(console, "jump", [game=this]()
 	{

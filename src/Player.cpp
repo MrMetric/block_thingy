@@ -84,7 +84,12 @@ void Player::step(const double delta_time)
 	glm::dvec3 acceleration;
 	acceleration.y -= 0.5; // gravity
 
-	acceleration = apply_movement_input(acceleration, walk_speed);
+	double move_speed = walk_speed;
+	if(going_faster)
+	{
+		move_speed *= 4;
+	}
+	acceleration = apply_movement_input(acceleration, move_speed);
 
 	if(noclip)
 	{
@@ -192,6 +197,11 @@ void Player::move_left(const bool do_that)
 void Player::move_right(const bool do_that)
 {
 	moving_right = do_that;
+}
+
+void Player::go_faster(const bool do_that)
+{
+	going_faster = do_that;
 }
 
 void Player::jump()
