@@ -51,13 +51,32 @@ using Poco::BinaryWriter;
 
 Game* Game::instance = nullptr;
 
-Game::Game(GLFWwindow* window, const int width, const int height, BinaryReader& reader)
+Game::Game(GLFWwindow* window, const int width, const int height)
+	:
+	Game(window, width, height, nullptr)
+{
+}
+
+template <typename T>
+static std::unique_ptr<T> make_member(BinaryReader* reader)
+{
+	if(reader == nullptr)
+	{
+		return std::make_unique<T>();
+	}
+	return std::make_unique<T>(*reader);
+}
+
+Game::Game(GLFWwindow* window, const int width, const int height, BinaryReader* reader)
 	:
 	window(window),
 	hovered_block(nullptr),
 	cam(window, event_manager),
 	gfx(window, event_manager),
-	world(reader),
+	player_ptr(make_member<Player>(reader)),
+	player(*player_ptr),
+	world_ptr(make_member<World>(reader)),
+	world(*world_ptr),
 	gui(event_manager),
 	delta_time(0),
 	wireframe(false, [](bool wireframe)
@@ -198,6 +217,7 @@ void Game::add_commands()
 		std::ofstream stdstream("world.gz", std::ios::binary);
 		Poco::DeflatingOutputStream stream(stdstream, Poco::DeflatingStreamBuf::STREAM_GZIP);
 		BinaryWriter writer(stream);
+		game->player.serialize(writer);
 		game->world.serialize(writer);
 		glfwSetWindowShouldClose(game->window, GL_TRUE);
 	});

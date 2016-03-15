@@ -2,6 +2,11 @@
 
 #include <glm/vec3.hpp>
 
+#include <Poco/BinaryReader.h>
+using Poco::BinaryReader;
+#include <Poco/BinaryWriter.h>
+using Poco::BinaryWriter;
+
 namespace Position
 {
 	struct BlockInWorld;
@@ -11,6 +16,8 @@ class Player
 {
 	public:
 		Player();
+		explicit Player(BinaryReader&);
+		Player(const Player&) = delete;
 		virtual ~Player();
 
 		const double abs_offset = 0.4;
@@ -37,6 +44,8 @@ class Player
 		glm::dvec3 rotation;
 		glm::dvec3 velocity;
 
+		void serialize(BinaryWriter&);
+
 	private:
 		bool block_is_at(double x, double y, double z);
 		double move_to(double coord, double move_var, double offset, const Position::BlockInWorld&);
@@ -48,4 +57,6 @@ class Player
 		bool on_ground;
 		bool do_jump = false;
 		bool noclip = false;
+
+		void deserialize(BinaryReader&);
 };

@@ -81,19 +81,17 @@ int main(int argc, char** argv)
 
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
-	if(!Util::file_is_openable("world.gz"))
-	{
-		std::ofstream stdstream("world.gz", std::ios::binary);
-		Poco::DeflatingOutputStream stream(stdstream, Poco::DeflatingStreamBuf::STREAM_GZIP);
-		BinaryWriter writer(stream);
-		writer << static_cast<uint64_t>(0);
-	}
-	// scope lets streams and reader destruct
+
+	if(Util::file_is_openable("world.gz"))
 	{
 		std::ifstream stdstream("world.gz", std::ios::binary);
 		Poco::InflatingInputStream stream(stdstream, Poco::InflatingStreamBuf::STREAM_GZIP);
 		BinaryReader reader(stream);
-		game = std::make_unique<Game>(window, width, height, reader); printOpenGLError();
+		game = std::make_unique<Game>(window, width, height, &reader); printOpenGLError();
+	}
+	else
+	{
+		game = std::make_unique<Game>(window, width, height); printOpenGLError();
 	}
 
 	std::cout << "starting main loop\n";
