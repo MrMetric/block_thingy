@@ -20,6 +20,11 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include <graphics/OpenGL/ShaderProgram.hpp>
+#include <Poco/BinaryReader.h>
+using Poco::BinaryReader;
+#include <Poco/BinaryWriter.h>
+using Poco::BinaryWriter;
+#include <Poco/DeflatingStream.h>
 
 #include "Block.hpp"
 #include "BlockType.hpp"
@@ -47,12 +52,13 @@
 
 Game* Game::instance = nullptr;
 
-Game::Game(GLFWwindow* window, const int width, const int height)
+Game::Game(GLFWwindow* window, const int width, const int height, BinaryReader& reader)
 	:
 	window(window),
 	hovered_block(nullptr),
 	cam(window, event_manager),
 	gfx(window, event_manager),
+	world(reader),
 	gui(event_manager),
 	delta_time(0),
 	fps(144),
@@ -212,9 +218,13 @@ void Game::add_commands()
 {
 	Console* console = &this->console;
 
-	commands.emplace_back(console, "quit", [window=window]()
+	commands.emplace_back(console, "quit", [game=this]()
 	{
-		glfwSetWindowShouldClose(window, GL_TRUE);
+		std::ofstream stdstream("world.gz", std::ios::binary);
+		Poco::DeflatingOutputStream stream(stdstream, Poco::DeflatingStreamBuf::STREAM_GZIP);
+		BinaryWriter writer(stream);
+		game->world.serialize(writer);
+		glfwSetWindowShouldClose(game->window, GL_TRUE);
 	});
 
 	// TODO: less copy/paste

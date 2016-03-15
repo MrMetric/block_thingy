@@ -4,6 +4,11 @@
 #include <random>
 #include <utility>
 
+#include <Poco/BinaryReader.h>
+using Poco::BinaryReader;
+#include <Poco/BinaryWriter.h>
+using Poco::BinaryWriter;
+
 #include "Block.hpp"
 #include "BlockType.hpp"
 #include "chunk/Chunk.hpp"
@@ -31,8 +36,11 @@ World::World()
 {
 }
 
-World::~World()
+World::World(BinaryReader& reader)
+	:
+	World()
 {
+	deserialize(reader);
 }
 
 void World::set_block(const Position::BlockInWorld& block_pos, const Block& block)
@@ -156,5 +164,26 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 				}
 			}
 		}
+	}
+}
+
+void World::serialize(BinaryWriter& writer)
+{
+	uint64_t chunk_count = chunks.size();
+	writer << chunk_count;
+	for(const auto& p : chunks)
+	{
+		p.second->serialize(writer);
+	}
+}
+
+void World::deserialize(BinaryReader& reader)
+{
+	uint64_t chunk_count;
+	reader >> chunk_count;
+	for(uint_fast64_t i = 0; i < chunk_count; ++i)
+	{
+		std::shared_ptr<Chunk> chunk = std::make_shared<Chunk>(reader, this);
+		chunks.emplace(chunk->get_position(), chunk);
 	}
 }

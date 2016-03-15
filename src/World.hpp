@@ -6,6 +6,11 @@
 #include <random>
 #include <unordered_map>
 
+#include <Poco/BinaryReader.h>
+using Poco::BinaryReader;
+#include <Poco/BinaryWriter.h>
+using Poco::BinaryWriter;
+
 #include "position/ChunkInWorld.hpp"
 
 class Chunk;
@@ -22,7 +27,7 @@ class World
 {
 	public:
 		World();
-		virtual ~World();
+		explicit World(BinaryReader&);
 
 		const Block& get_block_const(const Position::BlockInWorld&) const;
 		Block& get_block_mutable(const Position::BlockInWorld&);
@@ -36,9 +41,13 @@ class World
 		void gen_chunk(const Position::ChunkInWorld&);
 		void gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max);
 
+		void serialize(BinaryWriter&);
+
 	private:
 		world_map_t chunks;
 		mutable Position::ChunkInWorld last_key;
 		mutable std::shared_ptr<Chunk> last_chunk;
 		std::minstd_rand random_engine;
+
+		void deserialize(BinaryReader&);
 };

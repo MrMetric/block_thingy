@@ -4,6 +4,11 @@
 #include <memory>
 #include <vector>
 
+#include <Poco/BinaryReader.h>
+using Poco::BinaryReader;
+#include <Poco/BinaryWriter.h>
+using Poco::BinaryWriter;
+
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
 #include "mesh/ChunkMesher.hpp"
@@ -20,6 +25,7 @@ class Chunk
 {
 	public:
 		Chunk(const Position::ChunkInWorld&, World* owner);
+		Chunk(BinaryReader& reader, World* owner);
 		Chunk(const Chunk&) = delete;
 
 		const Block& get_block_const(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
@@ -36,6 +42,8 @@ class Chunk
 		void update();
 		void render();
 
+		void serialize(BinaryWriter&);
+
 	private:
 		World* owner;
 		Position::ChunkInWorld position;
@@ -50,4 +58,6 @@ class Chunk
 
 		void update_neighbors(BlockInChunk_type, BlockInChunk_type, BlockInChunk_type);
 		void update_neighbor(ChunkInWorld_type, ChunkInWorld_type, ChunkInWorld_type);
+
+		void deserialize(BinaryReader&);
 };

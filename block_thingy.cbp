@@ -61,6 +61,7 @@
 		<Linker>
 			<Add option="`pkg-config --static --libs glfw3`" />
 			<Add option="-lpng" />
+			<Add option="-lPocoFoundation" />
 		</Linker>
 		<Unit filename="src/Block.cpp" />
 		<Unit filename="src/Block.hpp" />

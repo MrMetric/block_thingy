@@ -6,6 +6,9 @@
 
 #include <glm/mat4x4.hpp>
 
+#include <Poco/BinaryReader.h>
+using Poco::BinaryReader;
+
 #include "Camera.hpp"
 #include "FPSManager.hpp"
 #include "Gfx.hpp"
@@ -25,7 +28,7 @@ struct GLFWwindow;
 class Game
 {
 	public:
-		Game(GLFWwindow* window, int width, int height);
+		Game(GLFWwindow* window, int width, int height, BinaryReader& reader);
 
 		void draw();
 		#ifdef USE_LIBPNG

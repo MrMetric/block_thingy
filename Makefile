@@ -28,6 +28,7 @@ CXXFLAGS = $(CFLAGS) \
 LDFLAGS = \
 	`pkg-config --static --libs glfw3` \
 	-lpng \
+	-lPocoFoundation \
 
 CFLAGS_DEBUG = $(CFLAGS) -g
 CXXFLAGS_DEBUG = $(CXXFLAGS) -g -fsanitize=undefined,integer -DCOOL_DEBUG_STUFF
