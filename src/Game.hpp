@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include <glm/mat4x4.hpp>
 
 #include <Poco/BinaryReader.h>
@@ -22,8 +25,6 @@ using Poco::BinaryReader;
 #include "physics/RaytraceHit.hpp"
 #include "position/ChunkInWorld.hpp"
 #include "util/Property.hpp"
-
-struct GLFWwindow;
 
 class Game
 {

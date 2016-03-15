@@ -1,10 +1,12 @@
 #include "Util.hpp"
 
+#include <cerrno>
 #include <cstdint>
 #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <stdexcept>
 #include <unistd.h>
 
 #include <glad/glad.h>
@@ -144,6 +146,6 @@ void Util::change_directory(const std::string& path)
 	// TODO: find out what Wandows uses
 	if(chdir(path.c_str()) == -1)
 	{
-		std::cout << "error changing directory to " << path << ": " << strerror(errno) << "\n";
+		throw std::runtime_error("error changing directory to " + path + ": " + strerror(errno) + "\n");
 	}
 }

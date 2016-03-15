@@ -132,7 +132,7 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 {
 	static std::uniform_int_distribution<uint_fast16_t> distribution(0, 999);
 
-	Position::BlockInWorld block_pos(BlockInWorld_type(0), 0, 0);
+	Position::BlockInWorld block_pos(static_cast<BlockInWorld_type>(0), 0, 0);
 	for(BlockInWorld_type x = min.x; x <= max.x; ++x)
 	{
 		for(BlockInWorld_type z = min.z; z <= max.z; ++z)
@@ -155,7 +155,7 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 					auto r = distribution(random_engine);
 					if(r == 0)
 					{
-						for(BlockInWorld_type y2 = -32; y2 < -32+8; ++y2)
+						for(BlockInWorld_type y2 = y; y2 < y+8; ++y2)
 						{
 							block_pos.y = y2;
 							set_block(block_pos, Block(BlockType::eye));

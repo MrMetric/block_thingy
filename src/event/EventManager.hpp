@@ -16,6 +16,7 @@ class EventManager
 {
 	public:
 		EventManager();
+		EventManager(const EventManager&) = delete;
 
 		event_handler_id_t add_handler(const event_handler_t&);
 		event_handler_id_t add_handler(EventType, const event_handler_t&);

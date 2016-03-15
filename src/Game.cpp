@@ -60,12 +60,12 @@ Game::Game(GLFWwindow* window, const int width, const int height, BinaryReader& 
 	world(reader),
 	gui(event_manager),
 	delta_time(0),
-	fps(144),
-	render_distance(3),
 	wireframe(false, [](bool wireframe)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 	}),
+	fps(999),
+	render_distance(3),
 	keybinder(&console)
 {
 	Game::instance = this;
@@ -136,22 +136,26 @@ void Game::mousepress(const int button, const int action, const int mods)
 	{
 		if(button == GLFW_MOUSE_BUTTON_LEFT)
 		{
-			if(hovered_block != nullptr && world.get_block_const(hovered_block->pos).type() != BlockType::none)
+			if(hovered_block != nullptr)
 			{
-				auto break_pos = hovered_block->pos;
-				world.set_block(break_pos, Block(BlockType::air));
-				find_hovered_block(gfx.projection_matrix, gfx.view_matrix);
-				event_manager.do_event(Event(EventType::break_block));
+				const Position::BlockInWorld pos = hovered_block->pos;
+				if(world.get_block_const(pos).type() != BlockType::none)
+				{
+					world.set_block(pos, Block(BlockType::air));
+					find_hovered_block(gfx.projection_matrix, gfx.view_matrix);
+					//event_manager.do_event(Event_break_block(pos, face));
+				}
 			}
 		}
 		else if(button == GLFW_MOUSE_BUTTON_RIGHT)
 		{
 			if(hovered_block != nullptr)
 			{
-				Position::BlockInWorld pos = hovered_block->adjacent();
-				if(player.can_place_block_at(pos))
+				const Position::BlockInWorld pos = hovered_block->adjacent();
+				if(world.get_block_const(pos).type() == BlockType::air && player.can_place_block_at(pos))
 				{
 					world.set_block(pos, Block(block_type));
+					//event_manager.do_event(Event_place_block(pos, face));
 				}
 			}
 		}

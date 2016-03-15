@@ -215,6 +215,8 @@ void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint_fast32_t 
 	FILE* fp = fopen(filename, "wb");
 	if(fp == nullptr)
 	{
+		png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
+		png_destroy_write_struct(&png_ptr, &info_ptr);
 		throw std::runtime_error(std::string("error opening png file: ") + strerror(errno));
 	}
 	png_init_io(png_ptr, fp);
