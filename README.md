@@ -10,7 +10,7 @@ I mek GAme
  * Y2K-compliant
  * has a license (GPL v3)
 
-## hoa 2 get dis shizzle
+## How to get it
 ### Cloning
 As this repository contains a submodule, you will need to clone it recursively:
 
