@@ -97,8 +97,6 @@
 		<Unit filename="src/console/Console.hpp" />
 		<Unit filename="src/console/KeybindManager.cpp" />
 		<Unit filename="src/console/KeybindManager.hpp" />
-		<Unit filename="src/console/command_test.cpp" />
-		<Unit filename="src/console/command_test.hpp" />
 		<Unit filename="src/event/Event.cpp" />
 		<Unit filename="src/event/Event.hpp" />
 		<Unit filename="src/event/EventManager.cpp" />

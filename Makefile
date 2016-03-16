@@ -59,7 +59,6 @@ OBJ_DEBUG = \
 	$(OBJDIR_DEBUG)/src/chunk/mesh/SimpleMesher.o \
 	$(OBJDIR_DEBUG)/src/console/ArgumentParser.o \
 	$(OBJDIR_DEBUG)/src/console/Command.o \
-	$(OBJDIR_DEBUG)/src/console/command_test.o \
 	$(OBJDIR_DEBUG)/src/console/Console.o \
 	$(OBJDIR_DEBUG)/src/console/KeybindManager.o \
 	$(OBJDIR_DEBUG)/src/event/Event.o \
@@ -94,7 +93,6 @@ OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/src/chunk/mesh/SimpleMesher.o \
 	$(OBJDIR_RELEASE)/src/console/ArgumentParser.o \
 	$(OBJDIR_RELEASE)/src/console/Command.o \
-	$(OBJDIR_RELEASE)/src/console/command_test.o \
 	$(OBJDIR_RELEASE)/src/console/Console.o \
 	$(OBJDIR_RELEASE)/src/console/KeybindManager.o \
 	$(OBJDIR_RELEASE)/src/event/Event.o \
@@ -182,9 +180,6 @@ $(OBJDIR_DEBUG)/src/console/ArgumentParser.o: src/console/ArgumentParser.cpp
 
 $(OBJDIR_DEBUG)/src/console/Command.o: src/console/Command.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/console/Command.cpp -o $(OBJDIR_DEBUG)/src/console/Command.o
-
-$(OBJDIR_DEBUG)/src/console/command_test.o: src/console/command_test.cpp
-	$(CXX) $(CXXFLAGS_DEBUG) -c src/console/command_test.cpp -o $(OBJDIR_DEBUG)/src/console/command_test.o
 
 $(OBJDIR_DEBUG)/src/console/Console.o: src/console/Console.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/console/Console.cpp -o $(OBJDIR_DEBUG)/src/console/Console.o
@@ -304,9 +299,6 @@ $(OBJDIR_RELEASE)/src/console/ArgumentParser.o: src/console/ArgumentParser.cpp
 
 $(OBJDIR_RELEASE)/src/console/Command.o: src/console/Command.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/console/Command.cpp -o $(OBJDIR_RELEASE)/src/console/Command.o
-
-$(OBJDIR_RELEASE)/src/console/command_test.o: src/console/command_test.cpp
-	$(CXX) $(CXXFLAGS_RELEASE) -c src/console/command_test.cpp -o $(OBJDIR_RELEASE)/src/console/command_test.o
 
 $(OBJDIR_RELEASE)/src/console/Console.o: src/console/Console.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/console/Console.cpp -o $(OBJDIR_RELEASE)/src/console/Console.o
