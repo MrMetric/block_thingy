@@ -56,6 +56,8 @@
 			<Add option="-Werror=extra-tokens" />
 			<Add option="-Werror=invalid-pp-token" />
 			<Add option="-DUSE_LIBPNG" />
+			<Add option="-DMSGPACK_DISABLE_LEGACY_NIL" />
+			<Add option="-DMSGPACK_DISABLE_LEGACY_CONVERT" />
 			<Add directory="src" />
 		</Compiler>
 		<Linker>
@@ -129,6 +131,8 @@
 		<Unit filename="src/position/ChunkInWorld.cpp" />
 		<Unit filename="src/position/ChunkInWorld.hpp" />
 		<Unit filename="src/std_make_unique.hpp" />
+		<Unit filename="src/storage/WorldFile.cpp" />
+		<Unit filename="src/storage/WorldFile.hpp" />
 		<Unit filename="src/util/Property.hpp" />
 		<Extensions>
 			<code_completion />

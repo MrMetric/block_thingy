@@ -24,6 +24,8 @@ CXXFLAGS = $(CFLAGS) \
 	-Werror=delete-incomplete \
 	-Werror=deprecated \
 	-DUSE_LIBPNG \
+	-DMSGPACK_DISABLE_LEGACY_NIL \
+	-DMSGPACK_DISABLE_LEGACY_CONVERT \
 
 LDFLAGS = \
 	`pkg-config --static --libs glfw3` \
@@ -75,6 +77,7 @@ OBJ_DEBUG = \
 	$(OBJDIR_DEBUG)/src/position/BlockInChunk.o \
 	$(OBJDIR_DEBUG)/src/position/BlockInWorld.o \
 	$(OBJDIR_DEBUG)/src/position/ChunkInWorld.o \
+	$(OBJDIR_DEBUG)/src/storage/WorldFile.o \
 
 OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/glad.o \
@@ -109,6 +112,7 @@ OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/src/position/BlockInChunk.o \
 	$(OBJDIR_RELEASE)/src/position/BlockInWorld.o \
 	$(OBJDIR_RELEASE)/src/position/ChunkInWorld.o \
+	$(OBJDIR_RELEASE)/src/storage/WorldFile.o \
 
 all: debug release
 
@@ -127,6 +131,7 @@ before_debug:
 	test -d $(OBJDIR_DEBUG)/src/gui || mkdir -p $(OBJDIR_DEBUG)/src/gui
 	test -d $(OBJDIR_DEBUG)/src/physics || mkdir -p $(OBJDIR_DEBUG)/src/physics
 	test -d $(OBJDIR_DEBUG)/src/position || mkdir -p $(OBJDIR_DEBUG)/src/position
+	test -d $(OBJDIR_DEBUG)/src/storage || mkdir -p $(OBJDIR_DEBUG)/src/storage
 
 debug: before_debug out_debug
 
@@ -229,6 +234,9 @@ $(OBJDIR_DEBUG)/src/position/BlockInWorld.o: src/position/BlockInWorld.cpp
 $(OBJDIR_DEBUG)/src/position/ChunkInWorld.o: src/position/ChunkInWorld.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/position/ChunkInWorld.cpp -o $(OBJDIR_DEBUG)/src/position/ChunkInWorld.o
 
+$(OBJDIR_DEBUG)/src/storage/WorldFile.o: src/storage/WorldFile.cpp
+	$(CXX) $(CXXFLAGS_DEBUG) -c src/storage/WorldFile.cpp -o $(OBJDIR_DEBUG)/src/storage/WorldFile.o
+
 clean_debug:
 	rm -f $(OUT_DEBUG)
 	rm -rf $(OBJDIR_DEBUG)
@@ -246,6 +254,7 @@ before_release:
 	test -d $(OBJDIR_RELEASE)/src/gui || mkdir -p $(OBJDIR_RELEASE)/src/gui
 	test -d $(OBJDIR_RELEASE)/src/physics || mkdir -p $(OBJDIR_RELEASE)/src/physics
 	test -d $(OBJDIR_RELEASE)/src/position || mkdir -p $(OBJDIR_RELEASE)/src/position
+	test -d $(OBJDIR_RELEASE)/src/storage || mkdir -p $(OBJDIR_RELEASE)/src/storage
 
 release: before_release out_release
 
@@ -347,6 +356,9 @@ $(OBJDIR_RELEASE)/src/position/BlockInWorld.o: src/position/BlockInWorld.cpp
 
 $(OBJDIR_RELEASE)/src/position/ChunkInWorld.o: src/position/ChunkInWorld.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/position/ChunkInWorld.cpp -o $(OBJDIR_RELEASE)/src/position/ChunkInWorld.o
+
+$(OBJDIR_RELEASE)/src/storage/WorldFile.o: src/storage/WorldFile.cpp
+	$(CXX) $(CXXFLAGS_RELEASE) -c src/storage/WorldFile.cpp -o $(OBJDIR_RELEASE)/src/storage/WorldFile.o
 
 clean_release:
 	rm -f $(OUT_RELEASE)

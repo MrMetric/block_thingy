@@ -10,11 +10,6 @@
 #include <graphics/OpenGL/ShaderProgram.hpp>
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
-#include <Poco/BinaryReader.h>
-using Poco::BinaryReader;
-#include <Poco/BinaryWriter.h>
-using Poco::BinaryWriter;
-
 #include "mesh/ChunkMesher.hpp"
 #include "mesh/GreedyMesher.hpp"
 #include "../Block.hpp"
@@ -35,15 +30,6 @@ Chunk::Chunk(const Position::ChunkInWorld& pos, World* owner)
 	changed(true),
 	solid_block(BlockType::air) // a useful default for now
 {
-}
-
-Chunk::Chunk(BinaryReader& reader, World* owner)
-	:
-	owner(owner),
-	mesher(std::make_unique<GreedyMesher>(*this)),
-	changed(true)
-{
-	deserialize(reader);
 }
 
 inline static std::array<Block, CHUNK_BLOCK_COUNT>::size_type blok_index(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
@@ -214,49 +200,5 @@ void Chunk::update_neighbor(const ChunkInWorld_type x, const ChunkInWorld_type y
 	if(chunk != nullptr)
 	{
 		chunk->changed = true;
-	}
-}
-
-void Chunk::serialize(BinaryWriter& writer)
-{
-	writer << position.x << position.y << position.z;
-
-	if(blok == nullptr)
-	{
-		writer << true;
-		writer << solid_block.type_id();
-	}
-	else
-	{
-		writer << false;
-		for(uint_fast32_t i = 0; i < blok->size(); ++i)
-		{
-			blok->at(i).serialize(writer);
-		}
-	}
-}
-
-void Chunk::deserialize(BinaryReader& reader)
-{
-	reader >> position.x;
-	reader >> position.y;
-	reader >> position.z;
-
-	bool is_solid;
-	reader >> is_solid;
-	if(is_solid)
-	{
-		blok = nullptr;
-		block_type_id_t type_id;
-		reader >> type_id;
-		solid_block = Block(type_id);
-	}
-	else
-	{
-		blok = std::make_unique<std::array<Block, CHUNK_BLOCK_COUNT>>();
-		for(uint_fast32_t i = 0; i < blok->size(); ++i)
-		{
-			blok->at(i) = Block(reader);
-		}
 	}
 }

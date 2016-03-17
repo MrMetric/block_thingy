@@ -6,13 +6,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <Poco/BinaryReader.h>
-using Poco::BinaryReader;
-#include <Poco/BinaryWriter.h>
-using Poco::BinaryWriter;
-#include <Poco/DeflatingStream.h>
-#include <Poco/InflatingStream.h>
-
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "Util.hpp"
@@ -82,17 +75,7 @@ int main(int argc, char** argv)
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
 
-	if(Util::file_is_openable("world.gz"))
-	{
-		std::ifstream stdstream("world.gz", std::ios::binary);
-		Poco::InflatingInputStream stream(stdstream, Poco::InflatingStreamBuf::STREAM_GZIP);
-		BinaryReader reader(stream);
-		game = std::make_unique<Game>(window, width, height, &reader); printOpenGLError();
-	}
-	else
-	{
-		game = std::make_unique<Game>(window, width, height); printOpenGLError();
-	}
+	game = std::make_unique<Game>(window, width, height); printOpenGLError();
 
 	std::cout << "starting main loop\n";
 	while(!glfwWindowShouldClose(window))

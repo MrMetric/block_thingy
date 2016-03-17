@@ -4,11 +4,6 @@
 #include <random>
 #include <utility>
 
-#include <Poco/BinaryReader.h>
-using Poco::BinaryReader;
-#include <Poco/BinaryWriter.h>
-using Poco::BinaryWriter;
-
 #include "Block.hpp"
 #include "BlockType.hpp"
 #include "chunk/Chunk.hpp"
@@ -28,19 +23,14 @@ uint64_t key_hasher(const Position::ChunkInWorld& chunk_pos)
 	return key;
 }
 
-World::World()
+World::World(const std::string& file_path)
 	:
 	chunks(0, key_hasher),
 	last_chunk(nullptr),
-	random_engine(0xFECA1)
+	random_engine(0xFECA1),
+	file(file_path, *this)
 {
-}
-
-World::World(BinaryReader& reader)
-	:
-	World()
-{
-	deserialize(reader);
+	file.load();
 }
 
 void World::set_block(const Position::BlockInWorld& block_pos, const Block& block)
@@ -167,23 +157,7 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 	}
 }
 
-void World::serialize(BinaryWriter& writer)
+void World::save()
 {
-	uint64_t chunk_count = chunks.size();
-	writer << chunk_count;
-	for(const auto& p : chunks)
-	{
-		p.second->serialize(writer);
-	}
-}
-
-void World::deserialize(BinaryReader& reader)
-{
-	uint64_t chunk_count;
-	reader >> chunk_count;
-	for(uint_fast64_t i = 0; i < chunk_count; ++i)
-	{
-		std::shared_ptr<Chunk> chunk = std::make_shared<Chunk>(reader, this);
-		chunks.emplace(chunk->get_position(), chunk);
-	}
+	file.save();
 }

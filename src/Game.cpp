@@ -19,12 +19,6 @@
 #include <glm/vec4.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include <Poco/BinaryReader.h>
-using Poco::BinaryReader;
-#include <Poco/BinaryWriter.h>
-using Poco::BinaryWriter;
-#include <Poco/DeflatingStream.h>
-
 #include "Block.hpp"
 #include "BlockType.hpp"
 #include "Camera.hpp"
@@ -52,36 +46,17 @@ Game* Game::instance = nullptr;
 
 Game::Game(GLFWwindow* window, const int width, const int height)
 	:
-	Game(window, width, height, nullptr)
-{
-}
-
-template <typename T>
-static std::unique_ptr<T> make_member(BinaryReader* reader)
-{
-	if(reader == nullptr)
-	{
-		return std::make_unique<T>();
-	}
-	return std::make_unique<T>(*reader);
-}
-
-Game::Game(GLFWwindow* window, const int width, const int height, BinaryReader* reader)
-	:
 	window(window),
 	hovered_block(nullptr),
 	cam(window, event_manager),
 	gfx(window, event_manager),
-	player_ptr(make_member<Player>(reader)),
-	player(*player_ptr),
-	world_ptr(make_member<World>(reader)),
-	world(*world_ptr),
+	world("worlds/test"),
 	gui(event_manager),
-	delta_time(0),
 	wireframe(false, [](bool wireframe)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 	}),
+	delta_time(0),
 	fps(999),
 	render_distance(3),
 	keybinder(&console)
@@ -212,11 +187,7 @@ void Game::add_commands()
 
 	commands.emplace_back(console, "quit", [game=this]()
 	{
-		std::ofstream stdstream("world.gz", std::ios::binary);
-		Poco::DeflatingOutputStream stream(stdstream, Poco::DeflatingStreamBuf::STREAM_GZIP);
-		BinaryWriter writer(stream);
-		game->player.serialize(writer);
-		game->world.serialize(writer);
+		game->world.save();
 		glfwSetWindowShouldClose(game->window, GL_TRUE);
 	});
 

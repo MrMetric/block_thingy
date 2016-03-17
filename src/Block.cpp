@@ -1,10 +1,5 @@
 #include "Block.hpp"
 
-#include <Poco/BinaryReader.h>
-using Poco::BinaryReader;
-#include <Poco/BinaryWriter.h>
-using Poco::BinaryWriter;
-
 #include "BlockType.hpp"
 
 Block::Block() : type_(BlockType::none) {}
@@ -19,11 +14,6 @@ Block::Block(const BlockType type)
 	:
 	type_(type)
 {
-}
-
-Block::Block(BinaryReader& reader)
-{
-	deserialize(reader);
 }
 
 block_type_id_t Block::type_id() const
@@ -44,16 +34,4 @@ bool Block::is_invisible() const
 bool Block::is_solid() const
 {
 	return type_ != BlockType::air;
-}
-
-void Block::serialize(BinaryWriter& writer)
-{
-	writer << type_id();
-}
-
-void Block::deserialize(BinaryReader& reader)
-{
-	block_type_id_t type_id_;
-	reader >> type_id_;
-	type_ = static_cast<BlockType>(type_id_);
 }

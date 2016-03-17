@@ -19,17 +19,6 @@ Player::Player()
 {
 }
 
-Player::Player(BinaryReader& reader)
-	:
-	Player()
-{
-	deserialize(reader);
-}
-
-Player::~Player()
-{
-}
-
 void Player::move(const glm::dvec3& acceleration)
 {
 	double sinY = std::sin(glm::radians(rotation.y));
@@ -248,32 +237,4 @@ double Player::move_to(double coord, const double move_var, const double offset,
 		coord += move_var;
 	}
 	return coord;
-}
-
-void Player::serialize(BinaryWriter& writer)
-{
-	writer << position.x << position.y << position.z;
-	writer << rotation.x << rotation.y << rotation.z;
-	writer << velocity.x << velocity.y << velocity.z;
-	writer << flags.on_ground;
-	writer << flags.noclip;
-}
-
-void Player::deserialize(BinaryReader& reader)
-{
-	reader >> position.x;
-	reader >> position.y;
-	reader >> position.z;
-
-	// TODO: the rotation must be set in Camera, not here (same as TODO in respawn)
-	reader >> rotation.x;
-	reader >> rotation.y;
-	reader >> rotation.z;
-
-	reader >> velocity.x;
-	reader >> velocity.y;
-	reader >> velocity.z;
-
-	reader >> flags.on_ground;
-	reader >> flags.noclip;
 }
