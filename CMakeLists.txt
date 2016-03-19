@@ -17,5 +17,5 @@ target_compile_features(block_thingy PRIVATE cxx_relaxed_constexpr)
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(GLFW REQUIRED glfw3)
-target_compile_options(block_thingy PRIVATE -march=native -O2)
-target_link_libraries(block_thingy ${GLFW_STATIC_LIBRARIES})
+target_compile_options(block_thingy PRIVATE -march=native -O2 -DUSE_LIBPNG -DMSGPACK_DISABLE_LEGACY_NIL -DMSGPACK_DISABLE_LEGACY_CONVERT)
+target_link_libraries(block_thingy ${GLFW_STATIC_LIBRARIES} -lpng)
