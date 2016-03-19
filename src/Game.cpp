@@ -79,7 +79,7 @@ void Game::draw()
 	player.rotation = cam.rotation;
 	player.step(delta_time);
 	cam.position = player.position;
-	cam.position.y += player.eye_height;
+	cam.position.y += player.get_eye_height();
 
 	Position::BlockInWorld render_origin(player.position);
 	RenderWorld::draw_world(world, gfx.block_shaders, gfx.matriks, render_origin, render_distance);

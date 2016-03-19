@@ -10,14 +10,10 @@ namespace Position
 class Player
 {
 	public:
-		Player();
+		Player(const std::string& name);
 		Player(const Player&) = delete;
 
-		const double abs_offset;
-
-		double eye_height;
-		double walk_speed;
-		double max_velocity;
+		const std::string name;
 
 		void move(const glm::dvec3& acceleration);
 		void step(double delta_time);
@@ -34,6 +30,9 @@ class Player
 		void jump();
 		void toggle_noclip();
 
+		double get_eye_height() const;
+		bool get_noclip() const;
+
 		glm::dvec3 position;
 		glm::dvec3 rotation;
 		glm::dvec3 velocity;
@@ -41,6 +40,11 @@ class Player
 	private:
 		bool block_is_at(double x, double y, double z);
 		double move_to(double coord, double move_var, double offset, const Position::BlockInWorld&);
+
+		const double abs_offset;
+		double eye_height;
+		double walk_speed;
+		double max_velocity;
 
 		struct
 		{

@@ -10,8 +10,9 @@
 #include "Game.hpp"
 #include "position/BlockInWorld.hpp"
 
-Player::Player()
+Player::Player(const std::string& name)
 	:
+	name(name),
 	abs_offset(0.4),
 	eye_height(1.7),
 	walk_speed(2),
@@ -204,6 +205,16 @@ void Player::jump()
 void Player::toggle_noclip()
 {
 	flags.noclip = !flags.noclip;
+}
+
+double Player::get_eye_height() const
+{
+	return eye_height;
+}
+
+bool Player::get_noclip() const
+{
+	return flags.noclip;
 }
 
 bool Player::block_is_at(const double x, const double y, const double z)
