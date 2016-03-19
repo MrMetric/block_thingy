@@ -47,8 +47,9 @@ class Game
 
 		Camera cam;
 		Gfx gfx;
-		Player player;
 		World world;
+		std::shared_ptr<Player> player_ptr;
+		Player& player;
 		Console console;
 		GUI gui;
 

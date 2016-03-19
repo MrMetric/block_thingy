@@ -40,6 +40,11 @@ class World
 		void gen_chunk(const Position::ChunkInWorld&);
 		void gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max);
 
+		void step(double delta_time);
+
+		std::shared_ptr<Player> add_player(const std::string& name);
+		std::shared_ptr<Player> get_player(const std::string& name);
+
 		void save();
 
 	private:
@@ -48,6 +53,6 @@ class World
 		mutable std::shared_ptr<Chunk> last_chunk;
 		std::minstd_rand random_engine;
 
-		std::vector<Player> players;
+		std::unordered_map<std::string, std::shared_ptr<Player>> players;
 		WorldFile file;
 };

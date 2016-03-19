@@ -51,6 +51,8 @@ Game::Game(GLFWwindow* window, const int width, const int height)
 	cam(window, event_manager),
 	gfx(window, event_manager),
 	world("worlds/test"),
+	player_ptr(world.add_player("test_player")),
+	player(*player_ptr),
 	gui(event_manager),
 	wireframe(false, [](bool wireframe)
 	{
@@ -68,6 +70,8 @@ Game::Game(GLFWwindow* window, const int width, const int height)
 	console.run_line("exec binds");
 
 	update_framebuffer_size(width, height);
+
+	cam.rotation = player.rotation; // keep saved value
 }
 
 void Game::draw()
@@ -77,7 +81,7 @@ void Game::draw()
 	gfx.set_cam_view(cam);
 
 	player.rotation = cam.rotation;
-	player.step(delta_time);
+	world.step(delta_time);
 	cam.position = player.position;
 	cam.position.y += player.get_eye_height();
 

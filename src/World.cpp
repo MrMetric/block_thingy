@@ -157,6 +157,31 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 	}
 }
 
+void World::step(const double delta_time)
+{
+	for(auto& p : players)
+	{
+		p.second->step(delta_time);
+	}
+}
+
+std::shared_ptr<Player> World::add_player(const std::string& name)
+{
+	std::shared_ptr<Player> player = std::make_shared<Player>(name);
+	players.emplace(name, player);
+	return player;
+}
+
+std::shared_ptr<Player> World::get_player(const std::string& name)
+{
+	auto i = players.find(name);
+	if(i == players.end())
+	{
+		return nullptr;
+	}
+	return i->second;
+}
+
 void World::save()
 {
 	file.save();
