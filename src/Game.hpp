@@ -12,7 +12,6 @@
 #include "Camera.hpp"
 #include "FPSManager.hpp"
 #include "Gfx.hpp"
-#include "Player.hpp"
 #include "World.hpp"
 #include "console/Command.hpp"
 #include "console/Console.hpp"
@@ -22,6 +21,8 @@
 #include "physics/RaytraceHit.hpp"
 #include "position/ChunkInWorld.hpp"
 #include "util/Property.hpp"
+
+class Player;
 
 class Game
 {

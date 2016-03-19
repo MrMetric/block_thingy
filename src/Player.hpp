@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include <glm/vec3.hpp>
 
 namespace Position

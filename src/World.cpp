@@ -6,6 +6,7 @@
 
 #include "Block.hpp"
 #include "BlockType.hpp"
+#include "Player.hpp"
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
