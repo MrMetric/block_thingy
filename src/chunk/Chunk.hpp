@@ -16,6 +16,8 @@
 
 class World;
 
+using chunk_block_array_t = std::array<Block, CHUNK_BLOCK_COUNT>;
+
 class Chunk
 {
 	public:
@@ -39,7 +41,7 @@ class Chunk
 	private:
 		World* owner;
 		Position::ChunkInWorld position;
-		std::unique_ptr<std::array<Block, CHUNK_BLOCK_COUNT>> blok;
+		std::unique_ptr<chunk_block_array_t> blok;
 		std::unique_ptr<ChunkMesher> mesher;
 		meshmap_t meshes;
 		std::vector<VertexBuffer> mesh_vbos;

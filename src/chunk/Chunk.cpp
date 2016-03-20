@@ -32,7 +32,7 @@ Chunk::Chunk(const Position::ChunkInWorld& pos, World* owner)
 {
 }
 
-inline static std::array<Block, CHUNK_BLOCK_COUNT>::size_type blok_index(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+inline static chunk_block_array_t::size_type blok_index(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
 	return CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
 }
@@ -159,7 +159,7 @@ void Chunk::init_blok()
 		return;
 	}
 
-	blok = std::make_unique<std::array<Block, CHUNK_BLOCK_COUNT>>();
+	blok = std::make_unique<chunk_block_array_t>();
 	blok->fill(solid_block);
 }
 
