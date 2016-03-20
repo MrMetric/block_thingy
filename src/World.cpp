@@ -14,12 +14,12 @@
 
 uint64_t key_hasher(const Position::ChunkInWorld& chunk_pos)
 {
-	uint32_t x_ = chunk_pos.x & 0x1FFFFF;
-	uint32_t y_ = chunk_pos.y & 0x1FFFFF;
-	uint32_t z_ = chunk_pos.z & 0x1FFFFF;
-	uint64_t key =	  (static_cast<uint64_t>(x_) << 42)
-					| (static_cast<uint64_t>(y_) << 21)
-					| (static_cast<uint64_t>(z_))
+	uint32_t x = chunk_pos.x & 0x1FFFFF;
+	uint32_t y = chunk_pos.y & 0x1FFFFF;
+	uint32_t z = chunk_pos.z & 0x1FFFFF;
+	uint64_t key =	  (static_cast<uint64_t>(x) << 42)
+					| (static_cast<uint64_t>(y) << 21)
+					| (static_cast<uint64_t>(z))
 				;
 	return key;
 }
@@ -97,19 +97,23 @@ std::shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld& chunk_pos)
 	return chunk;
 }
 
+// this does not set last_chunk/last_key because:
+// if the chunk is not null, get_chunk does it
+// if the chunk is null, set_chunk does it
 std::shared_ptr<Chunk> World::get_or_make_chunk(const Position::ChunkInWorld& chunk_pos)
 {
 	std::shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
-	if(chunk == nullptr)
+	if(chunk != nullptr)
+	{
+		return chunk;
+	}
+
 	{
 		chunk = std::make_shared<Chunk>(chunk_pos, this);
 		set_chunk(chunk_pos, chunk);
 		gen_chunk(chunk_pos); // should this really be here?
+		return chunk;
 	}
-	// this does not set last_chunk/last_key because:
-	// if the chunk is not null, get_chunk does it
-	// if the chunk is null, set_chunk does it
-	return chunk;
 }
 
 void World::gen_chunk(const Position::ChunkInWorld& chunk_pos)
@@ -133,6 +137,7 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 				block_pos.x = x;
 				block_pos.y = y;
 				block_pos.z = z;
+
 				if(y == -128 || (y > -64 && y < -32))
 				{
 					set_block(block_pos, Block(BlockType::test));
