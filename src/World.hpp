@@ -4,6 +4,7 @@
 #include <functional>
 #include <memory>
 #include <random>
+#include <set>
 #include <string>
 #include <unordered_map>
 
@@ -50,6 +51,7 @@ class World
 
 	private:
 		world_map_t chunks;
+		std::set<Position::ChunkInWorld> unsaved_chunks;
 		mutable Position::ChunkInWorld last_key;
 		mutable std::shared_ptr<Chunk> last_chunk;
 		std::minstd_rand random_engine;

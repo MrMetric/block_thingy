@@ -31,7 +31,6 @@ World::World(const std::string& file_path)
 	random_engine(0xFECA1),
 	file(file_path, *this)
 {
-	file.load();
 }
 
 void World::set_block(const Position::BlockInWorld& block_pos, const Block& block)
@@ -41,6 +40,8 @@ void World::set_block(const Position::BlockInWorld& block_pos, const Block& bloc
 
 	Position::BlockInChunk pos(block_pos);
 	chunk->set_block(pos, block);
+
+	unsaved_chunks.insert(chunk_pos);
 }
 
 const Block& World::get_block_const(const Position::BlockInWorld& block_pos) const
@@ -105,6 +106,13 @@ std::shared_ptr<Chunk> World::get_or_make_chunk(const Position::ChunkInWorld& ch
 	std::shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk != nullptr)
 	{
+		return chunk;
+	}
+
+	chunk = file.load_chunk(chunk_pos);
+	if(chunk != nullptr)
+	{
+		set_chunk(chunk_pos, chunk);
 		return chunk;
 	}
 
@@ -173,7 +181,11 @@ void World::step(const double delta_time)
 
 std::shared_ptr<Player> World::add_player(const std::string& name)
 {
-	std::shared_ptr<Player> player = std::make_shared<Player>(name);
+	std::shared_ptr<Player> player = file.load_player(name);
+	if(player == nullptr)
+	{
+		player = std::make_shared<Player>(name);
+	}
 	players.emplace(name, player);
 	return player;
 }
@@ -190,5 +202,15 @@ std::shared_ptr<Player> World::get_player(const std::string& name)
 
 void World::save()
 {
-	file.save();
+	file.save_players();
+	while(!unsaved_chunks.empty())
+	{
+		const Position::ChunkInWorld position = *unsaved_chunks.begin();
+		unsaved_chunks.erase(unsaved_chunks.begin());
+		std::shared_ptr<Chunk> chunk = get_chunk(position);
+		if(chunk != nullptr)
+		{
+			file.save_chunk(*chunk);
+		}
+	}
 }

@@ -49,6 +49,16 @@ namespace Position
 		return (x == that.x) && (y == that.y) && (z == that.z);
 	}
 
+	bool ChunkInWorld::operator<(const ChunkInWorld& that) const
+	{
+		if(x < that.x) return true;
+		if(x > that.x) return false;
+		if(y < that.y) return true;
+		if(y > that.y) return false;
+		if(z < that.z) return true;
+		return false;
+	}
+
 	ChunkInWorld operator-(const ChunkInWorld& pos, const ChunkInWorld_type a)
 	{
 		return ChunkInWorld(pos.x - a, pos.y - a, pos.z - a);
