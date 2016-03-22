@@ -52,7 +52,7 @@ void Player::move(const glm::dvec3& acceleration)
 		if(moveY < 0)
 		{
 			Position::BlockInWorld pos_feet_new(glm::dvec3(position.x, position.y + moveY, position.z));
-			if(block_is_at(pos_feet_new.x, pos_feet_new.y, pos_feet_new.z))
+			if(block_is_at(pos_feet_new))
 			{
 				position.y = pos_feet_new.y + 1;
 				velocity.y = 0;
@@ -149,11 +149,11 @@ void Player::respawn()
 	position.x = position.y = position.z = 0;
 	rotation.x = rotation.y = rotation.z = 0; // TODO: improve design (this needs to be set in the camera, not here)
 
-	while(!block_is_at(position.x, position.y, position.z))
+	while(!block_is_at({position.x, position.y, position.z}))
 	{
 		--position.y;
 	}
-	while(block_is_at(position.x, position.y, position.z))
+	while(block_is_at({position.x, position.y, position.z}))
 	{
 		++position.y;
 	}
@@ -217,9 +217,8 @@ bool Player::get_noclip() const
 	return flags.noclip;
 }
 
-bool Player::block_is_at(const double x, const double y, const double z)
+bool Player::block_is_at(const Position::BlockInWorld& block_pos)
 {
-	const Position::BlockInWorld block_pos(x, y, z);
 	const Block& block = Game::instance->world.get_block_const(block_pos);
 	return block.is_solid();
 }
@@ -231,7 +230,9 @@ double Player::move_to(double coord, const double move_var, const double offset,
 		return coord + move_var;
 	}
 
-	if(block_is_at(block_pos.x, block_pos.y, block_pos.z) || block_is_at(block_pos.x, block_pos.y + 1, block_pos.z))
+	bool foot = block_is_at(block_pos);
+	bool head = block_is_at({block_pos.x, block_pos.y + 1, block_pos.z});
+	if(foot || head)
 	{
 		if(move_var > 0)
 		{

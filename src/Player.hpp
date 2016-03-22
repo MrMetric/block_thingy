@@ -40,7 +40,7 @@ class Player
 		glm::dvec3 velocity;
 
 	private:
-		bool block_is_at(double x, double y, double z);
+		bool block_is_at(const Position::BlockInWorld&);
 		double move_to(double coord, double move_var, double offset, const Position::BlockInWorld&);
 
 		const double abs_offset;
