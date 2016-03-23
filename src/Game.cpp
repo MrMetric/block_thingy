@@ -280,7 +280,7 @@ void Game::add_commands()
 		streem >> game->cam.rotation.z;
 	});
 
-	commands.emplace_back(console, "exec", [console=console](const std::vector<std::string>& args)
+	commands.emplace_back(console, "exec", [game=this](const std::vector<std::string>& args)
 	{
 		if(args.size() != 1)
 		{
@@ -291,11 +291,11 @@ void Game::add_commands()
 		std::string line;
 		while(std::getline(file, line))
 		{
-			console->run_line(line);
+			game->console.run_line(line);
 		}
 	});
 
-	commands.emplace_back(console, "cam.rot", [cam=&cam](const std::vector<std::string>& args)
+	commands.emplace_back(console, "cam.rot", [game=this](const std::vector<std::string>& args)
 	{
 		if(args.size() != 2)
 		{
@@ -306,15 +306,15 @@ void Game::add_commands()
 		double value = std::stod(args[1]);
 		if(part == "x")
 		{
-			cam->rotation.x += value;
+			game->cam.rotation.x += value;
 		}
 		else if(part == "y")
 		{
-			cam->rotation.y += value;
+			game->cam.rotation.y += value;
 		}
 		else if(part == "z")
 		{
-			cam->rotation.z += value;
+			game->cam.rotation.z += value;
 		}
 		else
 		{
@@ -379,7 +379,7 @@ void Game::add_commands()
 		game->render_distance -= 1;
 	});
 
-	commands.emplace_back(console, "change_block_type", []()
+	commands.emplace_back(console, "change_block_type", [game=this]()
 	{
 		block_type_id_t i = static_cast<block_type_id_t>(block_type);
 		i = (i + 1) % BlockType_COUNT;
