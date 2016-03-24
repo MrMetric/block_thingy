@@ -189,68 +189,72 @@ void Game::add_commands()
 {
 	Console* console = &this->console;
 
-	commands.emplace_back(console, "quit", [game=this]()
+	#define COMMAND_(name) commands.emplace_back(console, name, [game=this]
+	#define COMMAND(name) COMMAND_(name)()
+	#define COMMAND_ARGS(name) COMMAND_(name)(const std::vector<std::string>& args)
+
+	COMMAND("quit")
 	{
 		game->world.save();
 		glfwSetWindowShouldClose(game->window, GL_TRUE);
 	});
 
 	// TODO: less copy/paste
-	commands.emplace_back(console, "+forward", [game=this]()
+	COMMAND("+forward")
 	{
 		game->player.move_forward(true);
 	});
-	commands.emplace_back(console, "-forward", [game=this]()
+	COMMAND("-forward")
 	{
 		game->player.move_forward(false);
 	});
-	commands.emplace_back(console, "+backward", [game=this]()
+	COMMAND("+backward")
 	{
 		game->player.move_backward(true);
 	});
-	commands.emplace_back(console, "-backward", [game=this]()
+	COMMAND("-backward")
 	{
 		game->player.move_backward(false);
 	});
-	commands.emplace_back(console, "+left", [game=this]()
+	COMMAND("+left")
 	{
 		game->player.move_left(true);
 	});
-	commands.emplace_back(console, "-left", [game=this]()
+	COMMAND("-left")
 	{
 		game->player.move_left(false);
 	});
-	commands.emplace_back(console, "+right", [game=this]()
+	COMMAND("+right")
 	{
 		game->player.move_right(true);
 	});
-	commands.emplace_back(console, "-right", [game=this]()
+	COMMAND("-right")
 	{
 		game->player.move_right(false);
 	});
-	commands.emplace_back(console, "+sprint", [game=this]()
+	COMMAND("+sprint")
 	{
 		game->player.go_faster(true);
 	});
-	commands.emplace_back(console, "-sprint", [game=this]()
+	COMMAND("-sprint")
 	{
 		game->player.go_faster(false);
 	});
 
-	commands.emplace_back(console, "jump", [game=this]()
+	COMMAND("jump")
 	{
 		game->player.jump();
 	});
-	commands.emplace_back(console, "noclip", [game=this]()
+	COMMAND("noclip")
 	{
 		game->player.toggle_noclip();
 	});
-	commands.emplace_back(console, "respawn", [game=this]()
+	COMMAND("respawn")
 	{
 		game->player.respawn();
 	});
 
-	commands.emplace_back(console, "save_pos", [game=this](const std::vector<std::string>& args)
+	COMMAND_ARGS("save_pos")
 	{
 		if(args.size() != 1)
 		{
@@ -263,7 +267,7 @@ void Game::add_commands()
 		streem << game->player.rotation.x << " " << game->player.rotation.y << " " << game->player.rotation.z;
 		streem.flush();
 	});
-	commands.emplace_back(console, "load_pos", [game=this](const std::vector<std::string>& args)
+	COMMAND_ARGS("load_pos")
 	{
 		if(args.size() != 1)
 		{
@@ -280,7 +284,7 @@ void Game::add_commands()
 		streem >> game->cam.rotation.z;
 	});
 
-	commands.emplace_back(console, "exec", [game=this](const std::vector<std::string>& args)
+	COMMAND_ARGS("exec")
 	{
 		if(args.size() != 1)
 		{
@@ -295,7 +299,7 @@ void Game::add_commands()
 		}
 	});
 
-	commands.emplace_back(console, "cam.rot", [game=this](const std::vector<std::string>& args)
+	COMMAND_ARGS("cam.rot")
 	{
 		if(args.size() != 2)
 		{
@@ -323,7 +327,7 @@ void Game::add_commands()
 	});
 
 	#ifdef USE_LIBPNG
-	commands.emplace_back(console, "screenshot", [game=this](const std::vector<std::string>& args)
+	COMMAND_ARGS("screenshot")
 	{
 		std::string filename;
 		if(args.size() == 0)
@@ -360,26 +364,26 @@ void Game::add_commands()
 	});
 	#endif
 
-	commands.emplace_back(console, "wireframe", [game=this]()
+	COMMAND("wireframe")
 	{
 		game->wireframe = !game->wireframe();
 	});
-	commands.emplace_back(console, "toggle_cull_face", [game=this]()
+	COMMAND("toggle_cull_face")
 	{
 		game->gfx.toggle_cull_face();
 		std::cout << "cull face: " << (game->gfx.cull_face ? "true" : "false") << "\n";
 	});
 
-	commands.emplace_back(console, "render_distance++", [game=this]()
+	COMMAND("render_distance++")
 	{
 		game->render_distance += 1;
 	});
-	commands.emplace_back(console, "render_distance--", [game=this]()
+	COMMAND("render_distance--")
 	{
 		game->render_distance -= 1;
 	});
 
-	commands.emplace_back(console, "change_block_type", [game=this]()
+	COMMAND("change_block_type")
 	{
 		block_type_id_t i = static_cast<block_type_id_t>(block_type);
 		i = (i + 1) % BlockType_COUNT;
@@ -388,7 +392,7 @@ void Game::add_commands()
 	});
 	console->run_line("bind j change_block_type");
 
-	commands.emplace_back(console, "nazi", [game=this]()
+	COMMAND("nazi")
 	{
 		if(game->hovered_block == nullptr)
 		{
@@ -422,4 +426,8 @@ void Game::add_commands()
 			}
 		}
 	});
+
+	#undef COMMAND_ARGS
+	#undef COMMAND
+	#undef COMMAND_
 }
