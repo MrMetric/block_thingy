@@ -400,7 +400,9 @@ void Game::add_commands()
 		}
 
 		Position::BlockInWorld start_pos = game->hovered_block->adjacent();
-		block_type_id_t nazi[9][9]
+		const size_t ysize = 9;
+		const size_t xsize = 9;
+		block_type_id_t nazi[ysize][xsize]
 		{
 			{ 2, 1, 1, 1, 2, 2, 2, 2, 2, },
 			{ 2, 1, 1, 1, 2, 1, 1, 1, 1, },
@@ -412,9 +414,9 @@ void Game::add_commands()
 			{ 1, 1, 1, 1, 2, 1, 1, 1, 2, },
 			{ 2, 2, 2, 2, 2, 1, 1, 1, 2, },
 		};
-		for(BlockInWorld_type x = 0; x < 9; ++x)
+		for(BlockInWorld_type x = 0; x < xsize; ++x)
 		{
-			for(BlockInWorld_type y = 8; y >= 0; --y)
+			for(BlockInWorld_type y = ysize - 1; y >= 0; --y)
 			{
 				for(BlockInWorld_type z = 0; z < 1; ++z)
 				{
