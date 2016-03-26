@@ -28,9 +28,9 @@ VertexBuffer::~VertexBuffer()
 	}
 }
 
-void VertexBuffer::data(const GLsizei size, const void* data, const GLenum usage)
+void VertexBuffer::data(const GLsizei size, const void* data, const UsageHint usage)
 {
-	glNamedBufferData(name, size, data, usage);
+	glNamedBufferData(name, size, data, static_cast<GLenum>(usage));
 }
 
 GLuint VertexBuffer::get_name() const

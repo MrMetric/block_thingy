@@ -116,7 +116,7 @@ void Chunk::update()
 	for(auto p : meshes)
 	{
 		const mesh_t& mesh = p.second;
-		mesh_vbos[i].data(mesh.size() * sizeof(mesh_t::value_type), mesh.data(), GL_DYNAMIC_DRAW);
+		mesh_vbos[i].data(mesh.size() * sizeof(mesh_t::value_type), mesh.data(), VertexBuffer::UsageHint::dynamic_draw);
 		++i;
 	}
 

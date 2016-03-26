@@ -174,7 +174,7 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 		}
 	}
 
-	outline_vbo.data(sizeof(vertexes), vertexes, GL_DYNAMIC_DRAW);
+	outline_vbo.data(sizeof(vertexes), vertexes, VertexBuffer::UsageHint::dynamic_draw);
 
 	glUseProgram(s_lines.get_name());
 	s_lines.uniformMatrix4fv("matriks", matriks);
