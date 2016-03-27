@@ -10,6 +10,7 @@
 
 #include "ShaderObject.hpp"
 #include "../../Util.hpp"
+#include "../../position/ChunkInWorld.hpp"
 
 #include "std_make_unique.hpp"
 
@@ -98,6 +99,11 @@ void ShaderProgram::uniform3f(const std::string& uniform_name, const float x, co
 {
 	const GLint u = get_uniform_location(uniform_name);
 	glProgramUniform3f(name, u, x, y, z);
+}
+
+void ShaderProgram::uniform3f(const std::string& uniform_name, const Position::ChunkInWorld& position) const
+{
+	uniform3f(uniform_name, position.x, position.y, position.z);
 }
 
 void ShaderProgram::uniform4fv(const std::string& uniform_name, const glm::vec4& vec) const

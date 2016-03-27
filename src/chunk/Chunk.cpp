@@ -138,7 +138,7 @@ void Chunk::render()
 		const ShaderProgram& shader = Game::instance->gfx.get_block_shader(type);
 		glUseProgram(shader.get_name());
 
-		shader.uniform3f("pos_mod", pos_mod.x, pos_mod.y, pos_mod.z);
+		shader.uniform3f("pos_mod", pos_mod);
 		shader.uniform1f("global_time", glfwGetTime());
 
 		glEnableVertexAttribArray(0);

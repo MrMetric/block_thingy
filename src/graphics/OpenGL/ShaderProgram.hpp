@@ -8,6 +8,11 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec4.hpp>
 
+namespace Position
+{
+	struct ChunkInWorld;
+}
+
 class ShaderProgram
 {
 	public:
@@ -25,6 +30,7 @@ class ShaderProgram
 		GLint get_uniform_location(const std::string&) const;
 		void uniform1f(const std::string&, float) const;
 		void uniform3f(const std::string&, float, float, float) const;
+		void uniform3f(const std::string&, const Position::ChunkInWorld&) const;
 		void uniform4fv(const std::string&, const glm::vec4&) const;
 		void uniformMatrix4fv(const std::string&, const glm::mat4&) const;
 
