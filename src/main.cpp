@@ -27,8 +27,6 @@ static void error_callback(const int error, const char* description)
 	std::cerr << "GLFW error " << error << ": " << description << "\n";
 }
 
-static std::unique_ptr<Game> game;
-
 int main(int argc, char** argv)
 {
 	if(argc > 1)
@@ -47,6 +45,18 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
+	if(!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
+	{
+		std::cerr << "Error loading GLAD\n";
+		return 1;
+	}
+	std::cout << "OpenGL Version " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
+
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
+
+	static std::unique_ptr<Game> game = std::make_unique<Game>(window, width, height); printOpenGLError();
+
 	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height)
 	{
 		game->update_framebuffer_size(width, height);
@@ -63,18 +73,6 @@ int main(int argc, char** argv)
 	{
 		game->mousemove(x, y);
 	});
-
-	if(!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
-	{
-		std::cerr << "Error loading GLAD\n";
-		return 1;
-	}
-	std::cout << "OpenGL Version " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
-
-	int width, height;
-	glfwGetFramebufferSize(window, &width, &height);
-
-	game = std::make_unique<Game>(window, width, height); printOpenGLError();
 
 	std::cout << "starting main loop\n";
 	while(!glfwWindowShouldClose(window))
