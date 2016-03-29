@@ -187,45 +187,23 @@ std::unique_ptr<RaytraceHit> PhysicsUtil::raycast(const World& world, const glm:
 		// X axis, and similarly for Y and Z. Therefore, choosing the least tMax
 		// chooses the closest cube boundary. Only the first case of the four
 		// has been commented in detail.
-		if(tMax.x < tMax.y)
+		const glm::dvec3::length_type i = (tMax.x < tMax.y) ? 0 : 1;
+		if(tMax[i] < tMax.z)
 		{
-			if(tMax.x < tMax.z)
-			{
-				cube_pos.x += step.x;
-				// Adjust tMaxX to the next X-oriented boundary crossing.
-				tMax.x += tDelta.x;
-				// Record the normal vector of the cube face we entered.
-				face.x = -step.x;
-				face.y = 0;
-				face.z = 0;
-			}
-			else
-			{
-				cube_pos.z += step.z;
-				tMax.z += tDelta.z;
-				face.x = 0;
-				face.y = 0;
-				face.z = -step.z;
-			}
+			cube_pos[i] += step[i];
+			// Adjust tMaxX to the next X-oriented boundary crossing.
+			tMax[i] += tDelta[i];
+			// Record the normal vector of the cube face we entered.
+			face.x = face.y = face.z = 0;
+			face[i] = -step[i];
 		}
 		else
 		{
-			if(tMax.y < tMax.z)
-			{
-				cube_pos.y += step.y;
-				tMax.y += tDelta.y;
-				face.x = 0;
-				face.y = -step.y;
-				face.z = 0;
-			}
-			else
-			{
-				cube_pos.z += step.z;
-				tMax.z += tDelta.z;
-				face.x = 0;
-				face.y = 0;
-				face.z = -step.z;
-			}
+			cube_pos.z += step.z;
+			tMax.z += tDelta.z;
+			face.x = 0;
+			face.y = 0;
+			face.z = -step.z;
 		}
 	}
 
