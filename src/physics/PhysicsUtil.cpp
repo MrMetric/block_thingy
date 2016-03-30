@@ -115,6 +115,11 @@ void PhysicsUtil::ScreenPosToWorldRay(
 	out_direction = lRayDir_world;
 }
 
+static bool pos_in_bounds(const Position::BlockInWorld& pos, const glm::dvec3& min, const glm::dvec3& max)
+{
+	return !(pos.x < min.x || pos.y < min.y || pos.z < min.z || pos.x > max.x || pos.y > max.y || pos.z > max.z);
+}
+
 // this stuff is from http://gamedev.stackexchange.com/a/49423
 // TODO: fix infinity/NaN stuff
 /**
@@ -174,8 +179,7 @@ std::unique_ptr<RaytraceHit> PhysicsUtil::raycast(const World& world, const glm:
 			(step.y > 0 ? cube_pos.y < max.y : cube_pos.y > min.y) &&
 			(step.z > 0 ? cube_pos.z < max.z : cube_pos.z > min.z))
 	{
-		// Invoke the callback, unless we are not *yet* within the bounds of the world.
-		if(!(cube_pos.x < min.x || cube_pos.y < min.y || cube_pos.z < min.z || cube_pos.x > max.x || cube_pos.y > max.y || cube_pos.z > max.z))
+		if(pos_in_bounds(cube_pos, min, max))
 		{
 			if(world.get_block_const(cube_pos).is_solid())
 			{
@@ -183,28 +187,20 @@ std::unique_ptr<RaytraceHit> PhysicsUtil::raycast(const World& world, const glm:
 			}
 		}
 
-		// tMaxX stores the t-value at which we cross a cube boundary along the
+		// tMax.x stores the t-value at which we cross a cube boundary along the
 		// X axis, and similarly for Y and Z. Therefore, choosing the least tMax
-		// chooses the closest cube boundary. Only the first case of the four
-		// has been commented in detail.
-		const glm::dvec3::length_type i = (tMax.x < tMax.y) ? 0 : 1;
-		if(tMax[i] < tMax.z)
+		// chooses the closest cube boundary.
+		glm::dvec3::length_type i = (tMax.x < tMax.y) ? 0 : 1;
+		if(tMax.z < tMax[i])
 		{
-			cube_pos[i] += step[i];
-			// Adjust tMaxX to the next X-oriented boundary crossing.
-			tMax[i] += tDelta[i];
-			// Record the normal vector of the cube face we entered.
-			face.x = face.y = face.z = 0;
-			face[i] = -step[i];
+			i = 2;
 		}
-		else
-		{
-			cube_pos.z += step.z;
-			tMax.z += tDelta.z;
-			face.x = 0;
-			face.y = 0;
-			face.z = -step.z;
-		}
+		cube_pos[i] += step[i];
+		// Adjust tMaxX to the next X-oriented boundary crossing.
+		tMax[i] += tDelta[i];
+		// Record the normal vector of the cube face we entered.
+		face.x = face.y = face.z = 0;
+		face[i] = -step[i];
 	}
 
 	// there is no cube in range
