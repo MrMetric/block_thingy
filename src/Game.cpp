@@ -44,7 +44,7 @@
 
 Game* Game::instance = nullptr;
 
-Game::Game(GLFWwindow* window, const int width, const int height)
+Game::Game(GLFWwindow* window, const uint_fast32_t width, const uint_fast32_t height)
 	:
 	window(window),
 	hovered_block(nullptr),
@@ -115,7 +115,7 @@ void Game::screenshot(const std::string& filename)
 }
 #endif
 
-void Game::update_framebuffer_size(const int width, const int height)
+void Game::update_framebuffer_size(const uint_fast32_t width, const uint_fast32_t height)
 {
 	event_manager.do_event(Event_window_size_change(width, height));
 }

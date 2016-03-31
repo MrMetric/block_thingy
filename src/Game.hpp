@@ -27,13 +27,13 @@ class Player;
 class Game
 {
 	public:
-		Game(GLFWwindow* window, int width, int height);
+		Game(GLFWwindow* window, uint_fast32_t width, uint_fast32_t height);
 
 		void draw();
 		#ifdef USE_LIBPNG
 		void screenshot(const std::string& filename);
 		#endif
-		void update_framebuffer_size(int width, int height);
+		void update_framebuffer_size(uint_fast32_t width, uint_fast32_t height);
 		void keypress(int key, int scancode, int action, int mods);
 		void mousepress(int button, int action, int mods);
 		void mousemove(double x, double y);

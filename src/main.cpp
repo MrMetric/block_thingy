@@ -59,7 +59,7 @@ int main(int argc, char** argv)
 
 	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height)
 	{
-		game->update_framebuffer_size(width, height);
+		game->update_framebuffer_size(static_cast<uint_fast32_t>(width), static_cast<uint_fast32_t>(height));
 	});
 	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 	{

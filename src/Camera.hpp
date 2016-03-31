@@ -13,7 +13,6 @@ class Camera
 	public:
 		Camera(GLFWwindow* window, EventManager& event_manager);
 
-		void update_framebuffer_size(int width, int height);
 		void handleMouseMove(double mouseX, double mouseY);
 
 		glm::dvec3 position;
@@ -23,5 +22,5 @@ class Camera
 		double sensitivity;
 
 		GLFWwindow* window;
-		glm::ivec2 window_mid;
+		glm::tvec2<uint_fast32_t> window_mid;
 };

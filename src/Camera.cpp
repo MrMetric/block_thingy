@@ -14,18 +14,13 @@ Camera::Camera(GLFWwindow* window, EventManager& event_manager)
 	sensitivity(0.1),
 	window(window)
 {
-	event_manager.add_handler(EventType::window_size_change, [self=this](const Event& event)
+	event_manager.add_handler(EventType::window_size_change, [this, window](const Event& event)
 	{
 		auto e = static_cast<const Event_window_size_change&>(event);
-		self->update_framebuffer_size(e.width, e.height);
+		window_mid.x = e.width / 2;
+		window_mid.y = e.height / 2;
+		glfwSetCursorPos(window, window_mid.x, window_mid.y);
 	});
-}
-
-void Camera::update_framebuffer_size(const int width, const int height)
-{
-	window_mid.x = width / 2;
-	window_mid.y = height / 2;
-	glfwSetCursorPos(window, window_mid.x, window_mid.y);
 }
 
 void Camera::handleMouseMove(const double mouseX, const double mouseY)

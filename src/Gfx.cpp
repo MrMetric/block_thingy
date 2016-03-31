@@ -43,10 +43,10 @@ Gfx::Gfx(GLFWwindow* window, EventManager& event_manager)
 
 	opengl_setup();
 
-	event_manager.add_handler(EventType::window_size_change, [self=this](const Event& event)
+	event_manager.add_handler(EventType::window_size_change, [this](const Event& event)
 	{
 		auto e = static_cast<const Event_window_size_change&>(event);
-		self->update_framebuffer_size(e.width, e.height);
+		update_framebuffer_size(e.width, e.height);
 	});
 }
 
