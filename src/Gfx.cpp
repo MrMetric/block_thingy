@@ -35,8 +35,8 @@
 
 Gfx::Gfx(GLFWwindow* window, EventManager& event_manager)
 	:
-	s_lines("shaders/lines"),
-	window(window)
+	window(window),
+	s_lines("shaders/lines")
 {
 	width = 0;
 	height = 0;

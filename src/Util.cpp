@@ -92,7 +92,7 @@ std::string Util::gl_error_string(const GLenum code)
 
 std::string Util::gl_object_log(const GLuint object)
 {
-	GLint log_length = 0;
+	GLint log_length;
 	if(glIsShader(object))
 	{
 		glGetShaderiv(object, GL_INFO_LOG_LENGTH, &log_length);
@@ -106,7 +106,7 @@ std::string Util::gl_object_log(const GLuint object)
 		throw std::runtime_error("Error printing log: object is not a shader or a program\n");
 	}
 
-	std::unique_ptr<char[]> log = std::make_unique<char[]>(log_length);
+	std::unique_ptr<char[]> log = std::make_unique<char[]>(static_cast<size_t>(log_length));
 
 	if(glIsShader(object))
 	{

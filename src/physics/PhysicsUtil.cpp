@@ -190,7 +190,7 @@ std::unique_ptr<RaytraceHit> PhysicsUtil::raycast(const World& world, const glm:
 		// tMax.x stores the t-value at which we cross a cube boundary along the
 		// X axis, and similarly for Y and Z. Therefore, choosing the least tMax
 		// chooses the closest cube boundary.
-		glm::dvec3::length_type i = (tMax.x < tMax.y) ? 0 : 1;
+		uint_fast8_t i = (tMax.x < tMax.y) ? 0 : 1;
 		if(tMax.z < tMax[i])
 		{
 			i = 2;
