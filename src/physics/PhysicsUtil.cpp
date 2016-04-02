@@ -93,18 +93,18 @@ void PhysicsUtil::ScreenPosToWorldRay(
 
 	// The View Matrix goes from World Space to Camera Space.
 	// So inverse(view_matrix) goes from Camera Space to World Space.
+	/*
 	glm::dmat4 InverseViewMatrix = glm::inverse(view_matrix);
-
-	glm::dvec4 lRayStart_camera = InverseProjectionMatrix * lRayStart_NDC;    lRayStart_camera /= lRayStart_camera.w;
-	glm::dvec4 lRayStart_world  = InverseViewMatrix       * lRayStart_camera; lRayStart_world  /= lRayStart_world .w;
-	glm::dvec4 lRayEnd_camera   = InverseProjectionMatrix * lRayEnd_NDC;      lRayEnd_camera   /= lRayEnd_camera  .w;
-	glm::dvec4 lRayEnd_world    = InverseViewMatrix       * lRayEnd_camera;   lRayEnd_world    /= lRayEnd_world   .w;
-
+	glm::dvec4 lRayStart_camera  = InverseProjectionMatrix * lRayStart_NDC;    lRayStart_camera /= lRayStart_camera.w;
+	glm::dvec4 lRayStart_world   = InverseViewMatrix       * lRayStart_camera; lRayStart_world  /= lRayStart_world .w;
+	glm::dvec4 lRayEnd_camera    = InverseProjectionMatrix * lRayEnd_NDC;      lRayEnd_camera   /= lRayEnd_camera  .w;
+	glm::dvec4 lRayEnd_world     = InverseViewMatrix       * lRayEnd_camera;   lRayEnd_world    /= lRayEnd_world   .w;
+	*/
 
 	// Faster way (just one inverse)
-	//glm::dmat4 M = glm::inverse(ProjectionMatrix * ViewMatrix);
-	//glm::vec4 lRayStart_world = M * lRayStart_NDC; lRayStart_world/=lRayStart_world.w;
-	//glm::vec4 lRayEnd_world   = M * lRayEnd_NDC  ; lRayEnd_world  /=lRayEnd_world.w;
+	glm::dmat4 M = glm::inverse(projection_matrix * view_matrix);
+	glm::vec4 lRayStart_world = M * lRayStart_NDC; lRayStart_world /= lRayStart_world.w;
+	glm::vec4 lRayEnd_world   = M * lRayEnd_NDC;   lRayEnd_world   /= lRayEnd_world.w;
 
 
 	glm::dvec3 lRayDir_world(lRayEnd_world - lRayStart_world);
