@@ -46,7 +46,11 @@ Gfx::Gfx(GLFWwindow* window, EventManager& event_manager)
 	event_manager.add_handler(EventType::window_size_change, [this](const Event& event)
 	{
 		auto e = static_cast<const Event_window_size_change&>(event);
-		update_framebuffer_size(e.width, e.height);
+
+		width = e.width;
+		height = e.height;
+		glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+		update_projection_matrix();
 	});
 }
 
@@ -125,14 +129,6 @@ void Gfx::toggle_cull_face()
 	{
 		glDisable(GL_CULL_FACE);
 	}
-}
-
-void Gfx::update_framebuffer_size(const GLsizei width, const GLsizei height)
-{
-	this->width = static_cast<uint_fast32_t>(width);
-	this->height = static_cast<uint_fast32_t>(height);
-	glViewport(0, 0, width, height);
-	update_projection_matrix();
 }
 
 void Gfx::update_projection_matrix()

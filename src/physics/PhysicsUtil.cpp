@@ -37,10 +37,6 @@ constexpr double intbound(double s, const double ds)
 	{
 		return intbound(-s, -ds);
 	}
-	if(ds == 0)
-	{
-		return infinity;
-	}
 
 	s = mod1(s);
 	// problem is now s+t*ds = 1
@@ -87,14 +83,15 @@ void PhysicsUtil::ScreenPosToWorldRay(
 	);
 
 
+	/*
 	// The Projection matrix goes from Camera Space to NDC.
 	// So inverse(projection_matrix) goes from NDC to Camera Space.
 	glm::dmat4 InverseProjectionMatrix = glm::inverse(projection_matrix);
 
 	// The View Matrix goes from World Space to Camera Space.
 	// So inverse(view_matrix) goes from Camera Space to World Space.
-	/*
 	glm::dmat4 InverseViewMatrix = glm::inverse(view_matrix);
+
 	glm::dvec4 lRayStart_camera  = InverseProjectionMatrix * lRayStart_NDC;    lRayStart_camera /= lRayStart_camera.w;
 	glm::dvec4 lRayStart_world   = InverseViewMatrix       * lRayStart_camera; lRayStart_world  /= lRayStart_world .w;
 	glm::dvec4 lRayEnd_camera    = InverseProjectionMatrix * lRayEnd_NDC;      lRayEnd_camera   /= lRayEnd_camera  .w;
@@ -152,7 +149,7 @@ std::unique_ptr<RaytraceHit> PhysicsUtil::raycast(const World& world, const glm:
 	// (i.e. change the integer part of the coordinate) in the variables
 	// tMaxX, tMaxY, and tMaxZ.
 
-	// Avoids an infinite loop.
+	// Avoids division by zero and an infinite loop
 	if(direction.x == 0 && direction.y == 0 && direction.z == 0)
 	{
 		throw std::invalid_argument("direction must not be (0, 0, 0)");

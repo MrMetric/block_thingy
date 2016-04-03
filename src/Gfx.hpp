@@ -47,7 +47,6 @@ class Gfx
 		static void uninit_glfw(GLFWwindow* window);
 		void opengl_setup();
 		void toggle_cull_face();
-		void update_framebuffer_size(GLsizei width, GLsizei height);
 		void set_cam_view(const Camera& cam);
 		void draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color);
 		const ShaderProgram& get_block_shader(BlockType) const;

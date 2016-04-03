@@ -25,7 +25,7 @@ class VertexBuffer
 			dynamic_copy = GL_DYNAMIC_COPY,
 		};
 
-		void data(GLsizei size, const void* data, UsageHint usage);
+		void data(size_t size, const void* data, UsageHint usage);
 
 		GLuint get_name() const;
 
