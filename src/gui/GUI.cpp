@@ -63,10 +63,9 @@ void GUI::draw_crosshair(const Gfx& gfx)
 	glDisable(GL_DEPTH_TEST);
 
 	glUseProgram(s_crosshair.get_name());
-	s_crosshair.uniformMatrix4fv("matriks", gfx.matriks);
 
 	glm::mat4 crosshair_matrix = glm::ortho(0.0f, static_cast<float>(gfx.width), static_cast<float>(gfx.height), 0.0f, -1.0f, 1.0f);
-	s_crosshair.uniformMatrix4fv("matriks", crosshair_matrix);
+	s_crosshair.uniform("matriks", crosshair_matrix);
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, crosshair_vbo.get_name());

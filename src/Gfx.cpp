@@ -100,6 +100,7 @@ void Gfx::opengl_setup()
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+
 	glEnable(GL_CULL_FACE);
 	cull_face = true;
 	glCullFace(GL_BACK);
@@ -173,8 +174,8 @@ void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
 	outline_vbo.data(sizeof(vertexes), vertexes, VertexBuffer::UsageHint::dynamic_draw);
 
 	glUseProgram(s_lines.get_name());
-	s_lines.uniformMatrix4fv("matriks", matriks);
-	s_lines.uniform4fv("color", color);
+	s_lines.uniform("matriks", matriks);
+	s_lines.uniform("color", color);
 
 	vertex_array.attrib(0, true);
 	glBindBuffer(GL_ARRAY_BUFFER, outline_vbo.get_name());

@@ -89,31 +89,33 @@ GLint ShaderProgram::get_uniform_location(const std::string& name) const
 	return i->second;
 }
 
-void ShaderProgram::uniform1f(const std::string& uniform_name, const float x) const
+void ShaderProgram::uniform(const std::string& uniform_name, const float x) const
 {
 	const GLint u = get_uniform_location(uniform_name);
 	glProgramUniform1f(name, u, x);
 }
 
-void ShaderProgram::uniform3f(const std::string& uniform_name, const float x, const float y, const float z) const
+void ShaderProgram::uniform(const std::string& uniform_name, const float x, const float y, const float z) const
 {
 	const GLint u = get_uniform_location(uniform_name);
 	glProgramUniform3f(name, u, x, y, z);
 }
 
-void ShaderProgram::uniform3f(const std::string& uniform_name, const Position::ChunkInWorld& position) const
+void ShaderProgram::uniform(const std::string& uniform_name, const glm::vec3& vec) const
 {
-	uniform3f(uniform_name, position.x, position.y, position.z);
+	const GLint u = get_uniform_location(uniform_name);
+	const float* ptr = glm::value_ptr(vec);
+	glProgramUniform3fv(name, u, 1, ptr);
 }
 
-void ShaderProgram::uniform4fv(const std::string& uniform_name, const glm::vec4& vec) const
+void ShaderProgram::uniform(const std::string& uniform_name, const glm::vec4& vec) const
 {
 	const GLint u = get_uniform_location(uniform_name);
 	const float* ptr = glm::value_ptr(vec);
 	glProgramUniform4fv(name, u, 1, ptr);
 }
 
-void ShaderProgram::uniformMatrix4fv(const std::string& uniform_name, const glm::mat4& matrix) const
+void ShaderProgram::uniform(const std::string& uniform_name, const glm::mat4& matrix) const
 {
 	const GLint u = get_uniform_location(uniform_name);
 	const float* ptr = glm::value_ptr(matrix);
@@ -190,7 +192,7 @@ static std::vector<std::string> get_uniform_names(const GLuint program)
 	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &uniform_count);
 
 	GLint max_name_length;
-	glGetProgramiv(program,  GL_ACTIVE_UNIFORM_MAX_LENGTH , &max_name_length);
+	glGetProgramiv(program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &max_name_length);
 
 	std::vector<std::string> uniform_names;
 	for(GLint i = 0; i < uniform_count; ++i)

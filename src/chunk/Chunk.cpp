@@ -130,7 +130,7 @@ void Chunk::render()
 		update();
 	}
 
-	const Position::ChunkInWorld pos_mod = position * CHUNK_SIZE;
+	const glm::vec3 pos_mod = glm::vec3(position.x, position.y, position.z) * static_cast<float>(CHUNK_SIZE);
 	size_t i = 0;
 	for(auto p : meshes)
 	{
@@ -138,8 +138,8 @@ void Chunk::render()
 		const ShaderProgram& shader = Game::instance->gfx.get_block_shader(type);
 		glUseProgram(shader.get_name());
 
-		shader.uniform3f("pos_mod", pos_mod);
-		shader.uniform1f("global_time", glfwGetTime());
+		shader.uniform("pos_mod", pos_mod);
+		shader.uniform("global_time", glfwGetTime());
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i].get_name());

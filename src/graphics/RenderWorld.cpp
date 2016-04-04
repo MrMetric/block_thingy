@@ -20,7 +20,7 @@ void RenderWorld::draw_world(
 	for(const auto& p : block_shaders)
 	{
 		const ShaderProgram& shader = p.second;
-		shader.uniformMatrix4fv("matriks", matriks);
+		shader.uniform("matriks", matriks);
 	}
 
 	Position::ChunkInWorld chunk_pos(origin);

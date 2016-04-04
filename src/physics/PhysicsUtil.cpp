@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <limits>
-#include <stdexcept>
 
 #include <glm/common.hpp>		// glm::sign
 #include <glm/geometric.hpp>	// glm::normalize
@@ -152,7 +151,7 @@ std::unique_ptr<RaytraceHit> PhysicsUtil::raycast(const World& world, const glm:
 	// Avoids division by zero and an infinite loop
 	if(direction.x == 0 && direction.y == 0 && direction.z == 0)
 	{
-		throw std::invalid_argument("direction must not be (0, 0, 0)");
+		return nullptr;
 	}
 
 	Position::BlockInWorld cube_pos(origin);

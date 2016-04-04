@@ -50,7 +50,7 @@ int main(int argc, char** argv)
 		std::cerr << "Error loading GLAD\n";
 		return 1;
 	}
-	std::cout << "OpenGL Version " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
+	std::cout << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
 
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);

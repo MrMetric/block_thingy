@@ -12,8 +12,9 @@ CFLAGS = \
 	-Werror=extra-tokens \
 	-Werror=invalid-pp-token \
 	-Werror=return-type \
-	-Werror=unknown-warning-option \
+	-Werror=uninitialized \
 	-Werror=unknown-pragmas \
+	-Werror=unknown-warning-option \
 
 CXXFLAGS = $(CFLAGS) \
 	-std=c++14 \

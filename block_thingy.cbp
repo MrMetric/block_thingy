@@ -48,13 +48,14 @@
 			<Add option="-Wno-missing-prototypes" />
 			<Add option="-Wno-shadow" />
 			<Add option="-Wno-padded" />
-			<Add option="-Werror=unknown-warning-option" />
-			<Add option="-Werror=unknown-pragmas" />
 			<Add option="-Werror=delete-incomplete" />
 			<Add option="-Werror=deprecated" />
-			<Add option="-Werror=return-type" />
 			<Add option="-Werror=extra-tokens" />
 			<Add option="-Werror=invalid-pp-token" />
+			<Add option="-Werror=return-type" />
+			<Add option="-Werror=uninitialized" />
+			<Add option="-Werror=unknown-pragmas" />
+			<Add option="-Werror=unknown-warning-option" />
 			<Add option="-DUSE_LIBPNG" />
 			<Add option="-DMSGPACK_DISABLE_LEGACY_NIL" />
 			<Add option="-DMSGPACK_DISABLE_LEGACY_CONVERT" />
