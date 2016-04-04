@@ -31,6 +31,11 @@ constexpr double mod1(const double a)
 
 constexpr double intbound(double s, const double ds)
 {
+	if(ds == 0)
+	{
+		return infinity;
+	}
+
 	// Find the smallest positive t such that s+t*ds is an integer.
 	if(ds < 0)
 	{
@@ -148,7 +153,7 @@ std::unique_ptr<RaytraceHit> PhysicsUtil::raycast(const World& world, const glm:
 	// (i.e. change the integer part of the coordinate) in the variables
 	// tMaxX, tMaxY, and tMaxZ.
 
-	// Avoids division by zero and an infinite loop
+	// Avoids an infinite loop
 	if(direction.x == 0 && direction.y == 0 && direction.z == 0)
 	{
 		return nullptr;
