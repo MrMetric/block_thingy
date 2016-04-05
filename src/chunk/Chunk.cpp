@@ -139,7 +139,7 @@ void Chunk::render()
 		glUseProgram(shader.get_name());
 
 		shader.uniform("pos_mod", pos_mod);
-		shader.uniform("global_time", glfwGetTime());
+		shader.uniform("global_time", static_cast<float>(glfwGetTime())); // TODO: use double when available
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i].get_name());

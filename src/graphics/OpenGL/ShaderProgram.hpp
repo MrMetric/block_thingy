@@ -29,6 +29,7 @@ class ShaderProgram
 		GLuint get_name() const;
 		GLint get_uniform_location(const std::string&) const;
 		void uniform(const std::string&, float) const;
+		void uniform(const std::string&, double) const;
 		void uniform(const std::string&, float, float, float) const;
 		void uniform(const std::string&, const glm::vec3&) const;
 		void uniform(const std::string&, const glm::vec4&) const;

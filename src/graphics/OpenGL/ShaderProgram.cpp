@@ -95,6 +95,12 @@ void ShaderProgram::uniform(const std::string& uniform_name, const float x) cons
 	glProgramUniform1f(name, u, x);
 }
 
+void ShaderProgram::uniform(const std::string& uniform_name, const double x) const
+{
+	const GLint u = get_uniform_location(uniform_name);
+	glProgramUniform1d(name, u, x);
+}
+
 void ShaderProgram::uniform(const std::string& uniform_name, const float x, const float y, const float z) const
 {
 	const GLint u = get_uniform_location(uniform_name);
