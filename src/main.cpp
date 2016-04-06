@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -42,13 +43,13 @@ int main(int argc, char** argv)
 	GLFWwindow* window = Gfx::init_glfw();
 	if(window == nullptr)
 	{
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 	if(!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
 		std::cerr << "Error loading GLAD\n";
-		return 1;
+		return EXIT_FAILURE;
 	}
 	std::cout << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
 
@@ -85,5 +86,5 @@ int main(int argc, char** argv)
 
 	Gfx::uninit_glfw(window);
 
-	return 0;
+	return EXIT_SUCCESS;
 }
