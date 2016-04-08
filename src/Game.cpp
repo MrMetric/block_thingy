@@ -400,8 +400,8 @@ void Game::add_commands()
 		}
 
 		Position::BlockInWorld start_pos = game->hovered_block->adjacent();
-		const size_t ysize = 9;
-		const size_t xsize = 9;
+		const BlockInWorld_type ysize = 9;
+		const BlockInWorld_type xsize = 9;
 		block_type_id_t nazi[ysize][xsize]
 		{
 			{ 2, 1, 1, 1, 2, 2, 2, 2, 2, },
