@@ -16,6 +16,7 @@ class Player
 		Player(const Player&) = delete;
 
 		const std::string name;
+		double reach_distance;
 
 		void move(const glm::dvec3& acceleration);
 		void step(double delta_time);

@@ -13,6 +13,7 @@
 Player::Player(const std::string& name)
 	:
 	name(name),
+	reach_distance(16),
 	abs_offset(0.4),
 	eye_height(1.7),
 	walk_speed(2),

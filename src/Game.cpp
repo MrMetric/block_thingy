@@ -176,7 +176,7 @@ void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dm
 		out_direction
 	);
 
-	hovered_block = PhysicsUtil::raycast(world, out_origin, out_direction, 8);
+	hovered_block = PhysicsUtil::raycast(world, out_origin, out_direction, player.reach_distance);
 	if(hovered_block != nullptr)
 	{
 		bool block_is_none = world.get_block_const(hovered_block->pos).type() == BlockType::none;
@@ -381,6 +381,14 @@ void Game::add_commands()
 	COMMAND("render_distance--")
 	{
 		game->render_distance -= 1;
+	});
+	COMMAND("reach_distance++")
+	{
+		game->player.reach_distance += 1;
+	});
+	COMMAND("reach_distance--")
+	{
+		game->player.reach_distance -= 1;
 	});
 
 	COMMAND("change_block_type")
