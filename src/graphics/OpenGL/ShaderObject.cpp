@@ -5,7 +5,9 @@
 
 #include <glad/glad.h>
 
+#include "../../Game.hpp"
 #include "../../Util.hpp"
+#include "../../console/Console.hpp"
 
 std::string get_log(const GLuint object);
 
@@ -18,7 +20,7 @@ ShaderObject::ShaderObject()
 
 ShaderObject::ShaderObject(const std::string& file_path, GLenum type)
 {
-	std::cout << "compiling shader: " << file_path << "\n";
+	Game::instance->console.logger << "compiling shader: " << file_path << "\n";
 
 	const std::string source = Util::read_file(file_path);
 	const char* source_c = source.c_str();

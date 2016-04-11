@@ -1,5 +1,6 @@
 #include "Console.hpp"
 
+#include <iostream>
 #include <stdexcept>
 #include <utility>
 #include <vector>
@@ -7,6 +8,9 @@
 #include "ArgumentParser.hpp"
 
 Console::Console()
+	:
+	logger(std::cout),
+	error_logger(std::cerr)
 {
 }
 

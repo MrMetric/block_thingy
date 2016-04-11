@@ -108,7 +108,7 @@ void Game::draw()
 #ifdef USE_LIBPNG
 void Game::screenshot(const std::string& filename)
 {
-	std::cout << "saving screenshot to " << filename << "\n";
+	console.logger << "saving screenshot to " << filename << "\n";
 	std::unique_ptr<GLubyte[]> pixels = std::make_unique<GLubyte[]>(3 * gfx.width * gfx.height);
 	glReadPixels(0, 0, gfx.width, gfx.height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
 	Gfx::write_png_RGB(filename.c_str(), pixels.get(), gfx.width, gfx.height, true);
@@ -258,7 +258,7 @@ void Game::add_commands()
 	{
 		if(args.size() != 1)
 		{
-			// print usage
+			game->console.error_logger << "Usage: save_pos <string: filename>\n";
 			return;
 		}
 		std::string save_name = args[0];
@@ -271,7 +271,7 @@ void Game::add_commands()
 	{
 		if(args.size() != 1)
 		{
-			// print usage
+			game->console.error_logger << "Usage: load_pos <string: filename>\n";
 			return;
 		}
 		std::string save_name = args[0];
@@ -288,7 +288,7 @@ void Game::add_commands()
 	{
 		if(args.size() != 1)
 		{
-			// print usage
+			game->console.error_logger << "Usage: exec <string: filename>\n";
 			return;
 		}
 		std::ifstream file("scripts/" + args[0]);
@@ -303,7 +303,7 @@ void Game::add_commands()
 	{
 		if(args.size() != 2)
 		{
-			// print usage
+			game->console.error_logger << "Usage: cam.rot x|y|z <float: degrees>\n";
 			return;
 		}
 		std::string part = args[0];
@@ -322,7 +322,7 @@ void Game::add_commands()
 		}
 		else
 		{
-			// error
+			game->console.error_logger << "component name must be x, y, or z\n";
 		}
 	});
 
@@ -350,7 +350,7 @@ void Game::add_commands()
 		}
 		else
 		{
-			// print usage
+			game->console.error_logger << "Usage: screenshot [string: filename]\n";
 			return;
 		}
 		try
@@ -359,7 +359,7 @@ void Game::add_commands()
 		}
 		catch(const std::runtime_error& e)
 		{
-			std::cerr << "error saving screenshot: " << e.what() << "\n";
+			game->console.error_logger << "error saving screenshot: " << e.what() << "\n";
 		}
 	});
 	#endif
@@ -367,28 +367,33 @@ void Game::add_commands()
 	COMMAND("wireframe")
 	{
 		game->wireframe = !game->wireframe();
+		game->console.logger << "wireframe: " << (game->wireframe() ? "true" : "false") << "\n";
 	});
 	COMMAND("toggle_cull_face")
 	{
 		game->gfx.toggle_cull_face();
-		std::cout << "cull face: " << (game->gfx.cull_face ? "true" : "false") << "\n";
+		game->console.logger << "cull face: " << (game->gfx.cull_face ? "true" : "false") << "\n";
 	});
 
 	COMMAND("render_distance++")
 	{
 		game->render_distance += 1;
+		game->console.logger << "render distance: " << game->render_distance << "\n";
 	});
 	COMMAND("render_distance--")
 	{
 		game->render_distance -= 1;
+		game->console.logger << "render distance: " << game->render_distance << "\n";
 	});
 	COMMAND("reach_distance++")
 	{
 		game->player.reach_distance += 1;
+		game->console.logger << "reach distance: " << game->player.reach_distance << "\n";
 	});
 	COMMAND("reach_distance--")
 	{
 		game->player.reach_distance -= 1;
+		game->console.logger << "reach distance: " << game->player.reach_distance << "\n";
 	});
 
 	COMMAND("change_block_type")
@@ -396,7 +401,7 @@ void Game::add_commands()
 		block_type_id_t i = static_cast<block_type_id_t>(block_type);
 		i = (i + 1) % BlockType_COUNT;
 		block_type = static_cast<BlockType>(i);
-		std::cout << "block type: " << i << "\n";
+		game->console.logger << "block type: " << i << "\n";
 	});
 	console->run_line("bind j change_block_type");
 
