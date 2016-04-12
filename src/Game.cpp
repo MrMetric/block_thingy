@@ -248,10 +248,12 @@ void Game::add_commands()
 	COMMAND("noclip")
 	{
 		game->player.toggle_noclip();
+		game->console.logger << "noclip: " << (game->player.get_noclip() ? "true" : "false") << "\n";
 	});
 	COMMAND("respawn")
 	{
 		game->player.respawn();
+		game->console.logger << "respawned\n";
 	});
 
 	COMMAND_ARGS("save_pos")
@@ -266,6 +268,7 @@ void Game::add_commands()
 		streem << game->player.position.x << " " << game->player.position.y << " " << game->player.position.z << " ";
 		streem << game->player.rotation.x << " " << game->player.rotation.y << " " << game->player.rotation.z;
 		streem.flush();
+		game->console.logger << "saved position and rotation to " << save_name << "\n";
 	});
 	COMMAND_ARGS("load_pos")
 	{
@@ -282,6 +285,8 @@ void Game::add_commands()
 		streem >> game->cam.rotation.x;
 		streem >> game->cam.rotation.y;
 		streem >> game->cam.rotation.z;
+		game->console.logger << "set position to " << glm::to_string(game->player.position) << "\n";
+		game->console.logger << "set rotation to " << glm::to_string(game->cam.rotation) << "\n";
 	});
 
 	COMMAND_ARGS("exec")
@@ -323,7 +328,9 @@ void Game::add_commands()
 		else
 		{
 			game->console.error_logger << "component name must be x, y, or z\n";
+			return;
 		}
+		game->console.logger << "camera rotation: " << glm::to_string(game->cam.rotation) << "\n";
 	});
 
 	#ifdef USE_LIBPNG
