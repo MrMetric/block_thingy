@@ -7,8 +7,8 @@
 class Command
 {
 	public:
-		Command(Console* console, const std::string& name, const console_handler_t& handler);
-		Command(Console* console, const std::string& name, const console_handler_noargs_t& handler);
+		Command(Console& console, const std::string& name, const console_handler_t& handler);
+		Command(Console& console, const std::string& name, const console_handler_noargs_t& handler);
 		Command(Command&& that);
 		~Command();
 
@@ -16,7 +16,7 @@ class Command
 		void operator=(const Command&) = delete;
 
 	private:
-		Console* console;
+		Console& console;
 		const std::string name;
 		bool unadd = true;
 };

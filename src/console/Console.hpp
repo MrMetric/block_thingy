@@ -28,6 +28,9 @@ class Console
 {
 	public:
 		Console();
+		Console(Console&&) = delete;
+		Console(const Console&) = delete;
+		void operator=(const Console&) = delete;
 
 		void add_command(const std::string& name, const console_handler_wrapper& handler);
 		void unadd_command(const std::string& name);

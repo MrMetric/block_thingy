@@ -2,20 +2,20 @@
 
 #include "Console.hpp"
 
-Command::Command(Console* console, const std::string& name, const console_handler_t& handler)
+Command::Command(Console& console, const std::string& name, const console_handler_t& handler)
 	:
 	console(console),
 	name(name)
 {
-	console->add_command(name, handler);
+	console.add_command(name, handler);
 }
 
-Command::Command(Console* console, const std::string& name, const console_handler_noargs_t& handler)
+Command::Command(Console& console, const std::string& name, const console_handler_noargs_t& handler)
 	:
 	console(console),
 	name(name)
 {
-	console->add_command(name, handler);
+	console.add_command(name, handler);
 }
 
 Command::Command(Command&& that)
@@ -30,6 +30,6 @@ Command::~Command()
 {
 	if(unadd)
 	{
-		console->unadd_command(name);
+		console.unadd_command(name);
 	}
 }

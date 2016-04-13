@@ -187,8 +187,6 @@ void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dm
 
 void Game::add_commands()
 {
-	Console* console = &this->console;
-
 	#define COMMAND_(name) commands.emplace_back(console, name, [game=this]
 	#define COMMAND(name) COMMAND_(name)()
 	#define COMMAND_ARGS(name) COMMAND_(name)(const std::vector<std::string>& args)
@@ -410,7 +408,7 @@ void Game::add_commands()
 		block_type = static_cast<BlockType>(i);
 		game->console.logger << "block type: " << i << "\n";
 	});
-	console->run_line("bind j change_block_type");
+	console.run_line("bind j change_block_type");
 
 	COMMAND("nazi")
 	{

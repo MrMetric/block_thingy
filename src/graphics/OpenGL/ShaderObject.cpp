@@ -20,7 +20,10 @@ ShaderObject::ShaderObject()
 
 ShaderObject::ShaderObject(const std::string& file_path, GLenum type)
 {
-	Game::instance->console.logger << "compiling shader: " << file_path << "\n";
+	(Game::instance != nullptr
+		? Game::instance->console.logger
+		: std::cout
+	) << "compiling shader: " << file_path << "\n";
 
 	const std::string source = Util::read_file(file_path);
 	const char* source_c = source.c_str();
