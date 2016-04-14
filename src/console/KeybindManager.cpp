@@ -11,20 +11,20 @@
 
 #include "Console.hpp"
 
-KeybindManager::KeybindManager(Console* console)
+KeybindManager::KeybindManager(Console& console)
 	:
 	console(console)
 {
-	console->add_command("bind", {[keybinder=this](const std::vector<std::string>& args)
+	console.add_command("bind", {[&keybinder=*this](const std::vector<std::string>& args)
 	{
 		if(args.size() != 2)
 		{
 			// print usage
 			return;
 		}
-		keybinder->bind_key(args[0], args[1]);
+		keybinder.bind_key(args[0], args[1]);
 	}});
-	console->add_command("unbind", {[keybinder=this](const std::vector<std::string>& args)
+	console.add_command("unbind", {[&keybinder=*this](const std::vector<std::string>& args)
 	{
 		if(args.size() != 1)
 		{
@@ -32,14 +32,14 @@ KeybindManager::KeybindManager(Console* console)
 			return;
 		}
 		int key = KeybindManager::translate_key(args[0]);
-		keybinder->unbind_key(key);
+		keybinder.unbind_key(key);
 	}});
 }
 
 KeybindManager::~KeybindManager()
 {
-	console->unadd_command("bind");
-	console->unadd_command("unbind");
+	console.unadd_command("bind");
+	console.unadd_command("unbind");
 }
 
 void KeybindManager::bind_key(const int key, const std::string& command)
@@ -80,7 +80,7 @@ void KeybindManager::keypress(const int key, const int action)
 				command2[0] = '-';
 				release_auto[key] = command2;
 			}
-			console->run_line(command);
+			console.run_line(command);
 		}
 	}
 	else if(action == GLFW_RELEASE)
@@ -88,7 +88,7 @@ void KeybindManager::keypress(const int key, const int action)
 		auto i = release_auto.find(key);
 		if(i != release_auto.end())
 		{
-			console->run_line(i->second);
+			console.run_line(i->second);
 		}
 	}
 	else

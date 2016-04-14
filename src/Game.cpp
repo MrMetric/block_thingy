@@ -61,7 +61,7 @@ Game::Game(GLFWwindow* window, const uint_fast32_t width, const uint_fast32_t he
 	delta_time(0),
 	fps(999),
 	render_distance(3),
-	keybinder(&console)
+	keybinder(console)
 {
 	Game::instance = this;
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // for screenshots
@@ -187,118 +187,118 @@ void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dm
 
 void Game::add_commands()
 {
-	#define COMMAND_(name) commands.emplace_back(console, name, [game=this]
+	#define COMMAND_(name) commands.emplace_back(console, name, [&game=*this]
 	#define COMMAND(name) COMMAND_(name)()
 	#define COMMAND_ARGS(name) COMMAND_(name)(const std::vector<std::string>& args)
 
 	COMMAND("quit")
 	{
-		game->world.save();
-		glfwSetWindowShouldClose(game->window, GL_TRUE);
+		game.world.save();
+		glfwSetWindowShouldClose(game.window, GL_TRUE);
 	});
 
 	// TODO: less copy/paste
 	COMMAND("+forward")
 	{
-		game->player.move_forward(true);
+		game.player.move_forward(true);
 	});
 	COMMAND("-forward")
 	{
-		game->player.move_forward(false);
+		game.player.move_forward(false);
 	});
 	COMMAND("+backward")
 	{
-		game->player.move_backward(true);
+		game.player.move_backward(true);
 	});
 	COMMAND("-backward")
 	{
-		game->player.move_backward(false);
+		game.player.move_backward(false);
 	});
 	COMMAND("+left")
 	{
-		game->player.move_left(true);
+		game.player.move_left(true);
 	});
 	COMMAND("-left")
 	{
-		game->player.move_left(false);
+		game.player.move_left(false);
 	});
 	COMMAND("+right")
 	{
-		game->player.move_right(true);
+		game.player.move_right(true);
 	});
 	COMMAND("-right")
 	{
-		game->player.move_right(false);
+		game.player.move_right(false);
 	});
 	COMMAND("+sprint")
 	{
-		game->player.go_faster(true);
+		game.player.go_faster(true);
 	});
 	COMMAND("-sprint")
 	{
-		game->player.go_faster(false);
+		game.player.go_faster(false);
 	});
 
 	COMMAND("jump")
 	{
-		game->player.jump();
+		game.player.jump();
 	});
 	COMMAND("noclip")
 	{
-		game->player.toggle_noclip();
-		game->console.logger << "noclip: " << (game->player.get_noclip() ? "true" : "false") << "\n";
+		game.player.toggle_noclip();
+		game.console.logger << "noclip: " << (game.player.get_noclip() ? "true" : "false") << "\n";
 	});
 	COMMAND("respawn")
 	{
-		game->player.respawn();
-		game->console.logger << "respawned\n";
+		game.player.respawn();
+		game.console.logger << "respawned\n";
 	});
 
 	COMMAND_ARGS("save_pos")
 	{
 		if(args.size() != 1)
 		{
-			game->console.error_logger << "Usage: save_pos <string: filename>\n";
+			game.console.error_logger << "Usage: save_pos <string: filename>\n";
 			return;
 		}
 		std::string save_name = args[0];
 		std::ofstream streem(save_name);
-		streem << game->player.position.x << " " << game->player.position.y << " " << game->player.position.z << " ";
-		streem << game->player.rotation.x << " " << game->player.rotation.y << " " << game->player.rotation.z;
+		streem << game.player.position.x << " " << game.player.position.y << " " << game.player.position.z << " ";
+		streem << game.player.rotation.x << " " << game.player.rotation.y << " " << game.player.rotation.z;
 		streem.flush();
-		game->console.logger << "saved position and rotation to " << save_name << "\n";
+		game.console.logger << "saved position and rotation to " << save_name << "\n";
 	});
 	COMMAND_ARGS("load_pos")
 	{
 		if(args.size() != 1)
 		{
-			game->console.error_logger << "Usage: load_pos <string: filename>\n";
+			game.console.error_logger << "Usage: load_pos <string: filename>\n";
 			return;
 		}
 		std::string save_name = args[0];
 		std::ifstream streem(save_name);
-		streem >> game->player.position.x;
-		streem >> game->player.position.y;
-		streem >> game->player.position.z;
-		streem >> game->cam.rotation.x;
-		streem >> game->cam.rotation.y;
-		streem >> game->cam.rotation.z;
-		game->console.logger << "set position to " << glm::to_string(game->player.position) << "\n";
-		game->console.logger << "set rotation to " << glm::to_string(game->cam.rotation) << "\n";
+		streem >> game.player.position.x;
+		streem >> game.player.position.y;
+		streem >> game.player.position.z;
+		streem >> game.cam.rotation.x;
+		streem >> game.cam.rotation.y;
+		streem >> game.cam.rotation.z;
+		game.console.logger << "set position to " << glm::to_string(game.player.position) << "\n";
+		game.console.logger << "set rotation to " << glm::to_string(game.cam.rotation) << "\n";
 	});
 
 	COMMAND_ARGS("exec")
 	{
 		if(args.size() != 1)
 		{
-			game->console.error_logger << "Usage: exec <string: filename>\n";
+			game.console.error_logger << "Usage: exec <string: filename>\n";
 			return;
 		}
 		std::ifstream file("scripts/" + args[0]);
 		std::string line;
 		while(std::getline(file, line))
 		{
-			game->console.run_line(line);
+			game.console.run_line(line);
 		}
 	});
 
@@ -306,29 +306,29 @@ void Game::add_commands()
 	{
 		if(args.size() != 2)
 		{
-			game->console.error_logger << "Usage: cam.rot x|y|z <float: degrees>\n";
+			game.console.error_logger << "Usage: cam.rot x|y|z <float: degrees>\n";
 			return;
 		}
 		std::string part = args[0];
 		double value = std::stod(args[1]);
 		if(part == "x")
 		{
-			game->cam.rotation.x += value;
+			game.cam.rotation.x += value;
 		}
 		else if(part == "y")
 		{
-			game->cam.rotation.y += value;
+			game.cam.rotation.y += value;
 		}
 		else if(part == "z")
 		{
-			game->cam.rotation.z += value;
+			game.cam.rotation.z += value;
 		}
 		else
 		{
-			game->console.error_logger << "component name must be x, y, or z\n";
+			game.console.error_logger << "component name must be x, y, or z\n";
 			return;
 		}
-		game->console.logger << "camera rotation: " << glm::to_string(game->cam.rotation) << "\n";
+		game.console.logger << "camera rotation: " << glm::to_string(game.cam.rotation) << "\n";
 	});
 
 	#ifdef USE_LIBPNG
@@ -355,50 +355,50 @@ void Game::add_commands()
 		}
 		else
 		{
-			game->console.error_logger << "Usage: screenshot [string: filename]\n";
+			game.console.error_logger << "Usage: screenshot [string: filename]\n";
 			return;
 		}
 		try
 		{
-			game->screenshot(filename);
+			game.screenshot(filename);
 		}
 		catch(const std::runtime_error& e)
 		{
-			game->console.error_logger << "error saving screenshot: " << e.what() << "\n";
+			game.console.error_logger << "error saving screenshot: " << e.what() << "\n";
 		}
 	});
 	#endif
 
 	COMMAND("wireframe")
 	{
-		game->wireframe = !game->wireframe();
-		game->console.logger << "wireframe: " << (game->wireframe() ? "true" : "false") << "\n";
+		game.wireframe = !game.wireframe();
+		game.console.logger << "wireframe: " << (game.wireframe() ? "true" : "false") << "\n";
 	});
 	COMMAND("toggle_cull_face")
 	{
-		game->gfx.toggle_cull_face();
-		game->console.logger << "cull face: " << (game->gfx.cull_face ? "true" : "false") << "\n";
+		game.gfx.toggle_cull_face();
+		game.console.logger << "cull face: " << (game.gfx.cull_face ? "true" : "false") << "\n";
 	});
 
 	COMMAND("render_distance++")
 	{
-		game->render_distance += 1;
-		game->console.logger << "render distance: " << game->render_distance << "\n";
+		game.render_distance += 1;
+		game.console.logger << "render distance: " << game.render_distance << "\n";
 	});
 	COMMAND("render_distance--")
 	{
-		game->render_distance -= 1;
-		game->console.logger << "render distance: " << game->render_distance << "\n";
+		game.render_distance -= 1;
+		game.console.logger << "render distance: " << game.render_distance << "\n";
 	});
 	COMMAND("reach_distance++")
 	{
-		game->player.reach_distance += 1;
-		game->console.logger << "reach distance: " << game->player.reach_distance << "\n";
+		game.player.reach_distance += 1;
+		game.console.logger << "reach distance: " << game.player.reach_distance << "\n";
 	});
 	COMMAND("reach_distance--")
 	{
-		game->player.reach_distance -= 1;
-		game->console.logger << "reach distance: " << game->player.reach_distance << "\n";
+		game.player.reach_distance -= 1;
+		game.console.logger << "reach distance: " << game.player.reach_distance << "\n";
 	});
 
 	COMMAND("change_block_type")
@@ -406,18 +406,18 @@ void Game::add_commands()
 		block_type_id_t i = static_cast<block_type_id_t>(block_type);
 		i = (i + 1) % BlockType_COUNT;
 		block_type = static_cast<BlockType>(i);
-		game->console.logger << "block type: " << i << "\n";
+		game.console.logger << "block type: " << i << "\n";
 	});
 	console.run_line("bind j change_block_type");
 
 	COMMAND("nazi")
 	{
-		if(game->hovered_block == nullptr)
+		if(game.hovered_block == nullptr)
 		{
 			return;
 		}
 
-		Position::BlockInWorld start_pos = game->hovered_block->adjacent();
+		Position::BlockInWorld start_pos = game.hovered_block->adjacent();
 		const BlockInWorld_type ysize = 9;
 		const BlockInWorld_type xsize = 9;
 		block_type_id_t nazi[ysize][xsize]
@@ -441,7 +441,7 @@ void Game::add_commands()
 					Position::BlockInWorld block_pos(x, y, z);
 					block_pos += start_pos;
 					block_type_id_t block_id = nazi[y][x];
-					game->world.set_block(block_pos, Block(block_id));
+					game.world.set_block(block_pos, Block(block_id));
 				}
 			}
 		}

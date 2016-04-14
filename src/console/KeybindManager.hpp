@@ -8,7 +8,7 @@ class Console;
 class KeybindManager
 {
 	public:
-		explicit KeybindManager(Console* console);
+		explicit KeybindManager(Console& console);
 		~KeybindManager();
 
 		void bind_key(int key, const std::string& command);
@@ -20,7 +20,7 @@ class KeybindManager
 		static int translate_key(std::string key);
 
 	private:
-		Console* console;
+		Console& console;
 		std::unordered_map<int, std::string> keybinds;
 		std::unordered_map<int, std::string> release_auto;
 };

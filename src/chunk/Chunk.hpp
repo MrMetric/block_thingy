@@ -21,7 +21,7 @@ using chunk_block_array_t = std::array<Block, CHUNK_BLOCK_COUNT>;
 class Chunk
 {
 	public:
-		Chunk(const Position::ChunkInWorld&, World* owner);
+		Chunk(const Position::ChunkInWorld&, World& owner);
 		Chunk(const Chunk&) = delete;
 
 		const Block& get_block_const(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
@@ -33,13 +33,13 @@ class Chunk
 		void set_block(const Position::BlockInChunk&, const Block&);
 
 		Position::ChunkInWorld get_position() const;
-		World* get_owner() const; // eeh
+		World& get_owner() const; // eeh
 
 		void update();
 		void render();
 
 	private:
-		World* owner;
+		World& owner;
 		Position::ChunkInWorld position;
 		std::unique_ptr<chunk_block_array_t> blok;
 		std::unique_ptr<ChunkMesher> mesher;

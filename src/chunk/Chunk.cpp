@@ -22,7 +22,7 @@
 
 #include "std_make_unique.hpp"
 
-Chunk::Chunk(const Position::ChunkInWorld& pos, World* owner)
+Chunk::Chunk(const Position::ChunkInWorld& pos, World& owner)
 	:
 	owner(owner),
 	position(pos),
@@ -94,7 +94,7 @@ Position::ChunkInWorld Chunk::get_position() const
 	return position;
 }
 
-World* Chunk::get_owner() const
+World& Chunk::get_owner() const
 {
 	return owner;
 }
@@ -196,7 +196,7 @@ void Chunk::update_neighbor(const ChunkInWorld_type x, const ChunkInWorld_type y
 {
 	Position::ChunkInWorld chunk_pos(x, y, z);
 	chunk_pos += position;
-	std::shared_ptr<Chunk> chunk = owner->get_chunk(chunk_pos);
+	std::shared_ptr<Chunk> chunk = owner.get_chunk(chunk_pos);
 	if(chunk != nullptr)
 	{
 		chunk->changed = true;

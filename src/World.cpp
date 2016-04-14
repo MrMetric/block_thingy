@@ -117,7 +117,7 @@ std::shared_ptr<Chunk> World::get_or_make_chunk(const Position::ChunkInWorld& ch
 	}
 
 	{
-		chunk = std::make_shared<Chunk>(chunk_pos, this);
+		chunk = std::make_shared<Chunk>(chunk_pos, *this);
 		set_chunk(chunk_pos, chunk);
 		gen_chunk(chunk_pos); // should this really be here?
 		return chunk;
