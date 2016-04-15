@@ -101,6 +101,12 @@ World& Chunk::get_owner() const
 
 void Chunk::update()
 {
+	if(blok == nullptr && solid_block.is_invisible())
+	{
+		meshes = meshmap_t();
+		return;
+	}
+
 	meshes = mesher->make_mesh();
 
 	if(mesh_vbos.size() < meshes.size())
@@ -119,8 +125,6 @@ void Chunk::update()
 		mesh_vbos[i].data(mesh.size() * sizeof(mesh_t::value_type), mesh.data(), VertexBuffer::UsageHint::dynamic_draw);
 		++i;
 	}
-
-	changed = false;
 }
 
 void Chunk::render()
@@ -128,6 +132,7 @@ void Chunk::render()
 	if(changed)
 	{
 		update();
+		changed = false;
 	}
 
 	const glm::vec3 pos_mod = glm::vec3(position.x, position.y, position.z) * static_cast<float>(CHUNK_SIZE);
