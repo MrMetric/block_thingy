@@ -16,21 +16,21 @@ Console::Console()
 
 console_handler_wrapper::console_handler_wrapper(const console_handler_t& handler)
 	:
-	args(true),
+	has_args(true),
 	handler_args(handler)
 {
 }
 
 console_handler_wrapper::console_handler_wrapper(const console_handler_noargs_t& handler)
 	:
-	args(false),
+	has_args(false),
 	handler_noargs(handler)
 {
 }
 
 void console_handler_wrapper::operator()(const std::vector<std::string>& args) const
 {
-	if(this->args)
+	if(has_args)
 	{
 		handler_args(args);
 	}

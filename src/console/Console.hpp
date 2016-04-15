@@ -17,7 +17,7 @@ class console_handler_wrapper
 		void operator()(const std::vector<std::string>& args) const;
 
 	private:
-		bool args;
+		bool has_args;
 
 		// uses more memory (I assume), but I do not know how to make a union work
 		console_handler_t handler_args;
