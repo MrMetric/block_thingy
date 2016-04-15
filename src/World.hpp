@@ -28,6 +28,7 @@ class World
 
 	public:
 		World(const std::string& file_path);
+
 		World(World&&) = delete;
 		World(const World&) = delete;
 		void operator=(const World&) = delete;

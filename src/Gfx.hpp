@@ -26,6 +26,10 @@ class Gfx
 	public:
 		Gfx(GLFWwindow* window, EventManager& event_manager);
 
+		Gfx(Gfx&&) = delete;
+		Gfx(const Gfx&) = delete;
+		void operator=(const Gfx&) = delete;
+
 		GLFWwindow* window;
 		uint_fast32_t width;
 		uint_fast32_t height;

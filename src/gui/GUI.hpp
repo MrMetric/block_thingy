@@ -13,6 +13,10 @@ class GUI
 	public:
 		GUI(EventManager& event_manager);
 
+		GUI(GUI&&) = delete;
+		GUI(const GUI&) = delete;
+		void operator=(const GUI&) = delete;
+
 		void update_framebuffer_size(uint_fast32_t width, uint_fast32_t height);
 		void draw(const Gfx&);
 

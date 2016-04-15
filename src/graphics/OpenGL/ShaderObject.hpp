@@ -9,11 +9,11 @@ class ShaderObject
 	public:
 		ShaderObject();
 		ShaderObject(const std::string& file_path, GLenum type);
-		ShaderObject(const ShaderObject&) = delete;
-		ShaderObject(ShaderObject&&);
 		~ShaderObject();
 
-		ShaderObject& operator=(const ShaderObject&) = delete;
+		ShaderObject(ShaderObject&&);
+		ShaderObject(const ShaderObject&) = delete;
+		void operator=(const ShaderObject&) = delete;
 
 		GLuint get_name() const;
 

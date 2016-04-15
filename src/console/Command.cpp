@@ -18,18 +18,18 @@ Command::Command(Console& console, const std::string& name, const console_handle
 	console.add_command(name, handler);
 }
 
-Command::Command(Command&& that)
-	:
-	console(that.console),
-	name(that.name)
-{
-	that.unadd = false;
-}
-
 Command::~Command()
 {
 	if(unadd)
 	{
 		console.unadd_command(name);
 	}
+}
+
+Command::Command(Command&& that)
+	:
+	console(that.console),
+	name(that.name)
+{
+	that.unadd = false;
 }

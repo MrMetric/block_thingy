@@ -6,11 +6,11 @@ class VertexBuffer
 {
 	public:
 		VertexBuffer();
-		VertexBuffer(const VertexBuffer&) = delete;
-		VertexBuffer(VertexBuffer&&);
 		~VertexBuffer();
 
-		VertexBuffer& operator=(const VertexBuffer&) = delete;
+		VertexBuffer(VertexBuffer&&);
+		VertexBuffer(const VertexBuffer&) = delete;
+		void operator=(const VertexBuffer&) = delete;
 
 		enum class UsageHint : GLenum
 		{

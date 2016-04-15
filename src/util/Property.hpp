@@ -15,6 +15,10 @@ template <typename T> class Property
 		{
 		}
 
+		Property(Property&&) = delete;
+		Property(const Property&) = delete;
+		void operator=(const Property&) = delete;
+
 		T operator()() const
 		{
 			return value;

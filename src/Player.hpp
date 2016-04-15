@@ -13,7 +13,10 @@ class Player
 {
 	public:
 		Player(const std::string& name);
+
+		Player(Player&&) = delete;
 		Player(const Player&) = delete;
+		void operator=(const Player&) = delete;
 
 		const std::string name;
 		double reach_distance;

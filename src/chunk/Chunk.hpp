@@ -22,7 +22,10 @@ class Chunk
 {
 	public:
 		Chunk(const Position::ChunkInWorld&, World& owner);
+
+		Chunk(Chunk&&) = delete;
 		Chunk(const Chunk&) = delete;
+		void operator=(const Chunk&) = delete;
 
 		const Block& get_block_const(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
 		const Block& get_block_const(const Position::BlockInChunk&) const;

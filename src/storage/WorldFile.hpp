@@ -16,6 +16,10 @@ class WorldFile
 	public:
 		WorldFile(const std::string& world_path, World& world);
 
+		WorldFile(WorldFile&&) = delete;
+		WorldFile(const WorldFile&) = delete;
+		void operator=(const WorldFile&) = delete;
+
 		void save_players();
 		void save_player(const Player&);
 		std::unique_ptr<Player> load_player(const std::string& name);

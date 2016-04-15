@@ -22,8 +22,9 @@ class ChunkMesher
 		explicit ChunkMesher(const Chunk&);
 		virtual ~ChunkMesher();
 
+		ChunkMesher(ChunkMesher&&) = delete;
 		ChunkMesher(const ChunkMesher&) = delete;
-		ChunkMesher& operator=(const ChunkMesher&) = delete;
+		void operator=(const ChunkMesher&) = delete;
 
 		virtual meshmap_t make_mesh() = 0;
 

@@ -29,6 +29,10 @@ class Game
 	public:
 		Game(GLFWwindow* window, uint_fast32_t width, uint_fast32_t height);
 
+		Game(Game&&) = delete;
+		Game(const Game&) = delete;
+		void operator=(const Game&) = delete;
+
 		void draw();
 		#ifdef USE_LIBPNG
 		void screenshot(const std::string& filename);

@@ -13,6 +13,10 @@ class Camera
 	public:
 		Camera(GLFWwindow* window, EventManager& event_manager);
 
+		Camera(Camera&&) = delete;
+		Camera(const Camera&) = delete;
+		void operator=(const Camera&) = delete;
+
 		void handleMouseMove(double mouseX, double mouseY);
 
 		glm::dvec3 position;

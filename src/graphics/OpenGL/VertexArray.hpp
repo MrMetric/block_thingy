@@ -6,11 +6,11 @@ class VertexArray
 {
 	public:
 		VertexArray();
-		VertexArray(const VertexArray&) = delete;
-		VertexArray(VertexArray&&);
 		~VertexArray();
 
-		VertexArray& operator=(const VertexArray&) = delete;
+		VertexArray(VertexArray&&);
+		VertexArray(const VertexArray&) = delete;
+		void operator=(const VertexArray&) = delete;
 
 		GLuint get_name() const;
 		void attrib(GLuint index, bool enabled);

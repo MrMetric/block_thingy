@@ -16,7 +16,10 @@ class EventManager
 {
 	public:
 		EventManager();
+
+		EventManager(EventManager&&) = delete;
 		EventManager(const EventManager&) = delete;
+		void operator=(const EventManager&) = delete;
 
 		event_handler_id_t add_handler(const event_handler_t&);
 		event_handler_id_t add_handler(EventType, const event_handler_t&);

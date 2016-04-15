@@ -11,6 +11,10 @@ class KeybindManager
 		explicit KeybindManager(Console& console);
 		~KeybindManager();
 
+		KeybindManager(KeybindManager&&) = delete;
+		KeybindManager(const KeybindManager&) = delete;
+		void operator=(const KeybindManager&) = delete;
+
 		void bind_key(int key, const std::string& command);
 		void bind_key(const std::string& key, const std::string& command);
 		void unbind_key(int key);

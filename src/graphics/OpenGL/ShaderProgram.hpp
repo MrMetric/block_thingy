@@ -16,11 +16,11 @@ class ShaderProgram
 		ShaderProgram(const char* path);
 		ShaderProgram(const std::string& path);
 		ShaderProgram(const std::vector<std::string>&, const std::string& name);
-		ShaderProgram(const ShaderProgram&) = delete;
-		ShaderProgram(ShaderProgram&&);
 		~ShaderProgram();
 
-		ShaderProgram& operator=(const ShaderProgram&) = delete;
+		ShaderProgram(ShaderProgram&&);
+		ShaderProgram(const ShaderProgram&) = delete;
+		void operator=(const ShaderProgram&) = delete;
 
 		GLuint get_name() const;
 		GLint get_uniform_location(const std::string&) const;
