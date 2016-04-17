@@ -34,4 +34,19 @@ namespace Util
 	std::string join_path(const path&);
 
 	void change_directory(const std::string&);
+
+	template <typename T> constexpr T clamp(T x, T min, T max)
+	{
+		if(x < min)
+		{
+			return min;
+		}
+		if(x > max)
+		{
+			return max;
+		}
+		return x;
+	}
+
+	double mod(double x, double y);
 };
