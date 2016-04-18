@@ -162,10 +162,6 @@ void GreedyMesher::generate_surface(glm::tvec3<uint_fast8_t>& xyz, const uint_fa
 
 Rectangle GreedyMesher::yield_rectangle()
 {
-	BlockInChunk_type start_z;
-	BlockInChunk_type start_x;
-	BlockInChunk_type w = 0;
-	BlockInChunk_type h = 0;
 	const size_t surface_size = surface.size();
 	for(BlockInChunk_type z = 0; z < surface_size; ++z)
 	{
@@ -176,10 +172,10 @@ Rectangle GreedyMesher::yield_rectangle()
 			const BlockType type = row[x];
 			if(type != BlockType::none)
 			{
-				start_z = z;
-				start_x = x;
-				w = 1;
-				h = 1;
+				BlockInChunk_type start_z = z;
+				BlockInChunk_type start_x = x;
+				BlockInChunk_type w = 1;
+				BlockInChunk_type h = 1;
 				row[x] = BlockType::none;
 				++x;
 				while(x < row_size && row[x] == type)
@@ -207,17 +203,11 @@ Rectangle GreedyMesher::yield_rectangle()
 					}
 					while(x < row2_size && w2 < w && row2[x] == type);
 
-					if(w2 == w)
-					{
-						for(BlockInChunk_type x2 = start_x; x2 < start_x + w2; ++x2)
-						{
-							row2[x2] = BlockType::none;
-						}
-					}
-					else
+					if(w2 != w)
 					{
 						break;
 					}
+					std::fill_n(&row2[start_x], w2, BlockType::none);
 
 					++z;
 					h += 1;
