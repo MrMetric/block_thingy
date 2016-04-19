@@ -24,7 +24,7 @@ Camera::Camera(GLFWwindow* window, EventManager& event_manager)
 	});
 }
 
-void Camera::handleMouseMove(const double mouseX, const double mouseY)
+void Camera::mousemove(const double mouseX, const double mouseY)
 {
 	rotation.x += (mouseY - window_mid.y) * sensitivity;
 	rotation.y += (mouseX - window_mid.x) * sensitivity;

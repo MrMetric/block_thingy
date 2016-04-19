@@ -141,7 +141,7 @@ void Gfx::update_projection_matrix()
 	projection_matrix = glm::perspective(fov, aspect_ratio, near, far);
 }
 
-void Gfx::set_cam_view(const Camera& cam)
+void Gfx::set_camera_view(const Camera& cam)
 {
 	view_matrix = glm::dmat4(1);
 	view_matrix *= glm::rotate(glm::radians(cam.rotation.x), glm::dvec3(1, 0, 0));

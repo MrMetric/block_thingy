@@ -28,6 +28,7 @@ class Console
 {
 	public:
 		Console();
+
 		Console(Console&&) = delete;
 		Console(const Console&) = delete;
 		void operator=(const Console&) = delete;

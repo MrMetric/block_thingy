@@ -17,7 +17,7 @@ class Camera
 		Camera(const Camera&) = delete;
 		void operator=(const Camera&) = delete;
 
-		void handleMouseMove(double mouseX, double mouseY);
+		void mousemove(double mouseX, double mouseY);
 
 		glm::dvec3 position;
 		glm::dvec3 rotation;

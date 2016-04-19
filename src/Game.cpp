@@ -48,7 +48,7 @@ Game::Game(GLFWwindow* window, const uint_fast32_t width, const uint_fast32_t he
 	:
 	window(window),
 	hovered_block(nullptr),
-	cam(window, event_manager),
+	camera(window, event_manager),
 	gfx(window, event_manager),
 	world("worlds/test"),
 	player_ptr(world.add_player("test_player")),
@@ -71,19 +71,19 @@ Game::Game(GLFWwindow* window, const uint_fast32_t width, const uint_fast32_t he
 
 	update_framebuffer_size(width, height);
 
-	cam.rotation = player.rotation; // keep saved value
+	camera.rotation = player.rotation; // keep saved value
 }
 
 void Game::draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-	gfx.set_cam_view(cam);
+	gfx.set_camera_view(camera);
 
-	player.rotation = cam.rotation;
+	player.rotation = camera.rotation;
 	world.step(delta_time);
-	cam.position = player.position;
-	cam.position.y += player.get_eye_height();
+	camera.position = player.position;
+	camera.position.y += player.get_eye_height();
 
 	Position::BlockInWorld render_origin(player.position);
 	RenderWorld::draw_world(world, gfx.block_shaders, gfx.matriks, render_origin, render_distance);
@@ -160,7 +160,7 @@ void Game::mousepress(const int button, const int action, const int mods)
 
 void Game::mousemove(const double x, const double y)
 {
-	cam.handleMouseMove(x, y);
+	camera.mousemove(x, y);
 }
 
 void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dmat4& view_matrix)
@@ -280,11 +280,11 @@ void Game::add_commands()
 		streem >> game.player.position.x;
 		streem >> game.player.position.y;
 		streem >> game.player.position.z;
-		streem >> game.cam.rotation.x;
-		streem >> game.cam.rotation.y;
-		streem >> game.cam.rotation.z;
+		streem >> game.camera.rotation.x;
+		streem >> game.camera.rotation.y;
+		streem >> game.camera.rotation.z;
 		game.console.logger << "set position to " << glm::to_string(game.player.position) << "\n";
-		game.console.logger << "set rotation to " << glm::to_string(game.cam.rotation) << "\n";
+		game.console.logger << "set rotation to " << glm::to_string(game.camera.rotation) << "\n";
 	});
 
 	COMMAND_ARGS("exec")
@@ -313,22 +313,22 @@ void Game::add_commands()
 		double value = std::stod(args[1]);
 		if(part == "x")
 		{
-			game.cam.rotation.x += value;
+			game.camera.rotation.x += value;
 		}
 		else if(part == "y")
 		{
-			game.cam.rotation.y += value;
+			game.camera.rotation.y += value;
 		}
 		else if(part == "z")
 		{
-			game.cam.rotation.z += value;
+			game.camera.rotation.z += value;
 		}
 		else
 		{
 			game.console.error_logger << "component name must be x, y, or z\n";
 			return;
 		}
-		game.console.logger << "camera rotation: " << glm::to_string(game.cam.rotation) << "\n";
+		game.console.logger << "camera rotation: " << glm::to_string(game.camera.rotation) << "\n";
 	});
 
 	#ifdef USE_LIBPNG

@@ -179,6 +179,7 @@ void Chunk::update_neighbors(const BlockInChunk_type x, const BlockInChunk_type 
 	{
 		update_neighbor(+1, 0, 0);
 	}
+
 	if(y == 0)
 	{
 		update_neighbor(0, -1, 0);
@@ -187,6 +188,7 @@ void Chunk::update_neighbors(const BlockInChunk_type x, const BlockInChunk_type 
 	{
 		update_neighbor(0, +1, 0);
 	}
+
 	if(z == 0)
 	{
 		update_neighbor(0, 0, -1);

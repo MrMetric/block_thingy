@@ -50,7 +50,7 @@ class Game
 		// event_manager must be initialized before others!
 		EventManager event_manager;
 
-		Camera cam;
+		Camera camera;
 		Gfx gfx;
 		World world;
 		std::shared_ptr<Player> player_ptr;
