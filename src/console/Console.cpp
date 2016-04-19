@@ -64,14 +64,19 @@ void Console::run_line(const std::string& line)
 	{
 		return;
 	}
-	std::string name = args[0];
+	const std::string name = args[0];
 	args.erase(args.begin());
 	run_command(name, args);
 }
 
 void Console::run_command(const std::string& name, const std::string& argline) const
 {
-	std::vector<std::string> args = ArgumentParser().parse_args(argline);
+	if(name[0] == '#') // ignore comments
+	{
+		return;
+	}
+
+	const std::vector<std::string> args = ArgumentParser().parse_args(argline);
 	run_command(name, args);
 }
 
@@ -81,10 +86,12 @@ void Console::run_command(const std::string& name, const std::vector<std::string
 	{
 		return;
 	}
+
 	auto i = handlers.find(name);
 	if(i == handlers.end())
 	{
-		throw std::runtime_error("unknown command: " + name);
+		error_logger << "unknown command: " << name << "\n";
+		return;
 	}
 	i->second(args);
 }
