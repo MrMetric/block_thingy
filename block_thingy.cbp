@@ -123,8 +123,8 @@
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/physics/PhysicsUtil.cpp" />
 		<Unit filename="src/physics/PhysicsUtil.hpp" />
-		<Unit filename="src/physics/RaytraceHit.cpp" />
-		<Unit filename="src/physics/RaytraceHit.hpp" />
+		<Unit filename="src/physics/RaycastHit.cpp" />
+		<Unit filename="src/physics/RaycastHit.hpp" />
 		<Unit filename="src/position/BlockInChunk.cpp" />
 		<Unit filename="src/position/BlockInChunk.hpp" />
 		<Unit filename="src/position/BlockInWorld.cpp" />

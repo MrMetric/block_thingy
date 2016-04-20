@@ -11,7 +11,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
-#include "RaytraceHit.hpp"
+#include "RaycastHit.hpp"
 #include "../Block.hpp"
 #include "../World.hpp"
 #include "../position/BlockInWorld.hpp"
@@ -133,7 +133,7 @@ static bool pos_in_bounds(const Position::BlockInWorld& pos, const glm::dvec3& m
  *
  * If the callback returns a true value, the traversal will be stopped.
  */
-std::unique_ptr<RaytraceHit> PhysicsUtil::raycast(const World& world, const glm::dvec3& origin, const glm::dvec3& direction, const double radius)
+std::unique_ptr<RaycastHit> PhysicsUtil::raycast(const World& world, const glm::dvec3& origin, const glm::dvec3& direction, const double radius)
 {
 	// From "A Fast Voxel Traversal Algorithm for Ray Tracing"
 	// by John Amanatides and Andrew Woo, 1987
@@ -184,7 +184,7 @@ std::unique_ptr<RaytraceHit> PhysicsUtil::raycast(const World& world, const glm:
 		{
 			if(world.get_block_const(cube_pos).is_solid())
 			{
-				return std::make_unique<RaytraceHit>(cube_pos, face);
+				return std::make_unique<RaycastHit>(cube_pos, face);
 			}
 		}
 

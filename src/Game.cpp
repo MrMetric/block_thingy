@@ -35,7 +35,7 @@
 #include "graphics/RenderWorld.hpp"
 #include "gui/GUI.hpp"
 #include "physics/PhysicsUtil.hpp"
-#include "physics/RaytraceHit.hpp"
+#include "physics/RaycastHit.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"

@@ -18,7 +18,7 @@
 #include "console/KeybindManager.hpp"
 #include "event/EventManager.hpp"
 #include "gui/GUI.hpp"
-#include "physics/RaytraceHit.hpp"
+#include "physics/RaycastHit.hpp"
 #include "position/ChunkInWorld.hpp"
 #include "util/Property.hpp"
 
@@ -45,7 +45,7 @@ class Game
 		static Game* instance;
 
 		GLFWwindow* window;
-		std::unique_ptr<RaytraceHit> hovered_block;
+		std::unique_ptr<RaycastHit> hovered_block;
 
 		// event_manager must be initialized before others!
 		EventManager event_manager;
