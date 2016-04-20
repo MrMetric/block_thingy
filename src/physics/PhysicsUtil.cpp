@@ -104,8 +104,8 @@ void PhysicsUtil::ScreenPosToWorldRay(
 
 	// Faster way (just one inverse)
 	glm::dmat4 M = glm::inverse(projection_matrix * view_matrix);
-	glm::vec4 lRayStart_world = M * lRayStart_NDC; lRayStart_world /= lRayStart_world.w;
-	glm::vec4 lRayEnd_world   = M * lRayEnd_NDC;   lRayEnd_world   /= lRayEnd_world.w;
+	glm::dvec4 lRayStart_world = M * lRayStart_NDC; lRayStart_world /= lRayStart_world.w;
+	glm::dvec4 lRayEnd_world   = M * lRayEnd_NDC;   lRayEnd_world   /= lRayEnd_world.w;
 
 
 	glm::dvec3 lRayDir_world(lRayEnd_world - lRayStart_world);
