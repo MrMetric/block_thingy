@@ -6,6 +6,7 @@
 #include <string>
 
 #include "BlockInWorld.hpp"
+#include "../Util.hpp"
 #include "../chunk/Chunk.hpp"
 
 namespace Position
@@ -23,12 +24,20 @@ namespace Position
 	// % can return a negative result, so do it properly here
 	// TODO: find out if std::mod works instead
 	#undef t
-	#define t(a) static_cast<BlockInChunk_type>(a - CHUNK_SIZE * std::floor(a / static_cast<double>(CHUNK_SIZE)))
+	#define t(a) static_cast<BlockInChunk_type>(Util::mod(a, CHUNK_SIZE))
 	BlockInChunk::BlockInChunk(const BlockInWorld& pos)
 	{
 		x = t(pos.x);
 		y = t(pos.y);
 		z = t(pos.z);
+	}
+
+	BlockInChunk_type BlockInChunk::operator[](const uint_fast8_t i) const
+	{
+		if(i == 0) return x;
+		if(i == 1) return y;
+		if(i == 2) return z;
+		throw std::out_of_range("Position::BlockInChunk::operator[]: " + std::to_string(i) + " > 2");
 	}
 
 	BlockInChunk_type& BlockInChunk::operator[](const uint_fast8_t i)
@@ -46,6 +55,11 @@ namespace Position
 		z += that.z;
 		check_bounds();
 		return *this;
+	}
+
+	bool BlockInChunk::operator==(const BlockInChunk& that) const
+	{
+		return (x == that.x) && (y == that.y) && (z == that.z);
 	}
 
 	void BlockInChunk::check_bounds()

@@ -15,6 +15,7 @@ namespace Position
 		ChunkInWorld(ChunkInWorld_type x, ChunkInWorld_type y, ChunkInWorld_type z);
 		explicit ChunkInWorld(const BlockInWorld&);
 
+		ChunkInWorld_type operator[](uint_fast8_t) const;
 		ChunkInWorld_type& operator[](uint_fast8_t);
 		ChunkInWorld& operator+=(const ChunkInWorld&);
 		bool operator==(const ChunkInWorld&) const;

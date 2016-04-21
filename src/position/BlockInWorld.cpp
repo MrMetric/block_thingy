@@ -45,6 +45,14 @@ namespace Position
 		this->z = t(z);
 	}
 
+	BlockInWorld_type BlockInWorld::operator[](const uint_fast8_t i) const
+	{
+		if(i == 0) return x;
+		if(i == 1) return y;
+		if(i == 2) return z;
+		throw std::out_of_range("Position::BlockInWorld::operator[]: " + std::to_string(i) + " > 2");
+	}
+
 	BlockInWorld_type& BlockInWorld::operator[](const uint_fast8_t i)
 	{
 		if(i == 0) return x;
@@ -61,6 +69,11 @@ namespace Position
 		return *this;
 	}
 
+	bool BlockInWorld::operator==(const BlockInWorld& that) const
+	{
+		return (x == that.x) && (y == that.y) && (z == that.z);
+	}
+
 	BlockInWorld operator+(const BlockInWorld& pos, const glm::ivec3& vec)
 	{
 		return Position::BlockInWorld(pos.x + vec.x, pos.y + vec.y, pos.z + vec.z);
@@ -70,10 +83,5 @@ namespace Position
 	{
 		os << "(" << pos.x << "," << pos.y << "," << pos.z << ")";
 		return os;
-	}
-
-	bool operator==(const BlockInWorld& pos1, const BlockInWorld& pos2)
-	{
-		return (pos1.x == pos2.x) && (pos1.y == pos2.y) && (pos1.z == pos2.z);
 	}
 }

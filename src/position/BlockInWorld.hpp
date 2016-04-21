@@ -20,14 +20,15 @@ namespace Position
 		explicit BlockInWorld(const glm::dvec3&);
 		BlockInWorld(double x, double y, double z);
 
+		BlockInWorld_type operator[](uint_fast8_t) const;
 		BlockInWorld_type& operator[](uint_fast8_t);
 		BlockInWorld& operator+=(const BlockInWorld&);
+		bool operator==(const BlockInWorld&) const;
 
 		BlockInWorld_type x, y, z;
 	};
 
 	BlockInWorld operator+(const BlockInWorld&, const glm::ivec3&);
-	bool operator==(const BlockInWorld&, const BlockInWorld&);
 
 	std::ostream& operator<<(std::ostream&, const BlockInWorld&);
 }
