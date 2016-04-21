@@ -295,6 +295,11 @@ void Game::add_commands()
 			return;
 		}
 		std::ifstream file("scripts/" + args[0]);
+		if(!file.is_open())
+		{
+			game.console.error_logger << "script not found: " << args[0] << "\n";
+			return;
+		}
 		std::string line;
 		while(std::getline(file, line))
 		{
