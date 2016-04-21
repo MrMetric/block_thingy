@@ -5,6 +5,7 @@
 #include <functional>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
@@ -261,7 +262,8 @@ void Game::add_commands()
 		}
 		std::string save_name = args[0];
 		std::ofstream streem(save_name);
-		streem << game.player.position.x << " " << game.player.position.y << " " << game.player.position.z << " ";
+		streem.precision(std::numeric_limits<double>::max_digits10);
+		streem << game.player.position.x << " " << game.player.position.y << " " << game.player.position.z << "\n";
 		streem << game.player.rotation.x << " " << game.player.rotation.y << " " << game.player.rotation.z;
 		streem.flush();
 		game.console.logger << "saved position and rotation to " << save_name << "\n";
