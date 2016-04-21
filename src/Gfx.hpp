@@ -5,6 +5,7 @@
 
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <graphics/OpenGL/ShaderProgram.hpp>
 #include <graphics/OpenGL/VertexArray.hpp>
@@ -14,7 +15,6 @@
 
 struct GLFWwindow;
 
-class Camera;
 class EventManager;
 namespace Position
 {
@@ -51,7 +51,7 @@ class Gfx
 		static void uninit_glfw(GLFWwindow* window);
 		void opengl_setup();
 		void toggle_cull_face();
-		void set_camera_view(const Camera& cam);
+		void set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation);
 		void draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color);
 		const ShaderProgram& get_block_shader(BlockType) const;
 

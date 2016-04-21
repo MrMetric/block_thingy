@@ -82,7 +82,7 @@ void Game::draw()
 	camera.position.y += player.get_eye_height();
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	gfx.set_camera_view(camera);
+	gfx.set_camera_view(camera.position, camera.rotation);
 	Position::BlockInWorld render_origin(player.position);
 	RenderWorld::draw_world(world, gfx.block_shaders, gfx.matriks, render_origin, render_distance);
 	find_hovered_block(gfx.projection_matrix, gfx.view_matrix);

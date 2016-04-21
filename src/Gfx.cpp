@@ -25,7 +25,6 @@
 #endif
 
 #include "BlockType.hpp"
-#include "Camera.hpp"
 #include "Cube.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
@@ -141,13 +140,13 @@ void Gfx::update_projection_matrix()
 	projection_matrix = glm::perspective(fov, aspect_ratio, near, far);
 }
 
-void Gfx::set_camera_view(const Camera& cam)
+void Gfx::set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation)
 {
 	view_matrix = glm::dmat4(1);
-	view_matrix *= glm::rotate(glm::radians(cam.rotation.x), glm::dvec3(1, 0, 0));
-	view_matrix *= glm::rotate(glm::radians(cam.rotation.y), glm::dvec3(0, 1, 0));
-	view_matrix *= glm::rotate(glm::radians(cam.rotation.z), glm::dvec3(0, 0, 1));
-	view_matrix *= glm::translate(-1.0 * cam.position);
+	view_matrix *= glm::rotate(glm::radians(rotation.x), glm::dvec3(1, 0, 0));
+	view_matrix *= glm::rotate(glm::radians(rotation.y), glm::dvec3(0, 1, 0));
+	view_matrix *= glm::rotate(glm::radians(rotation.z), glm::dvec3(0, 0, 1));
+	view_matrix *= glm::translate(-1.0 * position);
 	matriks = glm::mat4(projection_matrix * view_matrix);
 }
 
