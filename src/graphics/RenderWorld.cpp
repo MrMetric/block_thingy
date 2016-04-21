@@ -12,7 +12,7 @@
 void RenderWorld::draw_world(
 	World& world,
 	const std::map<BlockType, ShaderProgram>& block_shaders,
-	const glm::mat4& matriks,
+	const glm::dmat4& matriks,
 	const Position::BlockInWorld& origin,
 	const ChunkInWorld_type render_distance
 )
@@ -20,7 +20,7 @@ void RenderWorld::draw_world(
 	for(const auto& p : block_shaders)
 	{
 		const ShaderProgram& shader = p.second;
-		shader.uniform("matriks", matriks);
+		shader.uniform("matriks", glm::mat4(matriks));
 	}
 
 	Position::ChunkInWorld chunk_pos(origin);

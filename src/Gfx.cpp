@@ -147,7 +147,7 @@ void Gfx::set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation
 	view_matrix *= glm::rotate(glm::radians(rotation.y), glm::dvec3(0, 1, 0));
 	view_matrix *= glm::rotate(glm::radians(rotation.z), glm::dvec3(0, 0, 1));
 	view_matrix *= glm::translate(-1.0 * position);
-	matriks = glm::mat4(projection_matrix * view_matrix);
+	matriks = projection_matrix * view_matrix;
 }
 
 // TODO: use GL_LINES

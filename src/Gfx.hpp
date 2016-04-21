@@ -37,7 +37,7 @@ class Gfx
 		glm::dmat4 view_matrix;
 
 		VertexArray vertex_array;
-		glm::mat4 matriks;
+		glm::dmat4 matriks;
 
 		std::map<BlockType, ShaderProgram> block_shaders;
 

@@ -19,7 +19,7 @@ namespace RenderWorld
 	void draw_world(
 		World& world,
 		const std::map<BlockType, ShaderProgram>& block_shaders,
-		const glm::mat4& matriks,
+		const glm::dmat4& matriks,
 		const Position::BlockInWorld& origin,
 		ChunkInWorld_type render_distance
 	);
