@@ -32,10 +32,11 @@ const Block& ChunkMesher::block_at(const int_fast16_t x, const int_fast16_t y, c
 			return none;
 		}
 		Position::ChunkInWorld chunk_pos = chunk.get_position();
-		BlockInWorld_type bx = chunk_pos.x * CHUNK_SIZE + x;
-		BlockInWorld_type by = chunk_pos.y * CHUNK_SIZE + y;
-		BlockInWorld_type bz = chunk_pos.z * CHUNK_SIZE + z;
-		return chunk.get_owner().get_block_const({bx, by, bz});
+		Position::BlockInWorld block_pos(chunk_pos, {0, 0, 0});
+		block_pos.x += x;
+		block_pos.y += y;
+		block_pos.z += z;
+		return chunk.get_owner().get_block_const(block_pos);
 	}
 	#define s(a) static_cast<BlockInChunk_type>(a)
 	return chunk.get_block_const(s(x), s(y), s(z));
