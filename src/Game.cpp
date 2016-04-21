@@ -76,24 +76,20 @@ Game::Game(GLFWwindow* window, const uint_fast32_t width, const uint_fast32_t he
 
 void Game::draw()
 {
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-	gfx.set_camera_view(camera);
-
 	player.rotation = camera.rotation;
 	world.step(delta_time);
 	camera.position = player.position;
 	camera.position.y += player.get_eye_height();
 
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	gfx.set_camera_view(camera);
 	Position::BlockInWorld render_origin(player.position);
 	RenderWorld::draw_world(world, gfx.block_shaders, gfx.matriks, render_origin, render_distance);
 	find_hovered_block(gfx.projection_matrix, gfx.view_matrix);
 	gui.draw(gfx);
-
 	glfwSwapBuffers(window);
-	glfwPollEvents();
 
-	delta_time = fps.enforceFPS();
+	glfwPollEvents();
 
 	std::stringstream ss;
 	ss << "Baby's First Voxel Engine | " << fps.getFPS() << " fps";
@@ -103,6 +99,8 @@ void Game::draw()
 	ss << " | chunk" << Position::ChunkInWorld(player_block_pos);
 	ss << " | chunkblock" << Position::BlockInChunk(player_block_pos);
 	glfwSetWindowTitle(window, ss.str().c_str());
+
+	delta_time = fps.enforceFPS();
 }
 
 #ifdef USE_LIBPNG
