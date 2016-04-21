@@ -26,11 +26,11 @@ void RenderWorld::draw_world(
 	Position::ChunkInWorld chunk_pos(origin);
 	Position::ChunkInWorld min = chunk_pos - render_distance;
 	Position::ChunkInWorld max = chunk_pos + render_distance;
-	for(int x = min.x; x <= max.x; ++x)
+	for(ChunkInWorld_type x = min.x; x <= max.x; ++x)
 	{
-		for(int y = min.y; y <= max.y; ++y)
+		for(ChunkInWorld_type y = min.y; y <= max.y; ++y)
 		{
-			for(int z = min.z; z <= max.z; ++z)
+			for(ChunkInWorld_type z = min.z; z <= max.z; ++z)
 			{
 				std::shared_ptr<Chunk> chunk = world.get_or_make_chunk({ x, y, z });
 				chunk->render();
