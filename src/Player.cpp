@@ -150,14 +150,29 @@ void Player::respawn()
 	position.x = position.y = position.z = 0;
 	rotation.x = rotation.y = rotation.z = 0; // TODO: improve design (this needs to be set in the camera, not here)
 
-	while(!block_is_at({position.x, position.y, position.z}))
+	// TODO: make a better solution
+	static const uint_fast8_t loop_limit = 128;
+	uint_fast8_t i = 0;
+	Position::BlockInWorld block_pos(position);
+	while(!block_is_at(block_pos))
 	{
-		--position.y;
+		--block_pos.y;
+		++i;
+		if(i >= loop_limit)
+		{
+			break;
+		}
 	}
-	while(block_is_at({position.x, position.y, position.z}))
+	while(block_is_at(block_pos))
 	{
-		++position.y;
+		++block_pos.y;
+		++i;
+		if(i >= loop_limit)
+		{
+			break;
+		}
 	}
+	position.y = block_pos.y;
 
 	velocity.x = velocity.y = velocity.z = 0;
 }
