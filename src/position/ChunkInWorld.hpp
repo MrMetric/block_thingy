@@ -28,5 +28,7 @@ namespace Position
 	ChunkInWorld operator+(const ChunkInWorld&, ChunkInWorld_type);
 	ChunkInWorld operator*(const ChunkInWorld&, ChunkInWorld_type);
 
+	ChunkInWorld operator-(const ChunkInWorld&, const ChunkInWorld&);
+
 	std::ostream& operator<<(std::ostream&, const ChunkInWorld&);
 }

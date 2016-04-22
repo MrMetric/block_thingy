@@ -26,11 +26,15 @@
 
 #include "BlockType.hpp"
 #include "Cube.hpp"
+#include "Game.hpp"
+#include "chunk/Chunk.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"
 #include "graphics/primitive.hpp"
+#include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
+#include "position/ChunkInWorld.hpp"
 
 Gfx::Gfx(GLFWwindow* window, EventManager& event_manager)
 	:
@@ -142,17 +146,24 @@ void Gfx::update_projection_matrix()
 
 void Gfx::set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation)
 {
-	view_matrix = glm::dmat4(1);
+	glm::dmat4 view_matrix(1);
 	view_matrix *= glm::rotate(glm::radians(rotation.x), glm::dvec3(1, 0, 0));
 	view_matrix *= glm::rotate(glm::radians(rotation.y), glm::dvec3(0, 1, 0));
 	view_matrix *= glm::rotate(glm::radians(rotation.z), glm::dvec3(0, 0, 1));
-	view_matrix *= glm::translate(-1.0 * position);
-	matriks = projection_matrix * view_matrix;
+
+	view_matrix_physical = view_matrix * glm::translate(-1.0 * position);
+	view_matrix_graphical = view_matrix * glm::translate(-1.0 * glm::mod(position, static_cast<double>(CHUNK_SIZE)));
+
+	matriks = projection_matrix * view_matrix_graphical;
 }
 
 // TODO: use GL_LINES
-void Gfx::draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color)
+void Gfx::draw_cube_outline(const Position::BlockInWorld& block_pos, const glm::vec4& color)
 {
+	const Position::ChunkInWorld chunk_pos(block_pos);
+	const auto chunk_pos_graphical = chunk_pos - Position::ChunkInWorld(Position::BlockInWorld(Game::instance->camera.position));
+	const Position::BlockInWorld pos(chunk_pos_graphical, Position::BlockInChunk(block_pos));
+
 	vertex_coord_t<GLfloat> vertexes[16];
 	// damn thing is not Eulerian
 	// TODO: determine shortest path

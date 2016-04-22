@@ -25,6 +25,9 @@ namespace Position
 		BlockInWorld& operator+=(const BlockInWorld&);
 		bool operator==(const BlockInWorld&) const;
 
+		// WARNING: due to limited float range, do not use this for large values
+		operator glm::vec3() const;
+
 		BlockInWorld_type x, y, z;
 	};
 

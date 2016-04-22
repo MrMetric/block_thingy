@@ -14,10 +14,12 @@
 #include "mesh/GreedyMesher.hpp"
 #include "../Block.hpp"
 #include "../BlockType.hpp"
+#include "../Camera.hpp"
 #include "../Game.hpp"
 #include "../Gfx.hpp"
 #include "../World.hpp"
 #include "../position/BlockInChunk.hpp"
+#include "../position/BlockInWorld.hpp"
 #include "../position/ChunkInWorld.hpp"
 
 #include "std_make_unique.hpp"
@@ -135,7 +137,8 @@ void Chunk::render()
 		changed = false;
 	}
 
-	const glm::vec3 pos_mod = glm::vec3(position.x, position.y, position.z) * static_cast<float>(CHUNK_SIZE);
+	const Position::ChunkInWorld render_position = position - Position::ChunkInWorld(Position::BlockInWorld(Game::instance->camera.position));
+	const Position::BlockInWorld position_render_offset(render_position, {0, 0, 0});
 	size_t i = 0;
 	for(auto p : meshes)
 	{
@@ -143,7 +146,7 @@ void Chunk::render()
 		const ShaderProgram& shader = Game::instance->gfx.get_block_shader(type);
 		glUseProgram(shader.get_name());
 
-		shader.uniform("pos_mod", pos_mod);
+		shader.uniform("position_offset", static_cast<glm::vec3>(position_render_offset));
 		shader.uniform("global_time", static_cast<float>(glfwGetTime())); // TODO: use double when available
 
 		glEnableVertexAttribArray(0);

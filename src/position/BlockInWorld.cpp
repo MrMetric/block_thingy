@@ -74,6 +74,11 @@ namespace Position
 		return (x == that.x) && (y == that.y) && (z == that.z);
 	}
 
+	BlockInWorld::operator glm::vec3() const
+	{
+		return glm::vec3(x, y, z);
+	}
+
 	BlockInWorld operator+(const BlockInWorld& pos, const glm::ivec3& vec)
 	{
 		return Position::BlockInWorld(pos.x + vec.x, pos.y + vec.y, pos.z + vec.z);

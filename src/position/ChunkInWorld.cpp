@@ -74,6 +74,11 @@ namespace Position
 		return ChunkInWorld(pos.x * a, pos.y * a, pos.z * a);
 	}
 
+	ChunkInWorld operator-(const ChunkInWorld& pos1, const ChunkInWorld& pos2)
+	{
+		return ChunkInWorld(pos1.x - pos2.x, pos1.y - pos2.y, pos1.z - pos2.z);
+	}
+
 	std::ostream& operator<<(std::ostream& os, const ChunkInWorld& pos)
 	{
 		os << "(" << pos.x << "," << pos.y << "," << pos.z << ")";

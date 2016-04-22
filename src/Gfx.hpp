@@ -34,7 +34,8 @@ class Gfx
 		uint_fast32_t width;
 		uint_fast32_t height;
 		glm::dmat4 projection_matrix;
-		glm::dmat4 view_matrix;
+		glm::dmat4 view_matrix_physical;
+		glm::dmat4 view_matrix_graphical;
 
 		VertexArray vertex_array;
 		glm::dmat4 matriks;
@@ -52,7 +53,7 @@ class Gfx
 		void opengl_setup();
 		void toggle_cull_face();
 		void set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation);
-		void draw_cube_outline(Position::BlockInWorld pos, const glm::vec4& color);
+		void draw_cube_outline(const Position::BlockInWorld&, const glm::vec4& color);
 		const ShaderProgram& get_block_shader(BlockType) const;
 
 		#ifdef USE_LIBPNG

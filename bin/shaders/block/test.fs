@@ -1,15 +1,15 @@
 #version 330
 
 out vec4 FragColor;
-in vec3 vPos;
+in vec3 position;
 
 vec3 color(vec3 coords)
 {
-	return abs(mod(vPos - 1.0, 2.0) - 1.0);
+	return abs(mod(position - 1.0, 2.0) - 1.0);
 }
 
 void main()
 {
-	vec3 c = color(vPos);
+	vec3 c = color(position);
 	FragColor = vec4(c, 1.0);
 }

@@ -1,7 +1,7 @@
 #version 330
 
 out vec4 FragColor;
-in vec3 vPos;
+in vec3 position;
 uniform float global_time;
 
 float discretestep(float split, float x)
@@ -11,7 +11,7 @@ float discretestep(float split, float x)
 
 int get_side()
 {
-	vec3 f = fract(vPos);
+	vec3 f = fract(position);
 	if(f.x != 0.0 && f.y != 0.0 && f.z == 0.0)
 	{
 		return 0;
@@ -30,13 +30,13 @@ int get_side()
 vec2 get_side_coords()
 {
 	int side = get_side();
-	if(side == 0) return vPos.xy;
-	if(side == 1) return vPos.xz;
-	if(side == 2) return vPos.yz;
+	if(side == 0) return position.xy;
+	if(side == 1) return position.xz;
+	if(side == 2) return position.yz;
 	return vec2(0.0);
 }
 
-float radius = 0.3 * (sin(4.0 * global_time + length(vPos))/4.0 + 1.0);
+float radius = 0.3 * (sin(4.0 * global_time + length(position))/4.0 + 1.0);
 const float radius_max = 0.3 * (1.0 / 4.0 + 1.0);
 float radius_scaled = radius / radius_max;
 
