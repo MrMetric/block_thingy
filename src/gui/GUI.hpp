@@ -5,6 +5,8 @@
 #include <graphics/OpenGL/ShaderProgram.hpp>
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
+#include <types/window_size_t.hpp>
+
 class Gfx;
 class EventManager;
 
@@ -17,7 +19,7 @@ class GUI
 		GUI(const GUI&) = delete;
 		void operator=(const GUI&) = delete;
 
-		void update_framebuffer_size(uint_fast32_t width, uint_fast32_t height);
+		void update_framebuffer_size(const window_size_t&);
 		void draw(const Gfx&);
 
 	private:

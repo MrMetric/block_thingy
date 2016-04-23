@@ -1,12 +1,11 @@
 #include "../Event.hpp"
 
-#include <cstdint>
+#include <types/window_size_t.hpp>
 
 class Event_window_size_change : public Event
 {
 	public:
-		Event_window_size_change(uint_fast32_t width, uint_fast32_t height);
+		Event_window_size_change(const window_size_t&);
 
-		uint_fast32_t width;
-		uint_fast32_t height;
+		window_size_t window_size;
 };

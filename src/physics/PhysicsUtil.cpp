@@ -65,7 +65,7 @@ static glm::dvec3 delta(const glm::dvec3& direction)
 
 void PhysicsUtil::ScreenPosToWorldRay(
 	const glm::dvec2& mouse,              // Mouse position, in pixels, from bottom-left corner of the window
-	const glm::uvec2& screen_size,        // Window size, in pixels
+	const window_size_t& screen_size,     // Window size, in pixels
 	const glm::dmat4& view_matrix,        // Camera position and orientation
 	const glm::dmat4& projection_matrix,  // Camera parameters (ratio, field of view, near and far planes)
 	glm::dvec3& out_origin,               // Ouput : Origin of the ray. /!\ Starts at the near plane, so if you want the ray to start at the camera's position instead, ignore this.

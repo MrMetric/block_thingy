@@ -10,7 +10,8 @@
 #include "Gfx.hpp"
 #include "Util.hpp"
 
-#include "std_make_unique.hpp"
+#include <std_make_unique.hpp>
+#include <types/window_size_t.hpp>
 
 // http://www.lighthouse3d.com/cg-topics/error-tracking-in-opengl/
 void printOglError(const std::string& file, const int line)
@@ -56,11 +57,11 @@ int main(int argc, char** argv)
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
 
-	static std::unique_ptr<Game> game = std::make_unique<Game>(window, width, height); printOpenGLError();
+	static std::unique_ptr<Game> game = std::make_unique<Game>(window, window_size_t(width, height)); printOpenGLError();
 
 	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height)
 	{
-		game->update_framebuffer_size(static_cast<uint_fast32_t>(width), static_cast<uint_fast32_t>(height));
+		game->update_framebuffer_size(window_size_t(width, height));
 	});
 	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 	{

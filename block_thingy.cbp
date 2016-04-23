@@ -134,6 +134,7 @@
 		<Unit filename="src/std_make_unique.hpp" />
 		<Unit filename="src/storage/WorldFile.cpp" />
 		<Unit filename="src/storage/WorldFile.hpp" />
+		<Unit filename="src/types/window_size_t.hpp" />
 		<Unit filename="src/util/Property.hpp" />
 		<Extensions>
 			<code_completion />

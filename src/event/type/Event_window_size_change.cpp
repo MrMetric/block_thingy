@@ -2,11 +2,10 @@
 
 #include "../EventType.hpp"
 
-Event_window_size_change::Event_window_size_change(const uint_fast32_t width, const uint_fast32_t height)
+Event_window_size_change::Event_window_size_change(const window_size_t& window_size)
 	:
 	Event(EventType::window_size_change),
-	width(width),
-	height(height)
+	window_size(window_size)
 {
 }
 

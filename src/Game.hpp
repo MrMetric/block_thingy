@@ -22,12 +22,14 @@
 #include "position/ChunkInWorld.hpp"
 #include "util/Property.hpp"
 
+#include <types/window_size_t.hpp>
+
 class Player;
 
 class Game
 {
 	public:
-		Game(GLFWwindow* window, uint_fast32_t width, uint_fast32_t height);
+		Game(GLFWwindow* window, const window_size_t&);
 
 		Game(Game&&) = delete;
 		Game(const Game&) = delete;
@@ -37,7 +39,7 @@ class Game
 		#ifdef USE_LIBPNG
 		void screenshot(const std::string& filename);
 		#endif
-		void update_framebuffer_size(uint_fast32_t width, uint_fast32_t height);
+		void update_framebuffer_size(const window_size_t&);
 		void keypress(int key, int scancode, int action, int mods);
 		void mousepress(int button, int action, int mods);
 		void mousemove(double x, double y);

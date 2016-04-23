@@ -18,8 +18,7 @@ Camera::Camera(GLFWwindow* window, EventManager& event_manager)
 	event_manager.add_handler(EventType::window_size_change, [this, window](const Event& event)
 	{
 		auto e = static_cast<const Event_window_size_change&>(event);
-		window_mid.x = e.width / 2;
-		window_mid.y = e.height / 2;
+		window_mid = glm::dvec2(e.window_size) / 2.0;
 		glfwSetCursorPos(window, window_mid.x, window_mid.y);
 	});
 }

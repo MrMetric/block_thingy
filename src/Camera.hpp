@@ -1,5 +1,4 @@
 #pragma once
-
 // based on http://r3dux.org/2012/12/a-c-camera-class-for-simple-opengl-fps-controls/
 
 #include <glm/vec2.hpp>
@@ -26,5 +25,5 @@ class Camera
 		double sensitivity;
 
 		GLFWwindow* window;
-		glm::tvec2<uint_fast32_t> window_mid;
+		glm::dvec2 window_mid;
 };

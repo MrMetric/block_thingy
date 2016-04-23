@@ -6,6 +6,8 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+#include <types/window_size_t.hpp>
+
 struct RaycastHit;
 class World;
 
@@ -13,7 +15,7 @@ namespace PhysicsUtil
 {
 	void ScreenPosToWorldRay(
 		const glm::dvec2& mouse_pos,
-		const glm::uvec2& screen_size,
+		const window_size_t&,
 		const glm::dmat4& view_matrix,
 		const glm::dmat4& projection_matrix,
 		glm::dvec3& out_origin,

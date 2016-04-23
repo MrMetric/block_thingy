@@ -13,6 +13,8 @@
 
 #include "BlockType.hpp"
 
+#include <types/window_size_t.hpp>
+
 struct GLFWwindow;
 
 class EventManager;
@@ -31,8 +33,7 @@ class Gfx
 		void operator=(const Gfx&) = delete;
 
 		GLFWwindow* window;
-		uint_fast32_t width;
-		uint_fast32_t height;
+		window_size_t window_size;
 		glm::dmat4 projection_matrix;
 		glm::dmat4 view_matrix_physical;
 		glm::dmat4 view_matrix_graphical;

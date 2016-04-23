@@ -45,7 +45,7 @@
 
 Game* Game::instance = nullptr;
 
-Game::Game(GLFWwindow* window, const uint_fast32_t width, const uint_fast32_t height)
+Game::Game(GLFWwindow* window, const window_size_t& window_size)
 	:
 	window(window),
 	hovered_block(nullptr),
@@ -70,7 +70,7 @@ Game::Game(GLFWwindow* window, const uint_fast32_t width, const uint_fast32_t he
 	add_commands();
 	console.run_line("exec binds");
 
-	update_framebuffer_size(width, height);
+	update_framebuffer_size(window_size);
 
 	camera.rotation = player.rotation; // keep saved value
 }
@@ -108,15 +108,17 @@ void Game::draw()
 void Game::screenshot(const std::string& filename)
 {
 	console.logger << "saving screenshot to " << filename << "\n";
-	std::unique_ptr<GLubyte[]> pixels = std::make_unique<GLubyte[]>(3 * gfx.width * gfx.height);
-	glReadPixels(0, 0, gfx.width, gfx.height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
-	Gfx::write_png_RGB(filename.c_str(), pixels.get(), gfx.width, gfx.height, true);
+	const auto width = gfx.window_size.x;
+	const auto height = gfx.window_size.y;
+	std::unique_ptr<GLubyte[]> pixels = std::make_unique<GLubyte[]>(3 * width * height);
+	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
+	Gfx::write_png_RGB(filename.c_str(), pixels.get(), width, height, true);
 }
 #endif
 
-void Game::update_framebuffer_size(const uint_fast32_t width, const uint_fast32_t height)
+void Game::update_framebuffer_size(const window_size_t& window_size)
 {
-	event_manager.do_event(Event_window_size_change(width, height));
+	event_manager.do_event(Event_window_size_change(window_size));
 }
 
 void Game::keypress(const int key, const int scancode, const int action, const int mods)
@@ -167,8 +169,8 @@ void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dm
 	glm::dvec3 out_origin;
 	glm::dvec3 out_direction;
 	PhysicsUtil::ScreenPosToWorldRay(
-		glm::vec2(gfx.width / 2.0, gfx.height / 2.0),
-		glm::uvec2(gfx.width, gfx.height),
+		glm::dvec2(gfx.window_size) / 2.0,
+		gfx.window_size,
 		view_matrix,
 		projection_matrix,
 		out_origin,

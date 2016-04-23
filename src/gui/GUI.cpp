@@ -20,14 +20,14 @@ GUI::GUI(EventManager& event_manager)
 	event_manager.add_handler(EventType::window_size_change, [self=this](const Event& event)
 	{
 		auto e = static_cast<const Event_window_size_change&>(event);
-		self->update_framebuffer_size(e.width, e.height);
+		self->update_framebuffer_size(e.window_size);
 	});
 }
 
-void GUI::update_framebuffer_size(const uint_fast32_t width, const uint_fast32_t height)
+void GUI::update_framebuffer_size(const window_size_t& window_size)
 {
-	float midX = width / 2.0f;
-	float midY = height / 2.0f;
+	float midX = window_size.x / 2.0f;
+	float midY = window_size.y / 2.0f;
 	GLfloat crosshair_vertex[] = {
 		midX - 16, midY - 1, 0,
 		midX - 16, midY + 1, 0,
@@ -64,7 +64,9 @@ void GUI::draw_crosshair(const Gfx& gfx)
 
 	glUseProgram(s_crosshair.get_name());
 
-	glm::mat4 crosshair_matrix = glm::ortho(0.0f, static_cast<float>(gfx.width), static_cast<float>(gfx.height), 0.0f, -1.0f, 1.0f);
+	const float width = gfx.window_size.x;
+	const float height = gfx.window_size.y;
+	glm::mat4 crosshair_matrix = glm::ortho(0.0f, width, height, 0.0f, -1.0f, 1.0f);
 	s_crosshair.uniform("matriks", crosshair_matrix);
 
 	glEnableVertexAttribArray(0);

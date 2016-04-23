@@ -41,18 +41,14 @@ Gfx::Gfx(GLFWwindow* window, EventManager& event_manager)
 	window(window),
 	s_lines("shaders/lines")
 {
-	width = 0;
-	height = 0;
-
 	opengl_setup();
 
 	event_manager.add_handler(EventType::window_size_change, [this](const Event& event)
 	{
 		auto e = static_cast<const Event_window_size_change&>(event);
 
-		width = e.width;
-		height = e.height;
-		glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+		window_size = e.window_size;
+		glViewport(0, 0, static_cast<GLsizei>(window_size.x), static_cast<GLsizei>(window_size.y));
 		update_projection_matrix();
 	});
 }
@@ -137,10 +133,12 @@ void Gfx::toggle_cull_face()
 
 void Gfx::update_projection_matrix()
 {
-	const GLfloat fov  = 45.0f;
-	const GLfloat near = 0.01f;
-	const GLfloat far  = 1500.0f;
-	const GLfloat aspect_ratio = (width > height) ? float(width)/float(height) : float(height)/float(width);
+	const float fov  = 45.0f;
+	const float near = 0.01f;
+	const float far  = 1500.0f;
+	const float width = window_size.x;
+	const float height = window_size.y;
+	const float aspect_ratio = (width > height) ? (width / height) : (height / width);
 	projection_matrix = glm::perspective(fov, aspect_ratio, near, far);
 }
 
