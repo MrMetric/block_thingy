@@ -10,7 +10,6 @@
 
 #include "ShaderObject.hpp"
 #include "../../Util.hpp"
-#include "../../position/ChunkInWorld.hpp"
 
 #include "std_make_unique.hpp"
 

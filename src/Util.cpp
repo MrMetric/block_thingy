@@ -1,6 +1,7 @@
 #include "Util.hpp"
 
 #include <cerrno>
+#include <cmath>
 #include <cstdint>
 #include <cstring>
 #include <fstream>

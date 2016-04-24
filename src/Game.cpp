@@ -4,7 +4,6 @@
 #include <fstream>
 #include <functional>
 #include <iomanip>
-#include <iostream>
 #include <limits>
 #include <memory>
 #include <sstream>
@@ -29,9 +28,7 @@
 #include "World.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
-#include "event/Event.hpp"
 #include "event/EventManager.hpp"
-#include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"
 #include "graphics/RenderWorld.hpp"
 #include "gui/GUI.hpp"

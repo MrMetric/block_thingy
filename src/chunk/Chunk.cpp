@@ -10,6 +10,8 @@
 #include <graphics/OpenGL/ShaderProgram.hpp>
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
+#include <glm/vec3.hpp>
+
 #include "mesh/ChunkMesher.hpp"
 #include "mesh/GreedyMesher.hpp"
 #include "../Block.hpp"

@@ -10,8 +10,8 @@
 #include "Gfx.hpp"
 #include "Util.hpp"
 
-#include <std_make_unique.hpp>
-#include <types/window_size_t.hpp>
+#include "std_make_unique.hpp"
+#include "types/window_size_t.hpp"
 
 // http://www.lighthouse3d.com/cg-topics/error-tracking-in-opengl/
 void printOglError(const std::string& file, const int line)

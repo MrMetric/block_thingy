@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdint>
-
 #include <graphics/OpenGL/ShaderProgram.hpp>
 #include <graphics/OpenGL/VertexBuffer.hpp>
 

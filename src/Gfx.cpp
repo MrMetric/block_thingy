@@ -13,6 +13,7 @@
 #include <graphics/OpenGL/VertexArray.hpp>
 #include <graphics/OpenGL/VertexBuffer.hpp>
 
+#include <glm/common.hpp>					// glm::mod
 #include <glm/mat4x4.hpp>
 #include <glm/trigonometric.hpp>			// glm::radians
 #include <glm/vec3.hpp>
@@ -25,6 +26,7 @@
 #endif
 
 #include "BlockType.hpp"
+#include "Camera.hpp"
 #include "Cube.hpp"
 #include "Game.hpp"
 #include "chunk/Chunk.hpp"

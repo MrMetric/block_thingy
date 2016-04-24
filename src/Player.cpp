@@ -1,6 +1,7 @@
 #include "Player.hpp"
 
 #include <cmath>
+#include <cstdint>
 
 #include <glm/common.hpp>			// glm::sign
 #include <glm/trigonometric.hpp>	// glm::radians
@@ -8,6 +9,7 @@
 
 #include "Block.hpp"
 #include "Game.hpp"
+#include "World.hpp"
 #include "position/BlockInWorld.hpp"
 
 Player::Player(const std::string& name)

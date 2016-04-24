@@ -3,8 +3,6 @@
 
 #include <cstdint>
 
-#include <glad/glad.h>
-
 #include "../../position/BlockInChunk.hpp"
 
 class SimpleMesher : public ChunkMesher

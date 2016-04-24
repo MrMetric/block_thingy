@@ -1,5 +1,6 @@
 #include "GreedyMesher.hpp"
 
+#include <algorithm>
 #include <cstdint>
 
 #include <glad/glad.h>
