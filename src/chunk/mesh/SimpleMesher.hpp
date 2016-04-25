@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include "../../position/BlockInChunk.hpp"
+#include "position/BlockInChunk.hpp"
 
 class SimpleMesher : public ChunkMesher
 {

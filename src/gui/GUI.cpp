@@ -1,17 +1,17 @@
 #include "GUI.hpp"
 
 #include <glad/glad.h>
-#include <graphics/OpenGL/ShaderProgram.hpp>
-#include <graphics/OpenGL/VertexBuffer.hpp>
+#include "graphics/OpenGL/ShaderProgram.hpp"
+#include "graphics/OpenGL/VertexBuffer.hpp"
 
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp> // glm::ortho
 
-#include "../Game.hpp"
-#include "../Gfx.hpp"
-#include "../event/EventManager.hpp"
-#include "../event/EventType.hpp"
-#include "../event/type/Event_window_size_change.hpp"
+#include "Game.hpp"
+#include "Gfx.hpp"
+#include "event/EventManager.hpp"
+#include "event/EventType.hpp"
+#include "event/type/Event_window_size_change.hpp"
 
 GUI::GUI(EventManager& event_manager)
 	:

@@ -5,6 +5,7 @@ LD = clang++
 CFLAGS = \
 	-march=native \
 	-isystem lib \
+	-iquote src \
 	-Weverything \
 	-Wno-missing-braces \
 	-Wno-missing-prototypes \
@@ -19,7 +20,6 @@ CFLAGS = \
 CXXFLAGS = $(CFLAGS) \
 	-std=c++14 \
 	-fexceptions \
-	-Isrc \
 	-Wno-c++98-compat-pedantic \
 	-Wno-shadow \
 	-Werror=delete-incomplete \

@@ -7,7 +7,8 @@
 
 #include "BlockInChunk.hpp"
 #include "ChunkInWorld.hpp"
-#include "../chunk/Chunk.hpp"
+
+#include "chunk/Chunk.hpp"
 
 namespace Position
 {

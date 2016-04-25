@@ -1,6 +1,6 @@
-#include "../Event.hpp"
+#include "event/Event.hpp"
 
-#include <types/window_size_t.hpp>
+#include "types/window_size_t.hpp"
 
 class Event_window_size_change : public Event
 {

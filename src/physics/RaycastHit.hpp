@@ -2,7 +2,7 @@
 
 #include <glm/vec3.hpp>
 
-#include "../position/BlockInWorld.hpp"
+#include "position/BlockInWorld.hpp"
 
 struct RaycastHit
 {

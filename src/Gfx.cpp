@@ -9,9 +9,9 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <graphics/OpenGL/ShaderProgram.hpp>
-#include <graphics/OpenGL/VertexArray.hpp>
-#include <graphics/OpenGL/VertexBuffer.hpp>
+#include "graphics/OpenGL/ShaderProgram.hpp"
+#include "graphics/OpenGL/VertexArray.hpp"
+#include "graphics/OpenGL/VertexBuffer.hpp"
 
 #include <glm/common.hpp>					// glm::mod
 #include <glm/mat4x4.hpp>

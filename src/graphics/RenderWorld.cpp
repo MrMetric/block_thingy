@@ -3,11 +3,11 @@
 #include <memory>
 #include <utility>
 
-#include "OpenGL/ShaderProgram.hpp"
-#include "../World.hpp"
-#include "../chunk/Chunk.hpp"
-#include "../position/BlockInWorld.hpp"
-#include "../position/ChunkInWorld.hpp"
+#include "World.hpp"
+#include "chunk/Chunk.hpp"
+#include "graphics/OpenGL/ShaderProgram.hpp"
+#include "position/BlockInWorld.hpp"
+#include "position/ChunkInWorld.hpp"
 
 void RenderWorld::draw_world(
 	World& world,

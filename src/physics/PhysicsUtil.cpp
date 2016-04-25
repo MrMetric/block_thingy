@@ -12,9 +12,10 @@
 #include <glm/vec4.hpp>
 
 #include "RaycastHit.hpp"
-#include "../Block.hpp"
-#include "../World.hpp"
-#include "../position/BlockInWorld.hpp"
+
+#include "Block.hpp"
+#include "World.hpp"
+#include "position/BlockInWorld.hpp"
 
 #include "std_make_unique.hpp"
 

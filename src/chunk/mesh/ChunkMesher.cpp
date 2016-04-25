@@ -2,13 +2,13 @@
 
 #include <cstdint>
 
-#include "../Chunk.hpp"
-#include "../../Block.hpp"
-#include "../../BlockType.hpp"
-#include "../../World.hpp"
-#include "../../position/BlockInChunk.hpp"
-#include "../../position/BlockInWorld.hpp"
-#include "../../position/ChunkInWorld.hpp"
+#include "Block.hpp"
+#include "BlockType.hpp"
+#include "World.hpp"
+#include "chunk/Chunk.hpp"
+#include "position/BlockInChunk.hpp"
+#include "position/BlockInWorld.hpp"
+#include "position/ChunkInWorld.hpp"
 
 ChunkMesher::ChunkMesher(const Chunk& chunk)
 	:

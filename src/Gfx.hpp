@@ -6,13 +6,13 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
-#include <graphics/OpenGL/ShaderProgram.hpp>
-#include <graphics/OpenGL/VertexArray.hpp>
-#include <graphics/OpenGL/VertexBuffer.hpp>
+#include "graphics/OpenGL/ShaderProgram.hpp"
+#include "graphics/OpenGL/VertexArray.hpp"
+#include "graphics/OpenGL/VertexBuffer.hpp"
 
 #include "BlockType.hpp"
 
-#include <types/window_size_t.hpp>
+#include "types/window_size_t.hpp"
 
 struct GLFWwindow;
 

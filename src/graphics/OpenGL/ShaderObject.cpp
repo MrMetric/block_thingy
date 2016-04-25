@@ -5,9 +5,9 @@
 
 #include <glad/glad.h>
 
-#include "../../Game.hpp"
-#include "../../Util.hpp"
-#include "../../console/Console.hpp"
+#include "Game.hpp"
+#include "Util.hpp"
+#include "console/Console.hpp"
 
 std::string get_log(const GLuint object);
 

@@ -7,22 +7,22 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <graphics/OpenGL/ShaderProgram.hpp>
-#include <graphics/OpenGL/VertexBuffer.hpp>
+#include "graphics/OpenGL/ShaderProgram.hpp"
+#include "graphics/OpenGL/VertexBuffer.hpp"
 
 #include <glm/vec3.hpp>
 
-#include "mesh/ChunkMesher.hpp"
-#include "mesh/GreedyMesher.hpp"
-#include "../Block.hpp"
-#include "../BlockType.hpp"
-#include "../Camera.hpp"
-#include "../Game.hpp"
-#include "../Gfx.hpp"
-#include "../World.hpp"
-#include "../position/BlockInChunk.hpp"
-#include "../position/BlockInWorld.hpp"
-#include "../position/ChunkInWorld.hpp"
+#include "Block.hpp"
+#include "BlockType.hpp"
+#include "Camera.hpp"
+#include "Game.hpp"
+#include "Gfx.hpp"
+#include "World.hpp"
+#include "chunk/mesh/ChunkMesher.hpp"
+#include "chunk/mesh/GreedyMesher.hpp"
+#include "position/BlockInChunk.hpp"
+#include "position/BlockInWorld.hpp"
+#include "position/ChunkInWorld.hpp"
 
 #include "std_make_unique.hpp"
 

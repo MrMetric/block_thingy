@@ -7,8 +7,8 @@
 
 #include <Poco/File.h>
 
-#include "../Player.hpp"
-#include "../World.hpp"
+#include "Player.hpp"
+#include "World.hpp"
 
 WorldFile::WorldFile(const std::string& world_path, World& world)
 	:

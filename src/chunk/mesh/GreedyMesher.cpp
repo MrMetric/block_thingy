@@ -6,9 +6,9 @@
 #include <glad/glad.h>
 #include <glm/vec3.hpp>
 
-#include "../Chunk.hpp"
-#include "../../Block.hpp"
-#include "../../position/BlockInChunk.hpp"
+#include "Block.hpp"
+#include "chunk/Chunk.hpp"
+#include "position/BlockInChunk.hpp"
 
 namespace GreedyMesherPrivate
 {

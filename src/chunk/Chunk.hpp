@@ -4,12 +4,12 @@
 #include <memory>
 #include <vector>
 
-#include <graphics/OpenGL/VertexBuffer.hpp>
+#include "graphics/OpenGL/VertexBuffer.hpp"
 
-#include "mesh/ChunkMesher.hpp"
-#include "../Block.hpp"
-#include "../position/BlockInChunk.hpp"
-#include "../position/ChunkInWorld.hpp"
+#include "Block.hpp"
+#include "chunk/mesh/ChunkMesher.hpp"
+#include "position/BlockInChunk.hpp"
+#include "position/ChunkInWorld.hpp"
 
 #define CHUNK_SIZE 32
 #define CHUNK_BLOCK_COUNT (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)

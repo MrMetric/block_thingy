@@ -4,8 +4,8 @@
 
 #include <glm/mat4x4.hpp>
 
-#include "../BlockType.hpp"
-#include "../position/ChunkInWorld.hpp"
+#include "BlockType.hpp"
+#include "position/ChunkInWorld.hpp"
 
 class ShaderProgram;
 class World;

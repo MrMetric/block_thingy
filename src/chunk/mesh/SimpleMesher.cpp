@@ -1,10 +1,10 @@
 #include "SimpleMesher.hpp"
 
-#include "../Chunk.hpp"
-#include "../../Block.hpp"
-#include "../../BlockType.hpp"
-#include "../../Cube.hpp"
-#include "../../position/BlockInChunk.hpp"
+#include "Block.hpp"
+#include "BlockType.hpp"
+#include "Cube.hpp"
+#include "chunk/Chunk.hpp"
+#include "position/BlockInChunk.hpp"
 
 SimpleMesher::SimpleMesher(const Chunk& chunk)
 	:

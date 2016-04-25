@@ -1,9 +1,9 @@
 #pragma once
 
-#include <graphics/OpenGL/ShaderProgram.hpp>
-#include <graphics/OpenGL/VertexBuffer.hpp>
+#include "graphics/OpenGL/ShaderProgram.hpp"
+#include "graphics/OpenGL/VertexBuffer.hpp"
 
-#include <types/window_size_t.hpp>
+#include "types/window_size_t.hpp"
 
 class Gfx;
 class EventManager;

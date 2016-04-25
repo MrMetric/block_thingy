@@ -43,6 +43,7 @@
 			<Add option="-std=c++14" />
 			<Add option="-fexceptions" />
 			<Add option="-isystem lib" />
+			<Add option="-iquote src" />
 			<Add option="-Wno-c++98-compat-pedantic" />
 			<Add option="-Wno-newline-eof" />
 			<Add option="-Wno-missing-prototypes" />
@@ -59,7 +60,6 @@
 			<Add option="-DUSE_LIBPNG" />
 			<Add option="-DMSGPACK_DISABLE_LEGACY_NIL" />
 			<Add option="-DMSGPACK_DISABLE_LEGACY_CONVERT" />
-			<Add directory="src" />
 		</Compiler>
 		<Linker>
 			<Add option="`pkg-config --static --libs glfw3`" />

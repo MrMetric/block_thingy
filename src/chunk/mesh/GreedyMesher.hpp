@@ -6,7 +6,7 @@
 
 #include <glm/vec3.hpp>
 
-#include "../../BlockType.hpp"
+#include "BlockType.hpp"
 
 namespace GreedyMesherPrivate
 {

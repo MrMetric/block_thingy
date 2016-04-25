@@ -6,8 +6,9 @@
 #include <string>
 
 #include "BlockInWorld.hpp"
-#include "../Util.hpp"
-#include "../chunk/Chunk.hpp"
+
+#include "Util.hpp"
+#include "chunk/Chunk.hpp"
 
 namespace Position
 {

@@ -1,6 +1,6 @@
 #include "Event_window_size_change.hpp"
 
-#include "../EventType.hpp"
+#include "event/EventType.hpp"
 
 Event_window_size_change::Event_window_size_change(const window_size_t& window_size)
 	:

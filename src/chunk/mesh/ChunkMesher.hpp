@@ -5,8 +5,8 @@
 
 #include <glad/glad.h>
 
-#include "../../BlockType.hpp"
-#include "../../graphics/primitive.hpp"
+#include "BlockType.hpp"
+#include "graphics/primitive.hpp"
 
 class Block;
 class Chunk;
