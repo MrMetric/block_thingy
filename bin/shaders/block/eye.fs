@@ -1,7 +1,5 @@
 #version 330
 
-#define TAU 6.283185307179586476925286766559
-
 out vec4 FragColor;
 in vec3 position;
 uniform float global_time;
