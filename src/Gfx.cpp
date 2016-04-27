@@ -207,12 +207,12 @@ const ShaderProgram& Gfx::get_block_shader(const BlockType type) const
 #ifdef USE_LIBPNG
 void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint_fast32_t width, const uint_fast32_t height, const bool reverse_rows)
 {
-	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+	png_struct* png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if(png_ptr == nullptr)
 	{
 		throw std::runtime_error("png_create_write_struct returned null");
 	}
-	png_infop info_ptr = png_create_info_struct(png_ptr);
+	png_info* info_ptr = png_create_info_struct(png_ptr);
 	if(info_ptr == nullptr)
 	{
 		png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
@@ -224,13 +224,15 @@ void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint_fast32_t 
 	{
 		png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
 		png_destroy_write_struct(&png_ptr, &info_ptr);
-		throw std::runtime_error(std::string("error opening png file: ") + strerror(errno));
+		throw std::runtime_error(std::string("error opening png file for writing: ") + strerror(errno));
 	}
 	png_init_io(png_ptr, fp);
 	const int bit_depth = 8;
-	png_set_IHDR(png_ptr, info_ptr, static_cast<png_uint_32>(width), static_cast<png_uint_32>(height), bit_depth, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+	const png_uint_32 w = static_cast<png_uint_32>(width);
+	const png_uint_32 h = static_cast<png_uint_32>(height);
+	png_set_IHDR(png_ptr, info_ptr, w, h, bit_depth, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 	png_write_info(png_ptr, info_ptr);
-	uint_fast32_t rowsize = 3 * width * sizeof(png_byte);
+	const uint_fast32_t rowsize = png_get_rowbytes(png_ptr, info_ptr);
 	if(reverse_rows)
 	{
 		for(uint_fast32_t y = height; y > 0; --y)
