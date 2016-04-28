@@ -136,7 +136,7 @@ void Gfx::toggle_cull_face()
 void Gfx::update_projection_matrix()
 {
 	const float fov  = 45.0f;
-	const float near = 0.01f;
+	const float near = 0.1f;
 	const float far  = 1500.0f;
 	const float width = window_size.x;
 	const float height = window_size.y;
