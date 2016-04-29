@@ -171,8 +171,9 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 	}
 }
 
-void World::step(const double delta_time)
+void World::step(double delta_time)
 {
+	delta_time = 1.0 / 60.0;
 	for(auto& p : players)
 	{
 		p.second->step(delta_time);
