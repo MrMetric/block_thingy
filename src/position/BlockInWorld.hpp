@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
 #include <iosfwd>
+#include <stdint.h>
 
 #include <glm/vec3.hpp>
 

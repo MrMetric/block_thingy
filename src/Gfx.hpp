@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
 #include <map>
+#include <stdint.h>
 
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>

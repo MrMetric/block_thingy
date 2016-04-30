@@ -2,12 +2,12 @@
 
 #include <cerrno>
 #include <cmath>
-#include <cstdint>
 #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+#include <stdint.h>
 #include <unistd.h>
 
 #include <glad/glad.h>

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
 #include <iosfwd>
+#include <stdint.h>
 
 using ChunkInWorld_type = int32_t;
 

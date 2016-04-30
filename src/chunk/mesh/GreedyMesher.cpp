@@ -1,7 +1,7 @@
 #include "GreedyMesher.hpp"
 
 #include <algorithm>
-#include <cstdint>
+#include <stdint.h>
 
 #include <glad/glad.h>
 #include <glm/vec3.hpp>

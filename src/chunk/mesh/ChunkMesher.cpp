@@ -1,6 +1,6 @@
 #include "ChunkMesher.hpp"
 
-#include <cstdint>
+#include <stdint.h>
 
 #include "Block.hpp"
 #include "BlockType.hpp"

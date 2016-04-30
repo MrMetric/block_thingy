@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <stdint.h>
 #include <vector>
 
 #include <glad/glad.h>

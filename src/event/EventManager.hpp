@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
 #include <functional>
+#include <stdint.h>
 #include <unordered_map>
 #include <utility>			// std::pair
 

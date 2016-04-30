@@ -1,7 +1,7 @@
 #include "PhysicsUtil.hpp"
 
-#include <cstdint>
 #include <limits>
+#include <stdint.h>
 
 #include <glm/common.hpp>		// glm::sign
 #include <glm/geometric.hpp>	// glm::normalize

@@ -1,7 +1,7 @@
 #pragma once
 #include "ChunkMesher.hpp"
 
-#include <cstdint>
+#include <stdint.h>
 
 #include "position/BlockInChunk.hpp"
 

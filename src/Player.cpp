@@ -1,7 +1,7 @@
 #include "Player.hpp"
 
 #include <cmath>
-#include <cstdint>
+#include <stdint.h>
 
 #include <glm/common.hpp>			// glm::sign
 #include <glm/trigonometric.hpp>	// glm::radians

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
 #include <iosfwd>
+#include <stdint.h>
 
 using BlockInChunk_type = uint8_t;
 
