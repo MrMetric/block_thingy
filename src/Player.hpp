@@ -38,6 +38,7 @@ class Player
 
 		double get_eye_height() const;
 		bool get_noclip() const;
+		void set_noclip(bool);
 
 		glm::dvec3 position;
 		glm::dvec3 rotation;

@@ -235,6 +235,11 @@ bool Player::get_noclip() const
 	return flags.noclip;
 }
 
+void Player::set_noclip(bool noclip)
+{
+	flags.noclip = noclip;
+}
+
 bool Player::block_is_at(const Position::BlockInWorld& block_pos)
 {
 	const Block& block = Game::instance->world.get_block_const(block_pos);
