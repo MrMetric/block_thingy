@@ -51,10 +51,7 @@ std::unique_ptr<Player> WorldFile::load_player(const std::string& name)
 		return nullptr;
 	}
 
-	(Game::instance != nullptr
-		? Game::instance->console.logger
-		: std::cout
-	) << "loading player: " << file_path << "\n";
+	LOGGER << "loading player: " << file_path << "\n";
 
 	std::string bytes = Util::read_file(file_path);
 	msgpack::unpacked u;
