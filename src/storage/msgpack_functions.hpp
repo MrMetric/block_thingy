@@ -7,6 +7,7 @@
 
 #include <glm/vec3.hpp>
 
+#include "Block.hpp"
 #include "Player.hpp"
 
 template <typename T>
@@ -99,6 +100,38 @@ struct convert<Player>
 		bool noclip = false;
 		find_in_map(map, "noclip", noclip);
 		v.set_noclip(noclip);
+
+		return o;
+	}
+};
+
+template<>
+struct pack<Block>
+{
+	template <typename Stream>
+	packer<Stream>& operator()(msgpack::packer<Stream>& o, Block const& v) const
+	{
+		o.pack_map(1);
+		o.pack("t");
+		o.pack(v.type_id());
+		return o;
+	}
+};
+
+template<>
+struct convert<Block>
+{
+	msgpack::object const& operator()(msgpack::object const& o, Block& v) const
+	{
+		if(o.type != msgpack::type::MAP) throw msgpack::type_error();
+		if(o.via.map.size < 1) throw msgpack::type_error();
+
+		auto map = o.as<std::unordered_map<std::string, msgpack::object>>();
+
+		block_type_id_t type_id;
+		find_in_map_or_throw(map, "t", type_id);
+		BlockType block_type = static_cast<BlockType>(type_id);
+		v = Block(block_type);
 
 		return o;
 	}
