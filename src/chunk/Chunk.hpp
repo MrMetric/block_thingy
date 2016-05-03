@@ -41,16 +41,18 @@ class Chunk
 		void update();
 		void render();
 
+		// public because friend stuff does not work for msgpack stuff
+		std::unique_ptr<chunk_block_array_t> blok;
+		Block solid_block;
+
 	private:
 		World& owner;
 		Position::ChunkInWorld position;
-		std::unique_ptr<chunk_block_array_t> blok;
 		std::unique_ptr<ChunkMesher> mesher;
 		meshmap_t meshes;
 		std::vector<VertexBuffer> mesh_vbos;
 		bool changed;
 
-		Block solid_block;
 		void init_blok();
 
 		void update_neighbors(BlockInChunk_type, BlockInChunk_type, BlockInChunk_type);

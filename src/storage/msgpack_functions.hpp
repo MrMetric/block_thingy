@@ -9,6 +9,7 @@
 
 #include "Block.hpp"
 #include "Player.hpp"
+#include "chunk/Chunk.hpp"
 
 template <typename T>
 bool find_in_map(const std::unordered_map<std::string, msgpack::object>& map, const std::string& key, T& v)
@@ -100,6 +101,50 @@ struct convert<Player>
 		bool noclip = false;
 		find_in_map(map, "noclip", noclip);
 		v.set_noclip(noclip);
+
+		return o;
+	}
+};
+
+template<>
+struct pack<Chunk>
+{
+	template <typename Stream>
+	packer<Stream>& operator()(msgpack::packer<Stream>& o, Chunk const& chunk) const
+	{
+		o.pack_array(2);
+		bool is_solid = chunk.blok == nullptr;
+		o.pack(is_solid);
+		if(is_solid)
+		{
+			o.pack(chunk.solid_block);
+		}
+		else
+		{
+			o.pack(chunk.blok);
+		}
+		return o;
+	}
+};
+
+template<>
+struct convert<Chunk>
+{
+	msgpack::object const& operator()(msgpack::object const& o, Chunk& chunk) const
+	{
+		if(o.type != msgpack::type::ARRAY) throw msgpack::type_error();
+		if(o.via.array.size != 2) throw msgpack::type_error();
+
+		bool is_solid = o.via.array.ptr[0].as<bool>();
+		if(is_solid)
+		{
+			chunk.solid_block = o.via.array.ptr[1].as<Block>();
+		}
+		else
+		{
+			// let us hope this copy is optimized out
+			chunk.blok = std::make_unique<chunk_block_array_t>(o.via.array.ptr[1].as<chunk_block_array_t>());
+		}
 
 		return o;
 	}
