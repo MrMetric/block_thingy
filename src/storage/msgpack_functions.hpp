@@ -113,7 +113,7 @@ struct pack<Chunk>
 	packer<Stream>& operator()(msgpack::packer<Stream>& o, Chunk const& chunk) const
 	{
 		o.pack_array(2);
-		bool is_solid = chunk.blok == nullptr;
+		bool is_solid = chunk.blocks == nullptr;
 		o.pack(is_solid);
 		if(is_solid)
 		{
@@ -121,7 +121,7 @@ struct pack<Chunk>
 		}
 		else
 		{
-			o.pack(chunk.blok);
+			o.pack(chunk.blocks);
 		}
 		return o;
 	}
@@ -143,7 +143,7 @@ struct convert<Chunk>
 		else
 		{
 			// let us hope this copy is optimized out
-			chunk.blok = std::make_unique<chunk_block_array_t>(o.via.array.ptr[1].as<chunk_block_array_t>());
+			chunk.blocks = std::make_unique<chunk_block_array_t>(o.via.array.ptr[1].as<chunk_block_array_t>());
 		}
 
 		return o;

@@ -36,39 +36,39 @@ Chunk::Chunk(const Position::ChunkInWorld& pos, World& owner)
 {
 }
 
-inline static chunk_block_array_t::size_type blok_index(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+inline static chunk_block_array_t::size_type block_array_index(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
 	return CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
 }
 
 const Block& Chunk::get_block_const(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const
 {
-	if(blok == nullptr)
+	if(blocks == nullptr)
 	{
 		return solid_block;
 	}
-	return blok->at(blok_index(x, y, z));
+	return blocks->at(block_array_index(x, y, z));
 }
 
 const Block& Chunk::get_block_const(const Position::BlockInChunk& pos) const
 {
-	if(blok == nullptr)
+	if(blocks == nullptr)
 	{
 		return solid_block;
 	}
-	return blok->at(blok_index(pos.x, pos.y, pos.z));
+	return blocks->at(block_array_index(pos.x, pos.y, pos.z));
 }
 
 Block& Chunk::get_block_mutable(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
-	init_blok();
-	return blok->at(blok_index(x, y, z));
+	init_block_array();
+	return blocks->at(block_array_index(x, y, z));
 }
 
 Block& Chunk::get_block_mutable(const Position::BlockInChunk& pos)
 {
-	init_blok();
-	return blok->at(blok_index(pos.x, pos.y, pos.z));
+	init_block_array();
+	return blocks->at(block_array_index(pos.x, pos.y, pos.z));
 }
 
 void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, const Block& block)
@@ -81,8 +81,8 @@ void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, cons
 		throw std::domain_error("position out of bounds in Chunk::set: " + set_info);
 	}
 
-	init_blok();
-	blok->at(blok_index(x, y, z)) = block;
+	init_block_array();
+	blocks->at(block_array_index(x, y, z)) = block;
 	changed = true;
 
 	update_neighbors(x, y, z);
@@ -105,7 +105,7 @@ World& Chunk::get_owner() const
 
 void Chunk::update()
 {
-	if(blok == nullptr && solid_block.is_invisible())
+	if(blocks == nullptr && solid_block.is_invisible())
 	{
 		meshes = meshmap_t();
 		return;
@@ -162,15 +162,15 @@ void Chunk::render()
 	}
 }
 
-void Chunk::init_blok()
+void Chunk::init_block_array()
 {
-	if(blok != nullptr)
+	if(blocks != nullptr)
 	{
 		return;
 	}
 
-	blok = std::make_unique<chunk_block_array_t>();
-	blok->fill(solid_block);
+	blocks = std::make_unique<chunk_block_array_t>();
+	blocks->fill(solid_block);
 }
 
 void Chunk::update_neighbors(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)

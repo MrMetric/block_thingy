@@ -42,7 +42,7 @@ class Chunk
 		void render();
 
 		// public because friend stuff does not work for msgpack stuff
-		std::unique_ptr<chunk_block_array_t> blok;
+		std::unique_ptr<chunk_block_array_t> blocks;
 		Block solid_block;
 
 	private:
@@ -53,7 +53,7 @@ class Chunk
 		std::vector<VertexBuffer> mesh_vbos;
 		bool changed;
 
-		void init_blok();
+		void init_block_array();
 
 		void update_neighbors(BlockInChunk_type, BlockInChunk_type, BlockInChunk_type);
 		void update_neighbor(ChunkInWorld_type, ChunkInWorld_type, ChunkInWorld_type);
