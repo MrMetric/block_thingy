@@ -70,16 +70,16 @@ template<>
 struct pack<Player>
 {
 	template <typename Stream>
-	packer<Stream>& operator()(msgpack::packer<Stream>& o, Player const& v) const
+	packer<Stream>& operator()(msgpack::packer<Stream>& o, Player const& player) const
 	{
-		bool noclip = v.get_noclip();
+		bool noclip = player.get_noclip();
 		o.pack_map(noclip ? 4 : 3);
-		o.pack("position"); o.pack(v.position);
-		o.pack("rotation"); o.pack(v.rotation);
-		o.pack("velocity"); o.pack(v.velocity);
+		o.pack("position"); o.pack(player.position);
+		o.pack("rotation"); o.pack(player.rotation);
+		o.pack("velocity"); o.pack(player.velocity);
 		if(noclip)
 		{
-			o.pack("noclip"); o.pack(v.get_noclip());
+			o.pack("noclip"); o.pack(player.get_noclip());
 		}
 		return o;
 	}
@@ -88,19 +88,19 @@ struct pack<Player>
 template<>
 struct convert<Player>
 {
-	msgpack::object const& operator()(msgpack::object const& o, Player& v) const
+	msgpack::object const& operator()(msgpack::object const& o, Player& player) const
 	{
 		if(o.type != msgpack::type::MAP) throw msgpack::type_error();
 		if(o.via.map.size < 3) throw msgpack::type_error();
 
 		auto map = o.as<std::unordered_map<std::string, msgpack::object>>();
 
-		find_in_map_or_throw(map, "position", v.position);
-		find_in_map_or_throw(map, "rotation", v.rotation);
-		find_in_map_or_throw(map, "velocity", v.velocity);
+		find_in_map_or_throw(map, "position", player.position);
+		find_in_map_or_throw(map, "rotation", player.rotation);
+		find_in_map_or_throw(map, "velocity", player.velocity);
 		bool noclip = false;
 		find_in_map(map, "noclip", noclip);
-		v.set_noclip(noclip);
+		player.set_noclip(noclip);
 
 		return o;
 	}
@@ -138,6 +138,7 @@ struct convert<Chunk>
 		bool is_solid = o.via.array.ptr[0].as<bool>();
 		if(is_solid)
 		{
+			chunk.blocks = nullptr; // NOTE: should be null already
 			chunk.solid_block = o.via.array.ptr[1].as<Block>();
 		}
 		else
@@ -154,11 +155,12 @@ template<>
 struct pack<Block>
 {
 	template <typename Stream>
-	packer<Stream>& operator()(msgpack::packer<Stream>& o, Block const& v) const
+	packer<Stream>& operator()(msgpack::packer<Stream>& o, Block const& block) const
 	{
 		o.pack_map(1);
-		o.pack("t");
-		o.pack(v.type_id());
+
+		o.pack("t"); o.pack(block.type_id());
+
 		return o;
 	}
 };
@@ -166,7 +168,7 @@ struct pack<Block>
 template<>
 struct convert<Block>
 {
-	msgpack::object const& operator()(msgpack::object const& o, Block& v) const
+	msgpack::object const& operator()(msgpack::object const& o, Block& block) const
 	{
 		if(o.type != msgpack::type::MAP) throw msgpack::type_error();
 		if(o.via.map.size < 1) throw msgpack::type_error();
@@ -175,8 +177,8 @@ struct convert<Block>
 
 		block_type_id_t type_id;
 		find_in_map_or_throw(map, "t", type_id);
-		BlockType block_type = static_cast<BlockType>(type_id);
-		v = Block(block_type);
+		const BlockType block_type = static_cast<BlockType>(type_id);
+		block = Block(block_type);
 
 		return o;
 	}
