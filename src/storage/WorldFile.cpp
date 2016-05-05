@@ -59,12 +59,8 @@ std::unique_ptr<Player> WorldFile::load_player(const std::string& name)
 	LOGGER << "loading player: " << file_path << "\n";
 
 	std::string bytes = Util::read_file(file_path);
-	msgpack::unpacked u;
-	msgpack::unpack(u, bytes.c_str(), bytes.length());
-	msgpack::object o = u.get();
-
 	auto player = std::make_unique<Player>(name);
-	o.convert(*player);
+	unpack_bytes(bytes, *player);
 
 	return player;
 }
@@ -108,13 +104,8 @@ std::shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& posit
 	std::stringstream ss;
 	Poco::StreamCopier::copyStream(stream, ss);
 	std::string bytes = ss.str();
-
-	msgpack::unpacked u;
-	msgpack::unpack(u, bytes.c_str(), bytes.length());
-	msgpack::object o = u.get();
-
 	auto chunk = std::make_shared<Chunk>(position, world);
-	o.convert(*chunk);
+	unpack_bytes(bytes, *chunk);
 
 	return chunk;
 }

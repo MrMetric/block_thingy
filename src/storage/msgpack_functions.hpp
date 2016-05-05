@@ -32,6 +32,15 @@ void find_in_map_or_throw(const std::unordered_map<std::string, msgpack::object>
 	}
 }
 
+template <typename T>
+void unpack_bytes(const std::string& bytes, T& v)
+{
+	msgpack::unpacked u;
+	msgpack::unpack(u, bytes.c_str(), bytes.length());
+	msgpack::object o = u.get();
+	o.convert(v);
+}
+
 namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
 namespace adaptor {
