@@ -183,7 +183,7 @@ std::unique_ptr<RaycastHit> PhysicsUtil::raycast(const World& world, const glm::
 	{
 		if(pos_in_bounds(cube_pos, min, max))
 		{
-			if(world.get_block_const(cube_pos).is_solid())
+			if(world.get_block_const(cube_pos).is_selectable())
 			{
 				return std::make_unique<RaycastHit>(cube_pos, face);
 			}

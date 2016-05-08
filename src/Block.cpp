@@ -26,12 +26,36 @@ BlockType Block::type() const
 	return type_;
 }
 
+BlockVisibilityType Block::visibility_type() const
+{
+	if(type_ == BlockType::none || type_ == BlockType::air)
+	{
+		return BlockVisibilityType::invisible;
+	}
+	return BlockVisibilityType::opaque;
+}
+
+bool Block::is_opaque() const
+{
+	return visibility_type() == BlockVisibilityType::opaque;
+}
+
+bool Block::is_translucent() const
+{
+	return visibility_type() == BlockVisibilityType::translucent;
+}
+
 bool Block::is_invisible() const
 {
-	return type_ == BlockType::none || type_ == BlockType::air;
+	return visibility_type() == BlockVisibilityType::invisible;
 }
 
 bool Block::is_solid() const
+{
+	return type_ != BlockType::air;
+}
+
+bool Block::is_selectable() const
 {
 	return type_ != BlockType::air;
 }

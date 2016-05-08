@@ -28,42 +28,48 @@ meshmap_t SimpleMesher::make_mesh()
 				}
 				BlockType type = block.type();
 				mesh_t& mesh = meshes[type];
-				draw_cube(mesh, x, y, z);
+				draw_cube(mesh, block, x, y, z);
 			}
 		}
 	}
 	return meshes;
 }
 
-void SimpleMesher::draw_cube(mesh_t& mesh, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+void SimpleMesher::draw_cube(mesh_t& mesh, const Block& block, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
+	auto block_visible_from = [this](const Block& block, int_fast16_t x, int_fast16_t y, int_fast16_t z)
+	{
+		const Block& sibling = block_at(x, y, z);
+		return !sibling.is_opaque() && block.type() != sibling.type();
+	};
+
 	// front
-	if(block_is_invisible(x, y, z - 1))
+	if(block_visible_from(block, x, y, z - 1))
 	{
 		draw_face(mesh, x, y, z, 0);
 	}
 	// back
-	if(block_is_invisible(x, y, z + 1))
+	if(block_visible_from(block, x, y, z + 1))
 	{
 		draw_face(mesh, x, y, z, 1);
 	}
 	// top
-	if(block_is_invisible(x, y + 1, z))
+	if(block_visible_from(block, x, y + 1, z))
 	{
 		draw_face(mesh, x, y, z, 2);
 	}
 	// bottom
-	if(block_is_invisible(x, y - 1, z))
+	if(block_visible_from(block, x, y - 1, z))
 	{
 		draw_face(mesh, x, y, z, 3);
 	}
 	// right (?)
-	if(block_is_invisible(x - 1, y, z))
+	if(block_visible_from(block, x - 1, y, z))
 	{
 		draw_face(mesh, x, y, z, 4);
 	}
 	// left (?)
-	if(block_is_invisible(x + 1, y, z))
+	if(block_visible_from(block, x + 1, y, z))
 	{
 		draw_face(mesh, x, y, z, 5);
 	}

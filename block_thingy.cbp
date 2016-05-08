@@ -69,6 +69,7 @@
 		<Unit filename="src/Block.cpp" />
 		<Unit filename="src/Block.hpp" />
 		<Unit filename="src/BlockType.hpp" />
+		<Unit filename="src/BlockVisibilityType.hpp" />
 		<Unit filename="src/Camera.cpp" />
 		<Unit filename="src/Camera.hpp" />
 		<Unit filename="src/Cube.cpp" />

@@ -47,3 +47,8 @@ bool ChunkMesher::block_is_invisible(const int_fast16_t x, const int_fast16_t y,
 {
 	return block_at(x, y, z, allow_out_of_bounds).is_invisible();
 }
+
+bool ChunkMesher::block_is_opaque(const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds) const
+{
+	return block_at(x, y, z, allow_out_of_bounds).is_opaque();
+}

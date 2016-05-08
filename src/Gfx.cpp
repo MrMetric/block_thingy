@@ -106,6 +106,9 @@ void Gfx::opengl_setup()
 	cull_face = true;
 	glCullFace(GL_BACK);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glBindVertexArray(vertex_array.get_name());
 
 	block_shaders.emplace(BlockType::test, "shaders/block/test");
