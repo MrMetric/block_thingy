@@ -32,7 +32,7 @@ vec2 get_side_coords()
 	int side = get_side();
 	if(side == 0) return position.xy;
 	if(side == 1) return position.xz;
-	if(side == 2) return position.yz;
+	if(side == 2) return position.zy;
 	return vec2(0.0);
 }
 
