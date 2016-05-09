@@ -36,10 +36,10 @@ vec2 get_side_coords()
 	return vec2(0.0);
 }
 
-vec3 color(vec2 vec)
+vec3 color(vec2 coords)
 {
 	float offset = sin(global_time) + sin(2.0 * global_time) + sin(3.0 * global_time);
-	float len = length(fract(vec) - 0.5);
+	float len = length(fract(coords) - 0.5);
 	float m = 999999.0;
 	float r = (cos(      offset + m * len) + 1.0) / 2.0;
 	float g = (cos(0.1 + offset + m * len) + 1.0) / 2.0;

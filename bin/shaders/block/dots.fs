@@ -48,14 +48,14 @@ vec3 hsv2rgb(vec3 c)
 	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-float color(vec2 vec)
+vec3 color(vec2 coords)
 {
-	return 1.0 - discretestep(radius, length(fract(vec) - 0.5));
+	return vec3(1.0 - discretestep(radius, length(fract(coords) - 0.5)));
 }
 
 void main()
 {
-	vec3 c = vec3(color(get_side_coords()));
+	vec3 c = color(get_side_coords());
 	c *= hsv2rgb(vec3(global_time + radius_scaled, 1.0, 1.0));
 	c *= radius_scaled;
 	FragColor = vec4(c, 1.0);
