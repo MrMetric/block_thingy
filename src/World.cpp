@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <random>
+#include <stdint.h>
 #include <utility>
 
 #include "Block.hpp"

@@ -5,6 +5,8 @@
 
 #include "position/BlockInChunk.hpp"
 
+class Block;
+
 class SimpleMesher : public ChunkMesher
 {
 	public:
