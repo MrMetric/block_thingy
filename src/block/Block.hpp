@@ -3,6 +3,8 @@
 #include "BlockType.hpp"
 #include "BlockVisibilityType.hpp"
 
+namespace Block {
+
 class Block
 {
 	public:
@@ -27,3 +29,5 @@ class Block
 	private:
 		BlockType type_;
 };
+
+} // namespace Block

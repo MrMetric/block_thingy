@@ -2,9 +2,9 @@
 
 #include <stdint.h>
 
-#include "Block.hpp"
-#include "BlockType.hpp"
 #include "World.hpp"
+#include "block/Block.hpp"
+#include "block/BlockType.hpp"
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
@@ -20,7 +20,7 @@ ChunkMesher::~ChunkMesher()
 {
 }
 
-const Block& ChunkMesher::block_at(const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds) const
+const Block::Block& ChunkMesher::block_at(const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds) const
 {
 	if(x < 0 || x >= CHUNK_SIZE
 	|| y < 0 || y >= CHUNK_SIZE
@@ -28,7 +28,7 @@ const Block& ChunkMesher::block_at(const int_fast16_t x, const int_fast16_t y, c
 	{
 		if(!allow_out_of_bounds)
 		{
-			static const Block none = Block(BlockType::none);
+			static const Block::Block none = Block::Block(BlockType::none);
 			return none;
 		}
 		Position::ChunkInWorld chunk_pos = chunk.get_position();

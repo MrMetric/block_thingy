@@ -6,7 +6,7 @@
 #include <glad/glad.h>
 #include <glm/vec3.hpp>
 
-#include "Block.hpp"
+#include "block/Block.hpp"
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
@@ -148,8 +148,8 @@ void GreedyMesher::generate_surface(glm::tvec3<uint_fast8_t>& xyz, const uint_fa
 			int_fast8_t o[] = {0, 0, 0};
 			o[iy] = offset;
 
-			const Block& block = block_at(x, y, z);
-			const Block& sibling = block_at(x + o[0], y + o[1], z + o[2]);
+			const Block::Block& block = block_at(x, y, z);
+			const Block::Block& sibling = block_at(x + o[0], y + o[1], z + o[2]);
 			if(!block.is_invisible() // this block is visible
 			&& !sibling.is_opaque() // this block can be seen thru the adjacent block
 			&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks (of the same type)

@@ -19,13 +19,13 @@
 #include <glm/vec4.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include "Block.hpp"
-#include "BlockType.hpp"
 #include "Camera.hpp"
 #include "FPSManager.hpp"
 #include "Gfx.hpp"
 #include "Player.hpp"
 #include "World.hpp"
+#include "block/Block.hpp"
+#include "block/BlockType.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
 #include "event/EventManager.hpp"
@@ -135,7 +135,7 @@ void Game::mousepress(const int button, const int action, const int mods)
 				const Position::BlockInWorld pos = hovered_block->pos;
 				if(world.get_block_const(pos).type() != BlockType::none)
 				{
-					world.set_block(pos, Block(BlockType::air));
+					world.set_block(pos, Block::Block(BlockType::air));
 					find_hovered_block(gfx.projection_matrix, gfx.view_matrix_physical);
 					//event_manager.do_event(Event_break_block(pos, face));
 				}
@@ -148,7 +148,7 @@ void Game::mousepress(const int button, const int action, const int mods)
 				const Position::BlockInWorld pos = hovered_block->adjacent();
 				if(world.get_block_const(pos).type() == BlockType::air && player.can_place_block_at(pos))
 				{
-					world.set_block(pos, Block(block_type));
+					world.set_block(pos, Block::Block(block_type));
 					//event_manager.do_event(Event_place_block(pos, face));
 				}
 			}
@@ -445,7 +445,7 @@ void Game::add_commands()
 					Position::BlockInWorld block_pos(x, y, z);
 					block_pos += start_pos;
 					block_type_id_t block_id = nazi[y][x];
-					game.world.set_block(block_pos, Block(block_id));
+					game.world.set_block(block_pos, Block::Block(block_id));
 				}
 			}
 		}

@@ -11,9 +11,12 @@
 #include "position/ChunkInWorld.hpp"
 #include "storage/WorldFile.hpp"
 
-class Block;
 class Player;
 class Chunk;
+namespace Block
+{
+	class Block;
+}
 namespace Position
 {
 	struct BlockInWorld;
@@ -33,10 +36,10 @@ class World
 		World(const World&) = delete;
 		void operator=(const World&) = delete;
 
-		const Block& get_block_const(const Position::BlockInWorld&) const;
-		Block& get_block_mutable(const Position::BlockInWorld&);
+		const Block::Block& get_block_const(const Position::BlockInWorld&) const;
+		Block::Block& get_block_mutable(const Position::BlockInWorld&);
 
-		void set_block(const Position::BlockInWorld&, const Block&);
+		void set_block(const Position::BlockInWorld&, const Block::Block&);
 
 		std::shared_ptr<Chunk> get_chunk(const Position::ChunkInWorld&) const;
 		std::shared_ptr<Chunk> get_or_make_chunk(const Position::ChunkInWorld&);

@@ -11,6 +11,7 @@ enum class BlockType : block_type_id_t
 	test,
 	dots,
 	eye,
+	teleporter,
 	COUNT,
 };
 

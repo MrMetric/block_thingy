@@ -7,8 +7,8 @@
 
 #include <glm/vec3.hpp>
 
-#include "Block.hpp"
 #include "Player.hpp"
+#include "block/Block.hpp"
 #include "chunk/Chunk.hpp"
 
 template <typename T>
@@ -148,7 +148,7 @@ struct convert<Chunk>
 		if(is_solid)
 		{
 			chunk.blocks = nullptr; // NOTE: should be null already
-			chunk.solid_block = o.via.array.ptr[1].as<Block>();
+			chunk.solid_block = o.via.array.ptr[1].as<Block::Block>();
 		}
 		else
 		{
@@ -161,10 +161,10 @@ struct convert<Chunk>
 };
 
 template<>
-struct pack<Block>
+struct pack<Block::Block>
 {
 	template <typename Stream>
-	packer<Stream>& operator()(msgpack::packer<Stream>& o, Block const& block) const
+	packer<Stream>& operator()(msgpack::packer<Stream>& o, Block::Block const& block) const
 	{
 		o.pack_map(1);
 
@@ -175,9 +175,9 @@ struct pack<Block>
 };
 
 template<>
-struct convert<Block>
+struct convert<Block::Block>
 {
-	msgpack::object const& operator()(msgpack::object const& o, Block& block) const
+	msgpack::object const& operator()(msgpack::object const& o, Block::Block& block) const
 	{
 		if(o.type != msgpack::type::MAP) throw msgpack::type_error();
 		if(o.via.map.size < 1) throw msgpack::type_error();
@@ -187,7 +187,7 @@ struct convert<Block>
 		block_type_id_t type_id;
 		find_in_map_or_throw(map, "t", type_id);
 		const BlockType block_type = static_cast<BlockType>(type_id);
-		block = Block(block_type);
+		block = Block::Block(block_type);
 
 		return o;
 	}

@@ -5,9 +5,9 @@
 #include <stdint.h>
 #include <utility>
 
-#include "Block.hpp"
-#include "BlockType.hpp"
 #include "Player.hpp"
+#include "block/Block.hpp"
+#include "block/BlockType.hpp"
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
@@ -34,7 +34,7 @@ World::World(const std::string& file_path)
 {
 }
 
-void World::set_block(const Position::BlockInWorld& block_pos, const Block& block)
+void World::set_block(const Position::BlockInWorld& block_pos, const Block::Block& block)
 {
 	Position::ChunkInWorld chunk_pos(block_pos);
 	std::shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
@@ -45,13 +45,13 @@ void World::set_block(const Position::BlockInWorld& block_pos, const Block& bloc
 	unsaved_chunks.insert(chunk_pos);
 }
 
-const Block& World::get_block_const(const Position::BlockInWorld& block_pos) const
+const Block::Block& World::get_block_const(const Position::BlockInWorld& block_pos) const
 {
 	Position::ChunkInWorld chunk_pos(block_pos);
 	std::shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static const Block none = Block(BlockType::none);
+		static const Block::Block none = Block::Block(BlockType::none);
 		return none;
 	}
 
@@ -59,13 +59,13 @@ const Block& World::get_block_const(const Position::BlockInWorld& block_pos) con
 	return chunk->get_block_const(pos);
 }
 
-Block& World::get_block_mutable(const Position::BlockInWorld& block_pos)
+Block::Block& World::get_block_mutable(const Position::BlockInWorld& block_pos)
 {
 	Position::ChunkInWorld chunk_pos(block_pos);
 	std::shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static Block none = Block(BlockType::none); // TODO: this should be immutable
+		static Block::Block none = Block::Block(BlockType::none); // TODO: this should be immutable
 		return none;
 	}
 
@@ -149,11 +149,11 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 
 				if(y == -128 || (y > -64 && y < -32))
 				{
-					set_block(block_pos, Block(BlockType::test));
+					set_block(block_pos, Block::Block(BlockType::test));
 				}
 				else if(x == -32 && y < 32)
 				{
-					set_block(block_pos, Block(BlockType::dots));
+					set_block(block_pos, Block::Block(BlockType::dots));
 				}
 				else if(y == -32)
 				{
@@ -163,7 +163,7 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 						for(BlockInWorld_type y2 = y; y2 < y+8; ++y2)
 						{
 							block_pos.y = y2;
-							set_block(block_pos, Block(BlockType::eye));
+							set_block(block_pos, Block::Block(BlockType::eye));
 						}
 					}
 				}

@@ -12,12 +12,12 @@
 
 #include <glm/vec3.hpp>
 
-#include "Block.hpp"
-#include "BlockType.hpp"
 #include "Camera.hpp"
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "World.hpp"
+#include "block/Block.hpp"
+#include "block/BlockType.hpp"
 #include "chunk/mesh/ChunkMesher.hpp"
 #include "chunk/mesh/GreedyMesher.hpp"
 #include "position/BlockInChunk.hpp"
@@ -41,7 +41,7 @@ inline static chunk_block_array_t::size_type block_array_index(const BlockInChun
 	return CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
 }
 
-const Block& Chunk::get_block_const(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const
+const Block::Block& Chunk::get_block_const(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const
 {
 	if(blocks == nullptr)
 	{
@@ -50,7 +50,7 @@ const Block& Chunk::get_block_const(const BlockInChunk_type x, const BlockInChun
 	return blocks->at(block_array_index(x, y, z));
 }
 
-const Block& Chunk::get_block_const(const Position::BlockInChunk& pos) const
+const Block::Block& Chunk::get_block_const(const Position::BlockInChunk& pos) const
 {
 	if(blocks == nullptr)
 	{
@@ -59,19 +59,19 @@ const Block& Chunk::get_block_const(const Position::BlockInChunk& pos) const
 	return blocks->at(block_array_index(pos.x, pos.y, pos.z));
 }
 
-Block& Chunk::get_block_mutable(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+Block::Block& Chunk::get_block_mutable(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
 	init_block_array();
 	return blocks->at(block_array_index(x, y, z));
 }
 
-Block& Chunk::get_block_mutable(const Position::BlockInChunk& pos)
+Block::Block& Chunk::get_block_mutable(const Position::BlockInChunk& pos)
 {
 	init_block_array();
 	return blocks->at(block_array_index(pos.x, pos.y, pos.z));
 }
 
-void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, const Block& block)
+void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, const Block::Block& block)
 {
 	if(x >= CHUNK_SIZE
 	|| y >= CHUNK_SIZE
@@ -88,7 +88,7 @@ void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, cons
 	update_neighbors(x, y, z);
 }
 
-void Chunk::set_block(const Position::BlockInChunk& block_pos, const Block& block)
+void Chunk::set_block(const Position::BlockInChunk& block_pos, const Block::Block& block)
 {
 	set_block(block_pos.x, block_pos.y, block_pos.z, block);
 }

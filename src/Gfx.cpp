@@ -25,10 +25,10 @@
 #include <png.h>
 #endif
 
-#include "BlockType.hpp"
 #include "Camera.hpp"
 #include "Cube.hpp"
 #include "Game.hpp"
+#include "block/BlockType.hpp"
 #include "chunk/Chunk.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"

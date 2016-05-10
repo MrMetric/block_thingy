@@ -13,8 +13,8 @@
 
 #include "RaycastHit.hpp"
 
-#include "Block.hpp"
 #include "World.hpp"
+#include "block/Block.hpp"
 #include "position/BlockInWorld.hpp"
 
 #include "std_make_unique.hpp"

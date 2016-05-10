@@ -1,8 +1,8 @@
 #include "SimpleMesher.hpp"
 
-#include "Block.hpp"
-#include "BlockType.hpp"
 #include "Cube.hpp"
+#include "block/Block.hpp"
+#include "block/BlockType.hpp"
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
@@ -21,7 +21,7 @@ meshmap_t SimpleMesher::make_mesh()
 		{
 			for(BlockInChunk_type z = 0; z < CHUNK_SIZE; ++z)
 			{
-				const Block& block = block_at(x, y, z);
+				const Block::Block& block = block_at(x, y, z);
 				if(block.is_invisible())
 				{
 					continue;
@@ -35,11 +35,11 @@ meshmap_t SimpleMesher::make_mesh()
 	return meshes;
 }
 
-void SimpleMesher::draw_cube(mesh_t& mesh, const Block& block, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+void SimpleMesher::draw_cube(mesh_t& mesh, const Block::Block& block, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
-	auto block_visible_from = [this](const Block& block, int_fast16_t x, int_fast16_t y, int_fast16_t z)
+	auto block_visible_from = [this](const Block::Block& block, int_fast16_t x, int_fast16_t y, int_fast16_t z)
 	{
-		const Block& sibling = block_at(x, y, z);
+		const Block::Block& sibling = block_at(x, y, z);
 		return !sibling.is_opaque() && block.type() != sibling.type();
 	};
 

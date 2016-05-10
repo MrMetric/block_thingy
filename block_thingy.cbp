@@ -66,10 +66,6 @@
 			<Add option="-lpng" />
 			<Add option="-lPocoFoundation" />
 		</Linker>
-		<Unit filename="src/Block.cpp" />
-		<Unit filename="src/Block.hpp" />
-		<Unit filename="src/BlockType.hpp" />
-		<Unit filename="src/BlockVisibilityType.hpp" />
 		<Unit filename="src/Camera.cpp" />
 		<Unit filename="src/Camera.hpp" />
 		<Unit filename="src/Cube.cpp" />
@@ -85,6 +81,10 @@
 		<Unit filename="src/Util.hpp" />
 		<Unit filename="src/World.cpp" />
 		<Unit filename="src/World.hpp" />
+		<Unit filename="src/block/Block.cpp" />
+		<Unit filename="src/block/Block.hpp" />
+		<Unit filename="src/block/BlockType.hpp" />
+		<Unit filename="src/block/BlockVisibilityType.hpp" />
 		<Unit filename="src/chunk/Chunk.cpp" />
 		<Unit filename="src/chunk/Chunk.hpp" />
 		<Unit filename="src/chunk/mesh/ChunkMesher.cpp" />

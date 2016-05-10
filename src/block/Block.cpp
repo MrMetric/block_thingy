@@ -2,6 +2,8 @@
 
 #include "BlockType.hpp"
 
+namespace Block {
+
 Block::Block() : type_(BlockType::none) {}
 
 Block::Block(const block_type_id_t type_id)
@@ -59,3 +61,5 @@ bool Block::is_selectable() const
 {
 	return type_ != BlockType::air;
 }
+
+} // namespace Block

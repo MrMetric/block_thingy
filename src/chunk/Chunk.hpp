@@ -6,7 +6,7 @@
 
 #include "graphics/OpenGL/VertexBuffer.hpp"
 
-#include "Block.hpp"
+#include "block/Block.hpp"
 #include "chunk/mesh/ChunkMesher.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/ChunkInWorld.hpp"
@@ -16,7 +16,7 @@
 
 class World;
 
-using chunk_block_array_t = std::array<Block, CHUNK_BLOCK_COUNT>;
+using chunk_block_array_t = std::array<Block::Block, CHUNK_BLOCK_COUNT>;
 
 class Chunk
 {
@@ -27,13 +27,13 @@ class Chunk
 		Chunk(const Chunk&) = delete;
 		void operator=(const Chunk&) = delete;
 
-		const Block& get_block_const(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
-		const Block& get_block_const(const Position::BlockInChunk&) const;
-		Block& get_block_mutable(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z);
-		Block& get_block_mutable(const Position::BlockInChunk&);
+		const Block::Block& get_block_const(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
+		const Block::Block& get_block_const(const Position::BlockInChunk&) const;
+		Block::Block& get_block_mutable(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z);
+		Block::Block& get_block_mutable(const Position::BlockInChunk&);
 
-		void set_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, const Block&);
-		void set_block(const Position::BlockInChunk&, const Block&);
+		void set_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, const Block::Block&);
+		void set_block(const Position::BlockInChunk&, const Block::Block&);
 
 		Position::ChunkInWorld get_position() const;
 		World& get_owner() const; // eeh
@@ -43,7 +43,7 @@ class Chunk
 
 		// public because friend stuff does not work for msgpack stuff
 		std::unique_ptr<chunk_block_array_t> blocks;
-		Block solid_block;
+		Block::Block solid_block;
 
 	private:
 		World& owner;

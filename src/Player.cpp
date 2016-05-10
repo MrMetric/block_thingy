@@ -7,9 +7,9 @@
 #include <glm/trigonometric.hpp>	// glm::radians
 #include <glm/vec3.hpp>
 
-#include "Block.hpp"
 #include "Game.hpp"
 #include "World.hpp"
+#include "block/Block.hpp"
 #include "position/BlockInWorld.hpp"
 
 Player::Player(const std::string& name)
@@ -242,7 +242,7 @@ void Player::set_noclip(bool noclip)
 
 bool Player::block_is_at(const Position::BlockInWorld& block_pos)
 {
-	const Block& block = Game::instance->world.get_block_const(block_pos);
+	const Block::Block& block = Game::instance->world.get_block_const(block_pos);
 	return block.is_solid();
 }
 

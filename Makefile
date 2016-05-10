@@ -47,7 +47,6 @@ OUT_RELEASE = bin/block_thingy_r
 
 OBJ_DEBUG = \
 	$(OBJDIR_DEBUG)/glad.o \
-	$(OBJDIR_DEBUG)/src/Block.o \
 	$(OBJDIR_DEBUG)/src/Camera.o \
 	$(OBJDIR_DEBUG)/src/Cube.o \
 	$(OBJDIR_DEBUG)/src/Game.o \
@@ -56,6 +55,7 @@ OBJ_DEBUG = \
 	$(OBJDIR_DEBUG)/src/Player.o \
 	$(OBJDIR_DEBUG)/src/Util.o \
 	$(OBJDIR_DEBUG)/src/World.o \
+	$(OBJDIR_DEBUG)/src/block/Block.o \
 	$(OBJDIR_DEBUG)/src/chunk/Chunk.o \
 	$(OBJDIR_DEBUG)/src/chunk/mesh/ChunkMesher.o \
 	$(OBJDIR_DEBUG)/src/chunk/mesh/GreedyMesher.o \
@@ -82,7 +82,6 @@ OBJ_DEBUG = \
 
 OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/glad.o \
-	$(OBJDIR_RELEASE)/src/Block.o \
 	$(OBJDIR_RELEASE)/src/Camera.o \
 	$(OBJDIR_RELEASE)/src/Cube.o \
 	$(OBJDIR_RELEASE)/src/Game.o \
@@ -91,6 +90,7 @@ OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/src/Player.o \
 	$(OBJDIR_RELEASE)/src/Util.o \
 	$(OBJDIR_RELEASE)/src/World.o \
+	$(OBJDIR_RELEASE)/src/block/Block.o \
 	$(OBJDIR_RELEASE)/src/chunk/Chunk.o \
 	$(OBJDIR_RELEASE)/src/chunk/mesh/ChunkMesher.o \
 	$(OBJDIR_RELEASE)/src/chunk/mesh/GreedyMesher.o \
@@ -122,6 +122,7 @@ clean: clean_debug clean_release
 before_debug:
 	test -d bin || mkdir -p bin
 	test -d $(OBJDIR_DEBUG)/src || mkdir -p $(OBJDIR_DEBUG)/src
+	test -d $(OBJDIR_DEBUG)/src/block || mkdir -p $(OBJDIR_DEBUG)/src/block
 	test -d $(OBJDIR_DEBUG)/src/chunk || mkdir -p $(OBJDIR_DEBUG)/src/chunk
 	test -d $(OBJDIR_DEBUG)/src/chunk/mesh || mkdir -p $(OBJDIR_DEBUG)/src/chunk/mesh
 	test -d $(OBJDIR_DEBUG)/src/console || mkdir -p $(OBJDIR_DEBUG)/src/console
@@ -141,9 +142,6 @@ out_debug: before_debug $(OBJ_DEBUG) $(DEP_DEBUG)
 
 $(OBJDIR_DEBUG)/glad.o: lib/glad/glad.c
 	$(CC) $(CFLAGS_DEBUG) -c lib/glad/glad.c -o $(OBJDIR_DEBUG)/glad.o
-
-$(OBJDIR_DEBUG)/src/Block.o: src/Block.cpp
-	$(CXX) $(CXXFLAGS_DEBUG) -c src/Block.cpp -o $(OBJDIR_DEBUG)/src/Block.o
 
 $(OBJDIR_DEBUG)/src/Camera.o: src/Camera.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/Camera.cpp -o $(OBJDIR_DEBUG)/src/Camera.o
@@ -168,6 +166,9 @@ $(OBJDIR_DEBUG)/src/Util.o: src/Util.cpp
 
 $(OBJDIR_DEBUG)/src/World.o: src/World.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/World.cpp -o $(OBJDIR_DEBUG)/src/World.o
+
+$(OBJDIR_DEBUG)/src/block/Block.o: src/block/Block.cpp
+	$(CXX) $(CXXFLAGS_DEBUG) -c src/block/Block.cpp -o $(OBJDIR_DEBUG)/src/block/Block.o
 
 $(OBJDIR_DEBUG)/src/chunk/Chunk.o: src/chunk/Chunk.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/chunk/Chunk.cpp -o $(OBJDIR_DEBUG)/src/chunk/Chunk.o
@@ -245,6 +246,7 @@ clean_debug:
 before_release:
 	test -d bin || mkdir -p bin
 	test -d $(OBJDIR_RELEASE)/src || mkdir -p $(OBJDIR_RELEASE)/src
+	test -d $(OBJDIR_RELEASE)/src/block || mkdir -p $(OBJDIR_RELEASE)/src/block
 	test -d $(OBJDIR_RELEASE)/src/chunk || mkdir -p $(OBJDIR_RELEASE)/src/chunk
 	test -d $(OBJDIR_RELEASE)/src/chunk/mesh || mkdir -p $(OBJDIR_RELEASE)/src/chunk/mesh
 	test -d $(OBJDIR_RELEASE)/src/console || mkdir -p $(OBJDIR_RELEASE)/src/console
@@ -264,9 +266,6 @@ out_release: before_release $(OBJ_RELEASE) $(DEP_RELEASE)
 
 $(OBJDIR_RELEASE)/glad.o: lib/glad/glad.c
 	$(CC) $(CFLAGS_RELEASE) -c lib/glad/glad.c -o $(OBJDIR_RELEASE)/glad.o
-
-$(OBJDIR_RELEASE)/src/Block.o: src/Block.cpp
-	$(CXX) $(CXXFLAGS_RELEASE) -c src/Block.cpp -o $(OBJDIR_RELEASE)/src/Block.o
 
 $(OBJDIR_RELEASE)/src/Camera.o: src/Camera.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/Camera.cpp -o $(OBJDIR_RELEASE)/src/Camera.o
@@ -291,6 +290,9 @@ $(OBJDIR_RELEASE)/src/Util.o: src/Util.cpp
 
 $(OBJDIR_RELEASE)/src/World.o: src/World.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/World.cpp -o $(OBJDIR_RELEASE)/src/World.o
+
+$(OBJDIR_RELEASE)/src/block/Block.o: src/block/Block.cpp
+	$(CXX) $(CXXFLAGS_RELEASE) -c src/block/Block.cpp -o $(OBJDIR_RELEASE)/src/block/Block.o
 
 $(OBJDIR_RELEASE)/src/chunk/Chunk.o: src/chunk/Chunk.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/chunk/Chunk.cpp -o $(OBJDIR_RELEASE)/src/chunk/Chunk.o
