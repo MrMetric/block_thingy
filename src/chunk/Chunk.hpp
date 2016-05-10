@@ -39,7 +39,7 @@ class Chunk
 		World& get_owner() const; // eeh
 
 		void update();
-		void render();
+		void render(bool transluscent_pass);
 
 		// public because friend stuff does not work for msgpack stuff
 		std::unique_ptr<chunk_block_array_t> blocks;

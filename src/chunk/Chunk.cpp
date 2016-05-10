@@ -123,7 +123,7 @@ void Chunk::update()
 	}
 
 	size_t i = 0;
-	for(auto p : meshes)
+	for(const auto& p : meshes)
 	{
 		const mesh_t& mesh = p.second;
 		mesh_vbos[i].data(mesh.size() * sizeof(mesh_t::value_type), mesh.data(), VertexBuffer::UsageHint::dynamic_draw);
@@ -131,7 +131,7 @@ void Chunk::update()
 	}
 }
 
-void Chunk::render()
+void Chunk::render(const bool transluscent_pass)
 {
 	if(changed)
 	{
@@ -142,9 +142,14 @@ void Chunk::render()
 	const Position::ChunkInWorld render_position = position - Position::ChunkInWorld(Position::BlockInWorld(Game::instance->camera.position));
 	const Position::BlockInWorld position_render_offset(render_position, {0, 0, 0});
 	size_t i = 0;
-	for(auto p : meshes)
+	for(const auto& p : meshes)
 	{
 		const BlockType type = p.first;
+		if(Block::Block(type).is_translucent() != transluscent_pass)
+		{
+			++i;
+			continue;
+		}
 		const ShaderProgram& shader = Game::instance->gfx.get_block_shader(type);
 		glUseProgram(shader.get_name());
 
