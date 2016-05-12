@@ -33,9 +33,7 @@ namespace GreedyMesherPrivate
 }
 using namespace GreedyMesherPrivate;
 
-GreedyMesher::GreedyMesher(const Chunk& chunk)
-	:
-	ChunkMesher(chunk)
+GreedyMesher::GreedyMesher()
 {
 	for(uint_fast32_t i = 0; i < CHUNK_SIZE; ++i)
 	{
@@ -43,21 +41,21 @@ GreedyMesher::GreedyMesher(const Chunk& chunk)
 	}
 }
 
-meshmap_t GreedyMesher::make_mesh()
+meshmap_t GreedyMesher::make_mesh(const Chunk& chunk)
 {
 	meshmap_t meshes;
 
-	add_surface(meshes, Plane::XY, Side::top);
-	add_surface(meshes, Plane::XY, Side::bottom);
-	add_surface(meshes, Plane::XZ, Side::top);
-	add_surface(meshes, Plane::XZ, Side::bottom);
-	add_surface(meshes, Plane::YZ, Side::top);
-	add_surface(meshes, Plane::YZ, Side::bottom);
+	add_surface(chunk, meshes, Plane::XY, Side::top);
+	add_surface(chunk, meshes, Plane::XY, Side::bottom);
+	add_surface(chunk, meshes, Plane::XZ, Side::top);
+	add_surface(chunk, meshes, Plane::XZ, Side::bottom);
+	add_surface(chunk, meshes, Plane::YZ, Side::top);
+	add_surface(chunk, meshes, Plane::YZ, Side::bottom);
 
 	return meshes;
 }
 
-void GreedyMesher::add_surface(meshmap_t& meshes, const Plane plane, const Side side)
+void GreedyMesher::add_surface(const Chunk& chunk, meshmap_t& meshes, const Plane plane, const Side side)
 {
 	uint_fast8_t ix, iy, iz;
 	if(plane == Plane::XY)
@@ -82,7 +80,7 @@ void GreedyMesher::add_surface(meshmap_t& meshes, const Plane plane, const Side 
 	glm::tvec3<uint_fast8_t> xyz;
 	for(xyz[1] = 0; xyz[1] < CHUNK_SIZE; ++xyz[1])
 	{
-		generate_surface(xyz, ix, iy, iz, static_cast<int_fast8_t>(side));
+		generate_surface(chunk, xyz, ix, iy, iz, static_cast<int_fast8_t>(side));
 
 		while(true)
 		{
@@ -136,7 +134,7 @@ void GreedyMesher::add_surface(meshmap_t& meshes, const Plane plane, const Side 
 	}
 }
 
-void GreedyMesher::generate_surface(glm::tvec3<uint_fast8_t>& xyz, const uint_fast8_t ix, const uint_fast8_t iy, const uint_fast8_t iz, const int_fast8_t offset)
+void GreedyMesher::generate_surface(const Chunk& chunk, glm::tvec3<uint_fast8_t>& xyz, const uint_fast8_t ix, const uint_fast8_t iy, const uint_fast8_t iz, const int_fast8_t offset)
 {
 	for(xyz[0] = 0; xyz[0] < CHUNK_SIZE; ++xyz[0])
 	{
@@ -148,8 +146,8 @@ void GreedyMesher::generate_surface(glm::tvec3<uint_fast8_t>& xyz, const uint_fa
 			int_fast8_t o[] = {0, 0, 0};
 			o[iy] = offset;
 
-			const Block::Block& block = block_at(x, y, z);
-			const Block::Block& sibling = block_at(x + o[0], y + o[1], z + o[2]);
+			const Block::Block& block = block_at(chunk, x, y, z);
+			const Block::Block& sibling = block_at(chunk, x + o[0], y + o[1], z + o[2]);
 			if(!block.is_invisible() // this block is visible
 			&& !sibling.is_opaque() // this block can be seen thru the adjacent block
 			&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks (of the same type)

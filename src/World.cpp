@@ -9,6 +9,7 @@
 #include "block/Block.hpp"
 #include "block/BlockType.hpp"
 #include "chunk/Chunk.hpp"
+#include "chunk/mesh/GreedyMesher.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
@@ -27,6 +28,7 @@ uint64_t key_hasher(const Position::ChunkInWorld& chunk_pos)
 
 World::World(const std::string& file_path)
 	:
+	mesher(std::make_unique<GreedyMesher>()),
 	chunks(0, key_hasher),
 	last_chunk(nullptr),
 	random_engine(0xFECA1),

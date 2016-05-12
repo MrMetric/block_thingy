@@ -10,9 +10,7 @@
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 
-ChunkMesher::ChunkMesher(const Chunk& chunk)
-	:
-	chunk(chunk)
+ChunkMesher::ChunkMesher()
 {
 }
 
@@ -20,7 +18,7 @@ ChunkMesher::~ChunkMesher()
 {
 }
 
-const Block::Block& ChunkMesher::block_at(const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds) const
+const Block::Block& ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds) const
 {
 	if(x < 0 || x >= CHUNK_SIZE
 	|| y < 0 || y >= CHUNK_SIZE
@@ -43,12 +41,12 @@ const Block::Block& ChunkMesher::block_at(const int_fast16_t x, const int_fast16
 	#undef s
 }
 
-bool ChunkMesher::block_is_invisible(const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds) const
+bool ChunkMesher::block_is_invisible(const Chunk& chunk, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds) const
 {
-	return block_at(x, y, z, allow_out_of_bounds).is_invisible();
+	return block_at(chunk, x, y, z, allow_out_of_bounds).is_invisible();
 }
 
-bool ChunkMesher::block_is_opaque(const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds) const
+bool ChunkMesher::block_is_opaque(const Chunk& chunk, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds) const
 {
-	return block_at(x, y, z, allow_out_of_bounds).is_opaque();
+	return block_at(chunk, x, y, z, allow_out_of_bounds).is_opaque();
 }

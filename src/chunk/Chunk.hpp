@@ -48,7 +48,6 @@ class Chunk
 	private:
 		World& owner;
 		Position::ChunkInWorld position;
-		std::unique_ptr<ChunkMesher> mesher;
 		meshmap_t meshes;
 		std::vector<VertexBuffer> mesh_vbos;
 		bool changed;

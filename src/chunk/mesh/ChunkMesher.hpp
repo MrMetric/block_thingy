@@ -23,19 +23,17 @@ using meshmap_t = std::map<BlockType, mesh_t>;
 class ChunkMesher
 {
 	public:
-		explicit ChunkMesher(const Chunk&);
+		ChunkMesher();
 		virtual ~ChunkMesher();
 
 		ChunkMesher(ChunkMesher&&) = delete;
 		ChunkMesher(const ChunkMesher&) = delete;
 		void operator=(const ChunkMesher&) = delete;
 
-		virtual meshmap_t make_mesh() = 0;
+		virtual meshmap_t make_mesh(const Chunk&) = 0;
 
 	protected:
-		const Chunk& chunk;
-
-		const Block::Block& block_at(int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds = true) const;
-		bool block_is_invisible(int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds = true) const;
-		bool block_is_opaque(int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds = true) const;
+		const Block::Block& block_at(const Chunk&, int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds = true) const;
+		bool block_is_invisible(const Chunk&, int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds = true) const;
+		bool block_is_opaque(const Chunk&, int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds = true) const;
 };

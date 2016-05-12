@@ -18,8 +18,6 @@
 #include "World.hpp"
 #include "block/Block.hpp"
 #include "block/BlockType.hpp"
-#include "chunk/mesh/ChunkMesher.hpp"
-#include "chunk/mesh/GreedyMesher.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
@@ -30,7 +28,6 @@ Chunk::Chunk(const Position::ChunkInWorld& pos, World& owner)
 	:
 	owner(owner),
 	position(pos),
-	mesher(std::make_unique<GreedyMesher>(*this)),
 	changed(true),
 	solid_block(BlockType::air) // a useful default for now
 {
@@ -111,7 +108,7 @@ void Chunk::update()
 		return;
 	}
 
-	meshes = mesher->make_mesh();
+	meshes = owner.mesher->make_mesh(*this);
 
 	if(mesh_vbos.size() < meshes.size())
 	{

@@ -8,6 +8,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "chunk/mesh/ChunkMesher.hpp"
 #include "position/ChunkInWorld.hpp"
 #include "storage/WorldFile.hpp"
 
@@ -54,6 +55,8 @@ class World
 		std::shared_ptr<Player> get_player(const std::string& name);
 
 		void save();
+
+		std::unique_ptr<ChunkMesher> mesher;
 
 	private:
 		world_map_t chunks;

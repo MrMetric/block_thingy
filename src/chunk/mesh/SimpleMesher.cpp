@@ -6,13 +6,11 @@
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
-SimpleMesher::SimpleMesher(const Chunk& chunk)
-	:
-	ChunkMesher(chunk)
+SimpleMesher::SimpleMesher()
 {
 }
 
-meshmap_t SimpleMesher::make_mesh()
+meshmap_t SimpleMesher::make_mesh(const Chunk& chunk)
 {
 	meshmap_t meshes;
 	for(BlockInChunk_type x = 0; x < CHUNK_SIZE; ++x)
@@ -21,25 +19,25 @@ meshmap_t SimpleMesher::make_mesh()
 		{
 			for(BlockInChunk_type z = 0; z < CHUNK_SIZE; ++z)
 			{
-				const Block::Block& block = block_at(x, y, z);
+				const Block::Block& block = block_at(chunk, x, y, z);
 				if(block.is_invisible())
 				{
 					continue;
 				}
 				BlockType type = block.type();
 				mesh_t& mesh = meshes[type];
-				draw_cube(mesh, block, x, y, z);
+				draw_cube(chunk, mesh, block, x, y, z);
 			}
 		}
 	}
 	return meshes;
 }
 
-void SimpleMesher::draw_cube(mesh_t& mesh, const Block::Block& block, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+void SimpleMesher::draw_cube(const Chunk& chunk, mesh_t& mesh, const Block::Block& block, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
-	auto block_visible_from = [this](const Block::Block& block, int_fast16_t x, int_fast16_t y, int_fast16_t z)
+	auto block_visible_from = [this, &chunk](const Block::Block& block, int_fast16_t x, int_fast16_t y, int_fast16_t z)
 	{
-		const Block::Block& sibling = block_at(x, y, z);
+		const Block::Block& sibling = block_at(chunk, x, y, z);
 		return !sibling.is_opaque() && block.type() != sibling.type();
 	};
 
