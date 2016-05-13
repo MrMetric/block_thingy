@@ -1,10 +1,15 @@
 #include "SimpleMesher.hpp"
 
+#include <stdint.h>
+
 #include "Cube.hpp"
 #include "block/Block.hpp"
 #include "block/BlockType.hpp"
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
+
+static void draw_cube(const Chunk&, mesh_t&, const Block::Block& block, BlockInChunk_type, BlockInChunk_type, BlockInChunk_type);
+static void draw_face(mesh_t&, BlockInChunk_type, BlockInChunk_type, BlockInChunk_type, uint_fast8_t face);
 
 SimpleMesher::SimpleMesher()
 {
@@ -33,11 +38,11 @@ meshmap_t SimpleMesher::make_mesh(const Chunk& chunk)
 	return meshes;
 }
 
-void SimpleMesher::draw_cube(const Chunk& chunk, mesh_t& mesh, const Block::Block& block, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+void draw_cube(const Chunk& chunk, mesh_t& mesh, const Block::Block& block, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
-	auto block_visible_from = [this, &chunk](const Block::Block& block, int_fast16_t x, int_fast16_t y, int_fast16_t z)
+	auto block_visible_from = [&chunk](const Block::Block& block, int_fast16_t x, int_fast16_t y, int_fast16_t z)
 	{
-		const Block::Block& sibling = block_at(chunk, x, y, z);
+		const Block::Block& sibling = ChunkMesher::block_at(chunk, x, y, z);
 		return !sibling.is_opaque() && block.type() != sibling.type();
 	};
 
@@ -73,7 +78,7 @@ void SimpleMesher::draw_cube(const Chunk& chunk, mesh_t& mesh, const Block::Bloc
 	}
 }
 
-void SimpleMesher::draw_face(mesh_t& mesh, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, const uint_fast8_t face)
+void draw_face(mesh_t& mesh, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, const uint_fast8_t face)
 {
 	auto offset = face * 6;
 	for(uint_fast8_t i = 0; i < 2; ++i)

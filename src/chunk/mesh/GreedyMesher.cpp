@@ -10,28 +10,30 @@
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
-namespace GreedyMesherPrivate
+struct Rectangle
 {
-	struct Rectangle
-	{
-		BlockType type;
-		BlockInChunk_type x, z, w, h;
-	};
+	BlockType type;
+	BlockInChunk_type x, z;
+	BlockInChunk_type w, h;
+};
 
-	enum class Plane
-	{
-		XY,
-		XZ,
-		YZ,
-	};
+enum class Plane
+{
+	XY,
+	XZ,
+	YZ,
+};
 
-	enum class Side : int_fast8_t
-	{
-		top = 1,
-		bottom = -1,
-	};
-}
-using namespace GreedyMesherPrivate;
+enum class Side : int_fast8_t
+{
+	top = 1,
+	bottom = -1,
+};
+
+static void add_surface(const Chunk&, meshmap_t&, std::vector<std::vector<BlockType>>&, Plane, Side);
+static Rectangle yield_rectangle(std::vector<std::vector<BlockType>>&);
+static void generate_surface(const Chunk&, std::vector<std::vector<BlockType>>&, glm::tvec3<uint_fast8_t>&, uint_fast8_t, uint_fast8_t, uint_fast8_t, int_fast8_t);
+static void add_face(mesh_t&, const mesh_vertex_coord_t&, const mesh_vertex_coord_t&, const mesh_vertex_coord_t&, const mesh_vertex_coord_t&);
 
 GreedyMesher::GreedyMesher()
 {
@@ -45,17 +47,17 @@ meshmap_t GreedyMesher::make_mesh(const Chunk& chunk)
 {
 	meshmap_t meshes;
 
-	add_surface(chunk, meshes, Plane::XY, Side::top);
-	add_surface(chunk, meshes, Plane::XY, Side::bottom);
-	add_surface(chunk, meshes, Plane::XZ, Side::top);
-	add_surface(chunk, meshes, Plane::XZ, Side::bottom);
-	add_surface(chunk, meshes, Plane::YZ, Side::top);
-	add_surface(chunk, meshes, Plane::YZ, Side::bottom);
+	add_surface(chunk, meshes, surface, Plane::XY, Side::top);
+	add_surface(chunk, meshes, surface, Plane::XY, Side::bottom);
+	add_surface(chunk, meshes, surface, Plane::XZ, Side::top);
+	add_surface(chunk, meshes, surface, Plane::XZ, Side::bottom);
+	add_surface(chunk, meshes, surface, Plane::YZ, Side::top);
+	add_surface(chunk, meshes, surface, Plane::YZ, Side::bottom);
 
 	return meshes;
 }
 
-void GreedyMesher::add_surface(const Chunk& chunk, meshmap_t& meshes, const Plane plane, const Side side)
+void add_surface(const Chunk& chunk, meshmap_t& meshes, std::vector<std::vector<BlockType>>& surface, const Plane plane, const Side side)
 {
 	uint_fast8_t ix, iy, iz;
 	if(plane == Plane::XY)
@@ -80,11 +82,11 @@ void GreedyMesher::add_surface(const Chunk& chunk, meshmap_t& meshes, const Plan
 	glm::tvec3<uint_fast8_t> xyz;
 	for(xyz[1] = 0; xyz[1] < CHUNK_SIZE; ++xyz[1])
 	{
-		generate_surface(chunk, xyz, ix, iy, iz, static_cast<int_fast8_t>(side));
+		generate_surface(chunk, surface, xyz, ix, iy, iz, static_cast<int_fast8_t>(side));
 
 		while(true)
 		{
-			Rectangle rekt = yield_rectangle();
+			Rectangle rekt = yield_rectangle(surface);
 			if(rekt.type == BlockType::none)
 			{
 				break;
@@ -119,22 +121,22 @@ void GreedyMesher::add_surface(const Chunk& chunk, meshmap_t& meshes, const Plan
 			v4[iz] = s(rekt.z + rekt.h);
 			#undef s
 
-			mesh_t& vertexes = meshes[rekt.type];
+			mesh_t& mesh = meshes[rekt.type];
 			if((plane == Plane::XZ && side == Side::top)
 			|| (plane == Plane::XY && side == Side::bottom)
 			|| (plane == Plane::YZ && side == Side::bottom))
 			{
-				add_face(v4, v3, v2, v1, vertexes);
+				add_face(mesh, v4, v3, v2, v1);
 			}
 			else
 			{
-				add_face(v1, v2, v3, v4, vertexes);
+				add_face(mesh, v1, v2, v3, v4);
 			}
 		}
 	}
 }
 
-void GreedyMesher::generate_surface(const Chunk& chunk, glm::tvec3<uint_fast8_t>& xyz, const uint_fast8_t ix, const uint_fast8_t iy, const uint_fast8_t iz, const int_fast8_t offset)
+void generate_surface(const Chunk& chunk, std::vector<std::vector<BlockType>>& surface, glm::tvec3<uint_fast8_t>& xyz, const uint_fast8_t ix, const uint_fast8_t iy, const uint_fast8_t iz, const int_fast8_t offset)
 {
 	for(xyz[0] = 0; xyz[0] < CHUNK_SIZE; ++xyz[0])
 	{
@@ -146,8 +148,8 @@ void GreedyMesher::generate_surface(const Chunk& chunk, glm::tvec3<uint_fast8_t>
 			int_fast8_t o[] = {0, 0, 0};
 			o[iy] = offset;
 
-			const Block::Block& block = block_at(chunk, x, y, z);
-			const Block::Block& sibling = block_at(chunk, x + o[0], y + o[1], z + o[2]);
+			const Block::Block& block = ChunkMesher::block_at(chunk, x, y, z);
+			const Block::Block& sibling = ChunkMesher::block_at(chunk, x + o[0], y + o[1], z + o[2]);
 			if(!block.is_invisible() // this block is visible
 			&& !sibling.is_opaque() // this block can be seen thru the adjacent block
 			&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks (of the same type)
@@ -163,7 +165,7 @@ void GreedyMesher::generate_surface(const Chunk& chunk, glm::tvec3<uint_fast8_t>
 	}
 }
 
-Rectangle GreedyMesher::yield_rectangle()
+Rectangle yield_rectangle(std::vector<std::vector<BlockType>>& surface)
 {
 	const size_t surface_size = surface.size();
 	for(BlockInChunk_type z = 0; z < surface_size; ++z)
@@ -223,8 +225,8 @@ Rectangle GreedyMesher::yield_rectangle()
 	return { BlockType::none, 0, 0, 0, 0 };
 }
 
-void GreedyMesher::add_face(const mesh_vertex_coord_t& p1, const mesh_vertex_coord_t& p2, const mesh_vertex_coord_t& p3, const mesh_vertex_coord_t& p4, mesh_t& vertexes)
+void add_face(mesh_t& mesh, const mesh_vertex_coord_t& p1, const mesh_vertex_coord_t& p2, const mesh_vertex_coord_t& p3, const mesh_vertex_coord_t& p4)
 {
-	vertexes.emplace_back(p1, p2, p3);
-	vertexes.emplace_back(p3, p4, p1);
+	mesh.emplace_back(p1, p2, p3);
+	mesh.emplace_back(p3, p4, p1);
 }
