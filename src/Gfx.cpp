@@ -138,12 +138,12 @@ void Gfx::toggle_cull_face()
 
 void Gfx::update_projection_matrix()
 {
-	const float fov  = 45.0f;
-	const float near = 0.1f;
-	const float far  = 1500.0f;
-	const float width = window_size.x;
-	const float height = window_size.y;
-	const float aspect_ratio = (width > height) ? (width / height) : (height / width);
+	const double fov = 45.0;
+	const double near = 0.1;
+	const double far  = 1500.0;
+	const double width = window_size.x;
+	const double height = window_size.y;
+	const double aspect_ratio = (width > height) ? (width / height) : (height / width);
 	projection_matrix = glm::perspective(fov, aspect_ratio, near, far);
 }
 
