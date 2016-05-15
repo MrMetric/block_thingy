@@ -19,6 +19,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-fsanitize=undefined,integer" />
+					<Add option="-lPocoFoundationd" />
 					<Add library="obj/Debug/glad.o" />
 				</Linker>
 			</Target>
@@ -34,6 +35,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
+					<Add option="-lPocoFoundation" />
 					<Add library="obj/Release/glad.o" />
 				</Linker>
 			</Target>
@@ -64,7 +66,6 @@
 		<Linker>
 			<Add option="`pkg-config --static --libs glfw3`" />
 			<Add option="-lpng" />
-			<Add option="-lPocoFoundation" />
 		</Linker>
 		<Unit filename="src/Camera.cpp" />
 		<Unit filename="src/Camera.hpp" />
