@@ -1,3 +1,4 @@
+#pragma once
 #include "event/Event.hpp"
 
 #include "types/window_size_t.hpp"
