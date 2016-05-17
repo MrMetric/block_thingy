@@ -107,6 +107,8 @@
 		<Unit filename="src/event/EventManager.cpp" />
 		<Unit filename="src/event/EventManager.hpp" />
 		<Unit filename="src/event/EventType.hpp" />
+		<Unit filename="src/event/type/Event_enter_block.cpp" />
+		<Unit filename="src/event/type/Event_enter_block.hpp" />
 		<Unit filename="src/event/type/Event_window_size_change.cpp" />
 		<Unit filename="src/event/type/Event_window_size_change.hpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderObject.cpp" />

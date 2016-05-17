@@ -10,6 +10,7 @@
 #include "Game.hpp"
 #include "World.hpp"
 #include "block/Block.hpp"
+#include "event/type/Event_enter_block.hpp"
 #include "position/BlockInWorld.hpp"
 
 Player::Player(const std::string& name)
@@ -37,6 +38,8 @@ void Player::move(const glm::dvec3& acceleration)
 	{
 		velocity.z = glm::sign(velocity.z) * max_velocity;
 	}
+
+	Position::BlockInWorld old_position(position);
 
 	{
 		double moveX = velocity.x * cosY - velocity.z * sinY;
@@ -71,6 +74,19 @@ void Player::move(const glm::dvec3& acceleration)
 		{
 			position.y += moveY;
 			flags.on_ground = false;
+		}
+	}
+
+	// TODO: handle this better when bounding boxes are added
+	Position::BlockInWorld new_position(position);
+	if(new_position != old_position)
+	{
+		const Block::Block& block = Game::instance->world.get_block_const(new_position);
+		if(block.type() != BlockType::none
+		&& block.type() != BlockType::air
+		&& !block.is_solid())
+		{
+			Game::instance->event_manager.do_event(Event_enter_block(*this, block));
 		}
 	}
 }

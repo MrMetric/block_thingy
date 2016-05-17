@@ -75,6 +75,11 @@ namespace Position
 		return (x == that.x) && (y == that.y) && (z == that.z);
 	}
 
+	bool BlockInWorld::operator!=(const BlockInWorld& that) const
+	{
+		return !(*this == that);
+	}
+
 	BlockInWorld::operator glm::vec3() const
 	{
 		return glm::vec3(x, y, z);
