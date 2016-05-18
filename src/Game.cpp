@@ -383,6 +383,24 @@ void Game::add_commands()
 		game.gfx.toggle_cull_face();
 		game.console.logger << "cull face: " << (game.gfx.cull_face ? "true" : "false") << "\n";
 	});
+	COMMAND_ARGS("fov")
+	{
+		if(args.size() != 1 || args[0].length() == 0)
+		{
+			game.console.error_logger << "Usage: fov <exact number or +- difference>\n";
+			return;
+		}
+		double value = std::stod(args[0]);
+		if(args[0][0] == '+' || args[0][0] == '-')
+		{
+			game.gfx.fov += value;
+		}
+		else
+		{
+			game.gfx.fov = value;
+		}
+		game.gfx.update_projection_matrix();
+	});
 
 	COMMAND("render_distance++")
 	{

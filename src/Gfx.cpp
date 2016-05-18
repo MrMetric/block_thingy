@@ -41,7 +41,8 @@
 Gfx::Gfx(GLFWwindow* window, EventManager& event_manager)
 	:
 	window(window),
-	s_lines("shaders/lines")
+	s_lines("shaders/lines"),
+	fov(45)
 {
 	opengl_setup();
 
@@ -138,13 +139,12 @@ void Gfx::toggle_cull_face()
 
 void Gfx::update_projection_matrix()
 {
-	const double fov = 45.0;
 	const double near = 0.1;
 	const double far  = 1500.0;
 	const double width = window_size.x;
 	const double height = window_size.y;
 	const double aspect_ratio = (width > height) ? (width / height) : (height / width);
-	projection_matrix = glm::perspective(fov, aspect_ratio, near, far);
+	projection_matrix = glm::perspective(glm::radians(fov), aspect_ratio, near, far);
 }
 
 void Gfx::set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation)

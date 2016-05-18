@@ -47,11 +47,13 @@ class Gfx
 		VertexBuffer outline_vbo;
 
 		bool cull_face;
+		double fov;
 
 		static GLFWwindow* init_glfw();
 		static void uninit_glfw(GLFWwindow* window);
 		void opengl_setup();
 		void toggle_cull_face();
+		void update_projection_matrix();
 		void set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation);
 		void draw_cube_outline(const Position::BlockInWorld&, const glm::vec4& color);
 		const ShaderProgram& get_block_shader(BlockType) const;
@@ -59,7 +61,4 @@ class Gfx
 		#ifdef USE_LIBPNG
 		static void write_png_RGB(const char* filename, uint8_t* buf, uint_fast32_t width, uint_fast32_t height, bool reverse_rows = false);
 		#endif
-
-	private:
-		void update_projection_matrix();
 };
