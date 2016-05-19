@@ -42,7 +42,7 @@ Gfx::Gfx(GLFWwindow* window, EventManager& event_manager)
 	:
 	window(window),
 	s_lines("shaders/lines"),
-	fov(45)
+	fov(75)
 {
 	opengl_setup();
 
