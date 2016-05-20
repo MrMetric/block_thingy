@@ -1,6 +1,9 @@
 bin/block_thingy_d
 bin/block_thingy_r
+bin/cam_pos
 bin/*.png
+bin/worlds/
+
 *.o
 *.depend
 *.layout
