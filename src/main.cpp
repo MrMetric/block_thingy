@@ -53,6 +53,16 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 	std::cout << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
+	if(!GLAD_GL_ARB_direct_state_access)
+	{
+		std::cerr << "Required OpenGL extension not found: GL_ARB_direct_state_access\n";
+		return EXIT_FAILURE;
+	}
+	if(!GLAD_GL_ARB_separate_shader_objects)
+	{
+		std::cerr << "Required OpenGL extension not found: GL_ARB_separate_shader_objects\n";
+		return EXIT_FAILURE;
+	}
 
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
