@@ -24,6 +24,10 @@
 
 #include "std_make_unique.hpp"
 
+using std::string;
+using std::to_string;
+using std::shared_ptr;
+
 Chunk::Chunk(const Position::ChunkInWorld& pos, World& owner)
 	:
 	owner(owner),
@@ -74,7 +78,7 @@ void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, cons
 	|| y >= CHUNK_SIZE
 	|| z >= CHUNK_SIZE)
 	{
-		std::string set_info = "(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ") = " + std::to_string(block.type_id());
+		string set_info = "(" + to_string(x) + ", " + to_string(y) + ", " + to_string(z) + ") = " + to_string(block.type_id());
 		throw std::domain_error("position out of bounds in Chunk::set: " + set_info);
 	}
 
@@ -210,7 +214,7 @@ void Chunk::update_neighbor(const ChunkInWorld_type x, const ChunkInWorld_type y
 {
 	Position::ChunkInWorld chunk_pos(x, y, z);
 	chunk_pos += position;
-	std::shared_ptr<Chunk> chunk = owner.get_chunk(chunk_pos);
+	shared_ptr<Chunk> chunk = owner.get_chunk(chunk_pos);
 	if(chunk != nullptr)
 	{
 		chunk->changed = true;

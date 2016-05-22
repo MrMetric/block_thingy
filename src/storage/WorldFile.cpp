@@ -23,7 +23,12 @@
 
 #include "std_make_unique.hpp"
 
-WorldFile::WorldFile(const std::string& world_path, World& world)
+using std::shared_ptr;
+using std::string;
+using std::to_string;
+using std::unique_ptr;
+
+WorldFile::WorldFile(const string& world_path, World& world)
 	:
 	world_path(world_path),
 	player_path(world_path + "/players/"),
@@ -48,9 +53,9 @@ void WorldFile::save_player(const Player& player)
 	msgpack::pack(stream, player);
 }
 
-std::unique_ptr<Player> WorldFile::load_player(const std::string& name)
+unique_ptr<Player> WorldFile::load_player(const string& name)
 {
-	std::string file_path = player_path + name;
+	string file_path = player_path + name;
 	if(!Util::file_is_openable(file_path))
 	{
 		return nullptr;
@@ -58,7 +63,7 @@ std::unique_ptr<Player> WorldFile::load_player(const std::string& name)
 
 	LOGGER << "loading player: " << file_path << "\n";
 
-	std::string bytes = Util::read_file(file_path);
+	string bytes = Util::read_file(file_path);
 	auto player = std::make_unique<Player>(name);
 	unpack_bytes(bytes, *player);
 
@@ -76,10 +81,10 @@ void WorldFile::save_chunks()
 void WorldFile::save_chunk(const Chunk& chunk)
 {
 	Position::ChunkInWorld position = chunk.get_position();
-	std::string x = std::to_string(position.x);
-	std::string y = std::to_string(position.y);
-	std::string z = std::to_string(position.z);
-	std::string file_path = chunk_path + x + "_" + y + "_" + z + ".gz";
+	string x = to_string(position.x);
+	string y = to_string(position.y);
+	string z = to_string(position.z);
+	string file_path = chunk_path + x + "_" + y + "_" + z + ".gz";
 	LOGGER << "saving " << file_path << "\n";
 
 	std::ofstream stdstream(file_path, std::ios::binary);
@@ -88,12 +93,12 @@ void WorldFile::save_chunk(const Chunk& chunk)
 }
 
 // should return unique_ptr, but shared_ptr is easier to deal with in World
-std::shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
+shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 {
-	std::string x = std::to_string(position.x);
-	std::string y = std::to_string(position.y);
-	std::string z = std::to_string(position.z);
-	std::string file_path = chunk_path + x + "_" + y + "_" + z + ".gz";
+	string x = to_string(position.x);
+	string y = to_string(position.y);
+	string z = to_string(position.z);
+	string file_path = chunk_path + x + "_" + y + "_" + z + ".gz";
 	if(!Util::file_is_openable(file_path))
 	{
 		return nullptr;
@@ -103,7 +108,7 @@ std::shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& posit
 	Poco::InflatingInputStream stream(stdstream, Poco::InflatingStreamBuf::STREAM_GZIP);
 	std::stringstream ss;
 	Poco::StreamCopier::copyStream(stream, ss);
-	std::string bytes = ss.str();
+	string bytes = ss.str();
 	auto chunk = std::make_shared<Chunk>(position, world);
 	unpack_bytes(bytes, *chunk);
 

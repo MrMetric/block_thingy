@@ -40,6 +40,9 @@
 
 #include "std_make_unique.hpp"
 
+using std::string;
+using std::unique_ptr;
+
 Game* Game::instance = nullptr;
 
 Game::Game(GLFWwindow* window, const window_size_t& window_size)
@@ -102,12 +105,12 @@ void Game::draw()
 }
 
 #ifdef USE_LIBPNG
-void Game::screenshot(const std::string& filename)
+void Game::screenshot(const string& filename)
 {
 	console.logger << "saving screenshot to " << filename << "\n";
 	const auto width = gfx.window_size.x;
 	const auto height = gfx.window_size.y;
-	std::unique_ptr<GLubyte[]> pixels = std::make_unique<GLubyte[]>(3 * width * height);
+	unique_ptr<GLubyte[]> pixels = std::make_unique<GLubyte[]>(3 * width * height);
 	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
 	Gfx::write_png_RGB(filename.c_str(), pixels.get(), width, height, true);
 }
@@ -187,7 +190,7 @@ void Game::add_commands()
 {
 	#define COMMAND_(name) commands.emplace_back(console, name, [&game=*this]
 	#define COMMAND(name) COMMAND_(name)()
-	#define COMMAND_ARGS(name) COMMAND_(name)(const std::vector<std::string>& args)
+	#define COMMAND_ARGS(name) COMMAND_(name)(const std::vector<string>& args)
 
 	COMMAND("quit")
 	{
@@ -259,7 +262,7 @@ void Game::add_commands()
 			game.console.error_logger << "Usage: save_pos <string: filename>\n";
 			return;
 		}
-		std::string save_name = args[0];
+		string save_name = args[0];
 		std::ofstream streem(save_name);
 		streem.precision(std::numeric_limits<double>::max_digits10);
 		streem << game.player.position.x << " " << game.player.position.y << " " << game.player.position.z << "\n";
@@ -274,7 +277,7 @@ void Game::add_commands()
 			game.console.error_logger << "Usage: load_pos <string: filename>\n";
 			return;
 		}
-		std::string save_name = args[0];
+		string save_name = args[0];
 		std::ifstream streem(save_name);
 		streem >> game.player.position.x;
 		streem >> game.player.position.y;
@@ -299,7 +302,7 @@ void Game::add_commands()
 			game.console.error_logger << "script not found: " << args[0] << "\n";
 			return;
 		}
-		std::string line;
+		string line;
 		while(std::getline(file, line))
 		{
 			game.console.run_line(line);
@@ -313,7 +316,7 @@ void Game::add_commands()
 			game.console.error_logger << "Usage: cam.rot x|y|z <float: degrees>\n";
 			return;
 		}
-		std::string part = args[0];
+		string part = args[0];
 		double value = std::stod(args[1]);
 		if(part == "x")
 		{
@@ -338,7 +341,7 @@ void Game::add_commands()
 	#ifdef USE_LIBPNG
 	COMMAND_ARGS("screenshot")
 	{
-		std::string filename;
+		string filename;
 		if(args.size() == 0)
 		{
 			std::time_t time = std::time(nullptr);

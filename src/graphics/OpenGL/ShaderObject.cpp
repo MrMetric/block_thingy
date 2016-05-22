@@ -9,7 +9,9 @@
 #include "Util.hpp"
 #include "console/Console.hpp"
 
-std::string get_log(const GLuint object);
+using std::string;
+
+string get_log(const GLuint object);
 
 ShaderObject::ShaderObject()
 	:
@@ -18,11 +20,11 @@ ShaderObject::ShaderObject()
 {
 }
 
-ShaderObject::ShaderObject(const std::string& file_path, GLenum type)
+ShaderObject::ShaderObject(const string& file_path, GLenum type)
 {
 	LOGGER << "compiling shader: " << file_path << "\n";
 
-	const std::string source = Util::read_file(file_path);
+	const string source = Util::read_file(file_path);
 	const char* source_c = source.c_str();
 	const GLint source_len = static_cast<GLint>(source.length());
 	name = glCreateShader(type);
@@ -33,7 +35,7 @@ ShaderObject::ShaderObject(const std::string& file_path, GLenum type)
 	glGetShaderiv(name, GL_COMPILE_STATUS, &compile_ok);
 	if(compile_ok == GL_FALSE)
 	{
-		std::string log = Util::gl_object_log(name);
+		string log = Util::gl_object_log(name);
 		throw std::runtime_error("error compiling " + file_path + ":\n" + log);
 	}
 

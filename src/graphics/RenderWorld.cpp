@@ -8,6 +8,8 @@
 #include "graphics/OpenGL/ShaderProgram.hpp"
 #include "position/ChunkInWorld.hpp"
 
+using std::shared_ptr;
+
 void RenderWorld::draw_world(
 	World& world,
 	const std::map<BlockType, ShaderProgram>& block_shaders,
@@ -33,7 +35,7 @@ void RenderWorld::draw_world(
 			{
 				for(ChunkInWorld_type z = min.z; z <= max.z; ++z)
 				{
-					std::shared_ptr<Chunk> chunk = world.get_or_make_chunk({ x, y, z });
+					shared_ptr<Chunk> chunk = world.get_or_make_chunk({ x, y, z });
 					chunk->render(transluscent_pass);
 				}
 			}

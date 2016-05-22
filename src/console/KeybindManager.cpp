@@ -11,11 +11,13 @@
 
 #include "Console.hpp"
 
+using std::string;
+
 KeybindManager::KeybindManager(Console& console)
 	:
 	console(console)
 {
-	console.add_command("bind", {[&keybinder=*this](const std::vector<std::string>& args)
+	console.add_command("bind", {[&keybinder=*this](const std::vector<string>& args)
 	{
 		if(args.size() != 2)
 		{
@@ -24,7 +26,7 @@ KeybindManager::KeybindManager(Console& console)
 		}
 		keybinder.bind_key(args[0], args[1]);
 	}});
-	console.add_command("unbind", {[&keybinder=*this](const std::vector<std::string>& args)
+	console.add_command("unbind", {[&keybinder=*this](const std::vector<string>& args)
 	{
 		if(args.size() != 1)
 		{
@@ -42,12 +44,12 @@ KeybindManager::~KeybindManager()
 	console.unadd_command("unbind");
 }
 
-void KeybindManager::bind_key(const int key, const std::string& command)
+void KeybindManager::bind_key(const int key, const string& command)
 {
 	keybinds[key] = command;
 }
 
-void KeybindManager::bind_key(const std::string& key_string, const std::string& command)
+void KeybindManager::bind_key(const string& key_string, const string& command)
 {
 	int key = KeybindManager::translate_key(key_string);
 	if(key == GLFW_KEY_UNKNOWN)
@@ -69,14 +71,14 @@ void KeybindManager::keypress(const int key, const int action)
 		auto i = keybinds.find(key);
 		if(i != keybinds.end())
 		{
-			std::string command = i->second;
+			string command = i->second;
 			if(command[0] == '+')
 			{
 				if(action == GLFW_REPEAT)
 				{
 					return;
 				}
-				std::string command2 = command;
+				string command2 = command;
 				command2[0] = '-';
 				release_auto[key] = command2;
 			}
@@ -98,7 +100,7 @@ void KeybindManager::keypress(const int key, const int action)
 }
 
 // I think this is too long :[
-int KeybindManager::translate_key(std::string key)
+int KeybindManager::translate_key(string key)
 {
 	std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 	if(key.length() == 1)

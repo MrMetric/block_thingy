@@ -2,7 +2,9 @@
 
 #include "Console.hpp"
 
-Command::Command(Console& console, const std::string& name, const console_handler_t& handler)
+using std::string;
+
+Command::Command(Console& console, const string& name, const console_handler_t& handler)
 	:
 	console(console),
 	name(name)
@@ -10,7 +12,7 @@ Command::Command(Console& console, const std::string& name, const console_handle
 	console.add_command(name, handler);
 }
 
-Command::Command(Console& console, const std::string& name, const console_handler_noargs_t& handler)
+Command::Command(Console& console, const string& name, const console_handler_noargs_t& handler)
 	:
 	console(console),
 	name(name)

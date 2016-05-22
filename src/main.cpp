@@ -13,20 +13,25 @@
 #include "std_make_unique.hpp"
 #include "types/window_size_t.hpp"
 
+using std::cerr;
+using std::cout;
+using std::string;
+using std::unique_ptr;
+
 // http://www.lighthouse3d.com/cg-topics/error-tracking-in-opengl/
-void printOglError(const std::string& file, const int line)
+void printOglError(const string& file, const int line)
 {
 	GLenum glErr = glGetError();
 	if(glErr != GL_NO_ERROR)
 	{
-		std::cout << "glError in file " << file << " @ line " << line << ": " << Util::gl_error_string(glErr) << "\n";
+		cout << "glError in file " << file << " @ line " << line << ": " << Util::gl_error_string(glErr) << "\n";
 	}
 }
 #define printOpenGLError() printOglError(__FILE__, __LINE__)
 
 static void error_callback(const int error, const char* description)
 {
-	std::cerr << "GLFW error " << error << ": " << description << "\n";
+	cerr << "GLFW error " << error << ": " << description << "\n";
 }
 
 int main(int argc, char** argv)
@@ -38,8 +43,8 @@ int main(int argc, char** argv)
 
 	glfwSetErrorCallback(error_callback);
 
-	std::cout << "Compiled with GLFW " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << "\n";
-	std::cout << "Running with GLFW " << glfwGetVersionString() << "\n";
+	cout << "Compiled with GLFW " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << "\n";
+	cout << "Running with GLFW " << glfwGetVersionString() << "\n";
 
 	GLFWwindow* window = Gfx::init_glfw();
 	if(window == nullptr)
@@ -49,25 +54,25 @@ int main(int argc, char** argv)
 
 	if(!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
-		std::cerr << "Error loading GLAD\n";
+		cerr << "Error loading GLAD\n";
 		return EXIT_FAILURE;
 	}
-	std::cout << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
+	cout << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
 	if(!GLAD_GL_ARB_direct_state_access)
 	{
-		std::cerr << "Required OpenGL extension not found: GL_ARB_direct_state_access\n";
+		cerr << "Required OpenGL extension not found: GL_ARB_direct_state_access\n";
 		return EXIT_FAILURE;
 	}
 	if(!GLAD_GL_ARB_separate_shader_objects)
 	{
-		std::cerr << "Required OpenGL extension not found: GL_ARB_separate_shader_objects\n";
+		cerr << "Required OpenGL extension not found: GL_ARB_separate_shader_objects\n";
 		return EXIT_FAILURE;
 	}
 
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
 
-	static std::unique_ptr<Game> game = std::make_unique<Game>(window, window_size_t(width, height)); printOpenGLError();
+	static unique_ptr<Game> game = std::make_unique<Game>(window, window_size_t(width, height)); printOpenGLError();
 
 	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height)
 	{
@@ -86,7 +91,7 @@ int main(int argc, char** argv)
 		game->mousemove(x, y);
 	});
 
-	std::cout << "starting main loop\n";
+	cout << "starting main loop\n";
 	while(!glfwWindowShouldClose(window))
 	{
 		game->draw(); printOpenGLError();

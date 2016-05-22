@@ -7,6 +7,8 @@
 #include "Event.hpp"
 #include "EventType.hpp"
 
+using std::to_string;
+
 EventManager::EventManager()
 	:
 	max_id(0)
@@ -30,7 +32,7 @@ void EventManager::unadd_handler(const event_handler_id_t event_id)
 	auto i = handlers.find(event_id);
 	if(i == handlers.end())
 	{
-		throw std::runtime_error("there is no event with id " + std::to_string(event_id));
+		throw std::runtime_error("there is no event with id " + to_string(event_id));
 	}
 	handlers.erase(i);
 }

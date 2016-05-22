@@ -14,12 +14,17 @@
 
 #include "std_make_unique.hpp"
 
-bool Util::file_is_openable(const std::string& path)
+using std::cerr;
+using std::string;
+using std::to_string;
+using std::unique_ptr;
+
+bool Util::file_is_openable(const string& path)
 {
 	return std::ifstream(path).is_open();
 }
 
-std::string Util::read_file(const std::string& path)
+string Util::read_file(const string& path)
 {
 	try
 	{
@@ -27,19 +32,19 @@ std::string Util::read_file(const std::string& path)
 		inpoot.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 		uint_fast64_t fsize = static_cast<uint_fast64_t>(inpoot.tellg());
 		inpoot.seekg(0, std::ios::beg);
-		std::unique_ptr<char[]> aaa = std::make_unique<char[]>(fsize);
+		unique_ptr<char[]> aaa = std::make_unique<char[]>(fsize);
 		inpoot.read(aaa.get(), static_cast<std::streamsize>(fsize));
-		std::string bbb(aaa.get(), fsize);
+		string bbb(aaa.get(), fsize);
 		return bbb;
 	}
 	catch(const std::ios_base::failure&)
 	{
-		std::cerr << "failed to read " << path << "\n";
+		cerr << "failed to read " << path << "\n";
 		throw;
 	}
 }
 
-std::string Util::gl_error_string(const GLenum code)
+string Util::gl_error_string(const GLenum code)
 {
 	switch(code)
 	{
@@ -88,10 +93,10 @@ std::string Util::gl_error_string(const GLenum code)
 		}
 		#endif
 	}
-	return "unknown (" + std::to_string(code) + ")";
+	return "unknown (" + to_string(code) + ")";
 }
 
-std::string Util::gl_object_log(const GLuint object)
+string Util::gl_object_log(const GLuint object)
 {
 	GLint log_length;
 	if(glIsShader(object))
@@ -107,7 +112,7 @@ std::string Util::gl_object_log(const GLuint object)
 		throw std::runtime_error("Error printing log: object is not a shader or a program\n");
 	}
 
-	std::unique_ptr<char[]> log = std::make_unique<char[]>(static_cast<size_t>(log_length));
+	unique_ptr<char[]> log = std::make_unique<char[]>(static_cast<size_t>(log_length));
 
 	if(glIsShader(object))
 	{
@@ -118,23 +123,23 @@ std::string Util::gl_object_log(const GLuint object)
 		glGetProgramInfoLog(object, log_length, nullptr, log.get());
 	}
 
-	std::string log_string(log.get());
+	string log_string(log.get());
 	return log_string;
 }
 
-Util::path Util::split_path(const std::string& path)
+Util::path Util::split_path(const string& path)
 {
 	auto slash_pos = path.find_last_of('/');
 	auto dot_pos = path.find_last_of('.');
-	std::string folder = path.substr(0, slash_pos);
-	std::string file = path.substr(slash_pos + 1, dot_pos - slash_pos - 1);
-	std::string ext = path.substr(dot_pos + 1);
+	string folder = path.substr(0, slash_pos);
+	string file = path.substr(slash_pos + 1, dot_pos - slash_pos - 1);
+	string ext = path.substr(dot_pos + 1);
 	return { folder, file, ext };
 }
 
-std::string Util::join_path(const Util::path& path_parts)
+string Util::join_path(const Util::path& path_parts)
 {
-	std::string path = path_parts.folder + "/" + path_parts.file;
+	string path = path_parts.folder + "/" + path_parts.file;
 	if(path_parts.ext != "")
 	{
 		path += "." + path_parts.ext;
@@ -142,7 +147,7 @@ std::string Util::join_path(const Util::path& path_parts)
 	return path;
 }
 
-void Util::change_directory(const std::string& path)
+void Util::change_directory(const string& path)
 {
 	// TODO: find out what Wandows uses
 	if(chdir(path.c_str()) == -1)

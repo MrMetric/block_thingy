@@ -13,7 +13,9 @@
 #include "event/type/Event_enter_block.hpp"
 #include "position/BlockInWorld.hpp"
 
-Player::Player(const std::string& name)
+using std::string;
+
+Player::Player(const string& name)
 	:
 	name(name),
 	reach_distance(16),

@@ -14,8 +14,10 @@
 
 #include "std_make_unique.hpp"
 
-static GLuint make_program(const std::vector<std::string>& files, const std::string& debug_name);
-static std::vector<std::string> get_uniform_names(const GLuint name);
+using std::string;
+
+static GLuint make_program(const std::vector<string>& files, const string& debug_name);
+static std::vector<string> get_uniform_names(const GLuint name);
 
 ShaderProgram::ShaderProgram()
 	:
@@ -26,22 +28,22 @@ ShaderProgram::ShaderProgram()
 
 ShaderProgram::ShaderProgram(const char* path)
 	:
-	ShaderProgram(std::string(path))
+	ShaderProgram(string(path))
 {
 }
 
-ShaderProgram::ShaderProgram(const std::string& path)
+ShaderProgram::ShaderProgram(const string& path)
 	:
 	ShaderProgram({ path + ".vs", path + ".fs" }, path)
 {
 }
 
-ShaderProgram::ShaderProgram(const std::vector<std::string>& files, const std::string& debug_name)
+ShaderProgram::ShaderProgram(const std::vector<string>& files, const string& debug_name)
 {
 	name = make_program(files, debug_name);
 
-	std::vector<std::string> uniform_names = get_uniform_names(name);
-	for(const std::string& s : uniform_names)
+	std::vector<string> uniform_names = get_uniform_names(name);
+	for(const string& s : uniform_names)
 	{
 		GLint location = glGetUniformLocation(name, s.c_str());
 		if(location == -1)
@@ -79,7 +81,7 @@ GLuint ShaderProgram::get_name() const
 	return name;
 }
 
-GLint ShaderProgram::get_uniform_location(const std::string& name) const
+GLint ShaderProgram::get_uniform_location(const string& name) const
 {
 	auto i = uniforms.find(name);
 	if(i == uniforms.end())
@@ -89,49 +91,49 @@ GLint ShaderProgram::get_uniform_location(const std::string& name) const
 	return i->second;
 }
 
-void ShaderProgram::uniform(const std::string& uniform_name, const float x) const
+void ShaderProgram::uniform(const string& uniform_name, const float x) const
 {
 	const GLint u = get_uniform_location(uniform_name);
 	glProgramUniform1f(name, u, x);
 }
 
-void ShaderProgram::uniform(const std::string& uniform_name, const double x) const
+void ShaderProgram::uniform(const string& uniform_name, const double x) const
 {
 	const GLint u = get_uniform_location(uniform_name);
 	glProgramUniform1d(name, u, x);
 }
 
-void ShaderProgram::uniform(const std::string& uniform_name, const float x, const float y, const float z) const
+void ShaderProgram::uniform(const string& uniform_name, const float x, const float y, const float z) const
 {
 	const GLint u = get_uniform_location(uniform_name);
 	glProgramUniform3f(name, u, x, y, z);
 }
 
-void ShaderProgram::uniform(const std::string& uniform_name, const glm::vec3& vec) const
+void ShaderProgram::uniform(const string& uniform_name, const glm::vec3& vec) const
 {
 	const GLint u = get_uniform_location(uniform_name);
 	const float* ptr = glm::value_ptr(vec);
 	glProgramUniform3fv(name, u, 1, ptr);
 }
 
-void ShaderProgram::uniform(const std::string& uniform_name, const glm::vec4& vec) const
+void ShaderProgram::uniform(const string& uniform_name, const glm::vec4& vec) const
 {
 	const GLint u = get_uniform_location(uniform_name);
 	const float* ptr = glm::value_ptr(vec);
 	glProgramUniform4fv(name, u, 1, ptr);
 }
 
-void ShaderProgram::uniform(const std::string& uniform_name, const glm::mat4& matrix) const
+void ShaderProgram::uniform(const string& uniform_name, const glm::mat4& matrix) const
 {
 	const GLint u = get_uniform_location(uniform_name);
 	const float* ptr = glm::value_ptr(matrix);
 	glProgramUniformMatrix4fv(name, u, 1, GL_FALSE, ptr);
 }
 
-static GLuint make_program(const std::vector<std::string>& files, const std::string& debug_name)
+static GLuint make_program(const std::vector<string>& files, const string& debug_name)
 {
 	std::vector<ShaderObject> objects;
-	for(std::string path : files)
+	for(string path : files)
 	{
 		GLenum type;
 		Util::path path_parts = Util::split_path(path);
@@ -168,7 +170,7 @@ static GLuint make_program(const std::vector<std::string>& files, const std::str
 	glGetProgramiv(program, GL_LINK_STATUS, &izgud);
 	if(izgud == GL_FALSE)
 	{
-		std::string log = Util::gl_object_log(program);
+		string log = Util::gl_object_log(program);
 		glDeleteProgram(program);
 		throw std::runtime_error("error linking program " + debug_name + ":\n" + log);
 	}
@@ -177,7 +179,7 @@ static GLuint make_program(const std::vector<std::string>& files, const std::str
 	glGetProgramiv(program, GL_VALIDATE_STATUS, &izgud);
 	if(izgud == GL_FALSE)
 	{
-		std::string log = Util::gl_object_log(program);
+		string log = Util::gl_object_log(program);
 		glDeleteProgram(program);
 		throw std::runtime_error("program validation failed in " + debug_name + ":\n" + log);
 	}
@@ -192,7 +194,7 @@ static GLuint make_program(const std::vector<std::string>& files, const std::str
 	return program;
 }
 
-static std::vector<std::string> get_uniform_names(const GLuint program)
+static std::vector<string> get_uniform_names(const GLuint program)
 {
 	GLint uniform_count;
 	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &uniform_count);
@@ -200,7 +202,7 @@ static std::vector<std::string> get_uniform_names(const GLuint program)
 	GLint max_name_length;
 	glGetProgramiv(program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &max_name_length);
 
-	std::vector<std::string> uniform_names;
+	std::vector<string> uniform_names;
 	for(GLint i = 0; i < uniform_count; ++i)
 	{
 		std::unique_ptr<char[]> uniform_name = std::make_unique<char[]>(static_cast<size_t>(max_name_length));

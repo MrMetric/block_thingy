@@ -19,6 +19,8 @@
 
 #include "std_make_unique.hpp"
 
+using std::unique_ptr;
+
 constexpr double infinity = std::numeric_limits<double>::infinity();
 
 // like fmod(a, 1), but always returns a positive number
@@ -134,7 +136,7 @@ static bool pos_in_bounds(const Position::BlockInWorld& pos, const glm::dvec3& m
  *
  * If the callback returns a true value, the traversal will be stopped.
  */
-std::unique_ptr<RaycastHit> PhysicsUtil::raycast(const World& world, const glm::dvec3& origin, const glm::dvec3& direction, const double radius)
+unique_ptr<RaycastHit> PhysicsUtil::raycast(const World& world, const glm::dvec3& origin, const glm::dvec3& direction, const double radius)
 {
 	// From "A Fast Voxel Traversal Algorithm for Ray Tracing"
 	// by John Amanatides and Andrew Woo, 1987

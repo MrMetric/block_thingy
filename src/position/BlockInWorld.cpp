@@ -10,6 +10,8 @@
 
 #include "chunk/Chunk.hpp"
 
+using std::to_string;
+
 namespace Position
 {
 	BlockInWorld::BlockInWorld() : x(0), y(0), z(0) {}
@@ -51,7 +53,7 @@ namespace Position
 		if(i == 0) return x;
 		if(i == 1) return y;
 		if(i == 2) return z;
-		throw std::out_of_range("Position::BlockInWorld::operator[]: " + std::to_string(i) + " > 2");
+		throw std::out_of_range("Position::BlockInWorld::operator[]: " + to_string(i) + " > 2");
 	}
 
 	BlockInWorld_type& BlockInWorld::operator[](const uint_fast8_t i)
@@ -59,7 +61,7 @@ namespace Position
 		if(i == 0) return x;
 		if(i == 1) return y;
 		if(i == 2) return z;
-		throw std::out_of_range("Position::BlockInWorld::operator[]: " + std::to_string(i) + " > 2");
+		throw std::out_of_range("Position::BlockInWorld::operator[]: " + to_string(i) + " > 2");
 	}
 
 	BlockInWorld& BlockInWorld::operator+=(const BlockInWorld& that)

@@ -14,6 +14,9 @@
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 
+using std::shared_ptr;
+using std::string;
+
 uint64_t key_hasher(const Position::ChunkInWorld& chunk_pos)
 {
 	uint32_t x = chunk_pos.x & 0x1FFFFF;
@@ -26,7 +29,7 @@ uint64_t key_hasher(const Position::ChunkInWorld& chunk_pos)
 	return key;
 }
 
-World::World(const std::string& file_path)
+World::World(const string& file_path)
 	:
 	mesher(std::make_unique<GreedyMesher>()),
 	chunks(0, key_hasher),
@@ -39,7 +42,7 @@ World::World(const std::string& file_path)
 void World::set_block(const Position::BlockInWorld& block_pos, const Block::Block& block)
 {
 	Position::ChunkInWorld chunk_pos(block_pos);
-	std::shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
+	shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
 
 	Position::BlockInChunk pos(block_pos);
 	chunk->set_block(pos, block);
@@ -50,7 +53,7 @@ void World::set_block(const Position::BlockInWorld& block_pos, const Block::Bloc
 const Block::Block& World::get_block_const(const Position::BlockInWorld& block_pos) const
 {
 	Position::ChunkInWorld chunk_pos(block_pos);
-	std::shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
+	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
 		static const Block::Block none = Block::Block(BlockType::none);
@@ -64,7 +67,7 @@ const Block::Block& World::get_block_const(const Position::BlockInWorld& block_p
 Block::Block& World::get_block_mutable(const Position::BlockInWorld& block_pos)
 {
 	Position::ChunkInWorld chunk_pos(block_pos);
-	std::shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
+	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
 		static Block::Block none = Block::Block(BlockType::none); // TODO: this should be immutable
@@ -75,7 +78,7 @@ Block::Block& World::get_block_mutable(const Position::BlockInWorld& block_pos)
 	return chunk->get_block_mutable(pos);
 }
 
-void World::set_chunk(const Position::ChunkInWorld& chunk_pos, std::shared_ptr<Chunk> chunk)
+void World::set_chunk(const Position::ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 {
 	if(last_chunk != nullptr && chunk_pos == last_key)
 	{
@@ -84,7 +87,7 @@ void World::set_chunk(const Position::ChunkInWorld& chunk_pos, std::shared_ptr<C
 	chunks.insert({ chunk_pos, chunk });
 }
 
-std::shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld& chunk_pos) const
+shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld& chunk_pos) const
 {
 	if(last_chunk != nullptr && chunk_pos == last_key)
 	{
@@ -95,7 +98,7 @@ std::shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld& chunk_pos)
 	{
 		return nullptr;
 	}
-	std::shared_ptr<Chunk> chunk = i->second;
+	shared_ptr<Chunk> chunk = i->second;
 	last_key = chunk_pos;
 	last_chunk = chunk;
 	return chunk;
@@ -104,9 +107,9 @@ std::shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld& chunk_pos)
 // this does not set last_chunk/last_key because:
 // if the chunk is not null, get_chunk does it
 // if the chunk is null, set_chunk does it
-std::shared_ptr<Chunk> World::get_or_make_chunk(const Position::ChunkInWorld& chunk_pos)
+shared_ptr<Chunk> World::get_or_make_chunk(const Position::ChunkInWorld& chunk_pos)
 {
-	std::shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
+	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk != nullptr)
 	{
 		return chunk;
@@ -183,9 +186,9 @@ void World::step(double delta_time)
 	}
 }
 
-std::shared_ptr<Player> World::add_player(const std::string& name)
+shared_ptr<Player> World::add_player(const string& name)
 {
-	std::shared_ptr<Player> player = file.load_player(name);
+	shared_ptr<Player> player = file.load_player(name);
 	if(player == nullptr)
 	{
 		player = std::make_shared<Player>(name);
@@ -194,7 +197,7 @@ std::shared_ptr<Player> World::add_player(const std::string& name)
 	return player;
 }
 
-std::shared_ptr<Player> World::get_player(const std::string& name)
+shared_ptr<Player> World::get_player(const string& name)
 {
 	auto i = players.find(name);
 	if(i == players.end())
@@ -211,7 +214,7 @@ void World::save()
 	{
 		const Position::ChunkInWorld position = *unsaved_chunks.begin();
 		unsaved_chunks.erase(unsaved_chunks.begin());
-		std::shared_ptr<Chunk> chunk = get_chunk(position);
+		shared_ptr<Chunk> chunk = get_chunk(position);
 		if(chunk != nullptr)
 		{
 			file.save_chunk(*chunk);

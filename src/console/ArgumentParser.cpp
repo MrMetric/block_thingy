@@ -3,13 +3,15 @@
 #include <string>
 #include <vector>
 
+using std::string;
+
 ArgumentParser::ArgumentParser()
 {
 }
 
-std::vector<std::string> ArgumentParser::parse_args(const std::string& argline)
+std::vector<string> ArgumentParser::parse_args(const string& argline)
 {
-	std::vector<std::string> args;
+	std::vector<string> args;
 
 	iterator = argline.begin();
 	end = argline.end();
@@ -33,9 +35,9 @@ std::vector<std::string> ArgumentParser::parse_args(const std::string& argline)
 	return args;
 }
 
-std::string ArgumentParser::read_string(const char endchar)
+string ArgumentParser::read_string(const char endchar)
 {
-	std::string s = "";
+	string s = "";
 	while(iterator != end)
 	{
 		char c = *iterator;
@@ -79,5 +81,5 @@ std::string ArgumentParser::read_string(const char endchar)
 }
 
 truncated_argument::truncated_argument(const char* what_arg) : std::runtime_error(what_arg){}
-truncated_argument::truncated_argument(const std::string& what_arg) : std::runtime_error(what_arg){}
+truncated_argument::truncated_argument(const string& what_arg) : std::runtime_error(what_arg){}
 truncated_argument::~truncated_argument(){}

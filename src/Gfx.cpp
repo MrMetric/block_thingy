@@ -38,6 +38,9 @@
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 
+using std::cout;
+using std::string;
+
 Gfx::Gfx(GLFWwindow* window, EventManager& event_manager)
 	:
 	window(window),
@@ -72,7 +75,7 @@ GLFWwindow* Gfx::init_glfw()
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 	int width = mode->width * 3 / 4;
 	int height = mode->height * 3 / 4;
-	std::cout << "window size: " << width << "×" << height << "\n";
+	cout << "window size: " << width << "×" << height << "\n";
 	GLFWwindow* window = glfwCreateWindow(width, height, "Baby's First Voxel Engine", nullptr, nullptr);
 	if(!window)
 	{
@@ -118,10 +121,10 @@ void Gfx::opengl_setup()
 
 	GLfloat lineWidthRange[2];
 	glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, lineWidthRange);
-	std::cout << "OpenGL aliased line width range: " << lineWidthRange[0] << "," << lineWidthRange[1] << "\n";
+	cout << "OpenGL aliased line width range: " << lineWidthRange[0] << "," << lineWidthRange[1] << "\n";
 
 	glGetFloatv(GL_SMOOTH_LINE_WIDTH_RANGE, lineWidthRange);
-	std::cout << "OpenGL smooth line width range: " << lineWidthRange[0] << "," << lineWidthRange[1] << "\n";
+	cout << "OpenGL smooth line width range: " << lineWidthRange[0] << "," << lineWidthRange[1] << "\n";
 }
 
 void Gfx::toggle_cull_face()
@@ -227,7 +230,7 @@ void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint_fast32_t 
 	{
 		png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
 		png_destroy_write_struct(&png_ptr, &info_ptr);
-		throw std::runtime_error(std::string("error opening png file for writing: ") + strerror(errno));
+		throw std::runtime_error(string("error opening png file for writing: ") + strerror(errno));
 	}
 	png_init_io(png_ptr, fp);
 	const int bit_depth = 8;

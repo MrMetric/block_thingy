@@ -7,6 +7,8 @@
 
 #include "ArgumentParser.hpp"
 
+using std::string;
+
 Console::Console()
 	:
 	logger(std::cout),
@@ -28,7 +30,7 @@ console_handler_wrapper::console_handler_wrapper(const console_handler_noargs_t&
 {
 }
 
-void console_handler_wrapper::operator()(const std::vector<std::string>& args) const
+void console_handler_wrapper::operator()(const std::vector<string>& args) const
 {
 	if(has_args)
 	{
@@ -40,7 +42,7 @@ void console_handler_wrapper::operator()(const std::vector<std::string>& args) c
 	}
 }
 
-void Console::add_command(const std::string& name, const console_handler_wrapper& handler)
+void Console::add_command(const string& name, const console_handler_wrapper& handler)
 {
 	if(!handlers.insert({name, handler}).second)
 	{
@@ -48,39 +50,39 @@ void Console::add_command(const std::string& name, const console_handler_wrapper
 	}
 }
 
-void Console::unadd_command(const std::string& name)
+void Console::unadd_command(const string& name)
 {
 	handlers.erase(name);
 }
 
-void Console::run_line(const std::string& line)
+void Console::run_line(const string& line)
 {
 	if(line.length() == 0)
 	{
 		return;
 	}
-	std::vector<std::string> args = ArgumentParser().parse_args(line);
+	std::vector<string> args = ArgumentParser().parse_args(line);
 	if(args.size() < 1)
 	{
 		return;
 	}
-	const std::string name = args[0];
+	const string name = args[0];
 	args.erase(args.begin());
 	run_command(name, args);
 }
 
-void Console::run_command(const std::string& name, const std::string& argline) const
+void Console::run_command(const string& name, const string& argline) const
 {
 	if(name[0] == '#') // ignore comments
 	{
 		return;
 	}
 
-	const std::vector<std::string> args = ArgumentParser().parse_args(argline);
+	const std::vector<string> args = ArgumentParser().parse_args(argline);
 	run_command(name, args);
 }
 
-void Console::run_command(const std::string& name, const std::vector<std::string>& args) const
+void Console::run_command(const string& name, const std::vector<string>& args) const
 {
 	if(name[0] == '#') // ignore comments
 	{
