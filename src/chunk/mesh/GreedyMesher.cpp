@@ -30,9 +30,12 @@ enum class Side : int_fast8_t
 	bottom = -1,
 };
 
-static void add_surface(const Chunk&, meshmap_t&, std::vector<std::vector<BlockType>>&, Plane, Side);
-static Rectangle yield_rectangle(std::vector<std::vector<BlockType>>&);
-static void generate_surface(const Chunk&, std::vector<std::vector<BlockType>>&, glm::tvec3<uint_fast8_t>&, uint_fast8_t, uint_fast8_t, uint_fast8_t, int_fast8_t);
+using surface_t = std::vector<std::vector<BlockType>>;
+using u8vec3 = glm::tvec3<uint_fast8_t>;
+
+static void add_surface(const Chunk&, meshmap_t&, surface_t&, Plane, Side);
+static Rectangle yield_rectangle(surface_t&);
+static void generate_surface(const Chunk&, surface_t&, u8vec3&, const u8vec3&, int_fast8_t);
 static void add_face(mesh_t&, const mesh_vertex_coord_t&, const mesh_vertex_coord_t&, const mesh_vertex_coord_t&, const mesh_vertex_coord_t&);
 
 GreedyMesher::GreedyMesher()
@@ -57,7 +60,7 @@ meshmap_t GreedyMesher::make_mesh(const Chunk& chunk)
 	return meshes;
 }
 
-void add_surface(const Chunk& chunk, meshmap_t& meshes, std::vector<std::vector<BlockType>>& surface, const Plane plane, const Side side)
+void add_surface(const Chunk& chunk, meshmap_t& meshes, surface_t& surface, const Plane plane, const Side side)
 {
 	uint_fast8_t ix, iy, iz;
 	if(plane == Plane::XY)
@@ -79,10 +82,10 @@ void add_surface(const Chunk& chunk, meshmap_t& meshes, std::vector<std::vector<
 		iz = 2;
 	}
 
-	glm::tvec3<uint_fast8_t> xyz;
+	u8vec3 xyz;
 	for(xyz[1] = 0; xyz[1] < CHUNK_SIZE; ++xyz[1])
 	{
-		generate_surface(chunk, surface, xyz, ix, iy, iz, static_cast<int_fast8_t>(side));
+		generate_surface(chunk, surface, xyz, { ix, iy, iz }, static_cast<int_fast8_t>(side));
 
 		while(true)
 		{
@@ -97,7 +100,7 @@ void add_surface(const Chunk& chunk, meshmap_t& meshes, std::vector<std::vector<
 			mesh_vertex_coord_t v3;
 			mesh_vertex_coord_t v4;
 
-			uint8_t y1 = xyz[1];
+			uint_fast8_t y1 = xyz[1];
 			if(side == Side::top)
 			{
 				y1 += 1;
@@ -136,17 +139,17 @@ void add_surface(const Chunk& chunk, meshmap_t& meshes, std::vector<std::vector<
 	}
 }
 
-void generate_surface(const Chunk& chunk, std::vector<std::vector<BlockType>>& surface, glm::tvec3<uint_fast8_t>& xyz, const uint_fast8_t ix, const uint_fast8_t iy, const uint_fast8_t iz, const int_fast8_t offset)
+void generate_surface(const Chunk& chunk, surface_t& surface, u8vec3& xyz, const u8vec3& i, const int_fast8_t offset)
 {
 	for(xyz[0] = 0; xyz[0] < CHUNK_SIZE; ++xyz[0])
 	{
 		for(xyz[2] = 0; xyz[2] < CHUNK_SIZE; ++xyz[2])
 		{
-			uint_fast8_t x = xyz[ix];
-			uint_fast8_t y = xyz[iy];
-			uint_fast8_t z = xyz[iz];
+			uint_fast8_t x = xyz[i.x];
+			uint_fast8_t y = xyz[i.y];
+			uint_fast8_t z = xyz[i.z];
 			int_fast8_t o[] = {0, 0, 0};
-			o[iy] = offset;
+			o[i.y] = offset;
 
 			const Block::Block& block = ChunkMesher::block_at(chunk, x, y, z);
 			const Block::Block& sibling = ChunkMesher::block_at(chunk, x + o[0], y + o[1], z + o[2]);
@@ -165,12 +168,12 @@ void generate_surface(const Chunk& chunk, std::vector<std::vector<BlockType>>& s
 	}
 }
 
-Rectangle yield_rectangle(std::vector<std::vector<BlockType>>& surface)
+Rectangle yield_rectangle(surface_t& surface)
 {
 	const size_t surface_size = surface.size();
 	for(BlockInChunk_type z = 0; z < surface_size; ++z)
 	{
-		std::vector<BlockType>& row = surface[z];
+		surface_t::value_type& row = surface[z];
 		const size_t row_size = row.size();
 		for(BlockInChunk_type x = 0; x < row_size; ++x)
 		{
@@ -193,7 +196,7 @@ Rectangle yield_rectangle(std::vector<std::vector<BlockType>>& surface)
 				while(z < surface_size)
 				{
 					x = start_x;
-					std::vector<BlockType>& row2 = surface[z];
+					surface_t::value_type& row2 = surface[z];
 
 					if(row2[x] != type)
 					{
