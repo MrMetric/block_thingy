@@ -32,8 +32,13 @@ LDFLAGS = \
 	`pkg-config --static --libs glfw3` \
 	-lpng \
 
-CFLAGS_DEBUG = $(CFLAGS) -g
-CXXFLAGS_DEBUG = $(CXXFLAGS) -g -fsanitize=undefined,integer -DCOOL_DEBUG_STUFF
+CFLAGS_DEBUG = $(CFLAGS) \
+	-g \
+
+CXXFLAGS_DEBUG = $(CXXFLAGS) \
+	-g \
+	-fsanitize=undefined,integer \
+
 LDFLAGS_DEBUG = \
 	$(LDFLAGS) \
 	-lPocoFoundationd \
@@ -42,8 +47,14 @@ LDFLAGS_DEBUG = \
 OBJDIR_DEBUG = obj/Debug
 OUT_DEBUG = bin/block_thingy_d
 
-CFLAGS_RELEASE = $(CFLAGS) -O3
-CXXFLAGS_RELEASE = $(CXXFLAGS) -fomit-frame-pointer -O3 -g
+CFLAGS_RELEASE = $(CFLAGS) \
+	-O3 \
+
+CXXFLAGS_RELEASE = $(CXXFLAGS) \
+	-fomit-frame-pointer \
+	-O3 \
+	-g \
+
 LDFLAGS_RELEASE = \
 	$(LDFLAGS) \
 	-lPocoFoundation \
