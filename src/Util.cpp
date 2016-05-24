@@ -28,10 +28,10 @@ string Util::read_file(const string& path)
 {
 	try
 	{
-		std::ifstream inpoot(path, std::ios::ate | std::ios::binary);
+		std::ifstream inpoot(path, std::ifstream::ate | std::ifstream::binary);
 		inpoot.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 		uint_fast64_t fsize = static_cast<uint_fast64_t>(inpoot.tellg());
-		inpoot.seekg(0, std::ios::beg);
+		inpoot.seekg(0, std::ifstream::beg);
 		unique_ptr<char[]> aaa = std::make_unique<char[]>(fsize);
 		inpoot.read(aaa.get(), static_cast<std::streamsize>(fsize));
 		string bbb(aaa.get(), fsize);

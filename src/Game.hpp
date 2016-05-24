@@ -34,7 +34,7 @@ class Player;
 class Game
 {
 	public:
-		Game(GLFWwindow* window, const window_size_t&);
+		Game(GLFWwindow*, const window_size_t&);
 
 		Game(Game&&) = delete;
 		Game(const Game&) = delete;

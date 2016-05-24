@@ -49,7 +49,7 @@ void WorldFile::save_players()
 
 void WorldFile::save_player(const Player& player)
 {
-	std::ofstream stream(player_path + player.name, std::ios::binary);
+	std::ofstream stream(player_path + player.name, std::ofstream::binary);
 	msgpack::pack(stream, player);
 }
 
@@ -87,7 +87,7 @@ void WorldFile::save_chunk(const Chunk& chunk)
 	string file_path = chunk_path + x + "_" + y + "_" + z + ".gz";
 	LOGGER << "saving " << file_path << "\n";
 
-	std::ofstream stdstream(file_path, std::ios::binary);
+	std::ofstream stdstream(file_path, std::ofstream::binary);
 	Poco::DeflatingOutputStream stream(stdstream, Poco::DeflatingStreamBuf::STREAM_GZIP);
 	msgpack::pack(stream, chunk);
 }
@@ -104,7 +104,7 @@ shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 		return nullptr;
 	}
 
-	std::ifstream stdstream(file_path, std::ios::binary);
+	std::ifstream stdstream(file_path, std::ifstream::binary);
 	Poco::InflatingInputStream stream(stdstream, Poco::InflatingStreamBuf::STREAM_GZIP);
 	std::stringstream ss;
 	Poco::StreamCopier::copyStream(stream, ss);
