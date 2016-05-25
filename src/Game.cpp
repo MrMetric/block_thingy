@@ -1,5 +1,6 @@
 #include "Game.hpp"
 
+#include <cmath>
 #include <ctime>
 #include <fstream>
 #include <functional>
@@ -393,6 +394,7 @@ void Game::add_commands()
 			game.console.error_logger << "Usage: fov <exact number or +- difference>\n";
 			return;
 		}
+
 		double value = std::stod(args[0]);
 		if(args[0][0] == '+' || args[0][0] == '-')
 		{
@@ -402,6 +404,20 @@ void Game::add_commands()
 		{
 			game.gfx.fov = value;
 		}
+
+		if(game.gfx.fov < 0)
+		{
+			game.gfx.fov = std::fmod(game.gfx.fov, 360) + 360;
+		}
+		else
+		{
+			game.gfx.fov = std::fmod(game.gfx.fov, 360);
+		}
+		if(game.gfx.fov == 0) // avoid division by zero
+		{
+			game.gfx.fov = 360;
+		}
+
 		game.gfx.update_projection_matrix();
 	});
 
