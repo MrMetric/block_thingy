@@ -158,7 +158,7 @@ void generate_surface(const Chunk& chunk, surface_t& surface, u8vec3& xyz, const
 			&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks (of the same type)
 			)
 			{
-				surface[xyz[2]][xyz[0]] = chunk.get_block_const({x, y, z}).type();
+				surface[xyz[2]][xyz[0]] = block.type();
 			}
 			else
 			{
