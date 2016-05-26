@@ -4,7 +4,5 @@
 class SimpleMesher : public ChunkMesher
 {
 	public:
-		SimpleMesher();
-
 		meshmap_t make_mesh(const Chunk&) override;
 };

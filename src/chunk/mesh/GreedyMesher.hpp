@@ -1,17 +1,18 @@
 #pragma once
 #include "ChunkMesher.hpp"
 
-#include <vector>
+#include <array>
 
 #include "block/BlockType.hpp"
+#include "chunk/Chunk.hpp"
 
 class GreedyMesher : public ChunkMesher
 {
 	public:
-		GreedyMesher();
-
 		meshmap_t make_mesh(const Chunk&) override;
 
+		using surface_t = std::array<std::array<BlockType, CHUNK_SIZE>, CHUNK_SIZE>;
+
 	private:
-		std::vector<std::vector<BlockType>> surface;
+		surface_t surface;
 };

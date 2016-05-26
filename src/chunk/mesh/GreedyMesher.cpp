@@ -30,21 +30,13 @@ enum class Side : int_fast8_t
 	bottom = -1,
 };
 
-using surface_t = std::vector<std::vector<BlockType>>;
+using surface_t = GreedyMesher::surface_t;
 using u8vec3 = glm::tvec3<uint_fast8_t>;
 
 static void add_surface(const Chunk&, meshmap_t&, surface_t&, Plane, Side);
 static Rectangle yield_rectangle(surface_t&);
 static void generate_surface(const Chunk&, surface_t&, u8vec3&, const u8vec3&, int_fast8_t);
 static void add_face(mesh_t&, const mesh_vertex_coord_t&, const mesh_vertex_coord_t&, const mesh_vertex_coord_t&, const mesh_vertex_coord_t&);
-
-GreedyMesher::GreedyMesher()
-{
-	for(uint_fast32_t i = 0; i < CHUNK_SIZE; ++i)
-	{
-		surface.emplace_back(CHUNK_SIZE);
-	}
-}
 
 meshmap_t GreedyMesher::make_mesh(const Chunk& chunk)
 {

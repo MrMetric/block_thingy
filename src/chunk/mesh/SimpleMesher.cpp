@@ -11,10 +11,6 @@
 static void draw_cube(const Chunk&, mesh_t&, const Block::Block& block, BlockInChunk_type, BlockInChunk_type, BlockInChunk_type);
 static void draw_face(mesh_t&, BlockInChunk_type, BlockInChunk_type, BlockInChunk_type, uint_fast8_t face);
 
-SimpleMesher::SimpleMesher()
-{
-}
-
 meshmap_t SimpleMesher::make_mesh(const Chunk& chunk)
 {
 	meshmap_t meshes;
