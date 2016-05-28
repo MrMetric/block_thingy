@@ -162,12 +162,10 @@ void generate_surface(const Chunk& chunk, surface_t& surface, u8vec3& xyz, const
 
 Rectangle yield_rectangle(surface_t& surface)
 {
-	const size_t surface_size = surface.size();
-	for(BlockInChunk_type z = 0; z < surface_size; ++z)
+	for(BlockInChunk_type z = 0; z < CHUNK_SIZE; ++z)
 	{
 		surface_t::value_type& row = surface[z];
-		const size_t row_size = row.size();
-		for(BlockInChunk_type x = 0; x < row_size; ++x)
+		for(BlockInChunk_type x = 0; x < CHUNK_SIZE; ++x)
 		{
 			const BlockType type = row[x];
 			if(type != BlockType::none)
@@ -178,14 +176,14 @@ Rectangle yield_rectangle(surface_t& surface)
 				BlockInChunk_type h = 1;
 				row[x] = BlockType::none;
 				++x;
-				while(x < row_size && row[x] == type)
+				while(x < CHUNK_SIZE && row[x] == type)
 				{
 					w += 1;
 					row[x] = BlockType::none;
 					++x;
 				}
 				++z;
-				while(z < surface_size)
+				while(z < CHUNK_SIZE)
 				{
 					x = start_x;
 					surface_t::value_type& row2 = surface[z];
@@ -195,13 +193,12 @@ Rectangle yield_rectangle(surface_t& surface)
 						break;
 					}
 					BlockInChunk_type w2 = 0;
-					const size_t row2_size = row2.size();
 					do
 					{
 						w2 += 1;
 						++x;
 					}
-					while(x < row2_size && w2 < w && row2[x] == type);
+					while(x < CHUNK_SIZE && w2 < w && row2[x] == type);
 
 					if(w2 != w)
 					{
