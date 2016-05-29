@@ -18,3 +18,12 @@ bind , wireframe
 bind c toggle_cull_face
 bind = render_distance++
 bind - render_distance--
+bind j block_type++
+bind x "fov 75"
+bind c "fov -1"
+bind v "fov +1"
+bind joy_xbox360_b break_block
+bind joy_xbox360_y place_block
+bind joy_xbox360_lb block_type--
+bind joy_xbox360_rb block_type++
+bind joy_xbox360_a jump

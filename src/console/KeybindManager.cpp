@@ -54,7 +54,8 @@ void KeybindManager::bind_key(const string& key_string, const string& command)
 	int key = KeybindManager::translate_key(key_string);
 	if(key == GLFW_KEY_UNKNOWN)
 	{
-		throw std::runtime_error("unknown key: " + key_string);
+		// TODO: this does not compile with `const char*` ???
+		console.error_logger << ("unknown key name: " + key_string + "\n");
 	}
 	bind_key(key, command);
 }
@@ -64,8 +65,14 @@ void KeybindManager::unbind_key(const int key)
 	keybinds.erase(key);
 }
 
-void KeybindManager::keypress(const int key, const int action)
+void KeybindManager::keypress(int key, const int scancode, const int action, const int mods)
 {
+	if(mods == GLFW_CUSTOM_MOD_JOYSTICK)
+	{
+		key *= 1000;
+		key += scancode;
+	}
+
 	if(action == GLFW_PRESS || action == GLFW_REPEAT)
 	{
 		auto i = keybinds.find(key);
@@ -97,6 +104,11 @@ void KeybindManager::keypress(const int key, const int action)
 	{
 		// TODO: log unknown action
 	}
+}
+
+void KeybindManager::joypress(int joystick, int button)
+{
+	keypress(joystick, button, GLFW_REPEAT, GLFW_CUSTOM_MOD_JOYSTICK);
 }
 
 // I think this is too long :[
@@ -231,6 +243,18 @@ int KeybindManager::translate_key(string key)
 	if(key == "ralt") return GLFW_KEY_RIGHT_ALT;
 	if(key == "rsuper") return GLFW_KEY_RIGHT_SUPER;
 	if(key == "menu") return GLFW_KEY_MENU;
+
+	if(key == "joy_xbox360_a") return 1000;
+	if(key == "joy_xbox360_b") return 1001;
+	if(key == "joy_xbox360_x") return 1002;
+	if(key == "joy_xbox360_y") return 1003;
+	if(key == "joy_xbox360_lb") return 1004;
+	if(key == "joy_xbox360_rb") return 1005;
+	if(key == "joy_xbox360_back") return 1006;
+	if(key == "joy_xbox360_start") return 1007;
+	if(key == "joy_xbox360_logo") return 1008; // TODO: check name (player changer?)
+	if(key == "joy_xbox360_analog_left") return 1009;
+	if(key == "joy_xbox360_analog_right") return 1010;
 
 	return GLFW_KEY_UNKNOWN;
 }

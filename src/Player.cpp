@@ -162,7 +162,17 @@ glm::dvec3 Player::apply_movement_input(glm::dvec3 acceleration, const double mo
 	{
 		acceleration.x += move_speed;
 	}
+
+	acceleration.x += analog_motion.x * move_speed;
+	acceleration.z += analog_motion.y * move_speed;
+	analog_motion.x = analog_motion.y = 0.0;
+
 	return acceleration;
+}
+
+void Player::set_analog_motion(const glm::dvec2& vec)
+{
+	analog_motion = vec;
 }
 
 void Player::respawn()

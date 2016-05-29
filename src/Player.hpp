@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 namespace Position
@@ -24,6 +25,7 @@ class Player
 		void move(const glm::dvec3& acceleration);
 		void step(double delta_time);
 		glm::dvec3 apply_movement_input(glm::dvec3 acceleration, double move_speed);
+		void set_analog_motion(const glm::dvec2&);
 		void respawn();
 
 		bool can_place_block_at(const Position::BlockInWorld&);
@@ -52,6 +54,7 @@ class Player
 		double eye_height;
 		double walk_speed;
 		double max_velocity;
+		glm::dvec2 analog_motion;
 
 		struct
 		{

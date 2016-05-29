@@ -93,6 +93,38 @@ void Game::draw()
 
 	glfwPollEvents();
 
+	// TODO: save state and send GLFW_PRESS/GLFW_RELEASE
+	if(glfwJoystickPresent(GLFW_JOYSTICK_1))
+	{
+		int count;
+
+		const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &count);
+		for(int i = 0; i < count; ++i)
+		{
+			if(buttons[i] != 0)
+			{
+				keybinder.joypress(1, i);
+			}
+		}
+
+		auto fix_axis = [](float axis)
+		{
+			if(std::abs(axis) < 0.1)
+			{
+				return 0.0f;
+			}
+			return axis;
+		};
+
+		const float* axises = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
+		player.set_analog_motion({ fix_axis(axises[0]), fix_axis(axises[1]) });
+		glm::dvec2 window_mid = glm::dvec2(gfx.window_size) / 2.0;
+		glm::dvec2 motion(fix_axis(axises[3]), fix_axis(axises[4]));
+		motion *= 32.0;
+		motion += window_mid;
+		camera.mousemove(motion.x, motion.y);
+	}
+
 	std::stringstream ss;
 	ss << "Baby's First Voxel Engine | " << fps.getFPS() << " fps";
 	ss << " | player.pos(" << glm::to_string(player.position) << ")";
@@ -124,7 +156,7 @@ void Game::update_framebuffer_size(const window_size_t& window_size)
 
 void Game::keypress(const int key, const int scancode, const int action, const int mods)
 {
-	keybinder.keypress(key, action);
+	keybinder.keypress(key, scancode, action, mods);
 }
 
 static BlockType block_type = BlockType::test;
@@ -134,28 +166,11 @@ void Game::mousepress(const int button, const int action, const int mods)
 	{
 		if(button == GLFW_MOUSE_BUTTON_LEFT)
 		{
-			if(hovered_block != nullptr)
-			{
-				const Position::BlockInWorld pos = hovered_block->pos;
-				if(world.get_block_const(pos).type() != BlockType::none)
-				{
-					world.set_block(pos, Block::Block(BlockType::air));
-					find_hovered_block(gfx.projection_matrix, gfx.view_matrix_physical);
-					//event_manager.do_event(Event_break_block(pos, face));
-				}
-			}
+			console.run_command("break_block");
 		}
 		else if(button == GLFW_MOUSE_BUTTON_RIGHT)
 		{
-			if(hovered_block != nullptr)
-			{
-				const Position::BlockInWorld pos = hovered_block->adjacent();
-				if(world.get_block_const(pos).type() == BlockType::air && player.can_place_block_at(pos))
-				{
-					world.set_block(pos, Block::Block(block_type));
-					//event_manager.do_event(Event_place_block(pos, face));
-				}
-			}
+			console.run_command("place_block");
 		}
 	}
 }
@@ -199,6 +214,31 @@ void Game::add_commands()
 		glfwSetWindowShouldClose(game.window, GL_TRUE);
 	});
 
+	COMMAND("break_block")
+	{
+		if(game.hovered_block != nullptr)
+		{
+			const Position::BlockInWorld pos = game.hovered_block->pos;
+			if(game.world.get_block_const(pos).type() != BlockType::none)
+			{
+				game.world.set_block(pos, Block::Block(BlockType::air));
+				game.find_hovered_block(game.gfx.projection_matrix, game.gfx.view_matrix_physical);
+				//event_manager.do_event(Event_break_block(pos, face));
+			}
+		}
+	});
+	COMMAND("place_block")
+	{
+		if(game.hovered_block != nullptr)
+		{
+			const Position::BlockInWorld pos = game.hovered_block->adjacent();
+			if(game.world.get_block_const(pos).type() == BlockType::air && game.player.can_place_block_at(pos))
+			{
+				game.world.set_block(pos, Block::Block(block_type));
+				//event_manager.do_event(Event_place_block(pos, face));
+			}
+		}
+	});
 	// TODO: less copy/paste
 	COMMAND("+forward")
 	{
@@ -442,14 +482,27 @@ void Game::add_commands()
 		game.console.logger << "reach distance: " << game.player.reach_distance << "\n";
 	});
 
-	COMMAND("change_block_type")
+	COMMAND("block_type++")
 	{
 		block_type_id_t i = static_cast<block_type_id_t>(block_type);
 		i = (i + 1) % BlockType_COUNT;
 		block_type = static_cast<BlockType>(i);
 		game.console.logger << "block type: " << i << "\n";
 	});
-	console.run_line("bind j change_block_type");
+	COMMAND("block_type--")
+	{
+		block_type_id_t i = static_cast<block_type_id_t>(block_type);
+		if(i == 0)
+		{
+			i = BlockType_COUNT - 1;
+		}
+		else
+		{
+			i = (i - 1) % BlockType_COUNT;
+		}
+		block_type = static_cast<BlockType>(i);
+		game.console.logger << "block type: " << i << "\n";
+	});
 
 	COMMAND("nazi")
 	{
