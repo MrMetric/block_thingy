@@ -482,13 +482,17 @@ void Game::add_commands()
 	{
 		block_type_id_t i = static_cast<block_type_id_t>(block_type);
 		i = (i + 1) % BlockType_COUNT;
+		if(i < 2)
+		{
+			i = 2;
+		}
 		block_type = static_cast<BlockType>(i);
 		game.console.logger << "block type: " << i << "\n";
 	});
 	COMMAND("block_type--")
 	{
 		block_type_id_t i = static_cast<block_type_id_t>(block_type);
-		if(i == 0)
+		if(i == 2)
 		{
 			i = BlockType_COUNT - 1;
 		}
