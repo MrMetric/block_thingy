@@ -13,6 +13,7 @@
 Camera::Camera(GLFWwindow* window, EventManager& event_manager)
 	:
 	sensitivity(0.1),
+	joy_sensitivity(1.2),
 	window(window)
 {
 	event_manager.add_handler(EventType::window_size_change, [this, window](const Event& event)
@@ -23,10 +24,17 @@ Camera::Camera(GLFWwindow* window, EventManager& event_manager)
 	});
 }
 
-void Camera::mousemove(const double mouseX, const double mouseY)
+void Camera::mousemove(const double mouseX, const double mouseY, bool joystick)
 {
-	rotation.x += (mouseY - window_mid.y) * sensitivity;
-	rotation.y += (mouseX - window_mid.x) * sensitivity;
+	double x = (mouseY - window_mid.y) * sensitivity;
+	double y = (mouseX - window_mid.x) * sensitivity;
+	if(joystick)
+	{
+		x *= joy_sensitivity;
+		y *= joy_sensitivity;
+	}
+	rotation.x += x;
+	rotation.y += y;
 
 	// limit looking up/down to vertical
 	rotation.x = Util::clamp(rotation.x, -90.0, 90.0);

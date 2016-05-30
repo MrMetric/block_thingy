@@ -93,7 +93,6 @@ void Game::draw()
 
 	glfwPollEvents();
 
-	// TODO: save state and send GLFW_PRESS/GLFW_RELEASE
 	if(glfwJoystickPresent(GLFW_JOYSTICK_1))
 	{
 		int count;
@@ -101,10 +100,7 @@ void Game::draw()
 		const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &count);
 		for(int i = 0; i < count; ++i)
 		{
-			if(buttons[i] != 0)
-			{
-				keybinder.joypress(1, i);
-			}
+			keybinder.joypress(1, i, buttons[i] != 0);
 		}
 
 		auto fix_axis = [](float axis)
@@ -122,7 +118,7 @@ void Game::draw()
 		glm::dvec2 motion(fix_axis(axises[3]), fix_axis(axises[4]));
 		motion *= 32.0;
 		motion += window_mid;
-		camera.mousemove(motion.x, motion.y);
+		camera.mousemove(motion.x, motion.y, true);
 	}
 
 	std::stringstream ss;

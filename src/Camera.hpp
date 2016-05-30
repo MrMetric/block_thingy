@@ -16,13 +16,14 @@ class Camera
 		Camera(const Camera&) = delete;
 		void operator=(const Camera&) = delete;
 
-		void mousemove(double mouseX, double mouseY);
+		void mousemove(double mouseX, double mouseY, bool joystick = false);
 
 		glm::dvec3 position;
 		glm::dvec3 rotation;
 
 	private:
 		double sensitivity;
+		double joy_sensitivity;
 
 		GLFWwindow* window;
 		glm::dvec2 window_mid;

@@ -23,7 +23,7 @@ class KeybindManager
 		void unbind_key(int key);
 
 		void keypress(int key, int scancode, int action, int mods);
-		void joypress(int joystick, int button);
+		void joypress(int joystick, int button, bool pressed);
 
 		// intentionally not const ref
 		static int translate_key(std::string key);
@@ -32,4 +32,5 @@ class KeybindManager
 		Console& console;
 		std::unordered_map<int, std::string> keybinds;
 		std::unordered_map<int, std::string> release_auto;
+		std::unordered_map<int, uint_fast32_t> joystate;
 };

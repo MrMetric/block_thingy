@@ -106,9 +106,33 @@ void KeybindManager::keypress(int key, const int scancode, const int action, con
 	}
 }
 
-void KeybindManager::joypress(int joystick, int button)
+void KeybindManager::joypress(int joystick, int button, bool pressed)
 {
-	keypress(joystick, button, GLFW_REPEAT, GLFW_CUSTOM_MOD_JOYSTICK);
+	const auto i = joystate.find(button);
+	if(i == joystate.end())
+	{
+		joystate[button] = 0;
+	}
+
+	if(!pressed)
+	{
+		joystate[button] = 0;
+		keypress(joystick, button, GLFW_RELEASE, GLFW_CUSTOM_MOD_JOYSTICK);
+		return;
+	}
+
+	++joystate[button];
+	if(joystate[button] == 1)
+	{
+		keypress(joystick, button, GLFW_PRESS, GLFW_CUSTOM_MOD_JOYSTICK);
+		return;
+	}
+
+	if(joystate[button] > 29 && joystate[button] % 15 == 0)
+	{
+		keypress(joystick, button, GLFW_REPEAT, GLFW_CUSTOM_MOD_JOYSTICK);
+		return;
+	}
 }
 
 // I think this is too long :[
@@ -248,13 +272,13 @@ int KeybindManager::translate_key(string key)
 	if(key == "joy_xbox360_b") return 1001;
 	if(key == "joy_xbox360_x") return 1002;
 	if(key == "joy_xbox360_y") return 1003;
-	if(key == "joy_xbox360_lb") return 1004;
-	if(key == "joy_xbox360_rb") return 1005;
+	if(key == "joy_xbox360_lb" || key == "joy_xbox360_l1") return 1004;
+	if(key == "joy_xbox360_rb" || key == "joy_xbox360_r1") return 1005;
 	if(key == "joy_xbox360_back") return 1006;
 	if(key == "joy_xbox360_start") return 1007;
 	if(key == "joy_xbox360_logo") return 1008; // TODO: check name (player changer?)
-	if(key == "joy_xbox360_analog_left") return 1009;
-	if(key == "joy_xbox360_analog_right") return 1010;
+	if(key == "joy_xbox360_analog_left" || key == "joy_xbox360_l3") return 1009;
+	if(key == "joy_xbox360_analog_right" || key == "joy_xbox360_r3") return 1010;
 
 	return GLFW_KEY_UNKNOWN;
 }
