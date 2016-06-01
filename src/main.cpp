@@ -36,6 +36,10 @@ static void error_callback(const int error, const char* description)
 
 int main(int argc, char** argv)
 {
+	// TODO: put this somewhere else
+	static_assert(GL_TRUE, "GL_TRUE is not true");
+	static_assert(!GL_FALSE, "GL_FALSE is not false");
+
 	if(argc > 1)
 	{
 		Util::change_directory(argv[1]);

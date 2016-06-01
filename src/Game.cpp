@@ -113,7 +113,7 @@ void Game::draw()
 		};
 
 		const float* axises = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
-		player.set_analog_motion({ fix_axis(axises[0]), fix_axis(axises[1]) });
+		player.set_analog_motion({ fix_axis(axises[0]), fix_axis(axises[1]) }); // TODO: set to 0 on unplug event
 		glm::dvec2 window_mid = glm::dvec2(gfx.window_size) / 2.0;
 		glm::dvec2 motion(fix_axis(axises[3]), fix_axis(axises[4]));
 		motion *= 32.0;

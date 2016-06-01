@@ -94,7 +94,7 @@ void KeybindManager::keypress(int key, const int scancode, const int action, con
 	}
 	else if(action == GLFW_RELEASE)
 	{
-		auto i = release_auto.find(key);
+		const auto i = release_auto.find(key);
 		if(i != release_auto.end())
 		{
 			console.run_line(i->second);
