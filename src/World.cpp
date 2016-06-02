@@ -47,7 +47,7 @@ void World::set_block(const Position::BlockInWorld& block_pos, const Block::Bloc
 	Position::BlockInChunk pos(block_pos);
 	chunk->set_block(pos, block);
 
-	unsaved_chunks.insert(chunk_pos);
+	chunks_to_save.insert(chunk_pos);
 }
 
 const Block::Block& World::get_block_const(const Position::BlockInWorld& block_pos) const
@@ -210,10 +210,10 @@ shared_ptr<Player> World::get_player(const string& name)
 void World::save()
 {
 	file.save_players();
-	while(!unsaved_chunks.empty())
+	while(!chunks_to_save.empty())
 	{
-		const Position::ChunkInWorld position = *unsaved_chunks.begin();
-		unsaved_chunks.erase(unsaved_chunks.begin());
+		const Position::ChunkInWorld position = *chunks_to_save.begin();
+		chunks_to_save.erase(chunks_to_save.begin());
 		shared_ptr<Chunk> chunk = get_chunk(position);
 		if(chunk != nullptr)
 		{
