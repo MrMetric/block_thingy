@@ -30,10 +30,10 @@ using std::shared_ptr;
 
 Chunk::Chunk(const Position::ChunkInWorld& pos, World& owner)
 	:
+	solid_block(BlockType::air), // a useful default for now
 	owner(owner),
 	position(pos),
-	changed(true),
-	solid_block(BlockType::air) // a useful default for now
+	changed(true)
 {
 }
 
