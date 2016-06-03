@@ -105,7 +105,7 @@ void Game::draw()
 
 		auto fix_axis = [](float axis)
 		{
-			if(std::abs(axis) < 0.1)
+			if(std::abs(axis) < 0.1f)
 			{
 				return 0.0f;
 			}
