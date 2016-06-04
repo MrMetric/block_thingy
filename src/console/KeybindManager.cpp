@@ -1,6 +1,7 @@
 #include "KeybindManager.hpp"
 
 #include <algorithm>
+#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -54,8 +55,7 @@ void KeybindManager::bind_key(const string& key_string, const string& command)
 	int key = KeybindManager::translate_key(key_string);
 	if(key == GLFW_KEY_UNKNOWN)
 	{
-		// TODO: this does not compile with `const char*` ???
-		console.error_logger << ("unknown key name: " + key_string + "\n");
+		console.error_logger << "unknown key name: " << key_string << "\n";
 	}
 	bind_key(key, command);
 }
