@@ -102,7 +102,7 @@ void KeybindManager::keypress(int key, const int scancode, const int action, con
 	}
 	else
 	{
-		// TODO: log unknown action
+		console.error_logger << "unknown keypress action: " << action << "\n";
 	}
 }
 
