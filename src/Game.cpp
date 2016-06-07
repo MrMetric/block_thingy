@@ -459,12 +459,19 @@ void Game::add_commands()
 
 	COMMAND("render_distance++")
 	{
-		game.render_distance += 1;
+		if(std::numeric_limits<decltype(game.render_distance)>::max() > game.render_distance)
+		{
+			game.render_distance += 1;
+		}
 		game.console.logger << "render distance: " << game.render_distance << "\n";
 	});
 	COMMAND("render_distance--")
 	{
 		game.render_distance -= 1;
+		if(game.render_distance < 0)
+		{
+			game.render_distance = 0;
+		}
 		game.console.logger << "render distance: " << game.render_distance << "\n";
 	});
 	COMMAND("reach_distance++")
