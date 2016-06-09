@@ -280,5 +280,23 @@ int KeybindManager::translate_key(string key)
 	if(key == "joy_xbox360_analog_left" || key == "joy_xbox360_l3") return 1009;
 	if(key == "joy_xbox360_analog_right" || key == "joy_xbox360_r3") return 1010;
 
+	if(key == "joy_ps3_select") return 1000;
+	if(key == "joy_ps3_l3") return 1001;
+	if(key == "joy_ps3_r3") return 1002;
+	if(key == "joy_ps3_start") return 1003;
+	if(key == "joy_ps3_up") return 1004;
+	if(key == "joy_ps3_right") return 1005;
+	if(key == "joy_ps3_down") return 1006;
+	if(key == "joy_ps3_left") return 1007;
+	if(key == "joy_ps3_l2") return 1008;
+	if(key == "joy_ps3_r2") return 1009;
+	if(key == "joy_ps3_l1") return 1010;
+	if(key == "joy_ps3_r1") return 1011;
+	if(key == "joy_ps3_triangle") return 1012;
+	if(key == "joy_ps3_circle") return 1013;
+	if(key == "joy_ps3_x") return 1014;
+	if(key == "joy_ps3_square") return 1015;
+	if(key == "joy_ps3_logo") return 1016; // TODO: check name
+
 	return GLFW_KEY_UNKNOWN;
 }
