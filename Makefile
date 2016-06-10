@@ -53,10 +53,10 @@ CFLAGS_RELEASE = $(CFLAGS) \
 CXXFLAGS_RELEASE = $(CXXFLAGS) \
 	-fomit-frame-pointer \
 	-O3 \
-	-g \
 
 LDFLAGS_RELEASE = \
 	$(LDFLAGS) \
+	-s \
 	-lPocoFoundation \
 
 OBJDIR_RELEASE = obj/Release
