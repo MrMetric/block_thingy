@@ -98,7 +98,7 @@ void add_surface(const Chunk& chunk, meshmap_t& meshes, surface_t& surface, cons
 				y1 += 1;
 			}
 
-			#define s(x) static_cast<GLubyte>(x)
+			#define s(x) static_cast<mesh_vertex_coord_t::value_type>(x)
 			v1[ix] = rekt.x;
 			v1[iy] = y1;
 			v1[iz] = rekt.z;
