@@ -5,18 +5,19 @@
 
 #include <glm/vec3.hpp>
 
+#include "Gfx.hpp"
 #include "Util.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"
 
-Camera::Camera(GLFWwindow* window, EventManager& event_manager)
+Camera::Camera(Gfx& gfx, EventManager& event_manager)
 	:
 	sensitivity(0.1),
 	joy_sensitivity(1.2),
-	window(window)
+	gfx(gfx)
 {
-	event_manager.add_handler(EventType::window_size_change, [this, window](const Event& event)
+	event_manager.add_handler(EventType::window_size_change, [this, &window=gfx.window](const Event& event)
 	{
 		auto e = static_cast<const Event_window_size_change&>(event);
 		window_mid = glm::dvec2(e.window_size) / 2.0;
@@ -42,5 +43,5 @@ void Camera::mousemove(const double mouseX, const double mouseY, bool joystick)
 	// keep left/right angle in range [0, 360)
 	rotation.y = Util::mod(rotation.y, 360);
 
-	glfwSetCursorPos(window, window_mid.x, window_mid.y);
+	glfwSetCursorPos(gfx.window, window_mid.x, window_mid.y);
 }

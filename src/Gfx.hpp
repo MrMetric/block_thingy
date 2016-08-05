@@ -25,7 +25,7 @@ namespace Position
 class Gfx
 {
 	public:
-		Gfx(GLFWwindow* window, EventManager& event_manager);
+		Gfx(GLFWwindow*);
 
 		Gfx(Gfx&&) = delete;
 		Gfx(const Gfx&) = delete;
@@ -49,8 +49,9 @@ class Gfx
 		bool cull_face;
 		double fov;
 
+		void hook_events(EventManager&);
 		static GLFWwindow* init_glfw();
-		static void uninit_glfw(GLFWwindow* window);
+		void uninit_glfw();
 		void opengl_setup();
 		void toggle_cull_face();
 		void update_projection_matrix();
@@ -61,4 +62,7 @@ class Gfx
 		#ifdef USE_LIBPNG
 		static void write_png_RGB(const char* filename, uint8_t* buf, uint_fast32_t width, uint_fast32_t height, bool reverse_rows = false);
 		#endif
+
+	private:
+		static GLFWwindow* make_window();
 };

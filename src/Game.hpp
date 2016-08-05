@@ -34,7 +34,7 @@ class Player;
 class Game
 {
 	public:
-		Game(GLFWwindow*, const window_size_t&);
+		Game(Gfx&);
 
 		Game(Game&&) = delete;
 		Game(const Game&) = delete;
@@ -51,14 +51,13 @@ class Game
 
 		static Game* instance;
 
-		GLFWwindow* window;
 		std::unique_ptr<RaycastHit> hovered_block;
 
 		// event_manager must be initialized before others!
 		EventManager event_manager;
+		Gfx& gfx;
 
 		Camera camera;
-		Gfx gfx;
 		World world;
 		std::shared_ptr<Player> player_ptr;
 		Player& player;

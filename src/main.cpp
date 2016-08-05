@@ -51,60 +51,36 @@ int main(int argc, char** argv)
 	cout << "Running with GLFW " << glfwGetVersionString() << "\n";
 
 	GLFWwindow* window = Gfx::init_glfw();
-	if(window == nullptr)
-	{
-		return EXIT_FAILURE;
-	}
+	Gfx gfx(window); printOpenGLError();
 
-	if(!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
-	{
-		cerr << "Error loading GLAD\n";
-		return EXIT_FAILURE;
-	}
-	cout << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
-	if(!GLAD_GL_ARB_direct_state_access)
-	{
-		cerr << "Required OpenGL extension not found: GL_ARB_direct_state_access\n";
-		return EXIT_FAILURE;
-	}
-	if(!GLAD_GL_ARB_separate_shader_objects)
-	{
-		cerr << "Required OpenGL extension not found: GL_ARB_separate_shader_objects\n";
-		return EXIT_FAILURE;
-	}
+	static unique_ptr<Game> game = std::make_unique<Game>(gfx);
 
-	int width, height;
-	glfwGetFramebufferSize(window, &width, &height);
-
-	static unique_ptr<Game> game = std::make_unique<Game>(window, window_size_t(width, height)); printOpenGLError();
-
-	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height)
+	glfwSetFramebufferSizeCallback(game->gfx.window, [](GLFWwindow* window, int width, int height)
 	{
 		game->update_framebuffer_size(window_size_t(width, height));
 	});
-	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+	glfwSetKeyCallback(game->gfx.window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		game->keypress(key, scancode, action, mods);
 	});
-	glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods)
+	glfwSetMouseButtonCallback(game->gfx.window, [](GLFWwindow* window, int button, int action, int mods)
 	{
 		game->mousepress(button, action, mods);
 	});
-	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double x, double y)
+	glfwSetCursorPosCallback(game->gfx.window, [](GLFWwindow* window, double x, double y)
 	{
 		game->mousemove(x, y);
 	});
 
 	cout << "starting main loop\n";
-	while(!glfwWindowShouldClose(window))
+	while(!glfwWindowShouldClose(game->gfx.window))
 	{
 		game->draw(); printOpenGLError();
 	}
 
+	game->gfx.uninit_glfw();
 	game.reset(); // destruct
 	printOpenGLError();
-
-	Gfx::uninit_glfw(window);
 
 	return EXIT_SUCCESS;
 }

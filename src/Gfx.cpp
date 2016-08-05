@@ -41,14 +41,22 @@
 using std::cout;
 using std::string;
 
-Gfx::Gfx(GLFWwindow* window, EventManager& event_manager)
+Gfx::Gfx(GLFWwindow* window)
 	:
 	window(window),
 	s_lines("shaders/lines"),
 	fov(75)
 {
-	opengl_setup();
+	int width;
+	int height;
+	glfwGetFramebufferSize(window, &width, &height);
+	window_size = window_size_t(width, height);
 
+	opengl_setup();
+}
+
+void Gfx::hook_events(EventManager& event_manager)
+{
 	event_manager.add_handler(EventType::window_size_change, [this](const Event& event)
 	{
 		auto e = static_cast<const Event_window_size_change&>(event);
@@ -65,34 +73,27 @@ GLFWwindow* Gfx::init_glfw()
 	{
 		throw std::runtime_error("glfwInit() failed");
 	}
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwWindowHint(GLFW_SAMPLES, 4);
 
-	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-	int width = mode->width * 3 / 4;
-	int height = mode->height * 3 / 4;
-	cout << "window size: " << width << "×" << height << "\n";
-	GLFWwindow* window = glfwCreateWindow(width, height, "Baby's First Voxel Engine", nullptr, nullptr);
-	if(!window)
+	GLFWwindow* window = make_window();
+
+	if(!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
-		glfwTerminate();
-		return nullptr;
+		throw new std::runtime_error("Error loading GLAD");
 	}
-
-	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1); // enable vsync
-
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
+	std::cout << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
+	if(!GLAD_GL_ARB_direct_state_access)
+	{
+		throw new std::runtime_error("Required OpenGL extension not found: GL_ARB_direct_state_access");
+	}
+	if(!GLAD_GL_ARB_separate_shader_objects)
+	{
+		throw new std::runtime_error("Required OpenGL extension not found: GL_ARB_separate_shader_objects");
+	}
 
 	return window;
 }
 
-void Gfx::uninit_glfw(GLFWwindow* window)
+void Gfx::uninit_glfw()
 {
 	glfwDestroyWindow(window);
 	glfwTerminate();
@@ -260,3 +261,32 @@ void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint_fast32_t 
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 }
 #endif
+
+GLFWwindow* Gfx::make_window()
+{
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
+
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	int width = mode->width * 3 / 4;
+	int height = mode->height * 3 / 4;
+	cout << "window size: " << width << "×" << height << "\n";
+	GLFWwindow* window = glfwCreateWindow(width, height, "Baby's First Voxel Engine", nullptr, nullptr);
+	if(window == nullptr)
+	{
+		glfwTerminate();
+		throw new std::runtime_error("error creating window");
+	}
+
+	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1); // enable vsync
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
+
+	return window;
+}

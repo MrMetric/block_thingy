@@ -46,12 +46,11 @@ using std::unique_ptr;
 
 Game* Game::instance = nullptr;
 
-Game::Game(GLFWwindow* window, const window_size_t& window_size)
+Game::Game(Gfx& gfx)
 	:
-	window(window),
 	hovered_block(nullptr),
-	camera(window, event_manager),
-	gfx(window, event_manager),
+	gfx(gfx),
+	camera(gfx, event_manager),
 	world("worlds/test"),
 	player_ptr(world.add_player("test_player")),
 	player(*player_ptr),
@@ -68,10 +67,12 @@ Game::Game(GLFWwindow* window, const window_size_t& window_size)
 	Game::instance = this;
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // for screenshots
 
+	gfx.hook_events(event_manager);
+
 	add_commands();
 	console.run_line("exec binds");
 
-	update_framebuffer_size(window_size);
+	update_framebuffer_size(gfx.window_size);
 
 	camera.rotation = player.rotation; // keep saved value
 }
@@ -89,7 +90,7 @@ void Game::draw()
 	RenderWorld::draw_world(world, gfx.block_shaders, gfx.matriks, render_origin, render_distance);
 	find_hovered_block(gfx.projection_matrix, gfx.view_matrix_physical);
 	gui.draw(gfx);
-	glfwSwapBuffers(window);
+	glfwSwapBuffers(gfx.window);
 
 	glfwPollEvents();
 
@@ -128,7 +129,7 @@ void Game::draw()
 	ss << " | block" << player_block_pos;
 	ss << " | chunk" << Position::ChunkInWorld(player_block_pos);
 	ss << " | chunkblock" << Position::BlockInChunk(player_block_pos);
-	glfwSetWindowTitle(window, ss.str().c_str());
+	glfwSetWindowTitle(gfx.window, ss.str().c_str());
 
 	delta_time = fps.enforceFPS();
 }
@@ -207,7 +208,7 @@ void Game::add_commands()
 	COMMAND("quit")
 	{
 		game.world.save();
-		glfwSetWindowShouldClose(game.window, GL_TRUE);
+		glfwSetWindowShouldClose(game.gfx.window, GL_TRUE);
 	});
 
 	COMMAND("break_block")
