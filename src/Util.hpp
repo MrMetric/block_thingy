@@ -7,6 +7,15 @@
 
 namespace Util
 {
+	inline bool string_starts_with(const std::string& value, const std::string& start)
+	{
+		if(start.size() > value.size())
+		{
+			return false;
+		}
+		return std::equal(start.cbegin(), start.cend(), value.cbegin());
+	}
+
 	// http://stackoverflow.com/a/2072890/1578318
 	inline bool string_ends_with(const std::string& value, const std::string& ending)
 	{
@@ -14,7 +23,7 @@ namespace Util
 		{
 			return false;
 		}
-		return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+		return std::equal(ending.crbegin(), ending.crend(), value.crbegin());
 	}
 
 	bool file_is_openable(const std::string& path);

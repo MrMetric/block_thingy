@@ -1,6 +1,7 @@
 #include "ShaderObject.hpp"
 
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 
 #include <glad/glad.h>
@@ -12,6 +13,7 @@
 using std::string;
 
 string get_log(const GLuint object);
+string do_include(const string& file_path);
 
 ShaderObject::ShaderObject()
 	:
@@ -24,7 +26,7 @@ ShaderObject::ShaderObject(const string& file_path, GLenum type)
 {
 	LOGGER << "compiling shader: " << file_path << "\n";
 
-	const string source = Util::read_file(file_path);
+	const string source = do_include(file_path);
 	const char* source_c = source.c_str();
 	const GLint source_len = static_cast<GLint>(source.length());
 	name = glCreateShader(type);
@@ -64,4 +66,31 @@ ShaderObject::~ShaderObject()
 GLuint ShaderObject::get_name() const
 {
 	return name;
+}
+
+string do_include(const string& file_path)
+{
+	const string source = Util::read_file(file_path);
+	const string folder = Util::split_path(file_path).folder + "/";
+
+	std::istringstream input(source);
+	std::ostringstream output;
+	for(std::string line; std::getline(input, line); )
+	{
+		if(!Util::string_starts_with(line, "#include "))
+		{
+			output << line << "\n";
+			continue;
+		}
+		/* TODO:
+			check file existence
+			check syntax
+			handle other whitespace
+		*/
+		// 9 = len('#include ')
+		const string path = folder + line.substr(9);
+		output << do_include(path) << "\n";
+	}
+
+	return output.str();
 }
