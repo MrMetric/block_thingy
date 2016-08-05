@@ -6,6 +6,8 @@
 
 #include <glad/glad.h>
 
+#include <Poco/File.h>
+
 #include "Game.hpp"
 #include "Util.hpp"
 #include "console/Console.hpp"
@@ -68,6 +70,11 @@ GLuint ShaderObject::get_name() const
 	return name;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wexit-time-destructors"
+#pragma clang diagnostic ignored "-Wglobal-constructors"
+static const string include_str = "#include";
+#pragma clang diagnostic pop
 string do_include(const string& file_path)
 {
 	const string source = Util::read_file(file_path);
@@ -75,20 +82,26 @@ string do_include(const string& file_path)
 
 	std::istringstream input(source);
 	std::ostringstream output;
-	for(std::string line; std::getline(input, line); )
+	for(string line; std::getline(input, line); )
 	{
-		if(!Util::string_starts_with(line, "#include "))
+		if(!Util::string_starts_with(line, include_str))
 		{
 			output << line << "\n";
 			continue;
 		}
-		/* TODO:
-			check file existence
-			check syntax
-			handle other whitespace
-		*/
-		// 9 = len('#include ')
-		const string path = folder + line.substr(9);
+		string included = line.substr(include_str.length());
+		if(included.length() == 0 || (included[0] != ' ' && included[0] != '\t'))
+		{
+			continue;
+		}
+		included.erase(0, included.find_first_not_of(" \t"));
+		included.erase(included.find_last_not_of(" \t") + 1);
+		const string path = folder + included;
+		if(!Poco::File(path).isFile())
+		{
+			// TODO: log
+			continue;
+		}
 		output << do_include(path) << "\n";
 	}
 
