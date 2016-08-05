@@ -118,6 +118,7 @@ void Gfx::opengl_setup()
 	block_shaders.emplace(BlockType::test, "shaders/block/test");
 	block_shaders.emplace(BlockType::dots, "shaders/block/dots");
 	block_shaders.emplace(BlockType::eye, "shaders/block/eye");
+	block_shaders.emplace(BlockType::crappy_marble, "shaders/block/crappy_marble");
 
 	GLfloat lineWidthRange[2];
 	glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, lineWidthRange);

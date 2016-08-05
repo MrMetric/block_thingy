@@ -12,6 +12,7 @@ enum class BlockType : block_type_id_t
 	dots,
 	eye,
 	teleporter,
+	crappy_marble,
 	COUNT,
 };
 
