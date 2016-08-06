@@ -54,6 +54,7 @@ class Gfx
 		static GLFWwindow* init_glfw();
 		void uninit_glfw();
 		void opengl_setup();
+
 		void toggle_fullscreen();
 		void toggle_cull_face();
 		void update_projection_matrix();

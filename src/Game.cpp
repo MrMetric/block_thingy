@@ -193,7 +193,7 @@ void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dm
 	hovered_block = PhysicsUtil::raycast(world, out_origin, out_direction, player.reach_distance);
 	if(hovered_block != nullptr)
 	{
-		bool block_is_none = world.get_block_const(hovered_block->pos).type() == BlockType::none;
+		const bool block_is_none = world.get_block_const(hovered_block->pos).type() == BlockType::none;
 		glm::vec4 color = block_is_none ? glm::vec4(1, 0, 0, 1) : glm::vec4(1, 1, 1, 1);
 		gfx.draw_cube_outline(hovered_block->pos, color);
 	}
@@ -300,7 +300,7 @@ void Game::add_commands()
 			game.console.error_logger << "Usage: save_pos <string: filename>\n";
 			return;
 		}
-		string save_name = args[0];
+		const string save_name = args[0];
 		std::ofstream streem(save_name);
 		streem.precision(std::numeric_limits<double>::max_digits10);
 		streem << game.player.position.x << " " << game.player.position.y << " " << game.player.position.z << "\n";
@@ -315,7 +315,7 @@ void Game::add_commands()
 			game.console.error_logger << "Usage: load_pos <string: filename>\n";
 			return;
 		}
-		string save_name = args[0];
+		const string save_name = args[0];
 		std::ifstream streem(save_name);
 		streem >> game.player.position.x;
 		streem >> game.player.position.y;
@@ -334,14 +334,14 @@ void Game::add_commands()
 			game.console.error_logger << "Usage: exec <string: filename>\n";
 			return;
 		}
-		std::ifstream file("scripts/" + args[0]);
+		const string name = args[0];
+		std::ifstream file("scripts/" + name);
 		if(!file.is_open())
 		{
-			game.console.error_logger << "script not found: " << args[0] << "\n";
+			game.console.error_logger << "script not found: " << name << "\n";
 			return;
 		}
-		string line;
-		while(std::getline(file, line))
+		for(string line; std::getline(file, line); )
 		{
 			game.console.run_line(line);
 		}
@@ -354,8 +354,8 @@ void Game::add_commands()
 			game.console.error_logger << "Usage: cam.rot x|y|z <float: degrees>\n";
 			return;
 		}
-		string part = args[0];
-		double value = std::stod(args[1]);
+		const string part = args[0];
+		const double value = std::stod(args[1]);
 		if(part == "x")
 		{
 			game.camera.rotation.x += value;
@@ -418,7 +418,7 @@ void Game::add_commands()
 	{
 		game.gfx.toggle_fullscreen();
 	});
-	COMMAND("wireframe")
+	COMMAND("toggle_wireframe")
 	{
 		game.wireframe = !game.wireframe();
 		game.console.logger << "wireframe: " << (game.wireframe() ? "true" : "false") << "\n";
@@ -436,8 +436,9 @@ void Game::add_commands()
 			return;
 		}
 
-		double value = std::stod(args[0]);
-		if(args[0][0] == '+' || args[0][0] == '-')
+		const string svalue = args[0];
+		const double value = std::stod(svalue);
+		if(svalue[0] == '+' || svalue[0] == '-')
 		{
 			game.gfx.fov += value;
 		}
@@ -523,7 +524,7 @@ void Game::add_commands()
 			return;
 		}
 
-		Position::BlockInWorld start_pos = game.hovered_block->adjacent();
+		const Position::BlockInWorld start_pos = game.hovered_block->adjacent();
 		const BlockInWorld_type ysize = 9;
 		const BlockInWorld_type xsize = 9;
 		block_type_id_t nazi[ysize][xsize]

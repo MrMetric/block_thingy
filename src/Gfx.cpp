@@ -91,6 +91,8 @@ GLFWwindow* Gfx::init_glfw()
 		throw new std::runtime_error("Required OpenGL extension not found: GL_ARB_separate_shader_objects");
 	}
 
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wunused-parameter" // window
 	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height)
 	{
 		Game::instance->update_framebuffer_size(window_size_t(width, height));
@@ -107,6 +109,7 @@ GLFWwindow* Gfx::init_glfw()
 	{
 		Game::instance->mousemove(x, y);
 	});
+	#pragma clang diagnostic pop
 
 	return window;
 }
@@ -138,13 +141,6 @@ void Gfx::opengl_setup()
 	block_shaders.emplace(BlockType::dots, "shaders/block/dots");
 	block_shaders.emplace(BlockType::eye, "shaders/block/eye");
 	block_shaders.emplace(BlockType::crappy_marble, "shaders/block/crappy_marble");
-
-	GLfloat lineWidthRange[2];
-	glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, lineWidthRange);
-	cout << "OpenGL aliased line width range: " << lineWidthRange[0] << "," << lineWidthRange[1] << "\n";
-
-	glGetFloatv(GL_SMOOTH_LINE_WIDTH_RANGE, lineWidthRange);
-	cout << "OpenGL smooth line width range: " << lineWidthRange[0] << "," << lineWidthRange[1] << "\n";
 }
 
 // this toggles borderless window mode
@@ -180,7 +176,7 @@ void Gfx::toggle_cull_face()
 void Gfx::update_projection_matrix()
 {
 	const double near = 0.1;
-	const double far  = 1500.0;
+	const double far  = 1500.0; // TODO: calculate from chunk render distance
 	const double width = window_size.x;
 	const double height = window_size.y;
 	const double aspect_ratio = (width > height) ? (width / height) : (height / width);

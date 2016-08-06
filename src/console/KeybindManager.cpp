@@ -18,7 +18,10 @@ KeybindManager::KeybindManager(Console& console)
 	:
 	console(console)
 {
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wunused-parameter" // game
 	console.add_command("bind", {[&keybinder=*this](const std::vector<string>& args)
+	#pragma clang diagnostic pop
 	{
 		if(args.size() != 2)
 		{
@@ -27,7 +30,10 @@ KeybindManager::KeybindManager(Console& console)
 		}
 		keybinder.bind_key(args[0], args[1]);
 	}});
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wunused-parameter" // game
 	console.add_command("unbind", {[&keybinder=*this](const std::vector<string>& args)
+	#pragma clang diagnostic pop
 	{
 		if(args.size() != 1)
 		{
