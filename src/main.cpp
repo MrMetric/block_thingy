@@ -55,22 +55,6 @@ int main(int argc, char** argv)
 
 	static unique_ptr<Game> game = std::make_unique<Game>(gfx);
 
-	glfwSetFramebufferSizeCallback(game->gfx.window, [](GLFWwindow* window, int width, int height)
-	{
-		game->update_framebuffer_size(window_size_t(width, height));
-	});
-	glfwSetKeyCallback(game->gfx.window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
-	{
-		game->keypress(key, scancode, action, mods);
-	});
-	glfwSetMouseButtonCallback(game->gfx.window, [](GLFWwindow* window, int button, int action, int mods)
-	{
-		game->mousepress(button, action, mods);
-	});
-	glfwSetCursorPosCallback(game->gfx.window, [](GLFWwindow* window, double x, double y)
-	{
-		game->mousemove(x, y);
-	});
 
 	cout << "starting main loop\n";
 	while(!glfwWindowShouldClose(game->gfx.window))
