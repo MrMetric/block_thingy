@@ -45,6 +45,7 @@ Gfx::Gfx(GLFWwindow* window)
 	:
 	window(window),
 	s_lines("shaders/lines"),
+	is_fullscreen(false),
 	fov(75)
 {
 	int width;
@@ -74,7 +75,7 @@ GLFWwindow* Gfx::init_glfw()
 		throw std::runtime_error("glfwInit() failed");
 	}
 
-	GLFWwindow* window = make_window();
+	GLFWwindow* window = make_window(false);
 
 	if(!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
@@ -127,6 +128,23 @@ void Gfx::opengl_setup()
 
 	glGetFloatv(GL_SMOOTH_LINE_WIDTH_RANGE, lineWidthRange);
 	cout << "OpenGL smooth line width range: " << lineWidthRange[0] << "," << lineWidthRange[1] << "\n";
+}
+
+// this toggles borderless window mode
+// TODO: add real fullscreen mode
+void Gfx::toggle_fullscreen()
+{
+	is_fullscreen = !is_fullscreen;
+
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	int width = is_fullscreen ? mode->width : mode->width * 3 / 4;
+	int height = is_fullscreen ? mode->height : mode->height * 3 / 4;
+	cout << "window size: " << width << "×" << height << "\n";
+
+	const auto x = (mode->width - width) / 2;
+	const auto y = (mode->height - height) / 2;
+	glfwSetWindowMonitor(window, is_fullscreen ? monitor : nullptr, x, y, width, height, mode->refreshRate);
 }
 
 void Gfx::toggle_cull_face()
@@ -262,7 +280,7 @@ void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint_fast32_t 
 }
 #endif
 
-GLFWwindow* Gfx::make_window()
+GLFWwindow* Gfx::make_window(bool is_fullscreen)
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -272,8 +290,8 @@ GLFWwindow* Gfx::make_window()
 
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-	int width = mode->width * 3 / 4;
-	int height = mode->height * 3 / 4;
+	int width = is_fullscreen ? mode->width : mode->width * 3 / 4;
+	int height = is_fullscreen ? mode->height : mode->height * 3 / 4;
 	cout << "window size: " << width << "×" << height << "\n";
 	GLFWwindow* window = glfwCreateWindow(width, height, "Baby's First Voxel Engine", nullptr, nullptr);
 	if(window == nullptr)

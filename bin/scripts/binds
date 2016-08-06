@@ -13,6 +13,7 @@ bind p 'load_pos cam_pos'
 bind q 'cam.rot z -5'
 bind e 'cam.rot z +5'
 bind f2 screenshot
+bind f11 toggle_fullscreen
 bind esc quit
 bind , wireframe
 bind c toggle_cull_face

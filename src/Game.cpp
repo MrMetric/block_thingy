@@ -414,6 +414,10 @@ void Game::add_commands()
 	});
 	#endif
 
+	COMMAND("toggle_fullscreen")
+	{
+		game.gfx.toggle_fullscreen();
+	});
 	COMMAND("wireframe")
 	{
 		game.wireframe = !game.wireframe();

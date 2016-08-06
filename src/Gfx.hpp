@@ -46,6 +46,7 @@ class Gfx
 
 		VertexBuffer outline_vbo;
 
+		bool is_fullscreen;
 		bool cull_face;
 		double fov;
 
@@ -53,6 +54,7 @@ class Gfx
 		static GLFWwindow* init_glfw();
 		void uninit_glfw();
 		void opengl_setup();
+		void toggle_fullscreen();
 		void toggle_cull_face();
 		void update_projection_matrix();
 		void set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation);
@@ -64,5 +66,5 @@ class Gfx
 		#endif
 
 	private:
-		static GLFWwindow* make_window();
+		static GLFWwindow* make_window(bool is_fullscreen);
 };
