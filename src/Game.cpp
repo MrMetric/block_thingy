@@ -65,7 +65,6 @@ Game::Game(Gfx& gfx)
 	keybinder(console)
 {
 	Game::instance = this;
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // for screenshots
 
 	gfx.hook_events(event_manager);
 
@@ -140,7 +139,8 @@ void Game::screenshot(const string& filename)
 	console.logger << "saving screenshot to " << filename << "\n";
 	const auto width = gfx.window_size.x;
 	const auto height = gfx.window_size.y;
-	unique_ptr<GLubyte[]> pixels = std::make_unique<GLubyte[]>(3 * width * height);
+	auto pixels = std::make_unique<GLubyte[]>(3 * width * height);
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
 	Gfx::write_png_RGB(filename.c_str(), pixels.get(), width, height, true);
 }
