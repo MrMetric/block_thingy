@@ -45,11 +45,11 @@ namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
 namespace adaptor {
 
-template<>
-struct pack<glm::dvec3>
+template<typename T>
+struct pack<glm::tvec3<T>>
 {
 	template <typename Stream>
-	packer<Stream>& operator()(msgpack::packer<Stream>& o, glm::dvec3 const& v) const
+	packer<Stream>& operator()(msgpack::packer<Stream>& o, glm::tvec3<T> const& v) const
 	{
 		o.pack_array(3);
 		o.pack(v.x);
@@ -59,17 +59,17 @@ struct pack<glm::dvec3>
 	}
 };
 
-template<>
-struct convert<glm::dvec3>
+template<typename T>
+struct convert<glm::tvec3<T>>
 {
-	msgpack::object const& operator()(msgpack::object const& o, glm::dvec3& v) const
+	msgpack::object const& operator()(msgpack::object const& o, glm::tvec3<T>& v) const
 	{
 		if(o.type != msgpack::type::ARRAY) throw msgpack::type_error();
 		if(o.via.array.size != 3) throw msgpack::type_error();
 
-		v.x = o.via.array.ptr[0].as<double>();
-		v.y = o.via.array.ptr[1].as<double>();
-		v.z = o.via.array.ptr[2].as<double>();
+		v.x = o.via.array.ptr[0].as<T>();
+		v.y = o.via.array.ptr[1].as<T>();
+		v.z = o.via.array.ptr[2].as<T>();
 
 		return o;
 	}
@@ -81,7 +81,7 @@ struct pack<Player>
 	template <typename Stream>
 	packer<Stream>& operator()(msgpack::packer<Stream>& o, Player const& player) const
 	{
-		bool noclip = player.get_noclip();
+		const bool noclip = player.get_noclip();
 		o.pack_map(noclip ? 4 : 3);
 		o.pack("position"); o.pack(player.position);
 		o.pack("rotation"); o.pack(player.rotation);
@@ -121,8 +121,12 @@ struct pack<Chunk>
 	template <typename Stream>
 	packer<Stream>& operator()(msgpack::packer<Stream>& o, Chunk const& chunk) const
 	{
-		o.pack_array(2);
-		bool is_solid = chunk.blocks == nullptr;
+		const bool has_meshes = false;
+		uint32_t array_size = 3;
+		if(has_meshes) array_size += 1;
+
+		o.pack_array(array_size);
+		const bool is_solid = chunk.blocks == nullptr;
 		o.pack(is_solid);
 		if(is_solid)
 		{
@@ -132,9 +136,18 @@ struct pack<Chunk>
 		{
 			o.pack(chunk.blocks);
 		}
+
+		o.pack(has_meshes);
+		if(has_meshes)
+		{
+			o.pack(chunk.get_meshes());
+		}
+
 		return o;
 	}
 };
+
+template <typename T> class butts;
 
 template<>
 struct convert<Chunk>
@@ -142,18 +155,27 @@ struct convert<Chunk>
 	msgpack::object const& operator()(msgpack::object const& o, Chunk& chunk) const
 	{
 		if(o.type != msgpack::type::ARRAY) throw msgpack::type_error();
-		if(o.via.array.size != 2) throw msgpack::type_error();
+		if(o.via.array.size < 3) throw msgpack::type_error();
 
-		bool is_solid = o.via.array.ptr[0].as<bool>();
+		auto array = o.via.array.ptr;
+		uint_fast8_t i = 0;
+
+		const bool is_solid = array[i++].as<bool>();
 		if(is_solid)
 		{
 			chunk.blocks = nullptr; // NOTE: should be null already
-			chunk.solid_block = o.via.array.ptr[1].as<Block::Block>();
+			chunk.solid_block = array[i++].as<Block::Block>();
 		}
 		else
 		{
 			// let us hope this copy is optimized out
-			chunk.blocks = std::make_unique<chunk_block_array_t>(o.via.array.ptr[1].as<chunk_block_array_t>());
+			chunk.blocks = std::make_unique<chunk_block_array_t>(array[i++].as<chunk_block_array_t>());
+		}
+
+		const bool has_meshes = array[i++].as<bool>();
+		if(has_meshes)
+		{
+			chunk.set_meshes(array[i++].as<meshmap_t>());
 		}
 
 		return o;
@@ -189,6 +211,27 @@ struct convert<Block::Block>
 		const BlockType block_type = static_cast<BlockType>(type_id);
 		block = Block::Block(block_type);
 
+		return o;
+	}
+};
+
+template<>
+struct pack<BlockType>
+{
+	template <typename Stream>
+	packer<Stream>& operator()(msgpack::packer<Stream>& o, BlockType const t) const
+	{
+		o.pack(static_cast<block_type_id_t>(t));
+		return o;
+	}
+};
+
+template<>
+struct convert<BlockType>
+{
+	msgpack::object const& operator()(msgpack::object const& o, BlockType& t) const
+	{
+		t = static_cast<BlockType>(o.as<block_type_id_t>());
 		return o;
 	}
 };

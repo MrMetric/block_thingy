@@ -41,6 +41,9 @@ class Chunk
 		void update();
 		void render(bool transluscent_pass);
 
+		const meshmap_t& get_meshes() const;
+		void set_meshes(const meshmap_t&);
+
 		// public because friend stuff does not work for msgpack stuff
 		std::unique_ptr<chunk_block_array_t> blocks;
 		Block::Block solid_block;
@@ -51,6 +54,8 @@ class Chunk
 		meshmap_t meshes;
 		std::vector<VertexBuffer> mesh_vbos;
 		bool changed;
+
+		void update_vbos();
 
 		void init_block_array();
 

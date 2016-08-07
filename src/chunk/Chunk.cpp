@@ -114,22 +114,7 @@ void Chunk::update()
 
 	meshes = owner.mesher->make_mesh(*this);
 
-	if(mesh_vbos.size() < meshes.size())
-	{
-		size_t to_add = meshes.size() - mesh_vbos.size();
-		for(size_t i = 0; i < to_add; ++i)
-		{
-			mesh_vbos.emplace_back();
-		}
-	}
-
-	size_t i = 0;
-	for(const auto& p : meshes)
-	{
-		const mesh_t& mesh = p.second;
-		mesh_vbos[i].data(mesh.size() * sizeof(mesh_t::value_type), mesh.data(), VertexBuffer::UsageHint::dynamic_draw);
-		++i;
-	}
+	update_vbos();
 }
 
 void Chunk::render(const bool transluscent_pass)
@@ -164,6 +149,37 @@ void Chunk::render(const bool transluscent_pass)
 		glDrawArrays(GL_TRIANGLES, 0, draw_count);
 		glDisableVertexAttribArray(0);
 
+		++i;
+	}
+}
+
+const meshmap_t& Chunk::get_meshes() const
+{
+	return meshes;
+}
+void Chunk::set_meshes(const meshmap_t& m)
+{
+	changed = false;
+	meshes = m;
+	update_vbos();
+}
+
+void Chunk::update_vbos()
+{
+	if(mesh_vbos.size() < meshes.size())
+	{
+		size_t to_add = meshes.size() - mesh_vbos.size();
+		for(size_t i = 0; i < to_add; ++i)
+		{
+			mesh_vbos.emplace_back();
+		}
+	}
+
+	size_t i = 0;
+	for(const auto& p : meshes)
+	{
+		const mesh_t& mesh = p.second;
+		mesh_vbos[i].data(mesh.size() * sizeof(mesh_t::value_type), mesh.data(), VertexBuffer::UsageHint::dynamic_draw);
 		++i;
 	}
 }
