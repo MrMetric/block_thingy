@@ -2,7 +2,6 @@
 
 #include <functional>
 #include <memory>
-#include <random>
 #include <set>
 #include <stdint.h>
 #include <string>
@@ -63,7 +62,6 @@ class World
 		std::set<Position::ChunkInWorld> chunks_to_save;
 		mutable Position::ChunkInWorld last_key;
 		mutable std::shared_ptr<Chunk> last_chunk;
-		std::minstd_rand random_engine;
 
 		std::unordered_map<std::string, std::shared_ptr<Player>> players;
 		WorldFile file;

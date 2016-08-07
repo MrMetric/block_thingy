@@ -1,9 +1,10 @@
 #include "World.hpp"
 
 #include <memory>
-#include <random>
 #include <stdint.h>
 #include <utility>
+
+#include <glm/gtc/noise.hpp>
 
 #include "Player.hpp"
 #include "block/Block.hpp"
@@ -34,7 +35,6 @@ World::World(const string& file_path)
 	mesher(std::make_unique<GreedyMesher>()),
 	chunks(0, key_hasher),
 	last_chunk(nullptr),
-	random_engine(0xFECA1),
 	file(file_path, *this)
 {
 }
@@ -139,39 +139,51 @@ void World::gen_chunk(const Position::ChunkInWorld& chunk_pos)
 
 void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max)
 {
-	static std::uniform_int_distribution<uint_fast16_t> distribution(0, 999);
-
 	Position::BlockInWorld block_pos(static_cast<BlockInWorld_type>(0), 0, 0);
 	for(BlockInWorld_type x = min.x; x <= max.x; ++x)
 	{
 		for(BlockInWorld_type z = min.z; z <= max.z; ++z)
 		{
-			for(BlockInWorld_type y = min.y; y <= max.y; ++y)
+			const double m = 20;
+			if(min.y > 0)
+			{
+				continue;
+			}
+
+			const uint_fast8_t roughness = 8;
+			auto turbulence = [](const glm::dvec2& P)
+			{
+				double val = 0;
+				double freq = 1;
+				for(uint_fast8_t i = 0; i < roughness; i++)
+				{
+					const glm::dvec2 Pm(P.x * freq, P.y * freq);
+					val += glm::abs(glm::simplex(Pm) / freq);
+					freq *= 2.07;
+				}
+				return val;
+			};
+
+			auto get_max_y = [&turbulence, x, z, m]()
+			{
+				const glm::dvec2 n(-turbulence(glm::dvec2(x, z) / 1024.0));
+				const double a = n.x * n.y;
+				const double b = glm::mod(a, 1.0);
+				const double d = glm::mod(ceil(a), 2.0);
+				return static_cast<BlockInWorld_type>(((d == 0 ? b : d - b) - 1) * m);
+			};
+
+			auto max_y = max.y <= -m ? max.y : std::min(max.y, get_max_y());
+
+			for(BlockInWorld_type y = min.y; y <= max_y; ++y)
 			{
 				block_pos.x = x;
 				block_pos.y = y;
 				block_pos.z = z;
 
-				if(y == -128 || (y > -64 && y < -32))
-				{
-					set_block(block_pos, Block::Block(BlockType::test));
-				}
-				else if(x == -32 && y < 32)
-				{
-					set_block(block_pos, Block::Block(BlockType::dots));
-				}
-				else if(y == -32)
-				{
-					auto r = distribution(random_engine);
-					if(r == 0)
-					{
-						for(BlockInWorld_type y2 = y; y2 < y+8; ++y2)
-						{
-							block_pos.y = y2;
-							set_block(block_pos, Block::Block(BlockType::eye));
-						}
-					}
-				}
+				const Position::ChunkInWorld chunkpos(block_pos);
+				const BlockType t = y > -m / 2 ? BlockType::white : BlockType::black;
+				set_block(block_pos, Block::Block(t));
 			}
 		}
 	}
