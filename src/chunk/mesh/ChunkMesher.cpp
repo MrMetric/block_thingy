@@ -40,3 +40,14 @@ const Block::Block& ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t
 	return chunk.get_block_const(s(x), s(y), s(z));
 	#undef s
 }
+
+bool ChunkMesher::block_visible_from(const Chunk& chunk, const Block::Block& block, int_fast16_t x, int_fast16_t y, int_fast16_t z)
+{
+	const Block::Block& sibling = block_at(chunk, x, y, z);
+	return
+		   sibling.type() != BlockType::none
+		&& !block.is_invisible() // this block is visible
+		&& !sibling.is_opaque() // this block can be seen thru the adjacent block
+		&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks (of the same type)
+	;
+};

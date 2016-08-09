@@ -195,7 +195,17 @@ void Chunk::init_block_array()
 	blocks->fill(solid_block);
 }
 
-void Chunk::update_neighbors(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+void Chunk::update_neighbors() const
+{
+	update_neighbor(-1,  0,  0);
+	update_neighbor(+1,  0,  0);
+	update_neighbor( 0, -1,  0);
+	update_neighbor( 0, +1,  0);
+	update_neighbor( 0,  0, -1);
+	update_neighbor( 0,  0, +1);
+}
+
+void Chunk::update_neighbors(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const
 {
 	// TODO: check if the neighbor chunk has a block beside this one (to avoid updating when the appearance won't change)
 	if(x == 0)
@@ -226,7 +236,7 @@ void Chunk::update_neighbors(const BlockInChunk_type x, const BlockInChunk_type 
 	}
 }
 
-void Chunk::update_neighbor(const ChunkInWorld_type x, const ChunkInWorld_type y, const ChunkInWorld_type z)
+void Chunk::update_neighbor(const ChunkInWorld_type x, const ChunkInWorld_type y, const ChunkInWorld_type z) const
 {
 	Position::ChunkInWorld chunk_pos(x, y, z);
 	chunk_pos += position;

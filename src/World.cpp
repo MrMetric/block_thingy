@@ -85,6 +85,7 @@ void World::set_chunk(const Position::ChunkInWorld& chunk_pos, shared_ptr<Chunk>
 		last_chunk = chunk;
 	}
 	chunks.insert({ chunk_pos, chunk });
+	chunk->update_neighbors();
 }
 
 shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld& chunk_pos) const

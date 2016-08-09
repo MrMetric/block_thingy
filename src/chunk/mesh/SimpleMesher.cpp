@@ -36,39 +36,33 @@ meshmap_t SimpleMesher::make_mesh(const Chunk& chunk)
 
 void draw_cube(const Chunk& chunk, mesh_t& mesh, const Block::Block& block, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
-	auto block_visible_from = [&chunk](const Block::Block& block, int_fast16_t x, int_fast16_t y, int_fast16_t z)
-	{
-		const Block::Block& sibling = ChunkMesher::block_at(chunk, x, y, z);
-		return !sibling.is_opaque() && block.type() != sibling.type();
-	};
-
 	// front
-	if(block_visible_from(block, x, y, z - 1))
+	if(ChunkMesher::block_visible_from(chunk, block, x, y, z - 1))
 	{
 		draw_face(mesh, x, y, z, 0);
 	}
 	// back
-	if(block_visible_from(block, x, y, z + 1))
+	if(ChunkMesher::block_visible_from(chunk, block, x, y, z + 1))
 	{
 		draw_face(mesh, x, y, z, 1);
 	}
 	// top
-	if(block_visible_from(block, x, y + 1, z))
+	if(ChunkMesher::block_visible_from(chunk, block, x, y + 1, z))
 	{
 		draw_face(mesh, x, y, z, 2);
 	}
 	// bottom
-	if(block_visible_from(block, x, y - 1, z))
+	if(ChunkMesher::block_visible_from(chunk, block, x, y - 1, z))
 	{
 		draw_face(mesh, x, y, z, 3);
 	}
 	// right (?)
-	if(block_visible_from(block, x - 1, y, z))
+	if(ChunkMesher::block_visible_from(chunk, block, x - 1, y, z))
 	{
 		draw_face(mesh, x, y, z, 4);
 	}
 	// left (?)
-	if(block_visible_from(block, x + 1, y, z))
+	if(ChunkMesher::block_visible_from(chunk, block, x + 1, y, z))
 	{
 		draw_face(mesh, x, y, z, 5);
 	}

@@ -144,11 +144,7 @@ void generate_surface(const Chunk& chunk, surface_t& surface, u8vec3& xyz, const
 			o[i.y] = offset;
 
 			const Block::Block& block = ChunkMesher::block_at(chunk, x, y, z);
-			const Block::Block& sibling = ChunkMesher::block_at(chunk, x + o[0], y + o[1], z + o[2]);
-			if(!block.is_invisible() // this block is visible
-			&& !sibling.is_opaque() // this block can be seen thru the adjacent block
-			&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks (of the same type)
-			)
+			if(ChunkMesher::block_visible_from(chunk, block, x + o[0], y + o[1], z + o[2]))
 			{
 				surface[xyz[2]][xyz[0]] = block.type();
 			}

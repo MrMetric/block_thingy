@@ -20,6 +20,8 @@ using chunk_block_array_t = std::array<Block::Block, CHUNK_BLOCK_COUNT>;
 
 class Chunk
 {
+	friend class World;
+
 	public:
 		Chunk(const Position::ChunkInWorld&, World& owner);
 
@@ -59,6 +61,7 @@ class Chunk
 
 		void init_block_array();
 
-		void update_neighbors(BlockInChunk_type, BlockInChunk_type, BlockInChunk_type);
-		void update_neighbor(ChunkInWorld_type, ChunkInWorld_type, ChunkInWorld_type);
+		void update_neighbors() const;
+		void update_neighbors(BlockInChunk_type, BlockInChunk_type, BlockInChunk_type) const;
+		void update_neighbor(ChunkInWorld_type, ChunkInWorld_type, ChunkInWorld_type) const;
 };
