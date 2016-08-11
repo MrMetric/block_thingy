@@ -23,6 +23,7 @@ struct Color
 	bool operator<(int) const;
 	Color operator+(int) const;
 	Color operator-(int) const;
+	Color& operator-=(int);
 
 	uint8_t r;
 	uint8_t g;

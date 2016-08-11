@@ -1,6 +1,7 @@
 #include "World.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <memory>
 #include <queue>
 #include <stdint.h>
@@ -138,20 +139,16 @@ void World::add_light(const Position::BlockInWorld& block_pos, const Graphics::C
 	set_light(block_pos, color);
 
 	// see https://www.seedofandromeda.com/blogs/29-fast-flood-fill-lighting-in-a-blocky-voxel-game-pt-1
-	std::queue<std::tuple<Position::BlockInWorld, Graphics::Color>> q;
-	q.emplace(block_pos, color);
+	std::queue<std::tuple<Position::BlockInWorld, glm::dvec3>> q;
+	q.emplace(block_pos, glm::dvec3(0, 0, 0));
 	std::vector<Position::BlockInWorld> visited;
 	while(!q.empty())
 	{
 		const auto pos = std::get<0>(q.front());
-		auto color = std::get<1>(q.front()) - 1;
+		const auto traveled = std::get<1>(q.front());
 		q.pop();
-		if(color < 1)
-		{
-			continue;
-		}
 
-		auto fill = [this, &pos, &q, &visited](Graphics::Color color, int8_t x, int8_t y, int8_t z)
+		auto fill = [this, &block_pos, &q, &visited, &pos, &traveled](Graphics::Color color, int8_t x, int8_t y, int8_t z)
 		{
 			const Position::BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
 			if(std::find(visited.cbegin(), visited.cend(), pos2) != visited.cend())
@@ -163,9 +160,16 @@ void World::add_light(const Position::BlockInWorld& block_pos, const Graphics::C
 			{
 				return;
 			}
+			const glm::dvec3 traveled2(traveled.x + std::abs(x), traveled.y + std::abs(y), traveled.z + std::abs(z));
+			const double distance = glm::length(traveled2);
+			color -= std::round(distance);
+			if(color < 1)
+			{
+				return;
+			}
 			const auto color2 = get_light(pos2) + color;
 			set_light(pos2, color2);
-			q.emplace(pos2, color);
+			q.emplace(pos2, traveled2);
 		};
 
 		fill(color,  0,  0, -1);

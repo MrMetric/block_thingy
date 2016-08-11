@@ -209,13 +209,9 @@ void Player::respawn()
 
 bool Player::can_place_block_at(const Position::BlockInWorld& block_pos)
 {
-	Position::BlockInWorld pos0(position.x, position.y, position.z);
-	Position::BlockInWorld pos1(position.x, position.y + 1, position.z);
-	if(block_pos == pos0 || block_pos == pos1)
-	{
-		return false;
-	}
-	return true;
+	Position::BlockInWorld pos0(glm::dvec3(position.x, position.y, position.z));
+	Position::BlockInWorld pos1(glm::dvec3(position.x, position.y + 1, position.z));
+	return block_pos != pos0 && block_pos != pos1;
 }
 
 void Player::move_forward(const bool do_that)

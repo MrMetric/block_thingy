@@ -84,6 +84,14 @@ Color Color::operator-(const int x) const
 	);
 }
 
+Color& Color::operator-=(const int x)
+{
+	r = static_cast<decltype(r)>(std::max(r - x, 0));
+	g = static_cast<decltype(g)>(std::max(g - x, 0));
+	b = static_cast<decltype(b)>(std::max(b - x, 0));
+	return *this;
+}
+
 std::ostream& operator<<(std::ostream& o, const Color& c)
 {
 	return o << '('
