@@ -14,13 +14,10 @@ vec3 hsv2rgb(vec3 c)
 
 vec3 color(vec2 coords)
 {
-	return vec3(1.0 - discretestep(radius, length(fract(coords) - 0.5)));
-}
-
-void main()
-{
-	vec3 c = color(get_side_coords());
+	vec3 c = vec3(1.0 - discretestep(radius, length(fract(coords) - 0.5)));
 	c *= hsv2rgb(vec3(global_time + radius_scaled, 1.0, 1.0));
 	c *= radius_scaled;
-	FragColor = vec4(c, 1.0);
+	return c;
 }
+
+#include include/main.fs
