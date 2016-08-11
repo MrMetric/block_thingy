@@ -127,6 +127,8 @@
 		<Unit filename="src/event/type/Event_enter_block.hpp" />
 		<Unit filename="src/event/type/Event_window_size_change.cpp" />
 		<Unit filename="src/event/type/Event_window_size_change.hpp" />
+		<Unit filename="src/graphics/Color.cpp" />
+		<Unit filename="src/graphics/Color.hpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderObject.cpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderObject.hpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderProgram.cpp" />

@@ -46,13 +46,13 @@ void Player::move(const glm::dvec3& acceleration)
 	{
 		double moveX = velocity.x * cosY - velocity.z * sinY;
 		double offset = moveX < 0 ? -abs_offset : abs_offset;
-		position.x = move_to(position.x, moveX, offset, Position::BlockInWorld(position.x + moveX + offset, position.y, position.z));
+		position.x = move_to(position.x, moveX, offset, Position::BlockInWorld(glm::dvec3(position.x + moveX + offset, position.y, position.z)));
 	}
 
 	{
 		double moveZ = velocity.z * cosY + velocity.x * sinY;
 		double offset = moveZ < 0 ? -abs_offset : abs_offset;
-		position.z = move_to(position.z, moveZ, offset, Position::BlockInWorld(position.x, position.y, position.z + moveZ + offset));
+		position.z = move_to(position.z, moveZ, offset, Position::BlockInWorld(glm::dvec3(position.x, position.y, position.z + moveZ + offset)));
 	}
 
 	{

@@ -40,13 +40,7 @@ namespace Position
 		y = t(vec.y);
 		z = t(vec.z);
 	}
-
-	BlockInWorld::BlockInWorld(const double x, const double y, const double z)
-	{
-		this->x = t(x);
-		this->y = t(y);
-		this->z = t(z);
-	}
+	#undef t
 
 	BlockInWorld_type BlockInWorld::operator[](const uint_fast8_t i) const
 	{

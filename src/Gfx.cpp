@@ -122,7 +122,7 @@ void Gfx::uninit_glfw()
 
 void Gfx::opengl_setup()
 {
-	glClearColor(0.0, 0.0, 0.5, 0.0);
+	glClearColor(0.0, 0.0, 0.1, 0.0);
 
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
@@ -143,6 +143,13 @@ void Gfx::opengl_setup()
 	block_shaders.emplace(BlockType::crappy_marble, "shaders/block/crappy_marble");
 	block_shaders.emplace(BlockType::white, "shaders/block/white");
 	block_shaders.emplace(BlockType::black, "shaders/block/black");
+	block_shaders.emplace(BlockType::light_test_red, "shaders/block/light_test");
+	block_shaders.emplace(BlockType::light_test_green, "shaders/block/light_test");
+	block_shaders.emplace(BlockType::light_test_blue, "shaders/block/light_test");
+	block_shaders.emplace(BlockType::light_test_yellow, "shaders/block/light_test");
+	block_shaders.emplace(BlockType::light_test_cyan, "shaders/block/light_test");
+	block_shaders.emplace(BlockType::light_test_pink, "shaders/block/light_test");
+	block_shaders.emplace(BlockType::light_test_white, "shaders/block/light_test");
 }
 
 // this toggles borderless window mode

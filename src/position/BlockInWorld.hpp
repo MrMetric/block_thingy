@@ -18,7 +18,6 @@ namespace Position
 		BlockInWorld(BlockInWorld_type x, BlockInWorld_type y, BlockInWorld_type z);
 		BlockInWorld(const ChunkInWorld&, const BlockInChunk&);
 		explicit BlockInWorld(const glm::dvec3&);
-		BlockInWorld(double x, double y, double z);
 
 		BlockInWorld_type operator[](uint_fast8_t) const;
 		BlockInWorld_type& operator[](uint_fast8_t);

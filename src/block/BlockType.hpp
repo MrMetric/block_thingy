@@ -15,6 +15,13 @@ enum class BlockType : block_type_id_t
 	crappy_marble,
 	white,
 	black,
+	light_test_red,
+	light_test_green,
+	light_test_blue,
+	light_test_yellow,
+	light_test_cyan,
+	light_test_pink,
+	light_test_white,
 	COUNT,
 };
 

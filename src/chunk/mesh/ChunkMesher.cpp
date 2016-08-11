@@ -6,9 +6,12 @@
 #include "block/Block.hpp"
 #include "block/BlockType.hpp"
 #include "chunk/Chunk.hpp"
+#include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
+
+const meshmap_key_t ChunkMesher::empty_key = { BlockType::none, Graphics::Color() };
 
 ChunkMesher::ChunkMesher()
 {
@@ -51,3 +54,21 @@ bool ChunkMesher::block_visible_from(const Chunk& chunk, const Block::Block& blo
 		&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks (of the same type)
 	;
 };
+
+Graphics::Color ChunkMesher::light_at(const Chunk& chunk, int_fast16_t x, int_fast16_t y, int_fast16_t z)
+{
+	if(x < 0 || x >= CHUNK_SIZE
+	|| y < 0 || y >= CHUNK_SIZE
+	|| z < 0 || z >= CHUNK_SIZE)
+	{
+		Position::ChunkInWorld chunk_pos = chunk.get_position();
+		Position::BlockInWorld block_pos(chunk_pos, {0, 0, 0});
+		block_pos.x += x;
+		block_pos.y += y;
+		block_pos.z += z;
+		return chunk.get_owner().get_light(block_pos);
+	}
+	#define s(a) static_cast<BlockInChunk_type>(a)
+	return chunk.get_light({ s(x), s(y), s(z) });
+	#undef s
+}

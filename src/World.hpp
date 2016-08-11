@@ -17,6 +17,10 @@ namespace Block
 {
 	class Block;
 }
+namespace Graphics
+{
+	struct Color;
+}
 namespace Position
 {
 	struct BlockInWorld;
@@ -40,6 +44,10 @@ class World
 		Block::Block& get_block_mutable(const Position::BlockInWorld&);
 
 		void set_block(const Position::BlockInWorld&, const Block::Block&);
+
+		Graphics::Color get_light(const Position::BlockInWorld&) const;
+		void set_light(const Position::BlockInWorld&, const Graphics::Color&);
+		void add_light(const Position::BlockInWorld&, const Graphics::Color&);
 
 		std::shared_ptr<Chunk> get_chunk(const Position::ChunkInWorld&) const;
 		std::shared_ptr<Chunk> get_or_make_chunk(const Position::ChunkInWorld&);

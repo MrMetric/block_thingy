@@ -18,6 +18,7 @@
 #include "World.hpp"
 #include "block/Block.hpp"
 #include "block/BlockType.hpp"
+#include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
@@ -35,6 +36,16 @@ Chunk::Chunk(const Position::ChunkInWorld& pos, World& owner)
 	position(pos),
 	changed(true)
 {
+}
+
+World& Chunk::get_owner() const
+{
+	return owner;
+}
+
+Position::ChunkInWorld Chunk::get_position() const
+{
+	return position;
 }
 
 inline static chunk_block_array_t::size_type block_array_index(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
@@ -94,26 +105,28 @@ void Chunk::set_block(const Position::BlockInChunk& block_pos, const Block::Bloc
 	set_block(block_pos.x, block_pos.y, block_pos.z, block);
 }
 
-Position::ChunkInWorld Chunk::get_position() const
+const Graphics::Color& Chunk::get_light(const Position::BlockInChunk& pos) const
 {
-	return position;
+	const auto i = block_array_index(pos.x, pos.y, pos.z);
+	return light[i];
 }
 
-World& Chunk::get_owner() const
+void Chunk::set_light(const Position::BlockInChunk& pos, const Graphics::Color& color)
 {
-	return owner;
+	const auto i = block_array_index(pos.x, pos.y, pos.z);
+	light[i] = color;
+	changed = true;
 }
 
 void Chunk::update()
 {
 	if(blocks == nullptr && solid_block.is_invisible())
 	{
-		meshes = meshmap_t();
+		meshes.clear();
 		return;
 	}
 
 	meshes = owner.mesher->make_mesh(*this);
-
 	update_vbos();
 }
 
@@ -130,7 +143,8 @@ void Chunk::render(const bool transluscent_pass)
 	size_t i = 0;
 	for(const auto& p : meshes)
 	{
-		const BlockType type = p.first;
+		const meshmap_key_t& key = p.first;
+		const BlockType type = std::get<0>(key);
 		if(Block::Block(type).is_translucent() != transluscent_pass)
 		{
 			++i;
@@ -141,6 +155,9 @@ void Chunk::render(const bool transluscent_pass)
 
 		shader.uniform("position_offset", static_cast<glm::vec3>(position_render_offset));
 		shader.uniform("global_time", static_cast<float>(glfwGetTime())); // TODO: use double when available
+
+		const Graphics::Color color = std::get<1>(key);
+		shader.uniform("light", color.to_vec3());
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i].get_name());

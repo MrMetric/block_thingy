@@ -85,6 +85,7 @@ OBJ_DEBUG = \
 	$(OBJDIR_DEBUG)/src/event/EventManager.o \
 	$(OBJDIR_DEBUG)/src/event/type/Event_enter_block.o \
 	$(OBJDIR_DEBUG)/src/event/type/Event_window_size_change.o \
+	$(OBJDIR_DEBUG)/src/graphics/Color.o \
 	$(OBJDIR_DEBUG)/src/graphics/RenderWorld.o \
 	$(OBJDIR_DEBUG)/src/graphics/OpenGL/ShaderObject.o \
 	$(OBJDIR_DEBUG)/src/graphics/OpenGL/ShaderProgram.o \
@@ -121,6 +122,7 @@ OBJ_RELEASE = \
 	$(OBJDIR_RELEASE)/src/event/EventManager.o \
 	$(OBJDIR_RELEASE)/src/event/type/Event_enter_block.o \
 	$(OBJDIR_RELEASE)/src/event/type/Event_window_size_change.o \
+	$(OBJDIR_RELEASE)/src/graphics/Color.o \
 	$(OBJDIR_RELEASE)/src/graphics/RenderWorld.o \
 	$(OBJDIR_RELEASE)/src/graphics/OpenGL/ShaderObject.o \
 	$(OBJDIR_RELEASE)/src/graphics/OpenGL/ShaderProgram.o \
@@ -224,6 +226,9 @@ $(OBJDIR_DEBUG)/src/event/type/Event_enter_block.o: src/event/type/Event_enter_b
 
 $(OBJDIR_DEBUG)/src/event/type/Event_window_size_change.o: src/event/type/Event_window_size_change.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/event/type/Event_window_size_change.cpp -o $(OBJDIR_DEBUG)/src/event/type/Event_window_size_change.o
+
+$(OBJDIR_DEBUG)/src/graphics/Color.o: src/graphics/Color.cpp
+	$(CXX) $(CXXFLAGS_DEBUG) -c src/graphics/Color.cpp -o $(OBJDIR_DEBUG)/src/graphics/Color.o
 
 $(OBJDIR_DEBUG)/src/graphics/RenderWorld.o: src/graphics/RenderWorld.cpp
 	$(CXX) $(CXXFLAGS_DEBUG) -c src/graphics/RenderWorld.cpp -o $(OBJDIR_DEBUG)/src/graphics/RenderWorld.o
@@ -351,6 +356,9 @@ $(OBJDIR_RELEASE)/src/event/type/Event_enter_block.o: src/event/type/Event_enter
 
 $(OBJDIR_RELEASE)/src/event/type/Event_window_size_change.o: src/event/type/Event_window_size_change.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/event/type/Event_window_size_change.cpp -o $(OBJDIR_RELEASE)/src/event/type/Event_window_size_change.o
+
+$(OBJDIR_RELEASE)/src/graphics/Color.o: src/graphics/Color.cpp
+	$(CXX) $(CXXFLAGS_RELEASE) -c src/graphics/Color.cpp -o $(OBJDIR_RELEASE)/src/graphics/Color.o
 
 $(OBJDIR_RELEASE)/src/graphics/RenderWorld.o: src/graphics/RenderWorld.cpp
 	$(CXX) $(CXXFLAGS_RELEASE) -c src/graphics/RenderWorld.cpp -o $(OBJDIR_RELEASE)/src/graphics/RenderWorld.o

@@ -10,9 +10,13 @@
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
+using surface_t = GreedyMesher::surface_t;
+using u8vec3 = glm::tvec3<uint_fast8_t>;
+using Graphics::Color;
+
 struct Rectangle
 {
-	BlockType type;
+	meshmap_key_t key;
 	BlockInChunk_type x, z;
 	BlockInChunk_type w, h;
 };
@@ -29,9 +33,6 @@ enum class Side : int_fast8_t
 	top = 1,
 	bottom = -1,
 };
-
-using surface_t = GreedyMesher::surface_t;
-using u8vec3 = glm::tvec3<uint_fast8_t>;
 
 static void add_surface(const Chunk&, meshmap_t&, surface_t&, Plane, Side);
 static Rectangle yield_rectangle(surface_t&);
@@ -82,7 +83,7 @@ void add_surface(const Chunk& chunk, meshmap_t& meshes, surface_t& surface, cons
 		while(true)
 		{
 			Rectangle rekt = yield_rectangle(surface);
-			if(rekt.type == BlockType::none)
+			if(std::get<0>(rekt.key) == BlockType::none)
 			{
 				break;
 			}
@@ -116,7 +117,7 @@ void add_surface(const Chunk& chunk, meshmap_t& meshes, surface_t& surface, cons
 			v4[iz] = s(rekt.z + rekt.h);
 			#undef s
 
-			mesh_t& mesh = meshes[rekt.type];
+			mesh_t& mesh = meshes[rekt.key];
 			if((plane == Plane::XZ && side == Side::top)
 			|| (plane == Plane::XY && side == Side::bottom)
 			|| (plane == Plane::YZ && side == Side::bottom))
@@ -146,11 +147,11 @@ void generate_surface(const Chunk& chunk, surface_t& surface, u8vec3& xyz, const
 			const Block::Block& block = ChunkMesher::block_at(chunk, x, y, z);
 			if(ChunkMesher::block_visible_from(chunk, block, x + o[0], y + o[1], z + o[2]))
 			{
-				surface[xyz[2]][xyz[0]] = block.type();
+				surface[xyz[2]][xyz[0]] = { block.type(), ChunkMesher::light_at(chunk, x + o[0], y + o[1], z + o[2]) };
 			}
 			else
 			{
-				surface[xyz[2]][xyz[0]] = BlockType::none;
+				surface[xyz[2]][xyz[0]] = ChunkMesher::empty_key;
 			}
 		}
 	}
@@ -163,19 +164,20 @@ Rectangle yield_rectangle(surface_t& surface)
 		surface_t::value_type& row = surface[z];
 		for(BlockInChunk_type x = 0; x < CHUNK_SIZE; ++x)
 		{
-			const BlockType type = row[x];
+			const meshmap_key_t key = row[x];
+			const BlockType type = std::get<0>(key);
 			if(type != BlockType::none)
 			{
 				BlockInChunk_type start_z = z;
 				BlockInChunk_type start_x = x;
 				BlockInChunk_type w = 1;
 				BlockInChunk_type h = 1;
-				row[x] = BlockType::none;
+				row[x] = ChunkMesher::empty_key;
 				++x;
-				while(x < CHUNK_SIZE && row[x] == type)
+				while(x < CHUNK_SIZE && row[x] == key)
 				{
 					w += 1;
-					row[x] = BlockType::none;
+					row[x] = ChunkMesher::empty_key;
 					++x;
 				}
 				++z;
@@ -184,7 +186,7 @@ Rectangle yield_rectangle(surface_t& surface)
 					x = start_x;
 					surface_t::value_type& row2 = surface[z];
 
-					if(row2[x] != type)
+					if(row2[x] != key)
 					{
 						break;
 					}
@@ -194,23 +196,23 @@ Rectangle yield_rectangle(surface_t& surface)
 						w2 += 1;
 						++x;
 					}
-					while(x < CHUNK_SIZE && w2 < w && row2[x] == type);
+					while(x < CHUNK_SIZE && w2 < w && row2[x] == key);
 
 					if(w2 != w)
 					{
 						break;
 					}
-					std::fill_n(&row2[start_x], w2, BlockType::none);
+					std::fill_n(&row2[start_x], w2, ChunkMesher::empty_key);
 
 					++z;
 					h += 1;
 				}
-				return { type, start_x, start_z, w, h };
+				return { key, start_x, start_z, w, h };
 			}
 		}
 	}
 
-	return { BlockType::none, 0, 0, 0, 0 };
+	return { ChunkMesher::empty_key, 0, 0, 0, 0 };
 }
 
 void add_face(mesh_t& mesh, const mesh_vertex_coord_t& p1, const mesh_vertex_coord_t& p2, const mesh_vertex_coord_t& p3, const mesh_vertex_coord_t& p4)

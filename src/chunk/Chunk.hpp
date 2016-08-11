@@ -8,6 +8,7 @@
 
 #include "block/Block.hpp"
 #include "chunk/mesh/ChunkMesher.hpp"
+#include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/ChunkInWorld.hpp"
 
@@ -29,6 +30,9 @@ class Chunk
 		Chunk(const Chunk&) = delete;
 		void operator=(const Chunk&) = delete;
 
+		World& get_owner() const; // eeh
+		Position::ChunkInWorld get_position() const;
+
 		const Block::Block& get_block_const(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
 		const Block::Block& get_block_const(const Position::BlockInChunk&) const;
 		Block::Block& get_block_mutable(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z);
@@ -37,8 +41,8 @@ class Chunk
 		void set_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, const Block::Block&);
 		void set_block(const Position::BlockInChunk&, const Block::Block&);
 
-		Position::ChunkInWorld get_position() const;
-		World& get_owner() const; // eeh
+		const Graphics::Color& get_light(const Position::BlockInChunk&) const;
+		void set_light(const Position::BlockInChunk&, const Graphics::Color&);
 
 		void update();
 		void render(bool transluscent_pass);
@@ -53,6 +57,7 @@ class Chunk
 	private:
 		World& owner;
 		Position::ChunkInWorld position;
+		std::array<Graphics::Color, CHUNK_BLOCK_COUNT> light;
 		meshmap_t meshes;
 		std::vector<VertexBuffer> mesh_vbos;
 		bool changed;

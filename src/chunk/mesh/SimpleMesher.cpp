@@ -8,7 +8,7 @@
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
-static void draw_cube(const Chunk&, mesh_t&, const Block::Block& block, BlockInChunk_type, BlockInChunk_type, BlockInChunk_type);
+static void draw_cube(const Chunk&, meshmap_t&, const Block::Block& block, BlockInChunk_type, BlockInChunk_type, BlockInChunk_type);
 static void draw_face(mesh_t&, BlockInChunk_type, BlockInChunk_type, BlockInChunk_type, uint_fast8_t face);
 
 meshmap_t SimpleMesher::make_mesh(const Chunk& chunk)
@@ -25,46 +25,50 @@ meshmap_t SimpleMesher::make_mesh(const Chunk& chunk)
 				{
 					continue;
 				}
-				BlockType type = block.type();
-				mesh_t& mesh = meshes[type];
-				draw_cube(chunk, mesh, block, x, y, z);
+				draw_cube(chunk, meshes, block, x, y, z);
 			}
 		}
 	}
 	return meshes;
 }
 
-void draw_cube(const Chunk& chunk, mesh_t& mesh, const Block::Block& block, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+void draw_cube(const Chunk& chunk, meshmap_t& meshes, const Block::Block& block, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
 {
 	// front
 	if(ChunkMesher::block_visible_from(chunk, block, x, y, z - 1))
 	{
-		draw_face(mesh, x, y, z, 0);
+		const meshmap_key_t key = { block.type(), ChunkMesher::light_at(chunk, x, y, z - 1) };
+		draw_face(meshes[key], x, y, z, 0);
 	}
 	// back
 	if(ChunkMesher::block_visible_from(chunk, block, x, y, z + 1))
 	{
-		draw_face(mesh, x, y, z, 1);
+		const meshmap_key_t key = { block.type(), ChunkMesher::light_at(chunk, x, y, z + 1) };
+		draw_face(meshes[key], x, y, z, 1);
 	}
 	// top
 	if(ChunkMesher::block_visible_from(chunk, block, x, y + 1, z))
 	{
-		draw_face(mesh, x, y, z, 2);
+		const meshmap_key_t key = { block.type(), ChunkMesher::light_at(chunk, x, y + 1, z) };
+		draw_face(meshes[key], x, y, z, 2);
 	}
 	// bottom
 	if(ChunkMesher::block_visible_from(chunk, block, x, y - 1, z))
 	{
-		draw_face(mesh, x, y, z, 3);
+		const meshmap_key_t key = { block.type(), ChunkMesher::light_at(chunk, x, y - 1, z) };
+		draw_face(meshes[key], x, y, z, 3);
 	}
 	// right (?)
 	if(ChunkMesher::block_visible_from(chunk, block, x - 1, y, z))
 	{
-		draw_face(mesh, x, y, z, 4);
+		const meshmap_key_t key = { block.type(), ChunkMesher::light_at(chunk, x - 1, y, z) };
+		draw_face(meshes[key], x, y, z, 4);
 	}
 	// left (?)
 	if(ChunkMesher::block_visible_from(chunk, block, x + 1, y, z))
 	{
-		draw_face(mesh, x, y, z, 5);
+		const meshmap_key_t key = { block.type(), ChunkMesher::light_at(chunk, x + 1, y, z) };
+		draw_face(meshes[key], x, y, z, 5);
 	}
 }
 

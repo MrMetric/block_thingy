@@ -1,6 +1,8 @@
 #include "World.hpp"
 
+#include <algorithm>
 #include <memory>
+#include <queue>
 #include <stdint.h>
 #include <utility>
 
@@ -11,6 +13,7 @@
 #include "block/BlockType.hpp"
 #include "chunk/Chunk.hpp"
 #include "chunk/mesh/GreedyMesher.hpp"
+#include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
@@ -47,6 +50,35 @@ void World::set_block(const Position::BlockInWorld& block_pos, const Block::Bloc
 	Position::BlockInChunk pos(block_pos);
 	chunk->set_block(pos, block);
 
+	if(block.type() == BlockType::light_test_red)
+	{
+		add_light(block_pos, Graphics::Color(16, 0, 0));
+	}
+	else if(block.type() == BlockType::light_test_green)
+	{
+		add_light(block_pos, Graphics::Color(0, 16, 0));
+	}
+	else if(block.type() == BlockType::light_test_blue)
+	{
+		add_light(block_pos, Graphics::Color(0, 0, 16));
+	}
+	else if(block.type() == BlockType::light_test_yellow)
+	{
+		add_light(block_pos, Graphics::Color(16, 16, 0));
+	}
+	else if(block.type() == BlockType::light_test_cyan)
+	{
+		add_light(block_pos, Graphics::Color(0, 16, 16));
+	}
+	else if(block.type() == BlockType::light_test_pink)
+	{
+		add_light(block_pos, Graphics::Color(16, 0, 16));
+	}
+	else if(block.type() == BlockType::light_test_white)
+	{
+		add_light(block_pos, Graphics::Color(16, 16, 16));
+	}
+
 	chunks_to_save.insert(chunk_pos);
 }
 
@@ -76,6 +108,73 @@ Block::Block& World::get_block_mutable(const Position::BlockInWorld& block_pos)
 
 	Position::BlockInChunk pos(block_pos);
 	return chunk->get_block_mutable(pos);
+}
+
+Graphics::Color World::get_light(const Position::BlockInWorld& block_pos) const
+{
+	const Position::ChunkInWorld chunk_pos(block_pos);
+	const shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
+	if(chunk == nullptr)
+	{
+		return Graphics::Color();
+	}
+	return chunk->get_light(Position::BlockInChunk(block_pos));
+}
+
+void World::set_light(const Position::BlockInWorld& block_pos, const Graphics::Color& color)
+{
+	const Position::ChunkInWorld chunk_pos(block_pos);
+	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
+	if(chunk == nullptr)
+	{
+		// TODO?
+		return;
+	}
+	chunk->set_light(Position::BlockInChunk(block_pos), color);
+}
+
+void World::add_light(const Position::BlockInWorld& block_pos, const Graphics::Color& color)
+{
+	set_light(block_pos, color);
+
+	// see https://www.seedofandromeda.com/blogs/29-fast-flood-fill-lighting-in-a-blocky-voxel-game-pt-1
+	std::queue<std::tuple<Position::BlockInWorld, Graphics::Color>> q;
+	q.emplace(block_pos, color);
+	std::vector<Position::BlockInWorld> visited;
+	while(!q.empty())
+	{
+		const auto pos = std::get<0>(q.front());
+		auto color = std::get<1>(q.front()) - 1;
+		q.pop();
+		if(color < 1)
+		{
+			continue;
+		}
+
+		auto fill = [this, &pos, &q, &visited](Graphics::Color color, int8_t x, int8_t y, int8_t z)
+		{
+			const Position::BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
+			if(std::find(visited.cbegin(), visited.cend(), pos2) != visited.cend())
+			{
+				return;
+			}
+			visited.push_back(pos2);
+			if(get_block_const(pos2).is_opaque())
+			{
+				return;
+			}
+			const auto color2 = get_light(pos2) + color;
+			set_light(pos2, color2);
+			q.emplace(pos2, color);
+		};
+
+		fill(color,  0,  0, -1);
+		fill(color,  0,  0, +1);
+		fill(color,  0, +1,  0);
+		fill(color,  0, -1,  0);
+		fill(color, -1,  0,  0);
+		fill(color, +1,  0,  0);
+	}
 }
 
 void World::set_chunk(const Position::ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
@@ -140,7 +239,7 @@ void World::gen_chunk(const Position::ChunkInWorld& chunk_pos)
 
 void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max)
 {
-	Position::BlockInWorld block_pos(static_cast<BlockInWorld_type>(0), 0, 0);
+	Position::BlockInWorld block_pos(0, 0, 0);
 	for(BlockInWorld_type x = min.x; x <= max.x; ++x)
 	{
 		for(BlockInWorld_type z = min.z; z <= max.z; ++z)
