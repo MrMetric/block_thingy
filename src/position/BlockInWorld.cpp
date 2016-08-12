@@ -16,7 +16,7 @@ namespace Position
 {
 	BlockInWorld::BlockInWorld() : x(0), y(0), z(0) {}
 
-	BlockInWorld::BlockInWorld(const BlockInWorld_type x, const BlockInWorld_type y, const BlockInWorld_type z)
+	BlockInWorld::BlockInWorld(const value_type x, const value_type y, const value_type z)
 	{
 		this->x = x;
 		this->y = y;
@@ -24,7 +24,7 @@ namespace Position
 	}
 
 	#undef t
-	#define t(a,b) static_cast<BlockInWorld_type>(a) * CHUNK_SIZE + b
+	#define t(a,b) static_cast<value_type>(a) * CHUNK_SIZE + b
 	BlockInWorld::BlockInWorld(const ChunkInWorld& chunk_pos, const BlockInChunk& block_pos)
 	{
 		x = t(chunk_pos.x, block_pos.x);
@@ -33,7 +33,7 @@ namespace Position
 	}
 
 	#undef t
-	#define t(a) static_cast<BlockInWorld_type>(std::floor(a))
+	#define t(a) static_cast<value_type>(std::floor(a))
 	BlockInWorld::BlockInWorld(const glm::dvec3& vec)
 	{
 		x = t(vec.x);
@@ -42,7 +42,7 @@ namespace Position
 	}
 	#undef t
 
-	BlockInWorld_type BlockInWorld::operator[](const uint_fast8_t i) const
+	BlockInWorld::value_type BlockInWorld::operator[](const uint_fast8_t i) const
 	{
 		if(i == 0) return x;
 		if(i == 1) return y;
@@ -50,7 +50,7 @@ namespace Position
 		throw std::out_of_range("Position::BlockInWorld::operator[]: " + to_string(i) + " > 2");
 	}
 
-	BlockInWorld_type& BlockInWorld::operator[](const uint_fast8_t i)
+	BlockInWorld::value_type& BlockInWorld::operator[](const uint_fast8_t i)
 	{
 		if(i == 0) return x;
 		if(i == 1) return y;
@@ -88,7 +88,6 @@ namespace Position
 
 	std::ostream& operator<<(std::ostream& os, const BlockInWorld& pos)
 	{
-		os << "(" << pos.x << "," << pos.y << "," << pos.z << ")";
-		return os;
+		return os << "(" << pos.x << "," << pos.y << "," << pos.z << ")";
 	}
 }

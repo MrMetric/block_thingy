@@ -21,6 +21,6 @@ namespace RenderWorld
 		const std::map<BlockType, ShaderProgram>& block_shaders,
 		const glm::dmat4& matriks,
 		const Position::BlockInWorld& origin,
-		ChunkInWorld_type render_distance
+		Position::ChunkInWorld::value_type render_distance
 	);
 }

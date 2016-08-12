@@ -10,15 +10,17 @@
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
+using Graphics::Color;
+using Position::BlockInChunk;
+
 using surface_t = GreedyMesher::surface_t;
 using u8vec3 = glm::tvec3<uint_fast8_t>;
-using Graphics::Color;
 
 struct Rectangle
 {
 	meshmap_key_t key;
-	BlockInChunk_type x, z;
-	BlockInChunk_type w, h;
+	BlockInChunk::value_type x, z;
+	BlockInChunk::value_type w, h;
 };
 
 enum class Plane
@@ -159,19 +161,19 @@ void generate_surface(const Chunk& chunk, surface_t& surface, u8vec3& xyz, const
 
 Rectangle yield_rectangle(surface_t& surface)
 {
-	for(BlockInChunk_type z = 0; z < CHUNK_SIZE; ++z)
+	for(BlockInChunk::value_type z = 0; z < CHUNK_SIZE; ++z)
 	{
 		surface_t::value_type& row = surface[z];
-		for(BlockInChunk_type x = 0; x < CHUNK_SIZE; ++x)
+		for(BlockInChunk::value_type x = 0; x < CHUNK_SIZE; ++x)
 		{
 			const meshmap_key_t key = row[x];
 			const BlockType type = std::get<0>(key);
 			if(type != BlockType::none)
 			{
-				BlockInChunk_type start_z = z;
-				BlockInChunk_type start_x = x;
-				BlockInChunk_type w = 1;
-				BlockInChunk_type h = 1;
+				BlockInChunk::value_type start_z = z;
+				BlockInChunk::value_type start_x = x;
+				BlockInChunk::value_type w = 1;
+				BlockInChunk::value_type h = 1;
 				row[x] = ChunkMesher::empty_key;
 				++x;
 				while(x < CHUNK_SIZE && row[x] == key)
@@ -190,7 +192,7 @@ Rectangle yield_rectangle(surface_t& surface)
 					{
 						break;
 					}
-					BlockInChunk_type w2 = 0;
+					BlockInChunk::value_type w2 = 0;
 					do
 					{
 						w2 += 1;

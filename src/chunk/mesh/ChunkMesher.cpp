@@ -39,7 +39,7 @@ const Block::Block& ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t
 		block_pos.z += z;
 		return chunk.get_owner().get_block_const(block_pos);
 	}
-	#define s(a) static_cast<BlockInChunk_type>(a)
+	#define s(a) static_cast<Position::BlockInChunk::value_type>(a)
 	return chunk.get_block_const(s(x), s(y), s(z));
 	#undef s
 }
@@ -68,7 +68,7 @@ Graphics::Color ChunkMesher::light_at(const Chunk& chunk, int_fast16_t x, int_fa
 		block_pos.z += z;
 		return chunk.get_owner().get_light(block_pos);
 	}
-	#define s(a) static_cast<BlockInChunk_type>(a)
+	#define s(a) static_cast<Position::BlockInChunk::value_type>(a)
 	return chunk.get_light({ s(x), s(y), s(z) });
 	#undef s
 }

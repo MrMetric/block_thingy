@@ -15,7 +15,7 @@ namespace Position
 {
 	ChunkInWorld::ChunkInWorld() : x(0), y(0), z(0) {}
 
-	ChunkInWorld::ChunkInWorld(const ChunkInWorld_type x, const ChunkInWorld_type y, const ChunkInWorld_type z)
+	ChunkInWorld::ChunkInWorld(const value_type x, const value_type y, const value_type z)
 		:
 		x(x),
 		y(y),
@@ -23,7 +23,7 @@ namespace Position
 	{
 	}
 
-	#define t(a) static_cast<ChunkInWorld_type>(std::floor(a / static_cast<double>(CHUNK_SIZE)))
+	#define t(a) static_cast<value_type>(std::floor(a / static_cast<double>(CHUNK_SIZE)))
 	ChunkInWorld::ChunkInWorld(const BlockInWorld& pos)
 	{
 		x = t(pos.x);
@@ -31,7 +31,7 @@ namespace Position
 		z = t(pos.z);
 	}
 
-	ChunkInWorld_type& ChunkInWorld::operator[](const uint_fast8_t i)
+	ChunkInWorld::value_type& ChunkInWorld::operator[](const uint_fast8_t i)
 	{
 		if(i == 0) return x;
 		if(i == 1) return y;
@@ -62,17 +62,17 @@ namespace Position
 		return false;
 	}
 
-	ChunkInWorld operator-(const ChunkInWorld& pos, const ChunkInWorld_type a)
+	ChunkInWorld operator-(const ChunkInWorld& pos, const ChunkInWorld::value_type a)
 	{
 		return ChunkInWorld(pos.x - a, pos.y - a, pos.z - a);
 	}
 
-	ChunkInWorld operator+(const ChunkInWorld& pos, const ChunkInWorld_type a)
+	ChunkInWorld operator+(const ChunkInWorld& pos, const ChunkInWorld::value_type a)
 	{
 		return ChunkInWorld(pos.x + a, pos.y + a, pos.z + a);
 	}
 
-	ChunkInWorld operator*(const ChunkInWorld& pos, const ChunkInWorld_type a)
+	ChunkInWorld operator*(const ChunkInWorld& pos, const ChunkInWorld::value_type a)
 	{
 		return ChunkInWorld(pos.x * a, pos.y * a, pos.z * a);
 	}
@@ -84,7 +84,6 @@ namespace Position
 
 	std::ostream& operator<<(std::ostream& os, const ChunkInWorld& pos)
 	{
-		os << "(" << pos.x << "," << pos.y << "," << pos.z << ")";
-		return os;
+		return os << "(" << pos.x << "," << pos.y << "," << pos.z << ")";
 	}
 }

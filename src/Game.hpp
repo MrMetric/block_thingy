@@ -70,7 +70,7 @@ class Game
 		double delta_time;
 		FPSManager fps;
 
-		ChunkInWorld_type render_distance;
+		Position::ChunkInWorld::value_type render_distance;
 
 		void draw_world();
 		void find_hovered_block(const glm::dmat4& projection_matrix, const glm::dmat4& view_matrix);

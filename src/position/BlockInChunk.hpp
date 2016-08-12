@@ -3,26 +3,26 @@
 #include <iosfwd>
 #include <stdint.h>
 
-using BlockInChunk_type = uint8_t;
-
 namespace Position
 {
 	struct BlockInWorld;
 
 	struct BlockInChunk
 	{
+		using value_type = uint8_t;
+
 		BlockInChunk();
-		BlockInChunk(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z);
+		BlockInChunk(value_type x, value_type y, value_type z);
 		explicit BlockInChunk(const BlockInWorld&);
 
-		BlockInChunk_type operator[](uint_fast8_t) const;
-		BlockInChunk_type& operator[](uint_fast8_t);
+		value_type operator[](uint_fast8_t) const;
+		value_type& operator[](uint_fast8_t);
 		BlockInChunk& operator+=(const BlockInChunk&);
 		bool operator==(const BlockInChunk&) const;
 
 		void check_bounds();
 
-		BlockInChunk_type x, y, z;
+		value_type x, y, z;
 	};
 
 	std::ostream& operator<<(std::ostream&, const BlockInChunk&);

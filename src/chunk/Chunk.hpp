@@ -33,12 +33,12 @@ class Chunk
 		World& get_owner() const; // eeh
 		Position::ChunkInWorld get_position() const;
 
-		const Block::Block& get_block_const(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z) const;
+		const Block::Block& get_block_const(Position::BlockInChunk::value_type x, Position::BlockInChunk::value_type y, Position::BlockInChunk::value_type z) const;
 		const Block::Block& get_block_const(const Position::BlockInChunk&) const;
-		Block::Block& get_block_mutable(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z);
+		Block::Block& get_block_mutable(Position::BlockInChunk::value_type x, Position::BlockInChunk::value_type y, Position::BlockInChunk::value_type z);
 		Block::Block& get_block_mutable(const Position::BlockInChunk&);
 
-		void set_block(BlockInChunk_type x, BlockInChunk_type y, BlockInChunk_type z, const Block::Block&);
+		void set_block(Position::BlockInChunk::value_type x, Position::BlockInChunk::value_type y, Position::BlockInChunk::value_type z, const Block::Block&);
 		void set_block(const Position::BlockInChunk&, const Block::Block&);
 
 		const Graphics::Color& get_light(const Position::BlockInChunk&) const;
@@ -67,6 +67,6 @@ class Chunk
 		void init_block_array();
 
 		void update_neighbors() const;
-		void update_neighbors(BlockInChunk_type, BlockInChunk_type, BlockInChunk_type) const;
-		void update_neighbor(ChunkInWorld_type, ChunkInWorld_type, ChunkInWorld_type) const;
+		void update_neighbors(Position::BlockInChunk::value_type, Position::BlockInChunk::value_type, Position::BlockInChunk::value_type) const;
+		void update_neighbor(Position::ChunkInWorld::value_type, Position::ChunkInWorld::value_type, Position::ChunkInWorld::value_type) const;
 };

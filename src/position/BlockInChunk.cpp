@@ -16,7 +16,7 @@ namespace Position
 {
 	BlockInChunk::BlockInChunk() : x(0), y(0), z(0) {}
 
-	BlockInChunk::BlockInChunk(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+	BlockInChunk::BlockInChunk(const value_type x, const value_type y, const value_type z)
 	{
 		this->x = x;
 		this->y = y;
@@ -27,7 +27,7 @@ namespace Position
 	// % can return a negative result, so do it properly here
 	// TODO: find out if std::mod works instead
 	#undef t
-	#define t(a) static_cast<BlockInChunk_type>(Util::mod(a, CHUNK_SIZE))
+	#define t(a) static_cast<value_type>(Util::mod(a, CHUNK_SIZE))
 	BlockInChunk::BlockInChunk(const BlockInWorld& pos)
 	{
 		x = t(pos.x);
@@ -35,7 +35,7 @@ namespace Position
 		z = t(pos.z);
 	}
 
-	BlockInChunk_type BlockInChunk::operator[](const uint_fast8_t i) const
+	BlockInChunk::value_type BlockInChunk::operator[](const uint_fast8_t i) const
 	{
 		if(i == 0) return x;
 		if(i == 1) return y;
@@ -43,7 +43,7 @@ namespace Position
 		throw std::out_of_range("Position::BlockInChunk::operator[]: " + to_string(i) + " > 2");
 	}
 
-	BlockInChunk_type& BlockInChunk::operator[](const uint_fast8_t i)
+	BlockInChunk::value_type& BlockInChunk::operator[](const uint_fast8_t i)
 	{
 		if(i == 0) return x;
 		if(i == 1) return y;
@@ -79,7 +79,6 @@ namespace Position
 
 	std::ostream& operator<<(std::ostream& os, const BlockInChunk& pos)
 	{
-		os << "(" << int(pos.x) << "," << int(pos.y) << "," << int(pos.z) << ")";
-		return os;
+		return os << "(" << int(pos.x) << "," << int(pos.y) << "," << int(pos.z) << ")";
 	}
 }

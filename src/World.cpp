@@ -22,7 +22,11 @@
 using std::shared_ptr;
 using std::string;
 
-uint64_t key_hasher(const Position::ChunkInWorld& chunk_pos)
+using Position::BlockInChunk;
+using Position::BlockInWorld;
+using Position::ChunkInWorld;
+
+uint64_t key_hasher(const ChunkInWorld& chunk_pos)
 {
 	uint32_t x = chunk_pos.x & 0x1FFFFF;
 	uint32_t y = chunk_pos.y & 0x1FFFFF;
@@ -43,12 +47,12 @@ World::World(const string& file_path)
 {
 }
 
-void World::set_block(const Position::BlockInWorld& block_pos, const Block::Block& block)
+void World::set_block(const BlockInWorld& block_pos, const Block::Block& block)
 {
-	Position::ChunkInWorld chunk_pos(block_pos);
+	ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
 
-	Position::BlockInChunk pos(block_pos);
+	BlockInChunk pos(block_pos);
 	chunk->set_block(pos, block);
 
 	if(block.type() == BlockType::light_test_red)
@@ -83,9 +87,9 @@ void World::set_block(const Position::BlockInWorld& block_pos, const Block::Bloc
 	chunks_to_save.insert(chunk_pos);
 }
 
-const Block::Block& World::get_block_const(const Position::BlockInWorld& block_pos) const
+const Block::Block& World::get_block_const(const BlockInWorld& block_pos) const
 {
-	Position::ChunkInWorld chunk_pos(block_pos);
+	ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
@@ -93,13 +97,13 @@ const Block::Block& World::get_block_const(const Position::BlockInWorld& block_p
 		return none;
 	}
 
-	Position::BlockInChunk pos(block_pos);
+	BlockInChunk pos(block_pos);
 	return chunk->get_block_const(pos);
 }
 
-Block::Block& World::get_block_mutable(const Position::BlockInWorld& block_pos)
+Block::Block& World::get_block_mutable(const BlockInWorld& block_pos)
 {
-	Position::ChunkInWorld chunk_pos(block_pos);
+	ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
@@ -107,41 +111,41 @@ Block::Block& World::get_block_mutable(const Position::BlockInWorld& block_pos)
 		return none;
 	}
 
-	Position::BlockInChunk pos(block_pos);
+	BlockInChunk pos(block_pos);
 	return chunk->get_block_mutable(pos);
 }
 
-Graphics::Color World::get_light(const Position::BlockInWorld& block_pos) const
+Graphics::Color World::get_light(const BlockInWorld& block_pos) const
 {
-	const Position::ChunkInWorld chunk_pos(block_pos);
+	const ChunkInWorld chunk_pos(block_pos);
 	const shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
 		return Graphics::Color();
 	}
-	return chunk->get_light(Position::BlockInChunk(block_pos));
+	return chunk->get_light(BlockInChunk(block_pos));
 }
 
-void World::set_light(const Position::BlockInWorld& block_pos, const Graphics::Color& color)
+void World::set_light(const BlockInWorld& block_pos, const Graphics::Color& color)
 {
-	const Position::ChunkInWorld chunk_pos(block_pos);
+	const ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
 		// TODO?
 		return;
 	}
-	chunk->set_light(Position::BlockInChunk(block_pos), color);
+	chunk->set_light(BlockInChunk(block_pos), color);
 }
 
-void World::add_light(const Position::BlockInWorld& block_pos, const Graphics::Color& color)
+void World::add_light(const BlockInWorld& block_pos, const Graphics::Color& color)
 {
 	set_light(block_pos, color);
 
 	// see https://www.seedofandromeda.com/blogs/29-fast-flood-fill-lighting-in-a-blocky-voxel-game-pt-1
-	std::queue<std::tuple<Position::BlockInWorld, glm::dvec3>> q;
+	std::queue<std::tuple<BlockInWorld, glm::dvec3>> q;
 	q.emplace(block_pos, glm::dvec3(0, 0, 0));
-	std::vector<Position::BlockInWorld> visited;
+	std::vector<BlockInWorld> visited;
 	while(!q.empty())
 	{
 		const auto pos = std::get<0>(q.front());
@@ -150,7 +154,7 @@ void World::add_light(const Position::BlockInWorld& block_pos, const Graphics::C
 
 		auto fill = [this, &block_pos, &q, &visited, &pos, &traveled](Graphics::Color color, int8_t x, int8_t y, int8_t z)
 		{
-			const Position::BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
+			const BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
 			if(std::find(visited.cbegin(), visited.cend(), pos2) != visited.cend())
 			{
 				return;
@@ -181,7 +185,7 @@ void World::add_light(const Position::BlockInWorld& block_pos, const Graphics::C
 	}
 }
 
-void World::set_chunk(const Position::ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
+void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 {
 	if(last_chunk != nullptr && chunk_pos == last_key)
 	{
@@ -191,7 +195,7 @@ void World::set_chunk(const Position::ChunkInWorld& chunk_pos, shared_ptr<Chunk>
 	chunk->update_neighbors();
 }
 
-shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld& chunk_pos) const
+shared_ptr<Chunk> World::get_chunk(const ChunkInWorld& chunk_pos) const
 {
 	if(last_chunk != nullptr && chunk_pos == last_key)
 	{
@@ -211,7 +215,7 @@ shared_ptr<Chunk> World::get_chunk(const Position::ChunkInWorld& chunk_pos) cons
 // this does not set last_chunk/last_key because:
 // if the chunk is not null, get_chunk does it
 // if the chunk is null, set_chunk does it
-shared_ptr<Chunk> World::get_or_make_chunk(const Position::ChunkInWorld& chunk_pos)
+shared_ptr<Chunk> World::get_or_make_chunk(const ChunkInWorld& chunk_pos)
 {
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk != nullptr)
@@ -234,19 +238,19 @@ shared_ptr<Chunk> World::get_or_make_chunk(const Position::ChunkInWorld& chunk_p
 	}
 }
 
-void World::gen_chunk(const Position::ChunkInWorld& chunk_pos)
+void World::gen_chunk(const ChunkInWorld& chunk_pos)
 {
-	Position::BlockInChunk min(0, 0, 0);
-	Position::BlockInChunk max(CHUNK_SIZE - 1, CHUNK_SIZE - 1, CHUNK_SIZE - 1);
-	gen_at(Position::BlockInWorld(chunk_pos, min), Position::BlockInWorld(chunk_pos, max));
+	BlockInChunk min(0, 0, 0);
+	BlockInChunk max(CHUNK_SIZE - 1, CHUNK_SIZE - 1, CHUNK_SIZE - 1);
+	gen_at(BlockInWorld(chunk_pos, min), BlockInWorld(chunk_pos, max));
 }
 
-void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWorld& max)
+void World::gen_at(const BlockInWorld& min, const BlockInWorld& max)
 {
-	Position::BlockInWorld block_pos(0, 0, 0);
-	for(BlockInWorld_type x = min.x; x <= max.x; ++x)
+	BlockInWorld block_pos(0, 0, 0);
+	for(auto x = min.x; x <= max.x; ++x)
 	{
-		for(BlockInWorld_type z = min.z; z <= max.z; ++z)
+		for(auto z = min.z; z <= max.z; ++z)
 		{
 			const double m = 20;
 			if(min.y > 0)
@@ -274,18 +278,18 @@ void World::gen_at(const Position::BlockInWorld& min, const Position::BlockInWor
 				const double a = n.x * n.y;
 				const double b = glm::mod(a, 1.0);
 				const double d = glm::mod(ceil(a), 2.0);
-				return static_cast<BlockInWorld_type>(((d == 0 ? b : d - b) - 1) * m);
+				return static_cast<BlockInWorld::value_type>(((d == 0 ? b : d - b) - 1) * m);
 			};
 
 			auto max_y = max.y <= -m ? max.y : std::min(max.y, get_max_y());
 
-			for(BlockInWorld_type y = min.y; y <= max_y; ++y)
+			for(auto y = min.y; y <= max_y; ++y)
 			{
 				block_pos.x = x;
 				block_pos.y = y;
 				block_pos.z = z;
 
-				const Position::ChunkInWorld chunkpos(block_pos);
+				const ChunkInWorld chunkpos(block_pos);
 				const BlockType t = y > -m / 2 ? BlockType::white : BlockType::black;
 				set_block(block_pos, Block::Block(t));
 			}
@@ -328,7 +332,7 @@ void World::save()
 	file.save_players();
 	while(!chunks_to_save.empty())
 	{
-		const Position::ChunkInWorld position = *chunks_to_save.begin();
+		const ChunkInWorld position = *chunks_to_save.begin();
 		chunks_to_save.erase(chunks_to_save.begin());
 		shared_ptr<Chunk> chunk = get_chunk(position);
 		if(chunk != nullptr)

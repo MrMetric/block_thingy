@@ -8,17 +8,19 @@
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
-static void draw_cube(const Chunk&, meshmap_t&, const Block::Block& block, BlockInChunk_type, BlockInChunk_type, BlockInChunk_type);
-static void draw_face(mesh_t&, BlockInChunk_type, BlockInChunk_type, BlockInChunk_type, uint_fast8_t face);
+using Position::BlockInChunk;
+
+static void draw_cube(const Chunk&, meshmap_t&, const Block::Block& block, BlockInChunk::value_type, BlockInChunk::value_type, BlockInChunk::value_type);
+static void draw_face(mesh_t&, BlockInChunk::value_type, BlockInChunk::value_type, BlockInChunk::value_type, uint_fast8_t face);
 
 meshmap_t SimpleMesher::make_mesh(const Chunk& chunk)
 {
 	meshmap_t meshes;
-	for(BlockInChunk_type x = 0; x < CHUNK_SIZE; ++x)
+	for(BlockInChunk::value_type x = 0; x < CHUNK_SIZE; ++x)
 	{
-		for(BlockInChunk_type y = 0; y < CHUNK_SIZE; ++y)
+		for(BlockInChunk::value_type y = 0; y < CHUNK_SIZE; ++y)
 		{
-			for(BlockInChunk_type z = 0; z < CHUNK_SIZE; ++z)
+			for(BlockInChunk::value_type z = 0; z < CHUNK_SIZE; ++z)
 			{
 				const Block::Block& block = block_at(chunk, x, y, z);
 				if(block.is_invisible())
@@ -32,7 +34,7 @@ meshmap_t SimpleMesher::make_mesh(const Chunk& chunk)
 	return meshes;
 }
 
-void draw_cube(const Chunk& chunk, meshmap_t& meshes, const Block::Block& block, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+void draw_cube(const Chunk& chunk, meshmap_t& meshes, const Block::Block& block, const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z)
 {
 	// front
 	if(ChunkMesher::block_visible_from(chunk, block, x, y, z - 1))
@@ -72,7 +74,7 @@ void draw_cube(const Chunk& chunk, meshmap_t& meshes, const Block::Block& block,
 	}
 }
 
-void draw_face(mesh_t& mesh, const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, const uint_fast8_t face)
+void draw_face(mesh_t& mesh, const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z, const uint_fast8_t face)
 {
 	auto offset = face * 6;
 	for(uint_fast8_t i = 0; i < 2; ++i)

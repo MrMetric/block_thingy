@@ -29,7 +29,11 @@ using std::string;
 using std::to_string;
 using std::shared_ptr;
 
-Chunk::Chunk(const Position::ChunkInWorld& pos, World& owner)
+using Position::BlockInChunk;
+using Position::BlockInWorld;
+using Position::ChunkInWorld;
+
+Chunk::Chunk(const ChunkInWorld& pos, World& owner)
 	:
 	solid_block(BlockType::air), // a useful default for now
 	owner(owner),
@@ -43,17 +47,17 @@ World& Chunk::get_owner() const
 	return owner;
 }
 
-Position::ChunkInWorld Chunk::get_position() const
+ChunkInWorld Chunk::get_position() const
 {
 	return position;
 }
 
-inline static chunk_block_array_t::size_type block_array_index(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+inline static chunk_block_array_t::size_type block_array_index(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z)
 {
 	return CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
 }
 
-const Block::Block& Chunk::get_block_const(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const
+const Block::Block& Chunk::get_block_const(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
 {
 	if(blocks == nullptr)
 	{
@@ -62,7 +66,7 @@ const Block::Block& Chunk::get_block_const(const BlockInChunk_type x, const Bloc
 	return blocks->at(block_array_index(x, y, z));
 }
 
-const Block::Block& Chunk::get_block_const(const Position::BlockInChunk& pos) const
+const Block::Block& Chunk::get_block_const(const BlockInChunk& pos) const
 {
 	if(blocks == nullptr)
 	{
@@ -71,19 +75,19 @@ const Block::Block& Chunk::get_block_const(const Position::BlockInChunk& pos) co
 	return blocks->at(block_array_index(pos.x, pos.y, pos.z));
 }
 
-Block::Block& Chunk::get_block_mutable(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z)
+Block::Block& Chunk::get_block_mutable(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z)
 {
 	init_block_array();
 	return blocks->at(block_array_index(x, y, z));
 }
 
-Block::Block& Chunk::get_block_mutable(const Position::BlockInChunk& pos)
+Block::Block& Chunk::get_block_mutable(const BlockInChunk& pos)
 {
 	init_block_array();
 	return blocks->at(block_array_index(pos.x, pos.y, pos.z));
 }
 
-void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z, const Block::Block& block)
+void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z, const Block::Block& block)
 {
 	if(x >= CHUNK_SIZE
 	|| y >= CHUNK_SIZE
@@ -100,18 +104,18 @@ void Chunk::set_block(const BlockInChunk_type x, const BlockInChunk_type y, cons
 	update_neighbors(x, y, z);
 }
 
-void Chunk::set_block(const Position::BlockInChunk& block_pos, const Block::Block& block)
+void Chunk::set_block(const BlockInChunk& block_pos, const Block::Block& block)
 {
 	set_block(block_pos.x, block_pos.y, block_pos.z, block);
 }
 
-const Graphics::Color& Chunk::get_light(const Position::BlockInChunk& pos) const
+const Graphics::Color& Chunk::get_light(const BlockInChunk& pos) const
 {
 	const auto i = block_array_index(pos.x, pos.y, pos.z);
 	return light[i];
 }
 
-void Chunk::set_light(const Position::BlockInChunk& pos, const Graphics::Color& color)
+void Chunk::set_light(const BlockInChunk& pos, const Graphics::Color& color)
 {
 	const auto i = block_array_index(pos.x, pos.y, pos.z);
 	light[i] = color;
@@ -138,8 +142,8 @@ void Chunk::render(const bool transluscent_pass)
 		changed = false;
 	}
 
-	const Position::ChunkInWorld render_position = position - Position::ChunkInWorld(Position::BlockInWorld(Game::instance->camera.position));
-	const Position::BlockInWorld position_render_offset(render_position, {0, 0, 0});
+	const ChunkInWorld render_position = position - ChunkInWorld(BlockInWorld(Game::instance->camera.position));
+	const BlockInWorld position_render_offset(render_position, {0, 0, 0});
 	size_t i = 0;
 	for(const auto& p : meshes)
 	{
@@ -222,7 +226,7 @@ void Chunk::update_neighbors() const
 	update_neighbor( 0,  0, +1);
 }
 
-void Chunk::update_neighbors(const BlockInChunk_type x, const BlockInChunk_type y, const BlockInChunk_type z) const
+void Chunk::update_neighbors(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
 {
 	// TODO: check if the neighbor chunk has a block beside this one (to avoid updating when the appearance won't change)
 	if(x == 0)
@@ -253,9 +257,9 @@ void Chunk::update_neighbors(const BlockInChunk_type x, const BlockInChunk_type 
 	}
 }
 
-void Chunk::update_neighbor(const ChunkInWorld_type x, const ChunkInWorld_type y, const ChunkInWorld_type z) const
+void Chunk::update_neighbor(const ChunkInWorld::value_type x, const ChunkInWorld::value_type y, const ChunkInWorld::value_type z) const
 {
-	Position::ChunkInWorld chunk_pos(x, y, z);
+	ChunkInWorld chunk_pos(x, y, z);
 	chunk_pos += position;
 	shared_ptr<Chunk> chunk = owner.get_chunk(chunk_pos);
 	if(chunk != nullptr)
