@@ -54,6 +54,7 @@ Game::Game(Gfx& gfx)
 	world("worlds/test"),
 	player_ptr(world.add_player("test_player")),
 	player(*player_ptr),
+	console(*this),
 	gui(event_manager),
 	wireframe(false, [](bool wireframe)
 	{
@@ -201,9 +202,9 @@ void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dm
 
 void Game::add_commands()
 {
-	#define COMMAND_(name) commands.emplace_back(console, name, [&game=*this]
-	#define COMMAND(name) COMMAND_(name)()
-	#define COMMAND_ARGS(name) COMMAND_(name)(const std::vector<string>& args)
+	#define COMMAND_(name) commands.emplace_back(console, name, [](Game& game
+	#define COMMAND(name) COMMAND_(name))
+	#define COMMAND_ARGS(name) COMMAND_(name), const std::vector<string>& args)
 
 	COMMAND("quit")
 	{

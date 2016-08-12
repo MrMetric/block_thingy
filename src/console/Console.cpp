@@ -7,12 +7,15 @@
 
 #include "ArgumentParser.hpp"
 
+#include "Game.hpp"
+
 using std::string;
 
-Console::Console()
+Console::Console(Game& game)
 	:
 	logger(std::cout),
-	error_logger(std::cerr)
+	error_logger(std::cerr),
+	game(game)
 {
 }
 
@@ -30,15 +33,15 @@ console_handler_wrapper::console_handler_wrapper(const console_handler_noargs_t&
 {
 }
 
-void console_handler_wrapper::operator()(const std::vector<string>& args) const
+void console_handler_wrapper::operator()(Game& game, const std::vector<string>& args) const
 {
 	if(has_args)
 	{
-		handler_args(args);
+		handler_args(game, args);
 	}
 	else
 	{
-		handler_noargs();
+		handler_noargs(game);
 	}
 }
 
@@ -95,5 +98,5 @@ void Console::run_command(const string& name, const std::vector<string>& args) c
 		error_logger << "unknown command: " << name << "\n";
 		return;
 	}
-	i->second(args);
+	i->second(game, args);
 }
