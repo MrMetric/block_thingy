@@ -19,6 +19,7 @@ Player::Player(const string& name)
 	:
 	name(name),
 	reach_distance(16),
+	position(2.5, 1.0, 2.5), // TODO: generate spawn position
 	abs_offset(0.4),
 	eye_height(1.7),
 	walk_speed(2),
@@ -272,7 +273,7 @@ bool Player::block_is_at(const Position::BlockInWorld& block_pos)
 
 double Player::move_to(double coord, const double move_var, const double offset, const Position::BlockInWorld& block_pos)
 {
-	if(flags.noclip)
+	if(move_var == 0 || flags.noclip)
 	{
 		return coord + move_var;
 	}

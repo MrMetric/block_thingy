@@ -79,11 +79,6 @@ Game::Game(Gfx& gfx)
 
 void Game::draw()
 {
-	player.rotation = camera.rotation;
-	world.step(delta_time);
-	camera.position = player.position;
-	camera.position.y += player.get_eye_height();
-
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	gfx.set_camera_view(camera.position, camera.rotation);
 	Position::BlockInWorld render_origin(player.position);
@@ -132,6 +127,11 @@ void Game::draw()
 	glfwSetWindowTitle(gfx.window, ss.str().c_str());
 
 	delta_time = fps.enforceFPS();
+
+	player.rotation = camera.rotation;
+	world.step(delta_time);
+	camera.position = player.position;
+	camera.position.y += player.get_eye_height();
 }
 
 #ifdef USE_LIBPNG
