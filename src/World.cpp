@@ -26,11 +26,12 @@ using Position::BlockInChunk;
 using Position::BlockInWorld;
 using Position::ChunkInWorld;
 
-uint64_t key_hasher(const ChunkInWorld& chunk_pos)
+template <typename T>
+uint64_t position_hasher(const T& pos)
 {
-	uint32_t x = chunk_pos.x & 0x1FFFFF;
-	uint32_t y = chunk_pos.y & 0x1FFFFF;
-	uint32_t z = chunk_pos.z & 0x1FFFFF;
+	uint32_t x = pos.x & 0x1FFFFF;
+	uint32_t y = pos.y & 0x1FFFFF;
+	uint32_t z = pos.z & 0x1FFFFF;
 	uint64_t key =	  (static_cast<uint64_t>(x) << 42)
 					| (static_cast<uint64_t>(y) << 21)
 					| (static_cast<uint64_t>(z))
@@ -41,7 +42,7 @@ uint64_t key_hasher(const ChunkInWorld& chunk_pos)
 World::World(const string& file_path)
 	:
 	mesher(std::make_unique<GreedyMesher>()),
-	chunks(0, key_hasher),
+	chunks(0, position_hasher<ChunkInWorld>),
 	last_chunk(nullptr),
 	file(file_path, *this)
 {
@@ -131,7 +132,7 @@ void World::add_light(const BlockInWorld& block_pos, const Graphics::Color& colo
 	// see https://www.seedofandromeda.com/blogs/29-fast-flood-fill-lighting-in-a-blocky-voxel-game-pt-1
 	std::queue<std::tuple<BlockInWorld, glm::dvec3>> q;
 	q.emplace(block_pos, glm::dvec3(0, 0, 0));
-	std::vector<BlockInWorld> visited;
+	std::unordered_map<BlockInWorld, bool, std::function<uint64_t(BlockInWorld)>> visited(0, position_hasher<BlockInWorld>);
 	while(!q.empty())
 	{
 		const auto pos = std::get<0>(q.front());
@@ -141,11 +142,11 @@ void World::add_light(const BlockInWorld& block_pos, const Graphics::Color& colo
 		auto fill = [this, &block_pos, &q, &visited, &pos, &traveled](Graphics::Color color, int8_t x, int8_t y, int8_t z)
 		{
 			const BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
-			if(std::find(visited.cbegin(), visited.cend(), pos2) != visited.cend())
+			// emplace failed = key already exists = position has been visited
+			if(!visited.emplace(pos2, true).second)
 			{
 				return;
 			}
-			visited.push_back(pos2);
 			if(get_block(pos2).is_opaque())
 			{
 				return;
