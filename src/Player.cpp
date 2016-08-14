@@ -84,7 +84,7 @@ void Player::move(const glm::dvec3& acceleration)
 	Position::BlockInWorld new_position(position);
 	if(new_position != old_position)
 	{
-		const Block::Block& block = Game::instance->world.get_block_const(new_position);
+		const Block::Block block = Game::instance->world.get_block(new_position);
 		if(block.type() != BlockType::none
 		&& block.type() != BlockType::air
 		&& !block.is_solid())
@@ -267,7 +267,7 @@ void Player::set_noclip(bool noclip)
 
 bool Player::block_is_at(const Position::BlockInWorld& block_pos)
 {
-	const Block::Block& block = Game::instance->world.get_block_const(block_pos);
+	const Block::Block block = Game::instance->world.get_block(block_pos);
 	return block.is_solid();
 }
 

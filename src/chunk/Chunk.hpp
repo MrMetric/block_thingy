@@ -33,10 +33,8 @@ class Chunk
 		World& get_owner() const; // eeh
 		Position::ChunkInWorld get_position() const;
 
-		const Block::Block& get_block_const(Position::BlockInChunk::value_type x, Position::BlockInChunk::value_type y, Position::BlockInChunk::value_type z) const;
-		const Block::Block& get_block_const(const Position::BlockInChunk&) const;
-		Block::Block& get_block_mutable(Position::BlockInChunk::value_type x, Position::BlockInChunk::value_type y, Position::BlockInChunk::value_type z);
-		Block::Block& get_block_mutable(const Position::BlockInChunk&);
+		Block::Block get_block(Position::BlockInChunk::value_type x, Position::BlockInChunk::value_type y, Position::BlockInChunk::value_type z) const;
+		Block::Block get_block(const Position::BlockInChunk&) const;
 
 		void set_block(Position::BlockInChunk::value_type x, Position::BlockInChunk::value_type y, Position::BlockInChunk::value_type z, const Block::Block&);
 		void set_block(const Position::BlockInChunk&, const Block::Block&);

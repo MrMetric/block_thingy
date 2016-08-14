@@ -22,7 +22,7 @@ meshmap_t SimpleMesher::make_mesh(const Chunk& chunk)
 		{
 			for(BlockInChunk::value_type z = 0; z < CHUNK_SIZE; ++z)
 			{
-				const Block::Block& block = block_at(chunk, x, y, z);
+				const Block::Block block = block_at(chunk, x, y, z);
 				if(block.is_invisible())
 				{
 					continue;

@@ -57,7 +57,7 @@ inline static chunk_block_array_t::size_type block_array_index(const BlockInChun
 	return CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
 }
 
-const Block::Block& Chunk::get_block_const(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
+Block::Block Chunk::get_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
 {
 	if(blocks == nullptr)
 	{
@@ -66,24 +66,12 @@ const Block::Block& Chunk::get_block_const(const BlockInChunk::value_type x, con
 	return blocks->at(block_array_index(x, y, z));
 }
 
-const Block::Block& Chunk::get_block_const(const BlockInChunk& pos) const
+Block::Block Chunk::get_block(const BlockInChunk& pos) const
 {
 	if(blocks == nullptr)
 	{
 		return solid_block;
 	}
-	return blocks->at(block_array_index(pos.x, pos.y, pos.z));
-}
-
-Block::Block& Chunk::get_block_mutable(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z)
-{
-	init_block_array();
-	return blocks->at(block_array_index(x, y, z));
-}
-
-Block::Block& Chunk::get_block_mutable(const BlockInChunk& pos)
-{
-	init_block_array();
 	return blocks->at(block_array_index(pos.x, pos.y, pos.z));
 }
 

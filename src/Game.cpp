@@ -194,7 +194,7 @@ void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dm
 	hovered_block = PhysicsUtil::raycast(world, out_origin, out_direction, player.reach_distance);
 	if(hovered_block != nullptr)
 	{
-		const bool block_is_none = world.get_block_const(hovered_block->pos).type() == BlockType::none;
+		const bool block_is_none = world.get_block(hovered_block->pos).type() == BlockType::none;
 		glm::vec4 color = block_is_none ? glm::vec4(1, 0, 0, 1) : glm::vec4(1, 1, 1, 1);
 		gfx.draw_cube_outline(hovered_block->pos, color);
 	}
@@ -217,7 +217,7 @@ void Game::add_commands()
 		if(game.hovered_block != nullptr)
 		{
 			const Position::BlockInWorld pos = game.hovered_block->pos;
-			if(game.world.get_block_const(pos).type() != BlockType::none)
+			if(game.world.get_block(pos).type() != BlockType::none)
 			{
 				game.world.set_block(pos, Block::Block(BlockType::air));
 				game.find_hovered_block(game.gfx.projection_matrix, game.gfx.view_matrix_physical);
@@ -230,7 +230,7 @@ void Game::add_commands()
 		if(game.hovered_block != nullptr)
 		{
 			const Position::BlockInWorld pos = game.hovered_block->adjacent();
-			if(game.world.get_block_const(pos).type() == BlockType::air && game.player.can_place_block_at(pos))
+			if(game.world.get_block(pos).type() == BlockType::air && game.player.can_place_block_at(pos))
 			{
 				game.world.set_block(pos, Block::Block(block_type));
 				//event_manager.do_event(Event_place_block(pos, face));

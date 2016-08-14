@@ -40,8 +40,7 @@ class World
 		World(const World&) = delete;
 		void operator=(const World&) = delete;
 
-		const Block::Block& get_block_const(const Position::BlockInWorld&) const;
-		Block::Block& get_block_mutable(const Position::BlockInWorld&);
+		Block::Block get_block(const Position::BlockInWorld&) const;
 
 		void set_block(const Position::BlockInWorld&, const Block::Block&);
 

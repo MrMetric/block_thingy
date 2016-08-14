@@ -87,7 +87,7 @@ void World::set_block(const BlockInWorld& block_pos, const Block::Block& block)
 	chunks_to_save.insert(chunk_pos);
 }
 
-const Block::Block& World::get_block_const(const BlockInWorld& block_pos) const
+Block::Block World::get_block(const BlockInWorld& block_pos) const
 {
 	ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
@@ -98,21 +98,7 @@ const Block::Block& World::get_block_const(const BlockInWorld& block_pos) const
 	}
 
 	BlockInChunk pos(block_pos);
-	return chunk->get_block_const(pos);
-}
-
-Block::Block& World::get_block_mutable(const BlockInWorld& block_pos)
-{
-	ChunkInWorld chunk_pos(block_pos);
-	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
-	if(chunk == nullptr)
-	{
-		static Block::Block none = Block::Block(BlockType::none); // TODO: this should be immutable
-		return none;
-	}
-
-	BlockInChunk pos(block_pos);
-	return chunk->get_block_mutable(pos);
+	return chunk->get_block(pos);
 }
 
 Graphics::Color World::get_light(const BlockInWorld& block_pos) const
@@ -160,7 +146,7 @@ void World::add_light(const BlockInWorld& block_pos, const Graphics::Color& colo
 				return;
 			}
 			visited.push_back(pos2);
-			if(get_block_const(pos2).is_opaque())
+			if(get_block(pos2).is_opaque())
 			{
 				return;
 			}

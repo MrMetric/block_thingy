@@ -146,7 +146,7 @@ void generate_surface(const Chunk& chunk, surface_t& surface, u8vec3& xyz, const
 			int_fast8_t o[] = {0, 0, 0};
 			o[i.y] = offset;
 
-			const Block::Block& block = ChunkMesher::block_at(chunk, x, y, z);
+			const Block::Block block = ChunkMesher::block_at(chunk, x, y, z);
 			if(ChunkMesher::block_visible_from(chunk, block, x + o[0], y + o[1], z + o[2]))
 			{
 				surface[xyz[2]][xyz[0]] = { block.type(), ChunkMesher::light_at(chunk, x + o[0], y + o[1], z + o[2]) };

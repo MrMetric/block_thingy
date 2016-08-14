@@ -39,7 +39,7 @@ class ChunkMesher
 
 		virtual meshmap_t make_mesh(const Chunk&) = 0;
 
-		static const Block::Block& block_at(const Chunk&, int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds = true);
+		static Block::Block block_at(const Chunk&, int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds = true);
 		static bool block_visible_from(const Chunk&, const Block::Block&, int_fast16_t, int_fast16_t, int_fast16_t);
 		static Graphics::Color light_at(const Chunk&, int_fast16_t x, int_fast16_t y, int_fast16_t z);
 };
