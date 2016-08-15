@@ -11,7 +11,8 @@
 
 #include "Camera.hpp"
 #include "FPSManager.hpp"
-#include "Gfx.hpp"
+#include "fwd/Gfx.hpp"
+#include "fwd/Player.hpp"
 #include "World.hpp"
 #include "console/Command.hpp"
 #include "console/Console.hpp"
@@ -28,8 +29,6 @@
 	? Game::instance->console.logger \
 	: std::cout \
 )
-
-class Player;
 
 class Game
 {

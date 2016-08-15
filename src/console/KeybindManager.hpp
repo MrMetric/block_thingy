@@ -6,7 +6,7 @@
 // intentionally not a single bit
 #define GLFW_CUSTOM_MOD_JOYSTICK 0x4321234
 
-class Console;
+#include "fwd/console/Console.hpp"
 
 class KeybindManager
 {

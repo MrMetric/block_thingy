@@ -5,8 +5,8 @@
 #include <unordered_map>
 #include <utility>			// std::pair
 
-class Event;
-enum class EventType;
+#include "fwd/event/Event.hpp"
+#include "fwd/event/EventType.hpp"
 
 using event_handler_t = std::function<void(const Event&)>;
 using event_handler_id_t = uint_fast32_t;

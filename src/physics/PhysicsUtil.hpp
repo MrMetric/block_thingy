@@ -6,10 +6,10 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-#include "types/window_size_t.hpp"
+#include "fwd/World.hpp"
+#include "fwd/physics/RaycastHit.hpp"
 
-struct RaycastHit;
-class World;
+#include "types/window_size_t.hpp"
 
 namespace PhysicsUtil
 {

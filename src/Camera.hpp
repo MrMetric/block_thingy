@@ -4,8 +4,8 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-class Gfx;
-class EventManager;
+#include "fwd/Gfx.hpp"
+#include "fwd/event/EventManager.hpp"
 
 class Camera
 {

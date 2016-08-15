@@ -3,9 +3,7 @@
 
 #include <array>
 
-#include "block/BlockType.hpp"
 #include "chunk/Chunk.hpp"
-#include "graphics/Color.hpp"
 
 class GreedyMesher : public ChunkMesher
 {

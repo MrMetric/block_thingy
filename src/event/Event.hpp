@@ -1,6 +1,6 @@
 #pragma once
 
-enum class EventType;
+#include "fwd/event/EventType.hpp"
 
 class Event
 {

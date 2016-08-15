@@ -1,11 +1,8 @@
 #pragma once
 #include "event/Event.hpp"
 
-class Player;
-namespace Block
-{
-	class Block;
-}
+#include "fwd/Player.hpp"
+#include "fwd/block/Block.hpp"
 
 class Event_enter_block : public Event
 {

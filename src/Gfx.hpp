@@ -10,7 +10,7 @@
 #include "graphics/OpenGL/VertexArray.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
 
-#include "block/BlockType.hpp"
+#include "fwd/block/BlockType.hpp"
 
 #include "types/window_size_t.hpp"
 

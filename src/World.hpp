@@ -7,24 +7,14 @@
 #include <string>
 #include <unordered_map>
 
+#include "fwd/Player.hpp"
+#include "fwd/block/Block.hpp"
+#include "fwd/chunk/Chunk.hpp"
 #include "chunk/mesh/ChunkMesher.hpp"
+#include "fwd/graphics/Color.hpp"
+#include "fwd/position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 #include "storage/WorldFile.hpp"
-
-class Player;
-class Chunk;
-namespace Block
-{
-	class Block;
-}
-namespace Graphics
-{
-	struct Color;
-}
-namespace Position
-{
-	struct BlockInWorld;
-}
 
 using world_map_keyhasher_t = std::function<uint64_t(Position::ChunkInWorld)>;
 using world_map_t = std::unordered_map<Position::ChunkInWorld, std::shared_ptr<Chunk>, world_map_keyhasher_t>;

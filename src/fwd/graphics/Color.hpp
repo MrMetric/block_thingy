@@ -1,0 +1,4 @@
+namespace Graphics
+{
+	struct Color;
+}

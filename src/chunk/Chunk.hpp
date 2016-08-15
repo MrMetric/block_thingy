@@ -6,6 +6,7 @@
 
 #include "graphics/OpenGL/VertexBuffer.hpp"
 
+#include "fwd/World.hpp"
 #include "block/Block.hpp"
 #include "chunk/mesh/ChunkMesher.hpp"
 #include "graphics/Color.hpp"
@@ -14,8 +15,6 @@
 
 #define CHUNK_SIZE 32
 #define CHUNK_BLOCK_COUNT (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
-
-class World;
 
 using chunk_block_array_t = std::array<Block::Block, CHUNK_BLOCK_COUNT>;
 

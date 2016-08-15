@@ -6,18 +6,11 @@
 
 #include <glad/glad.h>
 
-#include "block/BlockType.hpp"
+#include "fwd/block/Block.hpp"
+#include "fwd/block/BlockType.hpp"
+#include "fwd/chunk/Chunk.hpp"
+#include "fwd/graphics/Color.hpp"
 #include "graphics/primitive.hpp"
-
-class Chunk;
-namespace Block
-{
-	class Block;
-}
-namespace Graphics
-{
-	struct Color;
-}
 
 using mesh_triangle_t = triangle_t<GLubyte>;
 using mesh_vertex_coord_t = mesh_triangle_t::value_type;

@@ -3,6 +3,8 @@
 #include "BlockType.hpp"
 #include "BlockVisibilityType.hpp"
 
+#include "fwd/graphics/Color.hpp"
+
 namespace Block {
 
 class Block

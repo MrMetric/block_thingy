@@ -3,13 +3,10 @@
 #include <memory>
 #include <string>
 
-class Player;
-class World;
-class Chunk;
-namespace Position
-{
-	struct ChunkInWorld;
-}
+#include "fwd/Player.hpp"
+#include "fwd/World.hpp"
+#include "fwd/chunk/Chunk.hpp"
+#include "fwd/position/ChunkInWorld.hpp"
 
 class WorldFile
 {

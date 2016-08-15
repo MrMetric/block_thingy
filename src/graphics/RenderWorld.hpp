@@ -4,15 +4,12 @@
 
 #include <glm/mat4x4.hpp>
 
-#include "block/BlockType.hpp"
+#include "fwd/World.hpp"
+#include "fwd/block/BlockType.hpp"
+#include "fwd/position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 
 class ShaderProgram;
-class World;
-namespace Position
-{
-	struct BlockInWorld;
-}
 
 namespace RenderWorld
 {

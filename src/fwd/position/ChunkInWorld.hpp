@@ -1,0 +1,4 @@
+namespace Position
+{
+	struct ChunkInWorld;
+}
