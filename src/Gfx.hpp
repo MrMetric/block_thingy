@@ -37,14 +37,15 @@ class Gfx
 		glm::dmat4 view_matrix_physical;
 		glm::dmat4 view_matrix_graphical;
 
-		VertexArray vertex_array;
+		Graphics::OpenGL::VertexArray vertex_array;
 		glm::dmat4 matriks;
 
-		std::map<BlockType, ShaderProgram> block_shaders;
+		std::map<BlockType, Graphics::OpenGL::ShaderProgram> block_shaders;
 
-		ShaderProgram s_lines;
+		Graphics::OpenGL::ShaderProgram s_lines;
 
-		VertexBuffer outline_vbo;
+		Graphics::OpenGL::VertexBuffer outline_vbo;
+
 
 		bool is_fullscreen;
 		bool cull_face;
@@ -60,7 +61,7 @@ class Gfx
 		void update_projection_matrix();
 		void set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation);
 		void draw_cube_outline(const Position::BlockInWorld&, const glm::vec4& color);
-		const ShaderProgram& get_block_shader(BlockType) const;
+		const Graphics::OpenGL::ShaderProgram& get_block_shader(BlockType) const;
 
 		#ifdef USE_LIBPNG
 		static void write_png_RGB(const char* filename, uint8_t* buf, uint_fast32_t width, uint_fast32_t height, bool reverse_rows = false);

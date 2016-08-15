@@ -43,7 +43,8 @@ void GUI::update_framebuffer_size(const window_size_t& window_size)
 		midX + 1, midY + 16, 0,
 		midX + 1, midY - 16, 0,
 	};
-	crosshair_vbo.data(sizeof(crosshair_vertex), crosshair_vertex, VertexBuffer::UsageHint::dynamic_draw);
+	const auto usage_hint = Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw;
+	crosshair_vbo.data(sizeof(crosshair_vertex), crosshair_vertex, usage_hint);
 }
 
 void GUI::draw(const Gfx& gfx)

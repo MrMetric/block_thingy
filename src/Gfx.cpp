@@ -41,6 +41,8 @@
 using std::cout;
 using std::string;
 
+using Graphics::OpenGL::ShaderProgram;
+
 Gfx::Gfx(GLFWwindow* window)
 	:
 	window(window),
@@ -229,7 +231,8 @@ void Gfx::draw_cube_outline(const Position::BlockInWorld& block_pos, const glm::
 		}
 	}
 
-	outline_vbo.data(sizeof(vertexes), vertexes, VertexBuffer::UsageHint::dynamic_draw);
+	const auto usage_hint = Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw;
+	outline_vbo.data(sizeof(vertexes), vertexes, usage_hint);
 
 	glUseProgram(s_lines.get_name());
 	s_lines.uniform("matriks", matriks);

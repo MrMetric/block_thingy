@@ -2,6 +2,9 @@
 
 #include <glad/glad.h>
 
+namespace Graphics {
+namespace OpenGL {
+
 VertexBuffer::VertexBuffer()
 {
 	glCreateBuffers(1, &name);
@@ -37,3 +40,6 @@ GLuint VertexBuffer::get_name() const
 {
 	return name;
 }
+
+} // namespace OpenGL
+} // namespace Graphics

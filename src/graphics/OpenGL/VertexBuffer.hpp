@@ -2,6 +2,9 @@
 
 #include <glad/glad.h>
 
+namespace Graphics {
+namespace OpenGL {
+
 class VertexBuffer
 {
 	public:
@@ -33,3 +36,6 @@ class VertexBuffer
 		bool inited;
 		GLuint name;
 };
+
+} // namespace OpenGL
+} // namespace Graphics

@@ -1,5 +1,8 @@
 #include "VertexArray.hpp"
 
+namespace Graphics {
+namespace OpenGL {
+
 VertexArray::VertexArray()
 {
 	glCreateVertexArrays(1, &name);
@@ -42,3 +45,6 @@ void VertexArray::attrib(const GLuint index, const bool enabled)
 		glDisableVertexArrayAttrib(name, index);
 	}
 }
+
+} // namespace OpenGL
+} // namespace Graphics

@@ -144,7 +144,7 @@ void Chunk::render(const bool transluscent_pass)
 			++i;
 			continue;
 		}
-		const ShaderProgram& shader = Game::instance->gfx.get_block_shader(type);
+		const auto& shader = Game::instance->gfx.get_block_shader(type);
 		glUseProgram(shader.get_name());
 
 		shader.uniform("position_offset", static_cast<glm::vec3>(position_render_offset));
@@ -189,8 +189,9 @@ void Chunk::update_vbos()
 	size_t i = 0;
 	for(const auto& p : meshes)
 	{
+		const auto usage_hint = Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw;
 		const mesh_t& mesh = p.second;
-		mesh_vbos[i].data(mesh.size() * sizeof(mesh_t::value_type), mesh.data(), VertexBuffer::UsageHint::dynamic_draw);
+		mesh_vbos[i].data(mesh.size() * sizeof(mesh_t::value_type), mesh.data(), usage_hint);
 		++i;
 	}
 }

@@ -10,6 +10,8 @@
 
 using std::shared_ptr;
 
+using Graphics::OpenGL::ShaderProgram;
+
 void RenderWorld::draw_world(
 	World& world,
 	const std::map<BlockType, ShaderProgram>& block_shaders,

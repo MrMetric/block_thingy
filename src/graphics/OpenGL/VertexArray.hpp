@@ -2,6 +2,9 @@
 
 #include <glad/glad.h>
 
+namespace Graphics {
+namespace OpenGL {
+
 class VertexArray
 {
 	public:
@@ -19,3 +22,6 @@ class VertexArray
 		bool inited;
 		GLuint name;
 };
+
+} // namespace OpenGL
+} // namespace Graphics

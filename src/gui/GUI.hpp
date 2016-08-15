@@ -21,8 +21,8 @@ class GUI
 		void draw(const Gfx&);
 
 	private:
-		ShaderProgram s_crosshair;
-		VertexBuffer crosshair_vbo;
+		Graphics::OpenGL::ShaderProgram s_crosshair;
+		Graphics::OpenGL::VertexBuffer crosshair_vbo;
 
 		void draw_crosshair(const Gfx&);
 };

@@ -9,6 +9,9 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
+namespace Graphics {
+namespace OpenGL {
+
 class ShaderProgram
 {
 	public:
@@ -36,3 +39,6 @@ class ShaderProgram
 		GLuint name;
 		std::unordered_map<std::string, GLint> uniforms;
 };
+
+} // namespace OpenGL
+} // namespace Graphics

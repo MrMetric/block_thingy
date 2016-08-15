@@ -138,6 +138,7 @@
 		<Unit filename="src/fwd/event/EventManager.hpp" />
 		<Unit filename="src/fwd/event/EventType.hpp" />
 		<Unit filename="src/fwd/graphics/Color.hpp" />
+		<Unit filename="src/fwd/graphics/OpenGL/ShaderProgram.hpp" />
 		<Unit filename="src/fwd/physics/RaycastHit.hpp" />
 		<Unit filename="src/fwd/position/BlockInWorld.hpp" />
 		<Unit filename="src/fwd/position/ChunkInWorld.hpp" />

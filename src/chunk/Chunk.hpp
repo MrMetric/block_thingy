@@ -56,7 +56,7 @@ class Chunk
 		Position::ChunkInWorld position;
 		std::array<Graphics::Color, CHUNK_BLOCK_COUNT> light;
 		meshmap_t meshes;
-		std::vector<VertexBuffer> mesh_vbos;
+		std::vector<Graphics::OpenGL::VertexBuffer> mesh_vbos;
 		bool changed;
 
 		void update_vbos();
