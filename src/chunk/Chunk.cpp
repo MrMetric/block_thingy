@@ -108,6 +108,8 @@ void Chunk::set_light(const BlockInChunk& pos, const Graphics::Color& color)
 	const auto i = block_array_index(pos.x, pos.y, pos.z);
 	light[i] = color;
 	changed = true;
+
+	update_neighbors(pos.x, pos.y, pos.z);
 }
 
 void Chunk::update()
