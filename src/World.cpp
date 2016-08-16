@@ -155,7 +155,12 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 	{
 		last_chunk = chunk;
 	}
-	chunks.insert({ chunk_pos, chunk });
+
+	if(!chunks.emplace(chunk_pos, chunk).second)
+	{
+		chunks[chunk_pos] = chunk;
+	}
+
 	chunk->update_neighbors();
 }
 
@@ -165,6 +170,7 @@ shared_ptr<Chunk> World::get_chunk(const ChunkInWorld& chunk_pos) const
 	{
 		return last_chunk;
 	}
+
 	auto i = chunks.find(chunk_pos);
 	if(i == chunks.end())
 	{
@@ -302,6 +308,7 @@ shared_ptr<Player> World::get_player(const string& name)
 void World::save()
 {
 	file.save_players();
+
 	while(!chunks_to_save.empty())
 	{
 		const ChunkInWorld position = *chunks_to_save.begin();
