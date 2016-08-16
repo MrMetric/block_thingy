@@ -38,7 +38,7 @@ Chunk::Chunk(const ChunkInWorld& pos, World& owner)
 	solid_block(BlockType::air), // a useful default for now
 	owner(owner),
 	position(pos),
-	changed(true)
+	changed(false)
 {
 }
 
@@ -173,6 +173,18 @@ void Chunk::set_meshes(const meshmap_t& m)
 	changed = false;
 	meshes = m;
 	update_vbos();
+}
+
+void Chunk::set_blocks(std::unique_ptr<chunk_block_array_t> new_blocks)
+{
+	blocks = std::move(new_blocks);
+	changed = true;
+}
+void Chunk::set_blocks(const Block::Block& block)
+{
+	solid_block = block;
+	blocks = nullptr;
+	changed = true;
 }
 
 void Chunk::update_vbos()

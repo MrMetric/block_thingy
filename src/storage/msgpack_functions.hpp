@@ -163,13 +163,12 @@ struct convert<Chunk>
 		const bool is_solid = array[i++].as<bool>();
 		if(is_solid)
 		{
-			chunk.blocks = nullptr; // NOTE: should be null already
-			chunk.solid_block = array[i++].as<Block::Block>();
+			chunk.set_blocks(array[i++].as<Block::Block>());
 		}
 		else
 		{
 			// let us hope this copy is optimized out
-			chunk.blocks = std::make_unique<chunk_block_array_t>(array[i++].as<chunk_block_array_t>());
+			chunk.set_blocks(std::make_unique<chunk_block_array_t>(array[i++].as<chunk_block_array_t>()));
 		}
 
 		const bool has_meshes = array[i++].as<bool>();

@@ -47,6 +47,10 @@ class Chunk
 		const meshmap_t& get_meshes() const;
 		void set_meshes(const meshmap_t&);
 
+		// for loading
+		void set_blocks(std::unique_ptr<chunk_block_array_t>);
+		void set_blocks(const Block::Block&);
+
 		// public because friend stuff does not work for msgpack stuff
 		std::unique_ptr<chunk_block_array_t> blocks;
 		Block::Block solid_block;
