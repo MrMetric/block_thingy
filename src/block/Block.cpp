@@ -1,6 +1,7 @@
 #include "Block.hpp"
 
 #include "BlockType.hpp"
+#include "graphics/Color.hpp"
 
 namespace Block {
 
@@ -26,6 +27,22 @@ block_type_id_t Block::type_id() const
 BlockType Block::type() const
 {
 	return type_;
+}
+
+Graphics::Color Block::color() const
+{
+	switch(type())
+	{
+		case BlockType::light_test_red:		return {16,  0,  0};
+		case BlockType::light_test_green:	return { 0, 16,  0};
+		case BlockType::light_test_blue:	return { 0,  0, 16};
+		case BlockType::light_test_yellow:	return {16, 16,  0};
+		case BlockType::light_test_cyan:	return { 0, 16, 16};
+		case BlockType::light_test_pink:	return {16,  0, 16};
+		case BlockType::light_test_white:	return {16, 16, 16};
+	}
+
+	return {0, 0, 0};
 }
 
 BlockVisibilityType Block::visibility_type() const

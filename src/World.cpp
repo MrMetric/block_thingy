@@ -56,33 +56,10 @@ void World::set_block(const BlockInWorld& block_pos, const Block::Block& block)
 	BlockInChunk pos(block_pos);
 	chunk->set_block(pos, block);
 
-	if(block.type() == BlockType::light_test_red)
+	const auto color = block.color();
+	if(color.r != 0 || color.g != 0 || color.b != 0)
 	{
-		add_light(block_pos, Graphics::Color(16, 0, 0));
-	}
-	else if(block.type() == BlockType::light_test_green)
-	{
-		add_light(block_pos, Graphics::Color(0, 16, 0));
-	}
-	else if(block.type() == BlockType::light_test_blue)
-	{
-		add_light(block_pos, Graphics::Color(0, 0, 16));
-	}
-	else if(block.type() == BlockType::light_test_yellow)
-	{
-		add_light(block_pos, Graphics::Color(16, 16, 0));
-	}
-	else if(block.type() == BlockType::light_test_cyan)
-	{
-		add_light(block_pos, Graphics::Color(0, 16, 16));
-	}
-	else if(block.type() == BlockType::light_test_pink)
-	{
-		add_light(block_pos, Graphics::Color(16, 0, 16));
-	}
-	else if(block.type() == BlockType::light_test_white)
-	{
-		add_light(block_pos, Graphics::Color(16, 16, 16));
+		add_light(block_pos, color);
 	}
 
 	chunks_to_save.insert(chunk_pos);

@@ -17,6 +17,11 @@ class Block
 		block_type_id_t type_id() const;
 		BlockType type() const;
 
+		/**
+		 * If non-zero, this block emits light of this color
+		 */
+		Graphics::Color color() const;
+
 		BlockVisibilityType visibility_type() const;
 		bool is_opaque() const;
 		bool is_translucent() const;
