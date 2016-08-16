@@ -19,7 +19,8 @@ Player::Player(const string& name)
 	:
 	name(name),
 	reach_distance(16),
-	position(0.5, 1.0, 0.5), // TODO: generate spawn position
+	spawn_position(0.5, 1.0, 0.5), // TODO: generate this
+	position(spawn_position),
 	abs_offset(0.4),
 	eye_height(1.7),
 	walk_speed(2),
@@ -178,34 +179,11 @@ void Player::set_analog_motion(const glm::dvec2& vec)
 
 void Player::respawn()
 {
-	position.x = position.y = position.z = 0;
 	rotation.x = rotation.y = rotation.z = 0; // TODO: improve design (this needs to be set in the camera, not here)
-
-	// TODO: make a better solution
-	static const uint_fast8_t loop_limit = 128;
-	uint_fast8_t i = 0;
-	Position::BlockInWorld block_pos(position);
-	while(!block_is_at(block_pos))
-	{
-		--block_pos.y;
-		++i;
-		if(i >= loop_limit)
-		{
-			break;
-		}
-	}
-	while(block_is_at(block_pos))
-	{
-		++block_pos.y;
-		++i;
-		if(i >= loop_limit)
-		{
-			break;
-		}
-	}
-	position.y = block_pos.y;
-
 	velocity.x = velocity.y = velocity.z = 0;
+
+	position = spawn_position;
+	// TODO: if spawn is blocked, move to a nearby empty area
 }
 
 bool Player::can_place_block_at(const Position::BlockInWorld& block_pos)

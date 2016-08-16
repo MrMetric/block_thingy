@@ -39,6 +39,7 @@ class Player
 		bool get_noclip() const;
 		void set_noclip(bool);
 
+		glm::dvec3 spawn_position;
 		glm::dvec3 position;
 		glm::dvec3 rotation;
 		glm::dvec3 velocity;
