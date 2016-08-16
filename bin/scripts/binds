@@ -5,6 +5,7 @@ bind a +left
 bind d +right
 bind mouse1 break_block
 bind mouse2 place_block
+bind mouse3 pick_block
 bind lshift +sprint
 bind r respawn
 bind space jump
