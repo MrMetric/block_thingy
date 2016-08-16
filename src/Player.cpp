@@ -19,7 +19,7 @@ Player::Player(const string& name)
 	:
 	name(name),
 	reach_distance(16),
-	position(2.5, 1.0, 2.5), // TODO: generate spawn position
+	position(0.5, 1.0, 0.5), // TODO: generate spawn position
 	abs_offset(0.4),
 	eye_height(1.7),
 	walk_speed(2),

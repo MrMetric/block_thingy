@@ -209,6 +209,24 @@ void World::gen_chunk(const ChunkInWorld& chunk_pos)
 	gen_at(BlockInWorld(chunk_pos, min), BlockInWorld(chunk_pos, max));
 }
 
+static double sum_octaves(
+	const glm::dvec2& P,
+	double base_freq,
+	double freq_mul,
+	const uint_fast8_t octave_count
+)
+{
+	double val = 0;
+	double freq = base_freq;
+	for(uint_fast8_t i = 0; i < octave_count; i++)
+	{
+		const glm::dvec2 Pm(P.x * freq, P.y * freq);
+		val += glm::abs(glm::simplex(Pm) / freq);
+		freq *= freq_mul;
+	}
+	return val;
+};
+
 void World::gen_at(const BlockInWorld& min, const BlockInWorld& max)
 {
 	BlockInWorld block_pos(0, 0, 0);
@@ -222,30 +240,20 @@ void World::gen_at(const BlockInWorld& min, const BlockInWorld& max)
 				continue;
 			}
 
-			const uint_fast8_t roughness = 8;
-			auto turbulence = [](const glm::dvec2& P)
+			// https://www.shadertoy.com/view/Xl3GWS
+			auto get_max_y = [](const BlockInWorld::value_type x, const BlockInWorld::value_type z) -> double
 			{
-				double val = 0;
-				double freq = 1;
-				for(uint_fast8_t i = 0; i < roughness; i++)
-				{
-					const glm::dvec2 Pm(P.x * freq, P.y * freq);
-					val += glm::abs(glm::simplex(Pm) / freq);
-					freq *= 2.07;
-				}
-				return val;
-			};
+				// coords must not be (0, 0) (it makes this function always return 0)
+				const glm::dvec2 coords = (x == 0 && z == 0) ? glm::dvec2(0.0001) : glm::dvec2(x, z) / 1024.0;
+				const glm::dvec2 n(-sum_octaves(coords, 1, 2.07, 8));
 
-			auto get_max_y = [&turbulence, x, z, m]()
-			{
-				const glm::dvec2 n(-turbulence(glm::dvec2(x, z) / 1024.0));
 				const double a = n.x * n.y;
 				const double b = glm::mod(a, 1.0);
 				const double d = glm::mod(ceil(a), 2.0);
-				return static_cast<BlockInWorld::value_type>(((d == 0 ? b : d - b) - 1) * m);
+				return (d == 0 ? b : d - b) - 1;
 			};
 
-			auto max_y = max.y <= -m ? max.y : std::min(max.y, get_max_y());
+			auto max_y = max.y <= -m ? max.y : std::min(max.y, static_cast<BlockInWorld::value_type>(get_max_y(x, z) * m));
 
 			for(auto y = min.y; y <= max_y; ++y)
 			{
