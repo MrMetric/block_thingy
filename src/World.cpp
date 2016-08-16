@@ -5,6 +5,7 @@
 #include <memory>
 #include <queue>
 #include <stdint.h>
+#include <unordered_set>
 #include <utility>
 
 #include <glm/gtc/noise.hpp>
@@ -43,6 +44,7 @@ World::World(const string& file_path)
 	mesher(std::make_unique<GreedyMesher>()),
 	chunks(0, position_hasher<ChunkInWorld>),
 	last_chunk(nullptr),
+	chunks_to_save(0, position_hasher<ChunkInWorld>),
 	file(file_path, *this)
 {
 }
@@ -61,7 +63,7 @@ void World::set_block(const BlockInWorld& block_pos, const Block::Block& block)
 		add_light(block_pos, color);
 	}
 
-	chunks_to_save.insert(chunk_pos);
+	chunks_to_save.emplace(chunk_pos);
 }
 
 Block::Block World::get_block(const BlockInWorld& block_pos) const
@@ -108,7 +110,7 @@ void World::add_light(const BlockInWorld& block_pos, const Graphics::Color& colo
 	// see https://www.seedofandromeda.com/blogs/29-fast-flood-fill-lighting-in-a-blocky-voxel-game-pt-1
 	std::queue<std::tuple<BlockInWorld, glm::dvec3>> q;
 	q.emplace(block_pos, glm::dvec3(0, 0, 0));
-	std::unordered_map<BlockInWorld, bool, std::function<uint64_t(BlockInWorld)>> visited(0, position_hasher<BlockInWorld>);
+	std::unordered_set<BlockInWorld, std::function<uint64_t(BlockInWorld)>> visited(0, position_hasher<BlockInWorld>);
 	while(!q.empty())
 	{
 		const auto pos = std::get<0>(q.front());
@@ -119,7 +121,7 @@ void World::add_light(const BlockInWorld& block_pos, const Graphics::Color& colo
 		{
 			const BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
 			// emplace failed = key already exists = position has been visited
-			if(!visited.emplace(pos2, true).second)
+			if(!visited.emplace(pos2).second)
 			{
 				return;
 			}

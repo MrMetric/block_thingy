@@ -19,7 +19,6 @@ namespace Position
 		value_type& operator[](uint_fast8_t);
 		ChunkInWorld& operator+=(const ChunkInWorld&);
 		bool operator==(const ChunkInWorld&) const;
-		bool operator<(const ChunkInWorld&) const;
 
 		value_type x, y, z;
 	};

@@ -2,10 +2,10 @@
 
 #include <functional>
 #include <memory>
-#include <set>
 #include <stdint.h>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "fwd/Player.hpp"
 #include "fwd/block/Block.hpp"
@@ -56,9 +56,10 @@ class World
 
 	private:
 		world_map_t chunks;
-		std::set<Position::ChunkInWorld> chunks_to_save;
 		mutable Position::ChunkInWorld last_key;
 		mutable std::shared_ptr<Chunk> last_chunk;
+
+		std::unordered_set<Position::ChunkInWorld, std::function<uint64_t(Position::ChunkInWorld)>> chunks_to_save;
 
 		std::unordered_map<std::string, std::shared_ptr<Player>> players;
 		WorldFile file;
