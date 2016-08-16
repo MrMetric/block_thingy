@@ -130,7 +130,7 @@ void World::add_light(const BlockInWorld& block_pos, const Graphics::Color& colo
 			}
 			const glm::dvec3 traveled2(traveled.x + std::abs(x), traveled.y + std::abs(y), traveled.z + std::abs(z));
 			const double distance = glm::length(traveled2);
-			color -= std::round(distance);
+			color -= static_cast<Graphics::Color::value_type>(std::round(distance));
 			if(color < 1)
 			{
 				return;

@@ -2,8 +2,11 @@
 
 #include <cmath>
 #include <iostream>
+#include <limits>
 
 namespace Graphics {
+
+Color::value_type Color::max = 16;
 
 Color::Color()
 	:
@@ -11,7 +14,7 @@ Color::Color()
 {
 }
 
-Color::Color(uint8_t r, uint8_t g, uint8_t b)
+Color::Color(value_type r, value_type g, value_type b)
 	:
 	r(r),
 	g(g),
@@ -21,11 +24,12 @@ Color::Color(uint8_t r, uint8_t g, uint8_t b)
 
 glm::vec3 Color::to_vec3() const
 {
+	const float m = max;
 	glm::vec3 v
 	{
-		std::fmin(1, r / 16.0f),
-		std::fmin(1, g / 16.0f),
-		std::fmin(1, b / 16.0f)
+		std::fmin(1, r / m),
+		std::fmin(1, g / m),
+		std::fmin(1, b / m),
 	};
 	return v;
 }
@@ -61,34 +65,35 @@ Color Color::operator-(const Color& that) const
 	);
 }
 
-bool Color::operator<(const int x) const
+bool Color::operator<(const value_type x) const
 {
 	return (r < x) && (g < x) && (b < x);
 }
 
-Color Color::operator+(const int x) const
+Color Color::operator+(const value_type x) const
 {
+	const int m = std::numeric_limits<value_type>::max();
 	return Color(
-		static_cast<decltype(r)>(std::min(r + x, 255)),
-		static_cast<decltype(g)>(std::min(g + x, 255)),
-		static_cast<decltype(b)>(std::min(b + x, 255))
+		static_cast<value_type>(std::min(r + x, m)),
+		static_cast<value_type>(std::min(g + x, m)),
+		static_cast<value_type>(std::min(b + x, m))
 	);
 }
 
-Color Color::operator-(const int x) const
+Color Color::operator-(const value_type x) const
 {
 	return Color(
-		static_cast<decltype(r)>(std::max(r - x, 0)),
-		static_cast<decltype(g)>(std::max(g - x, 0)),
-		static_cast<decltype(b)>(std::max(b - x, 0))
+		static_cast<value_type>(std::max(r - x, 0)),
+		static_cast<value_type>(std::max(g - x, 0)),
+		static_cast<value_type>(std::max(b - x, 0))
 	);
 }
 
-Color& Color::operator-=(const int x)
+Color& Color::operator-=(const value_type x)
 {
-	r = static_cast<decltype(r)>(std::max(r - x, 0));
-	g = static_cast<decltype(g)>(std::max(g - x, 0));
-	b = static_cast<decltype(b)>(std::max(b - x, 0));
+	r = static_cast<value_type>(std::max(r - x, 0));
+	g = static_cast<value_type>(std::max(g - x, 0));
+	b = static_cast<value_type>(std::max(b - x, 0));
 	return *this;
 }
 

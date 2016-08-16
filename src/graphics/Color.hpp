@@ -10,8 +10,11 @@ namespace Graphics {
 
 struct Color
 {
+	using value_type = uint8_t;
+	static value_type max;
+
 	Color();
-	Color(uint8_t r, uint8_t g, uint8_t b);
+	Color(value_type r, value_type g, value_type b);
 
 	glm::vec3 to_vec3() const;
 
@@ -20,14 +23,14 @@ struct Color
 	Color operator+(const Color&) const;
 	Color operator-(const Color&) const;
 
-	bool operator<(int) const;
-	Color operator+(int) const;
-	Color operator-(int) const;
-	Color& operator-=(int);
+	bool operator<(value_type) const;
+	Color operator+(value_type) const;
+	Color operator-(value_type) const;
+	Color& operator-=(value_type);
 
-	uint8_t r;
-	uint8_t g;
-	uint8_t b;
+	value_type r;
+	value_type g;
+	value_type b;
 };
 
 std::ostream& operator<<(std::ostream&, const Color&);
