@@ -3,6 +3,8 @@ bind w +forward
 bind s +backward
 bind a +left
 bind d +right
+bind mouse1 break_block
+bind mouse2 place_block
 bind lshift +sprint
 bind r respawn
 bind space jump

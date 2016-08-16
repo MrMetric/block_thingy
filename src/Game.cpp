@@ -160,17 +160,7 @@ void Game::keypress(const int key, const int scancode, const int action, const i
 static BlockType block_type = BlockType::test;
 void Game::mousepress(const int button, const int action, const int mods)
 {
-	if(action == GLFW_PRESS)
-	{
-		if(button == GLFW_MOUSE_BUTTON_LEFT)
-		{
-			console.run_command("break_block");
-		}
-		else if(button == GLFW_MOUSE_BUTTON_RIGHT)
-		{
-			console.run_command("place_block");
-		}
-	}
+	keybinder.mousepress(button, action, mods);
 }
 
 void Game::mousemove(const double x, const double y)

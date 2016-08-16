@@ -11,6 +11,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Console.hpp"
+#include "Util.hpp"
 
 using std::string;
 
@@ -112,6 +113,11 @@ void KeybindManager::keypress(int key, const int scancode, const int action, con
 	}
 }
 
+void KeybindManager::mousepress(const int button, const int action, const int mods)
+{
+	keypress(button, 0, action, mods);
+}
+
 void KeybindManager::joypress(int joystick, int button, bool pressed)
 {
 	const auto i = joystate.find(button);
@@ -200,6 +206,20 @@ int KeybindManager::translate_key(string key)
 			case '\t': return GLFW_KEY_TAB;
 			default: return GLFW_KEY_UNKNOWN;
 		}
+	}
+
+	if(Util::string_starts_with(key, "mouse"))
+	{
+		if(key.length() != 6)
+		{
+			return GLFW_KEY_UNKNOWN;
+		}
+		int8_t btn = key[5] - '1';
+		if(btn < 0 || btn > 7)
+		{
+			return GLFW_KEY_UNKNOWN;
+		}
+		return GLFW_MOUSE_BUTTON_1 + btn;
 	}
 
 	if(key == "space") return GLFW_KEY_SPACE;

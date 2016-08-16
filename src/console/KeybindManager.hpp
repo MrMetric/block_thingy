@@ -23,6 +23,7 @@ class KeybindManager
 		void unbind_key(int key);
 
 		void keypress(int key, int scancode, int action, int mods);
+		void mousepress(int button, int action, int mods);
 		void joypress(int joystick, int button, bool pressed);
 
 		// intentionally not const ref
