@@ -12,7 +12,7 @@ I mek GAme
 
 ## How to get it
 ### Cloning
-As this repository contains a submodule, you will need to clone it recursively:
+As this repository has submodules, you need to clone it recursively:
 
     $ git clone --recursive https://gitlab.com/MrMetric/block_thingy.git
 
@@ -22,11 +22,12 @@ If you have already cloned it and did not do that, then you need to init and upd
     $ git submodule update --init --recursive
 
 ### Dependencies
- * glm: included as a submodule
+ * [GLM](https://github.com/g-truc/glm): included as a submodule
  * glad: included in the repository
- * GLFW 3: https://github.com/glfw/glfw
+ * [GLFW 3](https://github.com/glfw/glfw)
  * libpng: optional, used for saving screenshots. To enable it, `USE_LIBPNG` must be defined when compiling. Note that compiling without this disables screenshots entirely.
- * [POCO](https://github.com/pocoproject/poco)
+ * [POCO C++ Libraries](https://github.com/pocoproject/poco)
+ * [webgl-noise](https://github.com/stegu/webgl-noise): included as a submodule
 
 ### Building
  * versions of GCC older than 5.3.0 **can not** compile this
