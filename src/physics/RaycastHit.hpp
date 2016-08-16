@@ -11,5 +11,5 @@ struct RaycastHit
 	Position::BlockInWorld pos;
 	glm::ivec3 face;
 
-	Position::BlockInWorld adjacent();
+	Position::BlockInWorld adjacent() const;
 };

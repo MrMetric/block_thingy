@@ -123,17 +123,16 @@ string Util::gl_object_log(const GLuint object)
 		glGetProgramInfoLog(object, log_length, nullptr, log.get());
 	}
 
-	string log_string(log.get());
-	return log_string;
+	return string(log.get());
 }
 
 Util::path Util::split_path(const string& path)
 {
-	auto slash_pos = path.find_last_of('/');
-	auto dot_pos = path.find_last_of('.');
-	string folder = path.substr(0, slash_pos);
-	string file = path.substr(slash_pos + 1, dot_pos - slash_pos - 1);
-	string ext = path.substr(dot_pos + 1);
+	const auto slash_pos = path.find_last_of('/');
+	const auto dot_pos = path.find_last_of('.');
+	const string folder = path.substr(0, slash_pos);
+	const string file = path.substr(slash_pos + 1, dot_pos - slash_pos - 1);
+	const string ext = path.substr(dot_pos + 1);
 	return { folder, file, ext };
 }
 

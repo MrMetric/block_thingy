@@ -56,7 +56,7 @@ Game::Game(Gfx& gfx)
 	player(*player_ptr),
 	console(*this),
 	gui(event_manager),
-	wireframe(false, [](bool wireframe)
+	wireframe(false, [](const bool wireframe)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 	}),

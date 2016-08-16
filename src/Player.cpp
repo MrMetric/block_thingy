@@ -30,8 +30,8 @@ Player::Player(const string& name)
 
 void Player::move(const glm::dvec3& acceleration)
 {
-	double sinY = std::sin(glm::radians(rotation.y));
-	double cosY = std::cos(glm::radians(rotation.y));
+	const double sinY = std::sin(glm::radians(rotation.y));
+	const double cosY = std::cos(glm::radians(rotation.y));
 	velocity += acceleration;
 
 	if(std::abs(velocity.x) > max_velocity)
@@ -46,22 +46,22 @@ void Player::move(const glm::dvec3& acceleration)
 	Position::BlockInWorld old_position(position);
 
 	{
-		double moveX = velocity.x * cosY - velocity.z * sinY;
-		double offset = moveX < 0 ? -abs_offset : abs_offset;
+		const double moveX = velocity.x * cosY - velocity.z * sinY;
+		const double offset = moveX < 0 ? -abs_offset : abs_offset;
 		position.x = move_to(position.x, moveX, offset, Position::BlockInWorld(glm::dvec3(position.x + moveX + offset, position.y, position.z)));
 	}
 
 	{
-		double moveZ = velocity.z * cosY + velocity.x * sinY;
-		double offset = moveZ < 0 ? -abs_offset : abs_offset;
+		const double moveZ = velocity.z * cosY + velocity.x * sinY;
+		const double offset = moveZ < 0 ? -abs_offset : abs_offset;
 		position.z = move_to(position.z, moveZ, offset, Position::BlockInWorld(glm::dvec3(position.x, position.y, position.z + moveZ + offset)));
 	}
 
 	{
-		double moveY = velocity.y;
+		const double moveY = velocity.y;
 		if(moveY < 0)
 		{
-			Position::BlockInWorld pos_feet_new(glm::dvec3(position.x, position.y + moveY, position.z));
+			const Position::BlockInWorld pos_feet_new(glm::dvec3(position.x, position.y + moveY, position.z));
 			if(block_is_at(pos_feet_new))
 			{
 				position.y = pos_feet_new.y + 1;
@@ -82,7 +82,7 @@ void Player::move(const glm::dvec3& acceleration)
 	}
 
 	// TODO: handle this better when bounding boxes are added
-	Position::BlockInWorld new_position(position);
+	const Position::BlockInWorld new_position(position);
 	if(new_position != old_position)
 	{
 		const Block::Block block = Game::instance->world.get_block(new_position);

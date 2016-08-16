@@ -29,14 +29,13 @@ using Position::ChunkInWorld;
 template <typename T>
 uint64_t position_hasher(const T& pos)
 {
-	uint32_t x = pos.x & 0x1FFFFF;
-	uint32_t y = pos.y & 0x1FFFFF;
-	uint32_t z = pos.z & 0x1FFFFF;
-	uint64_t key =	  (static_cast<uint64_t>(x) << 42)
-					| (static_cast<uint64_t>(y) << 21)
-					| (static_cast<uint64_t>(z))
-				;
-	return key;
+	const uint32_t x = pos.x & 0x1FFFFF;
+	const uint32_t y = pos.y & 0x1FFFFF;
+	const uint32_t z = pos.z & 0x1FFFFF;
+	return	  (static_cast<uint64_t>(x) << 42)
+			| (static_cast<uint64_t>(y) << 21)
+			| (static_cast<uint64_t>(z))
+		;
 }
 
 World::World(const string& file_path)
@@ -50,10 +49,10 @@ World::World(const string& file_path)
 
 void World::set_block(const BlockInWorld& block_pos, const Block::Block& block)
 {
-	ChunkInWorld chunk_pos(block_pos);
+	const ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
 
-	BlockInChunk pos(block_pos);
+	const BlockInChunk pos(block_pos);
 	chunk->set_block(pos, block);
 
 	const auto color = block.color();
@@ -67,7 +66,7 @@ void World::set_block(const BlockInWorld& block_pos, const Block::Block& block)
 
 Block::Block World::get_block(const BlockInWorld& block_pos) const
 {
-	ChunkInWorld chunk_pos(block_pos);
+	const ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
@@ -171,7 +170,7 @@ shared_ptr<Chunk> World::get_chunk(const ChunkInWorld& chunk_pos) const
 		return last_chunk;
 	}
 
-	auto i = chunks.find(chunk_pos);
+	const auto i = chunks.find(chunk_pos);
 	if(i == chunks.end())
 	{
 		return nullptr;
@@ -217,8 +216,8 @@ void World::gen_chunk(const ChunkInWorld& chunk_pos)
 
 static double sum_octaves(
 	const glm::dvec2& P,
-	double base_freq,
-	double freq_mul,
+	const double base_freq,
+	const double freq_mul,
 	const uint_fast8_t octave_count
 )
 {
@@ -297,7 +296,7 @@ shared_ptr<Player> World::add_player(const string& name)
 
 shared_ptr<Player> World::get_player(const string& name)
 {
-	auto i = players.find(name);
+	const auto i = players.find(name);
 	if(i == players.end())
 	{
 		return nullptr;

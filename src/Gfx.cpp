@@ -158,8 +158,8 @@ void Gfx::toggle_fullscreen()
 
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-	int width = is_fullscreen ? mode->width : mode->width * 3 / 4;
-	int height = is_fullscreen ? mode->height : mode->height * 3 / 4;
+	const int width = is_fullscreen ? mode->width : mode->width * 3 / 4;
+	const int height = is_fullscreen ? mode->height : mode->height * 3 / 4;
 	cout << "window size: " << width << "×" << height << "\n";
 
 	const auto x = (mode->width - width) / 2;
@@ -220,7 +220,7 @@ void Gfx::draw_cube_outline(const Position::BlockInWorld& block_pos, const glm::
 	};
 	for(uint_fast8_t e = 0; e < 16; ++e)
 	{
-		uint_fast32_t o2 = 3 * elements[e];
+		const uint_fast32_t o2 = 3 * elements[e];
 		for(uint_fast8_t i = 0; i < 3; ++i)
 		{
 			vertexes[e][i] = Cube::cube_vertex[o2 + i] + pos[i];
@@ -311,8 +311,8 @@ GLFWwindow* Gfx::make_window(bool is_fullscreen)
 
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-	int width = is_fullscreen ? mode->width : mode->width * 3 / 4;
-	int height = is_fullscreen ? mode->height : mode->height * 3 / 4;
+	const int width = is_fullscreen ? mode->width : mode->width * 3 / 4;
+	const int height = is_fullscreen ? mode->height : mode->height * 3 / 4;
 	cout << "window size: " << width << "×" << height << "\n";
 	GLFWwindow* window = glfwCreateWindow(width, height, "Baby's First Voxel Engine", nullptr, nullptr);
 	if(window == nullptr)
