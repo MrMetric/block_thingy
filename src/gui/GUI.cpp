@@ -45,14 +45,19 @@ void GUI::update_framebuffer_size(const window_size_t& window_size)
 	};
 	const auto usage_hint = Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw;
 	crosshair_vbo.data(sizeof(crosshair_vertex), crosshair_vertex, usage_hint);
+
+	const double width = window_size.x;
+	const double height = window_size.y;
+	projection_matrix = glm::ortho(0.0, width, height, 0.0, -1.0, 1.0);
+	s_crosshair.uniform("matriks", glm::mat4(projection_matrix));
 }
 
 void GUI::draw(Gfx& gfx)
 {
-	draw_crosshair(gfx);
+	draw_crosshair();
 }
 
-void GUI::draw_crosshair(const Gfx& gfx)
+void GUI::draw_crosshair()
 {
 	bool wireframe = Game::instance->wireframe();
 
@@ -64,11 +69,6 @@ void GUI::draw_crosshair(const Gfx& gfx)
 	glDisable(GL_DEPTH_TEST);
 
 	glUseProgram(s_crosshair.get_name());
-
-	const float width = gfx.window_size.x;
-	const float height = gfx.window_size.y;
-	glm::mat4 crosshair_matrix = glm::ortho(0.0f, width, height, 0.0f, -1.0f, 1.0f);
-	s_crosshair.uniform("matriks", crosshair_matrix);
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, crosshair_vbo.get_name());

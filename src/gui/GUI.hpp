@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/mat4x4.hpp>
+
 #include "graphics/OpenGL/ShaderProgram.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
 
@@ -23,6 +25,7 @@ class GUI
 	private:
 		Graphics::OpenGL::ShaderProgram s_crosshair;
 		Graphics::OpenGL::VertexBuffer crosshair_vbo;
+		glm::dmat4 projection_matrix;
 
-		void draw_crosshair(const Gfx&);
+		void draw_crosshair();
 };
