@@ -79,7 +79,7 @@ ShaderProgram::~ShaderProgram()
 	}
 }
 
-GLuint ShaderProgram::get_name() const
+GLuint ShaderProgram::get_name()
 {
 	return name;
 }
@@ -94,39 +94,39 @@ GLint ShaderProgram::get_uniform_location(const string& name) const
 	return i->second;
 }
 
-void ShaderProgram::uniform(const string& uniform_name, const float x) const
+void ShaderProgram::uniform(const string& uniform_name, const float x)
 {
 	const GLint u = get_uniform_location(uniform_name);
 	glProgramUniform1f(name, u, x);
 }
 
-void ShaderProgram::uniform(const string& uniform_name, const double x) const
+void ShaderProgram::uniform(const string& uniform_name, const double x)
 {
 	const GLint u = get_uniform_location(uniform_name);
 	glProgramUniform1d(name, u, x);
 }
 
-void ShaderProgram::uniform(const string& uniform_name, const float x, const float y, const float z) const
+void ShaderProgram::uniform(const string& uniform_name, const float x, const float y, const float z)
 {
 	const GLint u = get_uniform_location(uniform_name);
 	glProgramUniform3f(name, u, x, y, z);
 }
 
-void ShaderProgram::uniform(const string& uniform_name, const glm::vec3& vec) const
+void ShaderProgram::uniform(const string& uniform_name, const glm::vec3& vec)
 {
 	const GLint u = get_uniform_location(uniform_name);
 	const float* ptr = glm::value_ptr(vec);
 	glProgramUniform3fv(name, u, 1, ptr);
 }
 
-void ShaderProgram::uniform(const string& uniform_name, const glm::vec4& vec) const
+void ShaderProgram::uniform(const string& uniform_name, const glm::vec4& vec)
 {
 	const GLint u = get_uniform_location(uniform_name);
 	const float* ptr = glm::value_ptr(vec);
 	glProgramUniform4fv(name, u, 1, ptr);
 }
 
-void ShaderProgram::uniform(const string& uniform_name, const glm::mat4& matrix) const
+void ShaderProgram::uniform(const string& uniform_name, const glm::mat4& matrix)
 {
 	const GLint u = get_uniform_location(uniform_name);
 	const float* ptr = glm::value_ptr(matrix);
@@ -166,7 +166,7 @@ static GLuint make_program(const std::vector<string>& files, const string& debug
 
 	// TODO: attach in previous loop?
 	GLuint program = glCreateProgram();
-	for(const ShaderObject& object : objects)
+	for(ShaderObject& object : objects)
 	{
 		glAttachShader(program, object.get_name());
 	}
@@ -193,7 +193,7 @@ static GLuint make_program(const std::vector<string>& files, const string& debug
 
 	// shader objects are not needed after linking, so memory can be freed by deleting them
 	// but a shader object will not be deleted until it is detached
-	for(const ShaderObject& object : objects)
+	for(ShaderObject& object : objects)
 	{
 		glDetachShader(program, object.get_name());
 	}

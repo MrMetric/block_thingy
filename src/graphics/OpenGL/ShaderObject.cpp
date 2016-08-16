@@ -68,7 +68,7 @@ ShaderObject::~ShaderObject()
 	}
 }
 
-GLuint ShaderObject::get_name() const
+GLuint ShaderObject::get_name()
 {
 	return name;
 }

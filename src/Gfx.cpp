@@ -41,8 +41,6 @@
 using std::cout;
 using std::string;
 
-using Graphics::OpenGL::ShaderProgram;
-
 Gfx::Gfx(GLFWwindow* window)
 	:
 	window(window),
@@ -245,7 +243,7 @@ void Gfx::draw_cube_outline(const Position::BlockInWorld& block_pos, const glm::
 	vertex_array.attrib(0, false);
 }
 
-const ShaderProgram& Gfx::get_block_shader(const BlockType type) const
+Graphics::OpenGL::ShaderProgram& Gfx::get_block_shader(const BlockType type)
 {
 	auto i = block_shaders.find(type);
 	if(i != block_shaders.end())

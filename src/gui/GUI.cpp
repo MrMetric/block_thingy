@@ -47,7 +47,7 @@ void GUI::update_framebuffer_size(const window_size_t& window_size)
 	crosshair_vbo.data(sizeof(crosshair_vertex), crosshair_vertex, usage_hint);
 }
 
-void GUI::draw(const Gfx& gfx)
+void GUI::draw(Gfx& gfx)
 {
 	draw_crosshair(gfx);
 }

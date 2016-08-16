@@ -144,7 +144,7 @@ void Chunk::render(const bool transluscent_pass)
 			++i;
 			continue;
 		}
-		const auto& shader = Game::instance->gfx.get_block_shader(type);
+		auto& shader = Game::instance->gfx.get_block_shader(type);
 		glUseProgram(shader.get_name());
 
 		shader.uniform("position_offset", static_cast<glm::vec3>(position_render_offset));

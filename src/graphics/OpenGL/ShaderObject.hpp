@@ -18,7 +18,7 @@ class ShaderObject
 		ShaderObject(const ShaderObject&) = delete;
 		void operator=(const ShaderObject&) = delete;
 
-		GLuint get_name() const;
+		GLuint get_name();
 
 	private:
 		bool inited;

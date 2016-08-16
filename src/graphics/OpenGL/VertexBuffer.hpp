@@ -30,7 +30,7 @@ class VertexBuffer
 
 		void data(size_t size, const void* data, UsageHint usage);
 
-		GLuint get_name() const;
+		GLuint get_name();
 
 	private:
 		bool inited;

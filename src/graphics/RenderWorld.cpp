@@ -14,15 +14,15 @@ using Graphics::OpenGL::ShaderProgram;
 
 void RenderWorld::draw_world(
 	World& world,
-	const std::map<BlockType, ShaderProgram>& block_shaders,
+	std::map<BlockType, ShaderProgram>& block_shaders,
 	const glm::dmat4& matriks,
 	const Position::BlockInWorld& origin,
 	const Position::ChunkInWorld::value_type render_distance
 )
 {
-	for(const auto& p : block_shaders)
+	for(auto& p : block_shaders)
 	{
-		const ShaderProgram& shader = p.second;
+		ShaderProgram& shader = p.second;
 		shader.uniform("matriks", glm::mat4(matriks));
 	}
 

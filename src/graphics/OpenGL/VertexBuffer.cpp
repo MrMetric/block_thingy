@@ -36,7 +36,7 @@ void VertexBuffer::data(const size_t size, const void* data, const UsageHint usa
 	glNamedBufferData(name, size, data, static_cast<GLenum>(usage));
 }
 
-GLuint VertexBuffer::get_name() const
+GLuint VertexBuffer::get_name()
 {
 	return name;
 }

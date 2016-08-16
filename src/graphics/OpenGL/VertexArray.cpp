@@ -29,7 +29,7 @@ VertexArray::~VertexArray()
 	}
 }
 
-GLuint VertexArray::get_name() const
+GLuint VertexArray::get_name()
 {
 	return name;
 }

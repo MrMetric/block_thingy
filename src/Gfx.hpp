@@ -61,7 +61,7 @@ class Gfx
 		void update_projection_matrix();
 		void set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation);
 		void draw_cube_outline(const Position::BlockInWorld&, const glm::vec4& color);
-		const Graphics::OpenGL::ShaderProgram& get_block_shader(BlockType) const;
+		Graphics::OpenGL::ShaderProgram& get_block_shader(BlockType);
 
 		#ifdef USE_LIBPNG
 		static void write_png_RGB(const char* filename, uint8_t* buf, uint_fast32_t width, uint_fast32_t height, bool reverse_rows = false);

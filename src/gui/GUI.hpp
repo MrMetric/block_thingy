@@ -18,7 +18,7 @@ class GUI
 		void operator=(const GUI&) = delete;
 
 		void update_framebuffer_size(const window_size_t&);
-		void draw(const Gfx&);
+		void draw(Gfx&);
 
 	private:
 		Graphics::OpenGL::ShaderProgram s_crosshair;

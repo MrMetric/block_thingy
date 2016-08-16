@@ -15,7 +15,7 @@ class VertexArray
 		VertexArray(const VertexArray&) = delete;
 		void operator=(const VertexArray&) = delete;
 
-		GLuint get_name() const;
+		GLuint get_name();
 		void attrib(GLuint index, bool enabled);
 
 	private:
