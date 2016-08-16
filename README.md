@@ -14,7 +14,7 @@ I mek GAme
 ### Cloning
 As this repository contains a submodule, you will need to clone it recursively:
 
-    $ git clone --recursive https://github.com/MrMetric/block_thingy.git
+    $ git clone --recursive https://gitlab.com/MrMetric/block_thingy.git
 
 If you have already cloned it and did not do that, then you need to init and update submodules:
 
@@ -24,7 +24,7 @@ If you have already cloned it and did not do that, then you need to init and upd
 ### Dependencies
  * glm: included as a submodule
  * glad: included in the repository
- * GLFW 3.1.2: installing it with your distro's package manager _might_ work. I recommend building it from source instead ([glfw-3.1.2.zip](https://github.com/glfw/glfw/releases/download/3.1.2/glfw-3.1.2.zip)).
+ * GLFW 3: https://github.com/glfw/glfw
  * libpng: optional, used for saving screenshots. To enable it, `USE_LIBPNG` must be defined when compiling. Note that compiling without this disables screenshots entirely.
  * [POCO](https://github.com/pocoproject/poco)
 
@@ -36,9 +36,9 @@ If you are unfamiliar with CMake: Make a directory to build in, and run `cmake <
 For example, in the repo root:
 
 ```shell
-mkdir build
-cmake ..
-make
+$ mkdir build
+$ cmake ..
+$ make
 ```
 
 Or, to specify a different compiler:
@@ -62,7 +62,15 @@ To run, `block_thingy` needs to know where the game files are. It defaults to `.
  * allow saving screenshots to a format other than PNG (for when the libpng dependency is not enabled)
  * improve build instructions
  * make physics framerate-independent
- * move the commands from `Game` and `command_test` to somewhere else
+ * move the commands from `Game` to somewhere else
  * separate chunk data / rendering (this decouples meshing from chunking, and has the side benefit of allowing mesh dimensions to not match chunks)
  * use events more (look at: keypress, mousemove, …)
  * other stuff that I am too lazy to say here
+
+## Note
+This repository exists in multiple places:
+
+ * [GitLab](https://gitlab.com/MrMetric/block_thingy)
+ * [GitHub](https://github.com/MrMetric/block_thingy)
+
+GitLab is the preferred location for posting issues and submitting merge requests (AKA pull requests)
