@@ -22,10 +22,14 @@ class Block
 		bool is_translucent() const;
 		bool is_invisible() const;
 
-		// can entities collide with this block?
+		/**
+		 * Can entities collide with this block?
+		 */
 		bool is_solid() const;
 
-		// can players interact with this block?
+		/**
+		 * Can players interact with this block?
+		 */
 		bool is_selectable() const;
 
 	private:

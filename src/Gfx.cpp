@@ -152,8 +152,6 @@ void Gfx::opengl_setup()
 	block_shaders.emplace(BlockType::light_test_white, "shaders/block/light_test");
 }
 
-// this toggles borderless window mode
-// TODO: add real fullscreen mode
 void Gfx::toggle_fullscreen()
 {
 	is_fullscreen = !is_fullscreen;
