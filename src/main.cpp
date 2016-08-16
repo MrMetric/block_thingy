@@ -53,10 +53,7 @@ int main(int argc, char** argv)
 	GLFWwindow* window = Gfx::init_glfw();
 	Gfx gfx(window); printOpenGLError();
 
-	#pragma clang diagnostic push
-	#pragma clang diagnostic ignored "-Wexit-time-destructors"
 	static unique_ptr<Game> game = std::make_unique<Game>(gfx);
-	#pragma clang diagnostic pop
 
 
 	cout << "starting main loop\n";

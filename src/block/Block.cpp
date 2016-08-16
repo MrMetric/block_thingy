@@ -32,7 +32,10 @@ BlockType Block::type() const
 Graphics::Color Block::color() const
 {
 	const auto m = Graphics::Color::max;
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wswitch"
 	switch(type())
+	#pragma clang diagnostic pop
 	{
 		case BlockType::light_test_red:		return { m,  0,  0};
 		case BlockType::light_test_green:	return { 0,  m,  0};

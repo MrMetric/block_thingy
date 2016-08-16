@@ -7,7 +7,6 @@ CFLAGS = \
 	-isystem lib \
 	-iquote src \
 	-Weverything \
-	-Wno-missing-braces \
 	-Wno-missing-prototypes \
 	-Wno-padded \
 	-Werror=extra-tokens \
@@ -21,6 +20,8 @@ CXXFLAGS = $(CFLAGS) \
 	-std=c++14 \
 	-fexceptions \
 	-Wno-c++98-compat-pedantic \
+	-Wno-exit-time-destructors \
+	-Wno-global-constructors \
 	-Wno-shadow \
 	-Werror=delete-incomplete \
 	-Werror=deprecated \

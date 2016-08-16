@@ -63,10 +63,11 @@
 			<Add option="-isystem lib" />
 			<Add option="-iquote src" />
 			<Add option="-Wno-c++98-compat-pedantic" />
-			<Add option="-Wno-newline-eof" />
+			<Add option="-Wno-exit-time-destructors" />
+			<Add option="-Wno-global-constructors" />
 			<Add option="-Wno-missing-prototypes" />
-			<Add option="-Wno-shadow" />
 			<Add option="-Wno-padded" />
+			<Add option="-Wno-shadow" />
 			<Add option="-Werror=delete-incomplete" />
 			<Add option="-Werror=deprecated" />
 			<Add option="-Werror=extra-tokens" />

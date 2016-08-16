@@ -73,11 +73,7 @@ GLuint ShaderObject::get_name()
 	return name;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wexit-time-destructors"
-#pragma clang diagnostic ignored "-Wglobal-constructors"
 static const string include_str = "#include";
-#pragma clang diagnostic pop
 string do_include(const string& file_path)
 {
 	const string source = Util::read_file(file_path);
