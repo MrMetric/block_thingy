@@ -255,6 +255,45 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 	}
 
 	chunk->update_neighbors();
+
+	// update light at chunk sides to make it flow into the new chunk
+	{
+		BlockInWorld pos1(chunk_pos, {0, 0, 0});
+		BlockInWorld pos;
+		for(uint_fast8_t i1 = 0; i1 < 3; ++i1)
+		{
+			uint_fast8_t i2 = (i1 + 1) % 3;
+			uint_fast8_t i3 = (i1 + 2) % 3;
+			for(pos[i1] = pos1[i1]; pos[i1] < pos1[i1] + CHUNK_SIZE; ++pos[i1])
+			for(pos[i2] = pos1[i2]; pos[i2] < pos1[i2] + CHUNK_SIZE; ++pos[i2])
+			{
+				BlockInWorld pos2(pos);
+
+				pos2[i3] = pos1[i3] - 1;
+				light_add.emplace(pos2);
+
+				pos2[i3] = pos1[i3] + CHUNK_SIZE;
+				light_add.emplace(pos2);
+			}
+		}
+		process_light_add();
+	}
+
+	// update light in chunk
+	{
+		BlockInChunk pos;
+		for(pos.x = 0; pos.x < CHUNK_SIZE; ++pos.x)
+		for(pos.y = 0; pos.y < CHUNK_SIZE; ++pos.y)
+		for(pos.z = 0; pos.z < CHUNK_SIZE; ++pos.z)
+		{
+			const Block::Block block = chunk->get_block(pos);
+			const Graphics::Color color = block.color();
+			if(color != 0)
+			{
+				add_light({chunk_pos, pos}, color);
+			}
+		}
+	}
 }
 
 shared_ptr<Chunk> World::get_chunk(const ChunkInWorld& chunk_pos) const
