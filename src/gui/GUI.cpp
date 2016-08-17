@@ -16,7 +16,7 @@
 GUI::GUI(EventManager& event_manager)
 	:
 	s_crosshair("shaders/crosshair"),
-	crosshair_vbo({3, GL_FLOAT}),
+	crosshair_vbo({2, GL_FLOAT}),
 	crosshair_vao(crosshair_vbo)
 {
 	event_manager.add_handler(EventType::window_size_change, [self=this](const Event& event)
@@ -31,19 +31,19 @@ void GUI::update_framebuffer_size(const window_size_t& window_size)
 	float midX = window_size.x / 2.0f;
 	float midY = window_size.y / 2.0f;
 	GLfloat crosshair_vertex[] = {
-		midX - 16, midY - 1, 0,
-		midX - 16, midY + 1, 0,
-		midX + 16, midY + 1, 0,
-		midX - 16, midY - 1, 0,
-		midX + 16, midY + 1, 0,
-		midX + 16, midY - 1, 0,
+		midX - 16, midY - 1,
+		midX - 16, midY + 1,
+		midX + 16, midY + 1,
+		midX - 16, midY - 1,
+		midX + 16, midY + 1,
+		midX + 16, midY - 1,
 
-		midX - 1, midY - 16, 0,
-		midX - 1, midY + 16, 0,
-		midX + 1, midY + 16, 0,
-		midX - 1, midY - 16, 0,
-		midX + 1, midY + 16, 0,
-		midX + 1, midY - 16, 0,
+		midX - 1, midY - 16,
+		midX - 1, midY + 16,
+		midX + 1, midY + 16,
+		midX - 1, midY - 16,
+		midX + 1, midY + 16,
+		midX + 1, midY - 16,
 	};
 	const auto usage_hint = Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw;
 	crosshair_vbo.data(sizeof(crosshair_vertex), crosshair_vertex, usage_hint);
@@ -61,8 +61,7 @@ void GUI::draw(Gfx& gfx)
 
 void GUI::draw_crosshair()
 {
-	bool wireframe = Game::instance->wireframe();
-
+	const bool wireframe = Game::instance->wireframe();
 	if(wireframe)
 	{
 		Game::instance->wireframe = false;
@@ -71,7 +70,6 @@ void GUI::draw_crosshair()
 	glDisable(GL_DEPTH_TEST);
 
 	glUseProgram(s_crosshair.get_name());
-
 	crosshair_vao.draw(GL_TRIANGLES, 0, 12);
 
 	glEnable(GL_DEPTH_TEST);
