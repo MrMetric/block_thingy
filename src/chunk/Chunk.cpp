@@ -121,7 +121,7 @@ void Chunk::update()
 	}
 
 	meshes = owner.mesher->make_mesh(*this);
-	update_vbos();
+	update_vaos();
 }
 
 void Chunk::render(const bool transluscent_pass)
@@ -153,12 +153,8 @@ void Chunk::render(const bool transluscent_pass)
 		const Graphics::Color color = std::get<1>(key);
 		shader.uniform("light", color.to_vec3());
 
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, mesh_vbos[i].get_name());
-		glVertexAttribPointer(0, 3, GL_UNSIGNED_BYTE, GL_FALSE, 0, 0);
 		const size_t draw_count = p.second.size() * 3;
-		glDrawArrays(GL_TRIANGLES, 0, draw_count);
-		glDisableVertexAttribArray(0);
+		mesh_vaos[i].draw(GL_TRIANGLES, 0, draw_count);
 
 		++i;
 	}
@@ -172,7 +168,7 @@ void Chunk::set_meshes(const meshmap_t& m)
 {
 	changed = false;
 	meshes = m;
-	update_vbos();
+	update_vaos();
 }
 
 void Chunk::set_blocks(std::unique_ptr<chunk_block_array_t> new_blocks)
@@ -187,16 +183,21 @@ void Chunk::set_blocks(const Block::Block& block)
 	changed = true;
 }
 
-void Chunk::update_vbos()
+void Chunk::update_vaos()
 {
-	if(mesh_vbos.size() < meshes.size())
+	if(mesh_vaos.size() < meshes.size())
 	{
-		size_t to_add = meshes.size() - mesh_vbos.size();
+		size_t to_add = meshes.size() - mesh_vaos.size();
 		for(size_t i = 0; i < to_add; ++i)
 		{
-			mesh_vbos.emplace_back();
+			Graphics::OpenGL::VertexBuffer vbo({3, GL_UNSIGNED_BYTE});
+			Graphics::OpenGL::VertexArray vao(vbo);
+
+			mesh_vbos.emplace_back(std::move(vbo));
+			mesh_vaos.emplace_back(std::move(vao));
 		}
 	}
+	// TODO: delete unused
 
 	size_t i = 0;
 	for(const auto& p : meshes)

@@ -5,10 +5,13 @@
 namespace Graphics {
 namespace OpenGL {
 
+class VertexBuffer;
+
 class VertexArray
 {
 	public:
-		VertexArray();
+		// TODO: allow multiple buffers
+		VertexArray(const VertexBuffer&);
 		~VertexArray();
 
 		VertexArray(VertexArray&&);
@@ -16,7 +19,10 @@ class VertexArray
 		void operator=(const VertexArray&) = delete;
 
 		GLuint get_name();
+
 		void attrib(GLuint index, bool enabled);
+
+		void draw(GLenum mode, GLint first, size_t count) const;
 
 	private:
 		bool inited;

@@ -37,7 +37,6 @@ class Gfx
 		glm::dmat4 view_matrix_physical;
 		glm::dmat4 view_matrix_graphical;
 
-		Graphics::OpenGL::VertexArray vertex_array;
 		glm::dmat4 matriks;
 
 		std::map<BlockType, Graphics::OpenGL::ShaderProgram> block_shaders;
@@ -45,6 +44,7 @@ class Gfx
 		Graphics::OpenGL::ShaderProgram s_lines;
 
 		Graphics::OpenGL::VertexBuffer outline_vbo;
+		Graphics::OpenGL::VertexArray outline_vao;
 
 
 		bool is_fullscreen;

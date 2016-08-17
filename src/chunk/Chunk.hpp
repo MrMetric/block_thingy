@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+#include "graphics/OpenGL/VertexArray.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
 
 #include "fwd/World.hpp"
@@ -58,12 +59,15 @@ class Chunk
 	private:
 		World& owner;
 		Position::ChunkInWorld position;
-		std::array<Graphics::Color, CHUNK_BLOCK_COUNT> light;
-		meshmap_t meshes;
-		std::vector<Graphics::OpenGL::VertexBuffer> mesh_vbos;
 		bool changed;
 
-		void update_vbos();
+		std::array<Graphics::Color, CHUNK_BLOCK_COUNT> light;
+
+		meshmap_t meshes;
+		std::vector<Graphics::OpenGL::VertexArray> mesh_vaos;
+		std::vector<Graphics::OpenGL::VertexBuffer> mesh_vbos;
+
+		void update_vaos();
 
 		void init_block_array();
 

@@ -15,7 +15,9 @@
 
 GUI::GUI(EventManager& event_manager)
 	:
-	s_crosshair("shaders/crosshair")
+	s_crosshair("shaders/crosshair"),
+	crosshair_vbo({3, GL_FLOAT}),
+	crosshair_vao(crosshair_vbo)
 {
 	event_manager.add_handler(EventType::window_size_change, [self=this](const Event& event)
 	{
@@ -70,11 +72,7 @@ void GUI::draw_crosshair()
 
 	glUseProgram(s_crosshair.get_name());
 
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, crosshair_vbo.get_name());
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glDrawArrays(GL_TRIANGLES, 0, 12);
-	glDisableVertexAttribArray(0);
+	crosshair_vao.draw(GL_TRIANGLES, 0, 12);
 
 	glEnable(GL_DEPTH_TEST);
 

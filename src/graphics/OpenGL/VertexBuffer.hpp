@@ -5,15 +5,23 @@
 namespace Graphics {
 namespace OpenGL {
 
+class VertexArray;
+
 class VertexBuffer
 {
+	friend class VertexArray;
+
 	public:
-		VertexBuffer();
+		struct Format;
+		// TODO: allow multiple formats
+		VertexBuffer(const Format&);
 		~VertexBuffer();
 
 		VertexBuffer(VertexBuffer&&);
 		VertexBuffer(const VertexBuffer&) = delete;
 		void operator=(const VertexBuffer&) = delete;
+
+		GLuint get_name();
 
 		enum class UsageHint : GLenum
 		{
@@ -27,14 +35,21 @@ class VertexBuffer
 			dynamic_read = GL_DYNAMIC_READ,
 			dynamic_copy = GL_DYNAMIC_COPY,
 		};
-
 		void data(size_t size, const void* data, UsageHint usage);
 
-		GLuint get_name();
+		struct Format
+		{
+			GLint size;
+			GLenum type;
+			bool normalized = false;
+			GLsizei stride = 0;
+			GLsizei offset = 0;
+		};
 
 	private:
 		bool inited;
 		GLuint name;
+		Format format;
 };
 
 } // namespace OpenGL

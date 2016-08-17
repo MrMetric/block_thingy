@@ -3,6 +3,7 @@
 #include <glm/mat4x4.hpp>
 
 #include "graphics/OpenGL/ShaderProgram.hpp"
+#include "graphics/OpenGL/VertexArray.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
 
 #include "types/window_size_t.hpp"
@@ -25,6 +26,7 @@ class GUI
 	private:
 		Graphics::OpenGL::ShaderProgram s_crosshair;
 		Graphics::OpenGL::VertexBuffer crosshair_vbo;
+		Graphics::OpenGL::VertexArray crosshair_vao;
 		glm::dmat4 projection_matrix;
 
 		void draw_crosshair();

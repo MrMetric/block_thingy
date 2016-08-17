@@ -45,6 +45,8 @@ Gfx::Gfx(GLFWwindow* window)
 	:
 	window(window),
 	s_lines("shaders/lines"),
+	outline_vbo({3, GL_FLOAT}),
+	outline_vao(outline_vbo),
 	is_fullscreen(false),
 	fov(75)
 {
@@ -134,8 +136,6 @@ void Gfx::opengl_setup()
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glBindVertexArray(vertex_array.get_name());
 
 	block_shaders.emplace(BlockType::test, "shaders/block/test");
 	block_shaders.emplace(BlockType::dots, "shaders/block/dots");
@@ -234,11 +234,7 @@ void Gfx::draw_cube_outline(const Position::BlockInWorld& block_pos, const glm::
 	s_lines.uniform("matriks", matriks);
 	s_lines.uniform("color", color);
 
-	vertex_array.attrib(0, true);
-	glBindBuffer(GL_ARRAY_BUFFER, outline_vbo.get_name());
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glDrawArrays(GL_LINE_STRIP, 0, 16);
-	vertex_array.attrib(0, false);
+	outline_vao.draw(GL_LINE_STRIP, 0, 16);
 }
 
 Graphics::OpenGL::ShaderProgram& Gfx::get_block_shader(const BlockType type)

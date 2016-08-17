@@ -5,7 +5,9 @@
 namespace Graphics {
 namespace OpenGL {
 
-VertexBuffer::VertexBuffer()
+VertexBuffer::VertexBuffer(const Format& format)
+	:
+	format(format)
 {
 	glCreateBuffers(1, &name);
 	inited = true;
@@ -31,14 +33,14 @@ VertexBuffer::~VertexBuffer()
 	}
 }
 
-void VertexBuffer::data(const size_t size, const void* data, const UsageHint usage)
-{
-	glNamedBufferData(name, size, data, static_cast<GLenum>(usage));
-}
-
 GLuint VertexBuffer::get_name()
 {
 	return name;
+}
+
+void VertexBuffer::data(const size_t size, const void* data, const UsageHint usage)
+{
+	glNamedBufferData(name, size, data, static_cast<GLenum>(usage));
 }
 
 } // namespace OpenGL
