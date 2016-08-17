@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <memory>
+#include <queue>
 #include <stdint.h>
 #include <string>
 #include <unordered_map>
@@ -11,8 +12,8 @@
 #include "fwd/block/Block.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "chunk/mesh/ChunkMesher.hpp"
-#include "fwd/graphics/Color.hpp"
-#include "fwd/position/BlockInWorld.hpp"
+#include "graphics/Color.hpp"
+#include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 #include "storage/WorldFile.hpp"
 
@@ -37,6 +38,9 @@ class World
 		Graphics::Color get_light(const Position::BlockInWorld&) const;
 		void set_light(const Position::BlockInWorld&, const Graphics::Color&);
 		void add_light(const Position::BlockInWorld&, const Graphics::Color&);
+		void process_light_add();
+		void sub_light(const Position::BlockInWorld&);
+		void update_light_around(const Position::BlockInWorld&);
 
 		std::shared_ptr<Chunk> get_chunk(const Position::ChunkInWorld&) const;
 		std::shared_ptr<Chunk> get_or_make_chunk(const Position::ChunkInWorld&);
@@ -58,6 +62,8 @@ class World
 		world_map_t chunks;
 		mutable Position::ChunkInWorld last_key;
 		mutable std::shared_ptr<Chunk> last_chunk;
+
+		std::queue<Position::BlockInWorld> light_add;
 
 		std::unordered_set<Position::ChunkInWorld, std::function<uint64_t(Position::ChunkInWorld)>> chunks_to_save;
 

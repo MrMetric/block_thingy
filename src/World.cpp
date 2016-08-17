@@ -54,16 +54,33 @@ void World::set_block(const BlockInWorld& block_pos, const Block::Block& block)
 	const ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
 
+	const Block::Block old_block = get_block(block_pos);
+
 	const BlockInChunk pos(block_pos);
 	chunk->set_block(pos, block);
 
-	const auto color = block.color();
-	if(color.r != 0 || color.g != 0 || color.b != 0)
+	chunks_to_save.emplace(chunk_pos);
+
+	if(block.is_opaque() && !old_block.is_opaque())
 	{
+		sub_light(block_pos);
+	}
+
+	const Graphics::Color old_color = old_block.color();
+	const Graphics::Color color = block.color();
+	if(old_color != color)
+	{
+		if(old_color != 0)
+		{
+			sub_light(block_pos);
+		}
 		add_light(block_pos, color);
 	}
 
-	chunks_to_save.emplace(chunk_pos);
+	if(block.is_opaque() != old_block.is_opaque())
+	{
+		update_light_around(block_pos);
+	}
 }
 
 Block::Block World::get_block(const BlockInWorld& block_pos) const
@@ -106,28 +123,36 @@ void World::set_light(const BlockInWorld& block_pos, const Graphics::Color& colo
 void World::add_light(const BlockInWorld& block_pos, const Graphics::Color& color)
 {
 	set_light(block_pos, color);
+	if(color == 0)
+	{
+		return;
+	}
 
 	// see https://www.seedofandromeda.com/blogs/29-fast-flood-fill-lighting-in-a-blocky-voxel-game-pt-1
-	std::queue<std::tuple<BlockInWorld, Graphics::Color>> q;
-	q.emplace(block_pos, color);
-	while(!q.empty())
+	light_add.emplace(block_pos);
+	process_light_add();
+}
+
+void World::process_light_add()
+{
+	while(!light_add.empty())
 	{
-		const auto pos = std::get<0>(q.front());
-		const auto color = std::get<1>(q.front()) - 1;
-		q.pop();
+		const BlockInWorld pos = light_add.front();
+		light_add.pop();
+		const Graphics::Color color = get_light(pos) - 1;
 		if(color == 0)
 		{
 			continue;
 		}
 
-		auto fill = [this, &block_pos, &q, &pos](Graphics::Color color, const int8_t x, const int8_t y, const int8_t z)
+		auto fill = [this, &pos, &color](const int8_t x, const int8_t y, const int8_t z)
 		{
 			const BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
 			if(get_block(pos2).is_opaque())
 			{
 				return;
 			}
-			auto color2 = get_light(pos2);
+			Graphics::Color color2 = get_light(pos2);
 			bool set = false;
 			for(uint_fast8_t i = 0; i < 3; ++i)
 			{
@@ -140,17 +165,81 @@ void World::add_light(const BlockInWorld& block_pos, const Graphics::Color& colo
 			if(set)
 			{
 				set_light(pos2, color2);
-				q.emplace(pos2, color2);
+				light_add.emplace(pos2);
+			}
+		};
+
+		fill( 0,  0, -1);
+		fill( 0,  0, +1);
+		fill( 0, -1,  0);
+		fill( 0, +1,  0);
+		fill(-1,  0,  0);
+		fill(+1,  0,  0);
+	}
+}
+
+void World::sub_light(const BlockInWorld& block_pos)
+{
+	Graphics::Color color = get_light(block_pos);
+	set_light(block_pos, {0, 0, 0});
+
+	std::queue<std::tuple<BlockInWorld, Graphics::Color>> q;
+	q.emplace(block_pos, color);
+	while(!q.empty())
+	{
+		const BlockInWorld pos = std::get<0>(q.front());
+		const Graphics::Color color = std::get<1>(q.front());
+		q.pop();
+
+		auto fill = [this, &block_pos, &q, &pos](Graphics::Color color, const int8_t x, const int8_t y, const int8_t z)
+		{
+			const BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
+			Graphics::Color color2 = get_light(pos2);
+			Graphics::Color color_set = color2;
+			Graphics::Color color_put(0, 0, 0);
+
+			bool set = false;
+			for(uint_fast8_t i = 0; i < 3; ++i)
+			{
+				if(color2[i] != 0 && color2[i] < color[i])
+				{
+					color_set[i] = 0;
+					color_put[i] = color2[i];
+					set = true;
+				}
+				else if(color2[i] >= color[i])
+				{
+					light_add.emplace(pos2);
+				}
+			}
+			if(set)
+			{
+				set_light(pos2, color_set);
+				q.emplace(pos2, color_put);
 			}
 		};
 
 		fill(color,  0,  0, -1);
 		fill(color,  0,  0, +1);
-		fill(color,  0, +1,  0);
 		fill(color,  0, -1,  0);
+		fill(color,  0, +1,  0);
 		fill(color, -1,  0,  0);
 		fill(color, +1,  0,  0);
 	}
+}
+
+void World::update_light_around(const BlockInWorld& block_pos)
+{
+	#define a(x_, y_, z_) light_add.emplace(block_pos.x + x_, block_pos.y + y_, block_pos.z + z_)
+	a( 0,  0, -1);
+	a( 0,  0, +1);
+	a( 0, -1,  0);
+	a( 0, +1,  0);
+	a(-1,  0,  0);
+	a(+1,  0,  0);
+	#undef a
+
+	process_light_add();
 }
 
 void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)

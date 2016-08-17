@@ -3,6 +3,10 @@
 #include <cmath>
 #include <iostream>
 #include <limits>
+#include <stdexcept>
+#include <string>
+
+using std::to_string;
 
 namespace Graphics {
 
@@ -34,9 +38,30 @@ glm::vec3 Color::to_vec3() const
 	return v;
 }
 
+Color::value_type Color::operator[](const uint_fast8_t i) const
+{
+	if(i == 0) return r;
+	if(i == 1) return g;
+	if(i == 2) return b;
+	throw std::out_of_range("Graphics::Color::operator[]: " + to_string(i) + " > 2");
+}
+
+Color::value_type& Color::operator[](const uint_fast8_t i)
+{
+	if(i == 0) return r;
+	if(i == 1) return g;
+	if(i == 2) return b;
+	throw std::out_of_range("Graphics::Color::operator[]: " + to_string(i) + " > 2");
+}
+
 bool Color::operator==(const Color& that) const
 {
 	return (r == that.r) && (g == that.g) && (b == that.b);
+}
+
+bool Color::operator!=(const Color& that) const
+{
+	return (r != that.r) || (g != that.g) || (b != that.b);
 }
 
 // defined for std::tuple hashing
@@ -63,6 +88,16 @@ Color Color::operator-(const Color& that) const
 		g - that.g,
 		b - that.b
 	);
+}
+
+bool Color::operator==(const value_type x) const
+{
+	return (r == x) && (g == x) && (b == x);
+}
+
+bool Color::operator!=(const value_type x) const
+{
+	return (r != x) || (g != x) || (b != x);
 }
 
 bool Color::operator<(const value_type x) const
