@@ -31,3 +31,5 @@ bind joy_xbox360_R3 block_type++
 bind joy_xbox360_L1 break_block
 bind joy_xbox360_R1 place_block
 bind joy_xbox360_A jump
+bind joy_xbox360_X +sprint
+bind joy_xbox360_Y noclip
