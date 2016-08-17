@@ -253,7 +253,10 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 	{
 		chunks[chunk_pos] = chunk;
 	}
-
+	if(chunk == nullptr)
+	{
+		return;
+	}
 	chunk->update_neighbors();
 
 	// update light at chunk sides to make it flow into the new chunk
