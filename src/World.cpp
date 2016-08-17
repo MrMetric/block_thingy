@@ -108,37 +108,40 @@ void World::add_light(const BlockInWorld& block_pos, const Graphics::Color& colo
 	set_light(block_pos, color);
 
 	// see https://www.seedofandromeda.com/blogs/29-fast-flood-fill-lighting-in-a-blocky-voxel-game-pt-1
-	std::queue<std::tuple<BlockInWorld, glm::dvec3>> q;
-	q.emplace(block_pos, glm::dvec3(0, 0, 0));
-	std::unordered_set<BlockInWorld, std::function<uint64_t(BlockInWorld)>> visited(0, position_hasher<BlockInWorld>);
+	std::queue<std::tuple<BlockInWorld, Graphics::Color>> q;
+	q.emplace(block_pos, color);
 	while(!q.empty())
 	{
 		const auto pos = std::get<0>(q.front());
-		const auto traveled = std::get<1>(q.front());
+		const auto color = std::get<1>(q.front()) - 1;
 		q.pop();
+		if(color == 0)
+		{
+			continue;
+		}
 
-		auto fill = [this, &block_pos, &q, &visited, &pos, &traveled](Graphics::Color color, int8_t x, int8_t y, int8_t z)
+		auto fill = [this, &block_pos, &q, &pos](Graphics::Color color, const int8_t x, const int8_t y, const int8_t z)
 		{
 			const BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
-			// emplace failed = key already exists = position has been visited
-			if(!visited.emplace(pos2).second)
-			{
-				return;
-			}
 			if(get_block(pos2).is_opaque())
 			{
 				return;
 			}
-			const glm::dvec3 traveled2(traveled.x + std::abs(x), traveled.y + std::abs(y), traveled.z + std::abs(z));
-			const double distance = glm::length(traveled2);
-			color -= static_cast<Graphics::Color::value_type>(std::round(distance));
-			if(color < 1)
+			auto color2 = get_light(pos2);
+			bool set = false;
+			for(uint_fast8_t i = 0; i < 3; ++i)
 			{
-				return;
+				if(color2[i] < color[i])
+				{
+					color2[i] = color[i];
+					set = true;
+				}
 			}
-			const auto color2 = get_light(pos2) + color;
-			set_light(pos2, color2);
-			q.emplace(pos2, traveled2);
+			if(set)
+			{
+				set_light(pos2, color2);
+				q.emplace(pos2, color2);
+			}
 		};
 
 		fill(color,  0,  0, -1);
