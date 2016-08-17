@@ -155,11 +155,12 @@ static GLuint make_program(const std::vector<string>& files, const string& debug
 		if(!Util::file_is_openable(path))
 		{
 			path_parts.file = "default";
-			path = Util::join_path(path_parts);
-			if(!Util::file_is_openable(path))
+			const string path2 = Util::join_path(path_parts);
+			if(!Util::file_is_openable(path2))
 			{
-				// TODO
+				throw std::runtime_error("shader not found and no default exists: " + path);
 			}
+			path = path2;
 		}
 		objects.emplace_back(path, type);
 	}
