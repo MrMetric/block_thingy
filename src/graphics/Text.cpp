@@ -1,6 +1,7 @@
 #include "Text.hpp"
 
 #include <iostream>
+#include <stdint.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdocumentation"
@@ -34,15 +35,13 @@ Text::Text(const string& font_path, const FT_UInt height)
 	FT_Library ft;
 	if(FT_Init_FreeType(&ft))
 	{
-		cerr << "failed to init FreeType\n";
-		return;
+		throw std::runtime_error("failed to init FreeType");
 	}
 
 	FT_Face face;
 	if(FT_New_Face(ft, font_path.c_str(), 0, &face))
 	{
-		cerr << "failed to load font " << font_path << "\n";
-		return;
+		throw std::runtime_error("failed to load font " + font_path);
 	}
 
 	FT_Set_Pixel_Sizes(face, 0, height);
@@ -103,20 +102,20 @@ void Text::draw(const string& s, glm::dvec2 pos, const glm::dmat4& projection_ma
 		const float h = ch.size.y;
 		const float y1 = ch.flip ? 1.0f : 0.0f;
 		const float y2 = 1.0f - ch.flip;
-		float vertices[6][4] =
+		const float vertices[] =
 		{
-			{ xpos,     ypos + h, 0.0f, y2 },
-			{ xpos,     ypos,     0.0f, y1 },
-			{ xpos + w, ypos,     1.0f, y1 },
+			xpos,     ypos + h, 0.0f, y2,
+			xpos,     ypos,     0.0f, y1,
+			xpos + w, ypos,     1.0f, y1,
 
-			{ xpos,     ypos + h, 0.0f, y2 },
-			{ xpos + w, ypos,     1.0f, y1 },
-			{ xpos + w, ypos + h, 1.0f, y2 },
+			xpos,     ypos + h, 0.0f, y2,
+			xpos + w, ypos,     1.0f, y1,
+			xpos + w, ypos + h, 1.0f, y2,
 		};
 
 		glBindTexture(GL_TEXTURE_2D, ch.texture.get_name());
 
-		vbo.data(6 * 4 * sizeof(float), vertices, OpenGL::VertexBuffer::UsageHint::dynamic_draw);
+		vbo.data(sizeof(vertices), vertices, OpenGL::VertexBuffer::UsageHint::dynamic_draw);
 		vao.draw(GL_TRIANGLES, 0, 6);
 
 		pos.x += ch.x_offset;

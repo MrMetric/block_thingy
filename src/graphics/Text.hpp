@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdint.h>
 #include <unordered_map>
 
 #include <glad/glad.h>
@@ -35,7 +36,7 @@ class Text
 			glm::ivec2			size;
 			glm::ivec2			bearing;	// offset from baseline to left/top of glyph
 			double				x_offset;
-			bool flip;
+			bool				flip;
 		};
 
 		static const uint8_t tab_width = 4;
