@@ -29,11 +29,11 @@ If you have already cloned it and did not do that, then you need to init and upd
  * [POCO C++ Libraries](https://github.com/pocoproject/poco)
  * [webgl-noise](https://github.com/stegu/webgl-noise): included as a submodule
 
-### Building
+### Building (using CMake)
  * versions of GCC older than 5.3.0 **can not** compile this
  * clang 3.7 and 3.9 both work fine; older versions are untested, although 3.5 is reported to work
 
-If you are unfamiliar with CMake: Make a directory to build in, and run `cmake <repo root path>`, along with whatever options you want CMake to use.
+Make a directory to build in, and run `cmake <repo root path>`, along with whatever options you want CMake to use.
 For example, in the repo root:
 
 ```shell
@@ -42,13 +42,30 @@ $ cmake ..
 $ make
 ```
 
-Or, to specify a different compiler:
+The build type options are:
+
+ * Debug
+ * Release
+ * RelWithDebInfo (default)
+ * MinSizeRel
+
+To specify Release (for example):
+
+```shell
+$ cmake .. -DCMAKE_BUILD_TYPE=release
+```
+
+Note: the build types are not case-sensitive.
+
+To use a different compiler:
 
 ```shell
 $ cmake .. -DCMAKE_C_COMPILER="/usr/local/bin/clang" -DCMAKE_CXX_COMPILER="/usr/local/bin/clang++"
 ```
 
-To run, `block_thingy` needs to know where the game files are. It defaults to `.`, which is incorrect here—the folder is `<repo root>/bin`. Following from the example above, simply do this:
+### Running
+
+To run, `block_thingy` needs to know where the game files are. It defaults to `.`, which is incorrect here—the folder is `<repo root>/bin`. Following from the above example, do this:
 
 ```shell
 ./block_thingy ../bin
