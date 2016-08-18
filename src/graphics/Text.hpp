@@ -28,7 +28,8 @@ class Text
 	public:
 		Text(const std::string& font_path, FT_UInt height);
 
-		void draw(const std::string&, glm::dvec2 pos, const glm::dmat4& projection_matrix);
+		void set_projection_matrix(const glm::dmat4& projection_matrix);
+		void draw(const std::string&, glm::dvec2 pos);
 
 		struct Character
 		{

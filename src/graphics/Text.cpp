@@ -58,12 +58,16 @@ Text::Text(const string& font_path, const FT_UInt height)
 	shader.uniform("color", glm::vec3(1.0));
 }
 
-void Text::draw(const string& s, glm::dvec2 pos, const glm::dmat4& projection_matrix)
+void Text::set_projection_matrix(const glm::dmat4& projection_matrix)
+{
+	shader.uniform("projection", glm::mat4(projection_matrix));
+}
+
+void Text::draw(const string& s, glm::dvec2 pos)
 {
 	const double start_x = pos.x;
 
 	glUseProgram(shader.get_name());
-	shader.uniform("projection", glm::mat4(projection_matrix));
 
 	glActiveTexture(GL_TEXTURE0);
 

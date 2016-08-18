@@ -56,6 +56,7 @@ void GUI::update_framebuffer_size(const window_size_t& window_size)
 	const double height = window_size.y;
 	projection_matrix = glm::ortho(0.0, width, height, 0.0, -1.0, 1.0);
 	s_crosshair.uniform("matriks", glm::mat4(projection_matrix));
+	text.set_projection_matrix(projection_matrix);
 }
 
 void GUI::draw()
@@ -92,5 +93,5 @@ void GUI::draw_debug_text()
 	ss << "x: " << pos.x << "\n";
 	ss << "y: " << pos.y << "\n";
 	ss << "z: " << pos.z << "\n";
-	text.draw(ss.str(), {8.0, 8.0}, projection_matrix);
+	text.draw(ss.str(), {8.0, 8.0});
 }
