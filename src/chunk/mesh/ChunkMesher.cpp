@@ -29,11 +29,9 @@ Block::Block ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t x, con
 	{
 		if(!allow_out_of_bounds)
 		{
-			static const Block::Block none = Block::Block(BlockType::none);
-			return none;
+			return Block::Block(BlockType::none);
 		}
-		Position::ChunkInWorld chunk_pos = chunk.get_position();
-		Position::BlockInWorld block_pos(chunk_pos, {0, 0, 0});
+		Position::BlockInWorld block_pos(chunk.get_position(), {0, 0, 0});
 		block_pos.x += x;
 		block_pos.y += y;
 		block_pos.z += z;
@@ -44,7 +42,7 @@ Block::Block ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t x, con
 	#undef s
 }
 
-bool ChunkMesher::block_visible_from(const Chunk& chunk, const Block::Block& block, int_fast16_t x, int_fast16_t y, int_fast16_t z)
+bool ChunkMesher::block_visible_from(const Chunk& chunk, const Block::Block& block, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z)
 {
 	const Block::Block sibling = block_at(chunk, x, y, z);
 	return
@@ -55,7 +53,7 @@ bool ChunkMesher::block_visible_from(const Chunk& chunk, const Block::Block& blo
 	;
 };
 
-Graphics::Color ChunkMesher::light_at(const Chunk& chunk, int_fast16_t x, int_fast16_t y, int_fast16_t z)
+Graphics::Color ChunkMesher::light_at(const Chunk& chunk, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z)
 {
 	if(x < 0 || x >= CHUNK_SIZE
 	|| y < 0 || y >= CHUNK_SIZE

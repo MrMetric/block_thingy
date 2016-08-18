@@ -30,7 +30,7 @@ void GUI::update_framebuffer_size(const window_size_t& window_size)
 {
 	float midX = window_size.x / 2.0f;
 	float midY = window_size.y / 2.0f;
-	GLfloat crosshair_vertex[] = {
+	float crosshair_vertex[] = {
 		midX - 16, midY - 1,
 		midX - 16, midY + 1,
 		midX + 16, midY + 1,
@@ -54,7 +54,7 @@ void GUI::update_framebuffer_size(const window_size_t& window_size)
 	s_crosshair.uniform("matriks", glm::mat4(projection_matrix));
 }
 
-void GUI::draw(Gfx& gfx)
+void GUI::draw()
 {
 	draw_crosshair();
 }

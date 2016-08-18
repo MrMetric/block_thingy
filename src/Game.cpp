@@ -84,7 +84,8 @@ void Game::draw()
 	Position::BlockInWorld render_origin(player.position);
 	RenderWorld::draw_world(world, gfx.block_shaders, gfx.matriks, render_origin, render_distance);
 	find_hovered_block(gfx.projection_matrix, gfx.view_matrix_physical);
-	gui.draw(gfx);
+	gui.draw();
+
 	glfwSwapBuffers(gfx.window);
 
 	glfwPollEvents();
@@ -298,7 +299,7 @@ void Game::add_commands()
 	COMMAND("respawn")
 	{
 		game.player.respawn();
-		game.console.logger << "respawned\n";
+		game.console.logger << "respawned at " << glm::to_string(game.player.position) << "\n";
 	});
 
 	COMMAND_ARGS("save_pos")

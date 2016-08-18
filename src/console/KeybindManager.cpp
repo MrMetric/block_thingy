@@ -118,7 +118,7 @@ void KeybindManager::mousepress(const int button, const int action, const int mo
 	keypress(button, 0, action, mods);
 }
 
-void KeybindManager::joypress(int joystick, int button, bool pressed)
+void KeybindManager::joypress(const int joystick, const int button, const bool pressed)
 {
 	const auto i = joystate.find(button);
 	if(i == joystate.end())

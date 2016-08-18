@@ -21,7 +21,7 @@ using std::unique_ptr;
 // http://www.lighthouse3d.com/cg-topics/error-tracking-in-opengl/
 void printOglError(const string& file, const int line)
 {
-	GLenum glErr = glGetError();
+	const GLenum glErr = glGetError();
 	if(glErr != GL_NO_ERROR)
 	{
 		cout << "glError in file " << file << " @ line " << line << ": " << Util::gl_error_string(glErr) << "\n";

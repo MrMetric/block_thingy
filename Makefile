@@ -25,12 +25,13 @@ CXXFLAGS = $(CFLAGS) \
 	-Wno-shadow \
 	-Werror=delete-incomplete \
 	-Werror=deprecated \
+	-Werror=missing-field-initializers \
 	-DUSE_LIBPNG \
 	-DMSGPACK_DISABLE_LEGACY_NIL \
 	-DMSGPACK_DISABLE_LEGACY_CONVERT \
 
 LDFLAGS = \
-	`pkg-config --static --libs glfw3` \
+	`pkg-config --libs glfw3` \
 	-lpng \
 
 CFLAGS_DEBUG = $(CFLAGS) \

@@ -84,7 +84,7 @@ void add_surface(const Chunk& chunk, meshmap_t& meshes, surface_t& surface, cons
 
 		while(true)
 		{
-			Rectangle rekt = yield_rectangle(surface);
+			const Rectangle rekt = yield_rectangle(surface);
 			if(std::get<0>(rekt.key) == BlockType::none)
 			{
 				break;
@@ -140,9 +140,9 @@ void generate_surface(const Chunk& chunk, surface_t& surface, u8vec3& xyz, const
 	{
 		for(xyz[2] = 0; xyz[2] < CHUNK_SIZE; ++xyz[2])
 		{
-			uint_fast8_t x = xyz[i.x];
-			uint_fast8_t y = xyz[i.y];
-			uint_fast8_t z = xyz[i.z];
+			const uint_fast8_t x = xyz[i.x];
+			const uint_fast8_t y = xyz[i.y];
+			const uint_fast8_t z = xyz[i.z];
 			int_fast8_t o[] = {0, 0, 0};
 			o[i.y] = offset;
 
@@ -170,8 +170,8 @@ Rectangle yield_rectangle(surface_t& surface)
 			const BlockType type = std::get<0>(key);
 			if(type != BlockType::none)
 			{
-				BlockInChunk::value_type start_z = z;
-				BlockInChunk::value_type start_x = x;
+				const BlockInChunk::value_type start_z = z;
+				const BlockInChunk::value_type start_x = x;
 				BlockInChunk::value_type w = 1;
 				BlockInChunk::value_type h = 1;
 				row[x] = ChunkMesher::empty_key;

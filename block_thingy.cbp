@@ -72,6 +72,7 @@
 			<Add option="-Werror=deprecated" />
 			<Add option="-Werror=extra-tokens" />
 			<Add option="-Werror=invalid-pp-token" />
+			<Add option="-Werror=missing-field-initializers" />
 			<Add option="-Werror=return-type" />
 			<Add option="-Werror=uninitialized" />
 			<Add option="-Werror=unknown-pragmas" />
@@ -81,7 +82,7 @@
 			<Add option="-DMSGPACK_DISABLE_LEGACY_CONVERT" />
 		</Compiler>
 		<Linker>
-			<Add option="`pkg-config --static --libs glfw3`" />
+			<Add option="`pkg-config --libs glfw3`" />
 			<Add option="-lpng" />
 		</Linker>
 		<Unit filename="src/Camera.cpp" />

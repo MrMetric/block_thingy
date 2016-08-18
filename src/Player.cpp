@@ -260,8 +260,8 @@ double Player::move_to(double coord, const double move_var, const double offset,
 		return coord + move_var;
 	}
 
-	bool foot = block_is_at(block_pos);
-	bool head = block_is_at({block_pos.x, block_pos.y + 1, block_pos.z});
+	const bool foot = block_is_at(block_pos);
+	const bool head = block_is_at({block_pos.x, block_pos.y + 1, block_pos.z});
 	if(foot || head)
 	{
 		if(move_var > 0)

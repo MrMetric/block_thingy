@@ -1,6 +1,6 @@
 #version 330
 
-layout (location = 0) in vec2 position;
+layout(location = 0) in vec2 position;
 uniform mat4 matriks;
 
 void main()
