@@ -1,7 +1,6 @@
 #include "Game.hpp"
 
 #include <cmath>
-#include <ctime>
 #include <fstream>
 #include <functional>
 #include <iomanip>
@@ -19,6 +18,10 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/gtx/string_cast.hpp>
+
+#include <Poco/DateTimeFormatter.h>
+#include <Poco/Timestamp.h>
+#include <Poco/Timezone.h>
 
 #include "Camera.hpp"
 #include "FPSManager.hpp"
@@ -391,17 +394,10 @@ void Game::add_commands()
 		string filename;
 		if(args.size() == 0)
 		{
-			std::time_t time = std::time(nullptr);
-			std::tm t = *std::localtime(&time);
-			std::stringstream ss;
-			ss << t.tm_year + 1900 << "-";
-			ss << std::setfill('0') << std::setw(2) << t.tm_mon + 1 << "-";
-			ss << std::setfill('0') << std::setw(2) << t.tm_mday << " ";
-			ss << std::setfill('0') << std::setw(2) << t.tm_hour << ":";
-			ss << std::setfill('0') << std::setw(2) << t.tm_min << ":";
-			ss << std::setfill('0') << std::setw(2) << t.tm_sec;
-			ss << " (" << time << ").png";
-			filename = ss.str();
+			Poco::Timestamp t;
+			const int tzd = Poco::Timezone::tzd();
+			t += tzd * 1000000L;
+			filename = Poco::DateTimeFormatter::format(t, "%Y-%m-%d %H:%M:%s %z.png", tzd);
 		}
 		else if(args.size() == 1)
 		{
