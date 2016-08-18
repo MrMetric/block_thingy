@@ -22,6 +22,7 @@ If you have already cloned it and did not do that, then you need to init and upd
     $ git submodule update --init --recursive
 
 ### Dependencies
+ * [FreeType 2](https://www.freetype.org/)
  * [GLM](https://github.com/g-truc/glm): included as a submodule
  * glad: included in the repository
  * [GLFW 3](https://github.com/glfw/glfw)

@@ -6,6 +6,7 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+
 #include "graphics/OpenGL/ShaderProgram.hpp"
 #include "graphics/OpenGL/VertexArray.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
@@ -45,7 +46,6 @@ class Gfx
 
 		Graphics::OpenGL::VertexBuffer outline_vbo;
 		Graphics::OpenGL::VertexArray outline_vao;
-
 
 		bool is_fullscreen;
 		bool cull_face;

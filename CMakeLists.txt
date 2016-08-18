@@ -17,24 +17,31 @@ target_compile_features(block_thingy PRIVATE cxx_relaxed_constexpr)
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(GLFW REQUIRED glfw3)
+pkg_search_module(FREETYPE REQUIRED freetype2)
 
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE RelWithDebInfo)
 endif()
 
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	set(FSANITIZE -fsanitize=undefined,integer)
+endif()
+
 target_compile_options(block_thingy PRIVATE
-	$<$<CONFIG:Debug>:-fsanitize=undefined,integer>
-	$<$<CONFIG:RelWithDebInfo>:-fsanitize=undefined,integer>
+	$<$<CONFIG:Debug>:${FSANITIZE}>
+	$<$<CONFIG:RelWithDebInfo>:${FSANITIZE}>
 	-march=native
 	-DUSE_LIBPNG
 	-DMSGPACK_DISABLE_LEGACY_NIL
 	-DMSGPACK_DISABLE_LEGACY_CONVERT
 	${GLFW_CFLAGS}
+	${FREETYPE_CFLAGS}
 )
 target_link_libraries(block_thingy
-	$<$<CONFIG:Debug>:-fsanitize=undefined,integer>
-	$<$<CONFIG:RelWithDebInfo>:-fsanitize=undefined,integer>
+	$<$<CONFIG:Debug>:${FSANITIZE}>
+	$<$<CONFIG:RelWithDebInfo>:${FSANITIZE}>
 	${GLFW_LDFLAGS}
+	${FREETYPE_LDFLAGS}
 	-lpng
 	-lPocoFoundation
 )

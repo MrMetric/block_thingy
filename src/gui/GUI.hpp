@@ -2,6 +2,7 @@
 
 #include <glm/mat4x4.hpp>
 
+#include "graphics/Text.hpp"
 #include "graphics/OpenGL/ShaderProgram.hpp"
 #include "graphics/OpenGL/VertexArray.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
@@ -28,6 +29,8 @@ class GUI
 		Graphics::OpenGL::VertexBuffer crosshair_vbo;
 		Graphics::OpenGL::VertexArray crosshair_vao;
 		glm::dmat4 projection_matrix;
+		Graphics::Text text;
 
 		void draw_crosshair();
+		void draw_debug_text();
 };

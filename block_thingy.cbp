@@ -77,6 +77,7 @@
 			<Add option="-Werror=uninitialized" />
 			<Add option="-Werror=unknown-pragmas" />
 			<Add option="-Werror=unknown-warning-option" />
+			<Add option="`pkg-config --cflags freetype2`" />
 			<Add option="-DUSE_LIBPNG" />
 			<Add option="-DMSGPACK_DISABLE_LEGACY_NIL" />
 			<Add option="-DMSGPACK_DISABLE_LEGACY_CONVERT" />
@@ -84,6 +85,7 @@
 		<Linker>
 			<Add option="`pkg-config --libs glfw3`" />
 			<Add option="-lpng" />
+			<Add option="`pkg-config --libs freetype2`" />
 		</Linker>
 		<Unit filename="src/Camera.cpp" />
 		<Unit filename="src/Camera.hpp" />
@@ -141,6 +143,7 @@
 		<Unit filename="src/fwd/event/EventType.hpp" />
 		<Unit filename="src/fwd/graphics/Color.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/ShaderProgram.hpp" />
+		<Unit filename="src/fwd/graphics/OpenGL/Texture.hpp" />
 		<Unit filename="src/fwd/physics/RaycastHit.hpp" />
 		<Unit filename="src/fwd/position/BlockInWorld.hpp" />
 		<Unit filename="src/fwd/position/ChunkInWorld.hpp" />
@@ -150,12 +153,16 @@
 		<Unit filename="src/graphics/OpenGL/ShaderObject.hpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderProgram.cpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderProgram.hpp" />
+		<Unit filename="src/graphics/OpenGL/Texture.cpp" />
+		<Unit filename="src/graphics/OpenGL/Texture.hpp" />
 		<Unit filename="src/graphics/OpenGL/VertexArray.cpp" />
 		<Unit filename="src/graphics/OpenGL/VertexArray.hpp" />
 		<Unit filename="src/graphics/OpenGL/VertexBuffer.cpp" />
 		<Unit filename="src/graphics/OpenGL/VertexBuffer.hpp" />
 		<Unit filename="src/graphics/RenderWorld.cpp" />
 		<Unit filename="src/graphics/RenderWorld.hpp" />
+		<Unit filename="src/graphics/Text.cpp" />
+		<Unit filename="src/graphics/Text.hpp" />
 		<Unit filename="src/graphics/primitive.hpp" />
 		<Unit filename="src/gui/GUI.cpp" />
 		<Unit filename="src/gui/GUI.hpp" />

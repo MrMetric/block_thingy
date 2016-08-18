@@ -55,7 +55,6 @@ int main(int argc, char** argv)
 
 	static unique_ptr<Game> game = std::make_unique<Game>(gfx);
 
-
 	cout << "starting main loop\n";
 	while(!glfwWindowShouldClose(game->gfx.window))
 	{
