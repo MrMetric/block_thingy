@@ -48,7 +48,8 @@ Gfx::Gfx(GLFWwindow* window)
 	outline_vbo({3, GL_FLOAT}),
 	outline_vao(outline_vbo),
 	is_fullscreen(false),
-	fov(75)
+	fov(75),
+	gui_text("fonts/Anonymous Pro/Anonymous Pro.ttf", 24)
 {
 	int width;
 	int height;
@@ -67,6 +68,11 @@ void Gfx::hook_events(EventManager& event_manager)
 		window_size = e.window_size;
 		glViewport(0, 0, static_cast<GLsizei>(window_size.x), static_cast<GLsizei>(window_size.y));
 		update_projection_matrix();
+
+		const double width = e.window_size.x;
+		const double height = e.window_size.y;
+		gui_projection_matrix = glm::ortho(0.0, width, height, 0.0, -1.0, 1.0);
+		gui_text.set_projection_matrix(gui_projection_matrix);
 	});
 }
 
@@ -124,8 +130,6 @@ void Gfx::uninit_glfw()
 
 void Gfx::opengl_setup()
 {
-	glClearColor(0.0, 0.0, 0.1, 0.0);
-
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -320,7 +324,6 @@ GLFWwindow* Gfx::make_window(bool is_fullscreen)
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1); // enable vsync
 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
 
 	return window;

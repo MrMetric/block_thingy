@@ -18,7 +18,7 @@
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
 #include "event/EventManager.hpp"
-#include "gui/GUI.hpp"
+#include "graphics/GUI/Base.hpp"
 #include "physics/RaycastHit.hpp"
 #include "position/ChunkInWorld.hpp"
 #include "util/Property.hpp"
@@ -40,6 +40,11 @@ class Game
 		void operator=(const Game&) = delete;
 
 		void draw();
+		void step_world();
+		void draw_world();
+		void open_gui(std::unique_ptr<Graphics::GUI::Base>);
+		void quit();
+
 		#ifdef USE_LIBPNG
 		void screenshot(const std::string& filename);
 		#endif
@@ -61,7 +66,8 @@ class Game
 		std::shared_ptr<Player> player_ptr;
 		Player& player;
 		Console console;
-		GUI gui;
+		KeybindManager keybinder;
+		std::unique_ptr<Graphics::GUI::Base> gui;
 
 		Property<bool> wireframe;
 
@@ -71,11 +77,8 @@ class Game
 
 		Position::ChunkInWorld::value_type render_distance;
 
-		void draw_world();
 		void find_hovered_block(const glm::dmat4& projection_matrix, const glm::dmat4& view_matrix);
 
 		std::vector<Command> commands;
 		void add_commands();
-
-		KeybindManager keybinder;
 };

@@ -71,6 +71,7 @@
 			<Add option="-Werror=delete-incomplete" />
 			<Add option="-Werror=deprecated" />
 			<Add option="-Werror=extra-tokens" />
+			<Add option="-Werror=inconsistent-missing-override" />
 			<Add option="-Werror=invalid-pp-token" />
 			<Add option="-Werror=missing-field-initializers" />
 			<Add option="-Werror=return-type" />
@@ -131,6 +132,7 @@
 		<Unit filename="src/event/type/Event_enter_block.hpp" />
 		<Unit filename="src/event/type/Event_window_size_change.cpp" />
 		<Unit filename="src/event/type/Event_window_size_change.hpp" />
+		<Unit filename="src/fwd/Game.hpp" />
 		<Unit filename="src/fwd/Gfx.hpp" />
 		<Unit filename="src/fwd/Player.hpp" />
 		<Unit filename="src/fwd/World.hpp" />
@@ -149,6 +151,12 @@
 		<Unit filename="src/fwd/position/ChunkInWorld.hpp" />
 		<Unit filename="src/graphics/Color.cpp" />
 		<Unit filename="src/graphics/Color.hpp" />
+		<Unit filename="src/graphics/GUI/Base.cpp" />
+		<Unit filename="src/graphics/GUI/Base.hpp" />
+		<Unit filename="src/graphics/GUI/Pause.cpp" />
+		<Unit filename="src/graphics/GUI/Pause.hpp" />
+		<Unit filename="src/graphics/GUI/Play.cpp" />
+		<Unit filename="src/graphics/GUI/Play.hpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderObject.cpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderObject.hpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderProgram.cpp" />
@@ -164,8 +172,6 @@
 		<Unit filename="src/graphics/Text.cpp" />
 		<Unit filename="src/graphics/Text.hpp" />
 		<Unit filename="src/graphics/primitive.hpp" />
-		<Unit filename="src/gui/GUI.cpp" />
-		<Unit filename="src/gui/GUI.hpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/physics/PhysicsUtil.cpp" />
 		<Unit filename="src/physics/PhysicsUtil.hpp" />

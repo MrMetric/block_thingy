@@ -7,6 +7,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
+#include "graphics/Text.hpp"
 #include "graphics/OpenGL/ShaderProgram.hpp"
 #include "graphics/OpenGL/VertexArray.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
@@ -50,6 +51,9 @@ class Gfx
 		bool is_fullscreen;
 		bool cull_face;
 		double fov;
+
+		Graphics::Text gui_text;
+		glm::dmat4 gui_projection_matrix;
 
 		void hook_events(EventManager&);
 		static GLFWwindow* init_glfw();

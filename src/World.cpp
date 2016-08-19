@@ -45,6 +45,7 @@ uint64_t position_hasher(const T& pos)
 World::World(const string& file_path)
 	:
 	mesher(std::make_unique<GreedyMesher>()),
+	ticks(0),
 	chunks(0, position_hasher<ChunkInWorld>),
 	last_chunk(nullptr),
 	chunks_to_save(0, position_hasher<ChunkInWorld>),
@@ -420,6 +421,7 @@ void World::step(double delta_time)
 	{
 		p.second->step(delta_time);
 	}
+	ticks += 1;
 }
 
 shared_ptr<Player> World::add_player(const string& name)
@@ -457,4 +459,14 @@ void World::save()
 			file.save_chunk(*chunk);
 		}
 	}
+}
+
+uint_fast64_t World::get_ticks()
+{
+	return ticks;
+}
+
+double World::get_time()
+{
+	return ticks / 60.0;
 }

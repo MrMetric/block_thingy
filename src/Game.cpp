@@ -35,7 +35,9 @@
 #include "event/EventManager.hpp"
 #include "event/type/Event_window_size_change.hpp"
 #include "graphics/RenderWorld.hpp"
-#include "gui/GUI.hpp"
+#include "graphics/GUI/Base.hpp"
+#include "graphics/GUI/Pause.hpp"
+#include "graphics/GUI/Play.hpp"
 #include "physics/PhysicsUtil.hpp"
 #include "physics/RaycastHit.hpp"
 #include "position/BlockInChunk.hpp"
@@ -58,17 +60,19 @@ Game::Game(Gfx& gfx)
 	player_ptr(world.add_player("test_player")),
 	player(*player_ptr),
 	console(*this),
-	gui(event_manager),
+	keybinder(console),
 	wireframe(false, [](const bool wireframe)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 	}),
 	delta_time(0),
 	fps(999),
-	render_distance(3),
-	keybinder(console)
+	render_distance(3)
 {
 	Game::instance = this;
+
+	gui = std::make_unique<Graphics::GUI::Play>(*this);
+	gui->init();
 
 	gfx.hook_events(event_manager);
 
@@ -83,11 +87,8 @@ Game::Game(Gfx& gfx)
 void Game::draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	gfx.set_camera_view(camera.position, camera.rotation);
-	Position::BlockInWorld render_origin(player.position);
-	RenderWorld::draw_world(world, gfx.block_shaders, gfx.matriks, render_origin, render_distance);
-	find_hovered_block(gfx.projection_matrix, gfx.view_matrix_physical);
-	gui.draw();
+
+	gui->draw();
 
 	glfwSwapBuffers(gfx.window);
 
@@ -131,11 +132,40 @@ void Game::draw()
 	glfwSetWindowTitle(gfx.window, ss.str().c_str());
 
 	delta_time = fps.enforceFPS();
+}
 
+void Game::step_world()
+{
 	player.rotation = camera.rotation;
 	world.step(delta_time);
 	camera.position = player.position;
 	camera.position.y += player.get_eye_height();
+}
+
+void Game::draw_world()
+{
+	gfx.set_camera_view(camera.position, camera.rotation);
+	Position::BlockInWorld render_origin(player.position);
+	RenderWorld::draw_world(world, gfx.block_shaders, gfx.matriks, render_origin, render_distance);
+	find_hovered_block(gfx.projection_matrix, gfx.view_matrix_physical);
+}
+
+void Game::open_gui(std::unique_ptr<Graphics::GUI::Base> gui)
+{
+	if(gui == nullptr)
+	{
+		console.error_logger << "Tried to open a null GUI\n";
+		return;
+	}
+	gui->init();
+	gui->parent = std::move(this->gui);
+	this->gui = std::move(gui);
+}
+
+void Game::quit()
+{
+	world.save();
+	glfwSetWindowShouldClose(gfx.window, GL_TRUE);
 }
 
 #ifdef USE_LIBPNG
@@ -158,18 +188,17 @@ void Game::update_framebuffer_size(const window_size_t& window_size)
 
 void Game::keypress(const int key, const int scancode, const int action, const int mods)
 {
-	keybinder.keypress(key, scancode, action, mods);
+	gui->keypress(key, scancode, action, mods);
 }
 
-static BlockType block_type = BlockType::test;
 void Game::mousepress(const int button, const int action, const int mods)
 {
-	keybinder.mousepress(button, action, mods);
+	gui->mousepress(button, action, mods);
 }
 
 void Game::mousemove(const double x, const double y)
 {
-	camera.mousemove(x, y);
+	gui->mousemove(x, y);
 }
 
 void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dmat4& view_matrix)
@@ -194,6 +223,7 @@ void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dm
 	}
 }
 
+static BlockType block_type = BlockType::test;
 void Game::add_commands()
 {
 	#define COMMAND_(name) commands.emplace_back(console, name, [](Game& game
@@ -202,8 +232,7 @@ void Game::add_commands()
 
 	COMMAND("quit")
 	{
-		game.world.save();
-		glfwSetWindowShouldClose(game.gfx.window, GL_TRUE);
+		game.quit();
 	});
 
 	COMMAND("break_block")
@@ -557,6 +586,35 @@ void Game::add_commands()
 				}
 			}
 		}
+	});
+
+	COMMAND_ARGS("open_gui")
+	{
+		if(args.size() != 1)
+		{
+			game.console.error_logger << "Usage: open_gui <GUI name>\n";
+			return;
+		}
+		const std::string name = args[0];
+		std::unique_ptr<Graphics::GUI::Base> gui;
+		if(name == "pause")
+		{
+			gui = std::make_unique<Graphics::GUI::Pause>(game);
+		}
+		else if(name == "console")
+		{
+			// TODO
+		}
+		else
+		{
+			game.console.error_logger << "No such GUI: " << name << "\n";
+			return;
+		}
+		game.open_gui(std::move(gui));
+	});
+	COMMAND("close_gui")
+	{
+		game.gui->close();
 	});
 
 	#undef COMMAND_ARGS

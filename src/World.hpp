@@ -58,7 +58,11 @@ class World
 
 		std::unique_ptr<ChunkMesher> mesher;
 
+		uint_fast64_t get_ticks();
+		double get_time();
+
 	private:
+		uint_fast64_t ticks;
 		world_map_t chunks;
 		mutable Position::ChunkInWorld last_key;
 		mutable std::shared_ptr<Chunk> last_chunk;

@@ -17,15 +17,14 @@ bind q 'cam.rot z -5'
 bind e 'cam.rot z +5'
 bind f2 screenshot
 bind f11 toggle_fullscreen
-bind esc quit
+bind esc close_gui
+bind ` 'open_gui console'
 bind , toggle_wireframe
 bind b toggle_cull_face
 bind = render_distance++
 bind - render_distance--
 bind j block_type++
-bind x 'fov 75'
-bind c 'fov -1'
-bind v 'fov +1'
+
 bind joy_xbox360_L3 block_type--
 bind joy_xbox360_R3 block_type++
 bind joy_xbox360_L1 break_block

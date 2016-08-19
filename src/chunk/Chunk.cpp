@@ -148,7 +148,7 @@ void Chunk::render(const bool transluscent_pass)
 		glUseProgram(shader.get_name());
 
 		shader.uniform("position_offset", static_cast<glm::vec3>(position_render_offset));
-		shader.uniform("global_time", static_cast<float>(glfwGetTime())); // TODO: use double when available
+		shader.uniform("global_time", static_cast<float>(owner.get_time())); // TODO: use double when available
 
 		const Graphics::Color color = std::get<1>(key);
 		shader.uniform("light", color.to_vec3());
