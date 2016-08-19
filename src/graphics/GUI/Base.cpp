@@ -15,7 +15,7 @@ Base::Base(Game& game)
 	:
 	game(game)
 {
-	game.event_manager.add_handler(EventType::window_size_change, [this](const Event& event)
+	event_handler = game.event_manager.add_handler(EventType::window_size_change, [this](const Event& event)
 	{
 		auto e = static_cast<const Event_window_size_change&>(event);
 		update_framebuffer_size(e.window_size);
@@ -24,6 +24,7 @@ Base::Base(Game& game)
 
 Base::~Base()
 {
+	game.event_manager.unadd_handler(event_handler);
 }
 
 void Base::init()
@@ -69,6 +70,10 @@ void Base::mousepress(const int button, const int action, const int mods)
 }
 
 void Base::mousemove(const double x, const double y)
+{
+}
+
+void Base::update_framebuffer_size(const window_size_t& window_size)
 {
 }
 

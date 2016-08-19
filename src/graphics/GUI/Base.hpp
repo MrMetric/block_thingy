@@ -5,6 +5,7 @@
 #include <glm/mat4x4.hpp>
 
 #include "fwd/Game.hpp"
+#include "fwd/event/EventManager.hpp"
 #include "graphics/Text.hpp"
 
 #include "types/window_size_t.hpp"
@@ -36,7 +37,10 @@ class Base
 		Game& game;
 
 		virtual void draw_gui() = 0;
-		virtual void update_framebuffer_size(const window_size_t&) = 0;
+		virtual void update_framebuffer_size(const window_size_t&);
+
+	private:
+		event_handler_id_t event_handler;
 };
 
 } // namespace GUI

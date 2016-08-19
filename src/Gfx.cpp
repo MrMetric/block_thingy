@@ -49,7 +49,10 @@ Gfx::Gfx(GLFWwindow* window)
 	outline_vao(outline_vbo),
 	is_fullscreen(false),
 	fov(75),
-	gui_text("fonts/Anonymous Pro/Anonymous Pro.ttf", 24)
+	gui_text("fonts/Anonymous Pro/Anonymous Pro.ttf", 24),
+	s_gui_shape("shaders/gui_shape"),
+	gui_rectangle_vbo({2, GL_FLOAT}),
+	gui_rectangle_vao(gui_rectangle_vbo)
 {
 	int width;
 	int height;
@@ -73,6 +76,7 @@ void Gfx::hook_events(EventManager& event_manager)
 		const double height = e.window_size.y;
 		gui_projection_matrix = glm::ortho(0.0, width, height, 0.0, -1.0, 1.0);
 		gui_text.set_projection_matrix(gui_projection_matrix);
+		s_gui_shape.uniform("matriks", gui_projection_matrix);
 	});
 }
 
@@ -327,4 +331,29 @@ GLFWwindow* Gfx::make_window(bool is_fullscreen)
 	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
 
 	return window;
+}
+
+void Gfx::draw_rectangle(const glm::dvec2& center, const glm::dvec2& offset, const glm::dvec2& size, const glm::dvec4& color)
+{
+	const float w = static_cast<float>(size.x);
+	const float h = static_cast<float>(size.y);
+	const float x = static_cast<float>(center.x * window_size.x) - w / 2 + offset.x;
+	const float y = static_cast<float>(center.y * window_size.y) - h / 2 + offset.y;
+
+	float v[] =
+	{
+		x    , y    ,
+		x + w, y    ,
+		x + w, y + h,
+
+		x    , y    ,
+		x    , y + h,
+		x + w, y + h,
+	};
+
+	glUseProgram(s_gui_shape.get_name());
+	s_gui_shape.uniform("color", glm::vec4(color));
+
+	gui_rectangle_vbo.data(sizeof(v), v, Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw);
+	gui_rectangle_vao.draw(GL_TRIANGLES, 0, 6);
 }

@@ -14,10 +14,7 @@ namespace GUI {
 
 Play::Play(Game& game)
 	:
-	Base(game),
-	s_crosshair("shaders/crosshair"),
-	crosshair_vbo({2, GL_FLOAT}),
-	crosshair_vao(crosshair_vbo)
+	Base(game)
 {
 }
 
@@ -66,8 +63,9 @@ void Play::draw_gui()
 
 void Play::draw_crosshair()
 {
-	glUseProgram(s_crosshair.get_name());
-	crosshair_vao.draw(GL_TRIANGLES, 0, 12);
+	const glm::dvec4 crosshair_color(1.0);
+	game.gfx.draw_rectangle({0.5, 0.5}, {0, 0}, {2, 32}, crosshair_color);
+	game.gfx.draw_rectangle({0.5, 0.5}, {0, 0}, {32, 2}, crosshair_color);
 }
 
 void Play::draw_debug_text()
@@ -78,31 +76,6 @@ void Play::draw_debug_text()
 	ss << "y: " << pos.y << "\n";
 	ss << "z: " << pos.z << "\n";
 	game.gfx.gui_text.draw(ss.str(), {8.0, 8.0});
-}
-
-void Play::update_framebuffer_size(const window_size_t& window_size)
-{
-	float midX = window_size.x / 2.0f;
-	float midY = window_size.y / 2.0f;
-	float crosshair_vertex[] = {
-		midX - 16, midY - 1,
-		midX - 16, midY + 1,
-		midX + 16, midY + 1,
-		midX - 16, midY - 1,
-		midX + 16, midY + 1,
-		midX + 16, midY - 1,
-
-		midX - 1, midY - 16,
-		midX - 1, midY + 16,
-		midX + 1, midY + 16,
-		midX - 1, midY - 16,
-		midX + 1, midY + 16,
-		midX + 1, midY - 16,
-	};
-	const auto usage_hint = Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw;
-	crosshair_vbo.data(sizeof(crosshair_vertex), crosshair_vertex, usage_hint);
-
-	s_crosshair.uniform("matriks", glm::mat4(game.gfx.gui_projection_matrix));
 }
 
 } // namespace GUI

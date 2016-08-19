@@ -16,7 +16,6 @@ class Pause : public Base
 
 	private:
 		void draw_gui() override;
-		void update_framebuffer_size(const window_size_t&) override;
 };
 
 } // namespace GUI

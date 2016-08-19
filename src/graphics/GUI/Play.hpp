@@ -25,11 +25,6 @@ class Play : public Base
 		void draw_gui() override;
 		void draw_crosshair();
 		void draw_debug_text();
-		void update_framebuffer_size(const window_size_t&) override;
-
-		Graphics::OpenGL::ShaderProgram s_crosshair;
-		Graphics::OpenGL::VertexBuffer crosshair_vbo;
-		Graphics::OpenGL::VertexArray crosshair_vao;
 };
 
 } // namespace GUI

@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include <glm/mat4x4.hpp>
+#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
@@ -76,6 +77,12 @@ class Gfx
 		#ifdef USE_LIBPNG
 		static void write_png_RGB(const char* filename, uint8_t* buf, uint_fast32_t width, uint_fast32_t height, bool reverse_rows = false);
 		#endif
+
+		// for GUIs
+		Graphics::OpenGL::ShaderProgram s_gui_shape;
+		Graphics::OpenGL::VertexBuffer gui_rectangle_vbo;
+		Graphics::OpenGL::VertexArray gui_rectangle_vao;
+		void draw_rectangle(const glm::dvec2& center, const glm::dvec2& offset, const glm::dvec2& size, const glm::dvec4& color);
 
 	private:
 		static GLFWwindow* make_window(bool is_fullscreen);

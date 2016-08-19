@@ -26,10 +26,9 @@ void Pause::draw()
 void Pause::draw_gui()
 {
 	game.gfx.gui_text.draw("paused", {8, 100});
-}
 
-void Pause::update_framebuffer_size(const window_size_t& window_size)
-{
+	game.gfx.draw_rectangle({0.5, 0.5}, {0, 0}, {256, 64}, {0.0, 0.0, 0.0, 0.75});
+	game.gfx.draw_rectangle({0.5, 0.5}, {0, 70}, {256, 64}, {0.0, 0.0, 0.0, 0.75});
 }
 
 } // namespace GUI
