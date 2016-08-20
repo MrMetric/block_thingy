@@ -1,12 +1,15 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include <glm/mat4x4.hpp>
+#include <glm/vec2.hpp>
 
 #include "fwd/Game.hpp"
 #include "fwd/event/EventManager.hpp"
 #include "graphics/Text.hpp"
+#include "graphics/GUI/WidgetContainer.hpp"
 
 #include "types/window_size_t.hpp"
 
@@ -16,7 +19,7 @@ namespace GUI {
 class Base
 {
 	public:
-		Base(Game&);
+		Base(Game&, WidgetContainerMode root_mode);
 		virtual ~Base();
 
 		Base(Base&&) = delete;
@@ -33,11 +36,12 @@ class Base
 
 		std::unique_ptr<Base> parent;
 
-	protected:
 		Game& game;
 
+	protected:
 		virtual void draw_gui() = 0;
 		virtual void update_framebuffer_size(const window_size_t&);
+		WidgetContainer root;
 
 	private:
 		event_handler_id_t event_handler;

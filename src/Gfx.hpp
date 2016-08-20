@@ -82,7 +82,7 @@ class Gfx
 		Graphics::OpenGL::ShaderProgram s_gui_shape;
 		Graphics::OpenGL::VertexBuffer gui_rectangle_vbo;
 		Graphics::OpenGL::VertexArray gui_rectangle_vao;
-		void draw_rectangle(const glm::dvec2& center, const glm::dvec2& offset, const glm::dvec2& size, const glm::dvec4& color);
+		void draw_rectangle(const glm::dvec2& position, const glm::dvec2& size, const glm::dvec4& color);
 
 	private:
 		static GLFWwindow* make_window(bool is_fullscreen);

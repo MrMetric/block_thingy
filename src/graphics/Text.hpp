@@ -31,6 +31,8 @@ class Text
 		void set_projection_matrix(const glm::dmat4& projection_matrix);
 		void draw(const std::string&, glm::dvec2 pos);
 
+		glm::dvec2 get_size(std::string);
+
 		struct Character
 		{
 			OpenGL::Texture		texture;

@@ -157,6 +157,12 @@
 		<Unit filename="src/graphics/GUI/Pause.hpp" />
 		<Unit filename="src/graphics/GUI/Play.cpp" />
 		<Unit filename="src/graphics/GUI/Play.hpp" />
+		<Unit filename="src/graphics/GUI/Widget/Base.cpp" />
+		<Unit filename="src/graphics/GUI/Widget/Base.hpp" />
+		<Unit filename="src/graphics/GUI/Widget/Button.cpp" />
+		<Unit filename="src/graphics/GUI/Widget/Button.hpp" />
+		<Unit filename="src/graphics/GUI/WidgetContainer.cpp" />
+		<Unit filename="src/graphics/GUI/WidgetContainer.hpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderObject.cpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderObject.hpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderProgram.cpp" />

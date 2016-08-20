@@ -14,7 +14,7 @@ namespace GUI {
 
 Play::Play(Game& game)
 	:
-	Base(game)
+	Base(game, WidgetContainerMode::rows)
 {
 }
 
@@ -64,8 +64,12 @@ void Play::draw_gui()
 void Play::draw_crosshair()
 {
 	const glm::dvec4 crosshair_color(1.0);
-	game.gfx.draw_rectangle({0.5, 0.5}, {0, 0}, {2, 32}, crosshair_color);
-	game.gfx.draw_rectangle({0.5, 0.5}, {0, 0}, {32, 2}, crosshair_color);
+
+	// TODO: rectangle widget
+	const double x = game.gfx.window_size.x / 2.0;
+	const double y = game.gfx.window_size.y / 2.0;
+	game.gfx.draw_rectangle({x - 1, y - 16}, {2, 32}, crosshair_color);
+	game.gfx.draw_rectangle({x - 16, y - 1}, {32, 2}, crosshair_color);
 }
 
 void Play::draw_debug_text()

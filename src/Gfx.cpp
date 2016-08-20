@@ -333,12 +333,12 @@ GLFWwindow* Gfx::make_window(bool is_fullscreen)
 	return window;
 }
 
-void Gfx::draw_rectangle(const glm::dvec2& center, const glm::dvec2& offset, const glm::dvec2& size, const glm::dvec4& color)
+void Gfx::draw_rectangle(const glm::dvec2& position, const glm::dvec2& size, const glm::dvec4& color)
 {
 	const float w = static_cast<float>(size.x);
 	const float h = static_cast<float>(size.y);
-	const float x = static_cast<float>(center.x * window_size.x) - w / 2 + offset.x;
-	const float y = static_cast<float>(center.y * window_size.y) - h / 2 + offset.y;
+	const float x = static_cast<float>(position.x);
+	const float y = static_cast<float>(position.y);
 
 	float v[] =
 	{

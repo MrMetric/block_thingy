@@ -1,5 +1,6 @@
 #include "Text.hpp"
 
+#include <algorithm>
 #include <iostream>
 #include <stdint.h>
 
@@ -124,6 +125,64 @@ void Text::draw(const string& s, glm::dvec2 pos)
 
 		pos.x += ch.x_offset;
 	}
+}
+
+// TODO: deduplicate with draw
+glm::dvec2 Text::get_size(std::string s)
+{
+	while(s.back() == '\n' || s.back() == '\t')
+	{
+		s.pop_back();
+	}
+	if(s == "")
+	{
+		return {0, 0};
+	}
+
+	uint_fast32_t line_i = 0;
+	std::vector<double> widths;
+	glm::dvec2 size(0, chars['H'].size.y);
+	for(size_t i = 0; i < s.length(); ++i)
+	{
+		const char c = s[i];
+		if(c == '\n')
+		{
+			widths.push_back(size.x);
+			size.x = 0;
+			size.y += height;
+			line_i = 0;
+			continue;
+		}
+		if(c == '\t')
+		{
+			// TODO?: elastic tabstops
+			uint_fast8_t width = tab_width - (line_i % tab_width);
+			size.x += chars[' '].x_offset * width;
+			line_i += width;
+			continue;
+		}
+		++line_i;
+
+		auto ci = chars.find(c);
+		if(ci == chars.cend())
+		{
+			// TODO
+			ci = chars.find('?');
+		}
+		Character& ch = ci->second;
+
+		if(i != s.length() - 1)
+		{
+			size.x += ch.x_offset;
+		}
+		else
+		{
+			size.x += ch.size.x;
+		}
+	}
+	widths.push_back(size.x);
+
+	return {*std::max_element(widths.cbegin(), widths.cend()), size.y};
 }
 
 Text::Character load_char(const FT_Face& face, const FT_ULong c)
