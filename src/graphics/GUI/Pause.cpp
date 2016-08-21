@@ -9,27 +9,32 @@ namespace GUI {
 
 Pause::Pause(Game& game)
 	:
-	Base(game, WidgetContainerMode::rows)
+	Base(game, WidgetContainerMode::widgets)
 {
-	//root.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0, -140}, "Resume"     );
-	//root.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0, - 70}, "Save"       );
-	//root.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0,    0}, "Save & Exit");
-	//root.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0,   70}, "Exit"       );
-	//root.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0,  140}, "Kill Self"  );
+	root.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0, -105}, "Resume",
+	[&game]()
+	{
+		game.console.run_line("close_gui");
+	});
 
-	auto& row1 = root.add(WidgetContainerMode::widgets);
-	row1.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0, 0}, "row 1");
+	root.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0, -35}, "Save",
+	[&game]()
+	{
+		game.console.run_line("save");
+	});
 
-	auto& row2 = root.add(WidgetContainerMode::cols);
+	root.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0, 35}, "Save & Quit",
+	[&game]()
+	{
+		game.console.run_line("save");
+		game.console.run_line("quit");
+	});
 
-	auto& col1 = row2.add(WidgetContainerMode::widgets);
-	col1.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0, 0}, "col 1");
-
-	auto& col2 = row2.add(WidgetContainerMode::rows);
-	auto& col2_row1 = col2.add(WidgetContainerMode::widgets);
-	auto& col2_row2 = col2.add(WidgetContainerMode::widgets);
-	col2_row1.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0, 0}, "col 2 row 1");
-	col2_row2.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0, 0}, "col 2 row 2");
+	root.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0, 105}, "Quit",
+	[&game]()
+	{
+		game.console.run_line("quit");
+	});
 }
 
 void Pause::init()
@@ -45,7 +50,7 @@ void Pause::draw()
 
 void Pause::draw_gui()
 {
-	game.gfx.gui_text.draw("paused", {8, 100});
+	game.gfx.gui_text.draw("paused", {8, 150});
 }
 
 } // namespace GUI

@@ -165,7 +165,6 @@ void Game::open_gui(std::unique_ptr<Graphics::GUI::Base> gui)
 
 void Game::quit()
 {
-	world.save();
 	glfwSetWindowShouldClose(gfx.window, GL_TRUE);
 }
 
@@ -230,6 +229,10 @@ void Game::add_commands()
 	#define COMMAND(name) COMMAND_(name))
 	#define COMMAND_ARGS(name) COMMAND_(name), const std::vector<string>& args)
 
+	COMMAND("save")
+	{
+		game.world.save();
+	});
 	COMMAND("quit")
 	{
 		game.quit();

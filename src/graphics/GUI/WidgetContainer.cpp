@@ -21,6 +21,7 @@ void WidgetContainer::draw()
 		{
 			for(auto& widget : widgets)
 			{
+				if(widget == nullptr) continue; // this can happen when the GUI closes
 				widget->draw();
 			}
 			break;
@@ -30,6 +31,7 @@ void WidgetContainer::draw()
 		{
 			for(auto& container : containers)
 			{
+				if(container == nullptr) continue; // this can happen when the GUI closes
 				container->draw();
 			}
 			break;
@@ -45,6 +47,7 @@ void WidgetContainer::mousepress(const int button, const int action, const int m
 		{
 			for(auto& widget : widgets)
 			{
+				if(widget == nullptr) continue; // this can happen when the GUI closes
 				widget->mousepress(button, action, mods);
 			}
 			break;
@@ -54,6 +57,7 @@ void WidgetContainer::mousepress(const int button, const int action, const int m
 		{
 			for(auto& container : containers)
 			{
+				if(container == nullptr) continue; // this can happen when the GUI closes
 				container->mousepress(button, action, mods);
 			}
 			break;
@@ -69,6 +73,7 @@ void WidgetContainer::mousemove(const double x, const double y)
 		{
 			for(auto& widget : widgets)
 			{
+				if(widget == nullptr) continue; // this can happen when the GUI closes
 				widget->mousemove(x, y);
 			}
 			break;
@@ -78,6 +83,7 @@ void WidgetContainer::mousemove(const double x, const double y)
 		{
 			for(auto& container : containers)
 			{
+				if(container == nullptr) continue; // this can happen when the GUI closes
 				container->mousemove(x, y);
 			}
 			break;
@@ -116,6 +122,7 @@ void WidgetContainer::update_children()
 		{
 			for(auto& widget : widgets)
 			{
+				if(widget == nullptr) continue; // this can happen when the GUI closes
 				widget->update_container(position, size);
 			}
 			break;
@@ -129,6 +136,7 @@ void WidgetContainer::update_children()
 			double row_height = size.y / containers.size();
 			for(size_t i = 0; i < containers.size(); ++i)
 			{
+				if(containers[i] == nullptr) continue; // this can happen when the GUI closes
 				containers[i]->update_container({position.x, position.y + i * row_height}, {size.x, row_height});
 			}
 			break;
@@ -142,6 +150,7 @@ void WidgetContainer::update_children()
 			const double col_width = size.x / containers.size();
 			for(size_t i = 0; i < containers.size(); ++i)
 			{
+				if(containers[i] == nullptr) continue; // this can happen when the GUI closes
 				containers[i]->update_container({position.x + i * col_width, position.y}, {col_width, size.y});
 			}
 			break;
