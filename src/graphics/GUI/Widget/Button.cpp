@@ -9,15 +9,14 @@ namespace Graphics {
 namespace GUI {
 namespace Widget {
 
-Button::Button(
-			WidgetContainer& owner,
-			const glm::dvec2& position,
-			const glm::dvec2& offset,
-			const std::string& text,
-			std::function<void()> click_handler
-	)
-	:
-	Base(owner, position, offset, {256, 64}),
+Button::Button
+(
+	WidgetContainer& owner,
+	const std::string& text,
+	std::function<void()> click_handler
+)
+:
+	Base(owner, {256, 64}),
 	color(0, 0, 0, 0.8),
 	hover_color(0, 0, 0, 1),
 	hover(false),

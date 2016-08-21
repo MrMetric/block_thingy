@@ -41,7 +41,7 @@ class WidgetContainer
 			}
 
 			widgets.emplace_back(std::make_unique<T>(*this, std::forward<Args>(args)...));
-			widgets.back()->update_container(position, size);
+			update_children();
 			return *dynamic_cast<T*>(widgets.back().get());
 		}
 

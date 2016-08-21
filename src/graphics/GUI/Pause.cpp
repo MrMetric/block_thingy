@@ -11,26 +11,26 @@ Pause::Pause(Game& game)
 	:
 	Base(game, WidgetContainerMode::widgets)
 {
-	root.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0, -105}, "Resume",
+	root.add<Widget::Button>("Resume",
 	[&game]()
 	{
 		game.console.run_line("close_gui");
 	});
 
-	root.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0, -35}, "Save",
+	root.add<Widget::Button>("Save",
 	[&game]()
 	{
 		game.console.run_line("save");
 	});
 
-	root.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0, 35}, "Save & Quit",
+	root.add<Widget::Button>("Save & Quit",
 	[&game]()
 	{
 		game.console.run_line("save");
 		game.console.run_line("quit");
 	});
 
-	root.add<Widget::Button>(glm::dvec2{0.5, 0.5}, glm::dvec2{0, 105}, "Quit",
+	root.add<Widget::Button>("Quit",
 	[&game]()
 	{
 		game.console.run_line("quit");

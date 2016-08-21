@@ -120,10 +120,24 @@ void WidgetContainer::update_children()
 	{
 		case WidgetContainerMode::widgets:
 		{
+			if(widgets.size() == 0)
+			{
+				break;
+			}
+
+			const double spacing = 8;
+			double total_height = 0;
 			for(auto& widget : widgets)
 			{
-				if(widget == nullptr) continue; // this can happen when the GUI closes
-				widget->update_container(position, size);
+				total_height += widget->get_size().y;
+			}
+			total_height += spacing * (widgets.size() - 1);
+			double y = -total_height / 2;
+			for(auto& widget : widgets)
+			{
+				const double o = widget->get_size().y * widget->get_origin().y;
+				widget->update_container(position, size, {0, y + o});
+				y += widget->get_size().y + spacing;
 			}
 			break;
 		}

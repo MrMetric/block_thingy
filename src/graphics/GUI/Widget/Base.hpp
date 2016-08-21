@@ -14,7 +14,12 @@ namespace Widget {
 class Base
 {
 	public:
-		Base(WidgetContainer& owner, const glm::dvec2& position, const glm::dvec2& offset, const glm::dvec2& size, const glm::dvec2& origin = {0.5, 0.5});
+		Base
+		(
+			WidgetContainer& owner,
+			const glm::dvec2& size,
+			const glm::dvec2& origin = {0.5, 0.5}
+		);
 		virtual ~Base();
 
 		virtual void draw() = 0;
@@ -22,13 +27,19 @@ class Base
 		virtual void mousepress(int button, int action, int mods) = 0;
 		virtual void mousemove(double x, double y) = 0;
 
-		void update_container(const glm::dvec2& container_position, const glm::dvec2& container_size);
+		void update_container
+		(
+			const glm::dvec2& container_position,
+			const glm::dvec2& container_size,
+			const glm::dvec2& offset
+		);
+
+		glm::dvec2 get_size();
+		glm::dvec2 get_origin();
 
 	protected:
 		WidgetContainer& owner;
 
-		glm::dvec2 position;
-		glm::dvec2 offset;
 		glm::dvec2 size;
 		glm::dvec2 origin;
 		glm::dvec2 real_position;

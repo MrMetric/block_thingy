@@ -17,10 +17,9 @@ namespace Widget {
 class Button : public Base
 {
 	public:
-		Button(
+		Button
+		(
 			WidgetContainer& owner,
-			const glm::dvec2& position,
-			const glm::dvec2& offset,
 			const std::string& text,
 			std::function<void()> click_handler
 		);

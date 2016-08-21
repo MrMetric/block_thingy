@@ -9,11 +9,14 @@ namespace Graphics {
 namespace GUI {
 namespace Widget {
 
-Base::Base(WidgetContainer& owner, const glm::dvec2& position, const glm::dvec2& offset, const glm::dvec2& size, const glm::dvec2& origin)
-	:
+Base::Base
+(
+	WidgetContainer& owner,
+	const glm::dvec2& size,
+	const glm::dvec2& origin
+)
+:
 	owner(owner),
-	position(position),
-	offset(offset),
 	size(size),
 	origin(origin)
 {
@@ -23,9 +26,24 @@ Base::~Base()
 {
 }
 
-void Base::update_container(const glm::dvec2& container_position, const glm::dvec2& container_size)
+void Base::update_container
+(
+	const glm::dvec2& container_position,
+	const glm::dvec2& container_size,
+	const glm::dvec2& offset
+)
 {
-	real_position = container_position + position * container_size - size * origin + offset;
+	real_position = container_position + glm::dvec2(0.5) * container_size - size * origin + offset;
+}
+
+glm::dvec2 Base::get_size()
+{
+	return size;
+}
+
+glm::dvec2 Base::get_origin()
+{
+	return origin;
 }
 
 } // namespace Widget
