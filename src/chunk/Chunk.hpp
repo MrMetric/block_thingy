@@ -2,6 +2,7 @@
 
 #include <array>
 #include <memory>
+#include <stdint.h>
 #include <vector>
 
 #include "graphics/OpenGL/VertexArray.hpp"
@@ -14,8 +15,9 @@
 #include "position/BlockInChunk.hpp"
 #include "position/ChunkInWorld.hpp"
 
-#define CHUNK_SIZE 32
-#define CHUNK_BLOCK_COUNT (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
+// signed instead of std::size_t to allow comparison with signed values
+constexpr int_fast32_t CHUNK_SIZE = 32;
+constexpr int_fast32_t CHUNK_BLOCK_COUNT = CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE;
 
 using chunk_block_array_t = std::array<Block::Block, CHUNK_BLOCK_COUNT>;
 

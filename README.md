@@ -1,4 +1,4 @@
-# block thingy
+# block thingy [![Coverity Scan Build Status](https://scan.coverity.com/projects/7790/badge.svg)](https://scan.coverity.com/projects/mrmetric-block_thingy)
 I mek GAme
 
 ## Features

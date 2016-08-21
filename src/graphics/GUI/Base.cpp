@@ -63,9 +63,21 @@ void Base::draw()
 
 void Base::keypress(const int key, const int scancode, const int action, const int mods)
 {
-	if(action == GLFW_PRESS && key == GLFW_KEY_ESCAPE)
+	// TODO: proper input handling
+	if(action == GLFW_PRESS)
 	{
-		game.console.run_line("close_gui");
+		if(key == GLFW_KEY_ESCAPE)
+		{
+			game.console.run_line("close_gui");
+		}
+		else if(key == GLFW_KEY_F2)
+		{
+			game.console.run_line("screenshot");
+		}
+		else if(key == GLFW_KEY_F11)
+		{
+			game.console.run_line("toggle_fullscreen");
+		}
 	}
 }
 

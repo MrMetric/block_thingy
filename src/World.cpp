@@ -394,8 +394,8 @@ void World::gen_at(const BlockInWorld& min, const BlockInWorld& max)
 
 				const double a = n.x * n.y;
 				const double b = glm::mod(a, 1.0);
-				const double d = glm::mod(ceil(a), 2.0);
-				return (d == 0 ? b : d - b) - 1;
+				const auto d = static_cast<uint_fast8_t>(glm::mod(ceil(a), 2.0));
+				return (d == 0 ? b : 1 - b) - 1;
 			};
 
 			auto max_y = max.y <= -m ? max.y : std::min(max.y, static_cast<BlockInWorld::value_type>(get_max_y(x, z) * m));

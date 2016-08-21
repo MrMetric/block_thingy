@@ -56,6 +56,7 @@ void WidgetContainer::mousepress(const int button, const int action, const int m
 			{
 				container->mousepress(button, action, mods);
 			}
+			break;
 		}
 	}
 }
@@ -79,6 +80,7 @@ void WidgetContainer::mousemove(const double x, const double y)
 			{
 				container->mousemove(x, y);
 			}
+			break;
 		}
 	}
 }

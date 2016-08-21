@@ -255,7 +255,10 @@ bool Player::block_is_at(const Position::BlockInWorld& block_pos)
 
 double Player::move_to(double coord, const double move_var, const double offset, const Position::BlockInWorld& block_pos)
 {
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wfloat-equal"
 	if(move_var == 0 || flags.noclip)
+	#pragma clang diagnostic pop
 	{
 		return coord + move_var;
 	}

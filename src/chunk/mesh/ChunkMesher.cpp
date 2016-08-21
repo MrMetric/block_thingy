@@ -51,7 +51,7 @@ bool ChunkMesher::block_visible_from(const Chunk& chunk, const Block::Block& blo
 		&& !sibling.is_opaque() // this block can be seen thru the adjacent block
 		&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks (of the same type)
 	;
-};
+}
 
 Graphics::Color ChunkMesher::light_at(const Chunk& chunk, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z)
 {

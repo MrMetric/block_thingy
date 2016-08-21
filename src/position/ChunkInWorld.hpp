@@ -3,10 +3,10 @@
 #include <iosfwd>
 #include <stdint.h>
 
+#include "fwd/position/BlockInWorld.hpp"
+
 namespace Position
 {
-	struct BlockInWorld;
-
 	struct ChunkInWorld
 	{
 		using value_type = int64_t;

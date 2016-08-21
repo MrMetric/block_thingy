@@ -34,7 +34,10 @@ constexpr double mod1(const double a)
 
 constexpr double intbound(double s, const double ds)
 {
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wfloat-equal"
 	if(ds == 0)
+	#pragma clang diagnostic pop
 	{
 		return infinity;
 	}
@@ -58,7 +61,10 @@ static glm::dvec3 intbound(const glm::dvec3& origin, const glm::dvec3& direction
 static constexpr double delta(const double x)
 {
 	// TODO: profile vs (1.0 / glm::abs(x))
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wfloat-equal"
 	return (x == 0) ? infinity : (glm::sign(x) / x);
+	#pragma clang diagnostic pop
 }
 
 static glm::dvec3 delta(const glm::dvec3& direction)
@@ -66,6 +72,7 @@ static glm::dvec3 delta(const glm::dvec3& direction)
 	return { delta(direction.x), delta(direction.y), delta(direction.z) };
 }
 
+// http://www.opengl-tutorial.org/miscellaneous/clicking-on-objects/picking-with-a-physics-library/
 void PhysicsUtil::ScreenPosToWorldRay(
 	const glm::dvec2& mouse,              // Mouse position, in pixels, from bottom-left corner of the window
 	const window_size_t& screen_size,     // Window size, in pixels
@@ -77,8 +84,8 @@ void PhysicsUtil::ScreenPosToWorldRay(
 {
 	// The ray Start and End positions, in Normalized Device Coordinates (Have you read Tutorial 4 ?)
 	glm::dvec4 lRayStart_NDC(
-		(mouse.x / screen_size.x - 0.5) * 2, // [0,1024] -> [-1,1]
-		(mouse.y / screen_size.y - 0.5) * 2, // [0, 768] -> [-1,1]
+		(mouse.x / screen_size.x - 0.5) * 2, // [0,  width] -> [-1, 1]
+		(mouse.y / screen_size.y - 0.5) * 2, // [0, height] -> [-1, 1]
 		-1, // The near plane maps to Z=-1 in Normalized Device Coordinates
 		1
 	);
@@ -157,7 +164,10 @@ unique_ptr<RaycastHit> PhysicsUtil::raycast(const World& world, const glm::dvec3
 	// tMaxX, tMaxY, and tMaxZ.
 
 	// Avoids an infinite loop
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wfloat-equal"
 	if(direction.x == 0 && direction.y == 0 && direction.z == 0)
+	#pragma clang diagnostic pop
 	{
 		return nullptr;
 	}
@@ -178,7 +188,7 @@ unique_ptr<RaycastHit> PhysicsUtil::raycast(const World& world, const glm::dvec3
 	const glm::dvec3 min = origin - radius;
 	const glm::dvec3 max = origin + radius;
 
-	while(/* ray has not gone past bounds of world */
+	while(// ray has not gone past bounds of world
 			(step.x > 0 ? cube_pos.x < max.x : cube_pos.x > min.x) &&
 			(step.y > 0 ? cube_pos.y < max.y : cube_pos.y > min.y) &&
 			(step.z > 0 ? cube_pos.z < max.z : cube_pos.z > min.z))

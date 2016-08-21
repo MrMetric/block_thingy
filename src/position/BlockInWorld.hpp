@@ -5,11 +5,11 @@
 
 #include <glm/vec3.hpp>
 
+#include "fwd/position/BlockInChunk.hpp"
+#include "fwd/position/ChunkInWorld.hpp"
+
 namespace Position
 {
-	struct BlockInChunk;
-	struct ChunkInWorld;
-
 	struct BlockInWorld
 	{
 		using value_type = int_fast64_t;

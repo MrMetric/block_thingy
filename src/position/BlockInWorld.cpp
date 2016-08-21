@@ -24,7 +24,7 @@ namespace Position
 	}
 
 	#undef t
-	#define t(a,b) static_cast<value_type>(a) * CHUNK_SIZE + b
+	#define t(a, b) static_cast<value_type>(a) * CHUNK_SIZE + b
 	BlockInWorld::BlockInWorld(const ChunkInWorld& chunk_pos, const BlockInChunk& block_pos)
 	{
 		x = t(chunk_pos.x, block_pos.x);

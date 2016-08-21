@@ -25,4 +25,4 @@ enum class BlockType : block_type_id_t
 	COUNT,
 };
 
-#define BlockType_COUNT static_cast<block_type_id_t>(BlockType::COUNT)
+constexpr block_type_id_t BlockType_COUNT = static_cast<block_type_id_t>(BlockType::COUNT);

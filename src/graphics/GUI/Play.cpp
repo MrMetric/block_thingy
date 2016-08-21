@@ -76,9 +76,11 @@ void Play::draw_debug_text()
 {
 	std::ostringstream ss;
 	const auto& pos = game.player.position;
-	ss << "x: " << pos.x << "\n";
-	ss << "y: " << pos.y << "\n";
-	ss << "z: " << pos.z << "\n";
+	#define p(x) (x > 0 ? "+" : (x == 0 ? " " : "")) << x
+	ss << "x: " << p(pos.x) << "\n";
+	ss << "y: " << p(pos.y) << "\n";
+	ss << "z: " << p(pos.z) << "\n";
+	#undef p
 	game.gfx.gui_text.draw(ss.str(), {8.0, 8.0});
 }
 

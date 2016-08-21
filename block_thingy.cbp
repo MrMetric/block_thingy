@@ -57,6 +57,7 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-pedantic-errors" />
 			<Add option="-Weverything" />
 			<Add option="-std=c++14" />
 			<Add option="-fexceptions" />
@@ -75,6 +76,7 @@
 			<Add option="-Werror=invalid-pp-token" />
 			<Add option="-Werror=missing-field-initializers" />
 			<Add option="-Werror=return-type" />
+			<Add option="-Werror=sign-compare" />
 			<Add option="-Werror=uninitialized" />
 			<Add option="-Werror=unknown-pragmas" />
 			<Add option="-Werror=unknown-warning-option" />
@@ -147,6 +149,7 @@
 		<Unit filename="src/fwd/graphics/OpenGL/ShaderProgram.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/Texture.hpp" />
 		<Unit filename="src/fwd/physics/RaycastHit.hpp" />
+		<Unit filename="src/fwd/position/BlockInChunk.hpp" />
 		<Unit filename="src/fwd/position/BlockInWorld.hpp" />
 		<Unit filename="src/fwd/position/ChunkInWorld.hpp" />
 		<Unit filename="src/graphics/Color.cpp" />
