@@ -2,6 +2,7 @@
 
 #include <sstream>
 
+#include "fwd/block/BlockType.hpp"
 #include "graphics/OpenGL/ShaderProgram.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
 
@@ -76,11 +77,14 @@ void Play::draw_debug_text()
 {
 	std::ostringstream ss;
 	const auto& pos = game.player.position;
-	#define p(x) (x > 0 ? "+" : (x == 0 ? " " : "")) << x
+	#define p(x) (x > 0 ? "+" : (x < 0 ? "" : " ")) << x
 	ss << "x: " << p(pos.x) << "\n";
 	ss << "y: " << p(pos.y) << "\n";
 	ss << "z: " << p(pos.z) << "\n";
 	#undef p
+	// TODO: get block name
+	ss << "block type: " << static_cast<block_type_id_t>(game.block_type) << "\n";
+	ss << "fov: " << game.gfx.fov << "\n";
 	game.gfx.gui_text.draw(ss.str(), {8.0, 8.0});
 }
 

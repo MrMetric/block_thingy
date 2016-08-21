@@ -14,6 +14,7 @@
 #include "fwd/Gfx.hpp"
 #include "fwd/Player.hpp"
 #include "World.hpp"
+#include "fwd/block/BlockType.hpp"
 #include "console/Command.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
@@ -55,6 +56,7 @@ class Game
 
 		static Game* instance;
 
+		BlockType block_type;
 		std::unique_ptr<RaycastHit> hovered_block;
 
 		// event_manager must be initialized before others!

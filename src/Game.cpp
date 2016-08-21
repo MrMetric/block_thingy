@@ -53,6 +53,7 @@ Game* Game::instance = nullptr;
 
 Game::Game(Gfx& gfx)
 	:
+	block_type(BlockType::test),
 	hovered_block(nullptr),
 	gfx(gfx),
 	camera(gfx, event_manager),
@@ -223,7 +224,6 @@ void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dm
 	}
 }
 
-static BlockType block_type = BlockType::test;
 void Game::add_commands()
 {
 	#define COMMAND_(name) commands.emplace_back(console, name, [](Game& game
@@ -260,7 +260,7 @@ void Game::add_commands()
 		const Position::BlockInWorld pos = game.hovered_block->adjacent();
 		if(game.world.get_block(pos).type() == BlockType::air && game.player.can_place_block_at(pos))
 		{
-			game.world.set_block(pos, Block::Block(block_type));
+			game.world.set_block(pos, Block::Block(game.block_type));
 			//event_manager.do_event(Event_place_block(pos, face));
 		}
 	});
@@ -273,7 +273,7 @@ void Game::add_commands()
 
 		const Position::BlockInWorld pos = game.hovered_block->pos;
 		const auto block = game.world.get_block(pos);
-		block_type = block.type();
+		game.block_type = block.type();
 		game.console.logger << "block type: " << block.type_id() << "\n";
 	});
 
@@ -527,18 +527,18 @@ void Game::add_commands()
 
 	COMMAND("block_type++")
 	{
-		block_type_id_t i = static_cast<block_type_id_t>(block_type);
+		block_type_id_t i = static_cast<block_type_id_t>(game.block_type);
 		i = (i + 1) % BlockType_COUNT;
 		if(i < 2)
 		{
 			i = 2;
 		}
-		block_type = static_cast<BlockType>(i);
+		game.block_type = static_cast<BlockType>(i);
 		game.console.logger << "block type: " << i << "\n";
 	});
 	COMMAND("block_type--")
 	{
-		block_type_id_t i = static_cast<block_type_id_t>(block_type);
+		block_type_id_t i = static_cast<block_type_id_t>(game.block_type);
 		if(i == 2)
 		{
 			i = BlockType_COUNT - 1;
@@ -547,7 +547,7 @@ void Game::add_commands()
 		{
 			i = (i - 1) % BlockType_COUNT;
 		}
-		block_type = static_cast<BlockType>(i);
+		game.block_type = static_cast<BlockType>(i);
 		game.console.logger << "block type: " << i << "\n";
 	});
 
