@@ -4,14 +4,14 @@
 
 // see http://www.tinysg.de/techGuides/tg1_proceduralMarble.html for more info
 
-const int roughness = 8; // noisiness of veins (#octaves in turbulence)
-float turbulence(vec2 P)
+const int octave_count = 8;
+float sum_octaves(vec2 P)
 {
 	float val = 0.0;
 	float freq = 1.0;
-	for(int i = 0; i < roughness; i++)
+	for(int i = 0; i < octave_count; i++)
 	{
-		val += abs(snoise(P*freq) / freq);
+		val += abs(snoise(P * freq) / freq);
 		freq *= 2.07;
 	}
 	return val;
@@ -21,7 +21,7 @@ const float amplitude = 1.0;
 
 vec3 color(vec2 coords)
 {
-	vec2 n = coords + amplitude * turbulence(coords);
+	vec2 n = coords + amplitude * sum_octaves(coords);
 	float c1 = pow(abs(cos(M_TAU / 2.0 * n.x)), 1.0 / 6.0);
 	float c2 = pow(abs(cos(M_TAU / 2.0 * n.y)), 1.0 / 4.0);
 	vec3 c = vec3((c1 + c2) / 2.0);
