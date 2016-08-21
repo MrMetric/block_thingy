@@ -148,6 +148,7 @@ void Gfx::opengl_setup()
 	block_shaders.emplace(BlockType::test, "shaders/block/test");
 	block_shaders.emplace(BlockType::dots, "shaders/block/dots");
 	block_shaders.emplace(BlockType::eye, "shaders/block/eye");
+	block_shaders.emplace(BlockType::teleporter, "shaders/block/teleporter");
 	block_shaders.emplace(BlockType::crappy_marble, "shaders/block/crappy_marble");
 	block_shaders.emplace(BlockType::white, "shaders/block/white");
 	block_shaders.emplace(BlockType::black, "shaders/block/black");

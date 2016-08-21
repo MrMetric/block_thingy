@@ -55,6 +55,10 @@ BlockVisibilityType Block::visibility_type() const
 	{
 		return BlockVisibilityType::invisible;
 	}
+	if(type_ == BlockType::teleporter)
+	{
+		return BlockVisibilityType::translucent;
+	}
 	return BlockVisibilityType::opaque;
 }
 
@@ -75,7 +79,7 @@ bool Block::is_invisible() const
 
 bool Block::is_solid() const
 {
-	return type_ != BlockType::air;
+	return type_ != BlockType::air && type_ != BlockType::teleporter;
 }
 
 bool Block::is_selectable() const
