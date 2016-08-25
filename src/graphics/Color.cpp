@@ -26,18 +26,6 @@ Color::Color(value_type r, value_type g, value_type b)
 {
 }
 
-glm::vec3 Color::to_vec3() const
-{
-	const float m = max;
-	glm::vec3 v
-	{
-		std::fmin(1, r / m),
-		std::fmin(1, g / m),
-		std::fmin(1, b / m),
-	};
-	return v;
-}
-
 Color::value_type Color::operator[](const uint_fast8_t i) const
 {
 	if(i == 0) return r;
@@ -130,6 +118,18 @@ Color& Color::operator-=(const value_type x)
 	g = static_cast<value_type>(std::max(g - x, 0));
 	b = static_cast<value_type>(std::max(b - x, 0));
 	return *this;
+}
+
+Color::operator glm::vec3() const
+{
+	const float m = max;
+	glm::vec3 v
+	{
+		std::fmin(1, r / m),
+		std::fmin(1, g / m),
+		std::fmin(1, b / m),
+	};
+	return v;
 }
 
 std::ostream& operator<<(std::ostream& o, const Color& c)

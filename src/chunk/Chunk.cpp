@@ -151,7 +151,7 @@ void Chunk::render(const bool transluscent_pass)
 		shader.uniform("global_time", static_cast<float>(owner.get_time())); // TODO: use double when available
 
 		const Graphics::Color color = std::get<1>(key);
-		shader.uniform("light", color.to_vec3());
+		shader.uniform("light", static_cast<glm::vec3>(color));
 
 		const size_t draw_count = p.second.size() * 3;
 		mesh_vaos[i].draw(GL_TRIANGLES, 0, draw_count);

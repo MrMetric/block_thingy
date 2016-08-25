@@ -16,8 +16,6 @@ struct Color
 	Color();
 	Color(value_type r, value_type g, value_type b);
 
-	glm::vec3 to_vec3() const;
-
 	value_type operator[](uint_fast8_t) const;
 	value_type& operator[](uint_fast8_t);
 
@@ -33,6 +31,8 @@ struct Color
 	Color operator+(value_type) const;
 	Color operator-(value_type) const;
 	Color& operator-=(value_type);
+
+	operator glm::vec3() const;
 
 	value_type r;
 	value_type g;
