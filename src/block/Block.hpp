@@ -22,6 +22,8 @@ class Block
 		 */
 		Graphics::Color color() const;
 
+		double bounciness() const;
+
 		BlockVisibilityType visibility_type() const;
 		bool is_opaque() const;
 		bool is_translucent() const;

@@ -108,29 +108,33 @@ void Player::move(const glm::dvec3& acceleration)
 		if(move_vec.y < 0)
 		{
 			const Position::BlockInWorld pos_feet_new(glm::dvec3(position.x, position.y + move_vec.y, position.z));
-			if(block_is_at(pos_feet_new))
+			const Block::Block block = Game::instance->world.get_block(pos_feet_new);
+			if(block.is_solid())
 			{
 				position.y = pos_feet_new.y + 1;
-				velocity.y = 0;
-				flags.on_ground = true;
+				if(flags.on_ground)
+				{
+					velocity.y = 0;
+				}
+				else
+				{
+					velocity.y *= -block.bounciness();
+					flags.on_ground = true;
+				}
 			}
 			else
 			{
-				position.y += move_vec.y;
 				flags.on_ground = false;
 			}
 		}
 		else if(move_vec.y > 0)
 		{
 			const Position::BlockInWorld pos_head_new(glm::dvec3(position.x, position.y + move_vec.y + height, position.z));
-			if(block_is_at(pos_head_new))
+			const Block::Block block = Game::instance->world.get_block(pos_head_new);
+			if(block.is_solid())
 			{
 				position.y = pos_head_new.y - height;
-				velocity.y = 0;
-			}
-			else
-			{
-				position.y += move_vec.y;
+				velocity.y *= -block.bounciness();
 			}
 			flags.on_ground = false;
 		}

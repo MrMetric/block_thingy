@@ -49,6 +49,15 @@ Graphics::Color Block::color() const
 	return {0, 0, 0};
 }
 
+double Block::bounciness() const
+{
+	if(type_ == BlockType::test)
+	{
+		return 1;
+	}
+	return 0;
+}
+
 BlockVisibilityType Block::visibility_type() const
 {
 	if(type_ == BlockType::none || type_ == BlockType::air)
