@@ -5,6 +5,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+#include "physics/AABB.hpp"
 #include "fwd/position/BlockInWorld.hpp"
 
 class Player
@@ -46,10 +47,13 @@ class Player
 
 	private:
 		bool block_is_at(const Position::BlockInWorld&);
-		double move_to(double coord, double move_var, double offset, const Position::BlockInWorld&);
 
 		const double abs_offset;
+		AABB aabb;
+		AABB make_aabb(const glm::dvec3& position);
+		void set_aabb();
 		double eye_height;
+		double height;
 		double walk_speed;
 		double max_velocity;
 		glm::dvec2 analog_motion;

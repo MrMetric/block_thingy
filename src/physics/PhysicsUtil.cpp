@@ -164,10 +164,7 @@ unique_ptr<RaycastHit> PhysicsUtil::raycast(const World& world, const glm::dvec3
 	// tMaxX, tMaxY, and tMaxZ.
 
 	// Avoids an infinite loop
-	#pragma clang diagnostic push
-	#pragma clang diagnostic ignored "-Wfloat-equal"
-	if(direction.x == 0 && direction.y == 0 && direction.z == 0)
-	#pragma clang diagnostic pop
+	if(direction == glm::dvec3(0))
 	{
 		return nullptr;
 	}

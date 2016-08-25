@@ -22,7 +22,8 @@ Player::Player(const string& name)
 	spawn_position(0.5, 1.0, 0.5), // TODO: generate this
 	position(spawn_position),
 	abs_offset(0.4),
-	eye_height(1.7),
+	eye_height(1.6),
+	height(1.8),
 	walk_speed(2),
 	max_velocity(1)
 {
@@ -43,25 +44,71 @@ void Player::move(const glm::dvec3& acceleration)
 		velocity.z = glm::sign(velocity.z) * max_velocity;
 	}
 
-	Position::BlockInWorld old_position(position);
-
+	const glm::dvec3 move_vec
 	{
-		const double moveX = velocity.x * cosY - velocity.z * sinY;
-		const double offset = moveX < 0 ? -abs_offset : abs_offset;
-		position.x = move_to(position.x, moveX, offset, Position::BlockInWorld(glm::dvec3(position.x + moveX + offset, position.y, position.z)));
+		velocity.x * cosY - velocity.z * sinY,
+		velocity.y,
+		velocity.z * cosY + velocity.x * sinY,
+	};
+	glm::dvec3 new_position = position + move_vec;
+
+	if(flags.noclip)
+	{
+		position = new_position;
+		return;
 	}
 
+	AABB new_aabb = make_aabb(new_position);
+	const Position::BlockInWorld block_pos_old(position);
+	auto loop = [this, &move_vec, &new_position, &new_aabb, &block_pos_old](bool corners)
 	{
-		const double moveZ = velocity.z * cosY + velocity.x * sinY;
-		const double offset = moveZ < 0 ? -abs_offset : abs_offset;
-		position.z = move_to(position.z, moveZ, offset, Position::BlockInWorld(glm::dvec3(position.x, position.y, position.z + moveZ + offset)));
-	}
-
-	{
-		const double moveY = velocity.y;
-		if(moveY < 0)
+		Position::BlockInWorld block_pos_offset;
+		for(block_pos_offset.y = 0; block_pos_offset.y <= std::ceil(height); ++block_pos_offset.y)
+		for(block_pos_offset.x = -1; block_pos_offset.x <= 1; ++block_pos_offset.x)
+		for(block_pos_offset.z = -1; block_pos_offset.z <= 1; ++block_pos_offset.z)
 		{
-			const Position::BlockInWorld pos_feet_new(glm::dvec3(position.x, position.y + moveY, position.z));
+			bool sides = block_pos_offset.x != 0 && block_pos_offset.z != 0;
+			if(corners) sides = !sides;
+			if(sides) continue;
+
+			Position::BlockInWorld block_pos = block_pos_old;
+			block_pos += block_pos_offset;
+			if(!block_is_at(block_pos))
+			{
+				continue;
+			}
+			AABB block_aabb(block_pos);
+			if(new_aabb.collide(block_aabb))
+			{
+				glm::dvec3 direction_sign(block_pos_offset.x, block_pos_offset.y, block_pos_offset.z);
+				glm::dvec3 offset = new_aabb.offset(block_aabb, direction_sign);
+				if(corners)
+				{
+					// avoid being stuck on corners
+					glm::dvec3 abs_offset = glm::abs(offset);
+					if(abs_offset.x > abs_offset.z)
+					{
+						offset.x = 0;
+					}
+					else if(abs_offset.z > abs_offset.x)
+					{
+						offset.z = 0;
+					}
+				}
+				new_position += offset;
+				new_aabb = make_aabb(new_position);
+			}
+		}
+	};
+	loop(false);
+	loop(true);
+	position = new_position;
+
+	// TODO: use AABBs
+	{
+		if(move_vec.y < 0)
+		{
+			const Position::BlockInWorld pos_feet_new(glm::dvec3(position.x, position.y + move_vec.y, position.z));
 			if(block_is_at(pos_feet_new))
 			{
 				position.y = pos_feet_new.y + 1;
@@ -70,27 +117,27 @@ void Player::move(const glm::dvec3& acceleration)
 			}
 			else
 			{
-				position.y += moveY;
+				position.y += move_vec.y;
 				flags.on_ground = false;
 			}
 		}
-		else
+		else if(move_vec.y > 0)
 		{
-			position.y += moveY;
+			const Position::BlockInWorld pos_head_new(glm::dvec3(position.x, position.y + move_vec.y + height, position.z));
+			if(block_is_at(pos_head_new))
+			{
+				position.y = pos_head_new.y - height;
+				velocity.y = 0;
+			}
+			else
+			{
+				position.y += move_vec.y;
+			}
 			flags.on_ground = false;
 		}
-	}
-
-	// TODO: handle this better when bounding boxes are added
-	const Position::BlockInWorld new_position(position);
-	if(new_position != old_position)
-	{
-		const Block::Block block = Game::instance->world.get_block(new_position);
-		if(block.type() != BlockType::none
-		&& block.type() != BlockType::air
-		&& !block.is_solid())
+		else
 		{
-			Game::instance->event_manager.do_event(Event_enter_block(*this, block));
+			flags.on_ground = true;
 		}
 	}
 }
@@ -143,7 +190,24 @@ void Player::step(const double delta_time)
 	}
 	flags.do_jump = false;
 
-	move(acceleration * delta_time);
+	if(acceleration != glm::dvec3(0))
+	{
+		const Position::BlockInWorld old_position(position);
+		move(acceleration * delta_time);
+		const Position::BlockInWorld new_position(position);
+		if(new_position != old_position)
+		{
+			const Block::Block block = Game::instance->world.get_block(new_position);
+			if(block.type() != BlockType::none
+			&& block.type() != BlockType::air
+			&& !block.is_solid())
+			{
+				Game::instance->event_manager.do_event(Event_enter_block(*this, block));
+			}
+		}
+
+		set_aabb();
+	}
 }
 
 glm::dvec3 Player::apply_movement_input(glm::dvec3 acceleration, const double move_speed)
@@ -184,6 +248,8 @@ void Player::respawn()
 
 	position = spawn_position;
 	// TODO: if spawn is blocked, move to a nearby empty area
+
+	set_aabb();
 }
 
 bool Player::can_place_block_at(const Position::BlockInWorld& block_pos)
@@ -192,9 +258,8 @@ bool Player::can_place_block_at(const Position::BlockInWorld& block_pos)
 	{
 		return true;
 	}
-	Position::BlockInWorld pos0(glm::dvec3(position.x, position.y, position.z));
-	Position::BlockInWorld pos1(glm::dvec3(position.x, position.y + 1, position.z));
-	return block_pos != pos0 && block_pos != pos1;
+	AABB block_aabb(block_pos);
+	return !aabb.collide(block_aabb);
 }
 
 void Player::move_forward(const bool do_that)
@@ -253,33 +318,16 @@ bool Player::block_is_at(const Position::BlockInWorld& block_pos)
 	return block.is_solid();
 }
 
-double Player::move_to(double coord, const double move_var, const double offset, const Position::BlockInWorld& block_pos)
+AABB Player::make_aabb(const glm::dvec3& position)
 {
-	#pragma clang diagnostic push
-	#pragma clang diagnostic ignored "-Wfloat-equal"
-	if(move_var == 0 || flags.noclip)
-	#pragma clang diagnostic pop
-	{
-		return coord + move_var;
-	}
+	const glm::dvec3 size(abs_offset, height, abs_offset);
+	AABB aabb;
+	aabb.min = {position.x - size.x, position.y         , position.z - size.z};
+	aabb.max = {position.x + size.x, position.y + size.y, position.z + size.z};
+	return aabb;
+}
 
-	const bool foot = block_is_at(block_pos);
-	const bool head = block_is_at({block_pos.x, block_pos.y + 1, block_pos.z});
-	if(foot || head)
-	{
-		if(move_var > 0)
-		{
-			coord = std::ceil(coord);
-		}
-		else
-		{
-			coord = std::floor(coord);
-		}
-		coord -= offset;
-	}
-	else
-	{
-		coord += move_var;
-	}
-	return coord;
+void Player::set_aabb()
+{
+	aabb = make_aabb(position);
 }
