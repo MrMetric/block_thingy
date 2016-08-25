@@ -60,19 +60,18 @@ void Player::move(const glm::dvec3& acceleration)
 
 	AABB new_aabb = make_aabb(new_position);
 	const Position::BlockInWorld block_pos_old(position);
-	auto loop = [this, &move_vec, &new_position, &new_aabb, &block_pos_old](bool corners)
+	auto loop = [this, &move_vec, &new_position, &new_aabb, &block_pos_old](const bool corners)
 	{
 		Position::BlockInWorld block_pos_offset;
-		for(block_pos_offset.y = 0; block_pos_offset.y <= std::ceil(height); ++block_pos_offset.y)
+		for(block_pos_offset.y = 0; block_pos_offset.y <= std::floor(height); ++block_pos_offset.y)
 		for(block_pos_offset.x = -1; block_pos_offset.x <= 1; ++block_pos_offset.x)
 		for(block_pos_offset.z = -1; block_pos_offset.z <= 1; ++block_pos_offset.z)
 		{
-			bool sides = block_pos_offset.x != 0 && block_pos_offset.z != 0;
-			if(corners) sides = !sides;
-			if(sides) continue;
+			bool skip = block_pos_offset.x != 0 && block_pos_offset.z != 0;
+			if(corners) skip = !skip;
+			if(skip) continue;
 
-			Position::BlockInWorld block_pos = block_pos_old;
-			block_pos += block_pos_offset;
+			const Position::BlockInWorld block_pos = block_pos_old + block_pos_offset;
 			if(!block_is_at(block_pos))
 			{
 				continue;
@@ -80,12 +79,12 @@ void Player::move(const glm::dvec3& acceleration)
 			AABB block_aabb(block_pos);
 			if(new_aabb.collide(block_aabb))
 			{
-				glm::dvec3 direction_sign(block_pos_offset.x, block_pos_offset.y, block_pos_offset.z);
+				const glm::vec3 direction_sign = static_cast<glm::vec3>(block_pos_offset);
 				glm::dvec3 offset = new_aabb.offset(block_aabb, direction_sign);
 				if(corners)
 				{
 					// avoid being stuck on corners
-					glm::dvec3 abs_offset = glm::abs(offset);
+					const glm::dvec3 abs_offset = glm::abs(offset);
 					if(abs_offset.x > abs_offset.z)
 					{
 						offset.x = 0;
@@ -100,8 +99,8 @@ void Player::move(const glm::dvec3& acceleration)
 			}
 		}
 	};
-	loop(false);
-	loop(true);
+	loop(false); // skip corners
+	loop(true);  // skip sides
 	position = new_position;
 
 	// TODO: use AABBs

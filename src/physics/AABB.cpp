@@ -26,7 +26,7 @@ bool AABB::collide(const AABB& b2)
 	b1.min.z < b2.max.z;
 }
 
-glm::dvec3 AABB::offset(const AABB& b2, const glm::dvec3& direction_sign)
+glm::dvec3 AABB::offset(const AABB& b2, const glm::vec3& direction_sign)
 {
 	const AABB& b1 = *this;
 	glm::dvec3 offset;

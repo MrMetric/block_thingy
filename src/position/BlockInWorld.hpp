@@ -31,6 +31,7 @@ namespace Position
 		value_type x, y, z;
 	};
 
+	BlockInWorld operator+(const BlockInWorld&, const BlockInWorld&);
 	BlockInWorld operator+(const BlockInWorld&, const glm::ivec3&);
 
 	std::ostream& operator<<(std::ostream&, const BlockInWorld&);

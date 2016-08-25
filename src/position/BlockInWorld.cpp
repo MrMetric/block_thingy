@@ -81,6 +81,11 @@ namespace Position
 		return glm::vec3(x, y, z);
 	}
 
+	BlockInWorld operator+(const BlockInWorld& pos1, const BlockInWorld& pos2)
+	{
+		return {pos1.x + pos2.x, pos1.y + pos2.y, pos1.z + pos2.z};
+	}
+
 	BlockInWorld operator+(const BlockInWorld& pos, const glm::ivec3& vec)
 	{
 		return Position::BlockInWorld(pos.x + vec.x, pos.y + vec.y, pos.z + vec.z);
