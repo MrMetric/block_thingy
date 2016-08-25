@@ -13,7 +13,5 @@ void main()
 {
 	vec2 coords = get_side_coords();
 	vec3 c = color(coords);
-	float a = (3.9 - pow((1.0 - cos(global_time)) / 2.0, 4.0)) / 4.0;
-	a -= 8.0 / cosh(8.0 * (global_time - 1));
 	FragColor = vec4(c, sqrt(length(c)));
 }
