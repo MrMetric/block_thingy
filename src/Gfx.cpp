@@ -91,16 +91,18 @@ GLFWwindow* Gfx::init_glfw()
 
 	if(!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
-		throw new std::runtime_error("Error loading GLAD");
+		throw std::runtime_error("Error loading GLAD");
 	}
 	std::cout << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
 	if(!GLAD_GL_ARB_direct_state_access)
 	{
-		throw new std::runtime_error("Required OpenGL extension not found: GL_ARB_direct_state_access");
+		cout << "OpenGL extension not found: GL_ARB_direct_state_access\n";
+		shim_GL_ARB_direct_state_access();
 	}
 	if(!GLAD_GL_ARB_separate_shader_objects)
 	{
-		throw new std::runtime_error("Required OpenGL extension not found: GL_ARB_separate_shader_objects");
+		cout << "OpenGL extension not found: GL_ARB_separate_shader_objects\n";
+		shim_GL_ARB_separate_shader_objects();
 	}
 
 	#pragma clang diagnostic push
@@ -357,4 +359,74 @@ void Gfx::draw_rectangle(const glm::dvec2& position, const glm::dvec2& size, con
 
 	gui_rectangle_vbo.data(sizeof(v), v, Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw);
 	gui_rectangle_vao.draw(GL_TRIANGLES, 0, 6);
+}
+
+void Gfx::shim_GL_ARB_direct_state_access()
+{
+	glCreateBuffers = [](GLsizei n, GLuint* buffers)
+	{
+		glGenBuffers(n, buffers);
+	};
+	// TODO: handle target != GL_ARRAY_BUFFER
+	glNamedBufferData = [](GLuint buffer, GLsizeiptr size, const void* data, GLenum usage)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, buffer);
+		glBufferData(GL_ARRAY_BUFFER, size, data, usage);
+	};
+
+	glCreateVertexArrays = [](GLsizei n, GLuint* arrays)
+	{
+		glGenVertexArrays(n, arrays);
+	};
+	glEnableVertexArrayAttrib = [](GLuint vaobj, GLuint index)
+	{
+		glBindVertexArray(vaobj);
+		glEnableVertexAttribArray(index);
+	};
+	glDisableVertexArrayAttrib = [](GLuint vaobj, GLuint index)
+	{
+		glBindVertexArray(vaobj);
+		glDisableVertexAttribArray(index);
+	};
+
+	glCreateTextures = [](GLenum target, GLsizei n, GLuint* textures)
+	{
+		glGenTextures(n, textures);
+	};
+}
+
+void Gfx::shim_GL_ARB_separate_shader_objects()
+{
+	glProgramUniform1f = [](GLuint program, GLint location, float v0)
+	{
+		glUseProgram(program);
+		glUniform1f(location, v0);
+	};
+	glProgramUniform1d = [](GLuint program, GLint location, double v0)
+	{
+		glUseProgram(program);
+		//glUniform1d(location, v0);
+		// glUniform1d is from GL_ARB_gpu_shader_fp64, which is not loaded
+		throw std::runtime_error("glProgramUniform1d is unavailable");
+	};
+	glProgramUniform3f = [](GLuint program, GLint location, float v0, float v1, float v2)
+	{
+		glUseProgram(program);
+		glUniform3f(location, v0, v1, v2);
+	};
+	glProgramUniform3fv = [](GLuint program, GLint location, GLsizei count, const GLfloat* value)
+	{
+		glUseProgram(program);
+		glUniform3fv(location, count, value);
+	};
+	glProgramUniform4fv = [](GLuint program, GLint location, GLsizei count, const GLfloat* value)
+	{
+		glUseProgram(program);
+		glUniform4fv(location, count, value);
+	};
+	glProgramUniformMatrix4fv = [](GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+	{
+		glUseProgram(program);
+		glUniformMatrix4fv(location, count, transpose, value);
+	};
 }

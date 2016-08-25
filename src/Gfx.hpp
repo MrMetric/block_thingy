@@ -86,4 +86,6 @@ class Gfx
 
 	private:
 		static GLFWwindow* make_window(bool is_fullscreen);
+		static void shim_GL_ARB_direct_state_access();
+		static void shim_GL_ARB_separate_shader_objects();
 };
