@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/mat4x4.hpp>
+#include <glm/vec2.hpp>
 
 #include "Camera.hpp"
 #include "FPSManager.hpp"
@@ -53,6 +54,8 @@ class Game
 		void keypress(int key, int scancode, int action, int mods);
 		void mousepress(int button, int action, int mods);
 		void mousemove(double x, double y);
+		void joypress(int joystick, int button, bool pressed);
+		void joymove(const glm::dvec2& motion);
 
 		static Game* instance;
 

@@ -33,6 +33,8 @@ class Base
 		virtual void keypress(int key, int scancode, int action, int mods);
 		virtual void mousepress(int button, int action, int mods);
 		virtual void mousemove(double x, double y);
+		virtual void joypress(int joystick, int button, bool pressed);
+		virtual void joymove(const glm::dvec2& motion);
 
 		std::unique_ptr<Base> parent;
 

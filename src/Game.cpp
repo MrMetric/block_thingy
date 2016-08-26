@@ -102,7 +102,7 @@ void Game::draw()
 		const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &count);
 		for(int i = 0; i < count; ++i)
 		{
-			keybinder.joypress(1, i, buttons[i] != 0);
+			joypress(1, i, buttons[i] != 0);
 		}
 
 		auto fix_axis = [](float axis)
@@ -120,7 +120,7 @@ void Game::draw()
 		glm::dvec2 motion(fix_axis(axises[3]), fix_axis(axises[4]));
 		motion *= 32.0;
 		motion += window_mid;
-		camera.mousemove(motion.x, motion.y, true);
+		joymove(motion);
 	}
 
 	std::stringstream ss;
@@ -199,6 +199,16 @@ void Game::mousepress(const int button, const int action, const int mods)
 void Game::mousemove(const double x, const double y)
 {
 	gui->mousemove(x, y);
+}
+
+void Game::joypress(const int joystick, const int button, const bool pressed)
+{
+	gui->joypress(joystick, button, pressed);
+}
+
+void Game::joymove(const glm::dvec2& motion)
+{
+	gui->joymove(motion);
 }
 
 void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dmat4& view_matrix)

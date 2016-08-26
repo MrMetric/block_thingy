@@ -91,6 +91,16 @@ void Base::mousemove(const double x, const double y)
 	root.mousemove(x, y);
 }
 
+void Base::joymove(const glm::dvec2& motion)
+{
+	// TODO
+}
+
+void Base::joypress(const int joystick, const int button, const bool pressed)
+{
+	// TODO
+}
+
 void Base::update_framebuffer_size(const window_size_t& window_size)
 {
 	root.update_container({0, 0}, glm::dvec2(window_size));

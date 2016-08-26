@@ -20,6 +20,8 @@ class Play : public Base
 		void keypress(int key, int scancode, int action, int mods) override;
 		void mousepress(int button, int action, int mods) override;
 		void mousemove(double x, double y) override;
+		void joypress(int joystick, int button, bool pressed) override;
+		void joymove(const glm::dvec2& motion) override;
 
 	private:
 		void draw_gui() override;

@@ -56,6 +56,16 @@ void Play::mousemove(const double x, const double y)
 	game.camera.mousemove(x, y);
 }
 
+void Play::joypress(int joystick, int button, bool pressed)
+{
+	game.keybinder.joypress(joystick, button, pressed);
+}
+
+void Play::joymove(const glm::dvec2& motion)
+{
+	game.camera.mousemove(motion.x, motion.y, true);
+}
+
 void Play::draw_gui()
 {
 	draw_crosshair();
