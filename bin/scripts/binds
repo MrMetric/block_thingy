@@ -32,3 +32,4 @@ bind joy_xbox360_R1 place_block
 bind joy_xbox360_A jump
 bind joy_xbox360_X +sprint
 bind joy_xbox360_Y noclip
+bind joy_xbox360_start close_gui

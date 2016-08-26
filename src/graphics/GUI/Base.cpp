@@ -93,7 +93,12 @@ void Base::mousemove(const double x, const double y)
 
 void Base::joymove(const glm::dvec2& motion)
 {
-	// TODO
+	double x, y;
+	glfwGetCursorPos(game.gfx.window, &x, &y);
+	x += motion.x * 12.0;
+	y += motion.y * 12.0;
+	glfwSetCursorPos(game.gfx.window, x, y);
+	mousemove(x, y);
 }
 
 void Base::joypress(const int joystick, const int button, const bool pressed)

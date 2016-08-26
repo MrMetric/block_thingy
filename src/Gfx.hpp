@@ -36,6 +36,7 @@ class Gfx
 
 		GLFWwindow* window;
 		window_size_t window_size;
+		glm::dvec2 window_mid;
 		glm::dmat4 projection_matrix;
 		glm::dmat4 view_matrix_physical;
 		glm::dmat4 view_matrix_graphical;

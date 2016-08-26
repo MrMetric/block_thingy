@@ -17,18 +17,16 @@ Camera::Camera(Gfx& gfx, EventManager& event_manager)
 	joy_sensitivity(1.2),
 	gfx(gfx)
 {
-	event_manager.add_handler(EventType::window_size_change, [this, &window=gfx.window](const Event& event)
+	event_manager.add_handler(EventType::window_size_change, [&gfx=gfx](const Event& event)
 	{
-		auto e = static_cast<const Event_window_size_change&>(event);
-		window_mid = glm::dvec2(e.window_size) / 2.0;
-		glfwSetCursorPos(window, window_mid.x, window_mid.y);
+		glfwSetCursorPos(gfx.window, gfx.window_mid.x, gfx.window_mid.y);
 	});
 }
 
 void Camera::mousemove(const double mouseX, const double mouseY, bool joystick)
 {
-	double x = (mouseY - window_mid.y) * sensitivity;
-	double y = (mouseX - window_mid.x) * sensitivity;
+	double x = (mouseY - gfx.window_mid.y) * sensitivity;
+	double y = (mouseX - gfx.window_mid.x) * sensitivity;
 	if(joystick)
 	{
 		x *= joy_sensitivity;
@@ -43,5 +41,5 @@ void Camera::mousemove(const double mouseX, const double mouseY, bool joystick)
 	// keep left/right angle in range [0, 360)
 	rotation.y = Util::mod(rotation.y, 360);
 
-	glfwSetCursorPos(gfx.window, window_mid.x, window_mid.y);
+	glfwSetCursorPos(gfx.window, gfx.window_mid.x, gfx.window_mid.y);
 }

@@ -26,5 +26,4 @@ class Camera
 		double joy_sensitivity;
 
 		Gfx& gfx;
-		glm::dvec2 window_mid;
 };

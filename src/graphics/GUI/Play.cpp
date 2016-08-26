@@ -22,8 +22,7 @@ Play::Play(Game& game)
 void Play::init()
 {
 	glClearColor(0.0, 0.0, 0.1, 0.0);
-	glfwSetInputMode(game.gfx.window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-	glfwSetCursorPos(game.gfx.window, game.gfx.window_size.x / 2, game.gfx.window_size.y / 2);
+	glfwSetInputMode(game.gfx.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void Play::close()
@@ -63,7 +62,8 @@ void Play::joypress(int joystick, int button, bool pressed)
 
 void Play::joymove(const glm::dvec2& motion)
 {
-	game.camera.mousemove(motion.x, motion.y, true);
+	const glm::dvec2 pos = motion * 32.0 + game.gfx.window_mid;
+	game.camera.mousemove(pos.x, pos.y, true);
 }
 
 void Play::draw_gui()
@@ -77,8 +77,8 @@ void Play::draw_crosshair()
 	const glm::dvec4 crosshair_color(1.0);
 
 	// TODO: rectangle widget
-	const double x = game.gfx.window_size.x / 2.0;
-	const double y = game.gfx.window_size.y / 2.0;
+	const double x = game.gfx.window_mid.x;
+	const double y = game.gfx.window_mid.y;
 	game.gfx.draw_rectangle({x - 1, y - 16}, {2, 32}, crosshair_color);
 	game.gfx.draw_rectangle({x - 16, y - 1}, {32, 2}, crosshair_color);
 }

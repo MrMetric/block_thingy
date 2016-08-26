@@ -58,6 +58,7 @@ Gfx::Gfx(GLFWwindow* window)
 	int height;
 	glfwGetFramebufferSize(window, &width, &height);
 	window_size = window_size_t(width, height);
+	window_mid = glm::dvec2(window_size) / 2.0;
 
 	opengl_setup();
 }
@@ -69,6 +70,7 @@ void Gfx::hook_events(EventManager& event_manager)
 		auto e = static_cast<const Event_window_size_change&>(event);
 
 		window_size = e.window_size;
+		window_mid = glm::dvec2(window_size) / 2.0;
 		glViewport(0, 0, static_cast<GLsizei>(window_size.x), static_cast<GLsizei>(window_size.y));
 		update_projection_matrix();
 
