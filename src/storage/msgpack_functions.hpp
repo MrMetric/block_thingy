@@ -147,8 +147,6 @@ struct pack<Chunk>
 	}
 };
 
-template <typename T> class butts;
-
 template<>
 struct convert<Chunk>
 {
@@ -205,10 +203,9 @@ struct convert<Block::Block>
 
 		auto map = o.as<std::unordered_map<std::string, msgpack::object>>();
 
-		block_type_id_t type_id;
-		find_in_map_or_throw(map, "t", type_id);
-		const BlockType block_type = static_cast<BlockType>(type_id);
-		block = Block::Block(block_type);
+		BlockType t;
+		find_in_map_or_throw(map, "t", t);
+		block = Block::Block(t);
 
 		return o;
 	}

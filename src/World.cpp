@@ -93,7 +93,7 @@ Block::Block World::get_block(const BlockInWorld& block_pos) const
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static const Block::Block none = Block::Block(BlockType::none);
+		static const Block::Block none(BlockType::none);
 		return none;
 	}
 
