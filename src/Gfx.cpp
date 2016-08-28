@@ -407,9 +407,12 @@ void Gfx::shim_GL_ARB_separate_shader_objects()
 	glProgramUniform1d = [](GLuint program, GLint location, double v0)
 	{
 		glUseProgram(program);
-		//glUniform1d(location, v0);
-		// glUniform1d is from GL_ARB_gpu_shader_fp64, which is not loaded
+		// glUniform1d is from GL_ARB_gpu_shader_fp64
+		#ifdef glUniform1d
+		glUniform1d(location, v0);
+		#else
 		throw std::runtime_error("glProgramUniform1d is unavailable");
+		#endif
 	};
 	glProgramUniform3f = [](GLuint program, GLint location, float v0, float v1, float v2)
 	{
