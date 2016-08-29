@@ -31,9 +31,9 @@ class World
 		World(const World&) = delete;
 		void operator=(const World&) = delete;
 
-		Block::Block get_block(const Position::BlockInWorld&) const;
+		const Block::Block& get_block(const Position::BlockInWorld&) const;
 
-		void set_block(const Position::BlockInWorld&, const Block::Block&);
+		void set_block(const Position::BlockInWorld&, std::unique_ptr<Block::Block>);
 
 		Graphics::Color get_light(const Position::BlockInWorld&) const;
 		void set_light(const Position::BlockInWorld&, const Graphics::Color&);

@@ -21,7 +21,7 @@ ChunkMesher::~ChunkMesher()
 {
 }
 
-Block::Block ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds)
+const Block::Block& ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds)
 {
 	if(x < 0 || x >= CHUNK_SIZE
 	|| y < 0 || y >= CHUNK_SIZE
@@ -29,7 +29,8 @@ Block::Block ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t x, con
 	{
 		if(!allow_out_of_bounds)
 		{
-			return Block::Block(BlockType::none);
+			static const Block::Block none(BlockType::none);
+			return none;
 		}
 		Position::BlockInWorld block_pos(chunk.get_position(), {0, 0, 0});
 		block_pos.x += x;
@@ -44,7 +45,7 @@ Block::Block ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t x, con
 
 bool ChunkMesher::block_visible_from(const Chunk& chunk, const Block::Block& block, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z)
 {
-	const Block::Block sibling = block_at(chunk, x, y, z);
+	const Block::Block& sibling = block_at(chunk, x, y, z);
 	return
 		   sibling.type() != BlockType::none
 		&& !block.is_invisible() // this block is visible

@@ -1,6 +1,10 @@
 #include "Block.hpp"
 
-#include "BlockType.hpp"
+#include <stdexcept>
+#include <string>
+
+#include "block/BlockType.hpp"
+#include "block/BlockVisibilityType.hpp"
 #include "graphics/Color.hpp"
 
 namespace Block {
@@ -19,6 +23,27 @@ Block::Block(const BlockType type)
 {
 }
 
+Block::~Block()
+{
+}
+
+Block::Block(const Block& that)
+	:
+	type_(that.type_)
+{
+	operator=(that);
+}
+
+void Block::operator=(const Block& that)
+{
+	const auto type1 = type_id();
+	const auto type2 = that.type_id();
+	if(type1 != type2)
+	{
+		throw std::runtime_error("can not copy " + std::to_string(type2) + " to " + std::to_string(type1));
+	}
+}
+
 block_type_id_t Block::type_id() const
 {
 	return static_cast<block_type_id_t>(type_);
@@ -31,43 +56,16 @@ BlockType Block::type() const
 
 Graphics::Color Block::color() const
 {
-	const auto m = Graphics::Color::max;
-	#pragma clang diagnostic push
-	#pragma clang diagnostic ignored "-Wswitch"
-	switch(type())
-	#pragma clang diagnostic pop
-	{
-		case BlockType::light_test_red:		return { m,  0,  0};
-		case BlockType::light_test_green:	return { 0,  m,  0};
-		case BlockType::light_test_blue:	return { 0,  0,  m};
-		case BlockType::light_test_yellow:	return { m,  m,  0};
-		case BlockType::light_test_cyan:	return { 0,  m,  m};
-		case BlockType::light_test_pink:	return { m,  0,  m};
-		case BlockType::light_test_white:	return { m,  m,  m};
-	}
-
 	return {0, 0, 0};
 }
 
 double Block::bounciness() const
 {
-	if(type_ == BlockType::test)
-	{
-		return 1;
-	}
 	return 0;
 }
 
 BlockVisibilityType Block::visibility_type() const
 {
-	if(type_ == BlockType::none || type_ == BlockType::air)
-	{
-		return BlockVisibilityType::invisible;
-	}
-	if(type_ == BlockType::teleporter)
-	{
-		return BlockVisibilityType::translucent;
-	}
 	return BlockVisibilityType::opaque;
 }
 
@@ -88,12 +86,12 @@ bool Block::is_invisible() const
 
 bool Block::is_solid() const
 {
-	return type_ != BlockType::air && type_ != BlockType::teleporter;
+	return true;
 }
 
 bool Block::is_selectable() const
 {
-	return type_ != BlockType::air;
+	return true;
 }
 
 } // namespace Block

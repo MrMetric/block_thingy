@@ -1,5 +1,6 @@
 #include "Chunk.hpp"
 
+#include <algorithm>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -35,7 +36,7 @@ using Position::ChunkInWorld;
 
 Chunk::Chunk(const ChunkInWorld& pos, World& owner)
 	:
-	solid_block(BlockType::air), // a useful default for now
+	solid_block(Game::instance->block_registry.make(BlockType::air)), // a useful default for now
 	owner(owner),
 	position(pos),
 	changed(false)
@@ -57,44 +58,44 @@ inline static chunk_block_array_t::size_type block_array_index(const BlockInChun
 	return CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
 }
 
-Block::Block Chunk::get_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
+const Block::Block& Chunk::get_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
 {
 	if(blocks == nullptr)
 	{
-		return solid_block;
+		return *solid_block;
 	}
-	return blocks->at(block_array_index(x, y, z));
+	return *blocks->at(block_array_index(x, y, z));
 }
 
-Block::Block Chunk::get_block(const BlockInChunk& pos) const
+const Block::Block& Chunk::get_block(const BlockInChunk& pos) const
 {
 	if(blocks == nullptr)
 	{
-		return solid_block;
+		return *solid_block;
 	}
-	return blocks->at(block_array_index(pos.x, pos.y, pos.z));
+	return *blocks->at(block_array_index(pos.x, pos.y, pos.z));
 }
 
-void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z, const Block::Block& block)
+void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z, std::unique_ptr<Block::Block> block)
 {
 	if(x >= CHUNK_SIZE
 	|| y >= CHUNK_SIZE
 	|| z >= CHUNK_SIZE)
 	{
-		string set_info = "(" + to_string(x) + ", " + to_string(y) + ", " + to_string(z) + ") = " + to_string(block.type_id());
+		string set_info = "(" + to_string(x) + ", " + to_string(y) + ", " + to_string(z) + ") = " + to_string(block->type_id());
 		throw std::domain_error("position out of bounds in Chunk::set: " + set_info);
 	}
 
 	init_block_array();
-	blocks->at(block_array_index(x, y, z)) = block;
+	blocks->at(block_array_index(x, y, z)) = std::move(block);
 	changed = true;
 
 	update_neighbors(x, y, z);
 }
 
-void Chunk::set_block(const BlockInChunk& block_pos, const Block::Block& block)
+void Chunk::set_block(const BlockInChunk& block_pos, std::unique_ptr<Block::Block> block)
 {
-	set_block(block_pos.x, block_pos.y, block_pos.z, block);
+	set_block(block_pos.x, block_pos.y, block_pos.z, std::move(block));
 }
 
 const Graphics::Color& Chunk::get_light(const BlockInChunk& pos) const
@@ -114,7 +115,7 @@ void Chunk::set_light(const BlockInChunk& pos, const Graphics::Color& color)
 
 void Chunk::update()
 {
-	if(blocks == nullptr && solid_block.is_invisible())
+	if(blocks == nullptr && solid_block->is_invisible())
 	{
 		meshes.clear();
 		return;
@@ -139,7 +140,7 @@ void Chunk::render(const bool transluscent_pass)
 	{
 		const meshmap_key_t& key = p.first;
 		const BlockType type = std::get<0>(key);
-		if(Block::Block(type).is_translucent() != transluscent_pass)
+		if(Game::instance->block_registry.make(type)->is_translucent() != transluscent_pass)
 		{
 			++i;
 			continue;
@@ -174,11 +175,12 @@ void Chunk::set_meshes(const meshmap_t& m)
 void Chunk::set_blocks(std::unique_ptr<chunk_block_array_t> new_blocks)
 {
 	blocks = std::move(new_blocks);
+	solid_block = nullptr;
 	changed = true;
 }
-void Chunk::set_blocks(const Block::Block& block)
+void Chunk::set_blocks(std::unique_ptr<Block::Block> block)
 {
-	solid_block = block;
+	solid_block = std::move(block);
 	blocks = nullptr;
 	changed = true;
 }
@@ -217,7 +219,10 @@ void Chunk::init_block_array()
 	}
 
 	blocks = std::make_unique<chunk_block_array_t>();
-	blocks->fill(solid_block);
+	std::generate(blocks->begin(), blocks->end(), [this]()
+	{
+		return Game::instance->block_registry.make(*solid_block);
+	});
 }
 
 void Chunk::update_neighbors() const

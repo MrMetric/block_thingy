@@ -10,8 +10,10 @@
 
 #include <glm/gtc/noise.hpp>
 
+#include "Game.hpp"
 #include "Player.hpp"
 #include "block/Block.hpp"
+#include "block/BlockRegistry.hpp"
 #include "block/BlockType.hpp"
 #include "chunk/Chunk.hpp"
 #include "chunk/mesh/GreedyMesher.hpp"
@@ -53,24 +55,27 @@ World::World(const string& file_path)
 {
 }
 
-void World::set_block(const BlockInWorld& block_pos, const Block::Block& block)
+void World::set_block(const BlockInWorld& block_pos, std::unique_ptr<Block::Block> block_ptr)
 {
 	const ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
 
-	const Block::Block old_block = get_block(block_pos);
+	const Block::Block& old_block = get_block(block_pos);
+	const bool old_is_opaque = old_block.is_opaque();
+	const Graphics::Color old_color = old_block.color();
+	// old_block is invalid after the call to set_block
 
 	const BlockInChunk pos(block_pos);
-	chunk->set_block(pos, block);
+	chunk->set_block(pos, std::move(block_ptr));
+	const Block::Block& block = chunk->get_block(pos);
 
 	chunks_to_save.emplace(chunk_pos);
 
-	if(block.is_opaque() && !old_block.is_opaque())
+	if(block.is_opaque() && !old_is_opaque)
 	{
 		sub_light(block_pos);
 	}
 
-	const Graphics::Color old_color = old_block.color();
 	const Graphics::Color color = block.color();
 	if(old_color != color)
 	{
@@ -81,13 +86,13 @@ void World::set_block(const BlockInWorld& block_pos, const Block::Block& block)
 		add_light(block_pos, color);
 	}
 
-	if(block.is_opaque() != old_block.is_opaque())
+	if(block.is_opaque() != old_is_opaque)
 	{
 		update_light_around(block_pos);
 	}
 }
 
-Block::Block World::get_block(const BlockInWorld& block_pos) const
+const Block::Block& World::get_block(const BlockInWorld& block_pos) const
 {
 	const ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
@@ -293,7 +298,7 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 		for(pos.y = 0; pos.y < CHUNK_SIZE; ++pos.y)
 		for(pos.z = 0; pos.z < CHUNK_SIZE; ++pos.z)
 		{
-			const Block::Block block = chunk->get_block(pos);
+			const Block::Block& block = chunk->get_block(pos);
 			const Graphics::Color color = block.color();
 			if(color != 0)
 			{
@@ -408,7 +413,7 @@ void World::gen_at(const BlockInWorld& min, const BlockInWorld& max)
 
 				const ChunkInWorld chunkpos(block_pos);
 				const BlockType t = y > -m / 2 ? BlockType::white : BlockType::black;
-				set_block(block_pos, Block::Block(t));
+				set_block(block_pos, Game::instance->block_registry.make(t));
 			}
 		}
 	}

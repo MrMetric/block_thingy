@@ -15,6 +15,7 @@ struct Color
 
 	Color();
 	Color(value_type r, value_type g, value_type b);
+	Color(const glm::dvec3&);
 
 	value_type operator[](uint_fast8_t) const;
 	value_type& operator[](uint_fast8_t);

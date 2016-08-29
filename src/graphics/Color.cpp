@@ -26,6 +26,14 @@ Color::Color(value_type r, value_type g, value_type b)
 {
 }
 
+Color::Color(const glm::dvec3& v)
+	:
+	r(static_cast<value_type>(std::round(v.r * max))),
+	g(static_cast<value_type>(std::round(v.g * max))),
+	b(static_cast<value_type>(std::round(v.b * max)))
+{
+}
+
 Color::value_type Color::operator[](const uint_fast8_t i) const
 {
 	if(i == 0) return r;

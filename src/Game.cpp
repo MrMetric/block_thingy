@@ -255,7 +255,7 @@ void Game::add_commands()
 		const Position::BlockInWorld pos = game.hovered_block->pos;
 		if(game.world.get_block(pos).type() != BlockType::none)
 		{
-			game.world.set_block(pos, Block::Block(BlockType::air));
+			game.world.set_block(pos, game.block_registry.make(BlockType::air));
 			game.find_hovered_block(game.gfx.projection_matrix, game.gfx.view_matrix_physical);
 			//event_manager.do_event(Event_break_block(pos, face));
 		}
@@ -270,7 +270,7 @@ void Game::add_commands()
 		const Position::BlockInWorld pos = game.hovered_block->adjacent();
 		if(game.world.get_block(pos).type() == BlockType::air && game.player.can_place_block_at(pos))
 		{
-			game.world.set_block(pos, Block::Block(game.block_type));
+			game.world.set_block(pos, game.block_registry.make(game.block_type));
 			//event_manager.do_event(Event_place_block(pos, face));
 		}
 	});
@@ -282,7 +282,7 @@ void Game::add_commands()
 		}
 
 		const Position::BlockInWorld pos = game.hovered_block->pos;
-		const auto block = game.world.get_block(pos);
+		const Block::Block& block = game.world.get_block(pos);
 		game.block_type = block.type();
 		game.console.logger << "block type: " << block.type_id() << "\n";
 	});
@@ -591,8 +591,8 @@ void Game::add_commands()
 				{
 					Position::BlockInWorld block_pos(x, y, z);
 					block_pos += start_pos;
-					block_type_id_t block_id = nazi[y][x];
-					game.world.set_block(block_pos, Block::Block(block_id));
+					const BlockType type = static_cast<BlockType>(nazi[y][x]);
+					game.world.set_block(block_pos, game.block_registry.make(type));
 				}
 			}
 		}

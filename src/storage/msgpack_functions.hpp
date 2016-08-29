@@ -7,6 +7,7 @@
 
 #include <glm/vec3.hpp>
 
+#include "Game.hpp"
 #include "Player.hpp"
 #include "block/Block.hpp"
 #include "chunk/Chunk.hpp"
@@ -161,7 +162,7 @@ struct convert<Chunk>
 		const bool is_solid = array[i++].as<bool>();
 		if(is_solid)
 		{
-			chunk.set_blocks(array[i++].as<Block::Block>());
+			chunk.set_blocks(array[i++].as<std::unique_ptr<Block::Block>>());
 		}
 		else
 		{
@@ -194,9 +195,9 @@ struct pack<Block::Block>
 };
 
 template<>
-struct convert<Block::Block>
+struct convert<std::unique_ptr<Block::Block>>
 {
-	msgpack::object const& operator()(msgpack::object const& o, Block::Block& block) const
+	msgpack::object const& operator()(msgpack::object const& o, std::unique_ptr<Block::Block>& block) const
 	{
 		if(o.type != msgpack::type::MAP) throw msgpack::type_error();
 		if(o.via.map.size < 1) throw msgpack::type_error();
@@ -205,7 +206,7 @@ struct convert<Block::Block>
 
 		BlockType t;
 		find_in_map_or_throw(map, "t", t);
-		block = Block::Block(t);
+		block = Game::instance->block_registry.make(t);
 
 		return o;
 	}

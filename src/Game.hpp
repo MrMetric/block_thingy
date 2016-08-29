@@ -15,6 +15,7 @@
 #include "fwd/Gfx.hpp"
 #include "fwd/Player.hpp"
 #include "World.hpp"
+#include "block/BlockRegistry.hpp"
 #include "fwd/block/BlockType.hpp"
 #include "console/Command.hpp"
 #include "console/Console.hpp"
@@ -68,6 +69,7 @@ class Game
 
 		Camera camera;
 		World world;
+		Block::BlockRegistry block_registry;
 		std::shared_ptr<Player> player_ptr;
 		Player& player;
 		Console console;
