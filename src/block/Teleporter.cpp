@@ -6,7 +6,7 @@ namespace Block {
 
 Teleporter::Teleporter()
 	:
-	Block(BlockType::teleporter)
+	Base(BlockType::teleporter)
 {
 }
 

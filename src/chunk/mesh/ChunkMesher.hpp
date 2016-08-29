@@ -6,7 +6,7 @@
 
 #include <glad/glad.h>
 
-#include "fwd/block/Block.hpp"
+#include "fwd/block/Base.hpp"
 #include "fwd/block/BlockType.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "fwd/graphics/Color.hpp"
@@ -32,7 +32,7 @@ class ChunkMesher
 
 		virtual meshmap_t make_mesh(const Chunk&) = 0;
 
-		static const Block::Block& block_at(const Chunk&, int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds = true);
-		static bool block_visible_from(const Chunk&, const Block::Block&, int_fast16_t, int_fast16_t, int_fast16_t);
+		static const Block::Base& block_at(const Chunk&, int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds = true);
+		static bool block_visible_from(const Chunk&, const Block::Base&, int_fast16_t, int_fast16_t, int_fast16_t);
 		static Graphics::Color light_at(const Chunk&, int_fast16_t x, int_fast16_t y, int_fast16_t z);
 };

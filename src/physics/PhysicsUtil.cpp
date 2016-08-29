@@ -14,7 +14,7 @@
 #include "RaycastHit.hpp"
 
 #include "World.hpp"
-#include "block/Block.hpp"
+#include "block/Base.hpp"
 #include "position/BlockInWorld.hpp"
 
 #include "std_make_unique.hpp"

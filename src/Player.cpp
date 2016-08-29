@@ -9,7 +9,7 @@
 
 #include "Game.hpp"
 #include "World.hpp"
-#include "block/Block.hpp"
+#include "block/Base.hpp"
 #include "event/type/Event_enter_block.hpp"
 #include "position/BlockInWorld.hpp"
 
@@ -108,7 +108,7 @@ void Player::move(const glm::dvec3& acceleration)
 		if(move_vec.y < 0)
 		{
 			const Position::BlockInWorld pos_feet_new(glm::dvec3(position.x, position.y + move_vec.y, position.z));
-			const Block::Block& block = Game::instance->world.get_block(pos_feet_new);
+			const Block::Base& block = Game::instance->world.get_block(pos_feet_new);
 			if(block.is_solid())
 			{
 				position.y = pos_feet_new.y + 1;
@@ -130,7 +130,7 @@ void Player::move(const glm::dvec3& acceleration)
 		else if(move_vec.y > 0)
 		{
 			const Position::BlockInWorld pos_head_new(glm::dvec3(position.x, position.y + move_vec.y + height, position.z));
-			const Block::Block& block = Game::instance->world.get_block(pos_head_new);
+			const Block::Base& block = Game::instance->world.get_block(pos_head_new);
 			if(block.is_solid())
 			{
 				position.y = pos_head_new.y - height;
@@ -200,7 +200,7 @@ void Player::step(const double delta_time)
 		const Position::BlockInWorld new_position(position);
 		if(new_position != old_position)
 		{
-			const Block::Block& block = Game::instance->world.get_block(new_position);
+			const Block::Base& block = Game::instance->world.get_block(new_position);
 			if(block.type() != BlockType::none
 			&& block.type() != BlockType::air
 			&& !block.is_solid())
@@ -317,7 +317,7 @@ void Player::set_noclip(bool noclip)
 
 bool Player::block_is_at(const Position::BlockInWorld& block_pos)
 {
-	const Block::Block& block = Game::instance->world.get_block(block_pos);
+	const Block::Base& block = Game::instance->world.get_block(block_pos);
 	return block.is_solid();
 }
 

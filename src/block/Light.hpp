@@ -1,17 +1,17 @@
 #pragma once
-#include "Block.hpp"
+#include "Base.hpp"
 
 #include "graphics/Color.hpp"
 
 namespace Block {
 
-class Light : public Block
+class Light : public Base
 {
 	public:
 		Light();
 		Light(const Graphics::Color&);
 
-		void operator=(const Block&) override;
+		void operator=(const Base&) override;
 
 		Graphics::Color color() const override;
 

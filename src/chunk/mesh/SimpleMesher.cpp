@@ -3,14 +3,14 @@
 #include <stdint.h>
 
 #include "Cube.hpp"
-#include "block/Block.hpp"
+#include "block/Base.hpp"
 #include "block/BlockType.hpp"
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
 using Position::BlockInChunk;
 
-static void draw_cube(const Chunk&, meshmap_t&, const Block::Block& block, BlockInChunk::value_type, BlockInChunk::value_type, BlockInChunk::value_type);
+static void draw_cube(const Chunk&, meshmap_t&, const Block::Base& block, BlockInChunk::value_type, BlockInChunk::value_type, BlockInChunk::value_type);
 static void draw_face(mesh_t&, BlockInChunk::value_type, BlockInChunk::value_type, BlockInChunk::value_type, uint_fast8_t face);
 
 meshmap_t SimpleMesher::make_mesh(const Chunk& chunk)
@@ -22,7 +22,7 @@ meshmap_t SimpleMesher::make_mesh(const Chunk& chunk)
 		{
 			for(BlockInChunk::value_type z = 0; z < CHUNK_SIZE; ++z)
 			{
-				const Block::Block& block = block_at(chunk, x, y, z);
+				const Block::Base& block = block_at(chunk, x, y, z);
 				if(block.is_invisible())
 				{
 					continue;
@@ -34,7 +34,7 @@ meshmap_t SimpleMesher::make_mesh(const Chunk& chunk)
 	return meshes;
 }
 
-void draw_cube(const Chunk& chunk, meshmap_t& meshes, const Block::Block& block, const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z)
+void draw_cube(const Chunk& chunk, meshmap_t& meshes, const Block::Base& block, const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z)
 {
 	// front
 	if(ChunkMesher::block_visible_from(chunk, block, x, y, z - 1))

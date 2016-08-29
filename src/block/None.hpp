@@ -1,9 +1,9 @@
 #pragma once
-#include "Block.hpp"
+#include "Base.hpp"
 
 namespace Block {
 
-class None : public Block
+class None : public Base
 {
 	public:
 		None();

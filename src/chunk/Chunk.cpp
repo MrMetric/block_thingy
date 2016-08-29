@@ -17,7 +17,7 @@
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "World.hpp"
-#include "block/Block.hpp"
+#include "block/Base.hpp"
 #include "block/BlockType.hpp"
 #include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
@@ -58,7 +58,7 @@ inline static chunk_block_array_t::size_type block_array_index(const BlockInChun
 	return CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
 }
 
-const Block::Block& Chunk::get_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
+const Block::Base& Chunk::get_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
 {
 	if(blocks == nullptr)
 	{
@@ -67,7 +67,7 @@ const Block::Block& Chunk::get_block(const BlockInChunk::value_type x, const Blo
 	return *blocks->at(block_array_index(x, y, z));
 }
 
-const Block::Block& Chunk::get_block(const BlockInChunk& pos) const
+const Block::Base& Chunk::get_block(const BlockInChunk& pos) const
 {
 	if(blocks == nullptr)
 	{
@@ -76,7 +76,7 @@ const Block::Block& Chunk::get_block(const BlockInChunk& pos) const
 	return *blocks->at(block_array_index(pos.x, pos.y, pos.z));
 }
 
-void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z, std::unique_ptr<Block::Block> block)
+void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z, std::unique_ptr<Block::Base> block)
 {
 	if(x >= CHUNK_SIZE
 	|| y >= CHUNK_SIZE
@@ -93,7 +93,7 @@ void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::valu
 	update_neighbors(x, y, z);
 }
 
-void Chunk::set_block(const BlockInChunk& block_pos, std::unique_ptr<Block::Block> block)
+void Chunk::set_block(const BlockInChunk& block_pos, std::unique_ptr<Block::Base> block)
 {
 	set_block(block_pos.x, block_pos.y, block_pos.z, std::move(block));
 }
@@ -178,7 +178,7 @@ void Chunk::set_blocks(std::unique_ptr<chunk_block_array_t> new_blocks)
 	solid_block = nullptr;
 	changed = true;
 }
-void Chunk::set_blocks(std::unique_ptr<Block::Block> block)
+void Chunk::set_blocks(std::unique_ptr<Block::Base> block)
 {
 	solid_block = std::move(block);
 	blocks = nullptr;

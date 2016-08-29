@@ -16,14 +16,14 @@ Light::Light()
 
 Light::Light(const Color& color)
 	:
-	Block(BlockType::light),
+	Base(BlockType::light),
 	color_(color)
 {
 }
 
-void Light::operator=(const Block& block)
+void Light::operator=(const Base& block)
 {
-	Block::operator=(block);
+	Base::operator=(block);
 	const Light* that = dynamic_cast<const Light*>(&block);
 	color_ = that->color_;
 }

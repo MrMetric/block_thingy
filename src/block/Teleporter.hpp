@@ -1,8 +1,8 @@
-#include "Block.hpp"
+#include "Base.hpp"
 
 namespace Block {
 
-class Teleporter : public Block
+class Teleporter : public Base
 {
 	public:
 		Teleporter();

@@ -1,4 +1,4 @@
 namespace Block
 {
-	class Block;
+	class Base;
 }

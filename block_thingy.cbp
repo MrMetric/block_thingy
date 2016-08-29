@@ -108,8 +108,8 @@
 		<Unit filename="src/World.hpp" />
 		<Unit filename="src/block/Air.cpp" />
 		<Unit filename="src/block/Air.hpp" />
-		<Unit filename="src/block/Block.cpp" />
-		<Unit filename="src/block/Block.hpp" />
+		<Unit filename="src/block/Base.cpp" />
+		<Unit filename="src/block/Base.hpp" />
 		<Unit filename="src/block/BlockRegistry.cpp" />
 		<Unit filename="src/block/BlockRegistry.hpp" />
 		<Unit filename="src/block/BlockType.hpp" />
@@ -151,7 +151,7 @@
 		<Unit filename="src/fwd/Gfx.hpp" />
 		<Unit filename="src/fwd/Player.hpp" />
 		<Unit filename="src/fwd/World.hpp" />
-		<Unit filename="src/fwd/block/Block.hpp" />
+		<Unit filename="src/fwd/block/Base.hpp" />
 		<Unit filename="src/fwd/block/BlockType.hpp" />
 		<Unit filename="src/fwd/block/BlockVisibilityType.hpp" />
 		<Unit filename="src/fwd/chunk/Chunk.hpp" />

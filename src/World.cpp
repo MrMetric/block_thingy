@@ -15,7 +15,7 @@
 
 #include "Game.hpp"
 #include "Player.hpp"
-#include "block/Block.hpp"
+#include "block/Base.hpp"
 #include "block/BlockRegistry.hpp"
 #include "block/BlockType.hpp"
 #include "chunk/Chunk.hpp"
@@ -58,19 +58,19 @@ World::World(const string& file_path)
 {
 }
 
-void World::set_block(const BlockInWorld& block_pos, std::unique_ptr<Block::Block> block_ptr)
+void World::set_block(const BlockInWorld& block_pos, std::unique_ptr<Block::Base> block_ptr)
 {
 	const ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
 
-	const Block::Block& old_block = get_block(block_pos);
+	const Block::Base& old_block = get_block(block_pos);
 	const bool old_is_opaque = old_block.is_opaque();
 	const Graphics::Color old_color = old_block.color();
 	// old_block is invalid after the call to set_block
 
 	const BlockInChunk pos(block_pos);
 	chunk->set_block(pos, std::move(block_ptr));
-	const Block::Block& block = chunk->get_block(pos);
+	const Block::Base& block = chunk->get_block(pos);
 
 	chunks_to_save.emplace(chunk_pos);
 
@@ -95,13 +95,13 @@ void World::set_block(const BlockInWorld& block_pos, std::unique_ptr<Block::Bloc
 	}
 }
 
-const Block::Block& World::get_block(const BlockInWorld& block_pos) const
+const Block::Base& World::get_block(const BlockInWorld& block_pos) const
 {
 	const ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static const Block::Block none(BlockType::none);
+		static const Block::Base none(BlockType::none);
 		return none;
 	}
 
@@ -301,7 +301,7 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 		for(pos.y = 0; pos.y < CHUNK_SIZE; ++pos.y)
 		for(pos.z = 0; pos.z < CHUNK_SIZE; ++pos.z)
 		{
-			const Block::Block& block = chunk->get_block(pos);
+			const Block::Base& block = chunk->get_block(pos);
 			const Graphics::Color color = block.color();
 			if(color != 0)
 			{

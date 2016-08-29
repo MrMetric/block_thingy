@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 #include "World.hpp"
-#include "block/Block.hpp"
+#include "block/Base.hpp"
 #include "block/BlockType.hpp"
 #include "chunk/Chunk.hpp"
 #include "graphics/Color.hpp"
@@ -21,7 +21,7 @@ ChunkMesher::~ChunkMesher()
 {
 }
 
-const Block::Block& ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds)
+const Block::Base& ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds)
 {
 	if(x < 0 || x >= CHUNK_SIZE
 	|| y < 0 || y >= CHUNK_SIZE
@@ -29,7 +29,7 @@ const Block::Block& ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t
 	{
 		if(!allow_out_of_bounds)
 		{
-			static const Block::Block none(BlockType::none);
+			static const Block::Base none(BlockType::none);
 			return none;
 		}
 		Position::BlockInWorld block_pos(chunk.get_position(), {0, 0, 0});
@@ -43,9 +43,9 @@ const Block::Block& ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t
 	#undef s
 }
 
-bool ChunkMesher::block_visible_from(const Chunk& chunk, const Block::Block& block, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z)
+bool ChunkMesher::block_visible_from(const Chunk& chunk, const Block::Base& block, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z)
 {
-	const Block::Block& sibling = block_at(chunk, x, y, z);
+	const Block::Base& sibling = block_at(chunk, x, y, z);
 	return
 		   sibling.type() != BlockType::none
 		&& !block.is_invisible() // this block is visible

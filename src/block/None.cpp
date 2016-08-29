@@ -7,7 +7,7 @@ namespace Block {
 
 None::None()
 	:
-	Block(BlockType::none)
+	Base(BlockType::none)
 {
 }
 

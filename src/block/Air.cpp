@@ -7,7 +7,7 @@ namespace Block {
 
 Air::Air()
 	:
-	Block(BlockType::air)
+	Base(BlockType::air)
 {
 }
 

@@ -9,7 +9,7 @@
 #include <unordered_set>
 
 #include "fwd/Player.hpp"
-#include "fwd/block/Block.hpp"
+#include "fwd/block/Base.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "chunk/mesh/ChunkMesher.hpp"
 #include "graphics/Color.hpp"
@@ -31,9 +31,9 @@ class World
 		World(const World&) = delete;
 		void operator=(const World&) = delete;
 
-		const Block::Block& get_block(const Position::BlockInWorld&) const;
+		const Block::Base& get_block(const Position::BlockInWorld&) const;
 
-		void set_block(const Position::BlockInWorld&, std::unique_ptr<Block::Block>);
+		void set_block(const Position::BlockInWorld&, std::unique_ptr<Block::Base>);
 
 		Graphics::Color get_light(const Position::BlockInWorld&) const;
 		void set_light(const Position::BlockInWorld&, const Graphics::Color&);

@@ -7,16 +7,16 @@
 
 namespace Block {
 
-class Block
+class Base
 {
 	public:
-		Block();
-		explicit Block(block_type_id_t);
-		explicit Block(BlockType);
-		virtual ~Block();
+		Base();
+		explicit Base(block_type_id_t);
+		explicit Base(BlockType);
+		virtual ~Base();
 
-		Block(const Block&);
-		virtual void operator=(const Block&);
+		Base(const Base&);
+		virtual void operator=(const Base&);
 
 		block_type_id_t type_id() const;
 		BlockType type() const;

@@ -4,7 +4,7 @@ namespace Block {
 
 Test::Test()
 	:
-	Block(BlockType::test)
+	Base(BlockType::test)
 {
 }
 

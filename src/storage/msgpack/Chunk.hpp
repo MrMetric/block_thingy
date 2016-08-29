@@ -52,7 +52,7 @@ struct convert<Chunk>
 		const bool is_solid = array[i++].as<bool>();
 		if(is_solid)
 		{
-			chunk.set_blocks(array[i++].as<std::unique_ptr<Block::Block>>());
+			chunk.set_blocks(array[i++].as<std::unique_ptr<Block::Base>>());
 		}
 		else
 		{

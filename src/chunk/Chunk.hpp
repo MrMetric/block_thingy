@@ -9,7 +9,7 @@
 #include "graphics/OpenGL/VertexBuffer.hpp"
 
 #include "fwd/World.hpp"
-#include "block/Block.hpp"
+#include "block/Base.hpp"
 #include "chunk/mesh/ChunkMesher.hpp"
 #include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
@@ -19,7 +19,7 @@
 constexpr int_fast32_t CHUNK_SIZE = 32;
 constexpr int_fast32_t CHUNK_BLOCK_COUNT = CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE;
 
-using chunk_block_array_t = std::array<std::unique_ptr<Block::Block>, CHUNK_BLOCK_COUNT>;
+using chunk_block_array_t = std::array<std::unique_ptr<Block::Base>, CHUNK_BLOCK_COUNT>;
 
 class Chunk
 {
@@ -35,11 +35,11 @@ class Chunk
 		World& get_owner() const; // eeh
 		Position::ChunkInWorld get_position() const;
 
-		const Block::Block& get_block(Position::BlockInChunk::value_type x, Position::BlockInChunk::value_type y, Position::BlockInChunk::value_type z) const;
-		const Block::Block& get_block(const Position::BlockInChunk&) const;
+		const Block::Base& get_block(Position::BlockInChunk::value_type x, Position::BlockInChunk::value_type y, Position::BlockInChunk::value_type z) const;
+		const Block::Base& get_block(const Position::BlockInChunk&) const;
 
-		void set_block(Position::BlockInChunk::value_type x, Position::BlockInChunk::value_type y, Position::BlockInChunk::value_type z, std::unique_ptr<Block::Block>);
-		void set_block(const Position::BlockInChunk&, const std::unique_ptr<Block::Block>);
+		void set_block(Position::BlockInChunk::value_type x, Position::BlockInChunk::value_type y, Position::BlockInChunk::value_type z, std::unique_ptr<Block::Base>);
+		void set_block(const Position::BlockInChunk&, const std::unique_ptr<Block::Base>);
 
 		const Graphics::Color& get_light(const Position::BlockInChunk&) const;
 		void set_light(const Position::BlockInChunk&, const Graphics::Color&);
@@ -52,11 +52,11 @@ class Chunk
 
 		// for loading
 		void set_blocks(std::unique_ptr<chunk_block_array_t>);
-		void set_blocks(std::unique_ptr<Block::Block>);
+		void set_blocks(std::unique_ptr<Block::Base>);
 
 		// public because friend stuff does not work for msgpack stuff
 		std::unique_ptr<chunk_block_array_t> blocks;
-		std::unique_ptr<Block::Block> solid_block;
+		std::unique_ptr<Block::Base> solid_block;
 
 	private:
 		World& owner;

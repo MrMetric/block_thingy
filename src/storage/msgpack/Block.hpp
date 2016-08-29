@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "Game.hpp"
-#include "block/Block.hpp"
+#include "block/Base.hpp"
 #include "block/BlockType.hpp"
 
 namespace msgpack {
@@ -11,10 +11,10 @@ MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
 namespace adaptor {
 
 template<>
-struct pack<Block::Block>
+struct pack<Block::Base>
 {
 	template <typename Stream>
-	packer<Stream>& operator()(msgpack::packer<Stream>& o, Block::Block const& block) const
+	packer<Stream>& operator()(msgpack::packer<Stream>& o, Block::Base const& block) const
 	{
 		o.pack_map(1);
 
@@ -26,9 +26,9 @@ struct pack<Block::Block>
 };
 
 template<>
-struct convert<std::unique_ptr<Block::Block>>
+struct convert<std::unique_ptr<Block::Base>>
 {
-	msgpack::object const& operator()(msgpack::object const& o, std::unique_ptr<Block::Block>& block) const
+	msgpack::object const& operator()(msgpack::object const& o, std::unique_ptr<Block::Base>& block) const
 	{
 		if(o.type != msgpack::type::MAP) throw msgpack::type_error();
 		if(o.via.map.size < 1) throw msgpack::type_error();

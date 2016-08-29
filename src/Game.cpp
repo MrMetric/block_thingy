@@ -28,7 +28,7 @@
 #include "Gfx.hpp"
 #include "Player.hpp"
 #include "World.hpp"
-#include "block/Block.hpp"
+#include "block/Base.hpp"
 #include "block/BlockType.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
@@ -282,7 +282,7 @@ void Game::add_commands()
 		}
 
 		const Position::BlockInWorld pos = game.hovered_block->pos;
-		const Block::Block& block = game.world.get_block(pos);
+		const Block::Base& block = game.world.get_block(pos);
 		game.block_type = block.type();
 		game.console.logger << "block type: " << block.type_id() << "\n";
 	});

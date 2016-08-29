@@ -1,6 +1,6 @@
 #include "BlockRegistry.hpp"
 
-#include "block/Block.hpp"
+#include "block/Base.hpp"
 #include "block/BlockType.hpp"
 
 #include "block/Air.hpp"
@@ -23,7 +23,7 @@ BlockMaker::~BlockMaker()
 {
 }
 
-std::unique_ptr<Block> BlockMaker::make()
+std::unique_ptr<Base> BlockMaker::make()
 {
 	return nullptr;
 }
@@ -37,19 +37,19 @@ BlockRegistry::BlockRegistry()
 	add<Teleporter>(BlockType::teleporter);
 }
 
-std::unique_ptr<Block> BlockRegistry::make(const BlockType t)
+std::unique_ptr<Base> BlockRegistry::make(const BlockType t)
 {
 	const auto i = map.find(t);
 	if(i == map.cend())
 	{
-		return std::make_unique<Block>(t);
+		return std::make_unique<Base>(t);
 	}
 	return i->second->make();
 }
 
-std::unique_ptr<Block> BlockRegistry::make(const Block& block)
+std::unique_ptr<Base> BlockRegistry::make(const Base& block)
 {
-	std::unique_ptr<Block> new_block = make(block.type());
+	std::unique_ptr<Base> new_block = make(block.type());
 	*new_block = block;
 	return new_block;
 }

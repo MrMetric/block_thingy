@@ -1,4 +1,4 @@
-#include "Block.hpp"
+#include "Base.hpp"
 
 #include <stdexcept>
 #include <string>
@@ -9,32 +9,32 @@
 
 namespace Block {
 
-Block::Block() : type_(BlockType::none) {}
+Base::Base() : type_(BlockType::none) {}
 
-Block::Block(const block_type_id_t type_id)
+Base::Base(const block_type_id_t type_id)
 	:
 	type_(static_cast<BlockType>(type_id))
 {
 }
 
-Block::Block(const BlockType type)
+Base::Base(const BlockType type)
 	:
 	type_(type)
 {
 }
 
-Block::~Block()
+Base::~Base()
 {
 }
 
-Block::Block(const Block& that)
+Base::Base(const Base& that)
 	:
 	type_(that.type_)
 {
 	operator=(that);
 }
 
-void Block::operator=(const Block& that)
+void Base::operator=(const Base& that)
 {
 	const auto type1 = type_id();
 	const auto type2 = that.type_id();
@@ -44,52 +44,52 @@ void Block::operator=(const Block& that)
 	}
 }
 
-block_type_id_t Block::type_id() const
+block_type_id_t Base::type_id() const
 {
 	return static_cast<block_type_id_t>(type_);
 }
 
-BlockType Block::type() const
+BlockType Base::type() const
 {
 	return type_;
 }
 
-Graphics::Color Block::color() const
+Graphics::Color Base::color() const
 {
 	return {0, 0, 0};
 }
 
-double Block::bounciness() const
+double Base::bounciness() const
 {
 	return 0;
 }
 
-BlockVisibilityType Block::visibility_type() const
+BlockVisibilityType Base::visibility_type() const
 {
 	return BlockVisibilityType::opaque;
 }
 
-bool Block::is_opaque() const
+bool Base::is_opaque() const
 {
 	return visibility_type() == BlockVisibilityType::opaque;
 }
 
-bool Block::is_translucent() const
+bool Base::is_translucent() const
 {
 	return visibility_type() == BlockVisibilityType::translucent;
 }
 
-bool Block::is_invisible() const
+bool Base::is_invisible() const
 {
 	return visibility_type() == BlockVisibilityType::invisible;
 }
 
-bool Block::is_solid() const
+bool Base::is_solid() const
 {
 	return true;
 }
 
-bool Block::is_selectable() const
+bool Base::is_selectable() const
 {
 	return true;
 }
