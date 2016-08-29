@@ -22,7 +22,7 @@ using world_map_t = std::unordered_map<Position::ChunkInWorld, std::shared_ptr<C
 
 class World
 {
-	friend class WorldFile;
+	friend class Storage::WorldFile;
 
 	public:
 		World(const std::string& file_path);
@@ -72,5 +72,5 @@ class World
 		std::unordered_set<Position::ChunkInWorld, std::function<uint64_t(Position::ChunkInWorld)>> chunks_to_save;
 
 		std::unordered_map<std::string, std::shared_ptr<Player>> players;
-		WorldFile file;
+		Storage::WorldFile file;
 };

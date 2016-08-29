@@ -23,6 +23,8 @@
 
 #include "std_make_unique.hpp"
 
+namespace Storage {
+
 using std::shared_ptr;
 using std::string;
 using std::to_string;
@@ -114,3 +116,5 @@ shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 
 	return chunk;
 }
+
+} // namespace Storage

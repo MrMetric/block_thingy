@@ -8,6 +8,8 @@
 #include "fwd/chunk/Chunk.hpp"
 #include "fwd/position/ChunkInWorld.hpp"
 
+namespace Storage {
+
 class WorldFile
 {
 	public:
@@ -64,3 +66,5 @@ class WorldFile
 		std::string chunk_path;
 		World& world;
 };
+
+} // namespace Storage
