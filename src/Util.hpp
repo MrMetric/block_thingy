@@ -56,6 +56,4 @@ namespace Util
 		}
 		return x;
 	}
-
-	double mod(double x, double y);
 };

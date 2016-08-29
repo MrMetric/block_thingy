@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 #include <glad/glad.h>
 
 namespace Graphics {

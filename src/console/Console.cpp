@@ -70,7 +70,7 @@ void Console::run_line(const string& line)
 		return;
 	}
 	const string name = args[0];
-	args.erase(args.begin());
+	args.erase(args.cbegin());
 	run_command(name, args);
 }
 
@@ -92,8 +92,8 @@ void Console::run_command(const string& name, const std::vector<string>& args) c
 		return;
 	}
 
-	auto i = handlers.find(name);
-	if(i == handlers.end())
+	const auto i = handlers.find(name);
+	if(i == handlers.cend())
 	{
 		error_logger << "unknown command: " << name << "\n";
 		return;

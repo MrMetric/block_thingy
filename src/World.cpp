@@ -5,9 +5,12 @@
 #include <memory>
 #include <queue>
 #include <stdint.h>
+#include <tuple>
 #include <unordered_set>
 #include <utility>
 
+#include <glm/common.hpp>
+#include <glm/vec2.hpp>
 #include <glm/gtc/noise.hpp>
 
 #include "Game.hpp"
@@ -316,7 +319,7 @@ shared_ptr<Chunk> World::get_chunk(const ChunkInWorld& chunk_pos) const
 	}
 
 	const auto i = chunks.find(chunk_pos);
-	if(i == chunks.end())
+	if(i == chunks.cend())
 	{
 		return nullptr;
 	}
@@ -371,7 +374,7 @@ static double sum_octaves(
 	for(uint_fast8_t i = 0; i < octave_count; i++)
 	{
 		const glm::dvec2 Pm(P.x * freq, P.y * freq);
-		val += glm::abs(glm::simplex(Pm) / freq);
+		val += std::abs(glm::simplex(Pm) / freq);
 		freq *= freq_mul;
 	}
 	return val;
@@ -405,11 +408,11 @@ void World::gen_at(const BlockInWorld& min, const BlockInWorld& max)
 
 			auto max_y = max.y <= -m ? max.y : std::min(max.y, static_cast<BlockInWorld::value_type>(get_max_y(x, z) * m));
 
+			block_pos.x = x;
+			block_pos.z = z;
 			for(auto y = min.y; y <= max_y; ++y)
 			{
-				block_pos.x = x;
 				block_pos.y = y;
-				block_pos.z = z;
 
 				const ChunkInWorld chunkpos(block_pos);
 				const BlockType t = y > -m / 2 ? BlockType::white : BlockType::black;
@@ -443,7 +446,7 @@ shared_ptr<Player> World::add_player(const string& name)
 shared_ptr<Player> World::get_player(const string& name)
 {
 	const auto i = players.find(name);
-	if(i == players.end())
+	if(i == players.cend())
 	{
 		return nullptr;
 	}
@@ -456,8 +459,9 @@ void World::save()
 
 	while(!chunks_to_save.empty())
 	{
-		const ChunkInWorld position = *chunks_to_save.begin();
-		chunks_to_save.erase(chunks_to_save.begin());
+		const auto i = chunks_to_save.cbegin();
+		const ChunkInWorld position = *i;
+		chunks_to_save.erase(i);
 		shared_ptr<Chunk> chunk = get_chunk(position);
 		if(chunk != nullptr)
 		{

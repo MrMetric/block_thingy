@@ -1,5 +1,6 @@
 #include "Color.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <limits>

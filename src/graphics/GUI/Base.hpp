@@ -1,14 +1,11 @@
 #pragma once
 
 #include <memory>
-#include <vector>
 
-#include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
 
 #include "fwd/Game.hpp"
 #include "fwd/event/EventManager.hpp"
-#include "graphics/Text.hpp"
 #include "graphics/GUI/WidgetContainer.hpp"
 
 #include "types/window_size_t.hpp"

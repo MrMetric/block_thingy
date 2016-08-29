@@ -2,13 +2,13 @@
 
 #include <sstream>
 
-#include "fwd/block/BlockType.hpp"
-#include "graphics/OpenGL/ShaderProgram.hpp"
-#include "graphics/OpenGL/VertexBuffer.hpp"
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "Player.hpp"
+#include "fwd/block/BlockType.hpp"
 
 namespace Graphics {
 namespace GUI {

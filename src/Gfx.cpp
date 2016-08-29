@@ -246,12 +246,12 @@ void Gfx::draw_cube_outline(const Position::BlockInWorld& block_pos, const glm::
 
 Graphics::OpenGL::ShaderProgram& Gfx::get_block_shader(const BlockType type)
 {
-	auto i = block_shaders.find(type);
-	if(i != block_shaders.end())
+	const auto i = block_shaders.find(type);
+	if(i == block_shaders.cend())
 	{
-		return i->second;
+		return block_shaders.at(BlockType::test);
 	}
-	return block_shaders.at(BlockType::test);
+	return i->second;
 }
 
 #ifdef USE_LIBPNG

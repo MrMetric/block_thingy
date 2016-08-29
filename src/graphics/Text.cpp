@@ -2,7 +2,11 @@
 
 #include <algorithm>
 #include <iostream>
+#include <stdexcept>
 #include <stdint.h>
+#include <vector>
+
+#include <glad/glad.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdocumentation"

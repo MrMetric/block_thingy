@@ -13,8 +13,8 @@ std::vector<string> ArgumentParser::parse_args(const string& argline)
 {
 	std::vector<string> args;
 
-	iterator = argline.begin();
-	end = argline.end();
+	iterator = argline.cbegin();
+	end = argline.cend();
 
 	while(iterator != end)
 	{

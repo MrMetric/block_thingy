@@ -86,8 +86,8 @@ GLuint ShaderProgram::get_name()
 
 GLint ShaderProgram::get_uniform_location(const string& name) const
 {
-	auto i = uniforms.find(name);
-	if(i == uniforms.end())
+	const auto i = uniforms.find(name);
+	if(i == uniforms.cend())
 	{
 		return -1;
 	}

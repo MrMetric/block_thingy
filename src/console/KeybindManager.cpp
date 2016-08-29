@@ -2,12 +2,10 @@
 
 #include <algorithm>
 #include <iostream>
-#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "Console.hpp"
@@ -82,10 +80,10 @@ void KeybindManager::keypress(int key, const int scancode, const int action, con
 
 	if(action == GLFW_PRESS || action == GLFW_REPEAT)
 	{
-		auto i = keybinds.find(key);
-		if(i != keybinds.end())
+		const auto i = keybinds.find(key);
+		if(i != keybinds.cend())
 		{
-			string command = i->second;
+			const string command = i->second;
 			if(command[0] == '+')
 			{
 				if(action == GLFW_REPEAT)
@@ -102,7 +100,7 @@ void KeybindManager::keypress(int key, const int scancode, const int action, con
 	else if(action == GLFW_RELEASE)
 	{
 		const auto i = release_auto.find(key);
-		if(i != release_auto.end())
+		if(i != release_auto.cend())
 		{
 			console.run_line(i->second);
 		}
@@ -121,7 +119,7 @@ void KeybindManager::mousepress(const int button, const int action, const int mo
 void KeybindManager::joypress(const int joystick, const int button, const bool pressed)
 {
 	const auto i = joystate.find(button);
-	if(i == joystate.end())
+	if(i == joystate.cend())
 	{
 		joystate[button] = 0;
 	}

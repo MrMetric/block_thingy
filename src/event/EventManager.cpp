@@ -29,8 +29,8 @@ event_handler_id_t EventManager::add_handler(const EventType type, const event_h
 
 void EventManager::unadd_handler(const event_handler_id_t event_id)
 {
-	auto i = handlers.find(event_id);
-	if(i == handlers.end())
+	const auto i = handlers.find(event_id);
+	if(i == handlers.cend())
 	{
 		throw std::runtime_error("there is no event with id " + to_string(event_id));
 	}

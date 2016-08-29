@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <stdint.h>
 
-#include <glad/glad.h>
 #include <glm/vec3.hpp>
 
 #include "block/Block.hpp"

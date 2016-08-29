@@ -583,16 +583,15 @@ void Game::add_commands()
 			{ 1, 1, 1, 1, 2, 1, 1, 1, 2, },
 			{ 2, 2, 2, 2, 2, 1, 1, 1, 2, },
 		};
-		for(Position::BlockInWorld::value_type x = 0; x < xsize; ++x)
+		Position::BlockInWorld pos;
+		for(pos.x = 0; pos.x < xsize; ++pos.x)
 		{
-			for(Position::BlockInWorld::value_type y = ysize - 1; y >= 0; --y)
+			for(pos.y = ysize - 1; pos.y >= 0; --pos.y)
 			{
-				for(Position::BlockInWorld::value_type z = 0; z < 1; ++z)
+				for(pos.z = 0; pos.z < 1; ++pos.z)
 				{
-					Position::BlockInWorld block_pos(x, y, z);
-					block_pos += start_pos;
-					const BlockType type = static_cast<BlockType>(nazi[y][x]);
-					game.world.set_block(block_pos, game.block_registry.make(type));
+					const BlockType type = static_cast<BlockType>(nazi[pos.y][pos.x]);
+					game.world.set_block(pos + start_pos, game.block_registry.make(type));
 				}
 			}
 		}

@@ -1,9 +1,9 @@
 #pragma once
 #include "Base.hpp"
 
-#include "graphics/OpenGL/ShaderProgram.hpp"
-#include "graphics/OpenGL/VertexArray.hpp"
-#include "graphics/OpenGL/VertexBuffer.hpp"
+#include <glm/vec2.hpp>
+
+#include "fwd/Game.hpp"
 
 namespace Graphics {
 namespace GUI {

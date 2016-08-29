@@ -1,7 +1,6 @@
 #include "Util.hpp"
 
 #include <cerrno>
-#include <cmath>
 #include <cstring>
 #include <fstream>
 #include <iostream>
@@ -153,9 +152,4 @@ void Util::change_directory(const string& path)
 	{
 		throw std::runtime_error("error changing directory to " + path + ": " + strerror(errno) + "\n");
 	}
-}
-
-double Util::mod(double x, double y)
-{
-	return x - (std::floor(x / y) * y);
 }

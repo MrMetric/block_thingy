@@ -5,9 +5,10 @@
 #include <stdexcept>
 #include <string>
 
+#include <glm/common.hpp>
+
 #include "BlockInWorld.hpp"
 
-#include "Util.hpp"
 #include "chunk/Chunk.hpp"
 
 using std::to_string;
@@ -24,10 +25,18 @@ namespace Position
 		check_bounds();
 	}
 
-	// % can return a negative result, so do it properly here
-	// TODO: find out if std::mod works instead
+	/*
+	+5 % +2 == std::fmod(+5, +2) == 1
+	+5 % -2 == std::fmod(+5, -2) == 1
+	-5 % +2 == std::fmod(-5, +2) == -1
+	-5 % -2 == std::fmod(-5, -2) == -1
+	glm::mod(+5.0, +2.0) == 1
+	glm::mod(+5.0, -2.0) == -1
+	glm::mod(-5.0, +2.0) == 1
+	glm::mod(-5.0, -2.0) == -1
+	*/
 	#undef t
-	#define t(a) static_cast<value_type>(Util::mod(a, CHUNK_SIZE))
+	#define t(a) static_cast<value_type>(glm::mod(static_cast<double>(a), static_cast<double>(CHUNK_SIZE)))
 	BlockInChunk::BlockInChunk(const BlockInWorld& pos)
 	{
 		x = t(pos.x);

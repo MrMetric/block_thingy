@@ -15,13 +15,13 @@
 template <typename T>
 bool find_in_map(const std::unordered_map<std::string, msgpack::object>& map, const std::string& key, T& v)
 {
-	auto i = map.find(key);
-	if(i != map.end())
+	const auto i = map.find(key);
+	if(i == map.cend())
 	{
-		v = i->second.as<T>();
-		return true;
+		return false;
 	}
-	return false;
+	v = i->second.as<T>();
+	return true;
 }
 
 template <typename T>
