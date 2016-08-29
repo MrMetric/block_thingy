@@ -65,7 +65,7 @@ string ArgumentParser::read_string(const char endchar)
 			}
 			continue;
 		}
-		if(c == endchar)
+		if(c == endchar || (endchar == ' ' && c == '\t'))
 		{
 			++iterator;
 			return s;
