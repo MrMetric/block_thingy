@@ -79,7 +79,7 @@ void Player::move(const glm::dvec3& acceleration)
 			AABB block_aabb(block_pos);
 			if(new_aabb.collide(block_aabb))
 			{
-				const glm::vec3 direction_sign = static_cast<glm::vec3>(block_pos_offset);
+				const glm::vec3 direction_sign(block_pos_offset.x, 0, block_pos_offset.z);
 				glm::dvec3 offset = new_aabb.offset(block_aabb, direction_sign);
 				if(corners)
 				{
