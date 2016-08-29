@@ -32,11 +32,11 @@ void Play::close()
 
 void Play::draw()
 {
+	game.draw_world();
 	if(game.gui.get() == this)
 	{
 		game.step_world();
 	}
-	game.draw_world();
 	Base::draw();
 }
 
