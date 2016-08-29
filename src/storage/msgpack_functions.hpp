@@ -188,7 +188,8 @@ struct pack<Block::Block>
 	{
 		o.pack_map(1);
 
-		o.pack("t"); o.pack(block.type_id());
+		BlockType t = block.type() != BlockType::none ? block.type() : BlockType::air;
+		o.pack("t"); o.pack(t);
 
 		return o;
 	}
