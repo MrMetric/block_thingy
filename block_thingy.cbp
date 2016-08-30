@@ -179,6 +179,8 @@
 		<Unit filename="src/graphics/GUI/Widget/Base.hpp" />
 		<Unit filename="src/graphics/GUI/Widget/Button.cpp" />
 		<Unit filename="src/graphics/GUI/Widget/Button.hpp" />
+		<Unit filename="src/graphics/GUI/Widget/Text.cpp" />
+		<Unit filename="src/graphics/GUI/Widget/Text.hpp" />
 		<Unit filename="src/graphics/GUI/WidgetContainer.cpp" />
 		<Unit filename="src/graphics/GUI/WidgetContainer.hpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderObject.cpp" />

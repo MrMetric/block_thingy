@@ -13,9 +13,6 @@ class Pause : public Base
 
 		void init() override;
 		void draw() override;
-
-	private:
-		void draw_gui() override;
 };
 
 } // namespace GUI

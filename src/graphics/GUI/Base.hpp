@@ -38,7 +38,7 @@ class Base
 		Game& game;
 
 	protected:
-		virtual void draw_gui() = 0;
+		virtual void draw_gui();
 		virtual void update_framebuffer_size(const window_size_t&);
 		WidgetContainer root;
 

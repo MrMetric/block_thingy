@@ -26,6 +26,14 @@ Base::~Base()
 {
 }
 
+void Base::mousepress(const int button, const int action, const int mods)
+{
+}
+
+void Base::mousemove(const double x, const double y)
+{
+}
+
 void Base::update_container
 (
 	const glm::dvec2& container_position,

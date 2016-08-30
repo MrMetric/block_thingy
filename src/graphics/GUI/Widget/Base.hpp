@@ -24,8 +24,8 @@ class Base
 
 		virtual void draw() = 0;
 
-		virtual void mousepress(int button, int action, int mods) = 0;
-		virtual void mousemove(double x, double y) = 0;
+		virtual void mousepress(int button, int action, int mods);
+		virtual void mousemove(double x, double y);
 
 		void update_container
 		(

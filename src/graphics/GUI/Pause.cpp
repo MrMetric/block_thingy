@@ -5,6 +5,7 @@
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "graphics/GUI/Widget/Button.hpp"
+#include "graphics/GUI/Widget/Text.hpp"
 
 namespace Graphics {
 namespace GUI {
@@ -13,6 +14,8 @@ Pause::Pause(Game& game)
 	:
 	Base(game, WidgetContainerMode::widgets)
 {
+	root.add<Widget::Text>("Paused");
+
 	root.add<Widget::Button>("Resume",
 	[&game]()
 	{
@@ -48,11 +51,6 @@ void Pause::draw()
 {
 	parent->draw();
 	Base::draw();
-}
-
-void Pause::draw_gui()
-{
-	game.gfx.gui_text.draw("paused", {8, 150});
 }
 
 } // namespace GUI
