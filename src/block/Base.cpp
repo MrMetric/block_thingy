@@ -6,6 +6,8 @@
 #include "block/BlockType.hpp"
 #include "block/BlockVisibilityType.hpp"
 #include "graphics/Color.hpp"
+#include "storage/Interface.hpp"
+#include "storage/msgpack/BlockType.hpp"
 
 namespace Block {
 
@@ -92,6 +94,20 @@ bool Base::is_solid() const
 bool Base::is_selectable() const
 {
 	return true;
+}
+
+void Base::save(Storage::OutputInterface& i) const
+{
+	BlockType t = type_ != BlockType::none ? type_ : BlockType::air;
+	i.set("t", t);
+}
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter" // i
+void Base::load(Storage::InputInterface& i)
+#pragma clang diagnostic pop
+{
+	// type is set before loading
 }
 
 } // namespace Block

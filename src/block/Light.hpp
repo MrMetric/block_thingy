@@ -15,6 +15,9 @@ class Light : public Base
 
 		Graphics::Color color() const override;
 
+		void save(Storage::OutputInterface&) const override;
+		void load(Storage::InputInterface&) override;
+
 	private:
 		Graphics::Color color_;
 };

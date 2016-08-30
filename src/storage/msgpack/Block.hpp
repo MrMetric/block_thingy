@@ -5,6 +5,7 @@
 #include "Game.hpp"
 #include "block/Base.hpp"
 #include "block/BlockType.hpp"
+#include "storage/Interface.hpp"
 
 namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
@@ -16,10 +17,9 @@ struct pack<Block::Base>
 	template <typename Stream>
 	packer<Stream>& operator()(msgpack::packer<Stream>& o, Block::Base const& block) const
 	{
-		o.pack_map(1);
-
-		BlockType t = block.type() != BlockType::none ? block.type() : BlockType::air;
-		o.pack("t"); o.pack(t);
+		Storage::OutputInterface i;
+		block.save(i);
+		i.flush(o);
 
 		return o;
 	}
@@ -38,6 +38,8 @@ struct convert<std::unique_ptr<Block::Base>>
 		BlockType t;
 		find_in_map_or_throw(map, "t", t);
 		block = Game::instance->block_registry.make(t);
+		Storage::InputInterface i(map);
+		block->load(i);
 
 		return o;
 	}

@@ -166,6 +166,7 @@
 		<Unit filename="src/fwd/position/BlockInChunk.hpp" />
 		<Unit filename="src/fwd/position/BlockInWorld.hpp" />
 		<Unit filename="src/fwd/position/ChunkInWorld.hpp" />
+		<Unit filename="src/fwd/storage/Interface.hpp" />
 		<Unit filename="src/graphics/Color.cpp" />
 		<Unit filename="src/graphics/Color.hpp" />
 		<Unit filename="src/graphics/GUI/Base.cpp" />
@@ -209,6 +210,8 @@
 		<Unit filename="src/position/ChunkInWorld.cpp" />
 		<Unit filename="src/position/ChunkInWorld.hpp" />
 		<Unit filename="src/std_make_unique.hpp" />
+		<Unit filename="src/storage/Interface.cpp" />
+		<Unit filename="src/storage/Interface.hpp" />
 		<Unit filename="src/storage/WorldFile.cpp" />
 		<Unit filename="src/storage/WorldFile.hpp" />
 		<Unit filename="src/storage/msgpack/Block.hpp" />
@@ -218,6 +221,7 @@
 		<Unit filename="src/storage/msgpack/Player.hpp" />
 		<Unit filename="src/storage/msgpack/glm_vec3.hpp" />
 		<Unit filename="src/storage/msgpack_functions.hpp" />
+		<Unit filename="src/storage/msgpack_util.hpp" />
 		<Unit filename="src/types/window_size_t.hpp" />
 		<Unit filename="src/util/Property.hpp" />
 		<Extensions>

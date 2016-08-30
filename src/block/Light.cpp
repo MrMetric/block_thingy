@@ -3,6 +3,8 @@
 #include <glm/vec3.hpp>
 
 #include "block/BlockType.hpp"
+#include "storage/Interface.hpp"
+#include "storage/msgpack/Color.hpp"
 
 namespace Block {
 
@@ -31,6 +33,17 @@ void Light::operator=(const Base& block)
 Color Light::color() const
 {
 	return color_;
+}
+
+void Light::save(Storage::OutputInterface& i) const
+{
+	Base::save(i);
+	i.set("color", color_);
+}
+
+void Light::load(Storage::InputInterface& i)
+{
+	color_ = i.get<Color>("color");
 }
 
 }

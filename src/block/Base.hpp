@@ -2,8 +2,8 @@
 
 #include "block/BlockType.hpp"
 #include "fwd/block/BlockVisibilityType.hpp"
-
 #include "fwd/graphics/Color.hpp"
+#include "fwd/storage/Interface.hpp"
 
 namespace Block {
 
@@ -42,6 +42,9 @@ class Base
 		 * Can players interact with this block?
 		 */
 		virtual bool is_selectable() const;
+
+		virtual void save(Storage::OutputInterface&) const;
+		virtual void load(Storage::InputInterface&);
 
 	private:
 		BlockType type_;
