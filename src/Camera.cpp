@@ -19,7 +19,7 @@ Camera::Camera(Gfx& gfx, EventManager& event_manager)
 {
 	event_manager.add_handler(EventType::window_size_change, [&gfx=gfx](const Event& event)
 	{
-		glfwSetCursorPos(gfx.window, gfx.window_mid.x, gfx.window_mid.y);
+		gfx.center_cursor();
 	});
 }
 
@@ -41,5 +41,5 @@ void Camera::mousemove(const double mouseX, const double mouseY, bool joystick)
 	// keep left/right angle in range [0, 360)
 	rotation.y = glm::mod(rotation.y, 360.0);
 
-	glfwSetCursorPos(gfx.window, gfx.window_mid.x, gfx.window_mid.y);
+	gfx.center_cursor();
 }

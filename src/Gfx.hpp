@@ -79,6 +79,8 @@ class Gfx
 		static void write_png_RGB(const char* filename, uint8_t* buf, uint_fast32_t width, uint_fast32_t height, bool reverse_rows = false);
 		#endif
 
+		void center_cursor();
+
 		// for GUIs
 		Graphics::OpenGL::ShaderProgram s_gui_shape;
 		Graphics::OpenGL::VertexBuffer gui_rectangle_vbo;

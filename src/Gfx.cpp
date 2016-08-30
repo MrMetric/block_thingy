@@ -304,6 +304,11 @@ void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint_fast32_t 
 }
 #endif
 
+void Gfx::center_cursor()
+{
+	glfwSetCursorPos(window, window_mid.x, window_mid.y);
+}
+
 GLFWwindow* Gfx::make_window(bool is_fullscreen)
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
