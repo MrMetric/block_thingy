@@ -158,6 +158,10 @@ void Game::open_gui(std::unique_ptr<Graphics::GUI::Base> gui)
 	gui->init();
 	gui->parent = std::move(this->gui);
 	this->gui = std::move(gui);
+
+	double x, y;
+	glfwGetCursorPos(gfx.window, &x, &y);
+	this->gui->mousemove(x, y);
 }
 
 void Game::quit()
