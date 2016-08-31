@@ -47,6 +47,10 @@ string Util::gl_error_string(const GLenum code)
 {
 	switch(code)
 	{
+		case GL_NO_ERROR:
+		{
+			return "no error";
+		}
 		case GL_INVALID_ENUM:
 		{
 			return "invalid enum";

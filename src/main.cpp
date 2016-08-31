@@ -18,15 +18,15 @@ using std::string;
 using std::unique_ptr;
 
 // http://www.lighthouse3d.com/cg-topics/error-tracking-in-opengl/
-void printOglError(const string& file, const int line)
+void printOglError(const string& file, const int line, const string& func)
 {
 	const GLenum glErr = glGetError();
 	if(glErr != GL_NO_ERROR)
 	{
-		cout << "glError in file " << file << " @ line " << line << ": " << Util::gl_error_string(glErr) << "\n";
+		cout << "OpenGL error @ " << file << ":" << line << " (" << func << "): " << Util::gl_error_string(glErr) << "\n";
 	}
 }
-#define printOpenGLError() printOglError(__FILE__, __LINE__)
+#define printOpenGLError() printOglError(__FILE__, __LINE__, __func__)
 
 static void error_callback(const int error, const char* description)
 {
