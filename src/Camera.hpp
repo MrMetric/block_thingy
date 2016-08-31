@@ -1,7 +1,6 @@
 #pragma once
 // based on http://r3dux.org/2012/12/a-c-camera-class-for-simple-opengl-fps-controls/
 
-#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 #include "fwd/Gfx.hpp"

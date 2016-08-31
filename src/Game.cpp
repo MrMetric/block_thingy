@@ -3,12 +3,12 @@
 #include <cmath>
 #include <fstream>
 #include <functional>
-#include <iomanip>
 #include <limits>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -148,7 +148,7 @@ void Game::draw_world()
 	find_hovered_block(gfx.projection_matrix, gfx.view_matrix_physical);
 }
 
-void Game::open_gui(std::unique_ptr<Graphics::GUI::Base> gui)
+void Game::open_gui(unique_ptr<Graphics::GUI::Base> gui)
 {
 	if(gui == nullptr)
 	{
@@ -608,8 +608,8 @@ void Game::add_commands()
 			game.console.error_logger << "Usage: open_gui <GUI name>\n";
 			return;
 		}
-		const std::string name = args[0];
-		std::unique_ptr<Graphics::GUI::Base> gui;
+		const string name = args[0];
+		unique_ptr<Graphics::GUI::Base> gui;
 		if(name == "pause")
 		{
 			gui = std::make_unique<Graphics::GUI::Pause>(game);

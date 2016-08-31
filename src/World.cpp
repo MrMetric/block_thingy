@@ -25,8 +25,11 @@
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 
-using std::shared_ptr;
+#include "std_make_unique.hpp"
+
 using std::string;
+using std::shared_ptr;
+using std::unique_ptr;
 
 using Position::BlockInChunk;
 using Position::BlockInWorld;
@@ -58,7 +61,7 @@ World::World(const string& file_path)
 {
 }
 
-void World::set_block(const BlockInWorld& block_pos, std::unique_ptr<Block::Base> block_ptr)
+void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> block_ptr)
 {
 	const ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);

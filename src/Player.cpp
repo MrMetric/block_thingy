@@ -1,7 +1,6 @@
 #include "Player.hpp"
 
 #include <cmath>
-#include <stdint.h>
 
 #include <glm/common.hpp>			// glm::sign
 #include <glm/trigonometric.hpp>	// glm::radians
@@ -10,6 +9,8 @@
 #include "Game.hpp"
 #include "World.hpp"
 #include "block/Base.hpp"
+#include "block/BlockType.hpp"
+#include "event/EventManager.hpp"
 #include "event/type/Event_enter_block.hpp"
 #include "position/BlockInWorld.hpp"
 

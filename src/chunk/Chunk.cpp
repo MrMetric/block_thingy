@@ -1,13 +1,13 @@
 #include "Chunk.hpp"
 
 #include <algorithm>
+#include <cstddef>
 #include <memory>
 #include <stdexcept>
 #include <string>
 #include <utility>
 
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include "graphics/OpenGL/ShaderProgram.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
 
@@ -18,6 +18,7 @@
 #include "Gfx.hpp"
 #include "World.hpp"
 #include "block/Base.hpp"
+#include "block/BlockRegistry.hpp"
 #include "block/BlockType.hpp"
 #include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
@@ -29,6 +30,7 @@
 using std::string;
 using std::to_string;
 using std::shared_ptr;
+using std::unique_ptr;
 
 using Position::BlockInChunk;
 using Position::BlockInWorld;
@@ -76,7 +78,7 @@ const Block::Base& Chunk::get_block(const BlockInChunk& pos) const
 	return *blocks->at(block_array_index(pos.x, pos.y, pos.z));
 }
 
-void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z, std::unique_ptr<Block::Base> block)
+void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z, unique_ptr<Block::Base> block)
 {
 	if(x >= CHUNK_SIZE
 	|| y >= CHUNK_SIZE
@@ -93,7 +95,7 @@ void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::valu
 	update_neighbors(x, y, z);
 }
 
-void Chunk::set_block(const BlockInChunk& block_pos, std::unique_ptr<Block::Base> block)
+void Chunk::set_block(const BlockInChunk& block_pos, unique_ptr<Block::Base> block)
 {
 	set_block(block_pos.x, block_pos.y, block_pos.z, std::move(block));
 }
@@ -135,7 +137,7 @@ void Chunk::render(const bool transluscent_pass)
 
 	const ChunkInWorld render_position = position - ChunkInWorld(BlockInWorld(Game::instance->camera.position));
 	const BlockInWorld position_render_offset(render_position, {0, 0, 0});
-	size_t i = 0;
+	std::size_t i = 0;
 	for(const auto& p : meshes)
 	{
 		const meshmap_key_t& key = p.first;
@@ -154,7 +156,7 @@ void Chunk::render(const bool transluscent_pass)
 		const Graphics::Color color = std::get<1>(key);
 		shader.uniform("light", static_cast<glm::vec3>(color));
 
-		const size_t draw_count = p.second.size() * 3;
+		const std::size_t draw_count = p.second.size() * 3;
 		mesh_vaos[i].draw(GL_TRIANGLES, 0, draw_count);
 
 		++i;
@@ -172,13 +174,13 @@ void Chunk::set_meshes(const meshmap_t& m)
 	update_vaos();
 }
 
-void Chunk::set_blocks(std::unique_ptr<chunk_block_array_t> new_blocks)
+void Chunk::set_blocks(unique_ptr<chunk_block_array_t> new_blocks)
 {
 	blocks = std::move(new_blocks);
 	solid_block = nullptr;
 	changed = true;
 }
-void Chunk::set_blocks(std::unique_ptr<Block::Base> block)
+void Chunk::set_blocks(unique_ptr<Block::Base> block)
 {
 	solid_block = std::move(block);
 	blocks = nullptr;
@@ -189,8 +191,8 @@ void Chunk::update_vaos()
 {
 	if(mesh_vaos.size() < meshes.size())
 	{
-		size_t to_add = meshes.size() - mesh_vaos.size();
-		for(size_t i = 0; i < to_add; ++i)
+		const std::size_t to_add = meshes.size() - mesh_vaos.size();
+		for(std::size_t i = 0; i < to_add; ++i)
 		{
 			Graphics::OpenGL::VertexBuffer vbo({3, GL_UNSIGNED_BYTE});
 			Graphics::OpenGL::VertexArray vao(vbo);
@@ -201,7 +203,7 @@ void Chunk::update_vaos()
 	}
 	// TODO: delete unused
 
-	size_t i = 0;
+	std::size_t i = 0;
 	for(const auto& p : meshes)
 	{
 		const auto usage_hint = Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw;

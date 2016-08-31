@@ -132,7 +132,7 @@ void Text::draw(const string& s, glm::dvec2 pos)
 }
 
 // TODO: deduplicate with draw
-glm::dvec2 Text::get_size(std::string s)
+glm::dvec2 Text::get_size(string s)
 {
 	while(s.back() == '\n' || s.back() == '\t')
 	{
@@ -146,7 +146,7 @@ glm::dvec2 Text::get_size(std::string s)
 	uint_fast32_t line_i = 0;
 	std::vector<double> widths;
 	glm::dvec2 size(0, chars['H'].size.y);
-	for(size_t i = 0; i < s.length(); ++i)
+	for(string::size_type i = 0; i < s.length(); ++i)
 	{
 		const char c = s[i];
 		if(c == '\n')

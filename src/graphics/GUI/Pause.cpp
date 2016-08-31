@@ -4,6 +4,7 @@
 
 #include "Game.hpp"
 #include "Gfx.hpp"
+#include "console/Console.hpp"
 #include "graphics/GUI/Widget/Button.hpp"
 #include "graphics/GUI/Widget/Text.hpp"
 

@@ -11,7 +11,6 @@
 #include "Util.hpp"
 
 #include "std_make_unique.hpp"
-#include "types/window_size_t.hpp"
 
 using std::cerr;
 using std::cout;

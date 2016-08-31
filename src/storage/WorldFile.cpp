@@ -12,23 +12,24 @@
 #include <Poco/InflatingStream.h>
 #include <Poco/StreamCopier.h>
 
-#include "msgpack_functions.hpp"
-
 #include "Game.hpp"
 #include "Player.hpp"
 #include "Util.hpp"
 #include "World.hpp"
 #include "chunk/Chunk.hpp"
 #include "position/ChunkInWorld.hpp"
+#include "storage/msgpack_util.hpp"
+#include "storage/msgpack/Player.hpp"
+#include "storage/msgpack/Chunk.hpp"
 
 #include "std_make_unique.hpp"
 
-namespace Storage {
-
-using std::shared_ptr;
 using std::string;
 using std::to_string;
+using std::shared_ptr;
 using std::unique_ptr;
+
+namespace Storage {
 
 WorldFile::WorldFile(const string& world_path, World& world)
 	:

@@ -6,6 +6,8 @@
 #include "fwd/block/Base.hpp"
 #include "fwd/block/BlockType.hpp"
 
+#include "std_make_unique.hpp"
+
 namespace Block {
 
 class BlockMaker

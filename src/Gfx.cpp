@@ -1,5 +1,6 @@
 #include "Gfx.hpp"
 
+#include <cerrno>
 #include <cstdio>							// C FILE stuff (for libpng use)
 #include <cstring>							// strerror
 #include <iostream>
@@ -95,7 +96,7 @@ GLFWwindow* Gfx::init_glfw()
 	{
 		throw std::runtime_error("Error loading GLAD");
 	}
-	std::cout << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
+	cout << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
 	if(!GLAD_GL_ARB_direct_state_access)
 	{
 		cout << "OpenGL extension not found: GL_ARB_direct_state_access\n";

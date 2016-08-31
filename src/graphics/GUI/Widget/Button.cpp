@@ -1,9 +1,14 @@
 #include "Button.hpp"
 
+#include <GLFW/glfw3.h>
+
+#include <glm/common.hpp>
+
 #include "Game.hpp"
 #include "Gfx.hpp"
-#include "graphics/GUI/Base.hpp"
 #include "graphics/GUI/WidgetContainer.hpp"
+
+using std::string;
 
 namespace Graphics {
 namespace GUI {
@@ -12,7 +17,7 @@ namespace Widget {
 Button::Button
 (
 	WidgetContainer& owner,
-	const std::string& text,
+	const string& text,
 	std::function<void()> click_handler
 )
 :

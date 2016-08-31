@@ -1,10 +1,5 @@
 #include "Base.hpp"
 
-#include "Game.hpp"
-#include "Gfx.hpp"
-#include "graphics/GUI/Base.hpp"
-#include "graphics/GUI/WidgetContainer.hpp"
-
 namespace Graphics {
 namespace GUI {
 namespace Widget {

@@ -3,6 +3,10 @@
 #include <stdexcept>
 #include <string>
 
+#include "std_make_unique.hpp"
+
+using std::string;
+
 namespace Graphics {
 namespace GUI {
 
@@ -102,7 +106,7 @@ WidgetContainer& WidgetContainer::add(WidgetContainerMode mode)
 {
 	if(this->mode != WidgetContainerMode::rows && this->mode != WidgetContainerMode::cols)
 	{
-		throw std::runtime_error(std::string("can not add container(")
+		throw std::runtime_error(string("can not add container(")
 								+ std::to_string(static_cast<int>(mode))
 								+ ") to container("
 								+ std::to_string(static_cast<int>(this->mode))
@@ -148,7 +152,7 @@ void WidgetContainer::update_children()
 				return;
 			}
 			double row_height = size.y / containers.size();
-			for(size_t i = 0; i < containers.size(); ++i)
+			for(decltype(containers)::size_type i = 0; i < containers.size(); ++i)
 			{
 				if(containers[i] == nullptr) continue; // this can happen when the GUI closes
 				containers[i]->update_container({position.x, position.y + i * row_height}, {size.x, row_height});
@@ -162,7 +166,7 @@ void WidgetContainer::update_children()
 				break;
 			}
 			const double col_width = size.x / containers.size();
-			for(size_t i = 0; i < containers.size(); ++i)
+			for(decltype(containers)::size_type i = 0; i < containers.size(); ++i)
 			{
 				if(containers[i] == nullptr) continue; // this can happen when the GUI closes
 				containers[i]->update_container({position.x + i * col_width, position.y}, {col_width, size.y});

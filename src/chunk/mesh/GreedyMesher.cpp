@@ -6,10 +6,10 @@
 #include <glm/vec3.hpp>
 
 #include "block/Base.hpp"
+#include "block/BlockType.hpp"
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
-using Graphics::Color;
 using Position::BlockInChunk;
 
 using surface_t = GreedyMesher::surface_t;

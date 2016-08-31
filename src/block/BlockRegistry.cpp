@@ -9,6 +9,10 @@
 #include "block/Test.hpp"
 #include "block/Teleporter.hpp"
 
+#include "std_make_unique.hpp"
+
+using std::unique_ptr;
+
 namespace Block {
 
 BlockMaker::BlockMaker()
@@ -23,7 +27,7 @@ BlockMaker::~BlockMaker()
 {
 }
 
-std::unique_ptr<Base> BlockMaker::make()
+unique_ptr<Base> BlockMaker::make()
 {
 	return nullptr;
 }
@@ -37,7 +41,7 @@ BlockRegistry::BlockRegistry()
 	add<Teleporter>(BlockType::teleporter);
 }
 
-std::unique_ptr<Base> BlockRegistry::make(const BlockType t)
+unique_ptr<Base> BlockRegistry::make(const BlockType t)
 {
 	const auto i = map.find(t);
 	if(i == map.cend())
@@ -47,9 +51,9 @@ std::unique_ptr<Base> BlockRegistry::make(const BlockType t)
 	return i->second->make();
 }
 
-std::unique_ptr<Base> BlockRegistry::make(const Base& block)
+unique_ptr<Base> BlockRegistry::make(const Base& block)
 {
-	std::unique_ptr<Base> new_block = make(block.type());
+	unique_ptr<Base> new_block = make(block.type());
 	*new_block = block;
 	return new_block;
 }

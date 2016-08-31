@@ -6,9 +6,9 @@
 #include "storage/Interface.hpp"
 #include "storage/msgpack/Color.hpp"
 
-namespace Block {
-
 using Graphics::Color;
+
+namespace Block {
 
 Light::Light()
 	:

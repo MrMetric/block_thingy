@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string>
 #include <unordered_map>
 
 #include <glm/mat4x4.hpp>

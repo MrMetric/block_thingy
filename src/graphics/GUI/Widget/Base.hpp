@@ -2,8 +2,6 @@
 
 #include <glm/vec2.hpp>
 
-#include "types/window_size_t.hpp"
-
 namespace Graphics {
 namespace GUI {
 

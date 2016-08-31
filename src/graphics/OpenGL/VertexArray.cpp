@@ -60,7 +60,7 @@ void VertexArray::attrib(const GLuint index, const bool enabled)
 	}
 }
 
-void VertexArray::draw(const GLenum mode, const GLint first, const size_t count) const
+void VertexArray::draw(const GLenum mode, const GLint first, const std::size_t count) const
 {
 	glBindVertexArray(name);
 	glDrawArrays(mode, first, count);

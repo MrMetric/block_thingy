@@ -18,7 +18,7 @@ std::vector<string> ArgumentParser::parse_args(const string& argline)
 
 	while(iterator != end)
 	{
-		char c = *iterator;
+		const char c = *iterator;
 		++iterator;
 		if(c == ' ' || c == '\t')
 		{

@@ -111,7 +111,7 @@ string Util::gl_object_log(const GLuint object)
 		throw std::runtime_error("Error printing log: object is not a shader or a program\n");
 	}
 
-	unique_ptr<char[]> log = std::make_unique<char[]>(static_cast<size_t>(log_length));
+	unique_ptr<char[]> log = std::make_unique<char[]>(static_cast<std::size_t>(log_length));
 
 	if(glIsShader(object))
 	{

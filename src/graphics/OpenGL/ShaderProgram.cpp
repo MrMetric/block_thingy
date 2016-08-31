@@ -1,5 +1,6 @@
 #include "ShaderProgram.hpp"
 
+#include <cstddef>
 #include <memory>
 #include <stdexcept>
 #include <utility>
@@ -15,6 +16,7 @@
 #include "std_make_unique.hpp"
 
 using std::string;
+using std::unique_ptr;
 
 namespace Graphics {
 namespace OpenGL {
@@ -213,7 +215,7 @@ static std::vector<string> get_uniform_names(const GLuint program)
 	std::vector<string> uniform_names;
 	for(GLint i = 0; i < uniform_count; ++i)
 	{
-		std::unique_ptr<char[]> uniform_name = std::make_unique<char[]>(static_cast<size_t>(max_name_length));
+		unique_ptr<char[]> uniform_name = std::make_unique<char[]>(static_cast<std::size_t>(max_name_length));
 		GLsizei name_length;
 		glGetActiveUniformName(program, i, static_cast<GLsizei>(max_name_length), &name_length, uniform_name.get());
 		uniform_names.emplace_back(uniform_name.get(), name_length);

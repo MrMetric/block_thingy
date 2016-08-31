@@ -5,10 +5,13 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Camera.hpp"
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "Player.hpp"
 #include "fwd/block/BlockType.hpp"
+#include "console/Console.hpp"
+#include "console/KeybindManager.hpp"
 
 namespace Graphics {
 namespace GUI {

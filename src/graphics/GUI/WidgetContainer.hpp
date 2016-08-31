@@ -3,10 +3,15 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
+
+#include <glm/vec2.hpp>
 
 #include "fwd/Game.hpp"
 #include "graphics/GUI/Widget/Base.hpp"
+
+#include "std_make_unique.hpp"
 
 namespace Graphics {
 namespace GUI {

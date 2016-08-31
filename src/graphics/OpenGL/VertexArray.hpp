@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 #include <glad/glad.h>
 
 namespace Graphics {
@@ -22,7 +24,7 @@ class VertexArray
 
 		void attrib(GLuint index, bool enabled);
 
-		void draw(GLenum mode, GLint first, size_t count) const;
+		void draw(GLenum mode, GLint first, std::size_t count) const;
 
 	private:
 		bool inited;

@@ -1,11 +1,11 @@
 #pragma once
 
+#include <cstddef>
+
 #include <glad/glad.h>
 
 namespace Graphics {
 namespace OpenGL {
-
-class VertexArray;
 
 class VertexBuffer
 {
@@ -35,7 +35,7 @@ class VertexBuffer
 			dynamic_read = GL_DYNAMIC_READ,
 			dynamic_copy = GL_DYNAMIC_COPY,
 		};
-		void data(size_t size, const void* data, UsageHint usage);
+		void data(std::size_t size, const void* data, UsageHint usage);
 
 		struct Format
 		{

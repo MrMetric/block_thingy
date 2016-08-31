@@ -1,7 +1,5 @@
 #include "Camera.hpp"
 
-#include <GLFW/glfw3.h>
-
 #include <glm/common.hpp>
 #include <glm/vec3.hpp>
 
@@ -9,7 +7,6 @@
 #include "Util.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
-#include "event/type/Event_window_size_change.hpp"
 
 Camera::Camera(Gfx& gfx, EventManager& event_manager)
 	:
@@ -17,7 +14,7 @@ Camera::Camera(Gfx& gfx, EventManager& event_manager)
 	joy_sensitivity(1.2),
 	gfx(gfx)
 {
-	event_manager.add_handler(EventType::window_size_change, [&gfx=gfx](const Event& event)
+	event_manager.add_handler(EventType::window_size_change, [&gfx](const Event& event)
 	{
 		gfx.center_cursor();
 	});

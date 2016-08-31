@@ -1,6 +1,10 @@
 #pragma once
 
 #include "chunk/Chunk.hpp"
+#include "storage/msgpack/Block.hpp"
+#include "storage/msgpack/Color.hpp" // for meshes
+
+#include "std_make_unique.hpp"
 
 namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {

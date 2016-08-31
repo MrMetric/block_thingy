@@ -1,6 +1,6 @@
 #include "BlockInChunk.hpp"
 
-#include <iostream>
+#include <ostream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -88,6 +88,6 @@ namespace Position
 
 	std::ostream& operator<<(std::ostream& os, const BlockInChunk& pos)
 	{
-		return os << "(" << int(pos.x) << "," << int(pos.y) << "," << int(pos.z) << ")";
+		return os << '(' << to_string(pos.x) << ',' << to_string(pos.y) << ',' << to_string(pos.z) << ')';
 	}
 }
