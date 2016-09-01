@@ -1,26 +1,22 @@
 #include "Text.hpp"
 
 #include <algorithm>
+#include <codecvt>
 #include <iostream>
+#include <locale>
 #include <stdexcept>
 #include <stdint.h>
 #include <vector>
 
 #include <glad/glad.h>
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdocumentation"
-#pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
-#pragma clang diagnostic ignored "-Wold-style-cast"
-#pragma clang diagnostic ignored "-Wreserved-id-macro"
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#pragma clang diagnostic pop
-
 #include "graphics/OpenGL/Texture.hpp"
 
 using std::cerr;
 using std::string;
+using std::u32string;
+
+static std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> convert;
 
 // based on:
 // http://learnopengl.com/#!In-Practice/Text-Rendering
@@ -37,13 +33,11 @@ Text::Text(const string& font_path, const FT_UInt height)
 	vao(vbo),
 	shader("shaders/text")
 {
-	FT_Library ft;
 	if(FT_Init_FreeType(&ft))
 	{
 		throw std::runtime_error("failed to init FreeType");
 	}
 
-	FT_Face face;
 	if(FT_New_Face(ft, font_path.c_str(), 0, &face))
 	{
 		throw std::runtime_error("failed to load font " + font_path);
@@ -52,15 +46,15 @@ Text::Text(const string& font_path, const FT_UInt height)
 	FT_Set_Pixel_Sizes(face, 0, height);
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	for(FT_ULong c = ' '; c <= '~'; ++c)
-	{
-		chars.emplace(c, load_char(face, c));
-	}
-
-	FT_Done_Face(face);
-	FT_Done_FreeType(ft);
+	chars.emplace('H', load_char(face, 'H'));
 
 	shader.uniform("color", glm::vec3(1.0));
+}
+
+Text::~Text()
+{
+	FT_Done_Face(face);
+	FT_Done_FreeType(ft);
 }
 
 void Text::set_projection_matrix(const glm::dmat4& projection_matrix)
@@ -68,7 +62,14 @@ void Text::set_projection_matrix(const glm::dmat4& projection_matrix)
 	shader.uniform("projection", glm::mat4(projection_matrix));
 }
 
-void Text::draw(const string& s, glm::dvec2 pos)
+void Text::draw(const string& s_utf8, const glm::dvec2& pos)
+{
+	// TODO: handle exception from invalid input
+	u32string s = convert.from_bytes(s_utf8);
+	draw(s, pos);
+}
+
+void Text::draw(const u32string& s, glm::dvec2 pos)
 {
 	const double start_x = pos.x;
 
@@ -77,7 +78,7 @@ void Text::draw(const string& s, glm::dvec2 pos)
 	glActiveTexture(GL_TEXTURE0);
 
 	uint_fast32_t line_i = 0;
-	for(const char c : s)
+	for(const char32_t c : s)
 	{
 		if(c == '\n')
 		{
@@ -96,13 +97,7 @@ void Text::draw(const string& s, glm::dvec2 pos)
 		}
 		++line_i;
 
-		auto ci = chars.find(c);
-		if(ci == chars.cend())
-		{
-			// TODO
-			ci = chars.find('?');
-		}
-		Character& ch = ci->second;
+		Character& ch = get_char(c);
 
 		float xpos = static_cast<float>(pos.x + ch.bearing.x);
 		float ypos = static_cast<float>(pos.y + (chars['H'].bearing.y - ch.bearing.y));
@@ -132,13 +127,20 @@ void Text::draw(const string& s, glm::dvec2 pos)
 }
 
 // TODO: deduplicate with draw
-glm::dvec2 Text::get_size(string s)
+glm::dvec2 Text::get_size(const string& s_utf8)
+{
+	// TODO: handle exception from invalid input
+	u32string s = convert.from_bytes(s_utf8);
+	return get_size(s);
+}
+
+glm::dvec2 Text::get_size(u32string s)
 {
 	while(s.back() == '\n' || s.back() == '\t')
 	{
 		s.pop_back();
 	}
-	if(s == "")
+	if(s.size() == 0)
 	{
 		return {0, 0};
 	}
@@ -146,9 +148,9 @@ glm::dvec2 Text::get_size(string s)
 	uint_fast32_t line_i = 0;
 	std::vector<double> widths;
 	glm::dvec2 size(0, chars['H'].size.y);
-	for(string::size_type i = 0; i < s.length(); ++i)
+	for(decltype(s)::size_type i = 0; i < s.length(); ++i)
 	{
-		const char c = s[i];
+		const char32_t c = s[i];
 		if(c == '\n')
 		{
 			widths.push_back(size.x);
@@ -167,13 +169,7 @@ glm::dvec2 Text::get_size(string s)
 		}
 		++line_i;
 
-		auto ci = chars.find(c);
-		if(ci == chars.cend())
-		{
-			// TODO
-			ci = chars.find('?');
-		}
-		Character& ch = ci->second;
+		const Character& ch = get_char(c);
 
 		if(i != s.length() - 1)
 		{
@@ -187,6 +183,17 @@ glm::dvec2 Text::get_size(string s)
 	widths.push_back(size.x);
 
 	return {*std::max_element(widths.cbegin(), widths.cend()), size.y};
+}
+
+Text::Character& Text::get_char(const char32_t c)
+{
+	auto ci = chars.find(c);
+	if(ci == chars.cend())
+	{
+		chars.emplace(c, load_char(face, c));
+		ci = chars.find(c);
+	}
+	return ci->second;
 }
 
 Text::Character load_char(const FT_Face& face, const FT_ULong c)

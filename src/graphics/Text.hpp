@@ -11,8 +11,9 @@
 #pragma clang diagnostic ignored "-Wdocumentation"
 #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
 #pragma clang diagnostic ignored "-Wold-style-cast"
+#pragma clang diagnostic ignored "-Wreserved-id-macro"
 #include <ft2build.h>
-#include FT_TYPES_H
+#include FT_FREETYPE_H
 #pragma clang diagnostic pop
 
 #include "graphics/OpenGL/ShaderProgram.hpp"
@@ -26,11 +27,14 @@ class Text
 {
 	public:
 		Text(const std::string& font_path, FT_UInt height);
+		~Text();
 
 		void set_projection_matrix(const glm::dmat4& projection_matrix);
-		void draw(const std::string&, glm::dvec2 pos);
+		void draw(const std::string&, const glm::dvec2& pos);
+		void draw(const std::u32string&, glm::dvec2 pos);
 
-		glm::dvec2 get_size(std::string);
+		glm::dvec2 get_size(const std::string&);
+		glm::dvec2 get_size(std::u32string);
 
 		struct Character
 		{
@@ -44,11 +48,15 @@ class Text
 		static const uint8_t tab_width = 4;
 
 	private:
+		FT_Library ft;
+		FT_Face face;
 		FT_UInt height;
-		std::unordered_map<char, Character> chars;
+		std::unordered_map<char32_t, Character> chars;
 		OpenGL::VertexBuffer vbo;
 		OpenGL::VertexArray vao;
 		OpenGL::ShaderProgram shader;
+
+		Character& get_char(char32_t);
 };
 
 } // namespace Graphics
