@@ -5,6 +5,11 @@
 
 #include <glad/glad.h>
 
+// http://www.lighthouse3d.com/cg-topics/error-tracking-in-opengl/
+// http://www.lighthouse3d.com/cg-topics/error-tracking-in-opengl/
+void printOglError(const std::string& file, const int line, const std::string& func);
+#define printOpenGLError() printOglError(__FILE__, __LINE__, __func__)
+
 namespace Util
 {
 	inline bool string_starts_with(const std::string& value, const std::string& start)
