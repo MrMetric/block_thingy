@@ -1,9 +1,13 @@
 #pragma once
 
+#include <iostream>
 #include <string>
+#include <typeinfo>
 #include <unordered_map>
 
 #include <msgpack.hpp>
+
+#include "util/demangled_name.hpp"
 
 template <typename T>
 bool find_in_map(const std::unordered_map<std::string, msgpack::object>& map, const std::string& key, T& v)
@@ -22,6 +26,8 @@ void find_in_map_or_throw(const std::unordered_map<std::string, msgpack::object>
 {
 	if(!find_in_map(map, key, v))
 	{
+		// TODO: put message string in type_error
+		std::cerr << "did not find '" << key << "' of type " << Util::demangled_name(v) << "\n";
 		throw msgpack::type_error();
 	}
 }
