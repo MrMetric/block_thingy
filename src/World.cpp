@@ -458,6 +458,7 @@ shared_ptr<Player> World::get_player(const string& name)
 
 void World::save()
 {
+	file.save_world();
 	file.save_players();
 
 	while(!chunks_to_save.empty())

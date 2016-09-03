@@ -223,6 +223,7 @@
 		<Unit filename="src/storage/msgpack/Chunk.hpp" />
 		<Unit filename="src/storage/msgpack/Color.hpp" />
 		<Unit filename="src/storage/msgpack/Player.hpp" />
+		<Unit filename="src/storage/msgpack/World.hpp" />
 		<Unit filename="src/storage/msgpack/glm_vec3.hpp" />
 		<Unit filename="src/storage/msgpack_util.hpp" />
 		<Unit filename="src/types/window_size_t.hpp" />

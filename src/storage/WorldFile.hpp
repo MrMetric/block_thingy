@@ -13,11 +13,13 @@ namespace Storage {
 class WorldFile
 {
 	public:
-		WorldFile(const std::string& world_path, World& world);
+		WorldFile(const std::string& world_dir, World& world);
 
 		WorldFile(WorldFile&&) = delete;
 		WorldFile(const WorldFile&) = delete;
 		void operator=(const WorldFile&) = delete;
+
+		void save_world();
 
 		/**
 		 * Save all players that are currently in the world

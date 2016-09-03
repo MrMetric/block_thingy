@@ -9,8 +9,8 @@ namespace adaptor {
 template<>
 struct pack<BlockType>
 {
-	template <typename Stream>
-	packer<Stream>& operator()(msgpack::packer<Stream>& o, BlockType const t) const
+	template<typename Stream>
+	packer<Stream>& operator()(packer<Stream>& o, const BlockType t) const
 	{
 		o.pack(static_cast<block_type_id_t>(t));
 		return o;
@@ -20,7 +20,7 @@ struct pack<BlockType>
 template<>
 struct convert<BlockType>
 {
-	msgpack::object const& operator()(msgpack::object const& o, BlockType& t) const
+	const msgpack::object& operator()(const msgpack::object& o, BlockType& t) const
 	{
 		t = static_cast<BlockType>(o.as<block_type_id_t>());
 		return o;

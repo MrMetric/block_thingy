@@ -15,8 +15,8 @@ namespace adaptor {
 template<>
 struct pack<Block::Base>
 {
-	template <typename Stream>
-	packer<Stream>& operator()(msgpack::packer<Stream>& o, Block::Base const& block) const
+	template<typename Stream>
+	packer<Stream>& operator()(packer<Stream>& o, const Block::Base& block) const
 	{
 		Storage::OutputInterface i;
 		block.save(i);
@@ -29,7 +29,7 @@ struct pack<Block::Base>
 template<>
 struct convert<std::unique_ptr<Block::Base>>
 {
-	msgpack::object const& operator()(msgpack::object const& o, std::unique_ptr<Block::Base>& block) const
+	const msgpack::object& operator()(const msgpack::object& o, std::unique_ptr<Block::Base>& block) const
 	{
 		if(o.type != msgpack::type::MAP) throw msgpack::type_error();
 		if(o.via.map.size < 1) throw msgpack::type_error();

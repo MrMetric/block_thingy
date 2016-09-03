@@ -9,8 +9,8 @@ namespace adaptor {
 template<typename T>
 struct pack<glm::tvec3<T>>
 {
-	template <typename Stream>
-	packer<Stream>& operator()(msgpack::packer<Stream>& o, glm::tvec3<T> const& v) const
+	template<typename Stream>
+	packer<Stream>& operator()(packer<Stream>& o, const glm::tvec3<T>& v) const
 	{
 		o.pack_array(3);
 		o.pack(v.x);
@@ -23,7 +23,7 @@ struct pack<glm::tvec3<T>>
 template<typename T>
 struct convert<glm::tvec3<T>>
 {
-	msgpack::object const& operator()(msgpack::object const& o, glm::tvec3<T>& v) const
+	const msgpack::object& operator()(const msgpack::object& o, glm::tvec3<T>& v) const
 	{
 		if(o.type != msgpack::type::ARRAY) throw msgpack::type_error();
 		if(o.via.array.size != 3) throw msgpack::type_error();

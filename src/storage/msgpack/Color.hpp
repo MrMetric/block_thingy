@@ -9,8 +9,8 @@ namespace adaptor {
 template<>
 struct pack<Graphics::Color>
 {
-	template <typename Stream>
-	packer<Stream>& operator()(msgpack::packer<Stream>& o, Graphics::Color const& color) const
+	template<typename Stream>
+	packer<Stream>& operator()(packer<Stream>& o, const Graphics::Color& color) const
 	{
 		o.pack_array(3);
 		o.pack(color.r);
@@ -23,7 +23,7 @@ struct pack<Graphics::Color>
 template<>
 struct convert<Graphics::Color>
 {
-	msgpack::object const& operator()(msgpack::object const& o, Graphics::Color& color) const
+	const msgpack::object& operator()(const msgpack::object& o, Graphics::Color& color) const
 	{
 		if(o.type != msgpack::type::ARRAY) throw msgpack::type_error();
 		if(o.via.array.size != 3) throw msgpack::type_error();

@@ -20,6 +20,7 @@
 #include "position/ChunkInWorld.hpp"
 #include "storage/msgpack_util.hpp"
 #include "storage/msgpack/Player.hpp"
+#include "storage/msgpack/World.hpp"
 #include "storage/msgpack/Chunk.hpp"
 
 #include "std_make_unique.hpp"
@@ -31,15 +32,29 @@ using std::unique_ptr;
 
 namespace Storage {
 
-WorldFile::WorldFile(const string& world_path, World& world)
+WorldFile::WorldFile(const string& world_dir, World& world)
 	:
-	world_path(world_path),
-	player_path(world_path + "/players/"),
-	chunk_path(world_path + "/chunks/"),
+	world_path(world_dir + "/world"),
+	player_path(world_dir + "/players/"),
+	chunk_path(world_dir + "/chunks/"),
 	world(world)
 {
 	Poco::File(player_path).createDirectories();
 	Poco::File(chunk_path).createDirectories();
+
+	if(!Util::file_is_openable(world_path))
+	{
+		return;
+	}
+	LOGGER << "loading world: " << world_path << "\n";
+	string bytes = Util::read_file(world_path);
+	unpack_bytes(bytes, world);
+}
+
+void WorldFile::save_world()
+{
+	std::ofstream stream(world_path, std::ofstream::binary);
+	msgpack::pack(stream, world);
 }
 
 void WorldFile::save_players()

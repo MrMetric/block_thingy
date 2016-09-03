@@ -54,17 +54,20 @@ class Chunk
 		void set_blocks(std::unique_ptr<chunk_block_array_t>);
 		void set_blocks(std::unique_ptr<Block::Base>);
 
-		// public because friend stuff does not work for msgpack stuff
-		std::unique_ptr<chunk_block_array_t> blocks;
-		std::unique_ptr<Block::Base> solid_block;
+		// for msgpack
+		template<typename T> void save(T&) const;
+		template<typename T> void load(const T&);
 
 	private:
 		World& owner;
 		Position::ChunkInWorld position;
-		bool changed;
+
+		std::unique_ptr<chunk_block_array_t> blocks;
+		std::unique_ptr<Block::Base> solid_block;
 
 		std::array<Graphics::Color, CHUNK_BLOCK_COUNT> light;
 
+		bool changed;
 		meshmap_t meshes;
 		std::vector<Graphics::OpenGL::VertexArray> mesh_vaos;
 		std::vector<Graphics::OpenGL::VertexBuffer> mesh_vbos;
