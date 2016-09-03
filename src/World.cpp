@@ -104,8 +104,8 @@ const Block::Base& World::get_block(const BlockInWorld& block_pos) const
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static const Block::Base none(BlockType::none);
-		return none;
+		static const std::unique_ptr<Block::Base> none = Game::instance->block_registry.make(BlockType::none);
+		return *none;
 	}
 
 	BlockInChunk pos(block_pos);

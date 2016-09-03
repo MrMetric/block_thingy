@@ -13,12 +13,6 @@ namespace Block {
 
 Base::Base() : type_(BlockType::none) {}
 
-Base::Base(const block_type_id_t type_id)
-	:
-	type_(static_cast<BlockType>(type_id))
-{
-}
-
 Base::Base(const BlockType type)
 	:
 	type_(type)

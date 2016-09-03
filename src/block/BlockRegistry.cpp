@@ -46,7 +46,8 @@ unique_ptr<Base> BlockRegistry::make(const BlockType t)
 	const auto i = map.find(t);
 	if(i == map.cend())
 	{
-		return std::make_unique<Base>(t);
+		// BlockRegistry is a friend of Base, but this does not apply to std::make_unique
+		return unique_ptr<Base>(new Base(t));
 	}
 	return i->second->make();
 }

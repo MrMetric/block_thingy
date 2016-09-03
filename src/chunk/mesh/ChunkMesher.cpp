@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+#include "Game.hpp"
 #include "World.hpp"
 #include "block/Base.hpp"
 #include "block/BlockType.hpp"
@@ -29,8 +30,8 @@ const Block::Base& ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t 
 	{
 		if(!allow_out_of_bounds)
 		{
-			static const Block::Base none(BlockType::none);
-			return none;
+			static const std::unique_ptr<Block::Base> none = Game::instance->block_registry.make(BlockType::none);
+			return *none;
 		}
 		Position::BlockInWorld block_pos(chunk.get_position(), {0, 0, 0});
 		block_pos.x += x;
