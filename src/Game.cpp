@@ -228,8 +228,7 @@ void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dm
 	hovered_block = PhysicsUtil::raycast(world, out_origin, out_direction, player.reach_distance);
 	if(hovered_block != nullptr)
 	{
-		const bool block_is_none = world.get_block(hovered_block->pos).type() == BlockType::none;
-		glm::vec4 color = block_is_none ? glm::vec4(1, 0, 0, 1) : glm::vec4(1, 1, 1, 1);
+		const glm::dvec4 color = world.get_block(hovered_block->pos).selection_color();
 		gfx.draw_cube_outline(hovered_block->pos, color);
 	}
 }
@@ -272,7 +271,7 @@ void Game::add_commands()
 		}
 
 		const Position::BlockInWorld pos = game.hovered_block->adjacent();
-		if(game.world.get_block(pos).type() == BlockType::air && game.player.can_place_block_at(pos))
+		if(game.world.get_block(pos).is_replaceable() && game.player.can_place_block_at(pos))
 		{
 			game.world.set_block(pos, game.block_registry.make(game.block_type));
 			//event_manager.do_event(Event_place_block(pos, face));

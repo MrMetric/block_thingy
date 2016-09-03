@@ -9,6 +9,7 @@ class Test : public Base
 		Test();
 
 		double bounciness() const override;
+		glm::dvec4 selection_color() const override;
 };
 
 } // namespace Block

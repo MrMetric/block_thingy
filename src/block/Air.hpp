@@ -11,6 +11,7 @@ class Air : public Base
 		BlockVisibilityType visibility_type() const override;
 		bool is_solid() const override;
 		bool is_selectable() const override;
+		bool is_replaceable() const override;
 };
 
 } // namespace Block

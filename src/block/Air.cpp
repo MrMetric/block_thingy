@@ -26,4 +26,9 @@ bool Air::is_selectable() const
 	return false;
 }
 
+bool Air::is_replaceable() const
+{
+	return true;
+}
+
 } // namespace Block

@@ -9,6 +9,7 @@ class None : public Base
 		None();
 
 		BlockVisibilityType visibility_type() const override;
+		glm::dvec4 selection_color() const override;
 };
 
 } // namespace Block

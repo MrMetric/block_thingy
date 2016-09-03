@@ -67,6 +67,11 @@ double Base::bounciness() const
 	return 0;
 }
 
+glm::dvec4 Base::selection_color() const
+{
+	return {1, 1, 1, 1};
+}
+
 BlockVisibilityType Base::visibility_type() const
 {
 	return BlockVisibilityType::opaque;
@@ -95,6 +100,11 @@ bool Base::is_solid() const
 bool Base::is_selectable() const
 {
 	return true;
+}
+
+bool Base::is_replaceable() const
+{
+	return false;
 }
 
 void Base::save(Storage::OutputInterface& i) const
