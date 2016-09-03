@@ -206,7 +206,7 @@ void World::sub_light(const BlockInWorld& block_pos)
 		const Graphics::Color color = std::get<1>(q.front());
 		q.pop();
 
-		auto fill = [this, &block_pos, &q, &pos](Graphics::Color color, const int8_t x, const int8_t y, const int8_t z)
+		auto fill = [this, &q, &pos](const Graphics::Color& color, const int8_t x, const int8_t y, const int8_t z)
 		{
 			const BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
 			Graphics::Color color2 = get_light(pos2);

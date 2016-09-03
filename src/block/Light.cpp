@@ -23,11 +23,12 @@ Light::Light(const Color& color)
 {
 }
 
-void Light::operator=(const Base& block)
+Light& Light::operator=(const Base& block)
 {
 	Base::operator=(block);
 	const Light* that = dynamic_cast<const Light*>(&block);
 	color_ = that->color_;
+	return *this;
 }
 
 Color Light::color() const
@@ -43,6 +44,7 @@ void Light::save(Storage::OutputInterface& i) const
 
 void Light::load(Storage::InputInterface& i)
 {
+	Base::load(i);
 	color_ = i.get<Color>("color");
 }
 

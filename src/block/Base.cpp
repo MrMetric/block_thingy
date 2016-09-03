@@ -36,7 +36,7 @@ Base::Base(const Base& that)
 	operator=(that);
 }
 
-void Base::operator=(const Base& that)
+Base& Base::operator=(const Base& that)
 {
 	const auto type1 = type_id();
 	const auto type2 = that.type_id();
@@ -44,6 +44,7 @@ void Base::operator=(const Base& that)
 	{
 		throw std::runtime_error("can not copy " + std::to_string(type2) + " to " + std::to_string(type1));
 	}
+	return *this;
 }
 
 block_type_id_t Base::type_id() const

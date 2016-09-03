@@ -16,7 +16,7 @@ class Base
 		virtual ~Base();
 
 		Base(const Base&);
-		virtual void operator=(const Base&);
+		virtual Base& operator=(const Base&);
 
 		block_type_id_t type_id() const;
 		BlockType type() const;

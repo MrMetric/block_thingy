@@ -22,8 +22,6 @@ class Text : public Base
 
 	private:
 		std::string text;
-		glm::dvec2 size;
-		glm::dvec2 position;
 };
 
 } // namespace Widget

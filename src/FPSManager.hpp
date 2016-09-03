@@ -53,46 +53,27 @@ class FPSManager
 		double frameEndTime;           // Frame end time
 		double frameDuration;          // How many milliseconds between the last frame and this frame
 
-		double currentFps;             // The current FPS value
+		double currentFPS;             // The current FPS value
 		double targetFrameDuration;    // How many milliseconds each frame should take to hit a target FPS value (i.e. 60fps = 1.0 / 60 = 0.016ms)
 
 		double lastReportTime;         // The timestamp of when we last reported
 		double reportInterval;         // How often to update the FPS value
 
 		// FPSManager is padded with 4 bytes if this is a 32-bit int, so why not use all 64?
-		uint64_t frameCount;        // How many frames have been drawn s
-
-		// Private method to set relatively sane defaults. Called by constructors before overwriting with more specific values as required.
-		void init(double theTargetFps)
-		{
-			setTargetFps(theTargetFps);
-
-			frameCount     = 0;
-			currentFps     = 0.0;
-			frameStartTime = glfwGetTime();
-			frameEndTime   = frameStartTime + 1;
-			frameDuration  = 1;
-			lastReportTime = frameStartTime;
-			reportInterval = 1.0;
-		}
+		uint64_t frameCount;        // How many frames have been drawn so far in the report interval
 
 	public:
-		// Single parameter constructor - just set a desired framerate and let it go.
-		// Note: No FPS reporting by default, although you can turn it on or off later with the setVerbose(true/false) method
-		explicit FPSManager(int theTargetFps)
+		FPSManager(const double theTargetFps)
+		:
+			frameStartTime(glfwGetTime()),
+			frameEndTime(frameStartTime + 1),
+			frameDuration(1),
+			currentFPS(0),
+			targetFrameDuration(1.0 / theTargetFps),
+			lastReportTime(frameStartTime),
+			reportInterval(1),
+			frameCount(0)
 		{
-			init(theTargetFps);
-		}
-
-		void setTargetFps(double theFpsLimit)
-		{
-			targetFrameDuration = 1.0 / theFpsLimit;
-		}
-
-		// Returns the time it took to complete the last frame in milliseconds
-		double getFrameDuration()
-		{
-			return frameDuration;
 		}
 
 		// Method to force our application to stick to a given frame rate and return how long it took to process a frame
@@ -107,13 +88,13 @@ class FPSManager
 			if(reportInterval > 0)
 			{
 				// Calculate and display the FPS every specified time interval
-				if((frameEndTime - lastReportTime) > reportInterval)
+				if(frameEndTime > lastReportTime + reportInterval)
 				{
 					// Update the last report time to be now
 					lastReportTime = frameEndTime;
 
 					// Calculate the FPS as the number of frames divided by the interval in seconds
-					currentFps =  double(frameCount) / reportInterval;
+					currentFPS =  frameCount / reportInterval;
 
 					frameCount = 0;
 				}
@@ -124,7 +105,7 @@ class FPSManager
 			}
 
 			// Calculate how long we should sleep for to stick to our target frame rate
-			double sleepDuration = targetFrameDuration - frameDuration;
+			const double sleepDuration = targetFrameDuration - frameDuration;
 
 			// If we're running faster than our target duration, sleep until we catch up!
 			if(sleepDuration > 0)
@@ -142,6 +123,6 @@ class FPSManager
 
 		double getFPS()
 		{
-			return currentFps;
+			return currentFPS;
 		}
 };

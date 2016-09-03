@@ -11,7 +11,7 @@ class Light : public Base
 		Light();
 		Light(const Graphics::Color&);
 
-		void operator=(const Base&) override;
+		Light& operator=(const Base&) override;
 
 		Graphics::Color color() const override;
 
