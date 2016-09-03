@@ -1,7 +1,4 @@
-namespace Graphics
+namespace Graphics::OpenGL
 {
-	namespace OpenGL
-	{
-		class ShaderProgram;
-	}
+	class ShaderProgram;
 }

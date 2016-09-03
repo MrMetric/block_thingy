@@ -31,8 +31,11 @@ If you have already cloned it and did not do that, then you need to init and upd
  * [webgl-noise](https://github.com/stegu/webgl-noise): included as a submodule
 
 ### Building (using CMake)
- * versions of GCC older than 5.3.0 **can not** compile this
- * clang 3.7 and 3.9 both work fine; older versions are untested, although 3.5 is reported to work
+
+Compiler version requirements:
+
+ * GCC: >= 6
+ * Clang: >= 3.6
 
 Make a directory to build in, and run `cmake <repo root path>`, along with whatever options you want CMake to use.
 For example, in the repo root:

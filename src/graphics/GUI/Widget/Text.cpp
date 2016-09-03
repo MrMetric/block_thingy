@@ -8,9 +8,7 @@
 
 using std::string;
 
-namespace Graphics {
-namespace GUI {
-namespace Widget {
+namespace Graphics::GUI::Widget {
 
 Text::Text
 (
@@ -28,6 +26,4 @@ void Text::draw()
 	owner.game.gfx.gui_text.draw(text, glm::round(real_position));
 }
 
-} // namespace Widget
-} // namespace GUI
-} // namespace Graphics
+} // namespace Graphics::GUI::Widget

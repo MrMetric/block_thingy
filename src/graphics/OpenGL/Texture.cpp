@@ -1,7 +1,6 @@
 #include "Texture.hpp"
 
-namespace Graphics {
-namespace OpenGL {
+namespace Graphics::OpenGL {
 
 Texture::Texture()
 	:
@@ -55,5 +54,4 @@ GLuint Texture::get_name()
 	return name;
 }
 
-} // namespace OpenGL
-} // namespace Graphics
+} // namespace Graphics::OpenGL

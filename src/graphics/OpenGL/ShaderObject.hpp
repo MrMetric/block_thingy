@@ -4,8 +4,7 @@
 
 #include <glad/glad.h>
 
-namespace Graphics {
-namespace OpenGL {
+namespace Graphics::OpenGL {
 
 class ShaderObject
 {
@@ -25,5 +24,4 @@ class ShaderObject
 		GLuint name;
 };
 
-} // namespace OpenGL
-} // namespace Graphics
+} // namespace Graphics::OpenGL

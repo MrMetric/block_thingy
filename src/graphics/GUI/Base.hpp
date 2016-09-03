@@ -10,8 +10,7 @@
 
 #include "types/window_size_t.hpp"
 
-namespace Graphics {
-namespace GUI {
+namespace Graphics::GUI {
 
 class Base
 {
@@ -46,5 +45,4 @@ class Base
 		event_handler_id_t event_handler;
 };
 
-} // namespace GUI
-} // namespace Graphics
+} // namespace Graphics::GUI

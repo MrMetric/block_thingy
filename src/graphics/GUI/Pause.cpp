@@ -8,8 +8,7 @@
 #include "graphics/GUI/Widget/Button.hpp"
 #include "graphics/GUI/Widget/Text.hpp"
 
-namespace Graphics {
-namespace GUI {
+namespace Graphics::GUI {
 
 Pause::Pause(Game& game)
 	:
@@ -54,5 +53,4 @@ void Pause::draw()
 	Base::draw();
 }
 
-} // namespace GUI
-} // namespace Graphics
+} // namespace Graphics::GUI

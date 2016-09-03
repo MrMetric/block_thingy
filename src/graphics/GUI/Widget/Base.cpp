@@ -1,8 +1,6 @@
 #include "Base.hpp"
 
-namespace Graphics {
-namespace GUI {
-namespace Widget {
+namespace Graphics::GUI::Widget {
 
 Base::Base
 (
@@ -49,6 +47,4 @@ glm::dvec2 Base::get_origin()
 	return origin;
 }
 
-} // namespace Widget
-} // namespace GUI
-} // namespace Graphics
+} // namespace Graphics::GUI::Widget

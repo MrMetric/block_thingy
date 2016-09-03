@@ -1,7 +1,4 @@
-namespace Graphics
+namespace Graphics::OpenGL
 {
-	namespace OpenGL
-	{
-		class Texture;
-	}
+	class Texture;
 }

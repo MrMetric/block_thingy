@@ -3,8 +3,7 @@
 
 #include "fwd/Game.hpp"
 
-namespace Graphics {
-namespace GUI {
+namespace Graphics::GUI {
 
 class Pause : public Base
 {
@@ -15,5 +14,4 @@ class Pause : public Base
 		void draw() override;
 };
 
-} // namespace GUI
-} // namespace Graphics
+} // namespace Graphics::GUI

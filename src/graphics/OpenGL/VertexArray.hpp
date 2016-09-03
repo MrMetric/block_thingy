@@ -4,8 +4,7 @@
 
 #include <glad/glad.h>
 
-namespace Graphics {
-namespace OpenGL {
+namespace Graphics::OpenGL {
 
 class VertexBuffer;
 
@@ -31,5 +30,4 @@ class VertexArray
 		GLuint name;
 };
 
-} // namespace OpenGL
-} // namespace Graphics
+} // namespace Graphics::OpenGL

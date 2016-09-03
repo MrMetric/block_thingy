@@ -13,8 +13,7 @@
 
 using std::string;
 
-namespace Graphics {
-namespace OpenGL {
+namespace Graphics::OpenGL {
 
 string get_log(const GLuint object);
 string do_include(const string& file_path);
@@ -106,5 +105,4 @@ string do_include(const string& file_path)
 	return output.str();
 }
 
-} // namespace OpenGL
-} // namespace Graphics
+} // namespace Graphics::OpenGL

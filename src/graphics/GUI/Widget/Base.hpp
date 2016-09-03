@@ -2,12 +2,9 @@
 
 #include <glm/vec2.hpp>
 
-namespace Graphics {
-namespace GUI {
+#include "fwd/graphics/GUI/WidgetContainer.hpp"
 
-class WidgetContainer;
-
-namespace Widget {
+namespace Graphics::GUI::Widget {
 
 class Base
 {
@@ -43,6 +40,4 @@ class Base
 		glm::dvec2 real_position;
 };
 
-} // Widget
-} // GUI
-} // Graphics
+} // namespace Graphics::GUI::Widget

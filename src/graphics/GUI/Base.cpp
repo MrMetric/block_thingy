@@ -12,8 +12,7 @@
 #include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"
 
-namespace Graphics {
-namespace GUI {
+namespace Graphics::GUI {
 
 Base::Base(Game& game, const WidgetContainerMode root_mode)
 	:
@@ -118,5 +117,4 @@ void Base::update_framebuffer_size(const window_size_t& window_size)
 	root.update_container({0, 0}, glm::dvec2(window_size));
 }
 
-} // namespace GUI
-} // namespace Graphics
+} // namespace Graphics::GUI

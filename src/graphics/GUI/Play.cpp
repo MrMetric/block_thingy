@@ -13,8 +13,7 @@
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
 
-namespace Graphics {
-namespace GUI {
+namespace Graphics::GUI {
 
 Play::Play(Game& game)
 	:
@@ -102,5 +101,4 @@ void Play::draw_debug_text()
 	game.gfx.gui_text.draw(ss.str(), {8.0, 8.0});
 }
 
-} // namespace GUI
-} // namespace Graphics
+} // namespace Graphics::GUI

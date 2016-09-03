@@ -10,9 +10,7 @@
 
 using std::string;
 
-namespace Graphics {
-namespace GUI {
-namespace Widget {
+namespace Graphics::GUI::Widget {
 
 Button::Button
 (
@@ -83,6 +81,4 @@ void Button::mousemove(const double x, const double y)
 		 && y >= real_position.y && y < real_position.y + size.y;
 }
 
-} // Widget
-} // GUI
-} // Graphics
+} // namespace Graphics::GUI::Widget

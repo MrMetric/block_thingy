@@ -5,9 +5,7 @@
 
 #include <glm/vec2.hpp>
 
-namespace Graphics {
-namespace GUI {
-namespace Widget {
+namespace Graphics::GUI::Widget {
 
 class Text : public Base
 {
@@ -24,7 +22,4 @@ class Text : public Base
 		std::string text;
 };
 
-} // namespace Widget
-} // namespace GUI
-} // namespace Graphics
-
+} // namespace Graphics::GUI::Widget

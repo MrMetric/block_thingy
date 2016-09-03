@@ -13,8 +13,7 @@
 
 #include "std_make_unique.hpp"
 
-namespace Graphics {
-namespace GUI {
+namespace Graphics::GUI {
 
 enum class WidgetContainerMode
 {
@@ -65,5 +64,4 @@ class WidgetContainer
 		std::vector<std::unique_ptr<WidgetContainer>> containers;
 };
 
-} // namespace GUI
-} // namespace Graphics
+} // namespace Graphics::GUI

@@ -4,8 +4,7 @@
 
 #include <glad/glad.h>
 
-namespace Graphics {
-namespace OpenGL {
+namespace Graphics::OpenGL {
 
 class VertexBuffer
 {
@@ -52,5 +51,4 @@ class VertexBuffer
 		Format format;
 };
 
-} // namespace OpenGL
-} // namespace Graphics
+} // namespace Graphics::OpenGL

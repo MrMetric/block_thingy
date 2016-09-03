@@ -18,8 +18,7 @@
 using std::string;
 using std::unique_ptr;
 
-namespace Graphics {
-namespace OpenGL {
+namespace Graphics::OpenGL {
 
 static GLuint make_program(const std::vector<string>& files, const string& debug_name);
 static std::vector<string> get_uniform_names(const GLuint name);
@@ -224,5 +223,4 @@ static std::vector<string> get_uniform_names(const GLuint program)
 	return uniform_names;
 }
 
-} // namespace OpenGL
-} // namespace Graphics
+} // namespace Graphics::OpenGL

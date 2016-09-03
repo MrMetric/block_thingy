@@ -5,8 +5,7 @@
 
 #include "fwd/Game.hpp"
 
-namespace Graphics {
-namespace GUI {
+namespace Graphics::GUI {
 
 class Play : public Base
 {
@@ -29,5 +28,4 @@ class Play : public Base
 		void draw_debug_text();
 };
 
-} // namespace GUI
-} // namespace Graphics
+} // namespace Graphics::GUI

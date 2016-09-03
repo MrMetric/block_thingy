@@ -9,8 +9,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
-namespace Graphics {
-namespace OpenGL {
+namespace Graphics::OpenGL {
 
 class ShaderProgram
 {
@@ -40,5 +39,4 @@ class ShaderProgram
 		std::unordered_map<std::string, GLint> uniforms;
 };
 
-} // namespace OpenGL
-} // namespace Graphics
+} // namespace Graphics::OpenGL

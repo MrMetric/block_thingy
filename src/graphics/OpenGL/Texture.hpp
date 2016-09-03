@@ -4,8 +4,7 @@
 
 #include <glad/glad.h>
 
-namespace Graphics {
-namespace OpenGL {
+namespace Graphics::OpenGL {
 
 class Texture
 {
@@ -25,5 +24,4 @@ class Texture
 		GLuint name;
 };
 
-} // namespace OpenGL
-} // namespace Graphics
+} // namespace Graphics::OpenGL

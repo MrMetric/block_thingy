@@ -2,8 +2,7 @@
 
 #include "VertexBuffer.hpp"
 
-namespace Graphics {
-namespace OpenGL {
+namespace Graphics::OpenGL {
 
 VertexArray::VertexArray(const VertexBuffer& vbo)
 {
@@ -66,5 +65,4 @@ void VertexArray::draw(const GLenum mode, const GLint first, const std::size_t c
 	glDrawArrays(mode, first, count);
 }
 
-} // namespace OpenGL
-} // namespace Graphics
+} // namespace Graphics::OpenGL

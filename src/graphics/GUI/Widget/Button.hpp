@@ -7,12 +7,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 
-namespace Graphics {
-namespace GUI {
-
-class WidgetContainer;
-
-namespace Widget {
+namespace Graphics::GUI::Widget {
 
 class Button : public Base
 {
@@ -41,6 +36,4 @@ class Button : public Base
 		std::function<void()> click_handler;
 };
 
-} // Widget
-} // GUI
-} // Graphics
+} // namespace Graphics::GUI::Widget

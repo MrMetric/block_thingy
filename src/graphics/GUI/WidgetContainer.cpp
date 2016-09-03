@@ -7,8 +7,7 @@
 
 using std::string;
 
-namespace Graphics {
-namespace GUI {
+namespace Graphics::GUI {
 
 WidgetContainer::WidgetContainer(Game& game, const WidgetContainerMode mode)
 	:
@@ -176,5 +175,4 @@ void WidgetContainer::update_children()
 	}
 }
 
-} // namespace GUI
-} // namespace Graphics
+} // namespace Graphics::GUI

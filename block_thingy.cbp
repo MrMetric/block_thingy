@@ -59,7 +59,7 @@
 		<Compiler>
 			<Add option="-pedantic-errors" />
 			<Add option="-Weverything" />
-			<Add option="-std=c++14" />
+			<Add option="-std=c++1z" />
 			<Add option="-fexceptions" />
 			<Add option="-isystem lib" />
 			<Add option="-iquote src" />
@@ -162,6 +162,7 @@
 		<Unit filename="src/fwd/event/EventManager.hpp" />
 		<Unit filename="src/fwd/event/EventType.hpp" />
 		<Unit filename="src/fwd/graphics/Color.hpp" />
+		<Unit filename="src/fwd/graphics/GUI/WidgetContainer.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/ShaderProgram.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/Texture.hpp" />
 		<Unit filename="src/fwd/physics/RaycastHit.hpp" />

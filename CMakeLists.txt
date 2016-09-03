@@ -11,9 +11,11 @@ include_directories(
 )
 add_executable(block_thingy ${block_thingy_SRC})
 
+#[[
 set_property(TARGET block_thingy PROPERTY CXX_STANDARD 14)
 set_property(TARGET block_thingy PROPERTY CXX_STANDARD_REQUIRED ON)
 target_compile_features(block_thingy PRIVATE cxx_relaxed_constexpr)
+]]
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(GLFW REQUIRED glfw3)
@@ -27,6 +29,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	set(FSANITIZE -fsanitize=undefined,integer)
 endif()
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
 target_compile_options(block_thingy PRIVATE
 	$<$<CONFIG:Debug>:${FSANITIZE}>
 	$<$<CONFIG:RelWithDebInfo>:${FSANITIZE}>
