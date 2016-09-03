@@ -271,10 +271,15 @@ void Game::add_commands()
 		}
 
 		const Position::BlockInWorld pos = game.hovered_block->adjacent();
-		if(game.world.get_block(pos).is_replaceable() && game.player.can_place_block_at(pos))
+		if(game.world.get_block(pos).is_replaceable())
 		{
-			game.world.set_block(pos, game.block_registry.make(game.block_type));
-			//event_manager.do_event(Event_place_block(pos, face));
+			// TODO: check solidity without constructing
+			unique_ptr<Block::Base> block = game.block_registry.make(game.block_type);
+			if(game.player.can_place_block_at(pos) || !block->is_solid())
+			{
+				game.world.set_block(pos, std::move(block));
+				//event_manager.do_event(Event_place_block(pos, face));
+			}
 		}
 	});
 	COMMAND("pick_block")
