@@ -79,7 +79,7 @@ void Gfx::hook_events(EventManager& event_manager)
 		const double height = e.window_size.y;
 		gui_projection_matrix = glm::ortho(0.0, width, height, 0.0, -1.0, 1.0);
 		gui_text.set_projection_matrix(gui_projection_matrix);
-		s_gui_shape.uniform("matriks", gui_projection_matrix);
+		s_gui_shape.uniform("matriks", glm::mat4(gui_projection_matrix));
 	});
 }
 
@@ -212,7 +212,7 @@ void Gfx::set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation
 }
 
 // TODO: use GL_LINES
-void Gfx::draw_cube_outline(const Position::BlockInWorld& block_pos, const glm::vec4& color)
+void Gfx::draw_cube_outline(const Position::BlockInWorld& block_pos, const glm::dvec4& color)
 {
 	const Position::ChunkInWorld chunk_pos(block_pos);
 	const auto chunk_pos_graphical = chunk_pos - Position::ChunkInWorld(Position::BlockInWorld(Game::instance->camera.position));
@@ -239,8 +239,8 @@ void Gfx::draw_cube_outline(const Position::BlockInWorld& block_pos, const glm::
 	outline_vbo.data(sizeof(vertexes), vertexes, usage_hint);
 
 	glUseProgram(s_lines.get_name());
-	s_lines.uniform("matriks", matriks);
-	s_lines.uniform("color", color);
+	s_lines.uniform("matriks", glm::mat4(matriks));
+	s_lines.uniform("color", glm::vec4(color));
 
 	outline_vao.draw(GL_LINE_STRIP, 0, 16);
 }

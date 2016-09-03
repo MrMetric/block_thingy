@@ -172,7 +172,7 @@ unique_ptr<RaycastHit> PhysicsUtil::raycast(const World& world, const glm::dvec3
 	Position::BlockInWorld cube_pos(origin);
 
 	// Direction to increment x,y,z when stepping.
-	const glm::ivec3 step = glm::sign(direction);
+	const glm::ivec3 step(glm::sign(direction));
 
 	// See description above. The initial values depend on the fractional part of the origin.
 	glm::dvec3 tMax = intbound(origin, direction);

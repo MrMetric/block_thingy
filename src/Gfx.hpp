@@ -72,7 +72,7 @@ class Gfx
 		void toggle_cull_face();
 		void update_projection_matrix();
 		void set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation);
-		void draw_cube_outline(const Position::BlockInWorld&, const glm::vec4& color);
+		void draw_cube_outline(const Position::BlockInWorld&, const glm::dvec4& color);
 		Graphics::OpenGL::ShaderProgram& get_block_shader(BlockType);
 
 		#ifdef USE_LIBPNG

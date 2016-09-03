@@ -84,6 +84,9 @@
 			<Add option="-DMSGPACK_DISABLE_LEGACY_NIL" />
 			<Add option="-DMSGPACK_DISABLE_LEGACY_CONVERT" />
 			<Add option="-DGLFW_INCLUDE_NONE" />
+			<Add option="-DGLM_FORCE_SIZE_T_LENGTH" />
+			<Add option="-DGLM_FORCE_SIZE_FUNC" />
+			<Add option="-DGLM_FORCE_EXPLICIT_CTOR" />
 		</Compiler>
 		<Linker>
 			<Add option="`pkg-config --libs glfw3`" />
