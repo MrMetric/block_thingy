@@ -21,6 +21,8 @@ If you have already cloned it and did not do that, then you need to init and upd
     $ cd block_thingy
     $ git submodule update --init --recursive
 
+If you are using Windows, you must run `fix_symlinks.bat` before building or running block_thingy. This is because Git incorrectly translates each symbolic link to be just a text file with the link path as the content.
+
 ### Dependencies
  * [FreeType 2](https://www.freetype.org/)
  * [GLM](https://github.com/g-truc/glm): included as a submodule
