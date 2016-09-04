@@ -10,6 +10,11 @@
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
+#ifdef _WIN32
+// TODO: move meshers into their own namespace
+#define Rectangle MesherRectangle
+#endif // _WIN32
+
 using Position::BlockInChunk;
 
 using surface_t = GreedyMesher::surface_t;

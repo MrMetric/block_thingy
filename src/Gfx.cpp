@@ -39,6 +39,14 @@
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 
+#ifdef near
+#undef near
+#endif
+
+#ifdef far
+#undef far
+#endif
+
 using std::cout;
 using std::string;
 

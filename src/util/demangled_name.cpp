@@ -1,5 +1,6 @@
 #include "demangled_name.hpp"
 
+#ifdef __GNUG__
 #include <cstdlib>
 #include <cxxabi.h>
 #include <memory>
@@ -11,7 +12,6 @@ namespace Util {
 
 string demangle(const string& s)
 {
-	#ifdef __GNUG__
 	int status;
 	unique_ptr<char, void(*)(void*)> res
 	{
@@ -19,9 +19,12 @@ string demangle(const string& s)
 		std::free,
 	};
 	return (status == 0) ? res.get() : s;
-	#else
-	return s;
-	#endif
 }
 
 } // namespace Util
+#else
+std::string Util::demangle(const std::string& s)
+{
+	return s;
+}
+#endif

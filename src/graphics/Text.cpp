@@ -1,9 +1,7 @@
 #include "Text.hpp"
 
 #include <algorithm>
-#include <codecvt>
 #include <iostream>
-#include <locale>
 #include <stdexcept>
 #include <stdint.h>
 #include <vector>
@@ -11,12 +9,11 @@
 #include <glad/glad.h>
 
 #include "graphics/OpenGL/Texture.hpp"
+#include "util/unicode.hpp"
 
 using std::cerr;
 using std::string;
 using std::u32string;
-
-static std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> convert;
 
 // based on:
 // http://learnopengl.com/#!In-Practice/Text-Rendering
@@ -65,8 +62,7 @@ void Text::set_projection_matrix(const glm::dmat4& projection_matrix)
 void Text::draw(const string& s_utf8, const glm::dvec2& pos)
 {
 	// TODO: handle exception from invalid input
-	u32string s = convert.from_bytes(s_utf8);
-	draw(s, pos);
+	draw(Util::utf8_to_utf32(s_utf8), pos);
 }
 
 void Text::draw(const u32string& s, glm::dvec2 pos)
@@ -130,8 +126,7 @@ void Text::draw(const u32string& s, glm::dvec2 pos)
 glm::dvec2 Text::get_size(const string& s_utf8)
 {
 	// TODO: handle exception from invalid input
-	u32string s = convert.from_bytes(s_utf8);
-	return get_size(s);
+	return get_size(Util::utf8_to_utf32(s_utf8));
 }
 
 glm::dvec2 Text::get_size(u32string s)

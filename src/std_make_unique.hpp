@@ -1,10 +1,12 @@
 #pragma once
 // source: http://stackoverflow.com/a/17902439/1578318
 
-#if !defined(__cpp_lib_make_unique) || (__cpp_lib_make_unique < 201304)
+#include <memory>
+
+#if !defined(_MSC_VER) // dunno why __cpp_lib_make_unique is not defined
+#if __cpp_lib_make_unique < 201304
 
 #include <cstddef>
-#include <memory>
 #include <type_traits>
 #include <utility>
 
@@ -45,4 +47,7 @@ namespace std
 		make_unique(Args&&...) = delete;
 }
 
-#endif // __cpp_lib_make_unique
+#define __cpp_lib_make_unique 201304
+
+#endif // __cpp_lib_make_unique < 201304
+#endif // !defined(_LIBCPP_STD_VER) && !defined(_MSC_VER)

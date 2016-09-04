@@ -7,7 +7,11 @@
 #include <memory>
 #include <stdexcept>
 #include <stdint.h>
+#ifdef _WIN32
+#include <windows.h>
+#else
 #include <unistd.h>
+#endif
 
 #include <glad/glad.h>
 
@@ -162,9 +166,16 @@ string Util::join_path(const Util::path& path_parts)
 
 void Util::change_directory(const string& path)
 {
-	// TODO: find out what Wandows uses
+	#ifdef _WIN32
+	// TODO: unicode
+	if(!SetCurrentDirectoryA(path.c_str()))
+	{
+		throw std::runtime_error("error changing directory to " + path + ": " + to_string(GetLastError()));
+	}
+	#else
 	if(chdir(path.c_str()) == -1)
 	{
 		throw std::runtime_error("error changing directory to " + path + ": " + strerror(errno) + "\n");
 	}
+	#endif
 }
