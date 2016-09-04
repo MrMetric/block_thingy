@@ -1,5 +1,7 @@
 #include "VertexBuffer.hpp"
 
+#include <utility>
+
 #include <glad/glad.h>
 
 namespace Graphics::OpenGL {
@@ -20,6 +22,7 @@ VertexBuffer::VertexBuffer(VertexBuffer&& that)
 	{
 		that.name = 0;
 		that.inited = false;
+		format = std::move(that.format);
 	}
 }
 
