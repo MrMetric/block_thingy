@@ -4,6 +4,10 @@
 #include <stdexcept>
 #include <string>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -18,6 +22,25 @@ using std::cerr;
 using std::cout;
 using std::string;
 using std::unique_ptr;
+
+#ifdef _WIN32
+class CodePageHandler
+{
+	public:
+		CodePageHandler(UINT new_cp)
+		{
+			old_cp = GetConsoleOutputCP();
+			SetConsoleOutputCP(new_cp);
+		}
+		~CodePageHandler()
+		{
+			SetConsoleOutputCP(old_cp);
+		}
+
+	private:
+		UINT old_cp;
+};
+#endif
 
 static void log_exception(const std::exception& error)
 {
@@ -38,6 +61,10 @@ int main(int argc, char** argv)
 	// TODO: put this somewhere else
 	static_assert(GL_TRUE, "GL_TRUE is not true");
 	static_assert(!GL_FALSE, "GL_FALSE is not false");
+
+	#ifdef _WIN32
+	CodePageHandler cp(CP_UTF8);
+	#endif
 
 	if(argc > 1)
 	{
