@@ -23,7 +23,7 @@ Play::Play(Game& game)
 
 void Play::init()
 {
-	glClearColor(0.0, 0.0, 0.1, 0.0);
+	glClearColor(0, 0, 0.1f, 0);
 	glfwSetInputMode(game.gfx.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	game.gfx.center_cursor();
 }

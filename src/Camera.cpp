@@ -14,7 +14,7 @@ Camera::Camera(Gfx& gfx, EventManager& event_manager)
 	joy_sensitivity(1.2),
 	gfx(gfx)
 {
-	event_manager.add_handler(EventType::window_size_change, [&gfx](const Event& event)
+	event_manager.add_handler(EventType::window_size_change, [&gfx](const Event&)
 	{
 		gfx.center_cursor();
 	});

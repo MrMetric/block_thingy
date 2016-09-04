@@ -10,7 +10,7 @@ namespace Util {
 
 u32string utf8_to_utf32(const string& s)
 {
-	#if _MSC_VER == 1900 // a bug prevents linking
+	#if defined(_MSC_VER) && _MSC_VER == 1900 // a bug prevents linking
 	static std::wstring_convert<std::codecvt_utf8<int32_t>, int32_t> convert;
 	const auto s2 = convert.from_bytes(s);
 	return u32string(reinterpret_cast<const char32_t*>(s2.data()), s2.size());

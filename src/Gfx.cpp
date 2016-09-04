@@ -116,25 +116,22 @@ GLFWwindow* Gfx::init_glfw()
 		shim_GL_ARB_separate_shader_objects();
 	}
 
-	#pragma clang diagnostic push
-	#pragma clang diagnostic ignored "-Wunused-parameter" // window
-	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height)
+	glfwSetFramebufferSizeCallback(window, [](GLFWwindow*, int width, int height)
 	{
 		Game::instance->update_framebuffer_size(window_size_t(width, height));
 	});
-	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+	glfwSetKeyCallback(window, [](GLFWwindow*, int key, int scancode, int action, int mods)
 	{
 		Game::instance->keypress(key, scancode, action, mods);
 	});
-	glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods)
+	glfwSetMouseButtonCallback(window, [](GLFWwindow*, int button, int action, int mods)
 	{
 		Game::instance->mousepress(button, action, mods);
 	});
-	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double x, double y)
+	glfwSetCursorPosCallback(window, [](GLFWwindow*, double x, double y)
 	{
 		Game::instance->mousemove(x, y);
 	});
-	#pragma clang diagnostic pop
 
 	return window;
 }

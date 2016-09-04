@@ -10,6 +10,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Console.hpp"
+#include "Game.hpp"
 #include "Util.hpp"
 
 using std::string;
@@ -18,26 +19,20 @@ KeybindManager::KeybindManager(Console& console)
 	:
 	console(console)
 {
-	#pragma clang diagnostic push
-	#pragma clang diagnostic ignored "-Wunused-parameter" // game
 	console.add_command("bind", {[&keybinder=*this](Game& game, const std::vector<string>& args)
-	#pragma clang diagnostic pop
 	{
 		if(args.size() != 2)
 		{
-			// print usage
+			game.console.error_logger << "Usage: bind <key> <command>\n";
 			return;
 		}
 		keybinder.bind_key(args[0], args[1]);
 	}});
-	#pragma clang diagnostic push
-	#pragma clang diagnostic ignored "-Wunused-parameter" // game
 	console.add_command("unbind", {[&keybinder=*this](Game& game, const std::vector<string>& args)
-	#pragma clang diagnostic pop
 	{
 		if(args.size() != 1)
 		{
-			// print usage
+			game.console.error_logger << "Usage: unbind <key>\n";
 			return;
 		}
 		int key = KeybindManager::translate_key(args[0]);

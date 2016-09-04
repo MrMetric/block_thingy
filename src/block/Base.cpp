@@ -107,10 +107,7 @@ void Base::save(Storage::OutputInterface& i) const
 	i.set("t", t);
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-parameter" // i
-void Base::load(Storage::InputInterface& i)
-#pragma clang diagnostic pop
+void Base::load(Storage::InputInterface&)
 {
 	// type is set before loading
 }
