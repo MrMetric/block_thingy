@@ -335,7 +335,7 @@ GLFWwindow* Gfx::make_window(bool is_fullscreen)
 	if(window == nullptr)
 	{
 		glfwTerminate();
-		throw new std::runtime_error("error creating window");
+		throw std::runtime_error("error creating window");
 	}
 
 	glfwMakeContextCurrent(window);
