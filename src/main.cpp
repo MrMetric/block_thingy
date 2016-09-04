@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <memory>
+#include <stdexcept>
 #include <string>
 
 #include <glad/glad.h>
@@ -9,6 +10,7 @@
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "Util.hpp"
+#include "util/demangled_name.hpp"
 
 #include "std_make_unique.hpp"
 
@@ -17,6 +19,12 @@ using std::cout;
 using std::string;
 using std::unique_ptr;
 
+static void log_exception(const std::exception& error)
+{
+	cerr << "uncaught exception (" << Util::demangled_name(error) << ")\n";
+	cerr << "  what():  " << error.what() << "\n";
+}
+
 static void error_callback(const int error, const char* description)
 {
 	cerr << "GLFW error " << error << ": " << description << "\n";
@@ -24,6 +32,9 @@ static void error_callback(const int error, const char* description)
 
 int main(int argc, char** argv)
 {
+	try
+	{
+
 	// TODO: put this somewhere else
 	static_assert(GL_TRUE, "GL_TRUE is not true");
 	static_assert(!GL_FALSE, "GL_FALSE is not false");
@@ -52,6 +63,18 @@ int main(int argc, char** argv)
 	game->gfx.uninit_glfw();
 	game.reset(); // destruct
 	printOpenGLError();
+
+	}
+	catch(const std::runtime_error& error)
+	{
+		log_exception(error);
+		return EXIT_FAILURE;
+	}
+	catch(const std::logic_error& error)
+	{
+		log_exception(error);
+		return EXIT_FAILURE;
+	}
 
 	return EXIT_SUCCESS;
 }
