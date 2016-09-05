@@ -1,8 +1,12 @@
 #pragma once
 
+#include <memory>
+#include <vector>
+
 #include <glm/vec2.hpp>
 
 #include "fwd/graphics/GUI/WidgetContainer.hpp"
+#include "fwd/graphics/GUI/Widget/Modifier/Base.hpp"
 
 namespace Graphics::GUI::Widget {
 
@@ -17,7 +21,7 @@ class Base
 		);
 		virtual ~Base();
 
-		virtual void draw() = 0;
+		virtual void draw();
 
 		virtual void mousepress(int button, int action, int mods);
 		virtual void mousemove(double x, double y);
@@ -29,15 +33,21 @@ class Base
 			const glm::dvec2& offset
 		);
 
-		glm::dvec2 get_size();
-		glm::dvec2 get_origin();
+		glm::dvec2 get_size() const;
+		glm::dvec2 get_origin() const;
+		glm::dvec2 get_real_position() const;
 
-	protected:
 		WidgetContainer& owner;
 
+		void add_modifier(std::shared_ptr<Modifier::Base>);
+
+	protected:
 		glm::dvec2 size;
 		glm::dvec2 origin;
 		glm::dvec2 real_position;
+
+	private:
+		std::vector<std::shared_ptr<Modifier::Base>> modifiers;
 };
 
 } // namespace Graphics::GUI::Widget

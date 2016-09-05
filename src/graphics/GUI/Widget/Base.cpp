@@ -1,5 +1,7 @@
 #include "Base.hpp"
 
+#include "graphics/GUI/Widget/Modifier/Base.hpp"
+
 namespace Graphics::GUI::Widget {
 
 Base::Base
@@ -17,6 +19,14 @@ Base::Base
 
 Base::~Base()
 {
+}
+
+void Base::draw()
+{
+	for(auto& m : modifiers)
+	{
+		m->draw(*this);
+	}
 }
 
 void Base::mousepress(const int button, const int action, const int mods)
@@ -37,14 +47,24 @@ void Base::update_container
 	real_position = container_position + glm::dvec2(0.5) * container_size - size * origin + offset;
 }
 
-glm::dvec2 Base::get_size()
+glm::dvec2 Base::get_size() const
 {
 	return size;
 }
 
-glm::dvec2 Base::get_origin()
+glm::dvec2 Base::get_origin() const
 {
 	return origin;
+}
+
+glm::dvec2 Base::get_real_position() const
+{
+	return real_position;
+}
+
+void Base::add_modifier(std::shared_ptr<Modifier::Base> m)
+{
+	modifiers.emplace_back(m);
 }
 
 } // namespace Graphics::GUI::Widget

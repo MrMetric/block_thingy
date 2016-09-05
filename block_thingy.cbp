@@ -162,6 +162,8 @@
 		<Unit filename="src/fwd/event/EventManager.hpp" />
 		<Unit filename="src/fwd/event/EventType.hpp" />
 		<Unit filename="src/fwd/graphics/Color.hpp" />
+		<Unit filename="src/fwd/graphics/GUI/Widget/Base.hpp" />
+		<Unit filename="src/fwd/graphics/GUI/Widget/Modifier/Base.hpp" />
 		<Unit filename="src/fwd/graphics/GUI/WidgetContainer.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/ShaderProgram.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/Texture.hpp" />
@@ -182,6 +184,10 @@
 		<Unit filename="src/graphics/GUI/Widget/Base.hpp" />
 		<Unit filename="src/graphics/GUI/Widget/Button.cpp" />
 		<Unit filename="src/graphics/GUI/Widget/Button.hpp" />
+		<Unit filename="src/graphics/GUI/Widget/Modifier/Base.cpp" />
+		<Unit filename="src/graphics/GUI/Widget/Modifier/Base.hpp" />
+		<Unit filename="src/graphics/GUI/Widget/Modifier/Border.cpp" />
+		<Unit filename="src/graphics/GUI/Widget/Modifier/Border.hpp" />
 		<Unit filename="src/graphics/GUI/Widget/Text.cpp" />
 		<Unit filename="src/graphics/GUI/Widget/Text.hpp" />
 		<Unit filename="src/graphics/GUI/WidgetContainer.cpp" />
