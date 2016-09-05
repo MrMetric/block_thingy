@@ -26,7 +26,7 @@ Light::Light(const Color& color)
 Light& Light::operator=(const Base& block)
 {
 	Base::operator=(block);
-	const Light* that = dynamic_cast<const Light*>(&block);
+	const Light* that = static_cast<const Light*>(&block);
 	color_ = that->color_;
 	return *this;
 }

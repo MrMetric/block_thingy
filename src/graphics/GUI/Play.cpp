@@ -58,7 +58,7 @@ void Play::mousemove(const double x, const double y)
 	game.camera.mousemove(x, y);
 }
 
-void Play::joypress(int joystick, int button, bool pressed)
+void Play::joypress(const int joystick, const int button, const bool pressed)
 {
 	game.keybinder.joypress(joystick, button, pressed);
 }
