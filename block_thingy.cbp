@@ -235,8 +235,12 @@
 		<Unit filename="src/storage/msgpack_util.hpp" />
 		<Unit filename="src/types/window_size_t.hpp" />
 		<Unit filename="src/util/Property.hpp" />
+		<Unit filename="src/util/compiler_info.cpp" />
+		<Unit filename="src/util/compiler_info.hpp" />
 		<Unit filename="src/util/demangled_name.cpp" />
 		<Unit filename="src/util/demangled_name.hpp" />
+		<Unit filename="src/util/unicode.cpp" />
+		<Unit filename="src/util/unicode.hpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

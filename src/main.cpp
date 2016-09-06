@@ -14,6 +14,7 @@
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "Util.hpp"
+#include "util/compiler_info.hpp"
 #include "util/demangled_name.hpp"
 
 #include "std_make_unique.hpp"
@@ -65,6 +66,12 @@ int main(int argc, char** argv)
 	#ifdef _WIN32
 	CodePageHandler cp(CP_UTF8);
 	#endif
+
+	const string compiler_info = Util::compiler_info();
+	if(compiler_info != "")
+	{
+		cout << "Compiled by " << compiler_info << "\n";
+	}
 
 	if(argc > 1)
 	{
