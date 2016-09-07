@@ -190,12 +190,9 @@ unique_ptr<RaycastHit> PhysicsUtil::raycast(const World& world, const glm::dvec3
 			(step.y > 0 ? cube_pos.y < max.y : cube_pos.y > min.y) &&
 			(step.z > 0 ? cube_pos.z < max.z : cube_pos.z > min.z))
 	{
-		if(pos_in_bounds(cube_pos, min, max))
+		if(pos_in_bounds(cube_pos, min, max) && world.get_block(cube_pos).is_selectable())
 		{
-			if(world.get_block(cube_pos).is_selectable())
-			{
-				return std::make_unique<RaycastHit>(cube_pos, face);
-			}
+			return std::make_unique<RaycastHit>(cube_pos, face);
 		}
 
 		// tMax.x stores the t-value at which we cross a cube boundary along the

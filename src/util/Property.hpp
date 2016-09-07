@@ -5,11 +5,12 @@
 template <typename T> class Property
 {
 	public:
-		Property(
+		Property
+		(
 			T value,
 			std::function<void(T)> set
 		)
-			:
+		:
 			value(value),
 			set(set)
 		{

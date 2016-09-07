@@ -172,49 +172,50 @@ Rectangle yield_rectangle(surface_t& surface)
 		{
 			const meshmap_key_t key = row[x];
 			const BlockType type = std::get<0>(key);
-			if(type != BlockType::none)
+			if(type == BlockType::none)
 			{
-				const BlockInChunk::value_type start_z = z;
-				const BlockInChunk::value_type start_x = x;
-				BlockInChunk::value_type w = 1;
-				BlockInChunk::value_type h = 1;
+				continue;
+			}
+			const BlockInChunk::value_type start_z = z;
+			const BlockInChunk::value_type start_x = x;
+			BlockInChunk::value_type w = 1;
+			BlockInChunk::value_type h = 1;
+			row[x] = ChunkMesher::empty_key;
+			++x;
+			while(x < CHUNK_SIZE && row[x] == key)
+			{
+				w += 1;
 				row[x] = ChunkMesher::empty_key;
 				++x;
-				while(x < CHUNK_SIZE && row[x] == key)
+			}
+			++z;
+			while(z < CHUNK_SIZE)
+			{
+				x = start_x;
+				surface_t::value_type& row2 = surface[z];
+
+				if(row2[x] != key)
 				{
-					w += 1;
-					row[x] = ChunkMesher::empty_key;
+					break;
+				}
+				BlockInChunk::value_type w2 = 0;
+				do
+				{
+					w2 += 1;
 					++x;
 				}
-				++z;
-				while(z < CHUNK_SIZE)
+				while(x < CHUNK_SIZE && w2 < w && row2[x] == key);
+
+				if(w2 != w)
 				{
-					x = start_x;
-					surface_t::value_type& row2 = surface[z];
-
-					if(row2[x] != key)
-					{
-						break;
-					}
-					BlockInChunk::value_type w2 = 0;
-					do
-					{
-						w2 += 1;
-						++x;
-					}
-					while(x < CHUNK_SIZE && w2 < w && row2[x] == key);
-
-					if(w2 != w)
-					{
-						break;
-					}
-					std::fill_n(&row2[start_x], w2, ChunkMesher::empty_key);
-
-					++z;
-					h += 1;
+					break;
 				}
-				return { key, start_x, start_z, w, h };
+				std::fill_n(&row2[start_x], w2, ChunkMesher::empty_key);
+
+				++z;
+				h += 1;
 			}
+			return { key, start_x, start_z, w, h };
 		}
 	}
 

@@ -78,26 +78,27 @@ void Player::move(const glm::dvec3& acceleration)
 				continue;
 			}
 			AABB block_aabb(block_pos);
-			if(new_aabb.collide(block_aabb))
+			if(!new_aabb.collide(block_aabb))
 			{
-				const glm::vec3 direction_sign(block_pos_offset.x, 0, block_pos_offset.z);
-				glm::dvec3 offset = new_aabb.offset(block_aabb, direction_sign);
-				if(corners)
-				{
-					// avoid being stuck on corners
-					const glm::dvec3 abs_offset = glm::abs(offset);
-					if(abs_offset.x > abs_offset.z)
-					{
-						offset.x = 0;
-					}
-					else if(abs_offset.z > abs_offset.x)
-					{
-						offset.z = 0;
-					}
-				}
-				new_position += offset;
-				new_aabb = make_aabb(new_position);
+				continue;
 			}
+			const glm::vec3 direction_sign(block_pos_offset.x, 0, block_pos_offset.z);
+			glm::dvec3 offset = new_aabb.offset(block_aabb, direction_sign);
+			if(corners)
+			{
+				// avoid being stuck on corners
+				const glm::dvec3 abs_offset = glm::abs(offset);
+				if(abs_offset.x > abs_offset.z)
+				{
+					offset.x = 0;
+				}
+				else if(abs_offset.z > abs_offset.x)
+				{
+					offset.z = 0;
+				}
+			}
+			new_position += offset;
+			new_aabb = make_aabb(new_position);
 		}
 	};
 	loop(false); // skip corners

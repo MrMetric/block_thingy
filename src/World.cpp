@@ -387,40 +387,37 @@ void World::gen_at(const BlockInWorld& min, const BlockInWorld& max)
 {
 	BlockInWorld block_pos(0, 0, 0);
 	for(auto x = min.x; x <= max.x; ++x)
+	for(auto z = min.z; z <= max.z; ++z)
 	{
-		for(auto z = min.z; z <= max.z; ++z)
+		const double m = 20;
+		if(min.y > 0)
 		{
-			const double m = 20;
-			if(min.y > 0)
-			{
-				continue;
-			}
+			continue;
+		}
 
-			// https://www.shadertoy.com/view/Xl3GWS
-			auto get_max_y = [](const BlockInWorld::value_type x, const BlockInWorld::value_type z) -> double
-			{
-				// coords must not be (0, 0) (it makes this function always return 0)
-				const glm::dvec2 coords = (x == 0 && z == 0) ? glm::dvec2(0.0001) : glm::dvec2(x, z) / 1024.0;
-				const glm::dvec2 n(-sum_octaves(coords, 1, 2.07, 8));
+		// https://www.shadertoy.com/view/Xl3GWS
+		auto get_max_y = [](const BlockInWorld::value_type x, const BlockInWorld::value_type z) -> double
+		{
+			// coords must not be (0, 0) (it makes this function always return 0)
+			const glm::dvec2 coords = (x == 0 && z == 0) ? glm::dvec2(0.0001) : glm::dvec2(x, z) / 1024.0;
+			const glm::dvec2 n(-sum_octaves(coords, 1, 2.07, 8));
 
-				const double a = n.x * n.y;
-				const double b = glm::mod(a, 1.0);
-				const auto d = static_cast<uint_fast8_t>(glm::mod(ceil(a), 2.0));
-				return (d == 0 ? b : 1 - b) - 1;
-			};
+			const double a = n.x * n.y;
+			const double b = glm::mod(a, 1.0);
+			const auto d = static_cast<uint_fast8_t>(glm::mod(ceil(a), 2.0));
+			return (d == 0 ? b : 1 - b) - 1;
+		};
 
-			auto max_y = max.y <= -m ? max.y : std::min(max.y, static_cast<BlockInWorld::value_type>(get_max_y(x, z) * m));
+		auto max_y = max.y <= -m ? max.y : std::min(max.y, static_cast<BlockInWorld::value_type>(get_max_y(x, z) * m));
 
-			block_pos.x = x;
-			block_pos.z = z;
-			for(auto y = min.y; y <= max_y; ++y)
-			{
-				block_pos.y = y;
+		block_pos.x = x;
+		block_pos.z = z;
+		for(auto y = min.y; y <= max_y; ++y)
+		{
+			block_pos.y = y;
 
-				const ChunkInWorld chunkpos(block_pos);
-				const BlockType t = y > -m / 2 ? BlockType::white : BlockType::black;
-				set_block(block_pos, Game::instance->block_registry.make(t));
-			}
+			const BlockType t = y > -m / 2 ? BlockType::white : BlockType::black;
+			set_block(block_pos, Game::instance->block_registry.make(t));
 		}
 	}
 }
