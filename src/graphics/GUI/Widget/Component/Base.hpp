@@ -2,7 +2,7 @@
 
 #include "fwd/graphics/GUI/Widget/Base.hpp"
 
-namespace Graphics::GUI::Widget::Modifier {
+namespace Graphics::GUI::Widget::Component {
 
 class Base
 {
@@ -12,4 +12,4 @@ class Base
 		virtual void draw(const Widget::Base&) = 0;
 };
 
-} // namespace Graphics::GUI::Widget::Modifier
+}

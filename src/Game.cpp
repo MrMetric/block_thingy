@@ -192,6 +192,11 @@ void Game::keypress(const int key, const int scancode, const int action, const i
 	gui->keypress(key, scancode, action, mods);
 }
 
+void Game::charpress(const char32_t codepoint)
+{
+	gui->charpress(codepoint);
+}
+
 void Game::mousepress(const int button, const int action, const int mods)
 {
 	gui->mousepress(button, action, mods);

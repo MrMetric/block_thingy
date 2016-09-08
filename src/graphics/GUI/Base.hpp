@@ -27,6 +27,7 @@ class Base
 		virtual void draw();
 
 		virtual void keypress(int key, int scancode, int action, int mods);
+		virtual void charpress(char32_t codepoint);
 		virtual void mousepress(int button, int action, int mods);
 		virtual void mousemove(double x, double y);
 		virtual void joypress(int joystick, int button, bool pressed);

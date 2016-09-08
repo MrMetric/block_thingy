@@ -1,6 +1,6 @@
 #include "Base.hpp"
 
-#include "graphics/GUI/Widget/Modifier/Base.hpp"
+#include "graphics/GUI/Widget/Component/Base.hpp"
 
 namespace Graphics::GUI::Widget {
 
@@ -27,6 +27,14 @@ void Base::draw()
 	{
 		m->draw(*this);
 	}
+}
+
+void Base::keypress(const int key, const int scancode, const int action, const int mods)
+{
+}
+
+void Base::charpress(const char32_t codepoint)
+{
 }
 
 void Base::mousepress(const int button, const int action, const int mods)
@@ -62,7 +70,7 @@ glm::dvec2 Base::get_real_position() const
 	return real_position;
 }
 
-void Base::add_modifier(std::shared_ptr<Modifier::Base> m)
+void Base::add_modifier(std::shared_ptr<Component::Base> m)
 {
 	modifiers.emplace_back(m);
 }

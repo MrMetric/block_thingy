@@ -6,7 +6,7 @@
 #include <glm/vec2.hpp>
 
 #include "fwd/graphics/GUI/WidgetContainer.hpp"
-#include "fwd/graphics/GUI/Widget/Modifier/Base.hpp"
+#include "fwd/graphics/GUI/Widget/Component/Base.hpp"
 
 namespace Graphics::GUI::Widget {
 
@@ -23,6 +23,8 @@ class Base
 
 		virtual void draw();
 
+		virtual void keypress(int key, int scancode, int action, int mods);
+		virtual void charpress(char32_t codepoint);
 		virtual void mousepress(int button, int action, int mods);
 		virtual void mousemove(double x, double y);
 
@@ -39,7 +41,7 @@ class Base
 
 		WidgetContainer& owner;
 
-		void add_modifier(std::shared_ptr<Modifier::Base>);
+		void add_modifier(std::shared_ptr<Component::Base>);
 
 	protected:
 		glm::dvec2 size;
@@ -47,7 +49,7 @@ class Base
 		glm::dvec2 real_position;
 
 	private:
-		std::vector<std::shared_ptr<Modifier::Base>> modifiers;
+		std::vector<std::shared_ptr<Component::Base>> modifiers;
 };
 
 } // namespace Graphics::GUI::Widget

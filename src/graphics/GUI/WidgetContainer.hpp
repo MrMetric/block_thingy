@@ -29,6 +29,8 @@ class WidgetContainer
 
 		void draw();
 
+		void keypress(int key, int scancode, int action, int mods);
+		void charpress(char32_t codepoint);
 		void mousepress(int button, int action, int mods);
 		void mousemove(double x, double y);
 

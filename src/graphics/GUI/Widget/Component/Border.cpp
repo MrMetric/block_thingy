@@ -3,7 +3,7 @@
 #include "Game.hpp"
 #include "Gfx.hpp"
 
-namespace Graphics::GUI::Widget::Modifier {
+namespace Graphics::GUI::Widget::Component {
 
 Border::Border
 (
@@ -34,4 +34,4 @@ void Border::draw(const Widget::Base& w)
 	w.owner.game.gfx.draw_rectangle(border_pos_right, border_size_y, color);
 }
 
-} // namespace Graphics::GUI::Widget::Modifier
+}

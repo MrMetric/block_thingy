@@ -124,6 +124,10 @@ GLFWwindow* Gfx::init_glfw()
 	{
 		Game::instance->keypress(key, scancode, action, mods);
 	});
+	glfwSetCharCallback(window, [](GLFWwindow*, unsigned int codepoint)
+	{
+		Game::instance->charpress(static_cast<char32_t>(codepoint));
+	});
 	glfwSetMouseButtonCallback(window, [](GLFWwindow*, int button, int action, int mods)
 	{
 		Game::instance->mousepress(button, action, mods);

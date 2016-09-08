@@ -166,14 +166,7 @@ glm::dvec2 Text::get_size(u32string s)
 
 		const Character& ch = get_char(c);
 
-		if(i != s.length() - 1)
-		{
-			size.x += ch.x_offset;
-		}
-		else
-		{
-			size.x += ch.size.x;
-		}
+		size.x += ch.x_offset;
 	}
 	widths.push_back(size.x);
 

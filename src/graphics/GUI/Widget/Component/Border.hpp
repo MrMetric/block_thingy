@@ -3,7 +3,7 @@
 
 #include <glm/vec4.hpp>
 
-namespace Graphics::GUI::Widget::Modifier {
+namespace Graphics::GUI::Widget::Component {
 
 class Border : public Base
 {
@@ -21,4 +21,4 @@ class Border : public Base
 		glm::dvec4 color;
 };
 
-} // namespace Graphics::GUI::Widget::Modifier
+}

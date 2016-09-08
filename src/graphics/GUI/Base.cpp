@@ -81,6 +81,12 @@ void Base::keypress(const int key, const int scancode, const int action, const i
 			game.console.run_line("toggle_fullscreen");
 		}
 	}
+	root.keypress(key, scancode, action, mods);
+}
+
+void Base::charpress(const char32_t codepoint)
+{
+	root.charpress(codepoint);
 }
 
 void Base::mousepress(const int button, const int action, const int mods)

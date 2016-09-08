@@ -16,6 +16,8 @@ WidgetContainer::WidgetContainer(Game& game, const WidgetContainerMode mode)
 {
 }
 
+// TODO: deduplicate these things
+
 void WidgetContainer::draw()
 {
 	switch(mode)
@@ -38,6 +40,54 @@ void WidgetContainer::draw()
 				container->draw();
 			}
 			break;
+		}
+	}
+}
+
+void WidgetContainer::keypress(const int key, const int scancode, const int action, const int mods)
+{
+	switch(mode)
+	{
+		case WidgetContainerMode::widgets:
+		{
+			for(auto& widget : widgets)
+			{
+				if(widget == nullptr) continue; // this can happen when the GUI closes
+				widget->keypress(key, scancode, action, mods);
+			}
+		}
+		case WidgetContainerMode::rows:
+		case WidgetContainerMode::cols:
+		{
+			for(auto& container : containers)
+			{
+				if(container == nullptr) continue; // this can happen when the GUI closes
+				container->keypress(key, scancode, action, mods);
+			}
+		}
+	}
+}
+
+void WidgetContainer::charpress(const char32_t codepoint)
+{
+	switch(mode)
+	{
+		case WidgetContainerMode::widgets:
+		{
+			for(auto& widget : widgets)
+			{
+				if(widget == nullptr) continue; // this can happen when the GUI closes
+				widget->charpress(codepoint);
+			}
+		}
+		case WidgetContainerMode::rows:
+		case WidgetContainerMode::cols:
+		{
+			for(auto& container : containers)
+			{
+				if(container == nullptr) continue; // this can happen when the GUI closes
+				container->charpress(codepoint);
+			}
 		}
 	}
 }
