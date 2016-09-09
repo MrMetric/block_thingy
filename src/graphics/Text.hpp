@@ -1,7 +1,10 @@
 #pragma once
 
+#include <functional>
 #include <stdint.h>
 #include <string>
+#include <tuple>
+#include <vector>
 #include <unordered_map>
 
 #include <glm/mat4x4.hpp>
@@ -56,6 +59,12 @@ class Text
 		OpenGL::VertexArray vao;
 		OpenGL::ShaderProgram shader;
 
+		std::tuple<glm::dvec2, std::vector<double>> loop
+		(
+			const std::u32string&,
+			glm::dvec2,
+			std::function<void(const glm::dvec2&, Character&)>
+		);
 		Character& get_char(char32_t);
 };
 

@@ -17,11 +17,11 @@ using std::u32string;
 
 // based on:
 // http://learnopengl.com/#!In-Practice/Text-Rendering
-// http://www.learnopengl.com/#!In-Practice/2D-Game/Render-text
+// http://learnopengl.com/#!In-Practice/2D-Game/Render-text
 
 namespace Graphics {
 
-Text::Character load_char(const FT_Face& face, const FT_ULong c);
+Text::Character load_char(const FT_Face& face, char32_t);
 
 Text::Text(const string& font_path, const FT_UInt height)
 	:
@@ -43,7 +43,6 @@ Text::Text(const string& font_path, const FT_UInt height)
 	FT_Set_Pixel_Sizes(face, 0, height);
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	chars.emplace('H', load_char(face, 'H'));
 
 	shader.uniform("color", glm::vec3(1.0));
 }
@@ -59,44 +58,22 @@ void Text::set_projection_matrix(const glm::dmat4& projection_matrix)
 	shader.uniform("projection", glm::mat4(projection_matrix));
 }
 
-void Text::draw(const string& s_utf8, const glm::dvec2& pos)
+void Text::draw(const string& s, const glm::dvec2& pos)
 {
 	// TODO: handle exception from invalid input
-	draw(Util::utf8_to_utf32(s_utf8), pos);
+	draw(Util::utf8_to_utf32(s), pos);
 }
 
 void Text::draw(const u32string& s, glm::dvec2 pos)
 {
-	const double start_x = pos.x;
-
 	glUseProgram(shader.get_name());
 
 	glActiveTexture(GL_TEXTURE0);
 
-	uint_fast32_t line_i = 0;
-	for(const char32_t c : s)
+	loop(s, pos, [this](const glm::dvec2& pos, Character& ch)
 	{
-		if(c == '\n')
-		{
-			pos.x = start_x;
-			pos.y += height;
-			line_i = 0;
-			continue;
-		}
-		if(c == '\t')
-		{
-			// TODO?: elastic tabstops
-			uint_fast8_t width = tab_width - (line_i % tab_width);
-			pos.x += chars[' '].x_offset * width;
-			line_i += width;
-			continue;
-		}
-		++line_i;
-
-		Character& ch = get_char(c);
-
 		float xpos = static_cast<float>(pos.x + ch.bearing.x);
-		float ypos = static_cast<float>(pos.y + (chars['H'].bearing.y - ch.bearing.y));
+		float ypos = static_cast<float>(pos.y + (get_char('H').bearing.y - ch.bearing.y));
 
 		const float w = ch.size.x;
 		const float h = ch.size.y;
@@ -117,12 +94,9 @@ void Text::draw(const u32string& s, glm::dvec2 pos)
 
 		vbo.data(sizeof(vertices), vertices, OpenGL::VertexBuffer::UsageHint::dynamic_draw);
 		vao.draw(GL_TRIANGLES, 0, 6);
-
-		pos.x += ch.x_offset;
-	}
+	});
 }
 
-// TODO: deduplicate with draw
 glm::dvec2 Text::get_size(const string& s_utf8)
 {
 	// TODO: handle exception from invalid input
@@ -140,17 +114,33 @@ glm::dvec2 Text::get_size(u32string s)
 		return {0, 0};
 	}
 
-	uint_fast32_t line_i = 0;
+	glm::dvec2 size(0, get_char('H').size.y);
 	std::vector<double> widths;
-	glm::dvec2 size(0, chars['H'].size.y);
-	for(decltype(s)::size_type i = 0; i < s.length(); ++i)
+	std::tie(size, widths) = loop(s, size, [](const glm::dvec2& size, const Character& ch)
 	{
-		const char32_t c = s[i];
+	});
+	widths.push_back(size.x);
+
+	return {*std::max_element(widths.cbegin(), widths.cend()), size.y};
+}
+
+std::tuple<glm::dvec2, std::vector<double>> Text::loop
+(
+	const u32string& s,
+	glm::dvec2 pos,
+	std::function<void(const glm::dvec2&, Text::Character&)> f
+)
+{
+	std::vector<double> widths;
+	const double start_x = pos.x;
+	uint_fast32_t line_i = 0;
+	for(const char32_t c : s)
+	{
 		if(c == '\n')
 		{
-			widths.push_back(size.x);
-			size.x = 0;
-			size.y += height;
+			widths.push_back(pos.x);
+			pos.x = start_x;
+			pos.y += height;
 			line_i = 0;
 			continue;
 		}
@@ -158,33 +148,34 @@ glm::dvec2 Text::get_size(u32string s)
 		{
 			// TODO?: elastic tabstops
 			uint_fast8_t width = tab_width - (line_i % tab_width);
-			size.x += chars[' '].x_offset * width;
+			pos.x += get_char(' ').x_offset * width;
 			line_i += width;
 			continue;
 		}
 		++line_i;
 
-		const Character& ch = get_char(c);
+		Character& ch = get_char(c);
 
-		size.x += ch.x_offset;
+		f(pos, ch);
+
+		pos.x += ch.x_offset;
 	}
-	widths.push_back(size.x);
 
-	return {*std::max_element(widths.cbegin(), widths.cend()), size.y};
+	return std::make_tuple(pos, widths);
 }
 
 Text::Character& Text::get_char(const char32_t c)
 {
-	auto ci = chars.find(c);
-	if(ci == chars.cend())
+	auto i = chars.find(c);
+	if(i == chars.cend())
 	{
 		chars.emplace(c, load_char(face, c));
-		ci = chars.find(c);
+		i = chars.find(c);
 	}
-	return ci->second;
+	return i->second;
 }
 
-Text::Character load_char(const FT_Face& face, const FT_ULong c)
+Text::Character load_char(const FT_Face& face, const char32_t c)
 {
 	if(FT_Load_Char(face, c, FT_LOAD_RENDER))
 	{
