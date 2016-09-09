@@ -11,6 +11,7 @@
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"
+#include "util/key_mods.hpp"
 
 namespace Graphics::GUI {
 
@@ -63,7 +64,7 @@ void Base::draw()
 	if(depth_test) glEnable(GL_DEPTH_TEST);
 }
 
-void Base::keypress(const int key, const int scancode, const int action, const int mods)
+void Base::keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
 {
 	// TODO: proper input handling
 	if(action == GLFW_PRESS)
@@ -87,12 +88,12 @@ void Base::keypress(const int key, const int scancode, const int action, const i
 	root.keypress(key, scancode, action, mods);
 }
 
-void Base::charpress(const char32_t codepoint)
+void Base::charpress(const char32_t codepoint, const Util::key_mods mods)
 {
-	root.charpress(codepoint);
+	root.charpress(codepoint, mods);
 }
 
-void Base::mousepress(const int button, const int action, const int mods)
+void Base::mousepress(const int button, const int action, const Util::key_mods mods)
 {
 	root.mousepress(button, action, mods);
 }

@@ -21,6 +21,7 @@
 #include "graphics/GUI/Base.hpp"
 #include "physics/RaycastHit.hpp"
 #include "position/ChunkInWorld.hpp"
+#include "fwd/util/key_mods.hpp"
 #include "util/Property.hpp"
 
 #include "types/window_size_t.hpp"
@@ -49,9 +50,9 @@ class Game
 		void screenshot(const std::string& filename);
 		#endif
 		void update_framebuffer_size(const window_size_t&);
-		void keypress(int key, int scancode, int action, int mods);
-		void charpress(char32_t codepoint);
-		void mousepress(int button, int action, int mods);
+		void keypress(int key, int scancode, int action, Util::key_mods);
+		void charpress(char32_t, Util::key_mods);
+		void mousepress(int button, int action, Util::key_mods);
 		void mousemove(double x, double y);
 		void joypress(int joystick, int button, bool pressed);
 		void joymove(const glm::dvec2& motion);

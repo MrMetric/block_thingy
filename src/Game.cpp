@@ -43,6 +43,7 @@
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
+#include "util/key_mods.hpp"
 
 #include "std_make_unique.hpp"
 
@@ -187,17 +188,17 @@ void Game::update_framebuffer_size(const window_size_t& window_size)
 	event_manager.do_event(Event_window_size_change(window_size));
 }
 
-void Game::keypress(const int key, const int scancode, const int action, const int mods)
+void Game::keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
 {
 	gui->keypress(key, scancode, action, mods);
 }
 
-void Game::charpress(const char32_t codepoint)
+void Game::charpress(const char32_t codepoint, const Util::key_mods mods)
 {
-	gui->charpress(codepoint);
+	gui->charpress(codepoint, mods);
 }
 
-void Game::mousepress(const int button, const int action, const int mods)
+void Game::mousepress(const int button, const int action, const Util::key_mods mods)
 {
 	gui->mousepress(button, action, mods);
 }

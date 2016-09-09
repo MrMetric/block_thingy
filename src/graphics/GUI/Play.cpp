@@ -12,6 +12,7 @@
 #include "fwd/block/BlockType.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
+#include "util/key_mods.hpp"
 
 namespace Graphics::GUI {
 
@@ -43,12 +44,12 @@ void Play::draw()
 	Base::draw();
 }
 
-void Play::keypress(const int key, const int scancode, const int action, const int mods)
+void Play::keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
 {
 	game.keybinder.keypress(key, scancode, action, mods);
 }
 
-void Play::mousepress(const int button, const int action, const int mods)
+void Play::mousepress(const int button, const int action, const Util::key_mods mods)
 {
 	game.keybinder.mousepress(button, action, mods);
 }

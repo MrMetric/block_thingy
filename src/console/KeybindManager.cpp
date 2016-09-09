@@ -12,6 +12,7 @@
 #include "Console.hpp"
 #include "Game.hpp"
 #include "Util.hpp"
+#include "util/key_mods.hpp"
 
 using std::string;
 
@@ -66,14 +67,8 @@ void KeybindManager::unbind_key(const int key)
 	keybinds.erase(key);
 }
 
-void KeybindManager::keypress(int key, const int scancode, const int action, const int mods)
+void KeybindManager::keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
 {
-	if(mods == GLFW_CUSTOM_MOD_JOYSTICK)
-	{
-		key *= 1000;
-		key += scancode;
-	}
-
 	if(action == GLFW_PRESS || action == GLFW_REPEAT)
 	{
 		const auto i = keybinds.find(key);
@@ -107,7 +102,7 @@ void KeybindManager::keypress(int key, const int scancode, const int action, con
 	}
 }
 
-void KeybindManager::mousepress(const int button, const int action, const int mods)
+void KeybindManager::mousepress(const int button, const int action, const Util::key_mods mods)
 {
 	keypress(button, 0, action, mods);
 }
@@ -120,23 +115,25 @@ void KeybindManager::joypress(const int joystick, const int button, const bool p
 		joystate[button] = 0;
 	}
 
+	const int key = 1000 * joystick + button;
+
 	if(!pressed)
 	{
 		joystate[button] = 0;
-		keypress(joystick, button, GLFW_RELEASE, GLFW_CUSTOM_MOD_JOYSTICK);
+		keypress(key, 0, GLFW_RELEASE, Util::key_mods(0));
 		return;
 	}
 
 	++joystate[button];
 	if(joystate[button] == 1)
 	{
-		keypress(joystick, button, GLFW_PRESS, GLFW_CUSTOM_MOD_JOYSTICK);
+		keypress(key, 0, GLFW_PRESS, Util::key_mods(0));
 		return;
 	}
 
-	if(joystate[button] > 29 && joystate[button] % 15 == 0)
+	if(joystate[button] >= 30 && joystate[button] % 15 == 0)
 	{
-		keypress(joystick, button, GLFW_REPEAT, GLFW_CUSTOM_MOD_JOYSTICK);
+		keypress(key, 0, GLFW_REPEAT, Util::key_mods(0));
 		return;
 	}
 }

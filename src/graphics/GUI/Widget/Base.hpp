@@ -7,6 +7,7 @@
 
 #include "fwd/graphics/GUI/WidgetContainer.hpp"
 #include "fwd/graphics/GUI/Widget/Component/Base.hpp"
+#include "fwd/util/key_mods.hpp"
 
 namespace Graphics::GUI::Widget {
 
@@ -23,9 +24,9 @@ class Base
 
 		virtual void draw();
 
-		virtual void keypress(int key, int scancode, int action, int mods);
-		virtual void charpress(char32_t codepoint);
-		virtual void mousepress(int button, int action, int mods);
+		virtual void keypress(int key, int scancode, int action, Util::key_mods);
+		virtual void charpress(char32_t, Util::key_mods);
+		virtual void mousepress(int button, int action, Util::key_mods);
 		virtual void mousemove(double x, double y);
 
 		void update_container

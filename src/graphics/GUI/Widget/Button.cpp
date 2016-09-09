@@ -7,6 +7,7 @@
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "graphics/GUI/WidgetContainer.hpp"
+#include "util/key_mods.hpp"
 
 using std::string;
 
@@ -39,7 +40,7 @@ void Button::draw()
 	owner.game.gfx.gui_text.draw(text, glm::round(real_position + text_position));
 }
 
-void Button::mousepress(const int button, const int action, const int mods)
+void Button::mousepress(const int button, const int action, const Util::key_mods mods)
 {
 	if(!hover)
 	{

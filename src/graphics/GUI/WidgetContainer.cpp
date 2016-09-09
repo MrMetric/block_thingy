@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <string>
 
+#include "util/key_mods.hpp"
+
 #include "std_make_unique.hpp"
 
 using std::string;
@@ -44,7 +46,7 @@ void WidgetContainer::draw()
 	}
 }
 
-void WidgetContainer::keypress(const int key, const int scancode, const int action, const int mods)
+void WidgetContainer::keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
 {
 	switch(mode)
 	{
@@ -68,7 +70,7 @@ void WidgetContainer::keypress(const int key, const int scancode, const int acti
 	}
 }
 
-void WidgetContainer::charpress(const char32_t codepoint)
+void WidgetContainer::charpress(const char32_t codepoint, const Util::key_mods mods)
 {
 	switch(mode)
 	{
@@ -77,7 +79,7 @@ void WidgetContainer::charpress(const char32_t codepoint)
 			for(auto& widget : widgets)
 			{
 				if(widget == nullptr) continue; // this can happen when the GUI closes
-				widget->charpress(codepoint);
+				widget->charpress(codepoint, mods);
 			}
 		}
 		case WidgetContainerMode::rows:
@@ -86,13 +88,13 @@ void WidgetContainer::charpress(const char32_t codepoint)
 			for(auto& container : containers)
 			{
 				if(container == nullptr) continue; // this can happen when the GUI closes
-				container->charpress(codepoint);
+				container->charpress(codepoint, mods);
 			}
 		}
 	}
 }
 
-void WidgetContainer::mousepress(const int button, const int action, const int mods)
+void WidgetContainer::mousepress(const int button, const int action, const Util::key_mods mods)
 {
 	switch(mode)
 	{

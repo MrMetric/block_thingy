@@ -1,6 +1,7 @@
 #include "Base.hpp"
 
 #include "graphics/GUI/Widget/Component/Base.hpp"
+#include "util/key_mods.hpp"
 
 namespace Graphics::GUI::Widget {
 
@@ -29,15 +30,15 @@ void Base::draw()
 	}
 }
 
-void Base::keypress(const int key, const int scancode, const int action, const int mods)
+void Base::keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
 {
 }
 
-void Base::charpress(const char32_t codepoint)
+void Base::charpress(const char32_t codepoint, const Util::key_mods mods)
 {
 }
 
-void Base::mousepress(const int button, const int action, const int mods)
+void Base::mousepress(const int button, const int action, const Util::key_mods mods)
 {
 }
 

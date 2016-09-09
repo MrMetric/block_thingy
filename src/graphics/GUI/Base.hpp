@@ -7,6 +7,7 @@
 #include "fwd/Game.hpp"
 #include "fwd/event/EventManager.hpp"
 #include "graphics/GUI/WidgetContainer.hpp"
+#include "fwd/util/key_mods.hpp"
 
 #include "types/window_size_t.hpp"
 
@@ -26,9 +27,9 @@ class Base
 		virtual void close();
 		virtual void draw();
 
-		virtual void keypress(int key, int scancode, int action, int mods);
-		virtual void charpress(char32_t codepoint);
-		virtual void mousepress(int button, int action, int mods);
+		virtual void keypress(int key, int scancode, int action, Util::key_mods);
+		virtual void charpress(char32_t, Util::key_mods);
+		virtual void mousepress(int button, int action, Util::key_mods);
 		virtual void mousemove(double x, double y);
 		virtual void joypress(int joystick, int button, bool pressed);
 		virtual void joymove(const glm::dvec2& motion);

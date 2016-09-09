@@ -4,10 +4,8 @@
 #include <string>
 #include <unordered_map>
 
-// intentionally not a single bit
-constexpr int GLFW_CUSTOM_MOD_JOYSTICK = 0x4321234;
-
 #include "fwd/console/Console.hpp"
+#include "fwd/util/key_mods.hpp"
 
 class KeybindManager
 {
@@ -23,8 +21,8 @@ class KeybindManager
 		void bind_key(const std::string& key, const std::string& command);
 		void unbind_key(int key);
 
-		void keypress(int key, int scancode, int action, int mods);
-		void mousepress(int button, int action, int mods);
+		void keypress(int key, int scancode, int action, Util::key_mods);
+		void mousepress(int button, int action, Util::key_mods);
 		void joypress(int joystick, int button, bool pressed);
 
 		// intentionally not const ref

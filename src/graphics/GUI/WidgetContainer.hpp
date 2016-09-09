@@ -10,6 +10,7 @@
 
 #include "fwd/Game.hpp"
 #include "graphics/GUI/Widget/Base.hpp"
+#include "fwd/util/key_mods.hpp"
 
 #include "std_make_unique.hpp"
 
@@ -29,9 +30,9 @@ class WidgetContainer
 
 		void draw();
 
-		void keypress(int key, int scancode, int action, int mods);
-		void charpress(char32_t codepoint);
-		void mousepress(int button, int action, int mods);
+		void keypress(int key, int scancode, int action, Util::key_mods);
+		void charpress(char32_t, Util::key_mods);
+		void mousepress(int button, int action, Util::key_mods);
 		void mousemove(double x, double y);
 
 		void update_container(const glm::dvec2& position, const glm::dvec2& size);

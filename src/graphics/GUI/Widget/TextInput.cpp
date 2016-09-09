@@ -3,6 +3,7 @@
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "graphics/GUI/WidgetContainer.hpp"
+#include "util/key_mods.hpp"
 
 using std::string;
 
@@ -58,25 +59,32 @@ void TextInput::draw()
 	}
 }
 
-void TextInput::keypress(const int key, const int scancode, const int action, const int mods)
+void TextInput::keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
 {
 	if(!focus) return;
 	if(action == GLFW_RELEASE) return; // must be press or repeat
 
 	if(key == GLFW_KEY_BACKSPACE)
 	{
-		content.pop_back();
+		if(mods.none())
+		{
+			content.pop_back();
+		}
+		else if(mods.is(true, false, false, false))
+		{
+			// TODO
+		}
 	}
 }
 
-void TextInput::charpress(const char32_t codepoint)
+void TextInput::charpress(const char32_t codepoint, const Util::key_mods mods)
 {
 	if(!focus) return;
 
 	content += codepoint;
 }
 
-void TextInput::mousepress(const int button, const int action, const int mods)
+void TextInput::mousepress(const int button, const int action, const Util::key_mods)
 {
 	focus = hover;
 }

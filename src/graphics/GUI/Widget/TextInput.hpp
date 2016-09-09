@@ -19,9 +19,9 @@ class TextInput : public Base
 
 		void draw() override;
 
-		void keypress(int key, int scancode, int action, int mods) override;
-		void charpress(char32_t codepoint) override;
-		void mousepress(int button, int action, int mods) override;
+		void keypress(int key, int scancode, int action, Util::key_mods) override;
+		void charpress(char32_t, Util::key_mods) override;
+		void mousepress(int button, int action, Util::key_mods) override;
 		void mousemove(double x, double y) override;
 
 	private:

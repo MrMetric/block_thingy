@@ -21,7 +21,7 @@ class Button : public Base
 
 		void draw();
 
-		void mousepress(int button, int action, int mods);
+		void mousepress(int button, int action, Util::key_mods);
 		void mousemove(double x, double y);
 
 		glm::dvec4 color;
