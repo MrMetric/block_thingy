@@ -3,12 +3,14 @@
 	<FileVersion major="1" minor="6" />
 	<Project>
 		<Option title="block_thingy" />
+		<Option platforms="Unix;" />
 		<Option pch_mode="2" />
 		<Option compiler="clang" />
 		<Build>
 			<Target title="Debug">
 				<Option platforms="Unix;" />
 				<Option output="bin/block_thingy_d" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="clang" />
@@ -25,6 +27,7 @@
 			<Target title="Release + Debug">
 				<Option platforms="Unix;" />
 				<Option output="bin/block_thingy_rd" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin" />
 				<Option object_output="obj/Release_Debug/" />
 				<Option type="1" />
 				<Option compiler="clang" />
@@ -42,6 +45,7 @@
 			<Target title="Release">
 				<Option platforms="Unix;" />
 				<Option output="bin/block_thingy_r" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="clang" />
@@ -172,6 +176,7 @@
 		<Unit filename="src/fwd/position/BlockInWorld.hpp" />
 		<Unit filename="src/fwd/position/ChunkInWorld.hpp" />
 		<Unit filename="src/fwd/storage/Interface.hpp" />
+		<Unit filename="src/fwd/util/key_mods.hpp" />
 		<Unit filename="src/graphics/Color.cpp" />
 		<Unit filename="src/graphics/Color.hpp" />
 		<Unit filename="src/graphics/GUI/Base.cpp" />
@@ -245,6 +250,8 @@
 		<Unit filename="src/util/compiler_info.hpp" />
 		<Unit filename="src/util/demangled_name.cpp" />
 		<Unit filename="src/util/demangled_name.hpp" />
+		<Unit filename="src/util/key_mods.cpp" />
+		<Unit filename="src/util/key_mods.hpp" />
 		<Unit filename="src/util/unicode.cpp" />
 		<Unit filename="src/util/unicode.hpp" />
 		<Extensions>
