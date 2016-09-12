@@ -53,6 +53,8 @@ class Base
 		 */
 		virtual bool is_replaceable() const;
 
+		virtual void use_start();
+
 		virtual void save(Storage::OutputInterface&) const;
 		virtual void load(Storage::InputInterface&);
 

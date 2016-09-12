@@ -61,4 +61,6 @@ namespace Util
 		}
 		return x;
 	}
+
+	int stoi(const std::string&);
 };

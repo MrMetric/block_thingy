@@ -2,7 +2,9 @@
 
 #include <glm/vec3.hpp>
 
+#include "Game.hpp"
 #include "block/BlockType.hpp"
+#include "graphics/GUI/Light.hpp"
 #include "storage/Interface.hpp"
 #include "storage/msgpack/Color.hpp"
 
@@ -34,6 +36,18 @@ Light& Light::operator=(const Base& block)
 Color Light::color() const
 {
 	return color_;
+}
+
+void Light::color(const Color& c)
+{
+	Game::instance->world.sub_light(pos);
+	color_ = c;
+	Game::instance->world.add_light(pos, color_);
+}
+
+void Light::use_start()
+{
+	Game::instance->open_gui(std::make_unique<Graphics::GUI::Light>(*Game::instance, *this));
 }
 
 void Light::save(Storage::OutputInterface& i) const

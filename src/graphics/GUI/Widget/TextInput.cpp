@@ -17,6 +17,7 @@ TextInput::TextInput
 )
 :
 	Base(owner, {256, 40}),
+	invalid(false),
 	content(content),
 	placeholder(placeholder),
 	hover(false),
@@ -28,7 +29,7 @@ void TextInput::draw()
 {
 	Base::draw();
 
-	owner.game.gfx.draw_rectangle(real_position, size, {0.01, 0.01, 0.02, 0.85});
+	owner.game.gfx.draw_rectangle(real_position, size, invalid ? glm::dvec4(0.2, 0.01, 0.02, 0.85) : glm::dvec4(0.01, 0.01, 0.02, 0.85));
 
 	bool has_content = content.get32().size() > 0;
 
@@ -45,7 +46,7 @@ void TextInput::draw()
 	}
 	else
 	{
-		owner.game.gfx.gui_text.draw(placeholder.get32(), glm::round(text_pos));
+		owner.game.gfx.gui_text.draw(placeholder.get32(), glm::round(text_pos), glm::dvec3(0.6));
 	}
 
 	if(focus)
@@ -68,7 +69,11 @@ void TextInput::keypress(const int key, const int scancode, const int action, co
 	{
 		if(mods.none())
 		{
-			content.pop_back();
+			if(content.str_size() > 0)
+			{
+				content.pop_back();
+				trigger_on_change();
+			}
 		}
 		else if(mods.is(true, false, false, false))
 		{
@@ -82,6 +87,7 @@ void TextInput::charpress(const char32_t codepoint, const Util::key_mods mods)
 	if(!focus) return;
 
 	content += codepoint;
+	trigger_on_change();
 }
 
 void TextInput::mousepress(const int button, const int action, const Util::key_mods)
@@ -93,6 +99,20 @@ void TextInput::mousemove(const double x, const double y)
 {
 	hover = x >= real_position.x && x < real_position.x + size.x
 		 && y >= real_position.y && y < real_position.y + size.y;
+}
+
+void TextInput::on_change(on_change_callback_t callback)
+{
+	on_change_callbacks.emplace_back(callback);
+}
+
+void TextInput::trigger_on_change()
+{
+	string s = content.get8();
+	for(on_change_callback_t& callback : on_change_callbacks)
+	{
+		callback(*this, s);
+	}
 }
 
 }

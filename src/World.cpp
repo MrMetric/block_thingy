@@ -18,6 +18,7 @@
 #include "block/Base.hpp"
 #include "block/BlockRegistry.hpp"
 #include "block/BlockType.hpp"
+#include "block/Light.hpp"
 #include "chunk/Chunk.hpp"
 #include "chunk/mesh/GreedyMesher.hpp"
 #include "graphics/Color.hpp"
@@ -63,6 +64,12 @@ World::World(const string& file_path)
 
 void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> block_ptr)
 {
+	// TODO: find a better way to do this
+	if(block_ptr->type() == BlockType::light)
+	{
+		dynamic_cast<Block::Light*>(block_ptr.get())->pos = block_pos;
+	}
+
 	const ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
 
@@ -110,6 +117,20 @@ const Block::Base& World::get_block(const BlockInWorld& block_pos) const
 
 	BlockInChunk pos(block_pos);
 	return chunk->get_block(pos);
+}
+
+Block::Base& World::get_block_m(const BlockInWorld& block_pos)
+{
+	const ChunkInWorld chunk_pos(block_pos);
+	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
+	if(chunk == nullptr)
+	{
+		static /*const*/ std::unique_ptr<Block::Base> none = Game::instance->block_registry.make(BlockType::none);
+		return *none;
+	}
+
+	BlockInChunk pos(block_pos);
+	return chunk->get_block_m(pos);
 }
 
 Graphics::Color World::get_light(const BlockInWorld& block_pos) const
@@ -305,6 +326,14 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 		for(pos.z = 0; pos.z < CHUNK_SIZE; ++pos.z)
 		{
 			const Block::Base& block = chunk->get_block(pos);
+
+			// TODO: find a better way to do this
+			if(block.type() == BlockType::light)
+			{
+				Block::Base& block_m = chunk->get_block_m(pos);
+				dynamic_cast<Block::Light*>(&block_m)->pos = BlockInWorld(chunk_pos, pos);
+			}
+
 			const Graphics::Color color = block.color();
 			if(color != 0)
 			{

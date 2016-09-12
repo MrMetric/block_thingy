@@ -37,6 +37,7 @@ class Chunk
 
 		const Block::Base& get_block(Position::BlockInChunk::value_type x, Position::BlockInChunk::value_type y, Position::BlockInChunk::value_type z) const;
 		const Block::Base& get_block(const Position::BlockInChunk&) const;
+		Block::Base& get_block_m(const Position::BlockInChunk&);
 
 		void set_block(Position::BlockInChunk::value_type x, Position::BlockInChunk::value_type y, Position::BlockInChunk::value_type z, std::unique_ptr<Block::Base>);
 		void set_block(const Position::BlockInChunk&, const std::unique_ptr<Block::Base>);

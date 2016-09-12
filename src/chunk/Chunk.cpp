@@ -78,6 +78,12 @@ const Block::Base& Chunk::get_block(const BlockInChunk& pos) const
 	return *blocks->at(block_array_index(pos.x, pos.y, pos.z));
 }
 
+Block::Base& Chunk::get_block_m(const BlockInChunk& pos)
+{
+	init_block_array();
+	return *blocks->at(block_array_index(pos.x, pos.y, pos.z));
+}
+
 void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z, unique_ptr<Block::Base> block)
 {
 	if(x >= CHUNK_SIZE

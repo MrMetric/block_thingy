@@ -179,3 +179,12 @@ void Util::change_directory(const string& path)
 	}
 	#endif
 }
+
+int Util::stoi(const string& s)
+{
+	if(s.find_first_not_of("0123456789") != string::npos)
+	{
+		throw std::invalid_argument("stoi");
+	}
+	return std::stoi(s);
+}

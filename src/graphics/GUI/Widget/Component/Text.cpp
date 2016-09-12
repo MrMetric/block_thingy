@@ -19,12 +19,10 @@ void Text::draw(const Widget::Base& w)
 	// TODO
 }
 
-/*
 string Text::get8() const
 {
 	return Util::utf32_to_utf8(text);
 }
-*/
 
 u32string Text::get32() const
 {
@@ -52,11 +50,13 @@ Text& Text::operator+=(const char32_t c)
 
 void Text::pop_back()
 {
-	if(text.size() > 0)
-	{
-		text.pop_back();
-		update_info();
-	}
+	text.pop_back();
+	update_info();
+}
+
+std::size_t Text::str_size() const
+{
+	return text.size();
 }
 
 glm::dvec2 Text::get_size() const

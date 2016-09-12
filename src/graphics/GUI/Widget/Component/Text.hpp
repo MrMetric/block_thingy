@@ -14,12 +14,13 @@ class Text : public Base
 
 		void draw(const Widget::Base&) override;
 
-		//std::string get8() const;
+		std::string get8() const;
 		std::u32string get32() const;
 		Text& operator=(const std::string& utf8);
 		Text& operator=(const std::u32string& utf32);
 		Text& operator+=(const char32_t);
 		void pop_back();
+		std::size_t str_size() const;
 
 		glm::dvec2 get_size() const;
 

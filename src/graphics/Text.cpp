@@ -43,8 +43,6 @@ Text::Text(const string& font_path, const FT_UInt height)
 	FT_Set_Pixel_Sizes(face, 0, height);
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-	shader.uniform("color", glm::vec3(1.0));
 }
 
 Text::~Text()
@@ -58,16 +56,16 @@ void Text::set_projection_matrix(const glm::dmat4& projection_matrix)
 	shader.uniform("projection", glm::mat4(projection_matrix));
 }
 
-void Text::draw(const string& s, const glm::dvec2& pos)
+void Text::draw(const string& s, const glm::dvec2& pos, const glm::dvec3& color)
 {
 	// TODO: handle exception from invalid input
-	draw(Util::utf8_to_utf32(s), pos);
+	draw(Util::utf8_to_utf32(s), pos, color);
 }
 
-void Text::draw(const u32string& s, glm::dvec2 pos)
+void Text::draw(const u32string& s, glm::dvec2 pos, const glm::dvec3& color)
 {
+	shader.uniform("color", glm::vec3(color));
 	glUseProgram(shader.get_name());
-
 	glActiveTexture(GL_TEXTURE0);
 
 	loop(s, pos, [this](const glm::dvec2& pos, Character& ch)

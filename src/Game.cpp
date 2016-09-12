@@ -334,6 +334,21 @@ void Game::add_commands()
 	{
 		game.player.move_right(false);
 	});
+	COMMAND("jump")
+	{
+		game.player.jump();
+	});
+	COMMAND("+use")
+	{
+		if(game.hovered_block != nullptr)
+		{
+			game.world.get_block_m(game.hovered_block->pos).use_start();
+		}
+	});
+	COMMAND("-use")
+	{
+		// TODO
+	});
 	COMMAND("+sprint")
 	{
 		game.player.go_faster(true);
@@ -343,10 +358,6 @@ void Game::add_commands()
 		game.player.go_faster(false);
 	});
 
-	COMMAND("jump")
-	{
-		game.player.jump();
-	});
 	COMMAND("noclip")
 	{
 		game.player.toggle_noclip();

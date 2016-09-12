@@ -1,0 +1,4 @@
+namespace Block
+{
+	class Light;
+}

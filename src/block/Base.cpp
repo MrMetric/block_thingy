@@ -101,6 +101,10 @@ bool Base::is_replaceable() const
 	return false;
 }
 
+void Base::use_start()
+{
+}
+
 void Base::save(Storage::OutputInterface& i) const
 {
 	BlockType t = type_ != BlockType::none ? type_ : BlockType::air;

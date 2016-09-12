@@ -33,8 +33,8 @@ class Text
 		~Text();
 
 		void set_projection_matrix(const glm::dmat4& projection_matrix);
-		void draw(const std::string&, const glm::dvec2& pos);
-		void draw(const std::u32string&, glm::dvec2 pos);
+		void draw(const std::string&, const glm::dvec2& pos, const glm::dvec3& color = glm::dvec3(1.0));
+		void draw(const std::u32string&, glm::dvec2 pos, const glm::dvec3& color = glm::dvec3(1.0));
 
 		glm::dvec2 get_size(const std::string&);
 		glm::dvec2 get_size(std::u32string);
