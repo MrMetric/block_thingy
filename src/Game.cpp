@@ -222,7 +222,8 @@ void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dm
 {
 	glm::dvec3 out_origin;
 	glm::dvec3 out_direction;
-	PhysicsUtil::ScreenPosToWorldRay(
+	PhysicsUtil::ScreenPosToWorldRay
+	(
 		gfx.window_mid,
 		gfx.window_size,
 		view_matrix,

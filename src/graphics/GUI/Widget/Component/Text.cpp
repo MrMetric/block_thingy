@@ -23,17 +23,21 @@ string Text::get8() const
 {
 	return Util::utf32_to_utf8(text);
 }
-
 u32string Text::get32() const
 {
 	return text;
 }
 
-Text& Text::operator=(const string& utf8)
+Text& Text::operator=(const char32_t c)
 {
-	return operator=(Util::utf8_to_utf32(utf8));
+	text = c;
+	update_info();
+	return *this;
 }
-
+Text& Text::operator=(const string& s)
+{
+	return operator=(Util::utf8_to_utf32(s));
+}
 Text& Text::operator=(const u32string& s)
 {
 	text = s;
@@ -44,6 +48,16 @@ Text& Text::operator=(const u32string& s)
 Text& Text::operator+=(const char32_t c)
 {
 	text += c;
+	update_info();
+	return *this;
+}
+Text& Text::operator+=(const string& s)
+{
+	return operator+=(Util::utf8_to_utf32(s));
+}
+Text& Text::operator+=(const u32string& s)
+{
+	text += s;
 	update_info();
 	return *this;
 }

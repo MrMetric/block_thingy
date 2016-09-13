@@ -134,9 +134,9 @@ Color::operator glm::vec3() const
 	const float m = max;
 	glm::vec3 v
 	{
-		std::fmin(1, r / m),
-		std::fmin(1, g / m),
-		std::fmin(1, b / m),
+		std::min(1.0f, r / m),
+		std::min(1.0f, g / m),
+		std::min(1.0f, b / m),
 	};
 	return v;
 }

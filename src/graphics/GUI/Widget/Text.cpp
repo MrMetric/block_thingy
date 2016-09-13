@@ -13,16 +13,19 @@ namespace Graphics::GUI::Widget {
 Text::Text
 (
 	WidgetContainer& owner,
+	const glm::dvec2& origin,
 	const string& text
 )
 :
-	Base(owner, owner.game.gfx.gui_text.get_size(text), {0.5, 0.5}),
+	Base(owner, owner.game.gfx.gui_text.get_size(text), origin),
 	text(text)
 {
 }
 
 void Text::draw()
 {
+	Base::draw();
+
 	owner.game.gfx.gui_text.draw(text, glm::round(real_position));
 }
 

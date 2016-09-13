@@ -13,7 +13,8 @@
 
 namespace PhysicsUtil
 {
-	void ScreenPosToWorldRay(
+	void ScreenPosToWorldRay
+	(
 		const glm::dvec2& mouse_pos,
 		const window_size_t&,
 		const glm::dmat4& view_matrix,
@@ -21,5 +22,11 @@ namespace PhysicsUtil
 		glm::dvec3& out_origin,
 		glm::dvec3& out_direction
 	);
-	std::unique_ptr<RaycastHit> raycast(const World& world, const glm::dvec3& origin, const glm::dvec3& direction, double radius);
+	std::unique_ptr<RaycastHit> raycast
+	(
+		const World&,
+		const glm::dvec3& origin,
+		const glm::dvec3& direction,
+		double radius
+	);
 };

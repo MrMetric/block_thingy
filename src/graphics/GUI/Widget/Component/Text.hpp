@@ -16,9 +16,15 @@ class Text : public Base
 
 		std::string get8() const;
 		std::u32string get32() const;
-		Text& operator=(const std::string& utf8);
-		Text& operator=(const std::u32string& utf32);
+
+		Text& operator=(char32_t);
+		Text& operator=(const std::string&);
+		Text& operator=(const std::u32string&);
+
 		Text& operator+=(const char32_t);
+		Text& operator+=(const std::string&);
+		Text& operator+=(const std::u32string&);
+
 		void pop_back();
 		std::size_t str_size() const;
 

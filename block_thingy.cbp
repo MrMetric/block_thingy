@@ -160,6 +160,7 @@
 		<Unit filename="src/fwd/block/Base.hpp" />
 		<Unit filename="src/fwd/block/BlockType.hpp" />
 		<Unit filename="src/fwd/block/BlockVisibilityType.hpp" />
+		<Unit filename="src/fwd/block/Light.hpp" />
 		<Unit filename="src/fwd/chunk/Chunk.hpp" />
 		<Unit filename="src/fwd/console/Console.hpp" />
 		<Unit filename="src/fwd/event/Event.hpp" />
@@ -168,6 +169,7 @@
 		<Unit filename="src/fwd/graphics/Color.hpp" />
 		<Unit filename="src/fwd/graphics/GUI/Widget/Base.hpp" />
 		<Unit filename="src/fwd/graphics/GUI/Widget/Component/Base.hpp" />
+		<Unit filename="src/fwd/graphics/GUI/Widget/TextInput.hpp" />
 		<Unit filename="src/fwd/graphics/GUI/WidgetContainer.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/ShaderProgram.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/Texture.hpp" />
@@ -181,6 +183,8 @@
 		<Unit filename="src/graphics/Color.hpp" />
 		<Unit filename="src/graphics/GUI/Base.cpp" />
 		<Unit filename="src/graphics/GUI/Base.hpp" />
+		<Unit filename="src/graphics/GUI/Light.cpp" />
+		<Unit filename="src/graphics/GUI/Light.hpp" />
 		<Unit filename="src/graphics/GUI/Pause.cpp" />
 		<Unit filename="src/graphics/GUI/Pause.hpp" />
 		<Unit filename="src/graphics/GUI/Play.cpp" />

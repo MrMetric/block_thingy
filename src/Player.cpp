@@ -161,9 +161,7 @@ void Player::step(const double delta_time)
 
 	if(flags.noclip)
 	{
-		velocity.x *= 0.75;
-		velocity.y *= 0.75;
-		velocity.z *= 0.75;
+		velocity *= 0.75;
 		acceleration.y = 0;
 		if(flags.do_jump)
 		{

@@ -9,6 +9,7 @@
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "Player.hpp"
+#include "block/Base.hpp"
 #include "fwd/block/BlockType.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
@@ -98,7 +99,10 @@ void Play::draw_debug_text()
 	#undef p
 	// TODO: get block name
 	ss << "block type: " << static_cast<block_type_id_t>(game.block_type) << "\n";
-	ss << "fov: " << game.gfx.fov << "\n";
+	if(game.hovered_block != nullptr)
+	{
+		ss << "hovered: " << game.world.get_block(game.hovered_block->pos).type_id() << "\n";
+	}
 	game.gfx.gui_text.draw(ss.str(), {8.0, 8.0});
 }
 

@@ -13,6 +13,7 @@ class Text : public Base
 		Text
 		(
 			WidgetContainer& owner,
+			const glm::dvec2& origin,
 			const std::string& text
 		);
 

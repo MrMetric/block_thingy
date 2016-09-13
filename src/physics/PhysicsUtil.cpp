@@ -55,25 +55,33 @@ constexpr double intbound(double s, const double ds)
 
 static glm::dvec3 intbound(const glm::dvec3& origin, const glm::dvec3& direction)
 {
-	return { intbound(origin.x, direction.x), intbound(origin.y, direction.y), intbound(origin.z, direction.z) };
+	return
+	{
+		intbound(origin.x, direction.x),
+		intbound(origin.y, direction.y),
+		intbound(origin.z, direction.z),
+	};
 }
 
-static constexpr double delta(const double x)
+constexpr double delta(const double x)
 {
-	// TODO: profile vs (1.0 / glm::abs(x))
-	#pragma clang diagnostic push
-	#pragma clang diagnostic ignored "-Wfloat-equal"
-	return (x == 0) ? infinity : (glm::sign(x) / x);
-	#pragma clang diagnostic pop
+	if(x == 0) return infinity;
+	return 1 / std::abs(x);
 }
 
 static glm::dvec3 delta(const glm::dvec3& direction)
 {
-	return { delta(direction.x), delta(direction.y), delta(direction.z) };
+	return
+	{
+		delta(direction.x),
+		delta(direction.y),
+		delta(direction.z),
+	};
 }
 
 // http://www.opengl-tutorial.org/miscellaneous/clicking-on-objects/picking-with-a-physics-library/
-void PhysicsUtil::ScreenPosToWorldRay(
+void PhysicsUtil::ScreenPosToWorldRay
+(
 	const glm::dvec2& mouse,              // Mouse position, in pixels, from bottom-left corner of the window
 	const window_size_t& screen_size,     // Window size, in pixels
 	const glm::dmat4& view_matrix,        // Camera position and orientation
@@ -83,13 +91,15 @@ void PhysicsUtil::ScreenPosToWorldRay(
 )
 {
 	// The ray Start and End positions, in Normalized Device Coordinates (Have you read Tutorial 4 ?)
-	glm::dvec4 lRayStart_NDC(
+	glm::dvec4 lRayStart_NDC
+	(
 		(mouse.x / screen_size.x - 0.5) * 2, // [0,  width] -> [-1, 1]
 		(mouse.y / screen_size.y - 0.5) * 2, // [0, height] -> [-1, 1]
 		-1, // The near plane maps to Z=-1 in Normalized Device Coordinates
 		1
 	);
-	glm::dvec4 lRayEnd_NDC(
+	glm::dvec4 lRayEnd_NDC
+	(
 		(mouse.x / screen_size.x - 0.5) * 2,
 		(mouse.y / screen_size.y - 0.5) * 2,
 		0,
@@ -143,7 +153,13 @@ static bool pos_in_bounds(const Position::BlockInWorld& pos, const glm::dvec3& m
  *
  * If the callback returns a true value, the traversal will be stopped.
  */
-unique_ptr<RaycastHit> PhysicsUtil::raycast(const World& world, const glm::dvec3& origin, const glm::dvec3& direction, const double radius)
+unique_ptr<RaycastHit> PhysicsUtil::raycast
+(
+	const World& world,
+	const glm::dvec3& origin,
+	const glm::dvec3& direction,
+	const double radius
+)
 {
 	// From "A Fast Voxel Traversal Algorithm for Ray Tracing"
 	// by John Amanatides and Andrew Woo, 1987
@@ -163,7 +179,7 @@ unique_ptr<RaycastHit> PhysicsUtil::raycast(const World& world, const glm::dvec3
 	// (i.e. change the integer part of the coordinate) in the variables
 	// tMaxX, tMaxY, and tMaxZ.
 
-	// Avoids an infinite loop
+	// avoid an infinite loop (this is not possible, but being careful is important)
 	if(direction == glm::dvec3(0))
 	{
 		return nullptr;

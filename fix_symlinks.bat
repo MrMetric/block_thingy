@@ -9,7 +9,7 @@ exit /B
 
 :fix_link
 	cd %base%
-	set /p dest=<%base%%1\%2
-	cd %base%%1
+	set /p dest=<%1\%2
+	cd %1
 	del %2
 	mklink /J %2 %dest:/=\%

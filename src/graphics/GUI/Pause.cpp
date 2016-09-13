@@ -18,6 +18,8 @@ Pause::Pause(Game& game)
 {
 	auto& test = root.add<Widget::TextInput>("aaa", "test");
 
+	root.add<Widget::Text>(glm::dvec2(0.5, 0.5), "Paused");
+
 	auto& btn_resume = root.add<Widget::Button>("Resume",
 	[&game]()
 	{
@@ -43,12 +45,12 @@ Pause::Pause(Game& game)
 		game.console.run_line("quit");
 	});
 
-	auto button_border = std::make_shared<Widget::Component::Border>(2, glm::dvec4(1));
-	btn_resume.add_modifier(button_border);
-	btn_save.add_modifier(button_border);
-	btn_save_quit.add_modifier(button_border);
-	btn_quit.add_modifier(button_border);
-	test.add_modifier(button_border);
+	auto border = std::make_shared<Widget::Component::Border>(2, glm::dvec4(1));
+	btn_resume.add_modifier(border);
+	btn_save.add_modifier(border);
+	btn_save_quit.add_modifier(border);
+	btn_quit.add_modifier(border);
+	test.add_modifier(border);
 }
 
 void Pause::init()

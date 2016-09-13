@@ -27,7 +27,7 @@ Button::Button
 	mousedown(false),
 	text(text),
 	text_size(owner.game.gfx.gui_text.get_size(text)),
-	text_position((size - text_size) / 2.0),
+	text_position((size - text_size) * glm::dvec2(0.5, 0.5)),
 	click_handler(click_handler)
 {
 }

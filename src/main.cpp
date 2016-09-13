@@ -67,6 +67,8 @@ int main(int argc, char** argv)
 	CodePageHandler cp(CP_UTF8);
 	#endif
 
+	cout.setf(std::ios_base::boolalpha);
+
 	const string compiler_info = Util::compiler_info();
 	if(compiler_info != "")
 	{
