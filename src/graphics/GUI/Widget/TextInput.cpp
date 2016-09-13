@@ -3,6 +3,7 @@
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "graphics/GUI/WidgetContainer.hpp"
+#include "util/clipboard.hpp"
 #include "util/key_mods.hpp"
 
 using std::string;
@@ -65,6 +66,16 @@ void TextInput::keypress(const int key, const int scancode, const int action, co
 	if(!focus) return;
 	if(action == GLFW_RELEASE) return; // must be press or repeat
 
+	const char* key_name_ = glfwGetKeyName(key, scancode);
+	const string key_name = key_name_ != nullptr ? key_name_ : "";
+
+	if(mods.is(false, true, false, false) && key_name == "v")
+	{
+		content += Util::Clipboard::get_text();
+		trigger_on_change();
+		return;
+	}
+
 	if(key == GLFW_KEY_BACKSPACE)
 	{
 		if(mods.none())
@@ -75,7 +86,7 @@ void TextInput::keypress(const int key, const int scancode, const int action, co
 				trigger_on_change();
 			}
 		}
-		else if(mods.is(true, false, false, false))
+		else if(mods.is(false, true, false, false))
 		{
 			// TODO
 		}
