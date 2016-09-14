@@ -16,8 +16,6 @@ Pause::Pause(Game& game)
 	:
 	Base(game, WidgetContainerMode::widgets)
 {
-	auto& test = root.add<Widget::TextInput>("aaa", "test");
-
 	root.add<Widget::Text>(glm::dvec2(0.5, 0.5), "Paused");
 
 	auto& btn_resume = root.add<Widget::Button>("Resume",
@@ -50,7 +48,6 @@ Pause::Pause(Game& game)
 	btn_save.add_modifier(border);
 	btn_save_quit.add_modifier(border);
 	btn_quit.add_modifier(border);
-	test.add_modifier(border);
 }
 
 void Pause::init()
