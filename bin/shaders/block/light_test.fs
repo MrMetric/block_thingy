@@ -3,7 +3,7 @@
 const float d = 0.2;
 const float r = 0.1;
 //const float ring_size = 0.05;
-vec3 color(vec2 coords)
+vec4 color(vec2 coords)
 {
 	vec2 m = fract(coords) - 0.5;
 	vec2 o1 = d * vec2(cos(global_time), sin(global_time));
@@ -13,7 +13,7 @@ vec3 color(vec2 coords)
 	|| length(m + o2) < r
 	|| length(m - o2) < r)
 	{
-		return vec3(1.0);
+		return vec4(1.0);
 	}
 	/*
 	if(length(m) < r + (d + ring_size) / 2.0
@@ -23,9 +23,10 @@ vec3 color(vec2 coords)
 	}
 	*/
 
-	float cx = pow(abs(sin(M_TAU / 2.0 * coords.x)), 1.0 / 8.0);
-	float cy = pow(abs(sin(M_TAU / 2.0 * coords.y)), 1.0 / 8.0);
-	return vec3(1.0 - cx * cy);
+	float x = pow(abs(sin(M_TAU / 2.0 * coords.x)), 1.0 / 8.0);
+	float y = pow(abs(sin(M_TAU / 2.0 * coords.y)), 1.0 / 8.0);
+	vec3 c = vec3(1.0 - x * y);
+	return vec4(c, 1.0);
 }
 
 #include include/main.fs

@@ -12,12 +12,12 @@ vec3 hsv2rgb(vec3 c)
 	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-vec3 color(vec2 coords)
+vec4 color(vec2 coords)
 {
 	vec3 c = vec3(1.0 - discretestep(radius, length(fract(coords) - 0.5)));
 	c *= hsv2rgb(vec3(global_time + radius_scaled, 1.0, 1.0));
 	c *= radius_scaled;
-	return c;
+	return vec4(c, 1.0);
 }
 
 #include include/main.fs

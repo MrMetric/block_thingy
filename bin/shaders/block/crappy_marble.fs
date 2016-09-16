@@ -19,15 +19,15 @@ float sum_octaves(vec2 P)
 
 const float amplitude = 1.0;
 
-vec3 color(vec2 coords)
+vec4 color(vec2 coords)
 {
 	vec2 n = coords + amplitude * sum_octaves(coords);
-	float c1 = pow(abs(cos(M_TAU / 2.0 * n.x)), 1.0 / 6.0);
-	float c2 = pow(abs(cos(M_TAU / 2.0 * n.y)), 1.0 / 4.0);
-	vec3 c = vec3((c1 + c2) / 2.0);
+	float x = pow(abs(cos(M_TAU / 2.0 * n.x)), 1.0 / 6.0);
+	float y = pow(abs(cos(M_TAU / 2.0 * n.y)), 1.0 / 4.0);
+	vec3 c = vec3((x + y) / 2.0);
 	c.r *= 0.975;
 	c.b *= 0.975;
-	return c;
+	return vec4(c, 1.0);
 }
 
 #include include/main.fs
