@@ -16,6 +16,7 @@ enum class BlockType : block_type_id_t
 	white,
 	black,
 	light,
+	glass,
 	COUNT,
 };
 

@@ -4,6 +4,7 @@
 #include "block/BlockType.hpp"
 
 #include "block/Air.hpp"
+#include "block/Glass.hpp"
 #include "block/Light.hpp"
 #include "block/None.hpp"
 #include "block/Test.hpp"
@@ -35,6 +36,7 @@ unique_ptr<Base> BlockMaker::make()
 BlockRegistry::BlockRegistry()
 {
 	add<Air>(BlockType::air);
+	add<Glass>(BlockType::glass);
 	add<Light>(BlockType::light);
 	add<None>(BlockType::none);
 	add<Test>(BlockType::test);

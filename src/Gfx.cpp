@@ -168,6 +168,7 @@ void Gfx::opengl_setup()
 	block_shaders.emplace(BlockType::white, "shaders/block/white");
 	block_shaders.emplace(BlockType::black, "shaders/block/black");
 	block_shaders.emplace(BlockType::light, "shaders/block/light_test");
+	block_shaders.emplace(BlockType::glass, "shaders/block/glass");
 }
 
 void Gfx::toggle_fullscreen()
