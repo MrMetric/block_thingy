@@ -53,7 +53,7 @@ using std::unique_ptr;
 Game* Game::instance = nullptr;
 
 Game::Game(Gfx& gfx)
-	:
+:
 	block_type(BlockType::test),
 	hovered_block(nullptr),
 	gfx(gfx),

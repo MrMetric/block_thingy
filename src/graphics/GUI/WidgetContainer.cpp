@@ -11,8 +11,12 @@ using std::string;
 
 namespace Graphics::GUI {
 
-WidgetContainer::WidgetContainer(Game& game, const WidgetContainerMode mode)
-	:
+WidgetContainer::WidgetContainer
+(
+	Game& game,
+	const WidgetContainerMode mode
+)
+:
 	game(game),
 	mode(mode)
 {

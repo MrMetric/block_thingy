@@ -2,8 +2,12 @@
 
 #include "position/BlockInWorld.hpp"
 
-RaycastHit::RaycastHit(const Position::BlockInWorld& pos, const glm::ivec3& face)
-	:
+RaycastHit::RaycastHit
+(
+	const Position::BlockInWorld& pos,
+	const glm::ivec3& face
+)
+:
 	pos(pos),
 	face(face)
 {

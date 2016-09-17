@@ -33,7 +33,7 @@ using std::unique_ptr;
 namespace Storage {
 
 WorldFile::WorldFile(const string& world_dir, World& world)
-	:
+:
 	world_path(world_dir + "/world"),
 	player_path(world_dir + "/players/"),
 	chunk_path(world_dir + "/chunks/"),

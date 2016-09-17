@@ -18,7 +18,7 @@
 namespace Graphics::GUI {
 
 Play::Play(Game& game)
-	:
+:
 	Base(game, WidgetContainerMode::rows)
 {
 }

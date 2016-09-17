@@ -24,7 +24,7 @@ namespace Graphics {
 Text::Character load_char(const FT_Face& face, char32_t);
 
 Text::Text(const string& font_path, const FT_UInt height)
-	:
+:
 	height(height),
 	vbo({4, GL_FLOAT}),
 	vao(vbo),

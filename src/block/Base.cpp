@@ -11,10 +11,14 @@
 
 namespace Block {
 
-Base::Base() : type_(BlockType::none) {}
+Base::Base()
+:
+	type_(BlockType::none)
+{
+}
 
 Base::Base(const BlockType type)
-	:
+:
 	type_(type)
 {
 }
@@ -24,7 +28,7 @@ Base::~Base()
 }
 
 Base::Base(const Base& that)
-	:
+:
 	type_(that.type_)
 {
 	operator=(that);
@@ -116,4 +120,4 @@ void Base::load(Storage::InputInterface&)
 	// type is set before loading
 }
 
-} // namespace Block
+}

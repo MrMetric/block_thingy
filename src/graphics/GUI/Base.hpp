@@ -16,7 +16,11 @@ namespace Graphics::GUI {
 class Base
 {
 	public:
-		Base(Game&, WidgetContainerMode root_mode);
+		Base
+		(
+			Game&,
+			WidgetContainerMode root_mode
+		);
 		virtual ~Base();
 
 		Base(Base&&) = delete;

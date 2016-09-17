@@ -61,4 +61,4 @@ unique_ptr<Base> BlockRegistry::make(const Base& block)
 	return new_block;
 }
 
-} // namespace Block
+}

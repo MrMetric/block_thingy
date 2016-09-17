@@ -14,13 +14,13 @@ namespace Graphics {
 Color::value_type Color::max = 16;
 
 Color::Color()
-	:
+:
 	Color(0, 0, 0)
 {
 }
 
 Color::Color(value_type r, value_type g, value_type b)
-	:
+:
 	r(r),
 	g(g),
 	b(b)
@@ -28,7 +28,7 @@ Color::Color(value_type r, value_type g, value_type b)
 }
 
 Color::Color(const glm::dvec3& v)
-	:
+:
 	r(static_cast<value_type>(std::round(v.r * max))),
 	g(static_cast<value_type>(std::round(v.g * max))),
 	b(static_cast<value_type>(std::round(v.b * max)))

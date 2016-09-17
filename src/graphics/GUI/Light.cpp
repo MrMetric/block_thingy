@@ -16,7 +16,11 @@ using std::string;
 
 namespace Graphics::GUI {
 
-Light::Light(Game& game, Block::Light& block)
+Light::Light
+(
+	Game& game,
+	Block::Light& block
+)
 :
 	Base(game, WidgetContainerMode::widgets),
 	block(block)

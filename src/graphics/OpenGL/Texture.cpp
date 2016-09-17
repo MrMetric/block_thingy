@@ -3,7 +3,7 @@
 namespace Graphics::OpenGL {
 
 Texture::Texture()
-	:
+:
 	inited(false),
 	name(0)
 {

@@ -7,7 +7,7 @@ AABB::AABB()
 }
 
 AABB::AABB(const Position::BlockInWorld& block_pos)
-	:
+:
 	min(block_pos.x, block_pos.y, block_pos.z),
 	max(min + 1.0)
 {

@@ -6,7 +6,10 @@
 class Event_window_size_change : public Event
 {
 	public:
-		Event_window_size_change(const window_size_t&);
+		Event_window_size_change
+		(
+			const window_size_t&
+		);
 
 		window_size_t window_size;
 };

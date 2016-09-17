@@ -1,7 +1,7 @@
 #include "Event.hpp"
 
 Event::Event(EventType type)
-	:
+:
 	type_(type)
 {
 }

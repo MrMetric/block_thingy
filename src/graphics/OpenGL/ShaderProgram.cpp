@@ -24,20 +24,20 @@ static GLuint make_program(const std::vector<string>& files, const string& debug
 static std::vector<string> get_uniform_names(const GLuint name);
 
 ShaderProgram::ShaderProgram()
-	:
+:
 	inited(false),
 	name(0)
 {
 }
 
 ShaderProgram::ShaderProgram(const char* path)
-	:
+:
 	ShaderProgram(string(path))
 {
 }
 
 ShaderProgram::ShaderProgram(const string& path)
-	:
+:
 	ShaderProgram({ path + ".vs", path + ".fs" }, path)
 {
 }

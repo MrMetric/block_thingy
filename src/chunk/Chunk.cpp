@@ -37,7 +37,7 @@ using Position::BlockInWorld;
 using Position::ChunkInWorld;
 
 Chunk::Chunk(const ChunkInWorld& pos, World& owner)
-	:
+:
 	owner(owner),
 	position(pos),
 	solid_block(owner.game.block_registry.make(BlockType::air)), // a useful default for now

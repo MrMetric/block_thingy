@@ -7,8 +7,18 @@
 class Command
 {
 	public:
-		Command(Console& console, const std::string& name, const console_handler_t& handler);
-		Command(Console& console, const std::string& name, const console_handler_noargs_t& handler);
+		Command
+		(
+			Console& console,
+			const std::string& name,
+			const console_handler_t& handler
+		);
+		Command
+		(
+			Console& console,
+			const std::string& name,
+			const console_handler_noargs_t& handler
+		);
 		~Command();
 
 		Command(Command&&);

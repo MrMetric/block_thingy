@@ -2,7 +2,8 @@
 
 #include <functional>
 
-template <typename T> class Property
+template<typename T>
+class Property
 {
 	public:
 		Property

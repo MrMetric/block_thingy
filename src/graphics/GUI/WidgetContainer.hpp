@@ -26,7 +26,11 @@ enum class WidgetContainerMode
 class WidgetContainer
 {
 	public:
-		WidgetContainer(Game&, WidgetContainerMode mode);
+		WidgetContainer
+		(
+			Game&,
+			WidgetContainerMode
+		);
 
 		void draw();
 
@@ -37,7 +41,7 @@ class WidgetContainer
 
 		void update_container(const glm::dvec2& position, const glm::dvec2& size);
 
-		template <typename T, typename... Args>
+		template<typename T, typename... Args>
 		T& add(Args&&... args)
 		{
 			if(this->mode != WidgetContainerMode::widgets)

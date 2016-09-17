@@ -19,7 +19,7 @@ string get_log(const GLuint object);
 string do_include(const string& file_path);
 
 ShaderObject::ShaderObject()
-	:
+:
 	inited(false),
 	name(0)
 {

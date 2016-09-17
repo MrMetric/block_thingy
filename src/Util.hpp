@@ -49,7 +49,8 @@ namespace Util
 
 	void change_directory(const std::string&);
 
-	template <typename T> constexpr T clamp(T x, T min, T max)
+	template<typename T>
+	constexpr T clamp(T x, T min, T max)
 	{
 		if(x < min)
 		{

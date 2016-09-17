@@ -6,7 +6,7 @@
 namespace Block {
 
 Air::Air()
-	:
+:
 	Base(BlockType::air)
 {
 }
@@ -31,4 +31,4 @@ bool Air::is_replaceable() const
 	return true;
 }
 
-} // namespace Block
+}

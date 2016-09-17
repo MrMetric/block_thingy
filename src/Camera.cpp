@@ -9,7 +9,7 @@
 #include "event/EventType.hpp"
 
 Camera::Camera(Gfx& gfx, EventManager& event_manager)
-	:
+:
 	sensitivity(0.1),
 	joy_sensitivity(1.2),
 	gfx(gfx)

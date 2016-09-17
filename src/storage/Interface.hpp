@@ -25,7 +25,7 @@ class InputInterface
 {
 	public:
 		InputInterface(const std::unordered_map<std::string, msgpack::object>& map)
-			:
+		:
 			map(map)
 		{
 		}

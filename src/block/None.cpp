@@ -6,7 +6,7 @@
 namespace Block {
 
 None::None()
-	:
+:
 	Base(BlockType::none)
 {
 }
@@ -21,4 +21,4 @@ BlockVisibilityType None::visibility_type() const
 	return BlockVisibilityType::invisible;
 }
 
-} // namespace Block
+}

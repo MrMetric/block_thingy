@@ -7,7 +7,7 @@
 namespace Graphics::OpenGL {
 
 VertexBuffer::VertexBuffer(const Format& format)
-	:
+:
 	format(format)
 {
 	glCreateBuffers(1, &name);

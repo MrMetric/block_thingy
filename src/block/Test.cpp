@@ -8,7 +8,7 @@
 namespace Block {
 
 Test::Test()
-	:
+:
 	Base(BlockType::test)
 {
 }
@@ -24,4 +24,4 @@ glm::dvec4 Test::selection_color() const
 	return {glm::rgbColor(glm::dvec3(t % 360, 1, 1)), 1};
 }
 
-} // namespace Block
+}

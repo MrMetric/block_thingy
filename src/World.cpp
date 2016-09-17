@@ -36,7 +36,7 @@ using Position::BlockInChunk;
 using Position::BlockInWorld;
 using Position::ChunkInWorld;
 
-template <typename T>
+template<typename T>
 uint64_t position_hasher(const T& pos)
 {
 	// x has 1 more bit than y/z because there is room for it

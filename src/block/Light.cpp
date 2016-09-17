@@ -13,13 +13,13 @@ using Graphics::Color;
 namespace Block {
 
 Light::Light()
-	:
+:
 	Light(Color(glm::dvec3(1, 1, 1)))
 {
 }
 
 Light::Light(const Color& color)
-	:
+:
 	Base(BlockType::light),
 	color_(color)
 {

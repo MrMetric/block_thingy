@@ -7,7 +7,11 @@
 class Event_enter_block : public Event
 {
 	public:
-		Event_enter_block(Player&, const Block::Base&);
+		Event_enter_block
+		(
+			Player&,
+			const Block::Base&
+		);
 
 		Player& player;
 		const Block::Base& block;

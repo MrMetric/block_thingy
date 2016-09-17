@@ -6,7 +6,11 @@
 
 struct RaycastHit
 {
-	RaycastHit(const Position::BlockInWorld& pos, const glm::ivec3& face);
+	RaycastHit
+	(
+		const Position::BlockInWorld& pos,
+		const glm::ivec3& face
+	);
 
 	Position::BlockInWorld pos;
 	glm::ivec3 face;

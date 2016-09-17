@@ -13,7 +13,7 @@
 namespace Graphics::GUI {
 
 Pause::Pause(Game& game)
-	:
+:
 	Base(game, WidgetContainerMode::widgets)
 {
 	root.add<Widget::Text>(glm::dvec2(0.5, 0.5), "Paused");

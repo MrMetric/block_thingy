@@ -12,7 +12,7 @@
 using std::string;
 
 Console::Console(Game& game)
-	:
+:
 	logger(std::cout),
 	error_logger(std::cerr),
 	game(game)
@@ -20,14 +20,14 @@ Console::Console(Game& game)
 }
 
 console_handler_wrapper::console_handler_wrapper(const console_handler_t& handler)
-	:
+:
 	has_args(true),
 	handler_args(handler)
 {
 }
 
 console_handler_wrapper::console_handler_wrapper(const console_handler_noargs_t& handler)
-	:
+:
 	has_args(false),
 	handler_noargs(handler)
 {

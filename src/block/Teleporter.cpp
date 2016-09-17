@@ -5,7 +5,7 @@
 namespace Block {
 
 Teleporter::Teleporter()
-	:
+:
 	Base(BlockType::teleporter)
 {
 }
@@ -20,4 +20,4 @@ bool Teleporter::is_solid() const
 	return false;
 }
 
-} // namespace Block
+}

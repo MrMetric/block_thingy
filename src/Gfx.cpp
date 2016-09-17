@@ -52,7 +52,7 @@ using std::cout;
 using std::string;
 
 Gfx::Gfx(GLFWwindow* window)
-	:
+:
 	window(window),
 	s_lines("shaders/lines"),
 	outline_vbo({3, GL_FLOAT}),

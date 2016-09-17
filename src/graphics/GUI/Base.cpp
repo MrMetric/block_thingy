@@ -15,8 +15,12 @@
 
 namespace Graphics::GUI {
 
-Base::Base(Game& game, const WidgetContainerMode root_mode)
-	:
+Base::Base
+(
+	Game& game,
+	const WidgetContainerMode root_mode
+)
+:
 	game(game),
 	root(game, root_mode)
 {

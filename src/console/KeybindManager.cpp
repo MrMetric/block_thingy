@@ -17,7 +17,7 @@
 using std::string;
 
 KeybindManager::KeybindManager(Console& console)
-	:
+:
 	console(console)
 {
 	console.add_command("bind", {[&keybinder=*this](Game& game, const std::vector<string>& args)

@@ -10,7 +10,7 @@
 using std::to_string;
 
 EventManager::EventManager()
-	:
+:
 	max_id(0)
 {
 }
