@@ -26,7 +26,18 @@ Player::Player
 	name(name),
 	reach_distance(16),
 	spawn_position(0.5, 1.0, 0.5), // TODO: generate this
-	position(spawn_position),
+	position(spawn_position, [this, &game](glm::dvec3 p)
+	{
+		p.y += eye_height;
+		game.camera.position = p;
+	}),
+	rotation(glm::dvec3(0), [&game](glm::dvec3 r)
+	{
+		game.camera.rotation = r;
+	}),
+	velocity(glm::dvec3(0), [](glm::dvec3 v)
+	{
+	}),
 	abs_offset(0.4),
 	eye_height(1.6),
 	height(1.8),
@@ -37,8 +48,10 @@ Player::Player
 
 void Player::move(const glm::dvec3& acceleration)
 {
-	const double sinY = std::sin(glm::radians(rotation.y));
-	const double cosY = std::cos(glm::radians(rotation.y));
+	const double sinY = std::sin(glm::radians(rotation().y));
+	const double cosY = std::cos(glm::radians(rotation().y));
+
+	glm::dvec3 velocity = this->velocity();
 	velocity += acceleration;
 
 	if(std::abs(velocity.x) > max_velocity)
@@ -56,11 +69,13 @@ void Player::move(const glm::dvec3& acceleration)
 		velocity.y,
 		velocity.z * cosY + velocity.x * sinY,
 	};
+	glm::dvec3 position = this->position();
 	glm::dvec3 new_position = position + move_vec;
 
 	if(flags.noclip)
 	{
-		position = new_position;
+		this->velocity = velocity;
+		this->position = new_position;
 		return;
 	}
 
@@ -150,6 +165,9 @@ void Player::move(const glm::dvec3& acceleration)
 			flags.on_ground = true;
 		}
 	}
+
+	this->position = position;
+	this->velocity = velocity;
 }
 
 void Player::step(const double delta_time)
@@ -164,6 +182,7 @@ void Player::step(const double delta_time)
 	}
 	acceleration = apply_movement_input(acceleration, move_speed);
 
+	glm::dvec3 velocity = this->velocity();
 	if(flags.noclip)
 	{
 		velocity *= 0.75;
@@ -197,12 +216,13 @@ void Player::step(const double delta_time)
 		}
 	}
 	flags.do_jump = false;
+	this->velocity = velocity;
 
 	if(acceleration != glm::dvec3(0))
 	{
-		const Position::BlockInWorld old_position(position);
+		const Position::BlockInWorld old_position(position());
 		move(acceleration * delta_time);
-		const Position::BlockInWorld new_position(position);
+		const Position::BlockInWorld new_position(position());
 		if(new_position != old_position)
 		{
 			const Block::Base& block = game.world.get_block(new_position);
@@ -251,8 +271,8 @@ void Player::set_analog_motion(const glm::dvec2& vec)
 
 void Player::respawn()
 {
-	rotation.x = rotation.y = rotation.z = 0; // TODO: improve design (this needs to be set in the camera, not here)
-	velocity.x = velocity.y = velocity.z = 0;
+	rotation = glm::dvec3(0);
+	velocity = glm::dvec3(0);
 
 	position = spawn_position;
 	// TODO: if spawn is blocked, move to a nearby empty area
@@ -337,5 +357,5 @@ AABB Player::make_aabb(const glm::dvec3& position)
 
 void Player::set_aabb()
 {
-	aabb = make_aabb(position);
+	aabb = make_aabb(position());
 }

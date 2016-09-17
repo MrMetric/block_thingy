@@ -8,6 +8,7 @@
 #include "fwd/Game.hpp"
 #include "physics/AABB.hpp"
 #include "fwd/position/BlockInWorld.hpp"
+#include "util/Property.hpp"
 
 class Player
 {
@@ -46,9 +47,9 @@ class Player
 		void set_noclip(bool);
 
 		glm::dvec3 spawn_position;
-		glm::dvec3 position;
-		glm::dvec3 rotation;
-		glm::dvec3 velocity;
+		Property<glm::dvec3> position;
+		Property<glm::dvec3> rotation;
+		Property<glm::dvec3> velocity;
 
 	private:
 		Game& game;

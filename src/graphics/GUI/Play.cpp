@@ -91,7 +91,7 @@ void Play::draw_crosshair()
 void Play::draw_debug_text()
 {
 	std::ostringstream ss;
-	const auto& pos = game.player.position;
+	const glm::dvec3 pos = game.player.position();
 	#define p(x) (x > 0 ? "+" : (x < 0 ? "" : " ")) << x
 	ss << "x: " << p(pos.x) << "\n";
 	ss << "y: " << p(pos.y) << "\n";

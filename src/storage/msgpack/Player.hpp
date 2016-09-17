@@ -2,6 +2,7 @@
 
 #include "../../Player.hpp" // TODO
 #include "storage/msgpack/glm_vec3.hpp"
+#include "storage/msgpack/Property.hpp"
 
 namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {

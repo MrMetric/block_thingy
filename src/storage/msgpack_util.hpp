@@ -8,6 +8,7 @@
 #include <msgpack.hpp>
 
 #include "util/demangled_name.hpp"
+#include "util/Property.hpp"
 
 template <typename T>
 bool find_in_map(const std::unordered_map<std::string, msgpack::object>& map, const std::string& key, T& v)
@@ -19,6 +20,18 @@ bool find_in_map(const std::unordered_map<std::string, msgpack::object>& map, co
 	}
 	v = i->second.as<T>();
 	return true;
+}
+
+template<typename T>
+bool find_in_map(const std::unordered_map<std::string, msgpack::object>& map, const std::string& key, Property<T>& p)
+{
+	T v;
+	const bool a = find_in_map(map, key, v);
+	if(a)
+	{
+		p = v;
+	}
+	return a;
 }
 
 template <typename T>

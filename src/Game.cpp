@@ -82,8 +82,6 @@ Game::Game(Gfx& gfx)
 	console.run_line("exec binds");
 
 	update_framebuffer_size(gfx.window_size);
-
-	camera.rotation = player.rotation; // keep saved value
 }
 
 void Game::draw()
@@ -123,8 +121,8 @@ void Game::draw()
 
 	std::stringstream ss;
 	ss << "Baby's First Voxel Engine | " << fps.getFPS() << " fps";
-	ss << " | player.pos(" << glm::to_string(player.position) << ")";
-	Position::BlockInWorld player_block_pos(player.position);
+	ss << " | player.pos(" << glm::to_string(player.position()) << ")";
+	Position::BlockInWorld player_block_pos(player.position());
 	ss << " | block" << player_block_pos;
 	ss << " | chunk" << Position::ChunkInWorld(player_block_pos);
 	ss << " | chunkblock" << Position::BlockInChunk(player_block_pos);
@@ -137,14 +135,12 @@ void Game::step_world()
 {
 	player.rotation = camera.rotation;
 	world.step(delta_time);
-	camera.position = player.position;
-	camera.position.y += player.get_eye_height();
 }
 
 void Game::draw_world()
 {
 	gfx.set_camera_view(camera.position, camera.rotation);
-	Position::BlockInWorld render_origin(player.position);
+	Position::BlockInWorld render_origin(player.position());
 	RenderWorld::draw_world(world, gfx.block_shaders, gfx.matriks, render_origin, render_distance);
 	find_hovered_block(gfx.projection_matrix, gfx.view_matrix_physical);
 }
@@ -367,7 +363,7 @@ void Game::add_commands()
 	COMMAND("respawn")
 	{
 		game.player.respawn();
-		game.console.logger << "respawned at " << glm::to_string(game.player.position) << "\n";
+		game.console.logger << "respawned at " << glm::to_string(game.player.position()) << "\n";
 	});
 
 	COMMAND_ARGS("save_pos")
@@ -380,8 +376,13 @@ void Game::add_commands()
 		const string save_name = args[0];
 		std::ofstream streem(save_name);
 		streem.precision(std::numeric_limits<double>::max_digits10);
-		streem << game.player.position.x << " " << game.player.position.y << " " << game.player.position.z << "\n";
-		streem << game.player.rotation.x << " " << game.player.rotation.y << " " << game.player.rotation.z;
+
+		const glm::dvec3 pos = game.player.position();
+		streem << pos.x << " " << pos.y << " " << pos.z << "\n";
+
+		const glm::dvec3 rot = game.player.rotation();
+		streem << rot.x << " " << rot.y << " " << rot.z;
+
 		streem.flush();
 		game.console.logger << "saved position and rotation to " << save_name << "\n";
 	});
@@ -394,14 +395,20 @@ void Game::add_commands()
 		}
 		const string save_name = args[0];
 		std::ifstream streem(save_name);
-		streem >> game.player.position.x;
-		streem >> game.player.position.y;
-		streem >> game.player.position.z;
-		streem >> game.camera.rotation.x;
-		streem >> game.camera.rotation.y;
-		streem >> game.camera.rotation.z;
-		game.console.logger << "set position to " << glm::to_string(game.player.position) << "\n";
-		game.console.logger << "set rotation to " << glm::to_string(game.camera.rotation) << "\n";
+
+		glm::dvec3 pos;
+		streem >> pos.x;
+		streem >> pos.y;
+		streem >> pos.z;
+		game.player.position = pos;
+		game.console.logger << "set position to " << glm::to_string(pos) << "\n";
+
+		glm::dvec3 rot;
+		streem >> rot.x;
+		streem >> rot.y;
+		streem >> rot.z;
+		game.player.rotation = rot;
+		game.console.logger << "set rotation to " << glm::to_string(rot) << "\n";
 	});
 
 	COMMAND_ARGS("exec")
