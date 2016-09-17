@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "fwd/Game.hpp"
 #include "fwd/Player.hpp"
 #include "fwd/block/Base.hpp"
 #include "fwd/chunk/Chunk.hpp"
@@ -25,7 +26,11 @@ class World
 	friend class Storage::WorldFile;
 
 	public:
-		World(const std::string& file_path);
+		World
+		(
+			Game&,
+			const std::string& file_path
+		);
 
 		World(World&&) = delete;
 		World(const World&) = delete;
@@ -65,6 +70,8 @@ class World
 		// for msgpack
 		template<typename T> void save(T&) const;
 		template<typename T> void load(const T&);
+
+		Game& game;
 
 	private:
 		uint64_t ticks;

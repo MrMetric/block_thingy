@@ -71,7 +71,11 @@ void WorldFile::save_player(const Player& player)
 	msgpack::pack(stream, player);
 }
 
-unique_ptr<Player> WorldFile::load_player(const string& name)
+unique_ptr<Player> WorldFile::load_player
+(
+	Game& game,
+	const string& name
+)
 {
 	string file_path = player_path + name;
 	if(!Util::file_is_openable(file_path))
@@ -82,7 +86,7 @@ unique_ptr<Player> WorldFile::load_player(const string& name)
 	LOGGER << "loading player: " << file_path << "\n";
 
 	string bytes = Util::read_file(file_path);
-	auto player = std::make_unique<Player>(name);
+	auto player = std::make_unique<Player>(game, name);
 	unpack_bytes(bytes, *player);
 
 	return player;

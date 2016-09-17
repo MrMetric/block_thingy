@@ -40,7 +40,7 @@ Chunk::Chunk(const ChunkInWorld& pos, World& owner)
 	:
 	owner(owner),
 	position(pos),
-	solid_block(Game::instance->block_registry.make(BlockType::air)), // a useful default for now
+	solid_block(owner.game.block_registry.make(BlockType::air)), // a useful default for now
 	changed(false)
 {
 }
@@ -141,19 +141,19 @@ void Chunk::render(const bool transluscent_pass)
 		changed = false;
 	}
 
-	const ChunkInWorld render_position = position - ChunkInWorld(BlockInWorld(Game::instance->camera.position));
+	const ChunkInWorld render_position = position - ChunkInWorld(BlockInWorld(owner.game.camera.position));
 	const BlockInWorld position_render_offset(render_position, {0, 0, 0});
 	std::size_t i = 0;
 	for(const auto& p : meshes)
 	{
 		const meshmap_key_t& key = p.first;
 		const BlockType type = std::get<0>(key);
-		if(Game::instance->block_registry.make(type)->is_translucent() != transluscent_pass)
+		if(owner.game.block_registry.make(type)->is_translucent() != transluscent_pass)
 		{
 			++i;
 			continue;
 		}
-		auto& shader = Game::instance->gfx.get_block_shader(type);
+		auto& shader = owner.game.gfx.get_block_shader(type);
 		glUseProgram(shader.get_name());
 
 		shader.uniform("position_offset", static_cast<glm::vec3>(position_render_offset));
@@ -229,7 +229,7 @@ void Chunk::init_block_array()
 	blocks = std::make_unique<chunk_block_array_t>();
 	std::generate(blocks->begin(), blocks->end(), [this]()
 	{
-		return Game::instance->block_registry.make(*solid_block);
+		return owner.game.block_registry.make(*solid_block);
 	});
 }
 

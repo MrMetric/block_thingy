@@ -5,13 +5,18 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+#include "fwd/Game.hpp"
 #include "physics/AABB.hpp"
 #include "fwd/position/BlockInWorld.hpp"
 
 class Player
 {
 	public:
-		Player(const std::string& name);
+		Player
+		(
+			Game&,
+			const std::string& name
+		);
 
 		Player(Player&&) = delete;
 		Player(const Player&) = delete;
@@ -46,6 +51,8 @@ class Player
 		glm::dvec3 velocity;
 
 	private:
+		Game& game;
+
 		bool block_is_at(const Position::BlockInWorld&);
 
 		const double abs_offset;

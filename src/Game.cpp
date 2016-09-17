@@ -58,7 +58,7 @@ Game::Game(Gfx& gfx)
 	hovered_block(nullptr),
 	gfx(gfx),
 	camera(gfx, event_manager),
-	world("worlds/test"),
+	world(*this, "worlds/test"),
 	player_ptr(world.add_player("test_player")),
 	player(*player_ptr),
 	console(*this),

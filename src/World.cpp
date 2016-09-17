@@ -51,8 +51,13 @@ uint64_t position_hasher(const T& pos)
 		;
 }
 
-World::World(const string& file_path)
-	:
+World::World
+(
+	Game& game,
+	const string& file_path
+)
+:
+	game(game),
 	mesher(std::make_unique<GreedyMesher>()),
 	ticks(0),
 	chunks(0, position_hasher<ChunkInWorld>),
@@ -111,7 +116,7 @@ const Block::Base& World::get_block(const BlockInWorld& block_pos) const
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static const std::unique_ptr<Block::Base> none = Game::instance->block_registry.make(BlockType::none);
+		static const std::unique_ptr<Block::Base> none = game.block_registry.make(BlockType::none);
 		return *none;
 	}
 
@@ -125,7 +130,7 @@ Block::Base& World::get_block_m(const BlockInWorld& block_pos)
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static /*const*/ std::unique_ptr<Block::Base> none = Game::instance->block_registry.make(BlockType::none);
+		static /*const*/ std::unique_ptr<Block::Base> none = game.block_registry.make(BlockType::none);
 		return *none;
 	}
 
@@ -446,7 +451,7 @@ void World::gen_at(const BlockInWorld& min, const BlockInWorld& max)
 			block_pos.y = y;
 
 			const BlockType t = y > -m / 2 ? BlockType::white : BlockType::black;
-			set_block(block_pos, Game::instance->block_registry.make(t));
+			set_block(block_pos, game.block_registry.make(t));
 		}
 	}
 }
@@ -463,10 +468,10 @@ void World::step(double delta_time)
 
 shared_ptr<Player> World::add_player(const string& name)
 {
-	shared_ptr<Player> player = file.load_player(name);
+	shared_ptr<Player> player = file.load_player(game, name);
 	if(player == nullptr)
 	{
-		player = std::make_shared<Player>(name);
+		player = std::make_shared<Player>(game, name);
 	}
 	players.emplace(name, player);
 	return player;

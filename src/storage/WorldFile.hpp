@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 
+#include "fwd/Game.hpp"
 #include "fwd/Player.hpp"
 #include "fwd/World.hpp"
 #include "fwd/chunk/Chunk.hpp"
@@ -40,7 +41,11 @@ class WorldFile
 		/**
 		 * Load the player that has the specified name. If the player does not exist, `nullptr` is returned.
 		 */
-		std::unique_ptr<Player> load_player(const std::string& name);
+		std::unique_ptr<Player> load_player
+		(
+			Game& game,
+			const std::string& name
+		);
 
 		/**
 		 * Save all chunks in the world
