@@ -72,7 +72,7 @@ void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> blo
 	// TODO: find a better way to do this
 	if(block_ptr->type() == BlockType::light)
 	{
-		dynamic_cast<Block::Light*>(block_ptr.get())->pos = block_pos;
+		static_cast<Block::Light*>(block_ptr.get())->pos = block_pos;
 	}
 
 	const ChunkInWorld chunk_pos(block_pos);

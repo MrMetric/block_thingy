@@ -61,6 +61,7 @@ void WidgetContainer::keypress(const int key, const int scancode, const int acti
 				if(widget == nullptr) continue; // this can happen when the GUI closes
 				widget->keypress(key, scancode, action, mods);
 			}
+			break;
 		}
 		case WidgetContainerMode::rows:
 		case WidgetContainerMode::cols:
@@ -70,6 +71,7 @@ void WidgetContainer::keypress(const int key, const int scancode, const int acti
 				if(container == nullptr) continue; // this can happen when the GUI closes
 				container->keypress(key, scancode, action, mods);
 			}
+			break;
 		}
 	}
 }
@@ -85,6 +87,7 @@ void WidgetContainer::charpress(const char32_t codepoint, const Util::key_mods m
 				if(widget == nullptr) continue; // this can happen when the GUI closes
 				widget->charpress(codepoint, mods);
 			}
+			break;
 		}
 		case WidgetContainerMode::rows:
 		case WidgetContainerMode::cols:
@@ -94,6 +97,7 @@ void WidgetContainer::charpress(const char32_t codepoint, const Util::key_mods m
 				if(container == nullptr) continue; // this can happen when the GUI closes
 				container->charpress(codepoint, mods);
 			}
+			break;
 		}
 	}
 }
