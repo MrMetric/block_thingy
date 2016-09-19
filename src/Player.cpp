@@ -325,11 +325,6 @@ void Player::toggle_noclip()
 	flags.noclip = !flags.noclip;
 }
 
-double Player::get_eye_height() const
-{
-	return eye_height;
-}
-
 bool Player::get_noclip() const
 {
 	return flags.noclip;

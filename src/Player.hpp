@@ -42,7 +42,6 @@ class Player
 		void jump();
 		void toggle_noclip();
 
-		double get_eye_height() const;
 		bool get_noclip() const;
 		void set_noclip(bool);
 
