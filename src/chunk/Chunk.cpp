@@ -66,7 +66,7 @@ const Block::Base& Chunk::get_block(const BlockInChunk::value_type x, const Bloc
 	{
 		return *solid_block;
 	}
-	return *blocks->at(block_array_index(x, y, z));
+	return *blocks->operator[](block_array_index(x, y, z));
 }
 
 const Block::Base& Chunk::get_block(const BlockInChunk& pos) const
@@ -75,13 +75,13 @@ const Block::Base& Chunk::get_block(const BlockInChunk& pos) const
 	{
 		return *solid_block;
 	}
-	return *blocks->at(block_array_index(pos.x, pos.y, pos.z));
+	return *blocks->operator[](block_array_index(pos.x, pos.y, pos.z));
 }
 
 Block::Base& Chunk::get_block_m(const BlockInChunk& pos)
 {
 	init_block_array();
-	return *blocks->at(block_array_index(pos.x, pos.y, pos.z));
+	return *blocks->operator[](block_array_index(pos.x, pos.y, pos.z));
 }
 
 void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z, unique_ptr<Block::Base> block)
@@ -95,7 +95,7 @@ void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::valu
 	}
 
 	init_block_array();
-	blocks->at(block_array_index(x, y, z)) = std::move(block);
+	blocks->operator[](block_array_index(x, y, z)) = std::move(block);
 	changed = true;
 
 	update_neighbors(x, y, z);
