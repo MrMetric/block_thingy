@@ -20,7 +20,7 @@
 #include "block/BlockType.hpp"
 #include "block/Light.hpp"
 #include "chunk/Chunk.hpp"
-#include "chunk/mesh/GreedyMesher.hpp"
+#include "chunk/mesh/Greedy.hpp"
 #include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
@@ -57,7 +57,7 @@ World::World
 	const string& file_path
 )
 :
-	mesher(std::make_unique<GreedyMesher>()),
+	mesher(std::make_unique<Mesher::Greedy>()),
 	game(game),
 	ticks(0),
 	chunks(0, position_hasher<ChunkInWorld>),

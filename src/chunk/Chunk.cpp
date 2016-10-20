@@ -146,7 +146,7 @@ void Chunk::render(const bool transluscent_pass)
 	std::size_t i = 0;
 	for(const auto& p : meshes)
 	{
-		const meshmap_key_t& key = p.first;
+		const Mesher::meshmap_key_t& key = p.first;
 		const BlockType type = std::get<0>(key);
 		if(owner.game.block_registry.make(type)->is_translucent() != transluscent_pass)
 		{
@@ -169,11 +169,11 @@ void Chunk::render(const bool transluscent_pass)
 	}
 }
 
-const meshmap_t& Chunk::get_meshes() const
+const Mesher::meshmap_t& Chunk::get_meshes() const
 {
 	return meshes;
 }
-void Chunk::set_meshes(const meshmap_t& m)
+void Chunk::set_meshes(const Mesher::meshmap_t& m)
 {
 	changed = false;
 	meshes = m;
@@ -213,8 +213,8 @@ void Chunk::update_vaos()
 	for(const auto& p : meshes)
 	{
 		const auto usage_hint = Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw;
-		const mesh_t& mesh = p.second;
-		mesh_vbos[i].data(mesh.size() * sizeof(mesh_t::value_type), mesh.data(), usage_hint);
+		const Mesher::mesh_t& mesh = p.second;
+		mesh_vbos[i].data(mesh.size() * sizeof(Mesher::mesh_t::value_type), mesh.data(), usage_hint);
 		++i;
 	}
 }

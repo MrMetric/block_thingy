@@ -1,11 +1,13 @@
 #pragma once
-#include "ChunkMesher.hpp"
+#include "Base.hpp"
 
 #include <array>
 
 #include "chunk/Chunk.hpp"
 
-class GreedyMesher : public ChunkMesher
+namespace Mesher {
+
+class Greedy : public Base
 {
 	public:
 		meshmap_t make_mesh(const Chunk&) override;
@@ -15,3 +17,5 @@ class GreedyMesher : public ChunkMesher
 	private:
 		surface_t surface;
 };
+
+}

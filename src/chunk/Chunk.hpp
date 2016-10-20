@@ -10,7 +10,7 @@
 
 #include "fwd/World.hpp"
 #include "block/Base.hpp"
-#include "chunk/mesh/ChunkMesher.hpp"
+#include "chunk/mesh/Base.hpp"
 #include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/ChunkInWorld.hpp"
@@ -48,8 +48,8 @@ class Chunk
 		void update();
 		void render(bool transluscent_pass);
 
-		const meshmap_t& get_meshes() const;
-		void set_meshes(const meshmap_t&);
+		const Mesher::meshmap_t& get_meshes() const;
+		void set_meshes(const Mesher::meshmap_t&);
 
 		// for loading
 		void set_blocks(std::unique_ptr<chunk_block_array_t>);
@@ -69,7 +69,7 @@ class Chunk
 		std::array<Graphics::Color, CHUNK_BLOCK_COUNT> light;
 
 		bool changed;
-		meshmap_t meshes;
+		Mesher::meshmap_t meshes;
 		std::vector<Graphics::OpenGL::VertexArray> mesh_vaos;
 		std::vector<Graphics::OpenGL::VertexBuffer> mesh_vbos;
 

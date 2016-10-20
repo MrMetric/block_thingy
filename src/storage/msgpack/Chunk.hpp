@@ -54,7 +54,7 @@ void Chunk::load(const msgpack::object& o)
 	const bool has_meshes = v.at(i++).as<bool>();
 	if(has_meshes)
 	{
-		this->set_meshes(v.at(i++).as<meshmap_t>());
+		this->set_meshes(v.at(i++).as<Mesher::meshmap_t>());
 	}
 }
 

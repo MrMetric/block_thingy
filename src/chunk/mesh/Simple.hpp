@@ -1,8 +1,12 @@
 #pragma once
-#include "ChunkMesher.hpp"
+#include "Base.hpp"
 
-class SimpleMesher : public ChunkMesher
+namespace Mesher {
+
+class Simple : public Base
 {
 	public:
 		meshmap_t make_mesh(const Chunk&) override;
 };
+
+}

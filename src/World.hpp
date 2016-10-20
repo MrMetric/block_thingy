@@ -12,7 +12,7 @@
 #include "fwd/Player.hpp"
 #include "fwd/block/Base.hpp"
 #include "fwd/chunk/Chunk.hpp"
-#include "chunk/mesh/ChunkMesher.hpp"
+#include "chunk/mesh/Base.hpp"
 #include "graphics/Color.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
@@ -62,7 +62,7 @@ class World
 
 		void save();
 
-		std::unique_ptr<ChunkMesher> mesher;
+		std::unique_ptr<Mesher::Base> mesher;
 
 		uint64_t get_ticks();
 		double get_time();

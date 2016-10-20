@@ -1,4 +1,4 @@
-#include "ChunkMesher.hpp"
+#include "Base.hpp"
 
 #include <stdint.h>
 
@@ -12,17 +12,19 @@
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 
-const meshmap_key_t ChunkMesher::empty_key = { BlockType::none, Graphics::Color() };
+namespace Mesher {
 
-ChunkMesher::ChunkMesher()
+const meshmap_key_t Base::empty_key = { BlockType::none, Graphics::Color() };
+
+Base::Base()
 {
 }
 
-ChunkMesher::~ChunkMesher()
+Base::~Base()
 {
 }
 
-const Block::Base& ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds)
+const Block::Base& Base::block_at(const Chunk& chunk, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z, const bool allow_out_of_bounds)
 {
 	if(x < 0 || x >= CHUNK_SIZE
 	|| y < 0 || y >= CHUNK_SIZE
@@ -44,7 +46,7 @@ const Block::Base& ChunkMesher::block_at(const Chunk& chunk, const int_fast16_t 
 	#undef s
 }
 
-bool ChunkMesher::block_visible_from(const Chunk& chunk, const Block::Base& block, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z)
+bool Base::block_visible_from(const Chunk& chunk, const Block::Base& block, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z)
 {
 	const Block::Base& sibling = block_at(chunk, x, y, z);
 	return
@@ -55,7 +57,7 @@ bool ChunkMesher::block_visible_from(const Chunk& chunk, const Block::Base& bloc
 	;
 }
 
-Graphics::Color ChunkMesher::light_at(const Chunk& chunk, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z)
+Graphics::Color Base::light_at(const Chunk& chunk, const int_fast16_t x, const int_fast16_t y, const int_fast16_t z)
 {
 	if(x < 0 || x >= CHUNK_SIZE
 	|| y < 0 || y >= CHUNK_SIZE
@@ -71,4 +73,6 @@ Graphics::Color ChunkMesher::light_at(const Chunk& chunk, const int_fast16_t x, 
 	#define s(a) static_cast<Position::BlockInChunk::value_type>(a)
 	return chunk.get_light({ s(x), s(y), s(z) });
 	#undef s
+}
+
 }
