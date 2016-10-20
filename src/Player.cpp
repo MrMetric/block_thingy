@@ -22,7 +22,6 @@ Player::Player
 	const string& name
 )
 :
-	game(game),
 	name(name),
 	reach_distance(16),
 	spawn_position(0.5, 1.0, 0.5), // TODO: generate this
@@ -38,6 +37,7 @@ Player::Player
 	velocity(glm::dvec3(0), [](glm::dvec3 v)
 	{
 	}),
+	game(game),
 	abs_offset(0.4),
 	eye_height(1.6),
 	height(1.8),

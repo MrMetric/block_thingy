@@ -16,7 +16,7 @@ void Chunk::save(msgpack::packer<Poco::DeflatingOutputStream>& o) const
 	if(has_meshes) array_size += 1;
 
 	o.pack_array(array_size);
-	const bool is_solid = this->blocks == nullptr;
+	const bool is_solid = this->solid_block != nullptr;
 	o.pack(is_solid);
 	if(is_solid)
 	{

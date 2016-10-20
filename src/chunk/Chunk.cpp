@@ -123,7 +123,7 @@ void Chunk::set_light(const BlockInChunk& pos, const Graphics::Color& color)
 
 void Chunk::update()
 {
-	if(blocks == nullptr && solid_block->is_invisible())
+	if(solid_block != nullptr && solid_block->is_invisible())
 	{
 		meshes.clear();
 		return;

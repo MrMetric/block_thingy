@@ -81,7 +81,8 @@ class World
 
 		std::queue<Position::BlockInWorld> light_add;
 
-		std::unordered_set<Position::ChunkInWorld, std::function<uint64_t(Position::ChunkInWorld)>> chunks_to_save;
+		using ChunkPositionSet = std::unordered_set<Position::ChunkInWorld, std::function<uint64_t(Position::ChunkInWorld)>>;
+		ChunkPositionSet chunks_to_save;
 
 		std::unordered_map<std::string, std::shared_ptr<Player>> players;
 		Storage::WorldFile file;

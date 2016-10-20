@@ -15,9 +15,7 @@
 #include "position/BlockInChunk.hpp"
 #include "position/ChunkInWorld.hpp"
 
-// signed instead of std::size_t to allow comparison with signed values
-constexpr int_fast32_t CHUNK_SIZE = 32;
-constexpr int_fast32_t CHUNK_BLOCK_COUNT = CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE;
+#include "fwd/chunk/Chunk.hpp" // for CHUNK_SIZE and CHUNK_BLOCK_COUNT
 
 using chunk_block_array_t = std::array<std::unique_ptr<Block::Base>, CHUNK_BLOCK_COUNT>;
 

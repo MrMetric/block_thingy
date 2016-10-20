@@ -12,7 +12,8 @@ using std::shared_ptr;
 
 using Graphics::OpenGL::ShaderProgram;
 
-void RenderWorld::draw_world(
+void RenderWorld::draw_world
+(
 	World& world,
 	std::map<BlockType, ShaderProgram>& block_shaders,
 	const glm::dmat4& matriks,
