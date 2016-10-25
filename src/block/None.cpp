@@ -5,9 +5,9 @@
 
 namespace Block {
 
-None::None()
+None::None(BlockType t)
 :
-	Base(BlockType::none)
+	Base(t)
 {
 }
 

@@ -4,9 +4,9 @@
 
 namespace Block {
 
-Teleporter::Teleporter()
+Teleporter::Teleporter(BlockType t)
 :
-	Base(BlockType::teleporter)
+	Base(t)
 {
 }
 

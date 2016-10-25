@@ -57,6 +57,13 @@ class Game
 		void joypress(int joystick, int button, bool pressed);
 		void joymove(const glm::dvec2& motion);
 
+		template<typename T = Block::Base>
+		void add_block(const std::string& name)
+		{
+			BlockType t = block_registry.add<T>(name);
+			add_block(name, t);
+		}
+
 		static Game* instance;
 
 		BlockType block_type;
@@ -78,6 +85,8 @@ class Game
 		Property<bool> wireframe;
 
 	private:
+		void add_block(const std::string& name, BlockType);
+
 		double delta_time;
 		FPSManager fps;
 

@@ -12,15 +12,15 @@ using Graphics::Color;
 
 namespace Block {
 
-Light::Light()
+Light::Light(BlockType t)
 :
-	Light(Color(glm::dvec3(1, 1, 1)))
+	Light(t, Color(glm::dvec3(1, 1, 1)))
 {
 }
 
-Light::Light(const Color& color)
+Light::Light(BlockType t, const Color& color)
 :
-	Base(BlockType::light),
+	Base(t),
 	color_(color)
 {
 }

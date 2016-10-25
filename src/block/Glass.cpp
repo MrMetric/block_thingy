@@ -4,9 +4,9 @@
 
 namespace Block {
 
-Glass::Glass()
+Glass::Glass(BlockType t)
 :
-	Base(BlockType::glass)
+	Base(t)
 {
 }
 

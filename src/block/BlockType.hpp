@@ -9,15 +9,5 @@ enum class BlockType : block_type_id_t
 	none,
 	air,
 	test,
-	dots,
-	eye,
-	teleporter,
-	crappy_marble,
-	white,
-	black,
-	light,
-	glass,
-	COUNT,
+	light = 9, // TODO: delete this
 };
-
-constexpr block_type_id_t BlockType_COUNT = static_cast<block_type_id_t>(BlockType::COUNT);

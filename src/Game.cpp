@@ -45,6 +45,13 @@
 #include "position/ChunkInWorld.hpp"
 #include "util/key_mods.hpp"
 
+#include "block/Air.hpp"
+#include "block/Glass.hpp"
+#include "block/Light.hpp"
+#include "block/None.hpp"
+#include "block/Test.hpp"
+#include "block/Teleporter.hpp"
+
 #include "std_make_unique.hpp"
 
 using std::string;
@@ -72,6 +79,20 @@ Game::Game(Gfx& gfx)
 	render_distance(3)
 {
 	Game::instance = this;
+
+	// these 3 must be added first (in this order!) to get the correct IDs
+	add_block<Block::None>("none");
+	add_block<Block::Air>("air");
+	add_block<Block::Test>("test");
+
+	add_block("dots");
+	add_block("eye");
+	add_block<Block::Teleporter>("teleporter");
+	add_block("marble");
+	add_block("white");
+	add_block("black");
+	add_block<Block::Light>("light");
+	add_block<Block::Glass>("glass");
 
 	gui = std::make_unique<Graphics::GUI::Play>(*this);
 	gui->init();
@@ -212,6 +233,15 @@ void Game::joypress(const int joystick, const int button, const bool pressed)
 void Game::joymove(const glm::dvec2& motion)
 {
 	gui->joymove(motion);
+}
+
+void Game::add_block(const string& name, BlockType t)
+{
+	console.logger << "ID " << static_cast<block_type_id_t>(t) << ": " << name << "\n";
+	if(t != BlockType::none && t != BlockType::air)
+	{
+		gfx.block_shaders.emplace(t, "shaders/block/" + name);
+	}
 }
 
 void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dmat4& view_matrix)
@@ -571,7 +601,7 @@ void Game::add_commands()
 	COMMAND("block_type++")
 	{
 		block_type_id_t i = static_cast<block_type_id_t>(game.block_type);
-		i = (i + 1) % BlockType_COUNT;
+		i = (i + 1) % Block::MAX_ID;
 		if(i < 2)
 		{
 			i = 2;
@@ -584,11 +614,11 @@ void Game::add_commands()
 		block_type_id_t i = static_cast<block_type_id_t>(game.block_type);
 		if(i == 2)
 		{
-			i = BlockType_COUNT - 1;
+			i = Block::MAX_ID - 1;
 		}
 		else
 		{
-			i = (i - 1) % BlockType_COUNT;
+			i = (i - 1) % Block::MAX_ID;
 		}
 		game.block_type = static_cast<BlockType>(i);
 		game.console.logger << "block type: " << i << "\n";

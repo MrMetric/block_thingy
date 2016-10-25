@@ -6,7 +6,7 @@ namespace Block {
 class Air : public Base
 {
 	public:
-		Air();
+		Air(BlockType);
 
 		BlockVisibilityType visibility_type() const override;
 		bool is_solid() const override;

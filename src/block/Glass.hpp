@@ -6,7 +6,7 @@ namespace Block {
 class Glass : public Base
 {
 	public:
-		Glass();
+		Glass(BlockType);
 
 		BlockVisibilityType visibility_type() const;
 };

@@ -6,7 +6,7 @@ namespace Block {
 class Test : public Base
 {
 	public:
-		Test();
+		Test(BlockType);
 
 		double bounciness() const override;
 		glm::dvec4 selection_color() const override;

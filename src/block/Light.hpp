@@ -10,8 +10,8 @@ namespace Block {
 class Light : public Base
 {
 	public:
-		Light();
-		Light(const Graphics::Color&);
+		Light(BlockType);
+		Light(BlockType, const Graphics::Color&);
 
 		Light& operator=(const Base&) override;
 

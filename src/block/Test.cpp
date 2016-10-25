@@ -7,9 +7,9 @@
 
 namespace Block {
 
-Test::Test()
+Test::Test(BlockType t)
 :
-	Base(BlockType::test)
+	Base(t)
 {
 }
 

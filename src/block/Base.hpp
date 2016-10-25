@@ -13,6 +13,7 @@ class Base
 {
 	public:
 		Base();
+		Base(BlockType);
 		virtual ~Base();
 
 		Base(const Base&);
@@ -57,10 +58,6 @@ class Base
 
 		virtual void save(Storage::OutputInterface&) const;
 		virtual void load(Storage::InputInterface&);
-
-	protected:
-		friend class BlockRegistry;
-		Base(BlockType);
 
 	private:
 		BlockType type_;
