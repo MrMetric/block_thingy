@@ -61,7 +61,6 @@ Game* Game::instance = nullptr;
 
 Game::Game(Gfx& gfx)
 :
-	block_type(BlockType::test),
 	hovered_block(nullptr),
 	gfx(gfx),
 	camera(gfx, event_manager),
@@ -80,11 +79,11 @@ Game::Game(Gfx& gfx)
 {
 	Game::instance = this;
 
-	// these 3 must be added first (in this order!) to get the correct IDs
+	// these 2 must be added first (in this order!) to get the correct IDs
 	add_block<Block::None>("none");
 	add_block<Block::Air>("air");
-	add_block<Block::Test>("test");
 
+	add_block<Block::Test>("test");
 	add_block("dots");
 	add_block("eye");
 	add_block<Block::Teleporter>("teleporter");
@@ -93,6 +92,8 @@ Game::Game(Gfx& gfx)
 	add_block("black");
 	add_block<Block::Light>("light");
 	add_block<Block::Glass>("glass");
+
+	block_type = block_registry.get_id("white");
 
 	gui = std::make_unique<Graphics::GUI::Play>(*this);
 	gui->init();

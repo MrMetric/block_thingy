@@ -251,7 +251,7 @@ Graphics::OpenGL::ShaderProgram& Gfx::get_block_shader(const BlockType type)
 	const auto i = block_shaders.find(type);
 	if(i == block_shaders.cend())
 	{
-		return block_shaders.at(BlockType::test);
+		throw std::runtime_error("unknown block ID: " + std::to_string(static_cast<block_type_id_t>(type)));
 	}
 	return i->second;
 }

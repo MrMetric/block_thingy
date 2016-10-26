@@ -8,6 +8,5 @@ enum class BlockType : block_type_id_t
 {
 	none,
 	air,
-	test,
 	light = 9, // TODO: delete this
 };
