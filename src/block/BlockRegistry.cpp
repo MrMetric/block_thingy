@@ -70,6 +70,16 @@ string BlockRegistry::get_name(BlockType t)
 	return i->second;
 }
 
+BlockType BlockRegistry::get_id(const string& name)
+{
+	const auto i = name_to_id.find(name);
+	if(i == name_to_id.cend())
+	{
+		throw std::runtime_error("unknown block name: " + name);
+	}
+	return i->second;
+}
+
 void BlockRegistry::add(const std::string& name, const BlockType t)
 {
 	const auto i = name_to_id.find(name);
