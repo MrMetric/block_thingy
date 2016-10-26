@@ -38,7 +38,7 @@ unique_ptr<Base> BlockRegistry::make(const BlockType t)
 	const auto i = map.find(t);
 	if(i == map.cend())
 	{
-		throw std::invalid_argument("unknown block ID: " + std::to_string(static_cast<block_type_id_t>(t)));
+		throw std::runtime_error("unknown block ID: " + std::to_string(static_cast<block_type_id_t>(t)));
 	}
 	return i->second->make(t);
 }
@@ -48,7 +48,7 @@ unique_ptr<Base> BlockRegistry::make(const string& name)
 	const auto i = name_to_id.find(name);
 	if(i == name_to_id.cend())
 	{
-		throw std::invalid_argument("unknown block name: " + name);
+		throw std::runtime_error("unknown block name: " + name);
 	}
 	return make(i->second);
 }
@@ -60,9 +60,25 @@ unique_ptr<Base> BlockRegistry::make(const Base& block)
 	return new_block;
 }
 
+string BlockRegistry::get_name(BlockType t)
+{
+	const auto i = id_to_name.find(t);
+	if(i == id_to_name.cend())
+	{
+		throw std::runtime_error("unknown block ID: " + std::to_string(static_cast<block_type_id_t>(t)));
+	}
+	return i->second;
+}
+
 void BlockRegistry::add(const std::string& name, const BlockType t)
 {
+	const auto i = name_to_id.find(name);
+	if(i != name_to_id.cend())
+	{
+		throw std::runtime_error("duplicate block name: " + name);
+	}
 	name_to_id[name] = t;
+	id_to_name[t] = name;
 }
 
 }

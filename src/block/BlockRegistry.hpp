@@ -49,9 +49,13 @@ class BlockRegistry
 		std::unique_ptr<Base> make(const std::string& name);
 		std::unique_ptr<Base> make(const Base&);
 
+		std::string get_name(BlockType);
+		BlockType get_id(const std::string&);
+
 	private:
 		std::unordered_map<BlockType, std::unique_ptr<BlockMaker>> map;
 		std::unordered_map<std::string, BlockType> name_to_id;
+		std::unordered_map<BlockType, std::string> id_to_name;
 
 		void add(const std::string& name, BlockType);
 };
