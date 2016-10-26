@@ -91,12 +91,14 @@ void Play::draw_crosshair()
 void Play::draw_debug_text()
 {
 	std::ostringstream ss;
+	ss << std::boolalpha;
 	const glm::dvec3 pos = game.player.position();
 	#define p(x) (x > 0 ? "+" : (x < 0 ? "" : " ")) << x
 	ss << "x: " << p(pos.x) << "\n";
 	ss << "y: " << p(pos.y) << "\n";
 	ss << "z: " << p(pos.z) << "\n";
 	#undef p
+	ss << "noclip: " << game.player.get_noclip() << "\n";
 	ss << "block type: "
 		<< game.block_registry.get_name(game.block_type)
 		<< " (" << static_cast<block_type_id_t>(game.block_type) << ")"

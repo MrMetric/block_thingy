@@ -325,7 +325,6 @@ void Game::add_commands()
 		const Position::BlockInWorld pos = game.hovered_block->pos;
 		const Block::Base& block = game.world.get_block(pos);
 		game.block_type = block.type();
-		game.console.logger << "block type: " << block.type_id() << "\n";
 	});
 
 	// TODO: less copy/paste
@@ -388,7 +387,6 @@ void Game::add_commands()
 	COMMAND("noclip")
 	{
 		game.player.toggle_noclip();
-		game.console.logger << "noclip: " << (game.player.get_noclip() ? "true" : "false") << "\n";
 	});
 	COMMAND("respawn")
 	{
