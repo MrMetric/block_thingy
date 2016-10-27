@@ -17,6 +17,8 @@ Console::Console(Game& game)
 	error_logger(std::cerr),
 	game(game)
 {
+	logger << std::boolalpha;
+	error_logger << std::boolalpha;
 }
 
 console_handler_wrapper::console_handler_wrapper(const console_handler_t& handler)
