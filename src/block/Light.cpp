@@ -42,7 +42,7 @@ void Light::color(const Color& c)
 {
 	Game::instance->world.sub_light(pos);
 	color_ = c;
-	Game::instance->world.add_light(pos, color_);
+	Game::instance->world.add_light(pos, color_, true);
 }
 
 void Light::use_start()

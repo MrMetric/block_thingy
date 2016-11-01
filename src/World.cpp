@@ -101,7 +101,7 @@ void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> blo
 		{
 			sub_light(block_pos);
 		}
-		add_light(block_pos, color);
+		add_light(block_pos, color, false);
 	}
 
 	if(block.is_opaque() != old_is_opaque)
@@ -149,7 +149,7 @@ Graphics::Color World::get_light(const BlockInWorld& block_pos) const
 	return chunk->get_light(BlockInChunk(block_pos));
 }
 
-void World::set_light(const BlockInWorld& block_pos, const Graphics::Color& color)
+void World::set_light(const BlockInWorld& block_pos, const Graphics::Color& color, bool save)
 {
 	const ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
@@ -159,11 +159,15 @@ void World::set_light(const BlockInWorld& block_pos, const Graphics::Color& colo
 		return;
 	}
 	chunk->set_light(BlockInChunk(block_pos), color);
+	if(save)
+	{
+		chunks_to_save.emplace(chunk_pos);
+	}
 }
 
-void World::add_light(const BlockInWorld& block_pos, const Graphics::Color& color)
+void World::add_light(const BlockInWorld& block_pos, const Graphics::Color& color, bool save)
 {
-	set_light(block_pos, color);
+	set_light(block_pos, color, save);
 	if(color == 0)
 	{
 		return;
@@ -205,7 +209,7 @@ void World::process_light_add()
 			}
 			if(set)
 			{
-				set_light(pos2, color2);
+				set_light(pos2, color2, false);
 				light_add.emplace(pos2);
 			}
 		};
@@ -222,7 +226,7 @@ void World::process_light_add()
 void World::sub_light(const BlockInWorld& block_pos)
 {
 	Graphics::Color color = get_light(block_pos);
-	set_light(block_pos, {0, 0, 0});
+	set_light(block_pos, {0, 0, 0}, false);
 
 	std::queue<std::tuple<BlockInWorld, Graphics::Color>> q;
 	q.emplace(block_pos, color);
@@ -255,7 +259,7 @@ void World::sub_light(const BlockInWorld& block_pos)
 			}
 			if(set)
 			{
-				set_light(pos2, color_set);
+				set_light(pos2, color_set, false);
 				q.emplace(pos2, color_put);
 			}
 		};
@@ -342,7 +346,7 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 			const Graphics::Color color = block.color();
 			if(color != 0)
 			{
-				add_light({chunk_pos, pos}, color);
+				add_light({chunk_pos, pos}, color, false);
 			}
 		}
 	}

@@ -42,8 +42,8 @@ class World
 		void set_block(const Position::BlockInWorld&, std::unique_ptr<Block::Base>);
 
 		Graphics::Color get_light(const Position::BlockInWorld&) const;
-		void set_light(const Position::BlockInWorld&, const Graphics::Color&);
-		void add_light(const Position::BlockInWorld&, const Graphics::Color&);
+		void set_light(const Position::BlockInWorld&, const Graphics::Color&, bool save);
+		void add_light(const Position::BlockInWorld&, const Graphics::Color&, bool save);
 		void process_light_add();
 		void sub_light(const Position::BlockInWorld&);
 		void update_light_around(const Position::BlockInWorld&);
