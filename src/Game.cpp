@@ -191,6 +191,7 @@ void Game::quit()
 #ifdef USE_LIBPNG
 void Game::screenshot(const string& filename)
 {
+	// TODO: check file existence
 	console.logger << "saving screenshot to " << filename << "\n";
 	const auto width = gfx.window_size.x;
 	const auto height = gfx.window_size.y;
@@ -290,7 +291,7 @@ void Game::add_commands()
 		}
 
 		const Position::BlockInWorld pos = game.hovered_block->pos;
-		if(game.world.get_block(pos).type() != BlockType::none)
+		if(game.world.get_block(pos).type() != BlockType::none) // TODO: breakability check
 		{
 			game.world.set_block(pos, game.block_registry.make(BlockType::air));
 			game.find_hovered_block(game.gfx.projection_matrix, game.gfx.view_matrix_physical);

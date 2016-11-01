@@ -13,6 +13,9 @@ string compiler_info()
 {
 #if defined(__clang__)
 	return "Clang " __clang_version__;
+#elif defined(__INTEL_COMPILER)
+	// TODO: version
+	return "Intel Compiler";
 #elif defined(__GNUC__)
 	return "GCC " __VERSION__;
 #elif defined(_MSC_VER)

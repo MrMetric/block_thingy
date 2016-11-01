@@ -6,8 +6,7 @@
 #include <string>
 
 #include "BlockInWorld.hpp"
-
-#include "chunk/Chunk.hpp"
+#include "fwd/chunk/Chunk.hpp"
 
 using std::to_string;
 
@@ -36,6 +35,7 @@ ChunkInWorld::ChunkInWorld(const BlockInWorld& pos)
 	y = t(pos.y);
 	z = t(pos.z);
 }
+#undef t
 
 ChunkInWorld::value_type& ChunkInWorld::operator[](const uint_fast8_t i)
 {

@@ -27,9 +27,13 @@ void RenderWorld::draw_world
 		shader.uniform("matriks", glm::mat4(matriks));
 	}
 
+	// TODO: frustrum culling
+
 	const Position::ChunkInWorld chunk_pos(origin);
 	const Position::ChunkInWorld min = chunk_pos - render_distance;
 	const Position::ChunkInWorld max = chunk_pos + render_distance;
+
+	// TODO (when threading is added): what if a chunk loads between passes?
 	auto draw_chunks = [&world, &min, &max](const bool transluscent_pass)
 	{
 		for(Position::ChunkInWorld::value_type x = min.x; x <= max.x; ++x)
