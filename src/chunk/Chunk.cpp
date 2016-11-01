@@ -39,10 +39,9 @@ using Position::ChunkInWorld;
 Chunk::Chunk(const ChunkInWorld& pos, World& owner)
 :
 	owner(owner),
-	position(pos),
-	solid_block(owner.game.block_registry.make(BlockType::air)), // a useful default for now
-	changed(false)
+	position(pos)
 {
+	set_blocks(owner.game.block_registry.make(BlockType::air));
 }
 
 World& Chunk::get_owner() const
@@ -62,26 +61,17 @@ inline static chunk_block_array_t::size_type block_array_index(const BlockInChun
 
 const Block::Base& Chunk::get_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
 {
-	if(blocks == nullptr)
-	{
-		return *solid_block;
-	}
-	return *blocks->operator[](block_array_index(x, y, z));
+	return *blocks[block_array_index(x, y, z)];
 }
 
 const Block::Base& Chunk::get_block(const BlockInChunk& pos) const
 {
-	if(blocks == nullptr)
-	{
-		return *solid_block;
-	}
-	return *blocks->operator[](block_array_index(pos.x, pos.y, pos.z));
+	return *blocks[block_array_index(pos.x, pos.y, pos.z)];
 }
 
 Block::Base& Chunk::get_block_m(const BlockInChunk& pos)
 {
-	init_block_array();
-	return *blocks->operator[](block_array_index(pos.x, pos.y, pos.z));
+	return *blocks[block_array_index(pos.x, pos.y, pos.z)];
 }
 
 void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z, unique_ptr<Block::Base> block)
@@ -94,8 +84,8 @@ void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::valu
 		throw std::domain_error("position out of bounds in Chunk::set: " + set_info);
 	}
 
-	init_block_array();
-	blocks->operator[](block_array_index(x, y, z)) = std::move(block);
+	solid_block = nullptr;
+	blocks[block_array_index(x, y, z)] = std::move(block);
 	changed = true;
 
 	update_neighbors(x, y, z);
@@ -180,7 +170,7 @@ void Chunk::set_meshes(const Mesher::meshmap_t& m)
 	update_vaos();
 }
 
-void Chunk::set_blocks(unique_ptr<chunk_block_array_t> new_blocks)
+void Chunk::set_blocks(chunk_block_array_t new_blocks)
 {
 	blocks = std::move(new_blocks);
 	solid_block = nullptr;
@@ -188,8 +178,12 @@ void Chunk::set_blocks(unique_ptr<chunk_block_array_t> new_blocks)
 }
 void Chunk::set_blocks(unique_ptr<Block::Base> block)
 {
+	// TODO: compare new block with current block
 	solid_block = std::move(block);
-	blocks = nullptr;
+	std::generate(blocks.begin(), blocks.end(), [this]()
+	{
+		return owner.game.block_registry.make(*solid_block);
+	});
 	changed = true;
 }
 
@@ -217,20 +211,6 @@ void Chunk::update_vaos()
 		mesh_vbos[i].data(mesh.size() * sizeof(Mesher::mesh_t::value_type), mesh.data(), usage_hint);
 		++i;
 	}
-}
-
-void Chunk::init_block_array()
-{
-	if(blocks != nullptr)
-	{
-		return;
-	}
-
-	blocks = std::make_unique<chunk_block_array_t>();
-	std::generate(blocks->begin(), blocks->end(), [this]()
-	{
-		return owner.game.block_registry.make(*solid_block);
-	});
 }
 
 void Chunk::update_neighbors() const

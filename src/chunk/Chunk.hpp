@@ -22,6 +22,7 @@ using chunk_block_array_t = std::array<std::unique_ptr<Block::Base>, CHUNK_BLOCK
 class Chunk
 {
 	friend class World;
+	friend class Mesher::Base;
 
 	public:
 		Chunk(const Position::ChunkInWorld&, World& owner);
@@ -50,7 +51,7 @@ class Chunk
 		void set_meshes(const Mesher::meshmap_t&);
 
 		// for loading
-		void set_blocks(std::unique_ptr<chunk_block_array_t>);
+		void set_blocks(chunk_block_array_t);
 		void set_blocks(std::unique_ptr<Block::Base>);
 
 		// for msgpack
@@ -61,7 +62,7 @@ class Chunk
 		World& owner;
 		Position::ChunkInWorld position;
 
-		std::unique_ptr<chunk_block_array_t> blocks;
+		chunk_block_array_t blocks;
 		std::unique_ptr<Block::Base> solid_block;
 
 		std::array<Graphics::Color, CHUNK_BLOCK_COUNT> light;
@@ -72,8 +73,6 @@ class Chunk
 		std::vector<Graphics::OpenGL::VertexBuffer> mesh_vbos;
 
 		void update_vaos();
-
-		void init_block_array();
 
 		void update_neighbors() const;
 		void update_neighbors(Position::BlockInChunk::value_type, Position::BlockInChunk::value_type, Position::BlockInChunk::value_type) const;

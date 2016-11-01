@@ -41,6 +41,10 @@ const Block::Base& Base::block_at(const Chunk& chunk, const int_fast16_t x, cons
 		block_pos.z += z;
 		return chunk.get_owner().get_block(block_pos);
 	}
+	if(chunk.solid_block != nullptr)
+	{
+		return *chunk.solid_block;
+	}
 	#define s(a) static_cast<Position::BlockInChunk::value_type>(a)
 	return chunk.get_block(s(x), s(y), s(z));
 	#undef s

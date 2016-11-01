@@ -48,7 +48,7 @@ void Chunk::load(const msgpack::object& o)
 	else
 	{
 		// let us hope this copy is optimized out
-		this->set_blocks(std::make_unique<chunk_block_array_t>(v.at(i++).as<chunk_block_array_t>()));
+		this->set_blocks(v.at(i++).as<chunk_block_array_t>());
 	}
 
 	const bool has_meshes = v.at(i++).as<bool>();
