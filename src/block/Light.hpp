@@ -1,5 +1,6 @@
 #pragma once
 #include "Base.hpp"
+#include "Interface/KnowsPosition.hpp"
 
 #include "fwd/World.hpp"
 #include "graphics/Color.hpp"
@@ -7,7 +8,7 @@
 
 namespace Block {
 
-class Light : public Base
+class Light : public Base, public Interface::KnowsPosition
 {
 	public:
 		Light(BlockType);
@@ -25,9 +26,6 @@ class Light : public Base
 
 	private:
 		Graphics::Color color_;
-
-		friend class ::World;
-		Position::BlockInWorld pos;
 };
 
 }

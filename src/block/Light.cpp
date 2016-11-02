@@ -40,9 +40,9 @@ Color Light::color() const
 
 void Light::color(const Color& c)
 {
-	Game::instance->world.sub_light(pos);
+	Game::instance->world.sub_light(position);
 	color_ = c;
-	Game::instance->world.add_light(pos, color_, true);
+	Game::instance->world.add_light(position, color_, true);
 }
 
 void Light::use_start()

@@ -18,7 +18,7 @@
 #include "block/Base.hpp"
 #include "block/BlockRegistry.hpp"
 #include "block/BlockType.hpp"
-#include "block/Light.hpp"
+#include "block/Interface/KnowsPosition.hpp"
 #include "chunk/Chunk.hpp"
 #include "chunk/mesh/Greedy.hpp"
 #include "graphics/Color.hpp"
@@ -69,10 +69,12 @@ World::World
 
 void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> block_ptr)
 {
-	// TODO: find a better way to do this
-	if(block_ptr->type() == BlockType::light)
 	{
-		static_cast<Block::Light*>(block_ptr.get())->pos = block_pos;
+		auto ptr = dynamic_cast<Block::Interface::KnowsPosition*>(block_ptr.get());
+		if(ptr != nullptr)
+		{
+			ptr->set_position(block_pos);
+		}
 	}
 
 	const ChunkInWorld chunk_pos(block_pos);
@@ -334,13 +336,15 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 		for(pos.y = 0; pos.y < CHUNK_SIZE; ++pos.y)
 		for(pos.z = 0; pos.z < CHUNK_SIZE; ++pos.z)
 		{
-			const Block::Base& block = chunk->get_block(pos);
+			Block::Base& block = chunk->get_block_m(pos);
 
-			// TODO: find a better way to do this
-			if(block.type() == BlockType::light)
+			// might as well do it here rather than making a second loop
 			{
-				Block::Base& block_m = chunk->get_block_m(pos);
-				dynamic_cast<Block::Light*>(&block_m)->pos = BlockInWorld(chunk_pos, pos);
+				auto ptr = dynamic_cast<Block::Interface::KnowsPosition*>(&block);
+				if(ptr != nullptr)
+				{
+					ptr->set_position(BlockInWorld(chunk_pos, pos));
+				}
 			}
 
 			const Graphics::Color color = block.color();
