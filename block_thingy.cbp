@@ -122,6 +122,8 @@
 		<Unit filename="src/block/BlockVisibilityType.hpp" />
 		<Unit filename="src/block/Glass.cpp" />
 		<Unit filename="src/block/Glass.hpp" />
+		<Unit filename="src/block/Interface/KnowsPosition.cpp" />
+		<Unit filename="src/block/Interface/KnowsPosition.hpp" />
 		<Unit filename="src/block/Light.cpp" />
 		<Unit filename="src/block/Light.hpp" />
 		<Unit filename="src/block/None.cpp" />
@@ -132,12 +134,12 @@
 		<Unit filename="src/block/Test.hpp" />
 		<Unit filename="src/chunk/Chunk.cpp" />
 		<Unit filename="src/chunk/Chunk.hpp" />
-		<Unit filename="src/chunk/mesh/ChunkMesher.cpp" />
-		<Unit filename="src/chunk/mesh/ChunkMesher.hpp" />
-		<Unit filename="src/chunk/mesh/GreedyMesher.cpp" />
-		<Unit filename="src/chunk/mesh/GreedyMesher.hpp" />
-		<Unit filename="src/chunk/mesh/SimpleMesher.cpp" />
-		<Unit filename="src/chunk/mesh/SimpleMesher.hpp" />
+		<Unit filename="src/chunk/mesh/Base.cpp" />
+		<Unit filename="src/chunk/mesh/Base.hpp" />
+		<Unit filename="src/chunk/mesh/Greedy.cpp" />
+		<Unit filename="src/chunk/mesh/Greedy.hpp" />
+		<Unit filename="src/chunk/mesh/Simple.cpp" />
+		<Unit filename="src/chunk/mesh/Simple.hpp" />
 		<Unit filename="src/console/ArgumentParser.cpp" />
 		<Unit filename="src/console/ArgumentParser.hpp" />
 		<Unit filename="src/console/Command.cpp" />
