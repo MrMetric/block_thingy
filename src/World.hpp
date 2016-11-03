@@ -37,7 +37,7 @@ class World
 		void operator=(const World&) = delete;
 
 		const Block::Base& get_block(const Position::BlockInWorld&) const;
-		Block::Base& get_block_m(const Position::BlockInWorld&);
+		Block::Base& get_block(const Position::BlockInWorld&);
 
 		void set_block(const Position::BlockInWorld&, std::unique_ptr<Block::Base>);
 

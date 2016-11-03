@@ -59,44 +59,26 @@ inline static chunk_block_array_t::size_type block_array_index(const BlockInChun
 	return CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
 }
 
-const Block::Base& Chunk::get_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
-{
-	return *blocks[block_array_index(x, y, z)];
-}
-
 const Block::Base& Chunk::get_block(const BlockInChunk& pos) const
 {
 	return *blocks[block_array_index(pos.x, pos.y, pos.z)];
 }
 
-Block::Base& Chunk::get_block_m(const BlockInChunk& pos)
+Block::Base& Chunk::get_block(const BlockInChunk& pos)
 {
 	return *blocks[block_array_index(pos.x, pos.y, pos.z)];
 }
 
-void Chunk::set_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z, unique_ptr<Block::Base> block)
+void Chunk::set_block(const BlockInChunk& pos, unique_ptr<Block::Base> block)
 {
-	if(x >= CHUNK_SIZE
-	|| y >= CHUNK_SIZE
-	|| z >= CHUNK_SIZE)
-	{
-		string set_info = "(" + to_string(x) + ", " + to_string(y) + ", " + to_string(z) + ") = " + to_string(block->type_id());
-		throw std::domain_error("position out of bounds in Chunk::set: " + set_info);
-	}
-
 	solid_block = nullptr;
-	blocks[block_array_index(x, y, z)] = std::move(block);
+	blocks[block_array_index(pos.x, pos.y, pos.z)] = std::move(block);
 	changed = true;
 
-	update_neighbors(x, y, z);
+	update_neighbors(pos.x, pos.y, pos.z);
 }
 
-void Chunk::set_block(const BlockInChunk& block_pos, unique_ptr<Block::Base> block)
-{
-	set_block(block_pos.x, block_pos.y, block_pos.z, std::move(block));
-}
-
-const Graphics::Color& Chunk::get_light(const BlockInChunk& pos) const
+Graphics::Color Chunk::get_light(const BlockInChunk& pos) const
 {
 	const auto i = block_array_index(pos.x, pos.y, pos.z);
 	return light[i];
@@ -105,6 +87,8 @@ const Graphics::Color& Chunk::get_light(const BlockInChunk& pos) const
 void Chunk::set_light(const BlockInChunk& pos, const Graphics::Color& color)
 {
 	const auto i = block_array_index(pos.x, pos.y, pos.z);
+	if(light[i] == color) return;
+
 	light[i] = color;
 	changed = true;
 
@@ -185,6 +169,11 @@ void Chunk::set_blocks(unique_ptr<Block::Base> block)
 		return owner.game.block_registry.make(*solid_block);
 	});
 	changed = true;
+}
+
+const Block::Base& Chunk::get_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
+{
+	return *blocks[block_array_index(x, y, z)];
 }
 
 void Chunk::update_vaos()

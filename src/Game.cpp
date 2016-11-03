@@ -370,7 +370,7 @@ void Game::add_commands()
 	{
 		if(game.hovered_block != nullptr)
 		{
-			game.world.get_block_m(game.hovered_block->pos).use_start();
+			game.world.get_block(game.hovered_block->pos).use_start();
 		}
 	});
 	COMMAND("-use")

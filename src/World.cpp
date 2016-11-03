@@ -126,7 +126,7 @@ const Block::Base& World::get_block(const BlockInWorld& block_pos) const
 	return chunk->get_block(pos);
 }
 
-Block::Base& World::get_block_m(const BlockInWorld& block_pos)
+Block::Base& World::get_block(const BlockInWorld& block_pos)
 {
 	const ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
@@ -137,7 +137,7 @@ Block::Base& World::get_block_m(const BlockInWorld& block_pos)
 	}
 
 	BlockInChunk pos(block_pos);
-	return chunk->get_block_m(pos);
+	return chunk->get_block(pos);
 }
 
 Graphics::Color World::get_light(const BlockInWorld& block_pos) const
@@ -336,7 +336,7 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 		for(pos.y = 0; pos.y < CHUNK_SIZE; ++pos.y)
 		for(pos.z = 0; pos.z < CHUNK_SIZE; ++pos.z)
 		{
-			Block::Base& block = chunk->get_block_m(pos);
+			Block::Base& block = chunk->get_block(pos);
 
 			// might as well do it here rather than making a second loop
 			{
