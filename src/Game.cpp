@@ -104,6 +104,14 @@ Game::Game(Gfx& gfx)
 	console.run_line("exec binds");
 
 	update_framebuffer_size(gfx.window_size);
+
+	glfwSetJoystickCallback([](int joystick, int event)
+	{
+		if(joystick == GLFW_JOYSTICK_1 && event == GLFW_DISCONNECTED)
+		{
+			Game::instance->player.set_analog_motion({ 0, 0 });
+		}
+	});
 }
 
 void Game::draw()
@@ -136,7 +144,7 @@ void Game::draw()
 		};
 
 		const float* axises = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
-		player.set_analog_motion({ fix_axis(axises[0]), fix_axis(axises[1]) }); // TODO: set to 0 on unplug event
+		player.set_analog_motion({ fix_axis(axises[0]), fix_axis(axises[1]) });
 		glm::dvec2 motion(fix_axis(axises[3]), fix_axis(axises[4]));
 		joymove(motion);
 	}
