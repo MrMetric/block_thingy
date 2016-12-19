@@ -250,7 +250,15 @@ void Game::add_block(const string& name, BlockType t)
 	console.logger << "ID " << static_cast<block_type_id_t>(t) << ": " << name << "\n";
 	if(t != BlockType::none && t != BlockType::air)
 	{
-		gfx.block_shaders.emplace(t, "shaders/block/" + name);
+		try
+		{
+			gfx.block_shaders.emplace(t, "shaders/block/" + name);
+		}
+		catch(const std::runtime_error& e)
+		{
+			console.error_logger << "shader error:\n" << e.what() << "\n";
+			gfx.block_shaders.emplace(t, "shaders/block/default");
+		}
 	}
 }
 
