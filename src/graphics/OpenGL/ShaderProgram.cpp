@@ -95,43 +95,198 @@ GLint ShaderProgram::get_uniform_location(const string& name) const
 	return i->second;
 }
 
-void ShaderProgram::uniform(const string& uniform_name, const float x)
+void ShaderProgram::uniform(const string& u, const GLint x)
 {
-	const GLint u = get_uniform_location(uniform_name);
-	glProgramUniform1f(name, u, x);
+	glProgramUniform1i(name, get_uniform_location(u), x);
+}
+void ShaderProgram::uniform(const string& u, const GLint x, const GLint y)
+{
+	glProgramUniform2i(name, get_uniform_location(u), x, y);
+}
+void ShaderProgram::uniform(const string& u, const GLint x, const GLint y, const GLint z)
+{
+	glProgramUniform3i(name, get_uniform_location(u), x, y, z);
+}
+void ShaderProgram::uniform(const string& u, const GLint x, const GLint y, const GLint z, const GLint w)
+{
+	glProgramUniform4i(name, get_uniform_location(u), x, y, z, w);
 }
 
-void ShaderProgram::uniform(const string& uniform_name, const double x)
+void ShaderProgram::uniform(const string& u, const GLuint x)
 {
-	const GLint u = get_uniform_location(uniform_name);
-	glProgramUniform1d(name, u, x);
+	glProgramUniform1ui(name, get_uniform_location(u), x);
+}
+void ShaderProgram::uniform(const string& u, const GLuint x, const GLuint y)
+{
+	glProgramUniform2ui(name, get_uniform_location(u), x, y);
+}
+void ShaderProgram::uniform(const string& u, const GLuint x, const GLuint y, const GLuint z)
+{
+	glProgramUniform3ui(name, get_uniform_location(u), x, y, z);
+}
+void ShaderProgram::uniform(const string& u, const GLuint x, const GLuint y, const GLuint z, const GLuint w)
+{
+	glProgramUniform4ui(name, get_uniform_location(u), x, y, z, w);
 }
 
-void ShaderProgram::uniform(const string& uniform_name, const float x, const float y, const float z)
+void ShaderProgram::uniform(const string& u, const float x)
 {
-	const GLint u = get_uniform_location(uniform_name);
-	glProgramUniform3f(name, u, x, y, z);
+	glProgramUniform1f(name, get_uniform_location(u), x);
+}
+void ShaderProgram::uniform(const string& u, const float x, const float y)
+{
+	glProgramUniform2f(name, get_uniform_location(u), x, y);
+}
+void ShaderProgram::uniform(const string& u, const float x, const float y, const float z)
+{
+	glProgramUniform3f(name, get_uniform_location(u), x, y, z);
+}
+void ShaderProgram::uniform(const string& u, const float x, const float y, const float z, const float w)
+{
+	glProgramUniform4f(name, get_uniform_location(u), x, y, z, w);
 }
 
-void ShaderProgram::uniform(const string& uniform_name, const glm::vec3& vec)
+void ShaderProgram::uniform(const string& u, const double x)
 {
-	const GLint u = get_uniform_location(uniform_name);
-	const float* ptr = glm::value_ptr(vec);
-	glProgramUniform3fv(name, u, 1, ptr);
+	glProgramUniform1d(name, get_uniform_location(u), x);
+}
+void ShaderProgram::uniform(const string& u, const double x, const double y)
+{
+	glProgramUniform2d(name, get_uniform_location(u), x, y);
+}
+void ShaderProgram::uniform(const string& u, const double x, const double y, const double z)
+{
+	glProgramUniform3d(name, get_uniform_location(u), x, y, z);
+}
+void ShaderProgram::uniform(const string& u, const double x, const double y, const double z, const double w)
+{
+	glProgramUniform4d(name, get_uniform_location(u), x, y, z, w);
 }
 
-void ShaderProgram::uniform(const string& uniform_name, const glm::vec4& vec)
+void ShaderProgram::uniform(const string& u, const glm::ivec2& vec)
 {
-	const GLint u = get_uniform_location(uniform_name);
-	const float* ptr = glm::value_ptr(vec);
-	glProgramUniform4fv(name, u, 1, ptr);
+	glProgramUniform2iv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
+}
+void ShaderProgram::uniform(const string& u, const glm::ivec3& vec)
+{
+	glProgramUniform3iv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
+}
+void ShaderProgram::uniform(const string& u, const glm::ivec4& vec)
+{
+	glProgramUniform4iv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
 }
 
-void ShaderProgram::uniform(const string& uniform_name, const glm::mat4& matrix)
+void ShaderProgram::uniform(const string& u, const glm::uvec2& vec)
 {
-	const GLint u = get_uniform_location(uniform_name);
-	const float* ptr = glm::value_ptr(matrix);
-	glProgramUniformMatrix4fv(name, u, 1, GL_FALSE, ptr);
+	glProgramUniform2uiv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
+}
+void ShaderProgram::uniform(const string& u, const glm::uvec3& vec)
+{
+	glProgramUniform3uiv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
+}
+void ShaderProgram::uniform(const string& u, const glm::uvec4& vec)
+{
+	glProgramUniform4uiv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
+}
+
+void ShaderProgram::uniform(const string& u, const glm::vec2& vec)
+{
+	glProgramUniform2fv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
+}
+void ShaderProgram::uniform(const string& u, const glm::vec3& vec)
+{
+	glProgramUniform3fv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
+}
+void ShaderProgram::uniform(const string& u, const glm::vec4& vec)
+{
+	glProgramUniform4fv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
+}
+
+void ShaderProgram::uniform(const string& u, const glm::dvec2& vec)
+{
+	glProgramUniform2dv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
+}
+void ShaderProgram::uniform(const string& u, const glm::dvec3& vec)
+{
+	glProgramUniform3dv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
+}
+void ShaderProgram::uniform(const string& u, const glm::dvec4& vec)
+{
+	glProgramUniform4dv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
+}
+
+void ShaderProgram::uniform(const string& u, const glm::mat2& mat)
+{
+	glProgramUniformMatrix2fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::mat3& mat)
+{
+	glProgramUniformMatrix3fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::mat4& mat)
+{
+	glProgramUniformMatrix4fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::mat2x3& mat)
+{
+	glProgramUniformMatrix2x3fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::mat3x2& mat)
+{
+	glProgramUniformMatrix3x2fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::mat2x4& mat)
+{
+	glProgramUniformMatrix2x4fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::mat4x2& mat)
+{
+	glProgramUniformMatrix4x2fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::mat3x4& mat)
+{
+	glProgramUniformMatrix3x4fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::mat4x3& mat)
+{
+	glProgramUniformMatrix4x3fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void ShaderProgram::uniform(const string& u, const glm::dmat2& mat)
+{
+	glProgramUniformMatrix2dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::dmat3& mat)
+{
+	glProgramUniformMatrix3dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::dmat4& mat)
+{
+	glProgramUniformMatrix4dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::dmat2x3& mat)
+{
+	glProgramUniformMatrix2x3dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::dmat3x2& mat)
+{
+	glProgramUniformMatrix3x2dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::dmat2x4& mat)
+{
+	glProgramUniformMatrix2x4dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::dmat4x2& mat)
+{
+	glProgramUniformMatrix4x2dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::dmat3x4& mat)
+{
+	glProgramUniformMatrix3x4dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
+}
+void ShaderProgram::uniform(const string& u, const glm::dmat4x3& mat)
+{
+	glProgramUniformMatrix4x3dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
 
 static GLuint make_program(const std::vector<string>& files, const string& debug_name)
