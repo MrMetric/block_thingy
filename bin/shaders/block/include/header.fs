@@ -2,8 +2,8 @@
 
 const float M_TAU = 6.283185307179586476925286766559;
 
-out vec4 FragColor;
 in vec3 position;
+out vec4 FragColor;
 uniform float global_time;
 
 float discretestep(float split, float x)

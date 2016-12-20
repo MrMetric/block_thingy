@@ -146,8 +146,9 @@ string Util::gl_object_log(const GLuint object)
 
 Util::path Util::split_path(const string& path)
 {
-	const auto slash_pos = path.find_last_of('/');
-	const auto dot_pos = path.find_last_of('.');
+	// TODO: handle slash_pos or dot_pos being string::npos
+	const std::size_t slash_pos = path.find_last_of('/');
+	const std::size_t dot_pos = path.find_last_of('.');
 	const string folder = path.substr(0, slash_pos);
 	const string file = path.substr(slash_pos + 1, dot_pos - slash_pos - 1);
 	const string ext = path.substr(dot_pos + 1);

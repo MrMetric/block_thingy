@@ -43,6 +43,7 @@ class Game
 		void draw();
 		void step_world();
 		void draw_world();
+		void draw_world(const glm::dvec3& position, const glm::dvec3& rotation);
 		void open_gui(std::unique_ptr<Graphics::GUI::Base>);
 		void quit();
 

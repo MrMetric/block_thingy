@@ -169,8 +169,13 @@ void Game::step_world()
 
 void Game::draw_world()
 {
-	gfx.set_camera_view(camera.position, camera.rotation);
-	Position::BlockInWorld render_origin(player.position());
+	draw_world(camera.position, camera.rotation);
+}
+
+void Game::draw_world(const glm::dvec3& position, const glm::dvec3& rotation)
+{
+	gfx.set_camera_view(position, rotation);
+	Position::BlockInWorld render_origin(position);
 	RenderWorld::draw_world(world, gfx.block_shaders, gfx.matriks, render_origin, render_distance);
 	find_hovered_block(gfx.projection_matrix, gfx.view_matrix_physical);
 }

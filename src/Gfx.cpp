@@ -80,6 +80,7 @@ void Gfx::hook_events(EventManager& event_manager)
 		auto e = static_cast<const Event_window_size_change&>(event);
 
 		window_size = e.window_size;
+		cout << "window size: " << window_size.x << "×" << window_size.y << "\n";
 		window_mid = glm::dvec2(window_size) / 2.0;
 		glViewport(0, 0, static_cast<GLsizei>(window_size.x), static_cast<GLsizei>(window_size.y));
 		update_projection_matrix();
@@ -164,12 +165,12 @@ void Gfx::opengl_setup()
 void Gfx::toggle_fullscreen()
 {
 	is_fullscreen = !is_fullscreen;
+	cout << "fullscreen = " << is_fullscreen << "\n";
 
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 	const int width = is_fullscreen ? mode->width : mode->width * 3 / 4;
 	const int height = is_fullscreen ? mode->height : mode->height * 3 / 4;
-	cout << "window size: " << width << "×" << height << "\n";
 
 	const auto x = (mode->width - width) / 2;
 	const auto y = (mode->height - height) / 2;
