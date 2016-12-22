@@ -103,7 +103,11 @@ void TextInput::charpress(const char32_t codepoint, const Util::key_mods mods)
 
 void TextInput::mousepress(const int button, const int action, const Util::key_mods)
 {
-	focus = hover;
+	// TODO: option for left-handed mouse
+	if(button == GLFW_MOUSE_BUTTON_LEFT)
+	{
+		focus = hover;
+	}
 }
 
 void TextInput::mousemove(const double x, const double y)

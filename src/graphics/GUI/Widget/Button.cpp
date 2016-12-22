@@ -42,6 +42,11 @@ void Button::draw()
 
 void Button::mousepress(const int button, const int action, const Util::key_mods mods)
 {
+	// TODO: option for left-handed mouse
+	if(button != GLFW_MOUSE_BUTTON_LEFT)
+	{
+		return;
+	}
 	if(!hover)
 	{
 		if(mousedown && action == GLFW_RELEASE)
