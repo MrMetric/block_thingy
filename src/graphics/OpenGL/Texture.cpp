@@ -4,42 +4,31 @@ namespace Graphics::OpenGL {
 
 Texture::Texture()
 :
+	type(0),
 	inited(false),
 	name(0)
 {
 }
 
-Texture::Texture(const GLenum type, const GLvoid* data, const uint_fast32_t width, const uint_fast32_t height, const GLenum data_type)
+Texture::Texture(const GLenum type)
+:
+	type(type)
 {
 	glCreateTextures(type, 1, &name);
-
-	glBindTexture(type, name);
-	glTexImage2D(
-		type,
-		0,			// level
-		GL_RED,		// internal format
-		width,
-		height,
-		0,
-		GL_RED,		// format
-		data_type,
-		data
-	);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	inited = true;
 }
 
 Texture::Texture(Texture&& that)
+:
+	type(that.type)
 {
 	name = that.name;
 	inited = that.inited;
 	if(inited)
 	{
 		that.name = 0;
+		//that.type = 0;
 		that.inited = false;
 	}
 }
@@ -47,6 +36,39 @@ Texture::Texture(Texture&& that)
 Texture::~Texture()
 {
 	glDeleteTextures(1, &name);
+}
+
+void Texture::image2D
+(
+	GLint level,
+	GLint internal_format,
+	GLsizei width,
+	GLsizei height,
+	GLenum format,
+	GLenum data_type,
+	const GLvoid* data
+)
+{
+	glBindTexture(type, name);
+	glTexImage2D(type, level, internal_format, width, height, 0, format, data_type, data);
+}
+
+void Texture::image2D_multisample
+(
+	GLsizei samples,
+	GLenum internal_format,
+	GLsizei width,
+	GLsizei height,
+	bool fixed_sample_locations
+)
+{
+	glBindTexture(type, name);
+	glTexImage2DMultisample(type, samples, internal_format, width, height, fixed_sample_locations);
+}
+
+void Texture::parameter(Texture::Parameter p, GLint value)
+{
+	glTextureParameteri(name, static_cast<GLenum>(p), value);
 }
 
 GLuint Texture::get_name()

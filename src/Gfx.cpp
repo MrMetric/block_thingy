@@ -51,25 +51,34 @@
 using std::cout;
 using std::string;
 
+static window_size_t get_window_size(GLFWwindow* window)
+{
+	int width;
+	int height;
+	glfwGetFramebufferSize(window, &width, &height);
+	return {width, height};
+}
+
 Gfx::Gfx(GLFWwindow* window)
 :
 	window(window),
+	window_size(get_window_size(window)),
+	window_mid(glm::dvec2(window_size) / 2.0),
 	s_lines("shaders/lines"),
 	outline_vbo({3, GL_FLOAT}),
 	outline_vao(outline_vbo),
 	is_fullscreen(false),
 	fov(75),
 	gui_text("fonts/Anonymous Pro/Anonymous Pro.ttf", 24),
+	screen_rt(window_size, 8),
+	buf_rt(window_size),
+	screen_shader("shaders/screen/default"),
+	quad_vbo({3, GL_BYTE}),
+	quad_vao(quad_vbo),
 	s_gui_shape("shaders/gui_shape"),
 	gui_rectangle_vbo({2, GL_FLOAT}),
 	gui_rectangle_vao(gui_rectangle_vbo)
 {
-	int width;
-	int height;
-	glfwGetFramebufferSize(window, &width, &height);
-	window_size = window_size_t(width, height);
-	window_mid = glm::dvec2(window_size) / 2.0;
-
 	opengl_setup();
 }
 
@@ -82,7 +91,6 @@ void Gfx::hook_events(EventManager& event_manager)
 		window_size = e.window_size;
 		cout << "window size: " << window_size.x << "×" << window_size.y << "\n";
 		window_mid = glm::dvec2(window_size) / 2.0;
-		glViewport(0, 0, static_cast<GLsizei>(window_size.x), static_cast<GLsizei>(window_size.y));
 		update_projection_matrix();
 
 		const double width = e.window_size.x;
@@ -90,6 +98,10 @@ void Gfx::hook_events(EventManager& event_manager)
 		gui_projection_matrix = glm::ortho(0.0, width, height, 0.0, -1.0, 1.0);
 		gui_text.set_projection_matrix(gui_projection_matrix);
 		s_gui_shape.uniform("matriks", glm::mat4(gui_projection_matrix));
+
+		screen_rt.resize(window_size);
+		buf_rt.resize(window_size);
+		screen_shader.uniform("tex_size", static_cast<glm::vec2>(window_size));
 	});
 }
 
@@ -160,6 +172,20 @@ void Gfx::opengl_setup()
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	screen_shader.uniform("tex", 0);
+	screen_shader.uniform("tex_size", static_cast<glm::vec2>(window_size));
+
+	const GLbyte quad_vertex_buffer_data[] =
+	{
+		-1, -1, 0,
+		 1, -1, 0,
+		-1,  1, 0,
+		-1,  1, 0,
+		 1, -1, 0,
+		 1,  1, 0,
+	};
+	quad_vbo.data(sizeof(quad_vertex_buffer_data), quad_vertex_buffer_data, Graphics::OpenGL::VertexBuffer::UsageHint::static_draw);
 }
 
 void Gfx::toggle_fullscreen()
@@ -318,7 +344,7 @@ GLFWwindow* Gfx::make_window(bool is_fullscreen)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_SAMPLES, 8);
 
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);

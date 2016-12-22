@@ -190,20 +190,31 @@ Text::Character load_char(const FT_Face& face, const char32_t c)
 
 	const auto& bitmap = face->glyph->bitmap;
 
-	return
+	Text::Character ch
 	{
 		{
 			GL_TEXTURE_2D,
-			bitmap.buffer,
-			bitmap.width,
-			bitmap.rows,
-			GL_UNSIGNED_BYTE,
 		},
 		glm::ivec2(bitmap.width, bitmap.rows),
 		glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
 		face->glyph->advance.x / 64.0,
 		bitmap.pitch < 0,
 	};
+	ch.texture.image2D
+	(
+		0,					// level
+		GL_RED,				// internal format
+		static_cast<GLsizei>(bitmap.width),
+		static_cast<GLsizei>(bitmap.rows),
+		GL_RED,				// format
+		GL_UNSIGNED_BYTE,
+		bitmap.buffer
+	);
+	ch.texture.parameter(OpenGL::Texture::Parameter::wrap_s, GL_CLAMP_TO_EDGE);
+	ch.texture.parameter(OpenGL::Texture::Parameter::wrap_t, GL_CLAMP_TO_EDGE);
+	ch.texture.parameter(OpenGL::Texture::Parameter::min_filter, GL_LINEAR);
+	ch.texture.parameter(OpenGL::Texture::Parameter::mag_filter, GL_LINEAR);
+	return ch;
 }
 
 } // namespace Graphics

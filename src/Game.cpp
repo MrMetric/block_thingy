@@ -116,9 +116,39 @@ Game::Game(Gfx& gfx)
 
 void Game::draw()
 {
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	glViewport(0, 0, gfx.window_size.x, gfx.window_size.y);
 
+	glBindFramebuffer(GL_FRAMEBUFFER, gfx.screen_rt.frame_buffer.get_name());
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	gui->draw();
+
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, gfx.buf_rt.frame_buffer.get_name());
+	// GL_READ_FRAMEBUFFER is screen_rt.frame_buffer
+	glBlitFramebuffer
+	(
+		0, 0, gfx.window_size.x, gfx.window_size.y,
+		0, 0, gfx.window_size.x, gfx.window_size.y,
+		GL_COLOR_BUFFER_BIT,
+		GL_NEAREST
+	);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(gfx.buf_rt.frame_texture.type, gfx.buf_rt.frame_texture.get_name());
+	glUseProgram(gfx.screen_shader.get_name());
+	gfx.screen_shader.uniform("time", static_cast<float>(world.get_time()));
+	gfx.quad_vao.draw(GL_TRIANGLES, 0, 6);
+
+	glViewport(3 * gfx.window_size.x / 4, 0, gfx.window_size.x / 4, gfx.window_size.y / 4);
+	glScissor(3 * gfx.window_size.x / 4, 0, gfx.window_size.x / 4, gfx.window_size.y / 4);
+	glEnable(GL_SCISSOR_TEST);
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	glDisable(GL_SCISSOR_TEST);
+	// TODO: split stepping and drawing to allow using gui->draw() here
+	draw_world(camera.position, camera.rotation);
+
 
 	glfwSwapBuffers(gfx.window);
 

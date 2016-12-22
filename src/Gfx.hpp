@@ -8,6 +8,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
+#include "graphics/RenderTarget.hpp"
 #include "graphics/Text.hpp"
 #include "graphics/OpenGL/ShaderProgram.hpp"
 #include "graphics/OpenGL/VertexArray.hpp"
@@ -37,6 +38,7 @@ class Gfx
 		GLFWwindow* window;
 		window_size_t window_size;
 		glm::dvec2 window_mid;
+
 		glm::dmat4 projection_matrix;
 		glm::dmat4 view_matrix_physical;
 		glm::dmat4 view_matrix_graphical;
@@ -61,6 +63,12 @@ class Gfx
 		static GLFWwindow* init_glfw();
 		void uninit_glfw();
 		void opengl_setup();
+
+		Graphics::RenderTarget screen_rt;
+		Graphics::RenderTarget buf_rt;
+		Graphics::OpenGL::ShaderProgram screen_shader;
+		Graphics::OpenGL::VertexBuffer quad_vbo;
+		Graphics::OpenGL::VertexArray quad_vao;
 
 		/**
 		 * Toggle borderless window mode

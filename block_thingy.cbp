@@ -175,6 +175,7 @@
 		<Unit filename="src/fwd/graphics/GUI/Widget/Component/Base.hpp" />
 		<Unit filename="src/fwd/graphics/GUI/Widget/TextInput.hpp" />
 		<Unit filename="src/fwd/graphics/GUI/WidgetContainer.hpp" />
+		<Unit filename="src/fwd/graphics/OpenGL/Renderbuffer.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/ShaderProgram.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/Texture.hpp" />
 		<Unit filename="src/fwd/physics/RaycastHit.hpp" />
@@ -209,6 +210,10 @@
 		<Unit filename="src/graphics/GUI/Widget/TextInput.hpp" />
 		<Unit filename="src/graphics/GUI/WidgetContainer.cpp" />
 		<Unit filename="src/graphics/GUI/WidgetContainer.hpp" />
+		<Unit filename="src/graphics/OpenGL/Framebuffer.cpp" />
+		<Unit filename="src/graphics/OpenGL/Framebuffer.hpp" />
+		<Unit filename="src/graphics/OpenGL/Renderbuffer.cpp" />
+		<Unit filename="src/graphics/OpenGL/Renderbuffer.hpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderObject.cpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderObject.hpp" />
 		<Unit filename="src/graphics/OpenGL/ShaderProgram.cpp" />
@@ -219,6 +224,8 @@
 		<Unit filename="src/graphics/OpenGL/VertexArray.hpp" />
 		<Unit filename="src/graphics/OpenGL/VertexBuffer.cpp" />
 		<Unit filename="src/graphics/OpenGL/VertexBuffer.hpp" />
+		<Unit filename="src/graphics/RenderTarget.cpp" />
+		<Unit filename="src/graphics/RenderTarget.hpp" />
 		<Unit filename="src/graphics/RenderWorld.cpp" />
 		<Unit filename="src/graphics/RenderWorld.hpp" />
 		<Unit filename="src/graphics/Text.cpp" />
