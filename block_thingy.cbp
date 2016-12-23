@@ -91,6 +91,7 @@
 			<Add option="-DGLM_FORCE_SIZE_T_LENGTH" />
 			<Add option="-DGLM_FORCE_SIZE_FUNC" />
 			<Add option="-DGLM_FORCE_EXPLICIT_CTOR" />
+			<Add option="-DGLM_ENABLE_EXPERIMENTAL" />
 		</Compiler>
 		<Linker>
 			<Add option="`pkg-config --libs glfw3`" />
