@@ -66,9 +66,11 @@ class Gfx
 
 		Graphics::RenderTarget screen_rt;
 		Graphics::RenderTarget buf_rt;
-		Graphics::OpenGL::ShaderProgram screen_shader;
+		std::map<std::string, Graphics::OpenGL::ShaderProgram> screen_shaders;
+		Graphics::OpenGL::ShaderProgram* screen_shader;
 		Graphics::OpenGL::VertexBuffer quad_vbo;
 		Graphics::OpenGL::VertexArray quad_vao;
+		void set_screen_shader(const std::string&);
 
 		/**
 		 * Toggle borderless window mode

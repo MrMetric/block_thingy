@@ -137,8 +137,8 @@ void Game::draw()
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(gfx.buf_rt.frame_texture.type, gfx.buf_rt.frame_texture.get_name());
-	glUseProgram(gfx.screen_shader.get_name());
-	gfx.screen_shader.uniform("time", static_cast<float>(world.get_time()));
+	glUseProgram(gfx.screen_shader->get_name());
+	gfx.screen_shader->uniform("time", static_cast<float>(world.get_time()));
 	gfx.quad_vao.draw(GL_TRIANGLES, 0, 6);
 
 	glViewport(3 * gfx.window_size.x / 4, 0, gfx.window_size.x / 4, gfx.window_size.y / 4);
@@ -619,6 +619,16 @@ void Game::add_commands()
 		}
 
 		game.gfx.update_projection_matrix();
+	});
+	COMMAND_ARGS("screen_shader")
+	{
+		if(args.size() != 1 || args[0].size() == 0)
+		{
+			game.console.error_logger << "Usage: screen_shader <path>\n";
+			return;
+		}
+
+		game.gfx.set_screen_shader(args[0]);
 	});
 
 	COMMAND("render_distance++")

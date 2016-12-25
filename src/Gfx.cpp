@@ -72,7 +72,6 @@ Gfx::Gfx(GLFWwindow* window)
 	gui_text("fonts/Anonymous Pro/Anonymous Pro.ttf", 24),
 	screen_rt(window_size, 8),
 	buf_rt(window_size),
-	screen_shader("shaders/screen/default"),
 	quad_vbo({3, GL_BYTE}),
 	quad_vao(quad_vbo),
 	s_gui_shape("shaders/gui_shape"),
@@ -101,7 +100,7 @@ void Gfx::hook_events(EventManager& event_manager)
 
 		screen_rt.resize(window_size);
 		buf_rt.resize(window_size);
-		screen_shader.uniform("tex_size", static_cast<glm::vec2>(window_size));
+		screen_shader->uniform("tex_size", static_cast<glm::vec2>(window_size));
 	});
 }
 
@@ -173,8 +172,7 @@ void Gfx::opengl_setup()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	screen_shader.uniform("tex", 0);
-	screen_shader.uniform("tex_size", static_cast<glm::vec2>(window_size));
+	set_screen_shader("default");
 
 	const GLbyte quad_vertex_buffer_data[] =
 	{
@@ -186,6 +184,24 @@ void Gfx::opengl_setup()
 		 1,  1, 0,
 	};
 	quad_vbo.data(sizeof(quad_vertex_buffer_data), quad_vertex_buffer_data, Graphics::OpenGL::VertexBuffer::UsageHint::static_draw);
+}
+
+void Gfx::set_screen_shader(const string& name)
+{
+	const auto i = screen_shaders.find(name);
+	if(i != screen_shaders.cend())
+	{
+		screen_shader = &i->second;
+	}
+	else
+	{
+		const string path = "shaders/screen/" + name;
+		screen_shader = &screen_shaders.emplace(name, path).first->second;
+
+		// the default value is 0, so setting it explicitly is not needed
+		//screen_shader->uniform("tex", 0);
+	}
+	screen_shader->uniform("tex_size", static_cast<glm::vec2>(window_size));
 }
 
 void Gfx::toggle_fullscreen()
