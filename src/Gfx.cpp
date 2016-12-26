@@ -409,9 +409,9 @@ void Gfx::draw_rectangle(const glm::dvec2& position, const glm::dvec2& size, con
 
 void Gfx::shim_GL_ARB_direct_state_access()
 {
-	glCreateBuffers = [](GLsizei n, GLuint* buffers)
+	glCreateBuffers = [](GLsizei n, GLuint* ids)
 	{
-		glGenBuffers(n, buffers);
+		glGenBuffers(n, ids);
 	};
 	// TODO: handle target != GL_ARRAY_BUFFER
 	glNamedBufferData = [](GLuint buffer, GLsizeiptr size, const void* data, GLenum usage)
@@ -420,9 +420,9 @@ void Gfx::shim_GL_ARB_direct_state_access()
 		glBufferData(GL_ARRAY_BUFFER, size, data, usage);
 	};
 
-	glCreateVertexArrays = [](GLsizei n, GLuint* arrays)
+	glCreateVertexArrays = [](GLsizei n, GLuint* ids)
 	{
-		glGenVertexArrays(n, arrays);
+		glGenVertexArrays(n, ids);
 	};
 	glEnableVertexArrayAttrib = [](GLuint vaobj, GLuint index)
 	{
@@ -435,47 +435,119 @@ void Gfx::shim_GL_ARB_direct_state_access()
 		glDisableVertexAttribArray(index);
 	};
 
-	glCreateTextures = [](GLenum target, GLsizei n, GLuint* textures)
+	glCreateTextures = [](GLenum target, GLsizei n, GLuint* ids)
 	{
-		glGenTextures(n, textures);
+		glGenTextures(n, ids);
+	};
+	glTextureParameteri = nullptr;
+
+	glCreateFramebuffers = [](GLsizei n, GLuint* ids)
+	{
+		glGenFramebuffers(n, ids);
+	};
+	glCheckNamedFramebufferStatus = [](GLuint framebuffer, GLenum target)
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+		return glCheckFramebufferStatus(target);
+	};
+	glNamedFramebufferRenderbuffer = [](GLuint framebuffer, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer)
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+		glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, attachment, renderbuffertarget, renderbuffer);
+	};
+	glNamedFramebufferTexture = [](GLuint framebuffer, GLenum attachment, GLuint texture, GLint level)
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+		glFramebufferTexture(GL_READ_FRAMEBUFFER, attachment, texture, level);
+	};
+
+	glCreateRenderbuffers = [](GLsizei n, GLuint* ids)
+	{
+		glGenRenderbuffers(n, ids);
+	};
+	glNamedRenderbufferStorage = [](GLuint renderbuffer, GLenum internalformat, GLsizei width, GLsizei height)
+	{
+		glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, internalformat, width, height);
+	};
+	glNamedRenderbufferStorageMultisample = [](GLuint renderbuffer, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
+	{
+		glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, internalformat, width, height);
 	};
 }
 
 void Gfx::shim_GL_ARB_separate_shader_objects()
 {
-	glProgramUniform1f = [](GLuint program, GLint location, float v0)
-	{
-		glUseProgram(program);
-		glUniform1f(location, v0);
-	};
-	glProgramUniform1d = [](GLuint program, GLint location, double v0)
-	{
-		glUseProgram(program);
-		// glUniform1d is from GL_ARB_gpu_shader_fp64
-		#ifdef glUniform1d
-		glUniform1d(location, v0);
-		#else
-		throw std::runtime_error("glProgramUniform1d is unavailable");
-		#endif
-	};
-	glProgramUniform3f = [](GLuint program, GLint location, float v0, float v1, float v2)
-	{
-		glUseProgram(program);
-		glUniform3f(location, v0, v1, v2);
-	};
-	glProgramUniform3fv = [](GLuint program, GLint location, GLsizei count, const GLfloat* value)
-	{
-		glUseProgram(program);
-		glUniform3fv(location, count, value);
-	};
-	glProgramUniform4fv = [](GLuint program, GLint location, GLsizei count, const GLfloat* value)
-	{
-		glUseProgram(program);
-		glUniform4fv(location, count, value);
-	};
-	glProgramUniformMatrix4fv = [](GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
-	{
-		glUseProgram(program);
-		glUniformMatrix4fv(location, count, transpose, value);
-	};
+	#define UNIFORM(name, type) \
+	glProgramUniform1##name = [](GLuint program, GLint location, const type x) \
+	{ \
+		glUseProgram(program); \
+		glUniform1##name(location, x); \
+	}; \
+	glProgramUniform2##name = [](GLuint program, GLint location, const type x, const type y) \
+	{ \
+		glUseProgram(program); \
+		glUniform2##name(location, x, y); \
+	}; \
+	glProgramUniform3##name = [](GLuint program, GLint location, const type x, const type y, const type z) \
+	{ \
+		glUseProgram(program); \
+		glUniform3##name(location, x, y, z); \
+	}; \
+	glProgramUniform4##name = [](GLuint program, GLint location, const type x, const type y, const type z, const type w) \
+	{ \
+		glUseProgram(program); \
+		glUniform4##name(location, x, y, z, w); \
+	}
+	UNIFORM(i, GLint);
+	UNIFORM(ui, GLuint);
+	UNIFORM(f, GLfloat);
+	#ifdef GL_ARB_gpu_shader_fp64
+	UNIFORM(d, GLdouble);
+	#endif
+
+	#define UVEC(name, type) glProgramUniform##name##v = [](GLuint program, GLint location, GLsizei count, const type* value) \
+	{ \
+		glUseProgram(program); \
+		glUniform##name##v(location, count, value); \
+	}
+	UVEC(2i, GLint);
+	UVEC(3i, GLint);
+	UVEC(3i, GLint);
+	UVEC(4i, GLint);
+	UVEC(2ui, GLuint);
+	UVEC(3ui, GLuint);
+	UVEC(3ui, GLuint);
+	UVEC(4ui, GLuint);
+	UVEC(2f, GLfloat);
+	UVEC(3f, GLfloat);
+	UVEC(3f, GLfloat);
+	UVEC(4f, GLfloat);
+
+	#define UMATRIX(name, type) glProgramUniformMatrix##name##v = [](GLuint program, GLint location, GLsizei count, GLboolean transpose, const type* value) \
+	{ \
+		glUseProgram(program); \
+		glUniformMatrix##name##v(location, count, transpose, value); \
+	}
+	UMATRIX(2f, GLfloat);
+	UMATRIX(3f, GLfloat);
+	UMATRIX(4f, GLfloat);
+	UMATRIX(2x3f, GLfloat);
+	UMATRIX(3x2f, GLfloat);
+	UMATRIX(2x4f, GLfloat);
+	UMATRIX(4x2f, GLfloat);
+	UMATRIX(3x4f, GLfloat);
+	UMATRIX(4x3f, GLfloat);
+	#ifdef GL_ARB_gpu_shader_fp64
+	UMATRIX(2d, GLdouble);
+	UMATRIX(3d, GLdouble);
+	UMATRIX(4d, GLdouble);
+	UMATRIX(2x3d, GLdouble);
+	UMATRIX(3x2d, GLdouble);
+	UMATRIX(2x4d, GLdouble);
+	UMATRIX(4x2d, GLdouble);
+	UMATRIX(3x4d, GLdouble);
+	UMATRIX(4x3d, GLdouble);
+	#endif
 }

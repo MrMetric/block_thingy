@@ -68,7 +68,15 @@ void Texture::image2D_multisample
 
 void Texture::parameter(Texture::Parameter p, GLint value)
 {
-	glTextureParameteri(name, static_cast<GLenum>(p), value);
+	if(glTextureParameteri != nullptr)
+	{
+		glTextureParameteri(name, static_cast<GLenum>(p), value);
+	}
+	else
+	{
+		glBindTexture(type, name);
+		glTexParameteri(type, static_cast<GLenum>(p), value);
+	}
 }
 
 GLuint Texture::get_name()
