@@ -31,7 +31,6 @@ VertexBuffer::~VertexBuffer()
 	if(inited)
 	{
 		glDeleteBuffers(1, &name);
-		inited = false;
 	}
 }
 

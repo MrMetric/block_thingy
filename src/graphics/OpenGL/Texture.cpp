@@ -35,7 +35,10 @@ Texture::Texture(Texture&& that)
 
 Texture::~Texture()
 {
-	glDeleteTextures(1, &name);
+	if(inited)
+	{
+		glDeleteTextures(1, &name);
+	}
 }
 
 void Texture::image2D

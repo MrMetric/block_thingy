@@ -29,7 +29,7 @@ namespace Position
 class Gfx
 {
 	public:
-		Gfx(GLFWwindow*);
+		Gfx();
 
 		Gfx(Gfx&&) = delete;
 		Gfx(const Gfx&) = delete;
@@ -61,7 +61,7 @@ class Gfx
 
 		void hook_events(EventManager&);
 		static GLFWwindow* init_glfw();
-		void uninit_glfw();
+		static void uninit_glfw(GLFWwindow*);
 		void opengl_setup();
 
 		Graphics::RenderTarget screen_rt;

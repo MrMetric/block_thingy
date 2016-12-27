@@ -59,9 +59,9 @@ static window_size_t get_window_size(GLFWwindow* window)
 	return {width, height};
 }
 
-Gfx::Gfx(GLFWwindow* window)
+Gfx::Gfx()
 :
-	window(window),
+	window(init_glfw()),
 	window_size(get_window_size(window)),
 	window_mid(glm::dvec2(window_size) / 2.0),
 	s_lines("shaders/lines"),
@@ -153,7 +153,7 @@ GLFWwindow* Gfx::init_glfw()
 	return window;
 }
 
-void Gfx::uninit_glfw()
+void Gfx::uninit_glfw(GLFWwindow* window)
 {
 	glfwDestroyWindow(window);
 	glfwTerminate();

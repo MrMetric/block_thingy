@@ -38,7 +38,6 @@ VertexArray::~VertexArray()
 	if(inited)
 	{
 		glDeleteVertexArrays(1, &name);
-		inited = false;
 	}
 }
 

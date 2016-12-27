@@ -56,6 +56,8 @@ static void error_callback(const int error, const char* description)
 
 int main(int argc, char** argv)
 {
+	GLFWwindow* window;
+
 	try
 	{
 
@@ -83,9 +85,8 @@ int main(int argc, char** argv)
 	cout << "Compiled with GLFW " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << "\n";
 	cout << "Running with GLFW " << glfwGetVersionString() << "\n";
 
-	GLFWwindow* window = Gfx::init_glfw();
-	Gfx gfx(window); printOpenGLError();
-
+	Gfx gfx; printOpenGLError();
+	window = gfx.window;
 	static unique_ptr<Game> game = std::make_unique<Game>(gfx);
 
 	cout << "starting main loop\n";
@@ -94,7 +95,6 @@ int main(int argc, char** argv)
 		game->draw(); printOpenGLError();
 	}
 
-	game->gfx.uninit_glfw();
 	game.reset(); // destruct
 	printOpenGLError();
 
@@ -109,6 +109,8 @@ int main(int argc, char** argv)
 		log_exception(error);
 		return EXIT_FAILURE;
 	}
+
+	Gfx::uninit_glfw(window);
 
 	return EXIT_SUCCESS;
 }
