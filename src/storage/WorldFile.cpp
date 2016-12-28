@@ -48,7 +48,14 @@ WorldFile::WorldFile(const string& world_dir, World& world)
 	}
 	LOGGER << "loading world: " << world_path << "\n";
 	string bytes = Util::read_file(world_path);
-	unpack_bytes(bytes, world);
+	try
+	{
+		unpack_bytes(bytes, world);
+	}
+	catch(const msgpack::type_error& e)
+	{
+		throw std::runtime_error("error loading " + world_path + ": " + e.what());
+	}
 }
 
 void WorldFile::save_world()
@@ -87,7 +94,14 @@ unique_ptr<Player> WorldFile::load_player
 
 	string bytes = Util::read_file(file_path);
 	auto player = std::make_unique<Player>(game, name);
-	unpack_bytes(bytes, *player);
+	try
+	{
+		unpack_bytes(bytes, *player);
+	}
+	catch(const msgpack::type_error& e)
+	{
+		throw std::runtime_error("error loading " + file_path + ": " + e.what());
+	}
 
 	return player;
 }
@@ -132,7 +146,17 @@ shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 	Poco::StreamCopier::copyStream(stream, ss);
 	string bytes = ss.str();
 	auto chunk = std::make_shared<Chunk>(position, world);
-	unpack_bytes(bytes, *chunk);
+	try
+	{
+		unpack_bytes(bytes, *chunk);
+	}
+	catch(const msgpack::type_error& e)
+	{
+		//throw std::runtime_error("error loading " + file_path + ": " + e.what());
+		world.game.console.error_logger << "error loading " << file_path << ": " << e.what() << "\n";
+		// TODO: rename the bad file so the user can attempt to recover it (because the new chunk will overwrite it)
+		return nullptr;
+	}
 
 	return chunk;
 }
