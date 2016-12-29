@@ -409,68 +409,68 @@ void Gfx::draw_rectangle(const glm::dvec2& position, const glm::dvec2& size, con
 
 void Gfx::shim_GL_ARB_direct_state_access()
 {
-	glCreateBuffers = [](GLsizei n, GLuint* ids)
+	glCreateBuffers = [](GLsizei n, GLuint* ids) -> void
 	{
 		glGenBuffers(n, ids);
 	};
 	// TODO: handle target != GL_ARRAY_BUFFER
-	glNamedBufferData = [](GLuint buffer, GLsizeiptr size, const void* data, GLenum usage)
+	glNamedBufferData = [](GLuint buffer, GLsizeiptr size, const void* data, GLenum usage) -> void
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 		glBufferData(GL_ARRAY_BUFFER, size, data, usage);
 	};
 
-	glCreateVertexArrays = [](GLsizei n, GLuint* ids)
+	glCreateVertexArrays = [](GLsizei n, GLuint* ids) -> void
 	{
 		glGenVertexArrays(n, ids);
 	};
-	glEnableVertexArrayAttrib = [](GLuint vaobj, GLuint index)
+	glEnableVertexArrayAttrib = [](GLuint vaobj, GLuint index) -> void
 	{
 		glBindVertexArray(vaobj);
 		glEnableVertexAttribArray(index);
 	};
-	glDisableVertexArrayAttrib = [](GLuint vaobj, GLuint index)
+	glDisableVertexArrayAttrib = [](GLuint vaobj, GLuint index) -> void
 	{
 		glBindVertexArray(vaobj);
 		glDisableVertexAttribArray(index);
 	};
 
-	glCreateTextures = [](GLenum target, GLsizei n, GLuint* ids)
+	glCreateTextures = [](GLenum target, GLsizei n, GLuint* ids) -> void
 	{
 		glGenTextures(n, ids);
 	};
 	glTextureParameteri = nullptr;
 
-	glCreateFramebuffers = [](GLsizei n, GLuint* ids)
+	glCreateFramebuffers = [](GLsizei n, GLuint* ids) -> void
 	{
 		glGenFramebuffers(n, ids);
 	};
-	glCheckNamedFramebufferStatus = [](GLuint framebuffer, GLenum target)
+	glCheckNamedFramebufferStatus = [](GLuint framebuffer, GLenum target) -> GLenum
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
 		return glCheckFramebufferStatus(target);
 	};
-	glNamedFramebufferRenderbuffer = [](GLuint framebuffer, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer)
+	glNamedFramebufferRenderbuffer = [](GLuint framebuffer, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer) -> void
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
 		glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, attachment, renderbuffertarget, renderbuffer);
 	};
-	glNamedFramebufferTexture = [](GLuint framebuffer, GLenum attachment, GLuint texture, GLint level)
+	glNamedFramebufferTexture = [](GLuint framebuffer, GLenum attachment, GLuint texture, GLint level) -> void
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
 		glFramebufferTexture(GL_READ_FRAMEBUFFER, attachment, texture, level);
 	};
 
-	glCreateRenderbuffers = [](GLsizei n, GLuint* ids)
+	glCreateRenderbuffers = [](GLsizei n, GLuint* ids) -> void
 	{
 		glGenRenderbuffers(n, ids);
 	};
-	glNamedRenderbufferStorage = [](GLuint renderbuffer, GLenum internalformat, GLsizei width, GLsizei height)
+	glNamedRenderbufferStorage = [](GLuint renderbuffer, GLenum internalformat, GLsizei width, GLsizei height) -> void
 	{
 		glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
 		glRenderbufferStorage(GL_RENDERBUFFER, internalformat, width, height);
 	};
-	glNamedRenderbufferStorageMultisample = [](GLuint renderbuffer, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
+	glNamedRenderbufferStorageMultisample = [](GLuint renderbuffer, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height) -> void
 	{
 		glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
 		glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, internalformat, width, height);
@@ -480,22 +480,22 @@ void Gfx::shim_GL_ARB_direct_state_access()
 void Gfx::shim_GL_ARB_separate_shader_objects()
 {
 	#define UNIFORM(name, type) \
-	glProgramUniform1##name = [](GLuint program, GLint location, const type x) \
+	glProgramUniform1##name = [](GLuint program, GLint location, const type x) -> void \
 	{ \
 		glUseProgram(program); \
 		glUniform1##name(location, x); \
 	}; \
-	glProgramUniform2##name = [](GLuint program, GLint location, const type x, const type y) \
+	glProgramUniform2##name = [](GLuint program, GLint location, const type x, const type y) -> void \
 	{ \
 		glUseProgram(program); \
 		glUniform2##name(location, x, y); \
 	}; \
-	glProgramUniform3##name = [](GLuint program, GLint location, const type x, const type y, const type z) \
+	glProgramUniform3##name = [](GLuint program, GLint location, const type x, const type y, const type z) -> void \
 	{ \
 		glUseProgram(program); \
 		glUniform3##name(location, x, y, z); \
 	}; \
-	glProgramUniform4##name = [](GLuint program, GLint location, const type x, const type y, const type z, const type w) \
+	glProgramUniform4##name = [](GLuint program, GLint location, const type x, const type y, const type z, const type w) -> void \
 	{ \
 		glUseProgram(program); \
 		glUniform4##name(location, x, y, z, w); \
@@ -507,7 +507,7 @@ void Gfx::shim_GL_ARB_separate_shader_objects()
 	UNIFORM(d, GLdouble);
 	#endif
 
-	#define UVEC(name, type) glProgramUniform##name##v = [](GLuint program, GLint location, GLsizei count, const type* value) \
+	#define UVEC(name, type) glProgramUniform##name##v = [](GLuint program, GLint location, GLsizei count, const type* value) -> void \
 	{ \
 		glUseProgram(program); \
 		glUniform##name##v(location, count, value); \
@@ -525,7 +525,7 @@ void Gfx::shim_GL_ARB_separate_shader_objects()
 	UVEC(3f, GLfloat);
 	UVEC(4f, GLfloat);
 
-	#define UMATRIX(name, type) glProgramUniformMatrix##name##v = [](GLuint program, GLint location, GLsizei count, GLboolean transpose, const type* value) \
+	#define UMATRIX(name, type) glProgramUniformMatrix##name##v = [](GLuint program, GLint location, GLsizei count, GLboolean transpose, const type* value) -> void \
 	{ \
 		glUseProgram(program); \
 		glUniformMatrix##name##v(location, count, transpose, value); \
