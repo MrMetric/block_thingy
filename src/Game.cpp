@@ -69,10 +69,7 @@ Game::Game(Gfx& gfx)
 	player(*player_ptr),
 	console(*this),
 	keybinder(console),
-	wireframe(false, [](const bool wireframe)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
-	}),
+	wireframe(false),
 	delta_time(0),
 	fps(999),
 	render_distance(3)
@@ -204,10 +201,20 @@ void Game::draw_world()
 
 void Game::draw_world(const glm::dvec3& position, const glm::dvec3& rotation)
 {
+	if(wireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+
 	gfx.set_camera_view(position, rotation);
 	Position::BlockInWorld render_origin(position);
 	RenderWorld::draw_world(world, gfx.block_shaders, gfx.matriks, render_origin, render_distance);
 	find_hovered_block(gfx.projection_matrix, gfx.view_matrix_physical);
+
+	if(wireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 }
 
 void Game::open_gui(unique_ptr<Graphics::GUI::Base> gui)
@@ -578,13 +585,13 @@ void Game::add_commands()
 	});
 	COMMAND("toggle_wireframe")
 	{
-		game.wireframe = !game.wireframe();
-		game.console.logger << "wireframe: " << (game.wireframe() ? "true" : "false") << "\n";
+		game.wireframe = !game.wireframe;
+		game.console.logger << "wireframe: " << game.wireframe << "\n";
 	});
 	COMMAND("toggle_cull_face")
 	{
 		game.gfx.toggle_cull_face();
-		game.console.logger << "cull face: " << (game.gfx.cull_face ? "true" : "false") << "\n";
+		game.console.logger << "cull face: " << game.gfx.cull_face << "\n";
 	});
 	COMMAND_ARGS("fov")
 	{

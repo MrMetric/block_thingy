@@ -57,13 +57,9 @@ void Base::draw()
 	glGetBooleanv(GL_CULL_FACE, &cull_face);
 	if(cull_face) glDisable(GL_CULL_FACE);
 
-	const bool wireframe = game.wireframe();
-	if(wireframe) game.wireframe = false;
-
 	root.draw();
 	draw_gui();
 
-	if(wireframe) game.wireframe = true;
 	if(cull_face) glEnable(GL_CULL_FACE);
 	if(depth_test) glEnable(GL_DEPTH_TEST);
 }
