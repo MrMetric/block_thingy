@@ -59,10 +59,11 @@ class Game
 		void joymove(const glm::dvec2& motion);
 
 		template<typename T = Block::Base>
-		void add_block(const std::string& name)
+		BlockType add_block(const std::string& name)
 		{
 			BlockType t = block_registry.add<T>(name);
 			add_block(name, t);
+			return t;
 		}
 
 		static Game* instance;
