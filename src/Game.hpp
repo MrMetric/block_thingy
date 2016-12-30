@@ -94,7 +94,7 @@ class Game
 
 		Position::ChunkInWorld::value_type render_distance;
 
-		void find_hovered_block(const glm::dmat4& projection_matrix, const glm::dmat4& view_matrix);
+		void find_hovered_block();
 
 		std::vector<Command> commands;
 		void add_commands();

@@ -209,7 +209,7 @@ void Game::draw_world(const glm::dvec3& position, const glm::dvec3& rotation)
 	gfx.set_camera_view(position, rotation);
 	Position::BlockInWorld render_origin(position);
 	RenderWorld::draw_world(world, gfx.block_shaders, gfx.matriks, render_origin, render_distance);
-	find_hovered_block(gfx.projection_matrix, gfx.view_matrix_physical);
+	find_hovered_block();
 
 	if(wireframe)
 	{
@@ -304,7 +304,7 @@ void Game::add_block(const string& name, BlockType t)
 	}
 }
 
-void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dmat4& view_matrix)
+void Game::find_hovered_block()
 {
 	glm::dvec3 out_origin;
 	glm::dvec3 out_direction;
@@ -312,13 +312,14 @@ void Game::find_hovered_block(const glm::dmat4& projection_matrix, const glm::dm
 	(
 		gfx.window_mid,
 		gfx.window_size,
-		view_matrix,
-		projection_matrix,
+		gfx.view_matrix_graphical,
+		gfx.projection_matrix,
 		out_origin,
 		out_direction
 	);
 
-	hovered_block = PhysicsUtil::raycast(world, out_origin, out_direction, player.reach_distance);
+	glm::dvec3 offset = gfx.physical_position - gfx.graphical_position;
+	hovered_block = PhysicsUtil::raycast(world, out_origin + offset, out_direction, player.reach_distance);
 	if(hovered_block != nullptr)
 	{
 		const glm::dvec4 color = world.get_block(hovered_block->pos).selection_color();
@@ -352,7 +353,7 @@ void Game::add_commands()
 		if(game.world.get_block(pos).type() != BlockType::none) // TODO: breakability check
 		{
 			game.world.set_block(pos, game.block_registry.make(BlockType::air));
-			game.find_hovered_block(game.gfx.projection_matrix, game.gfx.view_matrix_physical);
+			game.find_hovered_block();
 			//event_manager.do_event(Event_break_block(pos, face));
 		}
 	});

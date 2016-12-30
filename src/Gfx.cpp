@@ -249,8 +249,10 @@ void Gfx::set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation
 	view_matrix *= glm::rotate(glm::radians(rotation.y), glm::dvec3(0, 1, 0));
 	view_matrix *= glm::rotate(glm::radians(rotation.z), glm::dvec3(0, 0, 1));
 
-	view_matrix_physical = view_matrix * glm::translate(-1.0 * position);
-	view_matrix_graphical = view_matrix * glm::translate(-1.0 * glm::mod(position, static_cast<double>(CHUNK_SIZE)));
+	physical_position = position;
+	graphical_position = glm::mod(position, static_cast<double>(CHUNK_SIZE));
+	view_matrix_physical = view_matrix * glm::translate(-1.0 * physical_position);
+	view_matrix_graphical = view_matrix * glm::translate(-1.0 * graphical_position);
 
 	matriks = projection_matrix * view_matrix_graphical;
 }
