@@ -3,7 +3,7 @@
 
 #include <array>
 
-#include "chunk/Chunk.hpp"
+#include "fwd/chunk/Chunk.hpp"
 
 namespace Mesher {
 

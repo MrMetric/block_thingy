@@ -2,9 +2,7 @@
 #include "Base.hpp"
 #include "Interface/KnowsPosition.hpp"
 
-#include "fwd/World.hpp"
 #include "graphics/Color.hpp"
-#include "position/BlockInWorld.hpp"
 
 namespace Block {
 

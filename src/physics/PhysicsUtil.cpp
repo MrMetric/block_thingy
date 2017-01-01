@@ -1,5 +1,6 @@
 #include "PhysicsUtil.hpp"
 
+#include <cmath>
 #include <limits>
 #include <stdint.h>
 

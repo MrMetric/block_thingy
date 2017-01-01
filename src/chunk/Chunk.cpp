@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <cstddef>
 #include <memory>
-#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -24,8 +23,6 @@
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
-
-#include "std_make_unique.hpp"
 
 using std::string;
 using std::to_string;

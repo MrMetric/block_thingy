@@ -30,7 +30,7 @@
 #include "Cube.hpp"
 #include "Game.hpp"
 #include "block/BlockType.hpp"
-#include "chunk/Chunk.hpp"
+#include "fwd/chunk/Chunk.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"

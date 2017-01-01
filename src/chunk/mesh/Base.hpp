@@ -10,7 +10,7 @@
 #include "fwd/block/Base.hpp"
 #include "fwd/block/BlockType.hpp"
 #include "fwd/chunk/Chunk.hpp"
-#include "fwd/graphics/Color.hpp"
+#include "graphics/Color.hpp"
 #include "graphics/primitive.hpp"
 
 namespace Mesher {

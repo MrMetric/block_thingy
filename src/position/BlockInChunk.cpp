@@ -9,7 +9,7 @@
 
 #include "BlockInWorld.hpp"
 
-#include "chunk/Chunk.hpp"
+#include "fwd/chunk/Chunk.hpp"
 
 using std::to_string;
 

@@ -2,7 +2,6 @@
 
 #include <array>
 #include <memory>
-#include <stdint.h>
 #include <vector>
 
 #include "graphics/OpenGL/VertexArray.hpp"

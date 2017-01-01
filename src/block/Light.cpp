@@ -1,12 +1,17 @@
 #include "Light.hpp"
 
+#include <memory>
+
 #include <glm/vec3.hpp>
 
 #include "Game.hpp"
+#include "World.hpp"
 #include "block/BlockType.hpp"
 #include "graphics/GUI/Light.hpp"
 #include "storage/Interface.hpp"
 #include "storage/msgpack/Color.hpp"
+
+#include "std_make_unique.hpp"
 
 using Graphics::Color;
 

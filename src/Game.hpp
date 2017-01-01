@@ -22,7 +22,6 @@
 #include "physics/RaycastHit.hpp"
 #include "position/ChunkInWorld.hpp"
 #include "fwd/util/key_mods.hpp"
-#include "util/Property.hpp"
 
 #include "types/window_size_t.hpp"
 

@@ -4,6 +4,7 @@
 #include <glm/vec3.hpp>
 
 #include "Game.hpp"
+#include "World.hpp"
 
 namespace Block {
 

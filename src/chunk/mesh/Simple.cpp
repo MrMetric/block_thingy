@@ -5,7 +5,7 @@
 #include "Cube.hpp"
 #include "block/Base.hpp"
 #include "block/BlockType.hpp"
-#include "chunk/Chunk.hpp"
+#include "fwd/chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
 using Position::BlockInChunk;

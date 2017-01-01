@@ -5,8 +5,6 @@
 #include "block/Base.hpp"
 #include "block/BlockType.hpp"
 
-#include "std_make_unique.hpp"
-
 using std::string;
 using std::unique_ptr;
 
