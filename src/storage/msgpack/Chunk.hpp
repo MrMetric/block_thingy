@@ -5,6 +5,7 @@
 #include "chunk/Chunk.hpp"
 #include "storage/msgpack/Block.hpp"
 #include "storage/msgpack/Color.hpp" // for meshes
+#include "storage/msgpack/glm_vec4.hpp" // for meshes
 
 #include "std_make_unique.hpp"
 

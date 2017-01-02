@@ -180,7 +180,7 @@ void Chunk::update_vaos()
 		const std::size_t to_add = meshes.size() - mesh_vaos.size();
 		for(std::size_t i = 0; i < to_add; ++i)
 		{
-			Graphics::OpenGL::VertexBuffer vbo({3, GL_UNSIGNED_BYTE});
+			Graphics::OpenGL::VertexBuffer vbo({4, GL_UNSIGNED_BYTE});
 			Graphics::OpenGL::VertexArray vao(vbo);
 
 			mesh_vbos.emplace_back(std::move(vbo));

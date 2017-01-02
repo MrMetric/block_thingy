@@ -88,6 +88,7 @@ void draw_face(mesh_t& mesh, const BlockInChunk::value_type x, const BlockInChun
 			tri[j].x = Cube::cube_vertex[element++] + x;
 			tri[j].y = Cube::cube_vertex[element++] + y;
 			tri[j].z = Cube::cube_vertex[element++] + z;
+			tri[j].w = face;
 		}
 		mesh.push_back(tri);
 	}

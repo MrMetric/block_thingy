@@ -89,6 +89,7 @@ Game::Game(Gfx& gfx)
 	add_block("black");
 	add_block<Block::Light>("light");
 	add_block<Block::Glass>("glass");
+	add_block("side_test");
 
 	block_type = block_registry.get_id("white");
 

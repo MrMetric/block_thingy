@@ -59,23 +59,27 @@ meshmap_t Greedy::make_mesh(const Chunk& chunk)
 void add_surface(const Chunk& chunk, meshmap_t& meshes, surface_t& surface, const Plane plane, const Side side)
 {
 	uint_fast8_t ix, iy, iz;
+	uint_fast8_t face;
 	if(plane == Plane::XY)
 	{
 		ix = 0;
 		iy = 2;
 		iz = 1;
+		face = (side == Side::bottom) ? 0 : 1;
 	}
 	else if(plane == Plane::XZ)
 	{
 		ix = 0;
 		iy = 1;
 		iz = 2;
+		face = (side == Side::top) ? 2 : 3;
 	}
 	else // must be YZ
 	{
 		ix = 1;
 		iy = 0;
 		iz = 2;
+		face = (side == Side::bottom) ? 4 : 5;
 	}
 
 	u8vec3 xyz;
@@ -120,9 +124,11 @@ void add_surface(const Chunk& chunk, meshmap_t& meshes, surface_t& surface, cons
 			v4[iz] = s(rekt.z + rekt.h);
 			#undef s
 
+			v1.w = v2.w = v3.w = v4.w = face;
+
 			mesh_t& mesh = meshes[rekt.key];
-			if((plane == Plane::XZ && side == Side::top)
-			|| (plane == Plane::XY && side == Side::bottom)
+			if((plane == Plane::XY && side == Side::bottom)
+			|| (plane == Plane::XZ && side == Side::top)
 			|| (plane == Plane::YZ && side == Side::bottom))
 			{
 				add_face(mesh, v4, v3, v2, v1);

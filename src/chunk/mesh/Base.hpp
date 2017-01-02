@@ -15,7 +15,7 @@
 
 namespace Mesher {
 
-using mesh_triangle_t = triangle_t<GLubyte>;
+using mesh_triangle_t = triangle_4_t<GLubyte>;
 using mesh_vertex_coord_t = mesh_triangle_t::value_type;
 using mesh_t = std::vector<mesh_triangle_t>;
 using meshmap_key_t = std::tuple<BlockType, Graphics::Color>;
