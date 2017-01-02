@@ -302,7 +302,7 @@ Graphics::OpenGL::ShaderProgram& Gfx::get_block_shader(const BlockType type)
 }
 
 #ifdef USE_LIBPNG
-void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint_fast32_t width, const uint_fast32_t height, const bool reverse_rows)
+void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint32_t width, const uint32_t height, const bool reverse_rows)
 {
 	png_struct* png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if(png_ptr == nullptr)
@@ -325,8 +325,8 @@ void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint_fast32_t 
 	}
 	png_init_io(png_ptr, fp);
 	const int bit_depth = 8;
-	const png_uint_32 w = static_cast<png_uint_32>(width);
-	const png_uint_32 h = static_cast<png_uint_32>(height);
+	const uint32_t w = width;
+	const uint32_t h = height;
 	png_set_IHDR(png_ptr, info_ptr, w, h, bit_depth, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 	png_write_info(png_ptr, info_ptr);
 	const uint_fast32_t rowsize = png_get_rowbytes(png_ptr, info_ptr);

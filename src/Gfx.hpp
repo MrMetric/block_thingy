@@ -90,7 +90,7 @@ class Gfx
 		Graphics::OpenGL::ShaderProgram& get_block_shader(BlockType);
 
 		#ifdef USE_LIBPNG
-		static void write_png_RGB(const char* filename, uint8_t* buf, uint_fast32_t width, uint_fast32_t height, bool reverse_rows = false);
+		static void write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint32_t height, bool reverse_rows = false);
 		#endif
 
 		void center_cursor();
