@@ -31,8 +31,8 @@ namespace Util
 		return std::equal(ending.crbegin(), ending.crend(), value.crbegin());
 	}
 
-	bool file_is_openable(const std::string& path);
-	std::string read_file(const std::string& path);
+	bool file_is_openable(const std::string&);
+	std::string read_file(const std::string&);
 
 	std::string gl_error_string(GLenum code);
 	std::string gl_object_log(GLuint object);
@@ -43,11 +43,12 @@ namespace Util
 		std::string file;
 		std::string ext;
 	};
-
 	path split_path(const std::string&);
 	std::string join_path(const path&);
 
 	void change_directory(const std::string&);
+	bool create_directory(const std::string&);
+	bool create_directories(const std::string&);
 
 	template<typename T>
 	constexpr T clamp(T x, T min, T max)
@@ -64,4 +65,6 @@ namespace Util
 	}
 
 	int stoi(const std::string&);
+
+	std::string datetime();
 };

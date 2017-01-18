@@ -69,8 +69,8 @@ class WorldFile
 
 	private:
 		std::string world_path;
-		std::string player_path;
-		std::string chunk_path;
+		std::string player_dir;
+		std::string chunk_dir;
 		World& world;
 };
 

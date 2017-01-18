@@ -265,6 +265,8 @@
 		<Unit filename="src/util/clipboard.hpp" />
 		<Unit filename="src/util/compiler_info.cpp" />
 		<Unit filename="src/util/compiler_info.hpp" />
+		<Unit filename="src/util/copy_stream.cpp" />
+		<Unit filename="src/util/copy_stream.hpp" />
 		<Unit filename="src/util/demangled_name.cpp" />
 		<Unit filename="src/util/demangled_name.hpp" />
 		<Unit filename="src/util/key_mods.cpp" />

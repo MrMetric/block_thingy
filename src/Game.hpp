@@ -47,7 +47,7 @@ class Game
 		void quit();
 
 		#ifdef USE_LIBPNG
-		void screenshot(const std::string& filename);
+		void screenshot(std::string filename);
 		#endif
 		void update_framebuffer_size(const window_size_t&);
 		void keypress(int key, int scancode, int action, Util::key_mods);

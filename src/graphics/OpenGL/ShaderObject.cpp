@@ -6,8 +6,6 @@
 
 #include <glad/glad.h>
 
-#include <Poco/File.h>
-
 #include "Game.hpp"
 #include "Util.hpp"
 
@@ -94,7 +92,7 @@ string do_include(const string& file_path)
 		included.erase(0, included.find_first_not_of(" \t"));
 		included.erase(included.find_last_not_of(" \t") + 1);
 		const string path = folder + included;
-		if(!Poco::File(path).isFile())
+		if(!Util::file_is_openable(path))
 		{
 			// TODO: log
 			continue;

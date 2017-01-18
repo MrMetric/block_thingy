@@ -2,16 +2,13 @@
 
 #include <fstream>
 #include <iostream>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <utility>
 
 #include <msgpack.hpp>
-#include <Poco/File.h>
 #include <Poco/DeflatingStream.h>
 #include <Poco/InflatingStream.h>
-#include <Poco/StreamCopier.h>
 
 #include "Game.hpp"
 #include "Player.hpp"
@@ -23,6 +20,7 @@
 #include "storage/msgpack/Player.hpp"
 #include "storage/msgpack/World.hpp"
 #include "storage/msgpack/Chunk.hpp"
+#include "util/copy_stream.hpp"
 
 #include "std_make_unique.hpp"
 
@@ -36,12 +34,12 @@ namespace Storage {
 WorldFile::WorldFile(const string& world_dir, World& world)
 :
 	world_path(world_dir + "/world"),
-	player_path(world_dir + "/players/"),
-	chunk_path(world_dir + "/chunks/"),
+	player_dir(world_dir + "/players/"),
+	chunk_dir(world_dir + "/chunks/"),
 	world(world)
 {
-	Poco::File(player_path).createDirectories();
-	Poco::File(chunk_path).createDirectories();
+	Util::create_directories(player_dir);
+	Util::create_directories(chunk_dir);
 
 	if(!Util::file_is_openable(world_path))
 	{
@@ -75,7 +73,7 @@ void WorldFile::save_players()
 
 void WorldFile::save_player(const Player& player)
 {
-	std::ofstream stream(player_path + player.name, std::ofstream::binary);
+	std::ofstream stream(player_dir + player.name, std::ofstream::binary);
 	msgpack::pack(stream, player);
 }
 
@@ -85,7 +83,7 @@ unique_ptr<Player> WorldFile::load_player
 	const string& name
 )
 {
-	string file_path = player_path + name;
+	string file_path = player_dir + name;
 	if(!Util::file_is_openable(file_path))
 	{
 		return nullptr;
@@ -121,7 +119,7 @@ void WorldFile::save_chunk(const Chunk& chunk)
 	string x = to_string(position.x);
 	string y = to_string(position.y);
 	string z = to_string(position.z);
-	string file_path = chunk_path + x + "_" + y + "_" + z + ".gz";
+	string file_path = chunk_dir + x + "_" + y + "_" + z + ".gz";
 	LOGGER << "saving " << file_path << "\n";
 
 	std::ofstream stdstream(file_path, std::ofstream::binary);
@@ -135,7 +133,7 @@ shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 	string x = to_string(position.x);
 	string y = to_string(position.y);
 	string z = to_string(position.z);
-	string file_path = chunk_path + x + "_" + y + "_" + z + ".gz";
+	string file_path = chunk_dir + x + "_" + y + "_" + z + ".gz";
 	if(!Util::file_is_openable(file_path))
 	{
 		return nullptr;
@@ -143,9 +141,7 @@ shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 
 	std::ifstream stdstream(file_path, std::ifstream::binary);
 	Poco::InflatingInputStream stream(stdstream, Poco::InflatingStreamBuf::STREAM_GZIP);
-	std::stringstream ss;
-	Poco::StreamCopier::copyStream(stream, ss);
-	string bytes = ss.str();
+	string bytes = Util::read_stream(stream);
 	auto chunk = std::make_shared<Chunk>(position, world);
 	try
 	{

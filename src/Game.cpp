@@ -19,14 +19,11 @@
 #include <glm/vec4.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include <Poco/DateTimeFormatter.h>
-#include <Poco/Timestamp.h>
-#include <Poco/Timezone.h>
-
 #include "Camera.hpp"
 #include "FPSManager.hpp"
 #include "Gfx.hpp"
 #include "Player.hpp"
+#include "Util.hpp"
 #include "World.hpp"
 #include "block/Base.hpp"
 #include "block/BlockType.hpp"
@@ -240,8 +237,12 @@ void Game::quit()
 }
 
 #ifdef USE_LIBPNG
-void Game::screenshot(const string& filename)
+void Game::screenshot(string filename)
 {
+	if(Util::create_directory("screenshots"))
+	{
+		filename = "screenshots/" + filename;
+	}
 	// TODO: check file existence
 	console.logger << "saving screenshot to " << filename << "\n";
 	const auto width = gfx.window_size.x;
@@ -556,10 +557,7 @@ void Game::add_commands()
 		string filename;
 		if(args.size() == 0)
 		{
-			Poco::Timestamp t;
-			const int tzd = Poco::Timezone::tzd();
-			t += tzd * 1000000L;
-			filename = Poco::DateTimeFormatter::format(t, "%Y-%m-%d %H:%M:%s %z.png", tzd);
+			filename = Util::datetime() + ".png";
 		}
 		else if(args.size() == 1)
 		{
