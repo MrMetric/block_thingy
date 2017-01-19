@@ -90,6 +90,7 @@
 			<Add option="-DGLM_ENABLE_EXPERIMENTAL" />
 		</Compiler>
 		<Linker>
+			<Add option="-lstdc++fs" />
 			<Add option="`pkg-config --libs glfw3`" />
 			<Add option="-lpng" />
 			<Add option="`pkg-config --libs freetype2`" />
@@ -106,6 +107,8 @@
 		<Unit filename="src/Gfx.hpp" />
 		<Unit filename="src/Player.cpp" />
 		<Unit filename="src/Player.hpp" />
+		<Unit filename="src/ResourceManager.cpp" />
+		<Unit filename="src/ResourceManager.hpp" />
 		<Unit filename="src/Util.cpp" />
 		<Unit filename="src/Util.hpp" />
 		<Unit filename="src/World.cpp" />

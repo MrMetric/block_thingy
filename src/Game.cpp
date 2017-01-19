@@ -23,6 +23,7 @@
 #include "FPSManager.hpp"
 #include "Gfx.hpp"
 #include "Player.hpp"
+#include "ResourceManager.hpp"
 #include "Util.hpp"
 #include "World.hpp"
 #include "block/Base.hpp"
@@ -78,17 +79,13 @@ Game::Game(Gfx& gfx)
 	add_block<Block::Air>("air");
 
 	add_block<Block::Test>("test");
-	add_block("dots");
-	add_block("eye");
 	add_block<Block::Teleporter>("teleporter");
-	add_block("marble");
-	add_block("white");
-	add_block("black");
 	add_block<Block::Light>("light");
 	add_block<Block::Glass>("glass");
-	add_block("side_test");
 
-	block_type = block_registry.get_id("white");
+	ResourceManager::load_blocks(*this);
+
+	block_type = block_registry.get_id("White");
 
 	gui = std::make_unique<Graphics::GUI::Play>(*this);
 	gui->init();
@@ -287,21 +284,35 @@ void Game::joymove(const glm::dvec2& motion)
 	gui->joymove(motion);
 }
 
+static void add_shader(Game& game, const BlockType t, const string& shader_path)
+{
+	try
+	{
+		game.gfx.block_shaders.emplace(t, "shaders/block/" + shader_path);
+	}
+	catch(const std::runtime_error& e)
+	{
+		game.console.error_logger << "shader error:\n" << e.what() << "\n";
+		game.gfx.block_shaders.emplace(t, "shaders/block/default");
+	}
+};
+
 void Game::add_block(const string& name, BlockType t)
 {
 	console.logger << "ID " << static_cast<block_type_id_t>(t) << ": " << name << "\n";
-	if(t != BlockType::none && t != BlockType::air)
+	if(t == BlockType::none || t == BlockType::air)
 	{
-		try
-		{
-			gfx.block_shaders.emplace(t, "shaders/block/" + name);
-		}
-		catch(const std::runtime_error& e)
-		{
-			console.error_logger << "shader error:\n" << e.what() << "\n";
-			gfx.block_shaders.emplace(t, "shaders/block/default");
-		}
+		return;
 	}
+	add_shader(*this, t, name);
+}
+
+BlockType Game::add_block_2(const std::string& name, const std::string& shader_path)
+{
+	BlockType t = block_registry.add<Block::Base>(name);
+	console.logger << "ID " << static_cast<block_type_id_t>(t) << ": " << name << "\n";
+	add_shader(*this, t, shader_path);
+	return t;
 }
 
 void Game::find_hovered_block()

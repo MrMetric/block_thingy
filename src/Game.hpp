@@ -63,6 +63,8 @@ class Game
 			return t;
 		}
 
+		BlockType add_block_2(const std::string& name, const std::string& shader_path);
+
 		static Game* instance;
 
 		BlockType block_type;

@@ -51,6 +51,7 @@ target_compile_options(block_thingy PRIVATE
 target_link_libraries(block_thingy
 	$<$<CONFIG:Debug>:${FSANITIZE}>
 	$<$<CONFIG:RelWithDebInfo>:${FSANITIZE}>
+	-lstdc++fs
 	${FREETYPE_LDFLAGS}
 	${GLFW_LDFLAGS}
 	${PNG_LIBRARIES}

@@ -459,7 +459,7 @@ void World::gen_at(const BlockInWorld& min, const BlockInWorld& max)
 			block_pos.y = y;
 
 			// TODO: investigate performance of using strings here vs caching the IDs
-			const string t = y > -m / 2 ? "white" : "black";
+			const string t = y > -m / 2 ? "White" : "Black";
 			set_block(block_pos, game.block_registry.make(t));
 		}
 	}
