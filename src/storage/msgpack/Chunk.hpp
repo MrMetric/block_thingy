@@ -10,7 +10,7 @@
 #include "std_make_unique.hpp"
 
 template<>
-void Chunk::save(msgpack::packer<Poco::DeflatingOutputStream>& o) const
+void Chunk::save(msgpack::packer<zstr::ostream>& o) const
 {
 	const bool has_meshes = false;
 	uint32_t array_size = 3;

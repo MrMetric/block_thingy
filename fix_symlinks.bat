@@ -4,6 +4,7 @@ set pwd=%cd%
 set base=%~dp0
 call :fix_link bin\shaders noise
 call :fix_link lib glm
+call :fix_link lib zstr
 cd %pwd%
 exit /B
 

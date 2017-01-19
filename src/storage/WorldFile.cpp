@@ -7,8 +7,7 @@
 #include <utility>
 
 #include <msgpack.hpp>
-#include <Poco/DeflatingStream.h>
-#include <Poco/InflatingStream.h>
+#include <zstr/zstr.hpp>
 
 #include "Game.hpp"
 #include "Player.hpp"
@@ -123,7 +122,7 @@ void WorldFile::save_chunk(const Chunk& chunk)
 	LOGGER << "saving " << file_path << "\n";
 
 	std::ofstream stdstream(file_path, std::ofstream::binary);
-	Poco::DeflatingOutputStream stream(stdstream, Poco::DeflatingStreamBuf::STREAM_GZIP);
+	zstr::ostream stream(stdstream);
 	msgpack::pack(stream, chunk);
 }
 
@@ -140,7 +139,7 @@ shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 	}
 
 	std::ifstream stdstream(file_path, std::ifstream::binary);
-	Poco::InflatingInputStream stream(stdstream, Poco::InflatingStreamBuf::STREAM_GZIP);
+	zstr::istream stream(stdstream);
 	string bytes = Util::read_stream(stream);
 	auto chunk = std::make_shared<Chunk>(position, world);
 	try

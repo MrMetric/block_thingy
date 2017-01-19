@@ -51,5 +51,5 @@ target_link_libraries(block_thingy
 	${GLFW_LDFLAGS}
 	${FREETYPE_LDFLAGS}
 	-lpng
-	-lPocoFoundation
+	-lz
 )

@@ -5,7 +5,7 @@
 #include <utility>
 
 #include <msgpack.hpp>
-#include <Poco/DeflatingStream.h>
+#include <zstr/zstr.hpp>
 
 #include "msgpack_util.hpp"
 
@@ -14,7 +14,7 @@ namespace v1 { // MSGPACK_API_VERSION_NAMESPACE(v1) does not work here?
 
 template<>
 template<>
-packer<Poco::DeflatingOutputStream>& packer<Poco::DeflatingOutputStream>::pack(const msgpack::sbuffer& v);
+packer<zstr::ostream>& packer<zstr::ostream>::pack(const msgpack::sbuffer& v);
 
 } // namespace v1
 } // namespace msgpack

@@ -4,3 +4,6 @@
 [submodule "submodules/noise"]
 	path = submodules/noise
 	url = https://github.com/stegu/webgl-noise.git
+[submodule "submodules/zstr"]
+	path = submodules/zstr
+	url = https://github.com/mateidavid/zstr.git
