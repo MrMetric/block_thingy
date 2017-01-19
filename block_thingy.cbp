@@ -81,7 +81,6 @@
 			<Add option="-Werror=unknown-pragmas" />
 			<Add option="-Werror=unknown-warning-option" />
 			<Add option="`pkg-config --cflags freetype2`" />
-			<Add option="-DUSE_LIBPNG" />
 			<Add option="-DMSGPACK_DISABLE_LEGACY_NIL" />
 			<Add option="-DMSGPACK_DISABLE_LEGACY_CONVERT" />
 			<Add option="-DGLFW_INCLUDE_NONE" />

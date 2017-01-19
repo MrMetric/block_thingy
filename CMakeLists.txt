@@ -17,9 +17,11 @@ set_property(TARGET block_thingy PROPERTY CXX_STANDARD_REQUIRED ON)
 target_compile_features(block_thingy PRIVATE cxx_relaxed_constexpr)
 ]]
 
+find_package(PNG REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_search_module(GLFW REQUIRED glfw3)
 pkg_search_module(FREETYPE REQUIRED freetype2)
+pkg_search_module(MSGPACK REQUIRED msgpack)
 
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE RelWithDebInfo)
@@ -34,7 +36,6 @@ target_compile_options(block_thingy PRIVATE
 	$<$<CONFIG:Debug>:${FSANITIZE}>
 	$<$<CONFIG:RelWithDebInfo>:${FSANITIZE}>
 	-march=native
-	-DUSE_LIBPNG
 	-DMSGPACK_DISABLE_LEGACY_NIL
 	-DMSGPACK_DISABLE_LEGACY_CONVERT
 	-DGLFW_INCLUDE_NONE
@@ -42,14 +43,16 @@ target_compile_options(block_thingy PRIVATE
 	-DGLM_FORCE_SIZE_FUNC
 	-DGLM_FORCE_EXPLICIT_CTOR
 	-DGLM_ENABLE_EXPERIMENTAL
-	${GLFW_CFLAGS}
 	${FREETYPE_CFLAGS}
+	${GLFW_CFLAGS}
+	${MSGPACK_CFLAGS}
 )
+
 target_link_libraries(block_thingy
 	$<$<CONFIG:Debug>:${FSANITIZE}>
 	$<$<CONFIG:RelWithDebInfo>:${FSANITIZE}>
-	${GLFW_LDFLAGS}
 	${FREETYPE_LDFLAGS}
-	-lpng
+	${GLFW_LDFLAGS}
+	${PNG_LIBRARIES}
 	-lz
 )

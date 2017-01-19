@@ -28,7 +28,8 @@ If you are using Windows, you must run `fix_symlinks.bat` before building or run
  * [GLM](https://github.com/g-truc/glm): included as a submodule
  * glad: included in the repository
  * [GLFW 3](https://github.com/glfw/glfw)
- * libpng: optional, used for saving screenshots. To enable it, `USE_LIBPNG` must be defined when compiling. Note that compiling without this disables screenshots entirely.
+ * libpng
+ * [msgpack-c](https://github.com/msgpack/msgpack-c/)
  * [webgl-noise](https://github.com/stegu/webgl-noise): included as a submodule
 
 ### Building (using CMake)
@@ -81,7 +82,7 @@ To run, `block_thingy` needs to know where the game files are. It defaults to `.
  * add frustum culling
  * add other meshing methods [[1]](http://0fps.net/2012/07/07/meshing-minecraft-part-2/) [[2]](https://blackflux.wordpress.com/2014/02/23/meshing-in-voxel-engines-part-1/)
  * add texturing
- * allow saving screenshots to a format other than PNG (for when the libpng dependency is not enabled)
+ * allow using image formats other than PNG
  * improve build instructions
  * make physics framerate-independent
  * move the commands from `Game` to somewhere else

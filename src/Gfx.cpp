@@ -22,9 +22,7 @@
 #include <glm/gtc/matrix_transform.hpp>		// glm::perspective
 #include <glm/gtx/transform.hpp>			// glm::rotate, glm::translate
 
-#ifdef USE_LIBPNG
 #include <png.h>
-#endif
 
 #include "Camera.hpp"
 #include "Cube.hpp"
@@ -301,7 +299,6 @@ Graphics::OpenGL::ShaderProgram& Gfx::get_block_shader(const BlockType type)
 	return i->second;
 }
 
-#ifdef USE_LIBPNG
 void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint32_t width, const uint32_t height, const bool reverse_rows)
 {
 	png_struct* png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -349,7 +346,6 @@ void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint32_t width
 	png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 }
-#endif
 
 void Gfx::center_cursor()
 {

@@ -236,7 +236,6 @@ void Game::quit()
 	glfwSetWindowShouldClose(gfx.window, GL_TRUE);
 }
 
-#ifdef USE_LIBPNG
 void Game::screenshot(string filename)
 {
 	if(Util::create_directory("screenshots"))
@@ -252,7 +251,6 @@ void Game::screenshot(string filename)
 	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
 	Gfx::write_png_RGB(filename.c_str(), pixels.get(), width, height, true);
 }
-#endif
 
 void Game::update_framebuffer_size(const window_size_t& window_size)
 {
@@ -551,7 +549,6 @@ void Game::add_commands()
 		game.console.logger << "camera rotation: " << glm::to_string(game.camera.rotation) << "\n";
 	});
 
-	#ifdef USE_LIBPNG
 	COMMAND_ARGS("screenshot")
 	{
 		string filename;
@@ -577,7 +574,6 @@ void Game::add_commands()
 			game.console.error_logger << "error saving screenshot: " << e.what() << "\n";
 		}
 	});
-	#endif
 
 	COMMAND("toggle_fullscreen")
 	{
