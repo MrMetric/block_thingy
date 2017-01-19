@@ -17,10 +17,10 @@ set_property(TARGET block_thingy PROPERTY CXX_STANDARD_REQUIRED ON)
 target_compile_features(block_thingy PRIVATE cxx_relaxed_constexpr)
 ]]
 
-find_package(PNG REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_search_module(GLFW REQUIRED glfw3)
 pkg_search_module(FREETYPE REQUIRED freetype2)
+pkg_search_module(LIBPNG REQUIRED libpng)
 pkg_search_module(MSGPACK REQUIRED msgpack)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -36,23 +36,26 @@ target_compile_options(block_thingy PRIVATE
 	$<$<CONFIG:Debug>:${FSANITIZE}>
 	$<$<CONFIG:RelWithDebInfo>:${FSANITIZE}>
 	-march=native
-	-DMSGPACK_DISABLE_LEGACY_NIL
-	-DMSGPACK_DISABLE_LEGACY_CONVERT
 	-DGLFW_INCLUDE_NONE
-	-DGLM_FORCE_SIZE_T_LENGTH
-	-DGLM_FORCE_SIZE_FUNC
-	-DGLM_FORCE_EXPLICIT_CTOR
 	-DGLM_ENABLE_EXPERIMENTAL
+	-DGLM_FORCE_EXPLICIT_CTOR
+	-DGLM_FORCE_SIZE_FUNC
+	-DGLM_FORCE_SIZE_T_LENGTH
+	-DMSGPACK_DISABLE_LEGACY_CONVERT
+	-DMSGPACK_DISABLE_LEGACY_NIL
 	${FREETYPE_CFLAGS}
 	${GLFW_CFLAGS}
+	${LIBPNG_CFLAGS}
 	${MSGPACK_CFLAGS}
 )
 
 target_link_libraries(block_thingy
 	$<$<CONFIG:Debug>:${FSANITIZE}>
 	$<$<CONFIG:RelWithDebInfo>:${FSANITIZE}>
+	-flto
 	${FREETYPE_LDFLAGS}
 	${GLFW_LDFLAGS}
-	${PNG_LIBRARIES}
+	${LIBPNG_LDFLAGS}
+	${MSGPACK_LDFLAGS}
 	-lz
 )
