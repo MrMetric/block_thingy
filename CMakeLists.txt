@@ -1,6 +1,16 @@
 cmake_minimum_required(VERSION 3.1.0)
 project(block_thingy)
 
+if(NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE RelWithDebInfo)
+endif()
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
+if(${CMAKE_BUILD_TYPE} STREQUAL Debug OR ${CMAKE_BUILD_TYPE} STREQUAL RelWithDebInfo)
+	set(DEBUG_BUILD 1)
+else()
+	set(DEBUG_BUILD 0)
+endif()
 file(GLOB_RECURSE block_thingy_SRC
 	"lib/glad/glad.c"
 	"src/*.cpp"
@@ -23,19 +33,15 @@ pkg_search_module(FREETYPE REQUIRED freetype2)
 pkg_search_module(LIBPNG REQUIRED libpng)
 pkg_search_module(MSGPACK REQUIRED msgpack)
 
-if(NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE RelWithDebInfo)
-endif()
-
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
 	set(FSANITIZE -fsanitize=undefined,integer)
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
 target_compile_options(block_thingy PRIVATE
-	$<$<CONFIG:Debug>:${FSANITIZE}>
-	$<$<CONFIG:RelWithDebInfo>:${FSANITIZE}>
+	$<${DEBUG_BUILD}:${FSANITIZE}>
 	-march=native
+	$<${DEBUG_BUILD}:-DDEBUG_BUILD>
 	-DGLFW_INCLUDE_NONE
 	-DGLM_ENABLE_EXPERIMENTAL
 	-DGLM_FORCE_EXPLICIT_CTOR
@@ -50,8 +56,7 @@ target_compile_options(block_thingy PRIVATE
 )
 
 target_link_libraries(block_thingy
-	$<$<CONFIG:Debug>:${FSANITIZE}>
-	$<$<CONFIG:RelWithDebInfo>:${FSANITIZE}>
+	$<${DEBUG_BUILD}:${FSANITIZE}>
 	-flto
 	${FREETYPE_LDFLAGS}
 	${GLFW_LDFLAGS}
