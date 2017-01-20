@@ -69,6 +69,10 @@ int main(int argc, char** argv)
 	CodePageHandler cp(CP_UTF8);
 	#endif
 
+	#ifdef DEBUG_BUILD
+	cout << "This is a debug build\n";
+	#endif
+
 	const string compiler_info = Util::compiler_info();
 	if(compiler_info != "")
 	{

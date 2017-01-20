@@ -5,7 +5,7 @@
 		<Option title="block_thingy" />
 		<Option platforms="Unix;" />
 		<Option pch_mode="2" />
-		<Option compiler="clang" />
+		<Option compiler="llvm_clang_compiler__ccache" />
 		<Build>
 			<Target title="Debug">
 				<Option platforms="Unix;" />
@@ -13,10 +13,11 @@
 				<Option working_dir="bin" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
-				<Option compiler="clang" />
+				<Option compiler="llvm_clang_compiler__ccache" />
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-fsanitize=undefined,integer" />
+					<Add option="-DDEBUG_BUILD" />
 				</Compiler>
 				<Linker>
 					<Add option="-fsanitize=undefined,integer" />
@@ -29,11 +30,12 @@
 				<Option working_dir="bin" />
 				<Option object_output="obj/Release_Debug/" />
 				<Option type="1" />
-				<Option compiler="clang" />
+				<Option compiler="llvm_clang_compiler__ccache" />
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-fsanitize=undefined,integer" />
 					<Add option="-O3" />
+					<Add option="-DDEBUG_BUILD" />
 				</Compiler>
 				<Linker>
 					<Add option="-fsanitize=undefined,integer" />
@@ -46,7 +48,7 @@
 				<Option working_dir="bin" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
-				<Option compiler="clang" />
+				<Option compiler="llvm_clang_compiler__ccache" />
 				<Compiler>
 					<Add option="-fomit-frame-pointer" />
 					<Add option="-O3" />
@@ -59,11 +61,22 @@
 		</Build>
 		<Compiler>
 			<Add option="-pedantic-errors" />
-			<Add option="-Weverything" />
 			<Add option="-std=c++1z" />
-			<Add option="-fexceptions" />
+			<Add option="-march=native" />
 			<Add option="-isystem lib" />
 			<Add option="-iquote src" />
+			<Add option="-DGLFW_INCLUDE_NONE" />
+			<Add option="-DGLM_ENABLE_EXPERIMENTAL" />
+			<Add option="-DGLM_FORCE_EXPLICIT_CTOR" />
+			<Add option="-DGLM_FORCE_SIZE_FUNC" />
+			<Add option="-DGLM_FORCE_SIZE_T_LENGTH" />
+			<Add option="-DMSGPACK_DISABLE_LEGACY_CONVERT" />
+			<Add option="-DMSGPACK_DISABLE_LEGACY_NIL" />
+			<Add option="`pkg-config --cflags freetype2`" />
+			<Add option="`pkg-config --cflags glfw3`" />
+			<Add option="`pkg-config --cflags libpng`" />
+			<Add option="`pkg-config --cflags msgpack`" />
+			<Add option="-Weverything" />
 			<Add option="-Wno-c++98-compat-pedantic" />
 			<Add option="-Wno-exit-time-destructors" />
 			<Add option="-Wno-global-constructors" />
@@ -80,20 +93,14 @@
 			<Add option="-Werror=uninitialized" />
 			<Add option="-Werror=unknown-pragmas" />
 			<Add option="-Werror=unknown-warning-option" />
-			<Add option="`pkg-config --cflags freetype2`" />
-			<Add option="-DMSGPACK_DISABLE_LEGACY_NIL" />
-			<Add option="-DMSGPACK_DISABLE_LEGACY_CONVERT" />
-			<Add option="-DGLFW_INCLUDE_NONE" />
-			<Add option="-DGLM_FORCE_SIZE_T_LENGTH" />
-			<Add option="-DGLM_FORCE_SIZE_FUNC" />
-			<Add option="-DGLM_FORCE_EXPLICIT_CTOR" />
-			<Add option="-DGLM_ENABLE_EXPERIMENTAL" />
 		</Compiler>
 		<Linker>
+			<Add option="-flto" />
 			<Add option="-lstdc++fs" />
-			<Add option="`pkg-config --libs glfw3`" />
-			<Add option="-lpng" />
 			<Add option="`pkg-config --libs freetype2`" />
+			<Add option="`pkg-config --libs glfw3`" />
+			<Add option="`pkg-config --libs libpng`" />
+			<Add option="`pkg-config --libs msgpack`" />
 			<Add option="-lz" />
 		</Linker>
 		<Unit filename="src/Camera.cpp" />
