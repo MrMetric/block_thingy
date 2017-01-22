@@ -11,6 +11,7 @@
 
 #include "ShaderObject.hpp"
 
+#include "ResourceManager.hpp"
 #include "Util.hpp"
 
 #include "std_make_unique.hpp"
@@ -20,7 +21,7 @@ using std::unique_ptr;
 
 namespace Graphics::OpenGL {
 
-static GLuint make_program(const std::vector<string>& files, const string& debug_name);
+static GLuint make_program(const std::vector<GLuint>& objects, const string& debug_name);
 static std::vector<string> get_uniform_names(const GLuint name);
 
 ShaderProgram::ShaderProgram()
@@ -42,20 +43,19 @@ ShaderProgram::ShaderProgram(const string& path)
 {
 }
 
-ShaderProgram::ShaderProgram(const std::vector<string>& files, const string& debug_name)
+ShaderProgram::ShaderProgram
+(
+	const std::vector<string>& file_paths,
+	const string& debug_name
+)
+:
+	debug_name(debug_name)
 {
-	name = make_program(files, debug_name);
-
-	std::vector<string> uniform_names = get_uniform_names(name);
-	for(const string& s : uniform_names)
+	for(const string& path : file_paths)
 	{
-		GLint location = glGetUniformLocation(name, s.c_str());
-		if(location == -1)
-		{
-			throw std::runtime_error("glGetUniformLocation returned -1 for " + s + " in " + debug_name);
-		}
-		uniforms.emplace(s, location);
+		res.push_back(ResourceManager::get_ShaderObject(path));
 	}
+	init();
 
 	inited = true;
 }
@@ -289,43 +289,34 @@ void ShaderProgram::uniform(const string& u, const glm::dmat4x3& mat)
 	glProgramUniformMatrix4x3dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
 
-static GLuint make_program(const std::vector<string>& files, const string& debug_name)
+void ShaderProgram::init()
 {
-	std::vector<ShaderObject> objects;
-	for(string path : files)
+	std::vector<GLuint> objects;
+	for(auto& r : res)
 	{
-		GLenum type;
-		Util::path path_parts = Util::split_path(path);
-		if(path_parts.ext == "vs")
-		{
-			type = GL_VERTEX_SHADER;
-		}
-		else if(path_parts.ext ==  "fs")
-		{
-			type = GL_FRAGMENT_SHADER;
-		}
-		else
-		{
-			throw std::invalid_argument("bad shader path: " + path);
-		}
-		if(!Util::file_is_openable(path))
-		{
-			path_parts.file = "default";
-			const string path2 = Util::join_path(path_parts);
-			if(!Util::file_is_openable(path2))
-			{
-				throw std::runtime_error("shader not found and no default exists: " + path);
-			}
-			path = path2;
-		}
-		objects.emplace_back(path, type);
+		objects.push_back(r->get_name());
 	}
+	name = make_program(objects, debug_name);
 
-	// TODO: attach in previous loop?
-	GLuint program = glCreateProgram();
-	for(ShaderObject& object : objects)
+	uniforms.clear();
+	std::vector<string> uniform_names = get_uniform_names(name);
+	for(const string& s : uniform_names)
 	{
-		glAttachShader(program, object.get_name());
+		GLint location = glGetUniformLocation(name, s.c_str());
+		if(location == -1)
+		{
+			throw std::runtime_error("glGetUniformLocation returned -1 for " + s + " in " + debug_name);
+		}
+		uniforms.emplace(s, location);
+	}
+}
+
+static GLuint make_program(const std::vector<GLuint>& objects, const string& debug_name)
+{
+	GLuint program = glCreateProgram();
+	for(const auto object : objects)
+	{
+		glAttachShader(program, object);
 	}
 
 	GLint izgud;
@@ -350,9 +341,9 @@ static GLuint make_program(const std::vector<string>& files, const string& debug
 
 	// shader objects are not needed after linking, so memory can be freed by deleting them
 	// but a shader object will not be deleted until it is detached
-	for(ShaderObject& object : objects)
+	for(GLuint object : objects)
 	{
-		glDetachShader(program, object.get_name());
+		glDetachShader(program, object);
 	}
 
 	return program;

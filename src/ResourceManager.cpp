@@ -6,6 +6,7 @@
 #include "Game.hpp"
 #include "Util.hpp"
 #include "console/ArgumentParser.hpp"
+#include "graphics/OpenGL/ShaderObject.hpp"
 
 #if __has_include(<filesystem>)
 #include <filesystem>
@@ -17,6 +18,7 @@ namespace fs = std::experimental::filesystem;
 
 using std::cerr;
 using std::string;
+using Graphics::OpenGL::ShaderObject;
 
 namespace ResourceManager {
 
@@ -62,6 +64,42 @@ void load_blocks(Game& game)
 		}
 		game.add_block_2(block["name"], block["shader"]);
 	}
+}
+
+static std::unordered_map<string, std::unique_ptr<ShaderObject>> cache_ShaderObject;
+Resource<ShaderObject> get_ShaderObject(string path)
+{
+	GLenum type;
+	Util::path path_parts = Util::split_path(path);
+	if(path_parts.ext == "vs")
+	{
+		type = GL_VERTEX_SHADER;
+	}
+	else if(path_parts.ext ==  "fs")
+	{
+		type = GL_FRAGMENT_SHADER;
+	}
+	else
+	{
+		throw std::invalid_argument("bad shader path: " + path);
+	}
+	if(!Util::file_is_openable(path))
+	{
+		path_parts.file = "default";
+		const string path2 = Util::join_path(path_parts);
+		if(!Util::file_is_openable(path2))
+		{
+			throw std::runtime_error("shader not found and no default exists: " + path);
+		}
+		path = path2;
+	}
+	auto i = cache_ShaderObject.find(path);
+	if(i == cache_ShaderObject.cend())
+	{
+		// the shader object is not in the cache, so compile and add it
+		i = cache_ShaderObject.emplace(path, std::make_unique<ShaderObject>(path, type)).first;
+	}
+	return Resource<ShaderObject>(&i->second);
 }
 
 }

@@ -18,6 +18,8 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
+#include "ResourceManager.hpp"
+
 namespace Graphics::OpenGL {
 
 class ShaderProgram
@@ -98,6 +100,10 @@ class ShaderProgram
 		bool inited;
 		GLuint name;
 		std::unordered_map<std::string, GLint> uniforms;
+		std::vector<ResourceManager::Resource<ShaderObject>> res;
+		std::string debug_name;
+
+		void init();
 };
 
 } // namespace Graphics::OpenGL
