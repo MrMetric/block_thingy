@@ -25,7 +25,8 @@ using Graphics::OpenGL::ShaderObject;
 namespace ResourceManager {
 
 static Inotify inotify;
-static std::vector<InotifyWatch> inotify_watches;
+// unique_ptr to keep validity when vector resizes itself
+static std::vector<std::unique_ptr<InotifyWatch>> inotify_watches;
 void init()
 {
 	inotify.SetNonBlock(true);
@@ -123,8 +124,8 @@ Resource<ShaderObject> get_ShaderObject(string path, bool reload)
 	{
 		// the shader object is not in the cache, so compile and add it
 		i = cache_ShaderObject.emplace(path, std::make_unique<ShaderObject>(path, type)).first;
-		inotify_watches.emplace_back(path, IN_CLOSE_WRITE);
-		inotify.Add(inotify_watches.back());
+		inotify_watches.emplace_back(std::make_unique<InotifyWatch>(path, IN_CLOSE_WRITE));
+		inotify.Add(inotify_watches.back().get());
 	}
 	else if(reload)
 	{
