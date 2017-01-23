@@ -91,9 +91,9 @@ uint32_t InotifyEvent::GetMaskByName(const std::string& rName)
 	return 0;
 }
 
-void InotifyEvent::DumpTypes(uint32_t uValue, std::string& rStr)
+std::string InotifyEvent::DumpTypes(uint32_t uValue)
 {
-	rStr = "";
+	std::string rStr;
 
 	if(IsType(uValue, IN_ALL_EVENTS))
 	{
@@ -223,11 +223,13 @@ void InotifyEvent::DumpTypes(uint32_t uValue, std::string& rStr)
 		rStr.append("IN_ONLYDIR");
 	}
 #endif // IN_ONLYDIR
+
+	return rStr;
 }
 
-void InotifyEvent::DumpTypes(std::string& rStr) const
+std::string InotifyEvent::DumpTypes() const
 {
-	DumpTypes(m_uMask, rStr);
+	return DumpTypes(m_uMask);
 }
 
 

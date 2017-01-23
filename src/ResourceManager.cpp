@@ -3,6 +3,8 @@
 #include <iostream>
 #include <unordered_map>
 
+#include <inotify-cxx/inotify-cxx.hpp>
+
 #include "Game.hpp"
 #include "Util.hpp"
 #include "console/ArgumentParser.hpp"
@@ -21,6 +23,29 @@ using std::string;
 using Graphics::OpenGL::ShaderObject;
 
 namespace ResourceManager {
+
+static Inotify inotify;
+static std::vector<InotifyWatch> inotify_watches;
+void init()
+{
+	inotify.SetNonBlock(true);
+}
+
+void check_updates()
+{
+	inotify.WaitForEvents();
+	if(inotify.GetEventCount() == 0)
+	{
+		return;
+	}
+
+	InotifyEvent event;
+	while(inotify.GetEvent(event))
+	{
+		const string path = event.GetWatch()->GetPath();
+		get_ShaderObject(path, true);
+	}
+}
 
 static std::unordered_map<string, string> parse_block(const string& s)
 {
@@ -67,7 +92,7 @@ void load_blocks(Game& game)
 }
 
 static std::unordered_map<string, std::unique_ptr<ShaderObject>> cache_ShaderObject;
-Resource<ShaderObject> get_ShaderObject(string path)
+Resource<ShaderObject> get_ShaderObject(string path, bool reload)
 {
 	GLenum type;
 	Util::path path_parts = Util::split_path(path);
@@ -98,8 +123,27 @@ Resource<ShaderObject> get_ShaderObject(string path)
 	{
 		// the shader object is not in the cache, so compile and add it
 		i = cache_ShaderObject.emplace(path, std::make_unique<ShaderObject>(path, type)).first;
+		inotify_watches.emplace_back(path, IN_CLOSE_WRITE);
+		inotify.Add(inotify_watches.back());
 	}
-	return Resource<ShaderObject>(&i->second);
+	else if(reload)
+	{
+		std::unique_ptr<ShaderObject> p;
+		try
+		{
+			p = std::make_unique<ShaderObject>(path, type);
+		}
+		catch(const std::runtime_error& e)
+		{
+			cerr << "failed to update ShaderObject " << path << ": " << e.what() << "\n";
+			return Resource<ShaderObject>(&i->second, path);
+		}
+		std::swap(p, i->second);
+		Resource<ShaderObject> r(&i->second, path);
+		r.update();
+		return r;
+	}
+	return Resource<ShaderObject>(&i->second, path);
 }
 
 }

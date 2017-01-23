@@ -220,9 +220,9 @@ public:
 	InotifyEvent()
 	:
 		m_uMask(0),
-		m_uCookie(0)
+		m_uCookie(0),
+		m_pWatch(nullptr)
 	{
-		m_pWatch = nullptr;
 	}
 
 	/**
@@ -320,15 +320,6 @@ public:
 		return m_name;
 	}
 
-	/// Extracts the event name.
-	/**
-	 * \param[out] rName event name
-	 */
-	inline void GetName(std::string& rName) const
-	{
-		rName = GetName();
-	}
-
 	/// Returns the source watch.
 	/**
 	 * \return source watch
@@ -345,18 +336,18 @@ public:
 	 */
 	static uint32_t GetMaskByName(const std::string& rName);
 
-	/// Fills the string with all types contained in an event mask value.
+	/// Returns a string with all types contained in an event mask value.
 	/**
 	 * \param[in] uValue event mask value
-	 * \param[out] rStr dumped event types
+	 * \return dumped event types
 	 */
-	static void DumpTypes(uint32_t uValue, std::string& rStr);
+	static std::string DumpTypes(uint32_t uValue);
 
-	/// Fills the string with all types contained in the event mask.
+	/// Returns a string with all types contained in the event mask.
 	/**
-	 * \param[out] rStr dumped event types
+	 * \return dumped event types
 	 */
-	void DumpTypes(std::string& rStr) const;
+	std::string DumpTypes() const;
 
 private:
 	uint32_t m_uMask;           ///< mask

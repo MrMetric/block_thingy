@@ -54,6 +54,10 @@ ShaderProgram::ShaderProgram
 	for(const string& path : file_paths)
 	{
 		res.push_back(ResourceManager::get_ShaderObject(path));
+		res.back().on_update([this]()
+		{
+			init();
+		});
 	}
 	init();
 

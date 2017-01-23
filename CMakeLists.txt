@@ -13,6 +13,7 @@ else()
 endif()
 file(GLOB_RECURSE block_thingy_SRC
 	"lib/glad/glad.c"
+	"lib/inotify-cxx/inotify-cxx.cpp"
 	"src/*.cpp"
 )
 include_directories(

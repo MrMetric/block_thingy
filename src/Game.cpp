@@ -73,6 +73,7 @@ Game::Game(Gfx& gfx)
 	render_distance(3)
 {
 	Game::instance = this;
+	ResourceManager::init();
 
 	// these 2 must be added first (in this order!) to get the correct IDs
 	add_block<Block::None>("none");
@@ -108,6 +109,8 @@ Game::Game(Gfx& gfx)
 
 void Game::draw()
 {
+	ResourceManager::check_updates();
+
 	glViewport(0, 0, gfx.window_size.x, gfx.window_size.y);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, gfx.screen_rt.frame_buffer.get_name());

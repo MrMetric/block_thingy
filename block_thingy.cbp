@@ -103,6 +103,8 @@
 			<Add option="`pkg-config --libs msgpack`" />
 			<Add option="-lz" />
 		</Linker>
+		<Unit filename="lib/inotify-cxx/inotify-cxx.cpp" />
+		<Unit filename="lib/inotify-cxx/inotify-cxx.hpp" />
 		<Unit filename="src/Camera.cpp" />
 		<Unit filename="src/Camera.hpp" />
 		<Unit filename="src/Cube.cpp" />
