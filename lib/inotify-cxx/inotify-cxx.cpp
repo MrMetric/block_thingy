@@ -42,20 +42,16 @@
 #define PROCFS_INOTIFY_BASE "/proc/sys/fs/inotify/"
 
 /// dump separator (between particular entries)
-#define DUMP_SEP \
-	({ \
-		if(!rStr.empty()) \
-		{ \
-			rStr.append(","); \
-		} \
-	})
+#define DUMP_SEP if(!rStr.empty()) rStr.append(",");
 
 
 int32_t InotifyEvent::GetDescriptor() const
 {
-	return m_pWatch != NULL            // if watch exists
-			?  m_pWatch->GetDescriptor()   // return its descriptor
-			:  -1;                         // else return -1
+	if(m_pWatch == nullptr)
+	{
+		return -1;
+	}
+	return m_pWatch->GetDescriptor();
 }
 
 uint32_t InotifyEvent::GetMaskByName(const std::string& rName)
@@ -92,7 +88,7 @@ uint32_t InotifyEvent::GetMaskByName(const std::string& rName)
 	if(rName == "IN_MOVE_SELF") return IN_MOVE_SELF;
 #endif // IN_MOVE_SELF
 
-	return (uint32_t) 0;
+	return 0;
 }
 
 void InotifyEvent::DumpTypes(uint32_t uValue, std::string& rStr)
@@ -235,7 +231,7 @@ void InotifyEvent::DumpTypes(std::string& rStr) const
 }
 
 
-void InotifyWatch::SetMask(uint32_t uMask) throw (InotifyException)
+void InotifyWatch::SetMask(uint32_t uMask)
 {
 	IN_WRITE_BEGIN
 
@@ -254,7 +250,7 @@ void InotifyWatch::SetMask(uint32_t uMask) throw (InotifyException)
 	IN_WRITE_END
 }
 
-void InotifyWatch::SetEnabled(bool fEnabled) throw (InotifyException)
+void InotifyWatch::SetEnabled(bool fEnabled)
 {
 	IN_WRITE_BEGIN
 
@@ -264,7 +260,7 @@ void InotifyWatch::SetEnabled(bool fEnabled) throw (InotifyException)
 		return;
 	}
 
-	if(m_pInotify != NULL)
+	if(m_pInotify != nullptr)
 	{
 		if(fEnabled)
 		{
@@ -303,7 +299,7 @@ void InotifyWatch::__Disable()
 		throw InotifyException(IN_EXC_MSG("event cannot occur on disabled watch"), EINVAL, this);
 	}
 
-	if(m_pInotify != NULL)
+	if(m_pInotify != nullptr)
 	{
 		m_pInotify->m_watches.erase(m_wd);
 		m_wd = -1;
@@ -315,7 +311,7 @@ void InotifyWatch::__Disable()
 }
 
 
-Inotify::Inotify() throw (InotifyException)
+Inotify::Inotify()
 {
 	IN_LOCK_INIT
 
@@ -323,7 +319,7 @@ Inotify::Inotify() throw (InotifyException)
 	if(m_fd == -1)
 	{
 		IN_LOCK_DONE
-		throw InotifyException(IN_EXC_MSG("inotify init failed"), errno, NULL);
+		throw InotifyException(IN_EXC_MSG("inotify init failed"), errno, nullptr);
 	}
 }
 
@@ -348,7 +344,7 @@ void Inotify::Close()
 	IN_WRITE_END
 }
 
-void Inotify::Add(InotifyWatch* pWatch) throw (InotifyException)
+void Inotify::Add(InotifyWatch* pWatch)
 {
 	IN_WRITE_BEGIN
 
@@ -360,7 +356,7 @@ void Inotify::Add(InotifyWatch* pWatch) throw (InotifyException)
 	}
 
 	// this path already watched - go away
-	if(FindWatch(pWatch->GetPath()) != NULL)
+	if(FindWatch(pWatch->GetPath()) != nullptr)
 	{
 		IN_WRITE_END_NOTHROW
 		throw InotifyException(IN_EXC_MSG("path already watched"), EBUSY, this);
@@ -381,7 +377,7 @@ void Inotify::Add(InotifyWatch* pWatch) throw (InotifyException)
 
 		// this path already watched (but defined another way)
 		InotifyWatch* pW = FindWatch(wd);
-		if(pW != NULL)
+		if(pW != nullptr)
 		{
 			// try to recover old watch because it may be modified - then go away
 			if(inotify_add_watch(m_fd, pW->GetPath().c_str(), pW->GetMask()) < 0)
@@ -407,7 +403,7 @@ void Inotify::Add(InotifyWatch* pWatch) throw (InotifyException)
 	IN_WRITE_END
 }
 
-void Inotify::Remove(InotifyWatch* pWatch) throw (InotifyException)
+void Inotify::Remove(InotifyWatch* pWatch)
 {
 	IN_WRITE_BEGIN
 
@@ -432,7 +428,7 @@ void Inotify::Remove(InotifyWatch* pWatch) throw (InotifyException)
 	}
 
 	m_paths.erase(pWatch->m_path);
-	pWatch->m_pInotify = NULL;
+	pWatch->m_pInotify = nullptr;
 
 	IN_WRITE_END
 }
@@ -450,8 +446,8 @@ void Inotify::RemoveAll()
 			inotify_rm_watch(m_fd, pW->m_wd);
 			pW->m_wd = -1;
 		}
-		pW->m_pInotify = NULL;
-		it++;
+		pW->m_pInotify = nullptr;
+		++it;
 	}
 
 	m_watches.clear();
@@ -460,46 +456,52 @@ void Inotify::RemoveAll()
 	IN_WRITE_END
 }
 
-void Inotify::WaitForEvents(bool fNoIntr) throw (InotifyException)
+void Inotify::WaitForEvents(const bool fNoIntr)
 {
 	ssize_t len = 0;
 
 	do
 	{
 		len = read(m_fd, m_buf, INOTIFY_BUFLEN);
-	} while(fNoIntr && len == -1 && errno == EINTR);
-
-	if(len == -1 && !(errno == EWOULDBLOCK || errno == EINTR))
-		throw InotifyException(IN_EXC_MSG("reading events failed"), errno, this);
+	}
+	while(fNoIntr && len == -1 && errno == EINTR);
 
 	if(len == -1)
+	{
+		if(errno != EWOULDBLOCK && errno != EINTR)
+		{
+			throw InotifyException(IN_EXC_MSG("reading events failed"), errno, this);
+		}
 		return;
+	}
 
 	IN_WRITE_BEGIN
 
 	ssize_t i = 0;
 	while(i < len)
 	{
-		struct inotify_event* pEvt = (struct inotify_event*) &m_buf[i];
+		inotify_event* pEvt = reinterpret_cast<inotify_event*>(&m_buf[i]);
 		InotifyWatch* pW = FindWatch(pEvt->wd);
-		if(pW != NULL)
+		if(pW != nullptr)
 		{
 			InotifyEvent evt(pEvt, pW);
-			if(    InotifyEvent::IsType(pW->GetMask(), IN_ONESHOT)
-					||  InotifyEvent::IsType(evt.GetMask(), IN_IGNORED))
+			if(InotifyEvent::IsType(pW->GetMask(), IN_ONESHOT)
+			|| InotifyEvent::IsType(evt.GetMask(), IN_IGNORED))
 				pW->__Disable();
 			m_events.push_back(evt);
 		}
-		i += INOTIFY_EVENT_SIZE + (ssize_t) pEvt->len;
+		i += INOTIFY_EVENT_SIZE + pEvt->len;
 	}
 
 	IN_WRITE_END
 }
 
-bool Inotify::GetEvent(InotifyEvent* pEvt) throw (InotifyException)
+bool Inotify::GetEvent(InotifyEvent* pEvt)
 {
-	if(pEvt == NULL)
+	if(pEvt == nullptr)
+	{
 		throw InotifyException(IN_EXC_MSG("null pointer to event"), EINVAL, this);
+	}
 
 	IN_WRITE_BEGIN
 
@@ -515,10 +517,12 @@ bool Inotify::GetEvent(InotifyEvent* pEvt) throw (InotifyException)
 	return b;
 }
 
-bool Inotify::PeekEvent(InotifyEvent* pEvt) throw (InotifyException)
+bool Inotify::PeekEvent(InotifyEvent* pEvt)
 {
-	if(pEvt == NULL)
+	if(pEvt == nullptr)
+	{
 		throw InotifyException(IN_EXC_MSG("null pointer to event"), EINVAL, this);
+	}
 
 	IN_READ_BEGIN
 
@@ -538,7 +542,7 @@ InotifyWatch* Inotify::FindWatch(int iDescriptor)
 	IN_READ_BEGIN
 
 	IN_WATCH_MAP::iterator it = m_watches.find(iDescriptor);
-	InotifyWatch* pW = it == m_watches.end() ? NULL : (*it).second;
+	InotifyWatch* pW = it == m_watches.end() ? nullptr : (*it).second;
 
 	IN_READ_END
 
@@ -550,14 +554,14 @@ InotifyWatch* Inotify::FindWatch(const std::string& rPath)
 	IN_READ_BEGIN
 
 	IN_WP_MAP::iterator it = m_paths.find(rPath);
-	InotifyWatch* pW = it == m_paths.end() ? NULL : (*it).second;
+	InotifyWatch* pW = it == m_paths.end() ? nullptr : (*it).second;
 
 	IN_READ_END
 
 	return pW;
 }
 
-void Inotify::SetNonBlock(bool fNonBlock) throw (InotifyException)
+void Inotify::SetNonBlock(bool fNonBlock)
 {
 	IN_WRITE_BEGIN
 
@@ -592,7 +596,7 @@ void Inotify::SetNonBlock(bool fNonBlock) throw (InotifyException)
 	IN_WRITE_END
 }
 
-void Inotify::SetCloseOnExec(bool fClOnEx) throw (InotifyException)
+void Inotify::SetCloseOnExec(bool fClOnEx)
 {
 	IN_WRITE_BEGIN
 
@@ -627,44 +631,44 @@ void Inotify::SetCloseOnExec(bool fClOnEx) throw (InotifyException)
 	IN_WRITE_END
 }
 
-uint32_t Inotify::GetCapability(InotifyCapability_t cap) throw (InotifyException)
+uint32_t Inotify::GetCapability(InotifyCapability_t cap)
 {
 	FILE* f = fopen(GetCapabilityPath(cap).c_str(), "r");
-	if(f == NULL)
+	if(f == nullptr)
 	{
-		throw InotifyException(IN_EXC_MSG("cannot get capability"), errno, NULL);
+		throw InotifyException(IN_EXC_MSG("cannot get capability"), errno, nullptr);
 	}
 
 	unsigned int val = 0;
 	if(fscanf(f, "%u", &val) != 1)
 	{
 		fclose(f);
-		throw InotifyException(IN_EXC_MSG("cannot get capability"), EIO, NULL);
+		throw InotifyException(IN_EXC_MSG("cannot get capability"), EIO, nullptr);
 	}
 
 	fclose(f);
 
-	return (uint32_t) val;
+	return static_cast<uint32_t>(val);
 }
 
-void Inotify::SetCapability(InotifyCapability_t cap, uint32_t val) throw (InotifyException)
+void Inotify::SetCapability(InotifyCapability_t cap, uint32_t val)
 {
 	FILE* f = fopen(GetCapabilityPath(cap).c_str(), "w");
-	if(f == NULL)
+	if(f == nullptr)
 	{
-		throw InotifyException(IN_EXC_MSG("cannot set capability"), errno, NULL);
+		throw InotifyException(IN_EXC_MSG("cannot set capability"), errno, nullptr);
 	}
 
-	if(fprintf(f, "%u", (unsigned int) val) <= 0)
+	if(fprintf(f, "%u", static_cast<unsigned int>(val)) <= 0)
 	{
 		fclose(f);
-		throw InotifyException(IN_EXC_MSG("cannot set capability"), EIO, NULL);
+		throw InotifyException(IN_EXC_MSG("cannot set capability"), EIO, nullptr);
 	}
 
 	fclose(f);
 }
 
-std::string Inotify::GetCapabilityPath(InotifyCapability_t cap) throw (InotifyException)
+std::string Inotify::GetCapabilityPath(InotifyCapability_t cap)
 {
 	std::string path(PROCFS_INOTIFY_BASE);
 
@@ -680,7 +684,7 @@ std::string Inotify::GetCapabilityPath(InotifyCapability_t cap) throw (InotifyEx
 			path.append("max_user_watches");
 			break;
 		default:
-			throw InotifyException(IN_EXC_MSG("unknown capability type"), EINVAL, NULL);
+			throw InotifyException(IN_EXC_MSG("unknown capability type"), EINVAL, nullptr);
 	}
 
 	return path;

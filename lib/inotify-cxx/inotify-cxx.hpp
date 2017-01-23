@@ -22,8 +22,7 @@
  */
 
 
-#ifndef _INOTIFYCXX_H_
-#define _INOTIFYCXX_H_
+#pragma once
 
 #include <stdint.h>
 #include <string>
@@ -35,7 +34,7 @@
 
 
 /// Event struct size
-#define INOTIFY_EVENT_SIZE (sizeof(struct inotify_event))
+#define INOTIFY_EVENT_SIZE (sizeof(inotify_event))
 
 /// Event buffer length
 #define INOTIFY_BUFLEN (1024 * (INOTIFY_EVENT_SIZE + 16))
@@ -62,7 +61,7 @@ typedef enum
  *
  * Even if INOTIFY_THREAD_SAFE is defined some classes stay
  * unsafe. If you must use them (must you?) in more than one
- * thread concurrently you need to implement explicite locking.
+ * thread concurrently you need to implement explicit locking.
  *
  * You need not to define INOTIFY_THREAD_SAFE in that cases
  * where the application is multithreaded but all the inotify
@@ -154,14 +153,14 @@ class Inotify;
 class InotifyException
 {
 public:
-	/// Constructor
 	/**
 	 * \param[in] rMsg message
 	 * \param[in] iErr error number (see errno.h)
 	 * \param[in] pSrc source
 	 */
-	InotifyException(const std::string& rMsg = "", int iErr = 0, void* pSrc = NULL)
-	: m_msg(rMsg),
+	InotifyException(const std::string& rMsg = "", int iErr = 0, void* pSrc = nullptr)
+	:
+		m_msg(rMsg),
 		m_err(iErr)
 	{
 		m_pSrc = pSrc;
@@ -215,49 +214,44 @@ protected:
 class InotifyEvent
 {
 public:
-	/// Constructor.
 	/**
 	 * Creates a plain event.
 	 */
 	InotifyEvent()
-	: m_uMask(0),
+	:
+		m_uMask(0),
 		m_uCookie(0)
 	{
-		m_pWatch = NULL;
+		m_pWatch = nullptr;
 	}
 
-	/// Constructor.
 	/**
 	 * Creates an event based on inotify event data.
-	 * For NULL pointers it works the same way as InotifyEvent().
+	 * For null pointers it works the same way as InotifyEvent().
 	 *
 	 * \param[in] pEvt event data
 	 * \param[in] pWatch inotify watch
 	 */
-	InotifyEvent(const struct inotify_event* pEvt, InotifyWatch* pWatch)
-	: m_uMask(0),
+	InotifyEvent(const inotify_event* pEvt, InotifyWatch* pWatch)
+	:
+		m_uMask(0),
 		m_uCookie(0)
 	{
-		if(pEvt != NULL)
+		if(pEvt != nullptr)
 		{
-			m_uMask = (uint32_t) pEvt->mask;
-			m_uCookie = (uint32_t) pEvt->cookie;
-			if(pEvt->name != NULL)
+			m_uMask = pEvt->mask;
+			m_uCookie = pEvt->cookie;
+			if(pEvt->len > 0)
 			{
-				m_name = pEvt->len > 0
-						? pEvt->name
-						: "";
+				m_name = pEvt->name;
 			}
 			m_pWatch = pWatch;
 		}
 		else
 		{
-			m_pWatch = NULL;
+			m_pWatch = nullptr;
 		}
 	}
-
-	/// Destructor.
-	~InotifyEvent() {}
 
 	/// Returns the event watch descriptor.
 	/**
@@ -312,9 +306,9 @@ public:
 	/**
 	 * \return event name length
 	 */
-	inline uint32_t GetLength() const
+	inline std::size_t GetLength() const
 	{
-		return (uint32_t) m_name.length();
+		return m_name.size();
 	}
 
 	/// Returns the event name.
@@ -383,7 +377,6 @@ private:
 class InotifyWatch
 {
 public:
-	/// Constructor.
 	/**
 	 * Creates an inotify watch. Because this watch is
 	 * inactive it has an invalid descriptor (-1).
@@ -392,16 +385,16 @@ public:
 	 * \param[in] uMask mask for events
 	 * \param[in] fEnabled events enabled yes/no
 	 */
-	InotifyWatch(const std::string& rPath, int32_t uMask, bool fEnabled = true)
-	: m_path(rPath),
+	InotifyWatch(const std::string& rPath, uint32_t uMask, bool fEnabled = true)
+	:
+		m_path(rPath),
 		m_uMask(uMask),
-		m_wd((int32_t) -1),
+		m_wd(-1),
 		m_fEnabled(fEnabled)
 	{
 		IN_LOCK_INIT
 	}
 
-	/// Destructor.
 	~InotifyWatch()
 	{
 		IN_LOCK_DONE
@@ -431,7 +424,7 @@ public:
 	 */
 	inline uint32_t GetMask() const
 	{
-		return (uint32_t) m_uMask;
+		return m_uMask;
 	}
 
 	/// Sets the watch event mask.
@@ -444,7 +437,7 @@ public:
 	 *
 	 * \throw InotifyException thrown if changing fails
 	 */
-	void SetMask(uint32_t uMask) throw (InotifyException);
+	void SetMask(uint32_t uMask);
 
 	/// Returns the appropriate inotify class instance.
 	/**
@@ -467,7 +460,7 @@ public:
 	 *
 	 * \throw InotifyException thrown if enabling/disabling fails
 	 */
-	void SetEnabled(bool fEnabled) throw (InotifyException);
+	void SetEnabled(bool fEnabled);
 
 	/// Checks whether the watch is enabled.
 	/**
@@ -531,16 +524,14 @@ typedef std::map<std::string, InotifyWatch*> IN_WP_MAP;
 class Inotify
 {
 public:
-	/// Constructor.
 	/**
 	 * Creates and initializes an instance of inotify communication
 	 * object (opens the inotify device).
 	 *
 	 * \throw InotifyException thrown if inotify isn't available
 	 */
-	Inotify() throw (InotifyException);
+	Inotify();
 
-	/// Destructor.
 	/**
 	 * Calls Close() due to clean-up.
 	 */
@@ -555,7 +546,7 @@ public:
 	 *
 	 * \throw InotifyException thrown if adding failed
 	 */
-	void Add(InotifyWatch* pWatch) throw (InotifyException);
+	void Add(InotifyWatch* pWatch);
 
 	/// Adds a new watch.
 	/**
@@ -563,7 +554,7 @@ public:
 	 *
 	 * \throw InotifyException thrown if adding failed
 	 */
-	inline void Add(InotifyWatch& rWatch) throw (InotifyException)
+	inline void Add(InotifyWatch& rWatch)
 	{
 		Add(&rWatch);
 	}
@@ -576,7 +567,7 @@ public:
 	 *
 	 * \throw InotifyException thrown if removing failed
 	 */
-	void Remove(InotifyWatch* pWatch) throw (InotifyException);
+	void Remove(InotifyWatch* pWatch);
 
 	/// Removes a watch.
 	/**
@@ -586,7 +577,7 @@ public:
 	 *
 	 * \throw InotifyException thrown if removing failed
 	 */
-	inline void Remove(InotifyWatch& rWatch) throw (InotifyException)
+	inline void Remove(InotifyWatch& rWatch)
 	{
 		Remove(&rWatch);
 	}
@@ -603,10 +594,10 @@ public:
 	 *
 	 * \sa GetEnabledCount()
 	 */
-	inline size_t GetWatchCount() const
+	inline std::size_t GetWatchCount() const
 	{
 		IN_READ_BEGIN
-		size_t n = (size_t) m_paths.size();
+		std::size_t n = m_paths.size();
 		IN_READ_END
 		return n;
 	}
@@ -617,10 +608,10 @@ public:
 	 *
 	 * \sa GetWatchCount()
 	 */
-	inline size_t GetEnabledCount() const
+	inline std::size_t GetEnabledCount() const
 	{
 		IN_READ_BEGIN
-		size_t n = (size_t) m_watches.size();
+		std::size_t n = m_watches.size();
 		IN_READ_END
 		return n;
 	}
@@ -637,7 +628,7 @@ public:
 	 *
 	 * \sa SetNonBlock()
 	 */
-	void WaitForEvents(bool fNoIntr = false) throw (InotifyException);
+	void WaitForEvents(bool fNoIntr = false);
 
 	/// Returns the count of received and queued events.
 	/**
@@ -646,10 +637,10 @@ public:
 	 *
 	 * \return count of events
 	 */
-	inline size_t GetEventCount()
+	inline std::size_t GetEventCount()
 	{
 		IN_READ_BEGIN
-		size_t n = (size_t) m_events.size();
+		std::size_t n = m_events.size();
 		IN_READ_END
 		return n;
 	}
@@ -657,13 +648,13 @@ public:
 	/// Extracts a queued inotify event.
 	/**
 	 * The extracted event is removed from the queue.
-	 * If the pointer is NULL it does nothing.
+	 * If the pointer is null, it does nothing.
 	 *
 	 * \param[in,out] pEvt event object
 	 *
-	 * \throw InotifyException thrown if the provided pointer is NULL
+	 * \throw InotifyException thrown if the provided pointer is null
 	 */
-	bool GetEvent(InotifyEvent* pEvt) throw (InotifyException);
+	bool GetEvent(InotifyEvent* pEvt);
 
 	/// Extracts a queued inotify event.
 	/**
@@ -673,7 +664,7 @@ public:
 	 *
 	 * \throw InotifyException thrown only in very anomalous cases
 	 */
-	bool GetEvent(InotifyEvent& rEvt) throw (InotifyException)
+	bool GetEvent(InotifyEvent& rEvt)
 	{
 		return GetEvent(&rEvt);
 	}
@@ -681,13 +672,13 @@ public:
 	/// Extracts a queued inotify event (without removing).
 	/**
 	 * The extracted event stays in the queue.
-	 * If the pointer is NULL it does nothing.
+	 * If the pointer is null, it does nothing.
 	 *
 	 * \param[in,out] pEvt event object
 	 *
-	 * \throw InotifyException thrown if the provided pointer is NULL
+	 * \throw InotifyException thrown if the provided pointer is null
 	 */
-	bool PeekEvent(InotifyEvent* pEvt) throw (InotifyException);
+	bool PeekEvent(InotifyEvent* pEvt);
 
 	/// Extracts a queued inotify event (without removing).
 	/**
@@ -697,7 +688,7 @@ public:
 	 *
 	 * \throw InotifyException thrown only in very anomalous cases
 	 */
-	bool PeekEvent(InotifyEvent& rEvt) throw (InotifyException)
+	bool PeekEvent(InotifyEvent& rEvt)
 	{
 		return PeekEvent(&rEvt);
 	}
@@ -707,7 +698,7 @@ public:
 	 * It tries to find a watch by the given descriptor.
 	 *
 	 * \param[in] iDescriptor watch descriptor
-	 * \return pointer to a watch; NULL if no such watch exists
+	 * \return pointer to a watch; null if no such watch exists
 	 */
 	InotifyWatch* FindWatch(int iDescriptor);
 
@@ -716,7 +707,7 @@ public:
 	 * It tries to find a watch by the given filesystem path.
 	 *
 	 * \param[in] rPath filesystem path
-	 * \return pointer to a watch; NULL if no such watch exists
+	 * \return pointer to a watch; null if no such watch exists
 	 *
 	 * \attention The path must be exactly identical to the one
 	 *            used for the searched watch. Be careful about
@@ -752,7 +743,7 @@ public:
 	 *
 	 * \sa GetDescriptor(), SetCloseOnExec()
 	 */
-	void SetNonBlock(bool fNonBlock) throw (InotifyException);
+	void SetNonBlock(bool fNonBlock);
 
 	/// Enables/disables closing on exec.
 	/**
@@ -768,7 +759,7 @@ public:
 	 *
 	 * \sa GetDescriptor(), SetNonBlock()
 	 */
-	void SetCloseOnExec(bool fClOnEx) throw (InotifyException);
+	void SetCloseOnExec(bool fClOnEx);
 
 	/// Acquires a particular inotify capability/limit.
 	/**
@@ -776,7 +767,7 @@ public:
 	 * \return capability/limit value
 	 * \throw InotifyException thrown if the given value cannot be acquired
 	 */
-	static uint32_t GetCapability(InotifyCapability_t cap) throw (InotifyException);
+	static uint32_t GetCapability(InotifyCapability_t cap);
 
 	/// Modifies a particular inotify capability/limit.
 	/**
@@ -787,14 +778,14 @@ public:
 	 *            Beware of setting extensive values - it may seriously
 	 *            affect system performance and/or stability.
 	 */
-	static void SetCapability(InotifyCapability_t cap, uint32_t val) throw (InotifyException);
+	static void SetCapability(InotifyCapability_t cap, uint32_t val);
 
 	/// Returns the maximum number of events in the kernel queue.
 	/**
 	 * \return maximum number of events in the kernel queue
 	 * \throw InotifyException thrown if the given value cannot be acquired
 	 */
-	inline static uint32_t GetMaxEvents() throw (InotifyException)
+	inline static uint32_t GetMaxEvents()
 	{
 		return GetCapability(IN_MAX_EVENTS);
 	}
@@ -808,7 +799,7 @@ public:
 	 *            is set here the more physical memory may be used for the inotify
 	 *            infrastructure.
 	 */
-	inline static void SetMaxEvents(uint32_t val) throw (InotifyException)
+	inline static void SetMaxEvents(uint32_t val)
 	{
 		SetCapability(IN_MAX_EVENTS, val);
 	}
@@ -821,7 +812,7 @@ public:
 	 * \return maximum number of inotify instances
 	 * \throw InotifyException thrown if the given value cannot be acquired
 	 */
-	inline static uint32_t GetMaxInstances() throw (InotifyException)
+	inline static uint32_t GetMaxInstances()
 	{
 		return GetCapability(IN_MAX_INSTANCES);
 	}
@@ -835,7 +826,7 @@ public:
 	 *            is set here the more physical memory may be used for the inotify
 	 *            infrastructure.
 	 */
-	inline static void SetMaxInstances(uint32_t val) throw (InotifyException)
+	inline static void SetMaxInstances(uint32_t val)
 	{
 		SetCapability(IN_MAX_INSTANCES, val);
 	}
@@ -848,7 +839,7 @@ public:
 	 * \return maximum number of inotify watches
 	 * \throw InotifyException thrown if the given value cannot be acquired
 	 */
-	inline static uint32_t GetMaxWatches() throw (InotifyException)
+	inline static uint32_t GetMaxWatches()
 	{
 		return GetCapability(IN_MAX_WATCHES);
 	}
@@ -862,7 +853,7 @@ public:
 	 *            is set here the more physical memory may be used for the inotify
 	 *            infrastructure.
 	 */
-	inline static void SetMaxWatches(uint32_t val) throw (InotifyException)
+	inline static void SetMaxWatches(uint32_t val)
 	{
 		SetCapability(IN_MAX_WATCHES, val);
 	}
@@ -878,7 +869,5 @@ private:
 
 	friend class InotifyWatch;
 
-	static std::string GetCapabilityPath(InotifyCapability_t cap) throw (InotifyException);
+	static std::string GetCapabilityPath(InotifyCapability_t cap);
 };
-
-#endif //_INOTIFYCXX_H_
