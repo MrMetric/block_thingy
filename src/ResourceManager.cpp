@@ -41,7 +41,7 @@ void check_updates()
 	}
 
 	InotifyEvent event;
-	while(inotify.GetEvent(event))
+	while(inotify.PopEvent(event))
 	{
 		const string path = event.GetWatch()->GetPath();
 		get_ShaderObject(path, true);

@@ -1,7 +1,5 @@
 /// inotify C++ interface implementation
 /**
- * \file inotify-cxx.cpp
- *
  * inotify C++ interface
  *
  * Copyright (C) 2006, 2007, 2009, 2012 Lukas Jelinek <lukas@aiken.cz>
@@ -22,243 +20,98 @@
  *
  */
 
-
+#include <algorithm>
+#include <cstdio>
 #include <errno.h>
-#include <unistd.h>
 #include <fcntl.h>
 #include <fstream>
-#include <cstdio>
-
+#include <iterator>
+#include <sstream>
 #include <sys/syscall.h>
+#include <unistd.h>
+#include <utility>
+#include <vector>
+
 
 // Use this if syscalls not defined
 #ifndef __NR_inotify_init
 #include <sys/inotify-syscalls.h>
-#endif // __NR_inotify_init
+#endif
 
 #include "inotify-cxx.hpp"
 
-/// procfs inotify base path
-#define PROCFS_INOTIFY_BASE "/proc/sys/fs/inotify/"
-
-/// dump separator (between particular entries)
-#define DUMP_SEP if(!rStr.empty()) rStr.append(",");
-
-
-int32_t InotifyEvent::GetDescriptor() const
+uint32_t InotifyEvent::GetMask() const
 {
-	if(m_pWatch == nullptr)
-	{
-		return -1;
-	}
-	return m_pWatch->GetDescriptor();
+	return m_uMask;
 }
 
-uint32_t InotifyEvent::GetMaskByName(const std::string& rName)
+bool InotifyEvent::IsType(const uint32_t value, const uint32_t type)
 {
-	if(rName == "IN_ACCESS") return IN_ACCESS;
-	if(rName == "IN_MODIFY") return IN_MODIFY;
-	if(rName == "IN_ATTRIB") return IN_ATTRIB;
-	if(rName == "IN_CLOSE_WRITE") return IN_CLOSE_WRITE;
-	if(rName == "IN_CLOSE_NOWRITE") return IN_CLOSE_NOWRITE;
-	if(rName == "IN_OPEN") return IN_OPEN;
-	if(rName == "IN_MOVED_FROM") return IN_MOVED_FROM;
-	if(rName == "IN_MOVED_TO") return IN_MOVED_TO;
-	if(rName == "IN_CREATE") return IN_CREATE;
-	if(rName == "IN_DELETE") return IN_DELETE;
-	if(rName == "IN_DELETE_SELF") return IN_DELETE_SELF;
-	if(rName == "IN_UNMOUNT") return IN_UNMOUNT;
-	if(rName == "IN_Q_OVERFLOW") return IN_Q_OVERFLOW;
-	if(rName == "IN_IGNORED") return IN_IGNORED;
-	if(rName == "IN_CLOSE") return IN_CLOSE;
-	if(rName == "IN_MOVE") return IN_MOVE;
-	if(rName == "IN_ISDIR") return IN_ISDIR;
-	if(rName == "IN_ONESHOT") return IN_ONESHOT;
-	if(rName == "IN_ALL_EVENTS") return IN_ALL_EVENTS;
-
-#ifdef IN_DONT_FOLLOW
-	if(rName == "IN_DONT_FOLLOW") return IN_DONT_FOLLOW;
-#endif // IN_DONT_FOLLOW
-
-#ifdef IN_ONLYDIR
-	if(rName == "IN_ONLYDIR") return IN_ONLYDIR;
-#endif // IN_ONLYDIR
-
-#ifdef IN_MOVE_SELF
-	if(rName == "IN_MOVE_SELF") return IN_MOVE_SELF;
-#endif // IN_MOVE_SELF
-
-	return 0;
+	return ((value & type) != 0) && ((~value & type) == 0);
 }
 
-std::string InotifyEvent::DumpTypes(uint32_t uValue)
+bool InotifyEvent::IsType(const uint32_t type) const
 {
-	std::string rStr;
-
-	if(IsType(uValue, IN_ALL_EVENTS))
-	{
-		rStr.append("IN_ALL_EVENTS");
-	}
-	else
-	{
-		if(IsType(uValue, IN_ACCESS))
-		{
-			DUMP_SEP;
-			rStr.append("IN_ACCESS");
-		}
-		if(IsType(uValue, IN_MODIFY))
-		{
-			DUMP_SEP;
-			rStr.append("IN_MODIFY");
-		}
-		if(IsType(uValue, IN_ATTRIB))
-		{
-			DUMP_SEP;
-			rStr.append("IN_ATTRIB");
-		}
-		if(IsType(uValue, IN_CREATE))
-		{
-			DUMP_SEP;
-			rStr.append("IN_CREATE");
-		}
-		if(IsType(uValue, IN_DELETE))
-		{
-			DUMP_SEP;
-			rStr.append("IN_DELETE");
-		}
-		if(IsType(uValue, IN_DELETE_SELF))
-		{
-			DUMP_SEP;
-			rStr.append("IN_DELETE_SELF");
-		}
-		if(IsType(uValue, IN_OPEN))
-		{
-			DUMP_SEP;
-			rStr.append("IN_OPEN");
-		}
-		if(IsType(uValue, IN_CLOSE))
-		{
-			DUMP_SEP;
-			rStr.append("IN_CLOSE");
-		}
-
-#ifdef IN_MOVE_SELF
-		if(IsType(uValue, IN_MOVE_SELF))
-		{
-			DUMP_SEP;
-			rStr.append("IN_MOVE_SELF");
-		}
-#endif // IN_MOVE_SELF
-
-		else
-		{
-			if(IsType(uValue, IN_CLOSE_WRITE))
-			{
-				DUMP_SEP;
-				rStr.append("IN_CLOSE_WRITE");
-			}
-			if(IsType(uValue, IN_CLOSE_NOWRITE))
-			{
-				DUMP_SEP;
-				rStr.append("IN_CLOSE_NOWRITE");
-			}
-		}
-		if(IsType(uValue, IN_MOVE))
-		{
-			DUMP_SEP;
-			rStr.append("IN_MOVE");
-		}
-		else
-		{
-			if(IsType(uValue, IN_MOVED_FROM))
-			{
-				DUMP_SEP;
-				rStr.append("IN_MOVED_FROM");
-			}
-			if(IsType(uValue, IN_MOVED_TO))
-			{
-				DUMP_SEP;
-				rStr.append("IN_MOVED_TO");
-			}
-		}
-	}
-	if(IsType(uValue, IN_UNMOUNT))
-	{
-		DUMP_SEP;
-		rStr.append("IN_UNMOUNT");
-	}
-	if(IsType(uValue, IN_Q_OVERFLOW))
-	{
-		DUMP_SEP;
-		rStr.append("IN_Q_OVERFLOW");
-	}
-	if(IsType(uValue, IN_IGNORED))
-	{
-		DUMP_SEP;
-		rStr.append("IN_IGNORED");
-	}
-	if(IsType(uValue, IN_ISDIR))
-	{
-		DUMP_SEP;
-		rStr.append("IN_ISDIR");
-	}
-	if(IsType(uValue, IN_ONESHOT))
-	{
-		DUMP_SEP;
-		rStr.append("IN_ONESHOT");
-	}
-
-#ifdef IN_DONT_FOLLOW
-	if(IsType(uValue, IN_DONT_FOLLOW))
-	{
-		DUMP_SEP;
-		rStr.append("IN_DONT_FOLLOW");
-	}
-#endif // IN_DONT_FOLLOW
-
-#ifdef IN_ONLYDIR
-	if(IsType(uValue, IN_ONLYDIR))
-	{
-		DUMP_SEP;
-		rStr.append("IN_ONLYDIR");
-	}
-#endif // IN_ONLYDIR
-
-	return rStr;
+	return IsType(m_uMask, type);
 }
 
-std::string InotifyEvent::DumpTypes() const
+uint32_t InotifyEvent::GetCookie() const
 {
-	return DumpTypes(m_uMask);
+	return m_uCookie;
 }
 
-
-void InotifyWatch::SetMask(uint32_t uMask)
+std::string InotifyEvent::GetName() const
 {
-	IN_WRITE_BEGIN
+	return m_name;
+}
 
+InotifyWatch* InotifyEvent::GetWatch()
+{
+	return m_pWatch;
+}
+
+InotifyWatch::InotifyWatch(const std::string& path, uint32_t mask, bool enabled)
+:
+	m_path(path),
+	m_uMask(mask),
+	m_wd(-1),
+	m_fEnabled(enabled)
+{
+}
+
+std::string InotifyWatch::GetPath() const
+{
+	return m_path;
+}
+
+uint32_t InotifyWatch::GetMask() const
+{
+	return m_uMask;
+}
+
+void InotifyWatch::SetMask(uint32_t mask)
+{
 	if(m_wd != -1)
 	{
-		int wd = inotify_add_watch(m_pInotify->GetDescriptor(), m_path.c_str(), uMask);
+		int wd = inotify_add_watch(m_pInotify->GetDescriptor(), m_path.c_str(), mask);
 		if(wd != m_wd)
 		{
-			IN_WRITE_END_NOTHROW
 			throw InotifyException(IN_EXC_MSG("changing mask failed"), wd == -1 ? errno : EINVAL, this);
 		}
 	}
 
-	m_uMask = uMask;
+	m_uMask = mask;
+}
 
-	IN_WRITE_END
+Inotify* InotifyWatch::GetInotify()
+{
+	return m_pInotify;
 }
 
 void InotifyWatch::SetEnabled(bool fEnabled)
 {
-	IN_WRITE_BEGIN
-
 	if(fEnabled == m_fEnabled)
 	{
-		IN_WRITE_END_NOTHROW
 		return;
 	}
 
@@ -269,7 +122,6 @@ void InotifyWatch::SetEnabled(bool fEnabled)
 			m_wd = inotify_add_watch(m_pInotify->GetDescriptor(), m_path.c_str(), m_uMask);
 			if(m_wd == -1)
 			{
-				IN_WRITE_END_NOTHROW
 				throw InotifyException(IN_EXC_MSG("enabling watch failed"), errno, this);
 			}
 			m_pInotify->m_watches.insert(IN_WATCH_MAP::value_type(m_wd, this));
@@ -278,7 +130,6 @@ void InotifyWatch::SetEnabled(bool fEnabled)
 		{
 			if(inotify_rm_watch(m_pInotify->GetDescriptor(), m_wd) != 0)
 			{
-				IN_WRITE_END_NOTHROW
 				throw InotifyException(IN_EXC_MSG("disabling watch failed"), errno, this);
 			}
 			m_pInotify->m_watches.erase(m_wd);
@@ -287,17 +138,17 @@ void InotifyWatch::SetEnabled(bool fEnabled)
 	}
 
 	m_fEnabled = fEnabled;
+}
 
-	IN_WRITE_END
+bool InotifyWatch::IsEnabled() const
+{
+	return m_fEnabled;
 }
 
 void InotifyWatch::__Disable()
 {
-	IN_WRITE_BEGIN
-
 	if(!m_fEnabled)
 	{
-		IN_WRITE_END_NOTHROW
 		throw InotifyException(IN_EXC_MSG("event cannot occur on disabled watch"), EINVAL, this);
 	}
 
@@ -308,59 +159,29 @@ void InotifyWatch::__Disable()
 	}
 
 	m_fEnabled = false;
-
-	IN_WRITE_END
 }
 
 
 Inotify::Inotify()
 {
-	IN_LOCK_INIT
-
 	m_fd = inotify_init();
 	if(m_fd == -1)
 	{
-		IN_LOCK_DONE
 		throw InotifyException(IN_EXC_MSG("inotify init failed"), errno, nullptr);
 	}
 }
 
 Inotify::~Inotify()
 {
-	Close();
-
-	IN_LOCK_DONE
-}
-
-void Inotify::Close()
-{
-	IN_WRITE_BEGIN
-
-	if(m_fd != -1)
-	{
-		RemoveAll();
-		close(m_fd);
-		m_fd = -1;
-	}
-
-	IN_WRITE_END
+	RemoveAll();
+	close(m_fd);
 }
 
 void Inotify::Add(InotifyWatch* pWatch)
 {
-	IN_WRITE_BEGIN
-
-	// invalid descriptor - this case shouldn't occur - go away
-	if(m_fd == -1)
-	{
-		IN_WRITE_END_NOTHROW
-		throw InotifyException(IN_EXC_MSG("invalid file descriptor"), EBUSY, this);
-	}
-
 	// this path already watched - go away
 	if(FindWatch(pWatch->GetPath()) != nullptr)
 	{
-		IN_WRITE_END_NOTHROW
 		throw InotifyException(IN_EXC_MSG("path already watched"), EBUSY, this);
 	}
 
@@ -373,7 +194,6 @@ void Inotify::Add(InotifyWatch* pWatch)
 		// adding failed - go away
 		if(wd == -1)
 		{
-			IN_WRITE_END_NOTHROW
 			throw InotifyException(IN_EXC_MSG("adding watch failed"), errno, this);
 		}
 
@@ -384,13 +204,11 @@ void Inotify::Add(InotifyWatch* pWatch)
 			// try to recover old watch because it may be modified - then go away
 			if(inotify_add_watch(m_fd, pW->GetPath().c_str(), pW->GetMask()) < 0)
 			{
-				IN_WRITE_END_NOTHROW
 				throw InotifyException(IN_EXC_MSG("watch collision detected and recovery failed"), errno, this);
 			}
 			else
 			{
 				// recovery failed - go away
-				IN_WRITE_END_NOTHROW
 				throw InotifyException(IN_EXC_MSG("path already watched (but defined another way)"), EBUSY, this);
 			}
 		}
@@ -401,18 +219,18 @@ void Inotify::Add(InotifyWatch* pWatch)
 
 	m_paths.insert(IN_WP_MAP::value_type(pWatch->m_path, pWatch));
 	pWatch->m_pInotify = this;
+}
 
-	IN_WRITE_END
+void Inotify::Add(InotifyWatch& rWatch)
+{
+	Add(&rWatch);
 }
 
 void Inotify::Remove(InotifyWatch* pWatch)
 {
-	IN_WRITE_BEGIN
-
 	// invalid descriptor - this case shouldn't occur - go away
 	if(m_fd == -1)
 	{
-		IN_WRITE_END_NOTHROW
 		throw InotifyException(IN_EXC_MSG("invalid file descriptor"), EBUSY, this);
 	}
 
@@ -422,7 +240,6 @@ void Inotify::Remove(InotifyWatch* pWatch)
 		// removing watch failed - go away
 		if(inotify_rm_watch(m_fd, pWatch->m_wd) == -1)
 		{
-			IN_WRITE_END_NOTHROW
 			throw InotifyException(IN_EXC_MSG("removing watch failed"), errno, this);
 		}
 		m_watches.erase(pWatch->m_wd);
@@ -431,14 +248,15 @@ void Inotify::Remove(InotifyWatch* pWatch)
 
 	m_paths.erase(pWatch->m_path);
 	pWatch->m_pInotify = nullptr;
+}
 
-	IN_WRITE_END
+void Inotify::Remove(InotifyWatch& rWatch)
+{
+	Remove(&rWatch);
 }
 
 void Inotify::RemoveAll()
 {
-	IN_WRITE_BEGIN
-
 	IN_WP_MAP::iterator it = m_paths.begin();
 	while(it != m_paths.end())
 	{
@@ -454,8 +272,16 @@ void Inotify::RemoveAll()
 
 	m_watches.clear();
 	m_paths.clear();
+}
 
-	IN_WRITE_END
+std::size_t Inotify::GetWatchCount() const
+{
+	return m_paths.size();
+}
+
+std::size_t Inotify::GetEnabledCount() const
+{
+	return m_watches.size();
 }
 
 void Inotify::WaitForEvents(const bool fNoIntr)
@@ -477,10 +303,7 @@ void Inotify::WaitForEvents(const bool fNoIntr)
 		return;
 	}
 
-	IN_WRITE_BEGIN
-
-	ssize_t i = 0;
-	while(i < len)
+	for(ssize_t i = 0; i < len;)
 	{
 		inotify_event* pEvt = reinterpret_cast<inotify_event*>(&m_buf[i]);
 		InotifyWatch* pW = FindWatch(pEvt->wd);
@@ -489,23 +312,26 @@ void Inotify::WaitForEvents(const bool fNoIntr)
 			InotifyEvent evt(pEvt, pW);
 			if(InotifyEvent::IsType(pW->GetMask(), IN_ONESHOT)
 			|| InotifyEvent::IsType(evt.GetMask(), IN_IGNORED))
+			{
 				pW->__Disable();
-			m_events.push_back(evt);
+			}
+			m_events.emplace_back(evt);
 		}
 		i += INOTIFY_EVENT_SIZE + pEvt->len;
 	}
-
-	IN_WRITE_END
 }
 
-bool Inotify::GetEvent(InotifyEvent* pEvt)
+std::size_t Inotify::GetEventCount() const
+{
+	return m_events.size();
+}
+
+bool Inotify::PopEvent(InotifyEvent* pEvt)
 {
 	if(pEvt == nullptr)
 	{
 		throw InotifyException(IN_EXC_MSG("null pointer to event"), EINVAL, this);
 	}
-
-	IN_WRITE_BEGIN
 
 	bool b = !m_events.empty();
 	if(b)
@@ -514,9 +340,12 @@ bool Inotify::GetEvent(InotifyEvent* pEvt)
 		m_events.pop_front();
 	}
 
-	IN_WRITE_END
-
 	return b;
+}
+
+bool Inotify::PopEvent(InotifyEvent& rEvt)
+{
+	return PopEvent(&rEvt);
 }
 
 bool Inotify::PeekEvent(InotifyEvent* pEvt)
@@ -526,57 +355,47 @@ bool Inotify::PeekEvent(InotifyEvent* pEvt)
 		throw InotifyException(IN_EXC_MSG("null pointer to event"), EINVAL, this);
 	}
 
-	IN_READ_BEGIN
-
 	bool b = !m_events.empty();
 	if(b)
 	{
 		*pEvt = m_events.front();
 	}
 
-	IN_READ_END
-
 	return b;
+}
+
+bool Inotify::PeekEvent(InotifyEvent& rEvt)
+{
+	return PeekEvent(&rEvt);
 }
 
 InotifyWatch* Inotify::FindWatch(int iDescriptor)
 {
-	IN_READ_BEGIN
-
 	IN_WATCH_MAP::iterator it = m_watches.find(iDescriptor);
-	InotifyWatch* pW = it == m_watches.end() ? nullptr : (*it).second;
-
-	IN_READ_END
-
-	return pW;
+	return it == m_watches.end() ? nullptr : (*it).second;
 }
 
 InotifyWatch* Inotify::FindWatch(const std::string& rPath)
 {
-	IN_READ_BEGIN
-
 	IN_WP_MAP::iterator it = m_paths.find(rPath);
-	InotifyWatch* pW = it == m_paths.end() ? nullptr : (*it).second;
+	return it == m_paths.end() ? nullptr : (*it).second;
+}
 
-	IN_READ_END
-
-	return pW;
+int Inotify::GetDescriptor() const
+{
+	return m_fd;
 }
 
 void Inotify::SetNonBlock(bool fNonBlock)
 {
-	IN_WRITE_BEGIN
-
 	if(m_fd == -1)
 	{
-		IN_WRITE_END_NOTHROW
 		throw InotifyException(IN_EXC_MSG("invalid file descriptor"), EBUSY, this);
 	}
 
 	int res = fcntl(m_fd, F_GETFL);
 	if(res == -1)
 	{
-		IN_WRITE_END_NOTHROW
 		throw InotifyException(IN_EXC_MSG("cannot get inotify flags"), errno, this);
 	}
 
@@ -591,27 +410,20 @@ void Inotify::SetNonBlock(bool fNonBlock)
 
 	if(fcntl(m_fd, F_SETFL, res) == -1)
 	{
-		IN_WRITE_END_NOTHROW
 		throw InotifyException(IN_EXC_MSG("cannot set inotify flags"), errno, this);
 	}
-
-	IN_WRITE_END
 }
 
 void Inotify::SetCloseOnExec(bool fClOnEx)
 {
-	IN_WRITE_BEGIN
-
 	if(m_fd == -1)
 	{
-		IN_WRITE_END_NOTHROW
 		throw InotifyException(IN_EXC_MSG("invalid file descriptor"), EBUSY, this);
 	}
 
 	int res = fcntl(m_fd, F_GETFD);
 	if(res == -1)
 	{
-		IN_WRITE_END_NOTHROW
 		throw InotifyException(IN_EXC_MSG("cannot get inotify flags"), errno, this);
 	}
 
@@ -626,68 +438,54 @@ void Inotify::SetCloseOnExec(bool fClOnEx)
 
 	if(fcntl(m_fd, F_SETFD, res) == -1)
 	{
-		IN_WRITE_END_NOTHROW
 		throw InotifyException(IN_EXC_MSG("cannot set inotify flags"), errno, this);
 	}
-
-	IN_WRITE_END
 }
 
-uint32_t Inotify::GetCapability(InotifyCapability_t cap)
+uint32_t Inotify::GetCapability(InotifyCapability cap)
 {
-	FILE* f = fopen(GetCapabilityPath(cap).c_str(), "r");
-	if(f == nullptr)
+	std::ifstream f(GetCapabilityPath(cap));
+	if(!f)
 	{
-		throw InotifyException(IN_EXC_MSG("cannot get capability"), errno, nullptr);
+		throw InotifyException(IN_EXC_MSG("cannot get capability"), errno);
 	}
 
-	unsigned int val = 0;
-	if(fscanf(f, "%u", &val) != 1)
+	uint32_t val;
+	if(!(f >> val))
 	{
-		fclose(f);
-		throw InotifyException(IN_EXC_MSG("cannot get capability"), EIO, nullptr);
+		throw InotifyException(IN_EXC_MSG("cannot get capability"), EIO);
 	}
 
-	fclose(f);
-
-	return static_cast<uint32_t>(val);
+	return val;
 }
 
-void Inotify::SetCapability(InotifyCapability_t cap, uint32_t val)
+void Inotify::SetCapability(InotifyCapability cap, uint32_t val)
 {
-	FILE* f = fopen(GetCapabilityPath(cap).c_str(), "w");
-	if(f == nullptr)
+	std::ofstream f(GetCapabilityPath(cap));
+	if(!f)
 	{
-		throw InotifyException(IN_EXC_MSG("cannot set capability"), errno, nullptr);
+		throw InotifyException(IN_EXC_MSG("cannot set capability"), errno);
 	}
 
-	if(fprintf(f, "%u", static_cast<unsigned int>(val)) <= 0)
+	if(!(f << val))
 	{
-		fclose(f);
-		throw InotifyException(IN_EXC_MSG("cannot set capability"), EIO, nullptr);
+		throw InotifyException(IN_EXC_MSG("cannot set capability"), EIO);
 	}
-
-	fclose(f);
 }
 
-std::string Inotify::GetCapabilityPath(InotifyCapability_t cap)
+std::string Inotify::GetCapabilityPath(InotifyCapability cap)
 {
-	std::string path(PROCFS_INOTIFY_BASE);
+	std::string path = "/proc/sys/fs/inotify/";
 
 	switch(cap)
 	{
-		case IN_MAX_EVENTS:
-			path.append("max_queued_events");
-			break;
-		case IN_MAX_INSTANCES:
-			path.append("max_user_instances");
-			break;
-		case IN_MAX_WATCHES:
-			path.append("max_user_watches");
-			break;
-		default:
-			throw InotifyException(IN_EXC_MSG("unknown capability type"), EINVAL, nullptr);
+		case InotifyCapability::max_events:
+			return path + "max_queued_events";
+		case InotifyCapability::max_instances:
+			return path + "max_user_instances";
+		case InotifyCapability::max_watches:
+			return path + "max_user_watches";
 	}
 
-	return path;
+	throw InotifyException(IN_EXC_MSG("unknown capability type"), EINVAL);
 }

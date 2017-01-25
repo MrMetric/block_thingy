@@ -1,7 +1,5 @@
 /// inotify C++ interface header
 /**
- * \file inotify-cxx.h
- *
  * inotify C++ interface
  *
  * Copyright (C) 2006, 2007, 2009 Lukas Jelinek, <lukas@aiken.cz>
@@ -24,10 +22,11 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <string>
 #include <deque>
 #include <map>
+#include <stdexcept>
+#include <stdint.h>
+#include <string>
 
 // Please ensure that the following header file takes the right place
 #include <sys/inotify.h>
@@ -46,94 +45,12 @@
 #define IN_EXC_MSG(msg) (std::string(__PRETTY_FUNCTION__) + ": " + msg)
 
 /// inotify capability/limit identifiers
-typedef enum
+enum class InotifyCapability
 {
-	IN_MAX_EVENTS     = 0,  ///< max. events in the kernel queue
-	IN_MAX_INSTANCES  = 1,  ///< max. inotify file descriptors per process
-	IN_MAX_WATCHES    = 2   ///< max. watches per file descriptor
-} InotifyCapability_t;
-
-/// inotify-cxx thread safety
-/**
- * If this symbol is defined you can use this interface safely
- * threaded applications. Remember that it slightly degrades
- * performance.
- *
- * Even if INOTIFY_THREAD_SAFE is defined some classes stay
- * unsafe. If you must use them (must you?) in more than one
- * thread concurrently you need to implement explicit locking.
- *
- * You need not to define INOTIFY_THREAD_SAFE in that cases
- * where the application is multithreaded but all the inotify
- * infrastructure will be managed only in one thread. This is
- * the recommended way.
- *
- * Locking may fail (it is very rare but not impossible). In this
- * case an exception is thrown. But if unlocking fails in case
- * of an error it does nothing (this failure is ignored).
- */
-#ifdef INOTIFY_THREAD_SAFE
-
-#include <pthread.h>
-
-#define IN_LOCK_DECL mutable pthread_rwlock_t __m_lock;
-
-#define IN_LOCK_INIT \
-	{ \
-		pthread_rwlockattr_t attr; \
-		int res = 0; \
-		if((res = pthread_rwlockattr_init(&attr)) != 0) \
-			throw InotifyException(IN_EXC_MSG("cannot initialize lock attributes"), res, this); \
-		if((res = pthread_rwlockattr_setkind_np(&attr, PTHREAD_RWLOCK_PREFER_WRITER_NP)) != 0) \
-			throw InotifyException(IN_EXC_MSG("cannot set lock kind"), res, this); \
-		if((res = pthread_rwlock_init(&__m_lock, &attr)) != 0) \
-			throw InotifyException(IN_EXC_MSG("cannot initialize lock"), res, this); \
-		pthread_rwlockattr_destroy(&attr); \
-	}
-
-#define IN_LOCK_DONE pthread_rwlock_destroy(&__m_lock);
-
-#define IN_READ_BEGIN \
-	{ \
-		int res = pthread_rwlock_rdlock(&__m_lock); \
-		if(res != 0) \
-			throw InotifyException(IN_EXC_MSG("locking for reading failed"), res, (void*) this); \
-	}
-
-#define IN_READ_END \
-	{ \
-		int res = pthread_rwlock_unlock(&__m_lock); \
-		if(res != 0) \
-			throw InotifyException(IN_EXC_MSG("unlocking failed"), res, (void*) this); \
-	}
-
-#define IN_READ_END_NOTHROW pthread_rwlock_unlock(&__m_lock);
-
-#define IN_WRITE_BEGIN \
-	{ \
-		int res = pthread_rwlock_wrlock(&__m_lock); \
-		if(res != 0) \
-			throw InotifyException(IN_EXC_MSG("locking for writing failed"), res, (void*) this); \
-	}
-
-#define IN_WRITE_END IN_READ_END
-#define IN_WRITE_END_NOTHROW IN_READ_END_NOTHROW
-
-#else // INOTIFY_THREAD_SAFE
-
-#define IN_LOCK_DECL
-#define IN_LOCK_INIT
-#define IN_LOCK_DONE
-#define IN_READ_BEGIN
-#define IN_READ_END
-#define IN_READ_END_NOTHROW
-#define IN_WRITE_BEGIN
-#define IN_WRITE_END
-#define IN_WRITE_END_NOTHROW
-
-#endif // INOTIFY_THREAD_SAFE
-
-
+	max_events,    // max. events in the kernel queue
+	max_instances, // max. inotify file descriptors per process
+	max_watches,   // max. watches per file descriptor
+};
 
 
 // forward declaration
@@ -150,29 +67,19 @@ class Inotify;
  * Although this class is basically thread-safe it is not intended
  * to be shared between threads.
  */
-class InotifyException
+class InotifyException : public std::runtime_error
 {
 public:
 	/**
-	 * \param[in] rMsg message
 	 * \param[in] iErr error number (see errno.h)
 	 * \param[in] pSrc source
 	 */
-	InotifyException(const std::string& rMsg = "", int iErr = 0, void* pSrc = nullptr)
+	InotifyException(const std::string& what_arg, int iErr = 0, void* pSrc = nullptr)
 	:
-		m_msg(rMsg),
-		m_err(iErr)
+		std::runtime_error(what_arg),
+		m_err(iErr),
+		m_pSrc(pSrc)
 	{
-		m_pSrc = pSrc;
-	}
-
-	/// Returns the exception message.
-	/**
-	 * \return message
-	 */
-	inline const std::string& GetMessage() const
-	{
-		return m_msg;
 	}
 
 	/// Returns the exception error number.
@@ -181,7 +88,7 @@ public:
 	 *
 	 * \return error number (standardized; see errno.h)
 	 */
-	inline int GetErrorNumber() const
+	int GetErrno() const
 	{
 		return m_err;
 	}
@@ -190,15 +97,14 @@ public:
 	/**
 	 * \return source
 	 */
-	inline void* GetSource() const
+	void* GetSource() const
 	{
 		return m_pSrc;
 	}
 
 protected:
-	std::string m_msg;      ///< message
-	int m_err;              ///< error number
-	mutable void* m_pSrc;   ///< source
+	int m_err;            // error number
+	mutable void* m_pSrc; // source
 };
 
 
@@ -253,101 +159,28 @@ public:
 		}
 	}
 
-	/// Returns the event watch descriptor.
-	/**
-	 * \return watch descriptor
-	 *
-	 * \sa InotifyWatch::GetDescriptor()
-	 */
-	int32_t GetDescriptor() const;
-
-	/// Returns the event mask.
-	/**
-	 * \return event mask
-	 *
-	 * \sa InotifyWatch::GetMask()
-	 */
-	inline uint32_t GetMask() const
-	{
-		return m_uMask;
-	}
+	uint32_t GetMask() const;
 
 	/// Checks a value for the event type.
 	/**
-	 * \param[in] uValue checked value
-	 * \param[in] uType type which is checked for
+	 * \param[in] value checked value
+	 * \param[in] type type which is checked for
 	 * \return true = the value contains the given type, false = otherwise
 	 */
-	inline static bool IsType(uint32_t uValue, uint32_t uType)
-	{
-		return ((uValue & uType) != 0) && ((~uValue & uType) == 0);
-	}
+	static bool IsType(uint32_t value, uint32_t type);
 
 	/// Checks for the event type.
 	/**
-	 * \param[in] uType type which is checked for
+	 * \param[in] type type which is checked for
 	 * \return true = event mask contains the given type, false = otherwise
 	 */
-	inline bool IsType(uint32_t uType) const
-	{
-		return IsType(m_uMask, uType);
-	}
+	bool IsType(uint32_t type) const;
 
-	/// Returns the event cookie.
-	/**
-	 * \return event cookie
-	 */
-	inline uint32_t GetCookie() const
-	{
-		return m_uCookie;
-	}
+	uint32_t GetCookie() const;
 
-	/// Returns the event name length.
-	/**
-	 * \return event name length
-	 */
-	inline std::size_t GetLength() const
-	{
-		return m_name.size();
-	}
+	std::string GetName() const;
 
-	/// Returns the event name.
-	/**
-	 * \return event name
-	 */
-	inline const std::string& GetName() const
-	{
-		return m_name;
-	}
-
-	/// Returns the source watch.
-	/**
-	 * \return source watch
-	 */
-	inline InotifyWatch* GetWatch()
-	{
-		return m_pWatch;
-	}
-
-	/// Finds the appropriate mask for a name.
-	/**
-	 * \param[in] rName mask name
-	 * \return mask for name; 0 on failure
-	 */
-	static uint32_t GetMaskByName(const std::string& rName);
-
-	/// Returns a string with all types contained in an event mask value.
-	/**
-	 * \param[in] uValue event mask value
-	 * \return dumped event types
-	 */
-	static std::string DumpTypes(uint32_t uValue);
-
-	/// Returns a string with all types contained in the event mask.
-	/**
-	 * \return dumped event types
-	 */
-	std::string DumpTypes() const;
+	InotifyWatch* GetWatch();
 
 private:
 	uint32_t m_uMask;           ///< mask
@@ -362,8 +195,6 @@ private:
 /**
  * It holds information about the inotify watch on a particular
  * inode.
- *
- * If the INOTIFY_THREAD_SAFE is defined this class is thread-safe.
  */
 class InotifyWatch
 {
@@ -372,51 +203,15 @@ public:
 	 * Creates an inotify watch. Because this watch is
 	 * inactive it has an invalid descriptor (-1).
 	 *
-	 * \param[in] rPath watched file path
-	 * \param[in] uMask mask for events
-	 * \param[in] fEnabled events enabled yes/no
+	 * \param[in] path watched file path
+	 * \param[in] mask mask for events
+	 * \param[in] enabled events enabled yes/no
 	 */
-	InotifyWatch(const std::string& rPath, uint32_t uMask, bool fEnabled = true)
-	:
-		m_path(rPath),
-		m_uMask(uMask),
-		m_wd(-1),
-		m_fEnabled(fEnabled)
-	{
-		IN_LOCK_INIT
-	}
+	InotifyWatch(const std::string& path, uint32_t mask, bool enabled = true);
 
-	~InotifyWatch()
-	{
-		IN_LOCK_DONE
-	}
+	std::string GetPath() const;
 
-	/// Returns the watch descriptor.
-	/**
-	 * \return watch descriptor; -1 for inactive watch
-	 */
-	inline int32_t GetDescriptor() const
-	{
-		return m_wd;
-	}
-
-	/// Returns the watched file path.
-	/**
-	 * \return file path
-	 */
-	inline const std::string& GetPath() const
-	{
-		return m_path;
-	}
-
-	/// Returns the watch event mask.
-	/**
-	 * \return event mask
-	 */
-	inline uint32_t GetMask() const
-	{
-		return m_uMask;
-	}
+	uint32_t GetMask() const;
 
 	/// Sets the watch event mask.
 	/**
@@ -424,20 +219,17 @@ public:
 	 * this method may fail due to unsuccessful re-setting
 	 * the watch in the kernel.
 	 *
-	 * \param[in] uMask event mask
+	 * \param[in] mask event mask
 	 *
 	 * \throw InotifyException thrown if changing fails
 	 */
-	void SetMask(uint32_t uMask);
+	void SetMask(uint32_t mask);
 
 	/// Returns the appropriate inotify class instance.
 	/**
 	 * \return inotify instance
 	 */
-	inline Inotify* GetInotify()
-	{
-		return m_pInotify;
-	}
+	Inotify* GetInotify();
 
 	/// Enables/disables the watch.
 	/**
@@ -457,25 +249,7 @@ public:
 	/**
 	 * \return true = enables, false = disabled
 	 */
-	inline bool IsEnabled() const
-	{
-		return m_fEnabled;
-	}
-
-	/// Checks whether the watch is recursive.
-	/**
-	 * A recursive watch monitors a directory itself and all
-	 * its subdirectories. This watch is a logical object
-	 * which may have many underlying kernel watches.
-	 *
-	 * \return currently always false (recursive watches not yet supported)
-	 * \attention Recursive watches are currently NOT supported.
-	 *            They are planned for future versions.
-	 */
-	inline bool IsRecursive() const
-	{
-		return false;
-	}
+	bool IsEnabled() const;
 
 private:
 	friend class Inotify;
@@ -485,8 +259,6 @@ private:
 	int32_t m_wd;         ///< watch descriptor
 	Inotify* m_pInotify;  ///< inotify object
 	bool m_fEnabled;      ///< events enabled yes/no
-
-	IN_LOCK_DECL
 
 	/// Disables the watch (due to removing by the kernel).
 	/**
@@ -499,18 +271,16 @@ private:
 
 
 /// Mapping from watch descriptors to watch objects.
-typedef std::map<int32_t, InotifyWatch*> IN_WATCH_MAP;
+using IN_WATCH_MAP = std::map<int32_t, InotifyWatch*>;
 
 /// Mapping from paths to watch objects.
-typedef std::map<std::string, InotifyWatch*> IN_WP_MAP;
+using IN_WP_MAP = std::map<std::string, InotifyWatch*>;
 
 
 /// inotify class
 /**
  * It holds information about the inotify device descriptor
  * and manages the event queue.
- *
- * If the INOTIFY_THREAD_SAFE is defined this class is thread-safe.
  */
 class Inotify
 {
@@ -522,14 +292,7 @@ public:
 	 * \throw InotifyException thrown if inotify isn't available
 	 */
 	Inotify();
-
-	/**
-	 * Calls Close() due to clean-up.
-	 */
 	~Inotify();
-
-	/// Removes all watches and closes the inotify device.
-	void Close();
 
 	/// Adds a new watch.
 	/**
@@ -545,10 +308,7 @@ public:
 	 *
 	 * \throw InotifyException thrown if adding failed
 	 */
-	inline void Add(InotifyWatch& rWatch)
-	{
-		Add(&rWatch);
-	}
+	void Add(InotifyWatch& rWatch);
 
 	/// Removes a watch.
 	/**
@@ -568,10 +328,7 @@ public:
 	 *
 	 * \throw InotifyException thrown if removing failed
 	 */
-	inline void Remove(InotifyWatch& rWatch)
-	{
-		Remove(&rWatch);
-	}
+	void Remove(InotifyWatch& rWatch);
 
 	/// Removes all watches.
 	void RemoveAll();
@@ -585,13 +342,7 @@ public:
 	 *
 	 * \sa GetEnabledCount()
 	 */
-	inline std::size_t GetWatchCount() const
-	{
-		IN_READ_BEGIN
-		std::size_t n = m_paths.size();
-		IN_READ_END
-		return n;
-	}
+	std::size_t GetWatchCount() const;
 
 	/// Returns the count of enabled watches.
 	/**
@@ -599,13 +350,7 @@ public:
 	 *
 	 * \sa GetWatchCount()
 	 */
-	inline std::size_t GetEnabledCount() const
-	{
-		IN_READ_BEGIN
-		std::size_t n = m_watches.size();
-		IN_READ_END
-		return n;
-	}
+	std::size_t GetEnabledCount() const;
 
 	/// Waits for inotify events.
 	/**
@@ -628,13 +373,7 @@ public:
 	 *
 	 * \return count of events
 	 */
-	inline std::size_t GetEventCount()
-	{
-		IN_READ_BEGIN
-		std::size_t n = m_events.size();
-		IN_READ_END
-		return n;
-	}
+	std::size_t GetEventCount() const;
 
 	/// Extracts a queued inotify event.
 	/**
@@ -645,7 +384,7 @@ public:
 	 *
 	 * \throw InotifyException thrown if the provided pointer is null
 	 */
-	bool GetEvent(InotifyEvent* pEvt);
+	bool PopEvent(InotifyEvent* pEvt);
 
 	/// Extracts a queued inotify event.
 	/**
@@ -655,10 +394,7 @@ public:
 	 *
 	 * \throw InotifyException thrown only in very anomalous cases
 	 */
-	bool GetEvent(InotifyEvent& rEvt)
-	{
-		return GetEvent(&rEvt);
-	}
+	bool PopEvent(InotifyEvent& rEvt);
 
 	/// Extracts a queued inotify event (without removing).
 	/**
@@ -679,10 +415,7 @@ public:
 	 *
 	 * \throw InotifyException thrown only in very anomalous cases
 	 */
-	bool PeekEvent(InotifyEvent& rEvt)
-	{
-		return PeekEvent(&rEvt);
-	}
+	bool PeekEvent(InotifyEvent& rEvt);
 
 	/// Searches for a watch by a watch descriptor.
 	/**
@@ -715,10 +448,7 @@ public:
 	 *
 	 * \sa SetNonBlock()
 	 */
-	inline int GetDescriptor() const
-	{
-		return m_fd;
-	}
+	int GetDescriptor() const;
 
 	/// Enables/disables non-blocking mode.
 	/**
@@ -758,7 +488,7 @@ public:
 	 * \return capability/limit value
 	 * \throw InotifyException thrown if the given value cannot be acquired
 	 */
-	static uint32_t GetCapability(InotifyCapability_t cap);
+	static uint32_t GetCapability(InotifyCapability cap);
 
 	/// Modifies a particular inotify capability/limit.
 	/**
@@ -769,96 +499,16 @@ public:
 	 *            Beware of setting extensive values - it may seriously
 	 *            affect system performance and/or stability.
 	 */
-	static void SetCapability(InotifyCapability_t cap, uint32_t val);
-
-	/// Returns the maximum number of events in the kernel queue.
-	/**
-	 * \return maximum number of events in the kernel queue
-	 * \throw InotifyException thrown if the given value cannot be acquired
-	 */
-	inline static uint32_t GetMaxEvents()
-	{
-		return GetCapability(IN_MAX_EVENTS);
-	}
-
-	/// Sets the maximum number of events in the kernel queue.
-	/**
-	 * \param[in] val new value
-	 * \throw InotifyException thrown if the given value cannot be set
-	 * \attention Using this function requires root privileges.
-	 *            Beware of setting extensive values - the greater value
-	 *            is set here the more physical memory may be used for the inotify
-	 *            infrastructure.
-	 */
-	inline static void SetMaxEvents(uint32_t val)
-	{
-		SetCapability(IN_MAX_EVENTS, val);
-	}
-
-	/// Returns the maximum number of inotify instances per process.
-	/**
-	 * It means the maximum number of open inotify file descriptors
-	 * per running process.
-	 *
-	 * \return maximum number of inotify instances
-	 * \throw InotifyException thrown if the given value cannot be acquired
-	 */
-	inline static uint32_t GetMaxInstances()
-	{
-		return GetCapability(IN_MAX_INSTANCES);
-	}
-
-	/// Sets the maximum number of inotify instances per process.
-	/**
-	 * \param[in] val new value
-	 * \throw InotifyException thrown if the given value cannot be set
-	 * \attention Using this function requires root privileges.
-	 *            Beware of setting extensive values - the greater value
-	 *            is set here the more physical memory may be used for the inotify
-	 *            infrastructure.
-	 */
-	inline static void SetMaxInstances(uint32_t val)
-	{
-		SetCapability(IN_MAX_INSTANCES, val);
-	}
-
-	/// Returns the maximum number of inotify watches per instance.
-	/**
-	 * It means the maximum number of inotify watches per inotify
-	 * file descriptor.
-	 *
-	 * \return maximum number of inotify watches
-	 * \throw InotifyException thrown if the given value cannot be acquired
-	 */
-	inline static uint32_t GetMaxWatches()
-	{
-		return GetCapability(IN_MAX_WATCHES);
-	}
-
-	/// Sets the maximum number of inotify watches per instance.
-	/**
-	 * \param[in] val new value
-	 * \throw InotifyException thrown if the given value cannot be set
-	 * \attention Using this function requires root privileges.
-	 *            Beware of setting extensive values - the greater value
-	 *            is set here the more physical memory may be used for the inotify
-	 *            infrastructure.
-	 */
-	inline static void SetMaxWatches(uint32_t val)
-	{
-		SetCapability(IN_MAX_WATCHES, val);
-	}
+	static void SetCapability(InotifyCapability cap, uint32_t val);
 
 private:
-	int m_fd;                             ///< file descriptor
-	IN_WATCH_MAP m_watches;               ///< watches (by descriptors)
-	IN_WP_MAP m_paths;                    ///< watches (by paths)
-	unsigned char m_buf[INOTIFY_BUFLEN];  ///< buffer for events
-	std::deque<InotifyEvent> m_events;    ///< event queue
-
-	IN_LOCK_DECL
+	int m_fd;                            // file descriptor
+	IN_WATCH_MAP m_watches;              // watches (by descriptors)
+	IN_WP_MAP m_paths;                   // watches (by paths)
+	unsigned char m_buf[INOTIFY_BUFLEN]; // buffer for events
+	std::deque<InotifyEvent> m_events;   // event queue
 
 	friend class InotifyWatch;
 
-	static std::string GetCapabilityPath(InotifyCapability_t cap);
+	static std::string GetCapabilityPath(InotifyCapability cap);
 };
