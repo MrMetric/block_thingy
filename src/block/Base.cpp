@@ -114,9 +114,9 @@ void Base::use_start()
 
 void Base::save(Storage::OutputInterface& i) const
 {
-	BlockType t = type_ != BlockType::none ? type_ : BlockType::air;
+	BlockType t = (type_ == BlockType::none) ? BlockType::air : type_;
 	BlockTypeExternal te = Game::instance->block_registry.get_extid(t);
-	i.set("t", te);
+	i.set("", te);
 }
 
 void Base::load(Storage::InputInterface&)
