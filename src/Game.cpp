@@ -88,6 +88,12 @@ Game::Game(Gfx& gfx)
 	add_block<Block::Glass>("glass");
 	add_block("side_test");
 
+	if(block_registry.get_extid_map().size() == 0)
+	{
+		// this should be done when starting a new world, but the design does not work that way yet
+		block_registry.reset_extid_map();
+	}
+
 	block_type = block_registry.get_id("white");
 
 	gui = std::make_unique<Graphics::GUI::Play>(*this);
@@ -287,14 +293,14 @@ void Game::joymove(const glm::dvec2& motion)
 	gui->joymove(motion);
 }
 
-void Game::add_block(const string& name, BlockType t)
+void Game::add_block(const string& strid, BlockType t)
 {
-	console.logger << "ID " << static_cast<block_type_id_t>(t) << ": " << name << "\n";
+	console.logger << "ID " << static_cast<block_type_id_t>(t) << ": " << strid << "\n";
 	if(t != BlockType::none && t != BlockType::air)
 	{
 		try
 		{
-			gfx.block_shaders.emplace(t, "shaders/block/" + name);
+			gfx.block_shaders.emplace(t, "shaders/block/" + strid);
 		}
 		catch(const std::runtime_error& e)
 		{

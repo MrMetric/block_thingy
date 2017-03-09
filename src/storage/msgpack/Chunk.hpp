@@ -12,11 +12,7 @@
 template<>
 void Chunk::save(msgpack::packer<zstr::ostream>& o) const
 {
-	const bool has_meshes = false;
-	uint32_t array_size = 3;
-	if(has_meshes) array_size += 1;
-
-	o.pack_array(array_size);
+	o.pack_array(2);
 	const bool is_solid = this->solid_block != nullptr;
 	o.pack(is_solid);
 	if(is_solid)
@@ -26,12 +22,6 @@ void Chunk::save(msgpack::packer<zstr::ostream>& o) const
 	else
 	{
 		o.pack(this->blocks);
-	}
-
-	o.pack(has_meshes);
-	if(has_meshes)
-	{
-		o.pack(this->get_meshes());
 	}
 }
 
@@ -50,12 +40,6 @@ void Chunk::load(const msgpack::object& o)
 	{
 		// let us hope this copy is optimized out
 		this->set_blocks(v.at(i++).as<chunk_block_array_t>());
-	}
-
-	const bool has_meshes = v.at(i++).as<bool>();
-	if(has_meshes)
-	{
-		this->set_meshes(v.at(i++).as<Mesher::meshmap_t>());
 	}
 }
 

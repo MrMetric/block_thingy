@@ -73,8 +73,8 @@ class Game
 		Gfx& gfx;
 
 		Camera camera;
+		Block::BlockRegistry block_registry; // must be initialized before world
 		World world;
-		Block::BlockRegistry block_registry;
 		std::shared_ptr<Player> player_ptr;
 		Player& player;
 		Console console;

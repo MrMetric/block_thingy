@@ -3,11 +3,14 @@
 #include <stdexcept>
 #include <string>
 
+#include "Game.hpp"
 #include "block/BlockType.hpp"
 #include "block/BlockVisibilityType.hpp"
 #include "graphics/Color.hpp"
 #include "storage/Interface.hpp"
 #include "storage/msgpack/BlockType.hpp"
+
+using std::string;
 
 namespace Block {
 
@@ -36,8 +39,8 @@ Base::Base(const Base& that)
 
 Base& Base::operator=(const Base& that)
 {
-	const auto type1 = type_id();
-	const auto type2 = that.type_id();
+	const auto type1 = static_cast<block_type_id_t>(type());
+	const auto type2 = static_cast<block_type_id_t>(that.type());
 	if(type1 != type2)
 	{
 		throw std::runtime_error("can not copy " + std::to_string(type2) + " to " + std::to_string(type1));
@@ -45,14 +48,14 @@ Base& Base::operator=(const Base& that)
 	return *this;
 }
 
-block_type_id_t Base::type_id() const
-{
-	return static_cast<block_type_id_t>(type_);
-}
-
 BlockType Base::type() const
 {
 	return type_;
+}
+
+string Base::name() const
+{
+	return Game::instance->block_registry.get_strid(type());
 }
 
 Graphics::Color Base::color() const
@@ -112,7 +115,8 @@ void Base::use_start()
 void Base::save(Storage::OutputInterface& i) const
 {
 	BlockType t = type_ != BlockType::none ? type_ : BlockType::air;
-	i.set("t", t);
+	BlockTypeExternal te = Game::instance->block_registry.get_extid(t);
+	i.set("t", te);
 }
 
 void Base::load(Storage::InputInterface&)

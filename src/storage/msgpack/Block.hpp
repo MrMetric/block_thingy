@@ -36,7 +36,7 @@ struct convert<std::unique_ptr<Block::Base>>
 
 		const auto map = o.as<std::unordered_map<std::string, msgpack::object>>();
 
-		BlockType t;
+		BlockTypeExternal t;
 		find_in_map_or_throw(map, "t", t);
 		block = Game::instance->block_registry.make(t);
 		Storage::InputInterface i(map);

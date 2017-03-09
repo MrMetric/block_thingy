@@ -100,15 +100,15 @@ void Play::draw_debug_text()
 	#undef p
 	ss << "noclip: " << game.player.get_noclip() << "\n";
 	ss << "block type: "
-		<< game.block_registry.get_name(game.block_type)
+		<< game.block_registry.get_strid(game.block_type)
 		<< " (" << static_cast<block_type_id_t>(game.block_type) << ")"
 		<< "\n";
 	if(game.hovered_block != nullptr)
 	{
-		const auto hovered_type = game.world.get_block(game.hovered_block->pos).type();
+		const Block::Base& hovered = game.world.get_block(game.hovered_block->pos);
 		ss << "hovered: "
-			<< game.block_registry.get_name(hovered_type)
-			<< " (" << static_cast<block_type_id_t>(hovered_type) << ")"
+			<< hovered.name()
+			<< " (" << static_cast<block_type_id_t>(hovered.type()) << ")"
 			<< "\n";
 	}
 	game.gfx.gui_text.draw(ss.str(), {8.0, 8.0});
