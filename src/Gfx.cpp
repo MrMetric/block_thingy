@@ -299,7 +299,7 @@ Graphics::OpenGL::ShaderProgram& Gfx::get_block_shader(const BlockType type)
 	return i->second;
 }
 
-void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint32_t width, const uint32_t height, const bool reverse_rows)
+void Gfx::write_png_RGB(const char* filename, const uint8_t* data, const uint32_t width, const uint32_t height, const bool reverse_rows)
 {
 	png_struct* png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if(png_ptr == nullptr)
@@ -331,14 +331,14 @@ void Gfx::write_png_RGB(const char* filename, uint8_t* buf, const uint32_t width
 	{
 		for(uint_fast32_t y = height; y > 0; --y)
 		{
-			png_write_row(png_ptr, buf + (y - 1) * rowsize);
+			png_write_row(png_ptr, data + (y - 1) * rowsize);
 		}
 	}
 	else
 	{
 		for(uint_fast32_t y = 0; y < height; ++y)
 		{
-			png_write_row(png_ptr, buf + y * rowsize);
+			png_write_row(png_ptr, data + y * rowsize);
 		}
 	}
 	png_write_end(png_ptr, info_ptr);
