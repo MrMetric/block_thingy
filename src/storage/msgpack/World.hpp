@@ -4,6 +4,7 @@
 
 #include "Game.hpp"
 #include "World.hpp"
+#include "block/BlockRegistry.hpp"
 
 //template<typename Stream>
 //void World::save(msgpack::packer<Stream>& o) const
@@ -14,7 +15,6 @@ void World::save(msgpack::packer<std::ofstream>& o) const
 	o.pack_array(2);
 	o.pack(ticks);
 
-	// TODO: save sorted
 	o.pack(game.block_registry.get_extid_map());
 }
 
@@ -25,7 +25,7 @@ void World::load(const msgpack::object& o)
 	ticks = v.at(0).as<decltype(ticks)>();
 
 	// poor design :[
-	game.block_registry.set_extid_map(v.at(1).as<std::unordered_map<BlockTypeExternal, std::string>>());
+	game.block_registry.set_extid_map(v.at(1).as<Block::BlockRegistry::extid_map_t>());
 }
 
 namespace msgpack {

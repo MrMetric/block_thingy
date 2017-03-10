@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
+#include <map>
 #include <memory>
-#include <unordered_map>
+#include <string>
 
 #include "fwd/block/Base.hpp"
 #include "fwd/block/BlockType.hpp"
@@ -55,19 +55,20 @@ class BlockRegistry
 		BlockType get_id(const std::string&) const;
 		BlockTypeExternal get_extid(BlockType) const;
 
+		using extid_map_t = std::map<BlockTypeExternal, std::string>;
 		void reset_extid_map();
-		void set_extid_map(std::unordered_map<BlockTypeExternal, std::string>);
-		const std::unordered_map<BlockTypeExternal, std::string>& get_extid_map() const;
+		void set_extid_map(extid_map_t);
+		const extid_map_t& get_extid_map() const;
 
 	private:
 		void make_strid_to_extid_map();
 
-		std::unordered_map<BlockType, std::unique_ptr<BlockMaker>> map;
+		std::map<BlockType, std::unique_ptr<BlockMaker>> map;
 
-		std::unordered_map<std::string, BlockType> strid_to_id;
-		std::unordered_map<BlockType, std::string> id_to_strid;
-		std::unordered_map<BlockTypeExternal, std::string> extid_to_strid;
-		std::unordered_map<std::string, BlockTypeExternal> strid_to_extid;
+		std::map<std::string, BlockType> strid_to_id;
+		std::map<BlockType, std::string> id_to_strid;
+		extid_map_t extid_to_strid;
+		std::map<std::string, BlockTypeExternal> strid_to_extid;
 		BlockTypeExternal max_extid;
 
 		void add(const std::string& name, BlockType);

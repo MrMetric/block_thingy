@@ -114,7 +114,7 @@ void BlockRegistry::reset_extid_map()
 
 static BlockTypeExternal get_max_extid
 (
-	const std::unordered_map<BlockTypeExternal, string>& extid_to_strid
+	const BlockRegistry::extid_map_t& extid_to_strid
 )
 {
 	BlockTypeExternal max_extid = static_cast<BlockTypeExternal>(0);
@@ -128,7 +128,7 @@ static BlockTypeExternal get_max_extid
 	return max_extid;
 }
 
-void BlockRegistry::set_extid_map(std::unordered_map<BlockTypeExternal, string> map)
+void BlockRegistry::set_extid_map(extid_map_t map)
 {
 	extid_to_strid = std::move(map);
 	make_strid_to_extid_map();
@@ -147,7 +147,7 @@ void BlockRegistry::set_extid_map(std::unordered_map<BlockTypeExternal, string> 
 	}
 }
 
-const std::unordered_map<BlockTypeExternal, string>& BlockRegistry::get_extid_map() const
+const BlockRegistry::extid_map_t& BlockRegistry::get_extid_map() const
 {
 	return extid_to_strid;
 }
