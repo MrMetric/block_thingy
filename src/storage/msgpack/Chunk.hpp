@@ -38,8 +38,19 @@ void Chunk::load(const msgpack::object& o)
 	}
 	else
 	{
+		const msgpack::object& o = v.at(i++);
+		// these checks are separate to distinguish them when debugging
+		if(o.type != msgpack::type::ARRAY)
+		{
+			throw msgpack::type_error();
+		}
+		// msgpack errors on > instead of !=
+		if(o.via.array.size != CHUNK_BLOCK_COUNT)
+		{
+			throw msgpack::type_error();
+		}
 		// let us hope this copy is optimized out
-		this->set_blocks(v.at(i++).as<chunk_block_array_t>());
+		this->set_blocks(o.as<chunk_block_array_t>());
 	}
 }
 

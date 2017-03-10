@@ -153,12 +153,23 @@ void Chunk::set_meshes(const Mesher::meshmap_t& m)
 
 void Chunk::set_blocks(chunk_block_array_t new_blocks)
 {
+	for(const auto& b : new_blocks)
+	{
+		if(b == nullptr)
+		{
+			throw std::invalid_argument("Chunk::set_blocks(array): got a null block");
+		}
+	}
 	blocks = std::move(new_blocks);
 	solid_block = nullptr;
 	changed = true;
 }
 void Chunk::set_blocks(unique_ptr<Block::Base> block)
 {
+	if(block == nullptr)
+	{
+		throw std::invalid_argument("Chunk::set_blocks(single): got a null block");
+	}
 	// TODO: compare new block with current block
 	solid_block = std::move(block);
 	std::generate(blocks.begin(), blocks.end(), [this]()

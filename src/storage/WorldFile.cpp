@@ -146,13 +146,20 @@ shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 	{
 		unpack_bytes(bytes, *chunk);
 	}
+	catch(const msgpack::v1::insufficient_bytes& e)
+	{
+		// TODO: load truncated chunks
+		world.game.console.error_logger << "error loading " << file_path << ": " << e.what() << '\n';
+		return nullptr;
+	}
 	catch(const msgpack::type_error& e)
 	{
 		//throw std::runtime_error("error loading " + file_path + ": " + e.what());
-		world.game.console.error_logger << "error loading " << file_path << ": " << e.what() << "\n";
+		world.game.console.error_logger << "error loading " << file_path << ": " << e.what() << '\n';
 		// TODO: rename the bad file so the user can attempt to recover it (because the new chunk will overwrite it)
 		return nullptr;
 	}
+	//catch(const std::exception& e)
 
 	return chunk;
 }
