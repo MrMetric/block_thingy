@@ -9,14 +9,13 @@
 
 #include "fwd/World.hpp"
 #include "block/Base.hpp"
+#include "chunk/ChunkData.hpp"
 #include "chunk/mesh/Base.hpp"
 #include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/ChunkInWorld.hpp"
 
-#include "fwd/chunk/Chunk.hpp" // for CHUNK_SIZE and CHUNK_BLOCK_COUNT
-
-using chunk_block_array_t = std::array<std::unique_ptr<Block::Base>, CHUNK_BLOCK_COUNT>;
+using chunk_blocks_t = ChunkData<std::unique_ptr<Block::Base>>;
 
 class Chunk
 {
@@ -48,7 +47,7 @@ class Chunk
 		void set_meshes(const Mesher::meshmap_t&);
 
 		// for loading
-		void set_blocks(chunk_block_array_t);
+		void set_blocks(chunk_blocks_t);
 		void set_blocks(std::unique_ptr<Block::Base>);
 
 		// for msgpack
@@ -59,12 +58,10 @@ class Chunk
 		World& owner;
 		Position::ChunkInWorld position;
 
-		chunk_block_array_t blocks;
+		chunk_blocks_t blocks;
 		std::unique_ptr<Block::Base> solid_block;
 
-		const Block::Base& get_block(Position::BlockInChunk::value_type x, Position::BlockInChunk::value_type y, Position::BlockInChunk::value_type z) const;
-
-		std::array<Graphics::Color, CHUNK_BLOCK_COUNT> light;
+		ChunkData<Graphics::Color> light;
 
 		bool changed;
 		Mesher::meshmap_t meshes;

@@ -38,7 +38,6 @@ Chunk::Chunk(const ChunkInWorld& pos, World& owner)
 	owner(owner),
 	position(pos)
 {
-	set_blocks(owner.block_registry.make(BlockType::air));
 }
 
 World& Chunk::get_owner() const
@@ -51,25 +50,20 @@ ChunkInWorld Chunk::get_position() const
 	return position;
 }
 
-inline static chunk_block_array_t::size_type block_array_index(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z)
-{
-	return CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
-}
-
 const Block::Base& Chunk::get_block(const BlockInChunk& pos) const
 {
-	return *blocks[block_array_index(pos.x, pos.y, pos.z)];
+	return *blocks.get_block(pos);
 }
 
 Block::Base& Chunk::get_block(const BlockInChunk& pos)
 {
-	return *blocks[block_array_index(pos.x, pos.y, pos.z)];
+	return *blocks.get_block(pos);
 }
 
 void Chunk::set_block(const BlockInChunk& pos, unique_ptr<Block::Base> block)
 {
 	solid_block = nullptr;
-	blocks[block_array_index(pos.x, pos.y, pos.z)] = std::move(block);
+	blocks.set_block(pos, std::move(block));
 	changed = true;
 
 	update_neighbors(pos.x, pos.y, pos.z);
@@ -77,18 +71,15 @@ void Chunk::set_block(const BlockInChunk& pos, unique_ptr<Block::Base> block)
 
 Graphics::Color Chunk::get_light(const BlockInChunk& pos) const
 {
-	const auto i = block_array_index(pos.x, pos.y, pos.z);
-	return light[i];
+	return light.get_block(pos);
 }
 
 void Chunk::set_light(const BlockInChunk& pos, const Graphics::Color& color)
 {
-	const auto i = block_array_index(pos.x, pos.y, pos.z);
-	if(light[i] == color) return;
+	light.set_block(pos, color);
 
-	light[i] = color;
+	// TODO: mark changed only when the color is different
 	changed = true;
-
 	update_neighbors(pos.x, pos.y, pos.z);
 }
 
@@ -152,7 +143,7 @@ void Chunk::set_meshes(const Mesher::meshmap_t& m)
 	update_vaos();
 }
 
-void Chunk::set_blocks(chunk_block_array_t new_blocks)
+void Chunk::set_blocks(chunk_blocks_t new_blocks)
 {
 	for(const auto& b : new_blocks)
 	{
@@ -173,16 +164,8 @@ void Chunk::set_blocks(unique_ptr<Block::Base> block)
 	}
 	// TODO: compare new block with current block
 	solid_block = std::move(block);
-	std::generate(blocks.begin(), blocks.end(), [this]()
-	{
-		return owner.block_registry.make(*solid_block);
-	});
+	blocks.fill(solid_block);
 	changed = true;
-}
-
-const Block::Base& Chunk::get_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
-{
-	return *blocks[block_array_index(x, y, z)];
 }
 
 void Chunk::update_vaos()

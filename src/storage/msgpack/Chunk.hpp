@@ -4,8 +4,7 @@
 
 #include "chunk/Chunk.hpp"
 #include "storage/msgpack/Block.hpp"
-#include "storage/msgpack/Color.hpp" // for meshes
-#include "storage/msgpack/glm_vec4.hpp" // for meshes
+#include "storage/msgpack/ChunkData.hpp"
 
 #include "std_make_unique.hpp"
 
@@ -50,7 +49,7 @@ void Chunk::load(const msgpack::object& o)
 			throw msgpack::type_error();
 		}
 		// let us hope this copy is optimized out
-		this->set_blocks(o.as<chunk_block_array_t>());
+		this->set_blocks(o.as<chunk_blocks_t>());
 	}
 }
 
