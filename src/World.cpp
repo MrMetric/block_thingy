@@ -13,7 +13,6 @@
 #include <glm/vec2.hpp>
 #include <glm/gtc/noise.hpp>
 
-#include "Game.hpp"
 #include "Player.hpp"
 #include "block/Base.hpp"
 #include "block/BlockRegistry.hpp"
@@ -53,12 +52,12 @@ uint64_t position_hasher(const T& pos)
 
 World::World
 (
-	Game& game,
+	Block::BlockRegistry& block_registry,
 	const string& file_path
 )
 :
 	mesher(std::make_unique<Mesher::Greedy>()),
-	game(game),
+	block_registry(block_registry),
 	ticks(0),
 	chunks(0, position_hasher<ChunkInWorld>),
 	last_chunk(nullptr),
@@ -118,7 +117,7 @@ const Block::Base& World::get_block(const BlockInWorld& block_pos) const
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static const std::unique_ptr<Block::Base> none = game.block_registry.make(BlockType::none);
+		static const std::unique_ptr<Block::Base> none = block_registry.make(BlockType::none);
 		return *none;
 	}
 
@@ -132,7 +131,7 @@ Block::Base& World::get_block(const BlockInWorld& block_pos)
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static /*const*/ std::unique_ptr<Block::Base> none = game.block_registry.make(BlockType::none);
+		static /*const*/ std::unique_ptr<Block::Base> none = block_registry.make(BlockType::none);
 		return *none;
 	}
 
@@ -460,7 +459,7 @@ void World::gen_at(const BlockInWorld& min, const BlockInWorld& max)
 
 			// TODO: investigate performance of using strings here vs caching the IDs
 			const string t = y > -m / 2 ? "white" : "black";
-			set_block(block_pos, game.block_registry.make(t));
+			set_block(block_pos, block_registry.make(t));
 		}
 	}
 }
@@ -477,11 +476,8 @@ void World::step(double delta_time)
 
 shared_ptr<Player> World::add_player(const string& name)
 {
-	shared_ptr<Player> player = file.load_player(game, name);
-	if(player == nullptr)
-	{
-		player = std::make_shared<Player>(game, name);
-	}
+	shared_ptr<Player> player = file.load_player(name);
+	// never nullptr; if the file does not exist, WorldFile makes a new player
 	players.emplace(name, player);
 	return player;
 }

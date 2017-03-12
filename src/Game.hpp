@@ -59,6 +59,14 @@ class Game
 		}
 
 		static Game* instance;
+		class set_instance
+		{
+			public:
+				set_instance(Game* ptr)
+				{
+					Game::instance = ptr;
+				}
+		} set_instance;
 
 		BlockType block_type;
 		std::unique_ptr<RaycastHit> hovered_block;

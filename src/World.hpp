@@ -8,9 +8,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "fwd/Game.hpp"
 #include "fwd/Player.hpp"
 #include "fwd/block/Base.hpp"
+#include "fwd/block/BlockRegistry.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "chunk/mesh/Base.hpp"
 #include "graphics/Color.hpp"
@@ -28,7 +28,7 @@ class World
 	public:
 		World
 		(
-			Game&,
+			Block::BlockRegistry&,
 			const std::string& file_path
 		);
 
@@ -71,7 +71,7 @@ class World
 		template<typename T> void save(T&) const;
 		template<typename T> void load(const T&);
 
-		Game& game;
+		Block::BlockRegistry& block_registry;
 
 	private:
 		uint64_t ticks;

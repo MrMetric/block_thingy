@@ -59,10 +59,11 @@ Game* Game::instance = nullptr;
 
 Game::Game(Gfx& gfx)
 :
+	set_instance(this),
 	hovered_block(nullptr),
 	gfx(gfx),
 	camera(gfx, event_manager),
-	world(*this, "worlds/test"),
+	world(block_registry, "worlds/test"),
 	player_ptr(world.add_player("test_player")),
 	player(*player_ptr),
 	console(*this),
@@ -72,8 +73,6 @@ Game::Game(Gfx& gfx)
 	fps(999),
 	render_distance(3)
 {
-	Game::instance = this;
-
 	// these 2 must be added first (in this order!) to get the correct IDs
 	add_block<Block::None>("none");
 	add_block<Block::Air>("air");

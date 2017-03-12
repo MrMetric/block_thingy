@@ -15,7 +15,7 @@ void World::save(msgpack::packer<std::ofstream>& o) const
 	o.pack_array(2);
 	o.pack(ticks);
 
-	o.pack(game.block_registry.get_extid_map());
+	o.pack(block_registry.get_extid_map());
 }
 
 template<>
@@ -24,8 +24,8 @@ void World::load(const msgpack::object& o)
 	const auto v = o.as<std::vector<msgpack::object>>();
 	ticks = v.at(0).as<decltype(ticks)>();
 
-	// poor design :[
-	game.block_registry.set_extid_map(v.at(1).as<Block::BlockRegistry::extid_map_t>());
+	// poor design?
+	block_registry.set_extid_map(v.at(1).as<Block::BlockRegistry::extid_map_t>());
 }
 
 namespace msgpack {

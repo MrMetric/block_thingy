@@ -78,20 +78,20 @@ void WorldFile::save_player(const Player& player)
 
 unique_ptr<Player> WorldFile::load_player
 (
-	Game& game,
 	const string& name
 )
 {
+	auto player = std::make_unique<Player>(*Game::instance, name);
+
 	string file_path = player_dir + name;
 	if(!Util::file_is_openable(file_path))
 	{
-		return nullptr;
+		return player;
 	}
 
 	LOG(INFO) << "loading player: " << file_path;
 
 	string bytes = Util::read_file(file_path);
-	auto player = std::make_unique<Player>(game, name);
 	try
 	{
 		unpack_bytes(bytes, *player);
