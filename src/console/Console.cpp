@@ -1,9 +1,10 @@
 #include "Console.hpp"
 
-#include <iostream>
 #include <stdexcept>
 #include <utility>
 #include <vector>
+
+#include <easylogging++/easylogging++.hpp>
 
 #include "ArgumentParser.hpp"
 
@@ -13,12 +14,8 @@ using std::string;
 
 Console::Console(Game& game)
 :
-	logger(std::cout),
-	error_logger(std::cerr),
 	game(game)
 {
-	logger << std::boolalpha;
-	error_logger << std::boolalpha;
 }
 
 console_handler_wrapper::console_handler_wrapper(const console_handler_t& handler)
@@ -97,7 +94,7 @@ void Console::run_command(const string& name, const std::vector<string>& args) c
 	const auto i = handlers.find(name);
 	if(i == handlers.cend())
 	{
-		error_logger << "unknown command: " << name << "\n";
+		LOG(ERROR) << "unknown command: " << name;
 		return;
 	}
 	i->second(game, args);

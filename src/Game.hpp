@@ -25,11 +25,6 @@
 
 #include "types/window_size_t.hpp"
 
-#define LOGGER (Game::instance != nullptr \
-	? Game::instance->console.logger \
-	: std::cout \
-)
-
 class Game
 {
 	public:

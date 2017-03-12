@@ -6,7 +6,6 @@
 #include <ctime>
 #include <fstream>
 #include <iomanip>
-#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <stdint.h>
@@ -18,12 +17,11 @@
 #include <unistd.h>
 #endif
 
+#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 
 #include "std_make_unique.hpp"
 
-using std::cerr;
-using std::cout;
 using std::string;
 using std::to_string;
 using std::unique_ptr;
@@ -34,7 +32,7 @@ void printOglError(const string& file, const int line, const string& func)
 	const GLenum glErr = glGetError();
 	if(glErr != GL_NO_ERROR)
 	{
-		cout << "OpenGL error @ " << file << ":" << line << " (" << func << "): " << Util::gl_error_string(glErr) << "\n";
+		LOG(ERROR) << "OpenGL error @ " << file << ":" << line << " (" << func << "): " << Util::gl_error_string(glErr);
 	}
 }
 
@@ -58,7 +56,7 @@ string Util::read_file(const string& path)
 	}
 	catch(const std::ios_base::failure&)
 	{
-		cerr << "failed to read " << path << "\n";
+		LOG(ERROR) << "failed to read " << path;
 		throw;
 	}
 }

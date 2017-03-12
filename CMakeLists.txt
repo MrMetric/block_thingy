@@ -12,6 +12,7 @@ else()
 	set(DEBUG_BUILD 0)
 endif()
 file(GLOB_RECURSE block_thingy_SRC
+	"lib/easylogging++/easylogging++.cpp"
 	"lib/glad/glad.c"
 	"src/*.cpp"
 )

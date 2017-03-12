@@ -3,7 +3,6 @@
 #include <cerrno>
 #include <cstdio>							// C FILE stuff (for libpng use)
 #include <cstring>							// strerror
-#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -22,6 +21,7 @@
 #include <glm/gtc/matrix_transform.hpp>		// glm::perspective
 #include <glm/gtx/transform.hpp>			// glm::rotate, glm::translate
 
+#include <easylogging++/easylogging++.hpp>
 #include <png.h>
 
 #include "Camera.hpp"
@@ -46,7 +46,6 @@
 #undef far
 #endif
 
-using std::cout;
 using std::string;
 
 static window_size_t get_window_size(GLFWwindow* window)
@@ -86,7 +85,7 @@ void Gfx::hook_events(EventManager& event_manager)
 		auto e = static_cast<const Event_window_size_change&>(event);
 
 		window_size = e.window_size;
-		cout << "window size: " << window_size.x << "×" << window_size.y << "\n";
+		LOG(DEBUG) << "window size: " << window_size.x << "×" << window_size.y;
 		window_mid = glm::dvec2(window_size) / 2.0;
 		update_projection_matrix();
 
@@ -115,15 +114,15 @@ GLFWwindow* Gfx::init_glfw()
 	{
 		throw std::runtime_error("Error loading GLAD");
 	}
-	cout << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
+	LOG(DEBUG) << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded";
 	if(!GLAD_GL_ARB_direct_state_access)
 	{
-		cout << "OpenGL extension not found: GL_ARB_direct_state_access\n";
+		LOG(WARNING) << "OpenGL extension not found: GL_ARB_direct_state_access";
 		shim_GL_ARB_direct_state_access();
 	}
 	if(!GLAD_GL_ARB_separate_shader_objects)
 	{
-		cout << "OpenGL extension not found: GL_ARB_separate_shader_objects\n";
+		LOG(WARNING) << "OpenGL extension not found: GL_ARB_separate_shader_objects";
 		shim_GL_ARB_separate_shader_objects();
 	}
 
@@ -205,7 +204,7 @@ void Gfx::set_screen_shader(const string& name)
 void Gfx::toggle_fullscreen()
 {
 	is_fullscreen = !is_fullscreen;
-	cout << "fullscreen = " << is_fullscreen << "\n";
+	LOG(INFO) << "fullscreen: " << is_fullscreen;
 
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
@@ -364,7 +363,7 @@ GLFWwindow* Gfx::make_window(bool is_fullscreen)
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 	const int width = is_fullscreen ? mode->width : mode->width * 3 / 4;
 	const int height = is_fullscreen ? mode->height : mode->height * 3 / 4;
-	cout << "window size: " << width << "×" << height << "\n";
+	LOG(DEBUG) << "window size: " << width << "×" << height;
 	GLFWwindow* window = glfwCreateWindow(width, height, "Baby's First Voxel Engine", nullptr, nullptr);
 	if(window == nullptr)
 	{

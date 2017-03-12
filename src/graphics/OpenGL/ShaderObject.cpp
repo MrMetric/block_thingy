@@ -1,12 +1,11 @@
 #include "ShaderObject.hpp"
 
-#include <iostream>
 #include <sstream>
 #include <stdexcept>
 
+#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 
-#include "Game.hpp"
 #include "Util.hpp"
 
 using std::string;
@@ -25,7 +24,7 @@ ShaderObject::ShaderObject()
 
 ShaderObject::ShaderObject(const string& file_path, GLenum type)
 {
-	LOGGER << "compiling shader: " << file_path << "\n";
+	LOG(INFO) << "compiling shader: " << file_path;
 
 	const string source = do_include(file_path);
 	const char* source_c = source.c_str();
