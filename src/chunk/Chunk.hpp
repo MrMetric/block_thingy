@@ -69,8 +69,4 @@ class Chunk
 		std::vector<Graphics::OpenGL::VertexBuffer> mesh_vbos;
 
 		void update_vaos();
-
-		void update_neighbors() const;
-		void update_neighbors(Position::BlockInChunk::value_type, Position::BlockInChunk::value_type, Position::BlockInChunk::value_type) const;
-		void update_neighbor(Position::ChunkInWorld::value_type, Position::ChunkInWorld::value_type, Position::ChunkInWorld::value_type) const;
 };

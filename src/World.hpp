@@ -86,4 +86,18 @@ class World
 
 		std::unordered_map<std::string, std::shared_ptr<Player>> players;
 		Storage::WorldFile file;
+
+		void update_chunk_neighbors(const Position::ChunkInWorld& chunk_pos) const;
+		void update_chunk_neighbors
+		(
+			const Position::ChunkInWorld& chunk_pos,
+			const Position::BlockInChunk pos
+		)
+		const;
+		void update_chunk_neighbor
+		(
+			const Position::ChunkInWorld& position,
+			Position::ChunkInWorld chunk_pos
+		)
+		const;
 };

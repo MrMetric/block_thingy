@@ -35,6 +35,7 @@ using Position::ChunkInWorld;
 
 Chunk::Chunk(const ChunkInWorld& pos, World& owner)
 :
+	changed(false),
 	owner(owner),
 	position(pos)
 {
@@ -65,8 +66,6 @@ void Chunk::set_block(const BlockInChunk& pos, unique_ptr<Block::Base> block)
 	solid_block = nullptr;
 	blocks.set_block(pos, std::move(block));
 	changed = true;
-
-	update_neighbors(pos.x, pos.y, pos.z);
 }
 
 Graphics::Color Chunk::get_light(const BlockInChunk& pos) const
@@ -80,7 +79,6 @@ void Chunk::set_light(const BlockInChunk& pos, const Graphics::Color& color)
 
 	// TODO: mark changed only when the color is different
 	changed = true;
-	update_neighbors(pos.x, pos.y, pos.z);
 }
 
 void Chunk::update()
@@ -191,57 +189,5 @@ void Chunk::update_vaos()
 		const Mesher::mesh_t& mesh = p.second;
 		mesh_vbos[i].data(mesh.size() * sizeof(Mesher::mesh_t::value_type), mesh.data(), usage_hint);
 		++i;
-	}
-}
-
-void Chunk::update_neighbors() const
-{
-	update_neighbor(-1,  0,  0);
-	update_neighbor(+1,  0,  0);
-	update_neighbor( 0, -1,  0);
-	update_neighbor( 0, +1,  0);
-	update_neighbor( 0,  0, -1);
-	update_neighbor( 0,  0, +1);
-}
-
-void Chunk::update_neighbors(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
-{
-	// TODO: check if the neighbor chunk has a block beside this one (to avoid updating when the appearance won't change)
-	if(x == 0)
-	{
-		update_neighbor(-1, 0, 0);
-	}
-	else if(x == CHUNK_SIZE - 1)
-	{
-		update_neighbor(+1, 0, 0);
-	}
-
-	if(y == 0)
-	{
-		update_neighbor(0, -1, 0);
-	}
-	else if(y == CHUNK_SIZE - 1)
-	{
-		update_neighbor(0, +1, 0);
-	}
-
-	if(z == 0)
-	{
-		update_neighbor(0, 0, -1);
-	}
-	else if(z == CHUNK_SIZE - 1)
-	{
-		update_neighbor(0, 0, +1);
-	}
-}
-
-void Chunk::update_neighbor(const ChunkInWorld::value_type x, const ChunkInWorld::value_type y, const ChunkInWorld::value_type z) const
-{
-	ChunkInWorld chunk_pos(x, y, z);
-	chunk_pos += position;
-	shared_ptr<Chunk> chunk = owner.get_chunk(chunk_pos);
-	if(chunk != nullptr)
-	{
-		chunk->changed = true;
 	}
 }

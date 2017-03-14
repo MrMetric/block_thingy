@@ -86,6 +86,8 @@ void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> blo
 
 	const BlockInChunk pos(block_pos);
 	chunk->set_block(pos, std::move(block_ptr));
+	update_chunk_neighbors(chunk_pos, pos);
+
 	const Block::Base& block = chunk->get_block(pos);
 
 	chunks_to_save.emplace(chunk_pos);
@@ -159,7 +161,9 @@ void World::set_light(const BlockInWorld& block_pos, const Graphics::Color& colo
 		// TODO?
 		return;
 	}
-	chunk->set_light(BlockInChunk(block_pos), color);
+	const BlockInChunk pos(block_pos);
+	chunk->set_light(pos, color);
+	update_chunk_neighbors(chunk_pos, pos);
 	if(save)
 	{
 		chunks_to_save.emplace(chunk_pos);
@@ -303,7 +307,7 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 	{
 		return;
 	}
-	chunk->update_neighbors();
+	update_chunk_neighbors(chunk_pos);
 
 	// update light at chunk sides to make it flow into the new chunk
 	{
@@ -518,4 +522,73 @@ uint_fast64_t World::get_ticks()
 double World::get_time()
 {
 	return ticks / 60.0;
+}
+
+void World::update_chunk_neighbors
+(
+	const ChunkInWorld& chunk_pos
+)
+const
+{
+	update_chunk_neighbor(chunk_pos, {-1,  0,  0});
+	update_chunk_neighbor(chunk_pos, {+1,  0,  0});
+	update_chunk_neighbor(chunk_pos, { 0, -1,  0});
+	update_chunk_neighbor(chunk_pos, { 0, +1,  0});
+	update_chunk_neighbor(chunk_pos, { 0,  0, -1});
+	update_chunk_neighbor(chunk_pos, { 0,  0, +1});
+}
+
+void World::update_chunk_neighbors
+(
+	const ChunkInWorld& chunk_pos,
+	const BlockInChunk pos
+)
+const
+{
+	const auto x = pos.x;
+	const auto y = pos.y;
+	const auto z = pos.z;
+
+	// TODO: check if the neighbor chunk has a block beside this one (to avoid updating when the appearance won't change)
+	if(x == 0)
+	{
+		update_chunk_neighbor(chunk_pos, {-1, 0, 0});
+	}
+	else if(x == CHUNK_SIZE - 1)
+	{
+		update_chunk_neighbor(chunk_pos, {+1, 0, 0});
+	}
+
+	if(y == 0)
+	{
+		update_chunk_neighbor(chunk_pos, {0, -1, 0});
+	}
+	else if(y == CHUNK_SIZE - 1)
+	{
+		update_chunk_neighbor(chunk_pos, {0, +1, 0});
+	}
+
+	if(z == 0)
+	{
+		update_chunk_neighbor(chunk_pos, {0, 0, -1});
+	}
+	else if(z == CHUNK_SIZE - 1)
+	{
+		update_chunk_neighbor(chunk_pos, {0, 0, +1});
+	}
+}
+
+void World::update_chunk_neighbor
+(
+	const ChunkInWorld& position,
+	ChunkInWorld chunk_pos
+)
+const
+{
+	chunk_pos += position;
+	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
+	if(chunk != nullptr)
+	{
+		chunk->changed = true;
+	}
 }
