@@ -35,21 +35,6 @@ using Position::BlockInChunk;
 using Position::BlockInWorld;
 using Position::ChunkInWorld;
 
-template<typename T>
-uint64_t position_hasher(const T& pos)
-{
-	// x has 1 more bit than y/z because there is room for it
-	// y/z are both 21 bits
-	// 64 - 21*2 = 22
-	const uint64_t x = pos.x & 0x3FFFFF;
-	const uint64_t y = pos.y & 0x1FFFFF;
-	const uint64_t z = pos.z & 0x1FFFFF;
-	return	  (x << 42)
-			| (y << 21)
-			| (z)
-		;
-}
-
 World::World
 (
 	Block::BlockRegistry& block_registry,
@@ -59,9 +44,9 @@ World::World
 	mesher(std::make_unique<Mesher::Greedy>()),
 	block_registry(block_registry),
 	ticks(0),
-	chunks(0, position_hasher<ChunkInWorld>),
+	chunks(0, Position::hasher<ChunkInWorld>),
 	last_chunk(nullptr),
-	chunks_to_save(0, position_hasher<ChunkInWorld>),
+	chunks_to_save(0, Position::hasher<ChunkInWorld>),
 	file(file_path, *this)
 {
 }

@@ -43,9 +43,6 @@ class Chunk
 		void update();
 		void render(bool transluscent_pass);
 
-		const Mesher::meshmap_t& get_meshes() const;
-		void set_meshes(const Mesher::meshmap_t&);
-
 		// for loading
 		void set_blocks(chunk_blocks_t);
 		void set_blocks(std::unique_ptr<Block::Base>);

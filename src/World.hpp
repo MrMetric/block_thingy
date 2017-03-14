@@ -16,10 +16,10 @@
 #include "graphics/Color.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
+#include "position/hash.hpp"
 #include "storage/WorldFile.hpp"
 
-using world_map_keyhasher_t = std::function<uint64_t(Position::ChunkInWorld)>;
-using world_map_t = std::unordered_map<Position::ChunkInWorld, std::shared_ptr<Chunk>, world_map_keyhasher_t>;
+using world_map_t = Position::unordered_map_t<Position::ChunkInWorld, std::shared_ptr<Chunk>>;
 
 class World
 {

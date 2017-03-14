@@ -33,9 +33,9 @@ void Framebuffer::attach_renderbuffer(GLenum attachment_point, Renderbuffer& ren
 	glNamedFramebufferRenderbuffer(name, attachment_point, GL_RENDERBUFFER, renderbuffer.get_name());
 }
 
-void Framebuffer::attach_texture(GLenum attachment_point, Texture& texture, GLint level)
+void Framebuffer::attach_texture(GLenum attachment_point, Texture& texture, GLint mipmap_level)
 {
-	glNamedFramebufferTexture(name, attachment_point, texture.get_name(), level);
+	glNamedFramebufferTexture(name, attachment_point, texture.get_name(), mipmap_level);
 }
 
 GLuint Framebuffer::get_name()

@@ -53,29 +53,29 @@ ChunkInWorld Chunk::get_position() const
 
 const Block::Base& Chunk::get_block(const BlockInChunk& pos) const
 {
-	return *blocks.get_block(pos);
+	return *blocks.get(pos);
 }
 
 Block::Base& Chunk::get_block(const BlockInChunk& pos)
 {
-	return *blocks.get_block(pos);
+	return *blocks.get(pos);
 }
 
 void Chunk::set_block(const BlockInChunk& pos, unique_ptr<Block::Base> block)
 {
 	solid_block = nullptr;
-	blocks.set_block(pos, std::move(block));
+	blocks.set(pos, std::move(block));
 	changed = true;
 }
 
 Graphics::Color Chunk::get_light(const BlockInChunk& pos) const
 {
-	return light.get_block(pos);
+	return light.get(pos);
 }
 
 void Chunk::set_light(const BlockInChunk& pos, const Graphics::Color& color)
 {
-	light.set_block(pos, color);
+	light.set(pos, color);
 
 	// TODO: mark changed only when the color is different
 	changed = true;
@@ -128,17 +128,6 @@ void Chunk::render(const bool transluscent_pass)
 
 		++i;
 	}
-}
-
-const Mesher::meshmap_t& Chunk::get_meshes() const
-{
-	return meshes;
-}
-void Chunk::set_meshes(const Mesher::meshmap_t& m)
-{
-	changed = false;
-	meshes = m;
-	update_vaos();
 }
 
 void Chunk::set_blocks(chunk_blocks_t new_blocks)

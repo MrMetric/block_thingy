@@ -40,17 +40,17 @@ public:
 	ChunkData(const ChunkData&) = delete;
 	void operator=(const ChunkData&) = delete;
 
-	const T& get_block(const Position::BlockInChunk& pos) const
+	const T& get(const Position::BlockInChunk& pos) const
 	{
 		return blocks[block_array_index(pos.x, pos.y, pos.z)];
 	}
 
-	T& get_block(const Position::BlockInChunk& pos)
+	T& get(const Position::BlockInChunk& pos)
 	{
 		return blocks[block_array_index(pos.x, pos.y, pos.z)];
 	}
 
-	void set_block(const Position::BlockInChunk& pos, T block)
+	void set(const Position::BlockInChunk& pos, T block)
 	{
 		const auto i = block_array_index(pos.x, pos.y, pos.z);
 		blocks[i] = std::move(block);

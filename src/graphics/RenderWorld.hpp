@@ -12,7 +12,8 @@
 
 namespace RenderWorld
 {
-	void draw_world(
+	void draw_world
+	(
 		World& world,
 		std::map<BlockType, Graphics::OpenGL::ShaderProgram>& block_shaders,
 		const glm::dmat4& matriks,
