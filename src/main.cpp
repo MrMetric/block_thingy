@@ -8,6 +8,9 @@
 #include <windows.h>
 #endif
 
+#include <easylogging++/easylogging++.hpp>
+INITIALIZE_EASYLOGGINGPP
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -19,8 +22,6 @@
 
 #include "std_make_unique.hpp"
 
-using std::cerr;
-using std::cout;
 using std::string;
 using std::unique_ptr;
 
@@ -45,17 +46,21 @@ class CodePageHandler
 
 static void log_exception(const std::exception& error)
 {
-	cerr << "uncaught exception (" << Util::demangled_name(error) << ")\n";
-	cerr << "  what():  " << error.what() << "\n";
+	LOG(ERROR) << "uncaught exception (" << Util::demangled_name(error) << ")\n"
+			   << "  what():  " << error.what();
 }
 
 static void error_callback(const int error, const char* description)
 {
-	cerr << "GLFW error " << error << ": " << description << "\n";
+	LOG(ERROR) << "GLFW error " << error << ": " << description;
 }
 
 int main(int argc, char** argv)
 {
+	std::cout << std::boolalpha;
+	std::cerr << std::boolalpha;
+	START_EASYLOGGINGPP(argc, argv);
+
 	GLFWwindow* window;
 
 	try
@@ -70,13 +75,13 @@ int main(int argc, char** argv)
 	#endif
 
 	#ifdef DEBUG_BUILD
-	cout << "This is a debug build\n";
+	LOG(INFO) << "This is a debug build";
 	#endif
 
 	const string compiler_info = Util::compiler_info();
 	if(compiler_info != "")
 	{
-		cout << "Compiled by " << compiler_info << "\n";
+		LOG(DEBUG) << "Compiled by " << compiler_info;
 	}
 
 	if(argc > 1)
@@ -86,14 +91,14 @@ int main(int argc, char** argv)
 
 	glfwSetErrorCallback(error_callback);
 
-	cout << "Compiled with GLFW " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << "\n";
-	cout << "Running with GLFW " << glfwGetVersionString() << "\n";
+	LOG(DEBUG) << "Compiled with GLFW " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION;
+	LOG(DEBUG) << "Running with GLFW " << glfwGetVersionString();
 
 	Gfx gfx; printOpenGLError();
 	window = gfx.window;
 	static unique_ptr<Game> game = std::make_unique<Game>(gfx);
 
-	cout << "starting main loop\n";
+	LOG(INFO) << "starting main loop";
 	while(!glfwWindowShouldClose(game->gfx.window))
 	{
 		game->draw(); printOpenGLError();

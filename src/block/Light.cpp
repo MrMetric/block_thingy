@@ -1,6 +1,7 @@
 #include "Light.hpp"
 
 #include <memory>
+#include <sstream>
 
 #include <glm/vec3.hpp>
 
@@ -13,6 +14,7 @@
 
 #include "std_make_unique.hpp"
 
+using std::string;
 using Graphics::Color;
 
 namespace Block {
@@ -36,6 +38,13 @@ Light& Light::operator=(const Base& block)
 	const Light* that = static_cast<const Light*>(&block);
 	color_ = that->color_;
 	return *this;
+}
+
+string Light::name() const
+{
+	std::ostringstream ss;
+	ss << "Light " << color();
+	return ss.str();
 }
 
 Color Light::color() const

@@ -1,17 +1,16 @@
 #include "Text.hpp"
 
 #include <algorithm>
-#include <iostream>
 #include <stdexcept>
 #include <stdint.h>
 #include <vector>
 
+#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 
 #include "graphics/OpenGL/Texture.hpp"
 #include "util/unicode.hpp"
 
-using std::cerr;
 using std::string;
 using std::u32string;
 
@@ -177,7 +176,7 @@ Text::Character load_char(const FT_Face& face, const char32_t c)
 {
 	if(FT_Load_Char(face, c, FT_LOAD_RENDER))
 	{
-		cerr << "failed to load character: " << c << "\n";
+		LOG(ERROR) << "failed to load character: " << c;
 		return
 		{
 			{},

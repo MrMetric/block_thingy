@@ -89,7 +89,7 @@ class Gfx
 		void draw_cube_outline(const Position::BlockInWorld&, const glm::dvec4& color);
 		Graphics::OpenGL::ShaderProgram& get_block_shader(BlockType);
 
-		static void write_png_RGB(const char* filename, uint8_t* buf, uint32_t width, uint32_t height, bool reverse_rows = false);
+		static void write_png_RGB(const char* filename, const uint8_t* data, uint32_t width, uint32_t height, bool reverse_rows = false);
 
 		void center_cursor();
 

@@ -42,9 +42,6 @@ class Console
 		void run_command(const std::string& name, const std::string& argline = "") const;
 		void run_command(const std::string& name, const std::vector<std::string>& args) const;
 
-		std::ostream& logger;
-		std::ostream& error_logger;
-
 	private:
 		std::vector<std::string> parse_args(const std::string&);
 

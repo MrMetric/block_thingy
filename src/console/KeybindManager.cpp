@@ -7,6 +7,7 @@
 #include <utility>
 #include <vector>
 
+#include <easylogging++/easylogging++.hpp>
 #include <GLFW/glfw3.h>
 
 #include "Console.hpp"
@@ -24,7 +25,7 @@ KeybindManager::KeybindManager(Console& console)
 	{
 		if(args.size() != 2)
 		{
-			game.console.error_logger << "Usage: bind <key> <command>\n";
+			LOG(ERROR) << "Usage: bind <key> <command>";
 			return;
 		}
 		keybinder.bind_key(args[0], args[1]);
@@ -33,7 +34,7 @@ KeybindManager::KeybindManager(Console& console)
 	{
 		if(args.size() != 1)
 		{
-			game.console.error_logger << "Usage: unbind <key>\n";
+			LOG(ERROR) << "Usage: unbind <key>";
 			return;
 		}
 		int key = KeybindManager::translate_key(args[0]);
@@ -57,7 +58,7 @@ void KeybindManager::bind_key(const string& key_string, const string& command)
 	int key = KeybindManager::translate_key(key_string);
 	if(key == GLFW_KEY_UNKNOWN)
 	{
-		console.error_logger << "unknown key name: " << key_string << "\n";
+		LOG(ERROR) << "unknown key name: " << key_string;
 	}
 	bind_key(key, command);
 }
@@ -98,7 +99,7 @@ void KeybindManager::keypress(const int key, const int scancode, const int actio
 	}
 	else
 	{
-		console.error_logger << "unknown keypress action: " << action << "\n";
+		LOG(ERROR) << "unknown keypress action: " << action;
 	}
 }
 

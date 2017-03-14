@@ -2,8 +2,10 @@ bin/block_thingy_d
 bin/block_thingy_r
 bin/block_thingy_rd
 bin/cam_pos
-bin/*.png
+bin/screenshots/
 bin/worlds/
+
+build/
 
 *.o
 *.depend

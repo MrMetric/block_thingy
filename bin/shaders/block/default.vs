@@ -10,5 +10,5 @@ void main()
 {
 	position = relative_position.xyz + position_offset;
 	face = int(relative_position.w);
-	gl_Position = matriks * vec4(position, 1.0);
+	gl_Position = matriks * vec4(position, 1);
 }

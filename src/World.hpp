@@ -8,18 +8,18 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "fwd/Game.hpp"
 #include "fwd/Player.hpp"
 #include "fwd/block/Base.hpp"
+#include "fwd/block/BlockRegistry.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "chunk/mesh/Base.hpp"
 #include "graphics/Color.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
+#include "position/hash.hpp"
 #include "storage/WorldFile.hpp"
 
-using world_map_keyhasher_t = std::function<uint64_t(Position::ChunkInWorld)>;
-using world_map_t = std::unordered_map<Position::ChunkInWorld, std::shared_ptr<Chunk>, world_map_keyhasher_t>;
+using world_map_t = Position::unordered_map_t<Position::ChunkInWorld, std::shared_ptr<Chunk>>;
 
 class World
 {
@@ -28,7 +28,7 @@ class World
 	public:
 		World
 		(
-			Game&,
+			Block::BlockRegistry&,
 			const std::string& file_path
 		);
 
@@ -71,7 +71,7 @@ class World
 		template<typename T> void save(T&) const;
 		template<typename T> void load(const T&);
 
-		Game& game;
+		Block::BlockRegistry& block_registry;
 
 	private:
 		uint64_t ticks;
@@ -86,4 +86,18 @@ class World
 
 		std::unordered_map<std::string, std::shared_ptr<Player>> players;
 		Storage::WorldFile file;
+
+		void update_chunk_neighbors(const Position::ChunkInWorld& chunk_pos) const;
+		void update_chunk_neighbors
+		(
+			const Position::ChunkInWorld& chunk_pos,
+			const Position::BlockInChunk pos
+		)
+		const;
+		void update_chunk_neighbor
+		(
+			const Position::ChunkInWorld& position,
+			Position::ChunkInWorld chunk_pos
+		)
+		const;
 };

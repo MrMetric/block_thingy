@@ -13,7 +13,6 @@
 #include <glm/vec2.hpp>
 #include <glm/gtc/noise.hpp>
 
-#include "Game.hpp"
 #include "Player.hpp"
 #include "block/Base.hpp"
 #include "block/BlockRegistry.hpp"
@@ -36,33 +35,18 @@ using Position::BlockInChunk;
 using Position::BlockInWorld;
 using Position::ChunkInWorld;
 
-template<typename T>
-uint64_t position_hasher(const T& pos)
-{
-	// x has 1 more bit than y/z because there is room for it
-	// y/z are both 21 bits
-	// 64 - 21*2 = 22
-	const uint64_t x = pos.x & 0x3FFFFF;
-	const uint64_t y = pos.y & 0x1FFFFF;
-	const uint64_t z = pos.z & 0x1FFFFF;
-	return	  (x << 42)
-			| (y << 21)
-			| (z)
-		;
-}
-
 World::World
 (
-	Game& game,
+	Block::BlockRegistry& block_registry,
 	const string& file_path
 )
 :
 	mesher(std::make_unique<Mesher::Greedy>()),
-	game(game),
+	block_registry(block_registry),
 	ticks(0),
-	chunks(0, position_hasher<ChunkInWorld>),
+	chunks(0, Position::hasher<ChunkInWorld>),
 	last_chunk(nullptr),
-	chunks_to_save(0, position_hasher<ChunkInWorld>),
+	chunks_to_save(0, Position::hasher<ChunkInWorld>),
 	file(file_path, *this)
 {
 }
@@ -87,6 +71,8 @@ void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> blo
 
 	const BlockInChunk pos(block_pos);
 	chunk->set_block(pos, std::move(block_ptr));
+	update_chunk_neighbors(chunk_pos, pos);
+
 	const Block::Base& block = chunk->get_block(pos);
 
 	chunks_to_save.emplace(chunk_pos);
@@ -118,7 +104,7 @@ const Block::Base& World::get_block(const BlockInWorld& block_pos) const
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static const std::unique_ptr<Block::Base> none = game.block_registry.make(BlockType::none);
+		static const std::unique_ptr<Block::Base> none = block_registry.make(BlockType::none);
 		return *none;
 	}
 
@@ -132,7 +118,7 @@ Block::Base& World::get_block(const BlockInWorld& block_pos)
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static /*const*/ std::unique_ptr<Block::Base> none = game.block_registry.make(BlockType::none);
+		static /*const*/ std::unique_ptr<Block::Base> none = block_registry.make(BlockType::none);
 		return *none;
 	}
 
@@ -160,7 +146,9 @@ void World::set_light(const BlockInWorld& block_pos, const Graphics::Color& colo
 		// TODO?
 		return;
 	}
-	chunk->set_light(BlockInChunk(block_pos), color);
+	const BlockInChunk pos(block_pos);
+	chunk->set_light(pos, color);
+	update_chunk_neighbors(chunk_pos, pos);
 	if(save)
 	{
 		chunks_to_save.emplace(chunk_pos);
@@ -304,7 +292,7 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 	{
 		return;
 	}
-	chunk->update_neighbors();
+	update_chunk_neighbors(chunk_pos);
 
 	// update light at chunk sides to make it flow into the new chunk
 	{
@@ -460,7 +448,7 @@ void World::gen_at(const BlockInWorld& min, const BlockInWorld& max)
 
 			// TODO: investigate performance of using strings here vs caching the IDs
 			const string t = y > -m / 2 ? "White" : "Black";
-			set_block(block_pos, game.block_registry.make(t));
+			set_block(block_pos, block_registry.make(t));
 		}
 	}
 }
@@ -477,11 +465,8 @@ void World::step(double delta_time)
 
 shared_ptr<Player> World::add_player(const string& name)
 {
-	shared_ptr<Player> player = file.load_player(game, name);
-	if(player == nullptr)
-	{
-		player = std::make_shared<Player>(game, name);
-	}
+	shared_ptr<Player> player = file.load_player(name);
+	// never nullptr; if the file does not exist, WorldFile makes a new player
 	players.emplace(name, player);
 	return player;
 }
@@ -522,4 +507,73 @@ uint_fast64_t World::get_ticks()
 double World::get_time()
 {
 	return ticks / 60.0;
+}
+
+void World::update_chunk_neighbors
+(
+	const ChunkInWorld& chunk_pos
+)
+const
+{
+	update_chunk_neighbor(chunk_pos, {-1,  0,  0});
+	update_chunk_neighbor(chunk_pos, {+1,  0,  0});
+	update_chunk_neighbor(chunk_pos, { 0, -1,  0});
+	update_chunk_neighbor(chunk_pos, { 0, +1,  0});
+	update_chunk_neighbor(chunk_pos, { 0,  0, -1});
+	update_chunk_neighbor(chunk_pos, { 0,  0, +1});
+}
+
+void World::update_chunk_neighbors
+(
+	const ChunkInWorld& chunk_pos,
+	const BlockInChunk pos
+)
+const
+{
+	const auto x = pos.x;
+	const auto y = pos.y;
+	const auto z = pos.z;
+
+	// TODO: check if the neighbor chunk has a block beside this one (to avoid updating when the appearance won't change)
+	if(x == 0)
+	{
+		update_chunk_neighbor(chunk_pos, {-1, 0, 0});
+	}
+	else if(x == CHUNK_SIZE - 1)
+	{
+		update_chunk_neighbor(chunk_pos, {+1, 0, 0});
+	}
+
+	if(y == 0)
+	{
+		update_chunk_neighbor(chunk_pos, {0, -1, 0});
+	}
+	else if(y == CHUNK_SIZE - 1)
+	{
+		update_chunk_neighbor(chunk_pos, {0, +1, 0});
+	}
+
+	if(z == 0)
+	{
+		update_chunk_neighbor(chunk_pos, {0, 0, -1});
+	}
+	else if(z == CHUNK_SIZE - 1)
+	{
+		update_chunk_neighbor(chunk_pos, {0, 0, +1});
+	}
+}
+
+void World::update_chunk_neighbor
+(
+	const ChunkInWorld& position,
+	ChunkInWorld chunk_pos
+)
+const
+{
+	chunk_pos += position;
+	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
+	if(chunk != nullptr)
+	{
+		chunk->changed = true;
+	}
 }

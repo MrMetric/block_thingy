@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include <glm/vec4.hpp>
 
 #include "block/BlockType.hpp"
@@ -19,8 +21,8 @@ class Base
 		Base(const Base&);
 		virtual Base& operator=(const Base&);
 
-		block_type_id_t type_id() const;
 		BlockType type() const;
+		virtual std::string name() const;
 
 		/**
 		 * If non-zero, this block emits light of this color

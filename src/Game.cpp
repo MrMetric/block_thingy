@@ -10,6 +10,7 @@
 #include <string>
 #include <utility>
 
+#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -59,10 +60,11 @@ Game* Game::instance = nullptr;
 
 Game::Game(Gfx& gfx)
 :
+	set_instance(this),
 	hovered_block(nullptr),
 	gfx(gfx),
 	camera(gfx, event_manager),
-	world(*this, "worlds/test"),
+	world(block_registry, "worlds/test"),
 	player_ptr(world.add_player("test_player")),
 	player(*player_ptr),
 	console(*this),
@@ -72,7 +74,6 @@ Game::Game(Gfx& gfx)
 	fps(999),
 	render_distance(3)
 {
-	Game::instance = this;
 	ResourceManager::init();
 
 	// these 2 must be added first (in this order!) to get the correct IDs
@@ -85,6 +86,12 @@ Game::Game(Gfx& gfx)
 	add_block<Block::Glass>("glass");
 
 	ResourceManager::load_blocks(*this);
+
+	if(block_registry.get_extid_map().size() == 0)
+	{
+		// this should be done when starting a new world, but the design does not work that way yet
+		block_registry.reset_extid_map();
+	}
 
 	block_type = block_registry.get_id("White");
 
@@ -219,7 +226,7 @@ void Game::open_gui(unique_ptr<Graphics::GUI::Base> gui)
 {
 	if(gui == nullptr)
 	{
-		console.error_logger << "Tried to open a null GUI\n";
+		LOG(WARNING) << "Tried to open a null GUI";
 		return;
 	}
 	gui->init();
@@ -243,7 +250,7 @@ void Game::screenshot(string filename)
 		filename = "screenshots/" + filename;
 	}
 	// TODO: check file existence
-	console.logger << "saving screenshot to " << filename << "\n";
+	LOG(INFO) << "saving screenshot to " << filename;
 	const auto width = gfx.window_size.x;
 	const auto height = gfx.window_size.y;
 	auto pixels = std::make_unique<GLubyte[]>(3 * width * height);
@@ -295,25 +302,25 @@ static void add_shader(Game& game, const BlockType t, const string& shader_path)
 	}
 	catch(const std::runtime_error& e)
 	{
-		game.console.error_logger << "shader error:\n" << e.what() << "\n";
+		LOG(ERROR) << "shader error:\n" << e.what();
 		game.gfx.block_shaders.emplace(t, "shaders/block/default");
 	}
-};
+}
 
-void Game::add_block(const string& name, BlockType t)
+void Game::add_block(const string& strid, BlockType t)
 {
-	console.logger << "ID " << static_cast<block_type_id_t>(t) << ": " << name << "\n";
+	LOG(DEBUG) << "ID " << static_cast<block_type_id_t>(t) << ": " << strid;
 	if(t == BlockType::none || t == BlockType::air)
 	{
 		return;
 	}
-	add_shader(*this, t, name);
+	add_shader(*this, t, strid);
 }
 
 BlockType Game::add_block_2(const std::string& name, const std::string& shader_path)
 {
 	BlockType t = block_registry.add<Block::Base>(name);
-	console.logger << "ID " << static_cast<block_type_id_t>(t) << ": " << name << "\n";
+	LOG(DEBUG) << "ID " << static_cast<block_type_id_t>(t) << ": " << name << "\n";
 	add_shader(*this, t, shader_path);
 	return t;
 }
@@ -466,14 +473,14 @@ void Game::add_commands()
 	COMMAND("respawn")
 	{
 		game.player.respawn();
-		game.console.logger << "respawned at " << glm::to_string(game.player.position()) << "\n";
+		LOG(INFO) << "respawned at " << glm::to_string(game.player.position());
 	});
 
 	COMMAND_ARGS("save_pos")
 	{
 		if(args.size() != 1)
 		{
-			game.console.error_logger << "Usage: save_pos <string: filename>\n";
+			LOG(ERROR) << "Usage: save_pos <string: filename>";
 			return;
 		}
 		const string save_name = args[0];
@@ -487,13 +494,13 @@ void Game::add_commands()
 		streem << rot.x << " " << rot.y << " " << rot.z;
 
 		streem.flush();
-		game.console.logger << "saved position and rotation to " << save_name << "\n";
+		LOG(INFO) << "saved position and rotation to " << save_name;
 	});
 	COMMAND_ARGS("load_pos")
 	{
 		if(args.size() != 1)
 		{
-			game.console.error_logger << "Usage: load_pos <string: filename>\n";
+			LOG(ERROR) << "Usage: load_pos <string: filename>";
 			return;
 		}
 		const string save_name = args[0];
@@ -504,28 +511,28 @@ void Game::add_commands()
 		streem >> pos.y;
 		streem >> pos.z;
 		game.player.position = pos;
-		game.console.logger << "set position to " << glm::to_string(pos) << "\n";
+		LOG(INFO) << "set position to " << glm::to_string(pos);
 
 		glm::dvec3 rot;
 		streem >> rot.x;
 		streem >> rot.y;
 		streem >> rot.z;
 		game.player.rotation = rot;
-		game.console.logger << "set rotation to " << glm::to_string(rot) << "\n";
+		LOG(INFO) << "set rotation to " << glm::to_string(rot);
 	});
 
 	COMMAND_ARGS("exec")
 	{
 		if(args.size() != 1)
 		{
-			game.console.error_logger << "Usage: exec <string: filename>\n";
+			LOG(ERROR) << "Usage: exec <string: filename>";
 			return;
 		}
 		const string name = args[0];
 		std::ifstream file("scripts/" + name);
 		if(!file.is_open())
 		{
-			game.console.error_logger << "script not found: " << name << "\n";
+			LOG(ERROR) << "script not found: " << name;
 			return;
 		}
 		for(string line; std::getline(file, line); )
@@ -538,7 +545,7 @@ void Game::add_commands()
 	{
 		if(args.size() != 2)
 		{
-			game.console.error_logger << "Usage: cam.rot x|y|z <float: degrees>\n";
+			LOG(ERROR) << "Usage: cam.rot x|y|z <float: degrees>";
 			return;
 		}
 		const string part = args[0];
@@ -557,10 +564,10 @@ void Game::add_commands()
 		}
 		else
 		{
-			game.console.error_logger << "component name must be x, y, or z\n";
+			LOG(ERROR) << "component name must be x, y, or z";
 			return;
 		}
-		game.console.logger << "camera rotation: " << glm::to_string(game.camera.rotation) << "\n";
+		LOG(INFO) << "camera rotation: " << glm::to_string(game.camera.rotation);
 	});
 
 	COMMAND_ARGS("screenshot")
@@ -576,7 +583,7 @@ void Game::add_commands()
 		}
 		else
 		{
-			game.console.error_logger << "Usage: screenshot [string: filename]\n";
+			LOG(ERROR) << "Usage: screenshot [string: filename]";
 			return;
 		}
 		try
@@ -585,7 +592,7 @@ void Game::add_commands()
 		}
 		catch(const std::runtime_error& e)
 		{
-			game.console.error_logger << "error saving screenshot: " << e.what() << "\n";
+			LOG(ERROR) << "error saving screenshot: " << e.what();
 		}
 	});
 
@@ -596,18 +603,18 @@ void Game::add_commands()
 	COMMAND("toggle_wireframe")
 	{
 		game.wireframe = !game.wireframe;
-		game.console.logger << "wireframe: " << game.wireframe << "\n";
+		LOG(INFO) << "wireframe: " << game.wireframe;
 	});
 	COMMAND("toggle_cull_face")
 	{
 		game.gfx.toggle_cull_face();
-		game.console.logger << "cull face: " << game.gfx.cull_face << "\n";
+		LOG(INFO) << "cull face: " << game.gfx.cull_face;
 	});
 	COMMAND_ARGS("fov")
 	{
 		if(args.size() != 1 || args[0].length() == 0)
 		{
-			game.console.error_logger << "Usage: fov <exact number or +- difference>\n";
+			LOG(ERROR) << "Usage: fov <exact number or +- difference>";
 			return;
 		}
 
@@ -641,7 +648,7 @@ void Game::add_commands()
 	{
 		if(args.size() != 1 || args[0].size() == 0)
 		{
-			game.console.error_logger << "Usage: screen_shader <path>\n";
+			LOG(ERROR) << "Usage: screen_shader <path>";
 			return;
 		}
 
@@ -654,7 +661,7 @@ void Game::add_commands()
 		{
 			game.render_distance += 1;
 		}
-		game.console.logger << "render distance: " << game.render_distance << "\n";
+		LOG(INFO) << "render distance: " << game.render_distance;
 	});
 	COMMAND("render_distance--")
 	{
@@ -663,17 +670,17 @@ void Game::add_commands()
 		{
 			game.render_distance = 0;
 		}
-		game.console.logger << "render distance: " << game.render_distance << "\n";
+		LOG(INFO) << "render distance: " << game.render_distance;
 	});
 	COMMAND("reach_distance++")
 	{
 		game.player.reach_distance += 1;
-		game.console.logger << "reach distance: " << game.player.reach_distance << "\n";
+		LOG(INFO) << "reach distance: " << game.player.reach_distance;
 	});
 	COMMAND("reach_distance--")
 	{
 		game.player.reach_distance -= 1;
-		game.console.logger << "reach distance: " << game.player.reach_distance << "\n";
+		LOG(INFO) << "reach distance: " << game.player.reach_distance;
 	});
 
 	COMMAND("block_type++")
@@ -685,7 +692,7 @@ void Game::add_commands()
 			i = 2;
 		}
 		game.block_type = static_cast<BlockType>(i);
-		game.console.logger << "block type: " << i << "\n";
+		LOG(DEBUG) << "block type: " << i;
 	});
 	COMMAND("block_type--")
 	{
@@ -699,7 +706,7 @@ void Game::add_commands()
 			i = (i - 1) % Block::MAX_ID;
 		}
 		game.block_type = static_cast<BlockType>(i);
-		game.console.logger << "block type: " << i << "\n";
+		LOG(DEBUG) << "block type: " << i;
 	});
 
 	COMMAND("nazi")
@@ -742,7 +749,7 @@ void Game::add_commands()
 	{
 		if(args.size() != 1)
 		{
-			game.console.error_logger << "Usage: open_gui <GUI name>\n";
+			LOG(ERROR) << "Usage: open_gui <GUI name>";
 			return;
 		}
 		const string name = args[0];
@@ -757,7 +764,7 @@ void Game::add_commands()
 		}
 		else
 		{
-			game.console.error_logger << "No such GUI: " << name << "\n";
+			LOG(ERROR) << "No such GUI: " << name;
 			return;
 		}
 		game.open_gui(std::move(gui));

@@ -14,6 +14,8 @@ class Light : public Base, public Interface::KnowsPosition
 
 		Light& operator=(const Base&) override;
 
+		std::string name() const override;
+
 		Graphics::Color color() const override;
 		void color(const Graphics::Color&);
 

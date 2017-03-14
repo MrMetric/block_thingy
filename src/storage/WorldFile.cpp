@@ -1,11 +1,11 @@
 #include "WorldFile.hpp"
 
 #include <fstream>
-#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <utility>
 
+#include <easylogging++/easylogging++.hpp>
 #include <msgpack.hpp>
 #include <zstr/zstr.hpp>
 
@@ -44,7 +44,7 @@ WorldFile::WorldFile(const string& world_dir, World& world)
 	{
 		return;
 	}
-	LOGGER << "loading world: " << world_path << "\n";
+	LOG(INFO) << "loading world: " << world_path;
 	string bytes = Util::read_file(world_path);
 	try
 	{
@@ -78,20 +78,20 @@ void WorldFile::save_player(const Player& player)
 
 unique_ptr<Player> WorldFile::load_player
 (
-	Game& game,
 	const string& name
 )
 {
+	auto player = std::make_unique<Player>(*Game::instance, name);
+
 	string file_path = player_dir + name;
 	if(!Util::file_is_openable(file_path))
 	{
-		return nullptr;
+		return player;
 	}
 
-	LOGGER << "loading player: " << file_path << "\n";
+	LOG(INFO) << "loading player: " << file_path;
 
 	string bytes = Util::read_file(file_path);
-	auto player = std::make_unique<Player>(game, name);
 	try
 	{
 		unpack_bytes(bytes, *player);
@@ -119,7 +119,7 @@ void WorldFile::save_chunk(const Chunk& chunk)
 	string y = to_string(position.y);
 	string z = to_string(position.z);
 	string file_path = chunk_dir + x + "_" + y + "_" + z + ".gz";
-	LOGGER << "saving " << file_path << "\n";
+	LOG(INFO) << "saving " << file_path;
 
 	std::ofstream stdstream(file_path, std::ofstream::binary);
 	zstr::ostream stream(stdstream);
@@ -146,13 +146,20 @@ shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 	{
 		unpack_bytes(bytes, *chunk);
 	}
+	catch(const msgpack::v1::insufficient_bytes& e)
+	{
+		// TODO: load truncated chunks
+		LOG(ERROR) << "error loading " << file_path << ": " << e.what();
+		return nullptr;
+	}
 	catch(const msgpack::type_error& e)
 	{
 		//throw std::runtime_error("error loading " + file_path + ": " + e.what());
-		world.game.console.error_logger << "error loading " << file_path << ": " << e.what() << "\n";
+		LOG(ERROR) << "error loading " << file_path << ": " << e.what();
 		// TODO: rename the bad file so the user can attempt to recover it (because the new chunk will overwrite it)
 		return nullptr;
 	}
+	//catch(const std::exception& e)
 
 	return chunk;
 }

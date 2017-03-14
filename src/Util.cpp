@@ -6,7 +6,6 @@
 #include <ctime>
 #include <fstream>
 #include <iomanip>
-#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <stdint.h>
@@ -18,12 +17,11 @@
 #include <unistd.h>
 #endif
 
+#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 
 #include "std_make_unique.hpp"
 
-using std::cerr;
-using std::cout;
 using std::string;
 using std::to_string;
 using std::unique_ptr;
@@ -34,7 +32,7 @@ void printOglError(const string& file, const int line, const string& func)
 	const GLenum glErr = glGetError();
 	if(glErr != GL_NO_ERROR)
 	{
-		cout << "OpenGL error @ " << file << ":" << line << " (" << func << "): " << Util::gl_error_string(glErr) << "\n";
+		LOG(ERROR) << "OpenGL error @ " << file << ":" << line << " (" << func << "): " << Util::gl_error_string(glErr);
 	}
 }
 
@@ -58,7 +56,7 @@ string Util::read_file(const string& path)
 	}
 	catch(const std::ios_base::failure&)
 	{
-		cerr << "failed to read " << path << "\n";
+		LOG(ERROR) << "failed to read " << path;
 		throw;
 	}
 }
@@ -149,21 +147,40 @@ string Util::gl_object_log(const GLuint object)
 	return string(log.get());
 }
 
-Util::path Util::split_path(const string& path)
+Util::path Util::split_path(string path)
 {
-	// TODO: handle slash_pos or dot_pos being string::npos
+	string folder, file, ext;
+
 	const std::size_t slash_pos = path.find_last_of('/');
+	if(slash_pos != string::npos)
+	{
+		folder = path.substr(0, slash_pos);
+		path = path.substr(slash_pos + 1);
+	}
+
 	const std::size_t dot_pos = path.find_last_of('.');
-	const string folder = path.substr(0, slash_pos);
-	const string file = path.substr(slash_pos + 1, dot_pos - slash_pos - 1);
-	const string ext = path.substr(dot_pos + 1);
+	if(dot_pos != string::npos)
+	{
+		file = path.substr(0, dot_pos);
+		ext = path.substr(dot_pos + 1);
+	}
+	else
+	{
+		file = path;
+	}
+
 	return { folder, file, ext };
 }
 
 string Util::join_path(const Util::path& path_parts)
 {
-	string path = path_parts.folder + "/" + path_parts.file;
-	if(path_parts.ext != "")
+	string path = path_parts.folder;
+	if(!path_parts.folder.empty())
+	{
+		path += "/";
+	}
+	path += path_parts.file;
+	if(!path_parts.ext.empty())
 	{
 		path += "." + path_parts.ext;
 	}
@@ -190,7 +207,7 @@ void Util::change_directory(const string& path)
 bool Util::create_directory(const string& path)
 {
 	#ifdef _WIN32
-	if(PathIsDirectory(path.c_str())
+	if(PathIsDirectory(path.c_str()))
 	#else
 	struct stat s;
 	if(stat(path.c_str(), &s) == 0 && s.st_mode & S_IFDIR)

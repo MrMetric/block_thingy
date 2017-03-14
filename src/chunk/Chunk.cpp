@@ -35,10 +35,10 @@ using Position::ChunkInWorld;
 
 Chunk::Chunk(const ChunkInWorld& pos, World& owner)
 :
+	changed(false),
 	owner(owner),
 	position(pos)
 {
-	set_blocks(owner.game.block_registry.make(BlockType::air));
 }
 
 World& Chunk::get_owner() const
@@ -51,45 +51,34 @@ ChunkInWorld Chunk::get_position() const
 	return position;
 }
 
-inline static chunk_block_array_t::size_type block_array_index(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z)
-{
-	return CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
-}
-
 const Block::Base& Chunk::get_block(const BlockInChunk& pos) const
 {
-	return *blocks[block_array_index(pos.x, pos.y, pos.z)];
+	return *blocks.get(pos);
 }
 
 Block::Base& Chunk::get_block(const BlockInChunk& pos)
 {
-	return *blocks[block_array_index(pos.x, pos.y, pos.z)];
+	return *blocks.get(pos);
 }
 
 void Chunk::set_block(const BlockInChunk& pos, unique_ptr<Block::Base> block)
 {
 	solid_block = nullptr;
-	blocks[block_array_index(pos.x, pos.y, pos.z)] = std::move(block);
+	blocks.set(pos, std::move(block));
 	changed = true;
-
-	update_neighbors(pos.x, pos.y, pos.z);
 }
 
 Graphics::Color Chunk::get_light(const BlockInChunk& pos) const
 {
-	const auto i = block_array_index(pos.x, pos.y, pos.z);
-	return light[i];
+	return light.get(pos);
 }
 
 void Chunk::set_light(const BlockInChunk& pos, const Graphics::Color& color)
 {
-	const auto i = block_array_index(pos.x, pos.y, pos.z);
-	if(light[i] == color) return;
+	light.set(pos, color);
 
-	light[i] = color;
+	// TODO: mark changed only when the color is different
 	changed = true;
-
-	update_neighbors(pos.x, pos.y, pos.z);
 }
 
 void Chunk::update()
@@ -112,19 +101,20 @@ void Chunk::render(const bool transluscent_pass)
 		changed = false;
 	}
 
-	const ChunkInWorld render_position = position - ChunkInWorld(BlockInWorld(owner.game.camera.position));
+	const ChunkInWorld render_position = position - ChunkInWorld(BlockInWorld(Game::instance->camera.position));
 	const BlockInWorld position_render_offset(render_position, {0, 0, 0});
 	std::size_t i = 0;
 	for(const auto& p : meshes)
 	{
 		const Mesher::meshmap_key_t& key = p.first;
 		const BlockType type = std::get<0>(key);
-		if(owner.game.block_registry.make(type)->is_translucent() != transluscent_pass)
+		// TODO: get existing block instead of making one
+		if(owner.block_registry.make(type)->is_translucent() != transluscent_pass)
 		{
 			++i;
 			continue;
 		}
-		auto& shader = owner.game.gfx.get_block_shader(type);
+		auto& shader = Game::instance->gfx.get_block_shader(type);
 		glUseProgram(shader.get_name());
 
 		shader.uniform("position_offset", static_cast<glm::vec3>(position_render_offset));
@@ -140,37 +130,29 @@ void Chunk::render(const bool transluscent_pass)
 	}
 }
 
-const Mesher::meshmap_t& Chunk::get_meshes() const
+void Chunk::set_blocks(chunk_blocks_t new_blocks)
 {
-	return meshes;
-}
-void Chunk::set_meshes(const Mesher::meshmap_t& m)
-{
-	changed = false;
-	meshes = m;
-	update_vaos();
-}
-
-void Chunk::set_blocks(chunk_block_array_t new_blocks)
-{
+	for(const auto& b : new_blocks)
+	{
+		if(b == nullptr)
+		{
+			throw std::invalid_argument("Chunk::set_blocks(array): got a null block");
+		}
+	}
 	blocks = std::move(new_blocks);
 	solid_block = nullptr;
 	changed = true;
 }
 void Chunk::set_blocks(unique_ptr<Block::Base> block)
 {
+	if(block == nullptr)
+	{
+		throw std::invalid_argument("Chunk::set_blocks(single): got a null block");
+	}
 	// TODO: compare new block with current block
 	solid_block = std::move(block);
-	std::generate(blocks.begin(), blocks.end(), [this]()
-	{
-		return owner.game.block_registry.make(*solid_block);
-	});
+	blocks.fill(solid_block);
 	changed = true;
-}
-
-const Block::Base& Chunk::get_block(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
-{
-	return *blocks[block_array_index(x, y, z)];
 }
 
 void Chunk::update_vaos()
@@ -196,57 +178,5 @@ void Chunk::update_vaos()
 		const Mesher::mesh_t& mesh = p.second;
 		mesh_vbos[i].data(mesh.size() * sizeof(Mesher::mesh_t::value_type), mesh.data(), usage_hint);
 		++i;
-	}
-}
-
-void Chunk::update_neighbors() const
-{
-	update_neighbor(-1,  0,  0);
-	update_neighbor(+1,  0,  0);
-	update_neighbor( 0, -1,  0);
-	update_neighbor( 0, +1,  0);
-	update_neighbor( 0,  0, -1);
-	update_neighbor( 0,  0, +1);
-}
-
-void Chunk::update_neighbors(const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z) const
-{
-	// TODO: check if the neighbor chunk has a block beside this one (to avoid updating when the appearance won't change)
-	if(x == 0)
-	{
-		update_neighbor(-1, 0, 0);
-	}
-	else if(x == CHUNK_SIZE - 1)
-	{
-		update_neighbor(+1, 0, 0);
-	}
-
-	if(y == 0)
-	{
-		update_neighbor(0, -1, 0);
-	}
-	else if(y == CHUNK_SIZE - 1)
-	{
-		update_neighbor(0, +1, 0);
-	}
-
-	if(z == 0)
-	{
-		update_neighbor(0, 0, -1);
-	}
-	else if(z == CHUNK_SIZE - 1)
-	{
-		update_neighbor(0, 0, +1);
-	}
-}
-
-void Chunk::update_neighbor(const ChunkInWorld::value_type x, const ChunkInWorld::value_type y, const ChunkInWorld::value_type z) const
-{
-	ChunkInWorld chunk_pos(x, y, z);
-	chunk_pos += position;
-	shared_ptr<Chunk> chunk = owner.get_chunk(chunk_pos);
-	if(chunk != nullptr)
-	{
-		chunk->changed = true;
 	}
 }

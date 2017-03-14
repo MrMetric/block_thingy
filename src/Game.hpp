@@ -25,11 +25,6 @@
 
 #include "types/window_size_t.hpp"
 
-#define LOGGER (Game::instance != nullptr \
-	? Game::instance->console.logger \
-	: std::cout \
-)
-
 class Game
 {
 	public:
@@ -66,6 +61,14 @@ class Game
 		BlockType add_block_2(const std::string& name, const std::string& shader_path);
 
 		static Game* instance;
+		class set_instance
+		{
+			public:
+				set_instance(Game* ptr)
+				{
+					Game::instance = ptr;
+				}
+		} set_instance;
 
 		BlockType block_type;
 		std::unique_ptr<RaycastHit> hovered_block;
@@ -75,8 +78,8 @@ class Game
 		Gfx& gfx;
 
 		Camera camera;
+		Block::BlockRegistry block_registry; // must be initialized before world
 		World world;
-		Block::BlockRegistry block_registry;
 		std::shared_ptr<Player> player_ptr;
 		Player& player;
 		Console console;
