@@ -50,7 +50,13 @@ unique_ptr<Base> BlockRegistry::make(const BlockTypeExternal te) const
 	{
 		throw std::runtime_error("invalid external block ID: " + std::to_string(static_cast<block_type_id_t>(te)));
 	}
-	BlockType t = strid_to_id.at(i->second);
+	const auto i2 = strid_to_id.find(i->second);
+	if(i2 == strid_to_id.cend())
+	{
+		// TODO: load unknown blocks
+		throw std::runtime_error("invalid block type in extid map: " + i->second);
+	}
+	const BlockType t = i2->second;
 	return make(t);
 }
 

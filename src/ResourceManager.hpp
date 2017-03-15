@@ -9,8 +9,6 @@
 #include "fwd/Game.hpp"
 #include "fwd/graphics/OpenGL/ShaderObject.hpp"
 
-namespace ResourceManager {
-
 template<typename T>
 class Resource
 {
@@ -60,11 +58,14 @@ class Resource
 template<typename T>
 std::unordered_map<std::string, std::vector<typename Resource<T>::update_func_t>> Resource<T>::update_funcs;
 
-void init();
-void check_updates();
+class ResourceManager
+{
+public:
+	ResourceManager();
+	~ResourceManager();
 
-void load_blocks(Game&);
+	void check_updates();
+	void load_blocks(Game&);
 
-Resource<Graphics::OpenGL::ShaderObject> get_ShaderObject(std::string path, bool reload = false);
-
-}
+	Resource<Graphics::OpenGL::ShaderObject> get_ShaderObject(std::string path, bool reload = false);
+};

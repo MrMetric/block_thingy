@@ -11,6 +11,7 @@
 
 #include "ShaderObject.hpp"
 
+#include "Game.hpp"
 #include "ResourceManager.hpp"
 #include "Util.hpp"
 
@@ -53,7 +54,7 @@ ShaderProgram::ShaderProgram
 {
 	for(const string& path : file_paths)
 	{
-		res.push_back(ResourceManager::get_ShaderObject(path));
+		res.push_back(Game::instance->resource_manager.get_ShaderObject(path));
 		res.back().on_update([this]()
 		{
 			init();

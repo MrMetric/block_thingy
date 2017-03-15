@@ -22,17 +22,23 @@ using std::cerr;
 using std::string;
 using Graphics::OpenGL::ShaderObject;
 
-namespace ResourceManager {
-
 static Inotify inotify;
 // unique_ptr to keep validity when vector resizes itself
 static std::vector<std::unique_ptr<InotifyWatch>> inotify_watches;
-void init()
+
+static std::unordered_map<std::string, std::unique_ptr<Graphics::OpenGL::ShaderObject>> cache_ShaderObject;
+
+ResourceManager::ResourceManager()
 {
 	inotify.SetNonBlock(true);
 }
 
-void check_updates()
+ResourceManager::~ResourceManager()
+{
+	cache_ShaderObject.clear();
+}
+
+void ResourceManager::check_updates()
 {
 	inotify.WaitForEvents();
 	if(inotify.GetEventCount() == 0)
@@ -75,7 +81,7 @@ static bool is_block_valid(const std::unordered_map<string, string>& block)
 	return true;
 }
 
-void load_blocks(Game& game)
+void ResourceManager::load_blocks(Game& game)
 {
 	for(const auto& entry : fs::recursive_directory_iterator("blocks"))
 	{
@@ -92,8 +98,7 @@ void load_blocks(Game& game)
 	}
 }
 
-static std::unordered_map<string, std::unique_ptr<ShaderObject>> cache_ShaderObject;
-Resource<ShaderObject> get_ShaderObject(string path, bool reload)
+Resource<ShaderObject> ResourceManager::get_ShaderObject(string path, const bool reload)
 {
 	GLenum type;
 	Util::path path_parts = Util::split_path(path);
@@ -145,6 +150,4 @@ Resource<ShaderObject> get_ShaderObject(string path, bool reload)
 		return r;
 	}
 	return Resource<ShaderObject>(&i->second, path);
-}
-
 }

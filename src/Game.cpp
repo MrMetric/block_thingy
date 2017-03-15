@@ -74,8 +74,6 @@ Game::Game(Gfx& gfx)
 	fps(999),
 	render_distance(3)
 {
-	ResourceManager::init();
-
 	// these 2 must be added first (in this order!) to get the correct IDs
 	add_block<Block::None>("none");
 	add_block<Block::Air>("air");
@@ -85,7 +83,7 @@ Game::Game(Gfx& gfx)
 	add_block<Block::Light>("light");
 	add_block<Block::Glass>("glass");
 
-	ResourceManager::load_blocks(*this);
+	resource_manager.load_blocks(*this);
 
 	if(block_registry.get_extid_map().size() == 0)
 	{
@@ -116,7 +114,7 @@ Game::Game(Gfx& gfx)
 
 void Game::draw()
 {
-	ResourceManager::check_updates();
+	resource_manager.check_updates();
 
 	glViewport(0, 0, gfx.window_size.x, gfx.window_size.y);
 
@@ -320,7 +318,7 @@ void Game::add_block(const string& strid, BlockType t)
 BlockType Game::add_block_2(const std::string& name, const std::string& shader_path)
 {
 	BlockType t = block_registry.add<Block::Base>(name);
-	LOG(DEBUG) << "ID " << static_cast<block_type_id_t>(t) << ": " << name << "\n";
+	LOG(DEBUG) << "ID " << static_cast<block_type_id_t>(t) << ": " << name;
 	add_shader(*this, t, shader_path);
 	return t;
 }

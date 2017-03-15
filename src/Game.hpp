@@ -11,6 +11,7 @@
 #include "FPSManager.hpp"
 #include "fwd/Gfx.hpp"
 #include "fwd/Player.hpp"
+#include "ResourceManager.hpp"
 #include "World.hpp"
 #include "block/BlockRegistry.hpp"
 #include "fwd/block/BlockType.hpp"
@@ -72,6 +73,8 @@ class Game
 
 		BlockType block_type;
 		std::unique_ptr<RaycastHit> hovered_block;
+
+		ResourceManager resource_manager;
 
 		// event_manager must be initialized before others!
 		EventManager event_manager;
