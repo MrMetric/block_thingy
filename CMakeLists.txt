@@ -30,10 +30,10 @@ target_compile_features(block_thingy PRIVATE cxx_relaxed_constexpr)
 ]]
 
 find_package(PkgConfig REQUIRED)
-pkg_search_module(GLFW REQUIRED glfw3)
+pkg_search_module(GLFW REQUIRED glfw3>=3.2)
 pkg_search_module(FREETYPE REQUIRED freetype2)
 pkg_search_module(LIBPNG REQUIRED libpng)
-pkg_search_module(MSGPACK REQUIRED msgpack)
+pkg_search_module(MSGPACK REQUIRED msgpack=2) # TODO: determine minimum version
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
 	set(FSANITIZE -fsanitize=undefined,integer)

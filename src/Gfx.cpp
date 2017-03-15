@@ -22,6 +22,7 @@
 #include <glm/gtx/transform.hpp>			// glm::rotate, glm::translate
 
 #include <easylogging++/easylogging++.hpp>
+#define PNG_SKIP_SETJMP_CHECK // for libpng < 1.5
 #include <png.h>
 
 #include "Camera.hpp"
@@ -330,14 +331,14 @@ void Gfx::write_png_RGB(const char* filename, const uint8_t* data, const uint32_
 	{
 		for(uint_fast32_t y = height; y > 0; --y)
 		{
-			png_write_row(png_ptr, data + (y - 1) * rowsize);
+			png_write_row(png_ptr, const_cast<uint8_t*>(data + (y - 1) * rowsize));
 		}
 	}
 	else
 	{
 		for(uint_fast32_t y = 0; y < height; ++y)
 		{
-			png_write_row(png_ptr, data + y * rowsize);
+			png_write_row(png_ptr, const_cast<uint8_t*>(data + y * rowsize));
 		}
 	}
 	png_write_end(png_ptr, info_ptr);
