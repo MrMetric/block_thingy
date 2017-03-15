@@ -20,7 +20,7 @@ class Resource
 			id(id)
 		{
 			this->p = p;
-			update_funcs.emplace(id, 1);
+			update_funcs.emplace(id, std::vector<update_func_t>(1));
 		}
 
 		T& operator*()

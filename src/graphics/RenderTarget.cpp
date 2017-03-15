@@ -1,6 +1,7 @@
 #include "RenderTarget.hpp"
 
 #include <stdexcept>
+#include <string>
 
 namespace Graphics {
 

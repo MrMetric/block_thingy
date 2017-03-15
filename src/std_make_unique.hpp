@@ -3,7 +3,13 @@
 
 #include <memory>
 
-#if !defined(_MSC_VER) // dunno why __cpp_lib_make_unique is not defined
+#ifndef __cpp_lib_make_unique
+	#if defined(_LIBCPP_STD_VER) || defined(_MSC_VER)
+		// ???
+		#define __cpp_lib_make_unique 201304
+	#endif
+#endif
+
 #if __cpp_lib_make_unique < 201304
 
 #include <cstddef>
@@ -50,4 +56,3 @@ namespace std
 #define __cpp_lib_make_unique 201304
 
 #endif // __cpp_lib_make_unique < 201304
-#endif // !defined(_LIBCPP_STD_VER) && !defined(_MSC_VER)

@@ -1,6 +1,7 @@
 #include "ResourceManager.hpp"
 
 #include <iostream>
+#include <sstream>
 #include <unordered_map>
 
 #include <inotify-cxx/inotify-cxx.hpp>
