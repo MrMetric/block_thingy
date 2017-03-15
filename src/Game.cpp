@@ -58,11 +58,10 @@ using std::unique_ptr;
 
 Game* Game::instance = nullptr;
 
-Game::Game(Gfx& gfx)
+Game::Game()
 :
 	set_instance(this),
 	hovered_block(nullptr),
-	gfx(gfx),
 	camera(gfx, event_manager),
 	world(block_registry, "worlds/test"),
 	player_ptr(world.add_player("test_player")),

@@ -9,7 +9,7 @@
 
 #include "Camera.hpp"
 #include "FPSManager.hpp"
-#include "fwd/Gfx.hpp"
+#include "Gfx.hpp"
 #include "fwd/Player.hpp"
 #include "ResourceManager.hpp"
 #include "World.hpp"
@@ -29,7 +29,7 @@
 class Game
 {
 	public:
-		Game(Gfx&);
+		Game();
 
 		Game(Game&&) = delete;
 		Game(const Game&) = delete;
@@ -78,7 +78,7 @@ class Game
 
 		// event_manager must be initialized before others!
 		EventManager event_manager;
-		Gfx& gfx;
+		Gfx gfx;
 
 		Camera camera;
 		Block::BlockRegistry block_registry; // must be initialized before world

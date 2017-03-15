@@ -94,9 +94,8 @@ int main(int argc, char** argv)
 	LOG(DEBUG) << "Compiled with GLFW " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION;
 	LOG(DEBUG) << "Running with GLFW " << glfwGetVersionString();
 
-	Gfx gfx; printOpenGLError();
-	window = gfx.window;
-	static unique_ptr<Game> game = std::make_unique<Game>(gfx);
+	static unique_ptr<Game> game = std::make_unique<Game>();
+	window = game->gfx.window;
 
 	LOG(INFO) << "starting main loop";
 	while(!glfwWindowShouldClose(game->gfx.window))
