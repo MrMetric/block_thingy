@@ -72,7 +72,7 @@ Game::Game()
 	wireframe(false),
 	delta_time(0),
 	fps(999),
-	render_distance(3)
+	render_distance(1)
 {
 	// these must be added first (in this order!) to get the correct IDs
 	add_block<Block::None>("none");
