@@ -7,6 +7,7 @@
 
 #include "block/Base.hpp"
 #include "block/BlockType.hpp"
+#include "block/Unknown.hpp"
 
 using std::string;
 using std::unique_ptr;
@@ -62,7 +63,11 @@ unique_ptr<Base> BlockRegistry::make(const BlockTypeExternal te) const
 			LOG(WARNING) << "invalid block type in extid map: " << i->second;
 			warning_for.push_back(i->second);
 		}
-		return make(BlockType::unknown);
+
+		// templating and virtual functions are not combinable, so I can not do this:
+		//return make(BlockType::unknown, i->second);
+
+		return std::make_unique<Unknown>(BlockType::unknown, i->second);
 	}
 	const BlockType t = i2->second;
 	return make(t);
