@@ -35,7 +35,7 @@ struct convert<Player>
 		if(o.type != msgpack::type::MAP) throw msgpack::type_error();
 		if(o.via.map.size < 3) throw msgpack::type_error();
 
-		auto map = o.as<std::unordered_map<std::string, msgpack::object>>();
+		auto map = o.as<std::map<std::string, msgpack::object>>();
 
 		find_in_map_or_throw(map, "position", player.position);
 		find_in_map_or_throw(map, "rotation", player.rotation);

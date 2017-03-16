@@ -1,6 +1,9 @@
 #include "BlockRegistry.hpp"
 
 #include <stdexcept>
+#include <vector>
+
+#include <easylogging++/easylogging++.hpp>
 
 #include "block/Base.hpp"
 #include "block/BlockType.hpp"
@@ -53,8 +56,13 @@ unique_ptr<Base> BlockRegistry::make(const BlockTypeExternal te) const
 	const auto i2 = strid_to_id.find(i->second);
 	if(i2 == strid_to_id.cend())
 	{
-		// TODO: load unknown blocks
-		throw std::runtime_error("invalid block type in extid map: " + i->second);
+		static std::vector<string> warning_for;
+		if(std::find(warning_for.cbegin(), warning_for.cend(), i->second) == warning_for.cend())
+		{
+			LOG(WARNING) << "invalid block type in extid map: " << i->second;
+			warning_for.push_back(i->second);
+		}
+		return make(BlockType::unknown);
 	}
 	const BlockType t = i2->second;
 	return make(t);

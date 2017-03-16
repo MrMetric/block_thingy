@@ -1,7 +1,7 @@
 #pragma once
 
+#include <map>
 #include <string>
-#include <unordered_map>
 #include <utility>
 
 #include <msgpack.hpp>
@@ -21,10 +21,12 @@ packer<zstr::ostream>& packer<zstr::ostream>::pack(const msgpack::sbuffer& v);
 
 namespace Storage {
 
+msgpack::object_handle copy_object(const msgpack::object&);
+
 class InputInterface
 {
 	public:
-		InputInterface(const std::unordered_map<std::string, msgpack::object>& map)
+		InputInterface(const std::map<std::string, msgpack::object>& map)
 		:
 			map(map)
 		{
@@ -38,15 +40,17 @@ class InputInterface
 			return value;
 		}
 
+		std::map<std::string, msgpack::object_handle> copy_all();
+
 	private:
-		const std::unordered_map<std::string, msgpack::object>& map;
+		const std::map<std::string, msgpack::object>& map;
 };
 
 class OutputInterface
 {
 	public:
 		template<typename T>
-		void set(const std::string& key, T value)
+		void set(const std::string& key, const T& value)
 		{
 			msgpack::sbuffer buffer;
 			msgpack::pack(buffer, value);
@@ -61,7 +65,7 @@ class OutputInterface
 		}
 
 	private:
-		std::unordered_map<std::string, msgpack::sbuffer> map;
+		std::map<std::string, msgpack::sbuffer> map;
 };
 
 } // namespace Storage

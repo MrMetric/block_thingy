@@ -34,7 +34,7 @@ struct convert<std::unique_ptr<Block::Base>>
 		if(o.type != msgpack::type::MAP) throw msgpack::type_error();
 		if(o.via.map.size < 1) throw msgpack::type_error();
 
-		const auto map = o.as<std::unordered_map<std::string, msgpack::object>>();
+		const auto map = o.as<std::map<std::string, msgpack::object>>();
 
 		BlockTypeExternal t;
 		find_in_map_or_throw(map, "", t);

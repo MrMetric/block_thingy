@@ -1,8 +1,8 @@
 #pragma once
 
+#include <map>
 #include <string>
 #include <typeinfo>
-#include <unordered_map>
 
 #include <easylogging++/easylogging++.hpp>
 #include <msgpack.hpp>
@@ -11,7 +11,12 @@
 #include "util/Property.hpp"
 
 template<typename T>
-bool find_in_map(const std::unordered_map<std::string, msgpack::object>& map, const std::string& key, T& v)
+bool find_in_map
+(
+	const std::map<std::string, msgpack::object>& map,
+	const std::string& key,
+	T& v
+)
 {
 	const auto i = map.find(key);
 	if(i == map.cend())
@@ -23,7 +28,12 @@ bool find_in_map(const std::unordered_map<std::string, msgpack::object>& map, co
 }
 
 template<typename T>
-bool find_in_map(const std::unordered_map<std::string, msgpack::object>& map, const std::string& key, Property<T>& p)
+bool find_in_map
+(
+	const std::map<std::string, msgpack::object>& map,
+	const std::string& key,
+	Property<T>& p
+)
 {
 	T v;
 	const bool a = find_in_map(map, key, v);
@@ -35,7 +45,12 @@ bool find_in_map(const std::unordered_map<std::string, msgpack::object>& map, co
 }
 
 template<typename T>
-void find_in_map_or_throw(const std::unordered_map<std::string, msgpack::object>& map, const std::string& key, T& v)
+void find_in_map_or_throw
+(
+	const std::map<std::string, msgpack::object>& map,
+	const std::string& key,
+	T& v
+)
 {
 	if(!find_in_map(map, key, v))
 	{

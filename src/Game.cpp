@@ -50,6 +50,7 @@
 #include "block/None.hpp"
 #include "block/Test.hpp"
 #include "block/Teleporter.hpp"
+#include "block/Unknown.hpp"
 
 #include "std_make_unique.hpp"
 
@@ -73,9 +74,10 @@ Game::Game()
 	fps(999),
 	render_distance(3)
 {
-	// these 2 must be added first (in this order!) to get the correct IDs
+	// these must be added first (in this order!) to get the correct IDs
 	add_block<Block::None>("none");
 	add_block<Block::Air>("air");
+	add_block<Block::Unknown>("unknown");
 
 	add_block<Block::Test>("test");
 	add_block<Block::Teleporter>("teleporter");
