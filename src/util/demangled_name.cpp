@@ -1,6 +1,6 @@
 #include "demangled_name.hpp"
 
-#ifdef __GNUG__
+#if defined(__GNUG__) && __has_include(<cxxabi.h>) // TODO: find libc++ equivalent
 #include <cstdlib>
 #include <cxxabi.h>
 #include <memory>
