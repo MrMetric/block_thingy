@@ -30,6 +30,7 @@ class Game
 {
 	public:
 		Game();
+		~Game();
 
 		Game(Game&&) = delete;
 		Game(const Game&) = delete;
@@ -72,6 +73,7 @@ class Game
 		} set_instance;
 
 		BlockType block_type;
+		std::unique_ptr<Block::Base> copied_block;
 		std::unique_ptr<RaycastHit> hovered_block;
 
 		ResourceManager resource_manager;

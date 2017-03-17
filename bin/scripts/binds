@@ -8,7 +8,7 @@ bind e +use
 bind lshift +sprint
 bind mouse1 break_block
 bind mouse2 place_block
-bind mouse3 pick_block
+bind mouse3 copy_block
 bind r respawn
 bind l noclip
 bind n nazi

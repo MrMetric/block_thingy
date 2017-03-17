@@ -1,6 +1,7 @@
 #include "Play.hpp"
 
 #include <sstream>
+#include <string>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -14,6 +15,8 @@
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
 #include "util/key_mods.hpp"
+
+using std::string;
 
 namespace Graphics::GUI {
 
@@ -99,17 +102,27 @@ void Play::draw_debug_text()
 	ss << "z: " << p(pos.z) << "\n";
 	#undef p
 	ss << "noclip: " << game.player.get_noclip() << "\n";
-	ss << "block type: "
-		<< game.block_registry.get_strid(game.block_type)
-		<< " (" << static_cast<block_type_id_t>(game.block_type) << ")"
-		<< "\n";
+	auto show_block = [](const Block::Base& block) -> string
+	{
+		std::ostringstream ss;
+		ss << block.name() << " (" << static_cast<block_type_id_t>(block.type()) << ")";
+		return ss.str();
+	};
+	if(game.copied_block != nullptr)
+	{
+		ss << "copied block: " << show_block(*game.copied_block) << "\n";
+	}
+	else
+	{
+		ss << "block type: "
+			<< game.block_registry.get_strid(game.block_type)
+			<< " (" << static_cast<block_type_id_t>(game.block_type) << ")"
+			<< "\n";
+	}
 	if(game.hovered_block != nullptr)
 	{
 		const Block::Base& hovered = game.world.get_block(game.hovered_block->pos);
-		ss << "hovered: "
-			<< hovered.name()
-			<< " (" << static_cast<block_type_id_t>(hovered.type()) << ")"
-			<< "\n";
+		ss << "hovered: " << show_block(hovered) << "\n";
 	}
 	game.gfx.gui_text.draw(ss.str(), {8.0, 8.0});
 }

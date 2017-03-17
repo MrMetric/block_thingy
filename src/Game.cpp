@@ -113,6 +113,10 @@ Game::Game()
 	});
 }
 
+Game::~Game()
+{
+}
+
 void Game::draw()
 {
 	resource_manager.check_updates();
@@ -388,7 +392,15 @@ void Game::add_commands()
 		if(game.world.get_block(pos).is_replaceable())
 		{
 			// TODO: check solidity without constructing
-			unique_ptr<Block::Base> block = game.block_registry.make(game.block_type);
+			unique_ptr<Block::Base> block;
+			if(game.copied_block != nullptr)
+			{
+				block = game.block_registry.make(*game.copied_block);
+			}
+			else
+			{
+				block = game.block_registry.make(game.block_type);
+			}
 			if(game.player.can_place_block_at(pos) || !block->is_solid())
 			{
 				game.world.set_block(pos, std::move(block));
@@ -396,16 +408,18 @@ void Game::add_commands()
 			}
 		}
 	});
-	COMMAND("pick_block")
+	COMMAND("copy_block")
 	{
 		if(game.hovered_block == nullptr)
 		{
+			game.copied_block = nullptr;
 			return;
 		}
 
 		const Position::BlockInWorld pos = game.hovered_block->pos;
 		const Block::Base& block = game.world.get_block(pos);
 		game.block_type = block.type();
+		game.copied_block = game.block_registry.make(block);
 	});
 
 	// TODO: less copy/paste
@@ -691,7 +705,7 @@ void Game::add_commands()
 			i = 2;
 		}
 		game.block_type = static_cast<BlockType>(i);
-		LOG(DEBUG) << "block type: " << i;
+		game.copied_block = nullptr;
 	});
 	COMMAND("block_type--")
 	{
@@ -705,7 +719,7 @@ void Game::add_commands()
 			i = (i - 1) % game.block_registry.get_max_id();
 		}
 		game.block_type = static_cast<BlockType>(i);
-		LOG(DEBUG) << "block type: " << i;
+		game.copied_block = nullptr;
 	});
 
 	COMMAND("nazi")
