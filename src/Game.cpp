@@ -685,7 +685,7 @@ void Game::add_commands()
 	COMMAND("block_type++")
 	{
 		block_type_id_t i = static_cast<block_type_id_t>(game.block_type);
-		i = (i + 1) % Block::MAX_ID;
+		i = (i + 1) % game.block_registry.get_max_id();
 		if(i < 2)
 		{
 			i = 2;
@@ -698,11 +698,11 @@ void Game::add_commands()
 		block_type_id_t i = static_cast<block_type_id_t>(game.block_type);
 		if(i == 2)
 		{
-			i = Block::MAX_ID - 1;
+			i = game.block_registry.get_max_id() - 1;
 		}
 		else
 		{
-			i = (i - 1) % Block::MAX_ID;
+			i = (i - 1) % game.block_registry.get_max_id();
 		}
 		game.block_type = static_cast<BlockType>(i);
 		LOG(DEBUG) << "block type: " << i;

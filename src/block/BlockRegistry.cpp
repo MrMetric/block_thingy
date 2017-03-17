@@ -26,7 +26,7 @@ BlockMaker::~BlockMaker()
 {
 }
 
-unique_ptr<Base> BlockMaker::make(BlockType)
+unique_ptr<Base> BlockMaker::make(BlockType) const
 {
 	return nullptr;
 }
@@ -39,8 +39,8 @@ BlockRegistry::BlockRegistry()
 
 unique_ptr<Base> BlockRegistry::make(const BlockType t) const
 {
-	const auto i = map.find(t);
-	if(i == map.cend())
+	const auto i = block_makers.find(t);
+	if(i == block_makers.cend())
 	{
 		throw std::runtime_error("unknown block ID: " + std::to_string(static_cast<block_type_id_t>(t)));
 	}
@@ -171,6 +171,11 @@ const BlockRegistry::extid_map_t& BlockRegistry::get_extid_map() const
 	return extid_to_strid;
 }
 
+block_type_id_t BlockRegistry::get_max_id() const
+{
+	return block_makers.size();
+}
+
 void BlockRegistry::make_strid_to_extid_map()
 {
 	strid_to_extid.clear();
@@ -180,8 +185,15 @@ void BlockRegistry::make_strid_to_extid_map()
 	}
 }
 
-void BlockRegistry::add(const string& strid, const BlockType t)
+BlockType BlockRegistry::add
+(
+	const string& strid,
+	std::unique_ptr<BlockMaker> maker
+)
 {
+	const BlockType t = static_cast<BlockType>(get_max_id());
+	block_makers.emplace(t, std::move(maker));
+
 	const auto i = strid_to_id.find(strid);
 	if(i != strid_to_id.cend())
 	{
@@ -197,6 +209,8 @@ void BlockRegistry::add(const string& strid, const BlockType t)
 		extid_to_strid.emplace(max_extid, strid);
 		strid_to_extid.emplace(strid, max_extid);
 	}
+
+	return t;
 }
 
 }

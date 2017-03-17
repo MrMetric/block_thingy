@@ -11,24 +11,22 @@
 
 namespace Block {
 
-static block_type_id_t MAX_ID = 0;
-
 class BlockMaker
 {
 	public:
 		BlockMaker();
 		BlockMaker(const BlockMaker&);
 		virtual ~BlockMaker();
-		virtual std::unique_ptr<Base> make(BlockType);
+		virtual std::unique_ptr<Base> make(BlockType) const;
 };
 
 template<typename T>
 class BlockMakerInstance : public BlockMaker
 {
 	public:
-		std::unique_ptr<Base> make(BlockType type) override
+		std::unique_ptr<Base> make(BlockType t) const override
 		{
-			return std::make_unique<T>(type);
+			return std::make_unique<T>(t);
 		}
 };
 
@@ -40,10 +38,7 @@ class BlockRegistry
 		template<typename T = Base>
 		BlockType add(const std::string& name)
 		{
-			BlockType t = static_cast<BlockType>(MAX_ID++);
-			map[t] = std::make_unique<BlockMakerInstance<T>>();
-			add(name, t);
-			return t;
+			return add(name, std::make_unique<BlockMakerInstance<T>>());
 		}
 
 		std::unique_ptr<Base> make(BlockType) const;
@@ -60,10 +55,12 @@ class BlockRegistry
 		void set_extid_map(extid_map_t);
 		const extid_map_t& get_extid_map() const;
 
+		block_type_id_t get_max_id() const;
+
 	private:
 		void make_strid_to_extid_map();
 
-		std::map<BlockType, std::unique_ptr<BlockMaker>> map;
+		std::map<BlockType, std::unique_ptr<BlockMaker>> block_makers;
 
 		std::map<std::string, BlockType> strid_to_id;
 		std::map<BlockType, std::string> id_to_strid;
@@ -71,7 +68,7 @@ class BlockRegistry
 		std::map<std::string, BlockTypeExternal> strid_to_extid;
 		BlockTypeExternal max_extid;
 
-		void add(const std::string& name, BlockType);
+		BlockType add(const std::string& name, std::unique_ptr<BlockMaker>);
 };
 
 } // namespace Block
