@@ -1,11 +1,11 @@
 #include include/header.fs
 
-vec4 color(vec2 coords)
+vec4 color(vec2 uv)
 {
-	float c = pow((cos(M_TAU * coords.x) + 1) / 2, 0.25);
+	float c = pow((cos(M_TAU * uv.x) + 1) / 2, 0.25);
 	if(face == FACE_TOP || face == FACE_BOTTOM)
 	{
-		c *= pow((cos(M_TAU * coords.y) + 1) / 2, 0.25);
+		c *= pow((cos(M_TAU * uv.y) + 1) / 2, 0.25);
 	}
 
 	if(face == FACE_FRONT)

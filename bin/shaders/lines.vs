@@ -5,5 +5,5 @@ uniform mat4 matriks;
 
 void main()
 {
-	gl_Position = matriks * vec4(position, 1.0);
+	gl_Position = matriks * vec4(position, 1);
 }

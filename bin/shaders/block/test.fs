@@ -1,15 +1,12 @@
-#version 330
-
-out vec4 FragColor;
-in vec3 position;
+#include include/header.fs
 
 vec3 color(vec3 coords)
 {
-	return abs(mod(coords - 1.0, 2.0) - 1.0);
+	return abs(mod(coords - 1, 2) - 1);
 }
 
 void main()
 {
 	vec3 c = color(position);
-	FragColor = vec4(c, 1.0);
+	FragColor = vec4(c, 1);
 }

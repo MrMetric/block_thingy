@@ -1,11 +1,10 @@
 #include include/header.fs
 
-vec4 color(vec2 coords)
+vec4 color(vec2 uv)
 {
-	vec2 p = fract(coords);
-	vec3 c = vec3(p, length(p));
-	p *= 4.0;
-	c *= abs(cos(p.x + global_time) * sin(p.x) + cos(p.y + global_time) * sin(p.y)) / 2.0;
+	vec3 c = vec3(uv, length(uv));
+	vec2 p = uv * 4;
+	c *= abs(cos(p.x + global_time) * sin(p.x) + cos(p.y + global_time) * sin(p.y)) / 2;
 	return vec4(c, sqrt(length(c)));
 }
 
