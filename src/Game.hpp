@@ -1,21 +1,19 @@
 #pragma once
 
+#include <experimental/propagate_const>
 #include <memory>
 #include <string>
-#include <vector>
 
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
 
 #include "Camera.hpp"
-#include "FPSManager.hpp"
 #include "Gfx.hpp"
 #include "fwd/Player.hpp"
 #include "ResourceManager.hpp"
 #include "World.hpp"
 #include "block/BlockRegistry.hpp"
 #include "fwd/block/BlockType.hpp"
-#include "console/Command.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
 #include "event/EventManager.hpp"
@@ -96,13 +94,8 @@ class Game
 	private:
 		void add_block(const std::string& name, BlockType);
 
-		double delta_time;
-		FPSManager fps;
-
 		Position::ChunkInWorld::value_type render_distance;
 
-		void find_hovered_block();
-
-		std::vector<Command> commands;
-		void add_commands();
+		struct impl;
+		std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;
 };

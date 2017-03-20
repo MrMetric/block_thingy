@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
@@ -29,6 +30,7 @@
 #include "World.hpp"
 #include "block/Base.hpp"
 #include "block/BlockType.hpp"
+#include "console/Command.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
 #include "event/EventManager.hpp"
@@ -59,6 +61,27 @@ using std::unique_ptr;
 
 Game* Game::instance = nullptr;
 
+struct Game::impl
+{
+	impl(Game& game)
+	:
+		game(game),
+		delta_time(0),
+		fps(999)
+	{
+	}
+
+	Game& game;
+
+	double delta_time;
+	FPSManager fps;
+
+	void find_hovered_block();
+
+	std::vector<Command> commands;
+	void add_commands();
+};
+
 Game::Game()
 :
 	set_instance(this),
@@ -70,9 +93,8 @@ Game::Game()
 	console(*this),
 	keybinder(console),
 	wireframe(false),
-	delta_time(0),
-	fps(999),
-	render_distance(1)
+	render_distance(1),
+	pImpl(std::make_unique<impl>(*this))
 {
 	// these must be added first (in this order!) to get the correct IDs
 	add_block<Block::None>("none");
@@ -99,7 +121,7 @@ Game::Game()
 
 	gfx.hook_events(event_manager);
 
-	add_commands();
+	pImpl->add_commands();
 	console.run_line("exec binds");
 
 	update_framebuffer_size(gfx.window_size);
@@ -185,7 +207,7 @@ void Game::draw()
 	}
 
 	std::stringstream ss;
-	ss << "Baby's First Voxel Engine | " << fps.getFPS() << " fps";
+	ss << "Baby's First Voxel Engine | " << pImpl->fps.getFPS() << " fps";
 	ss << " | player.pos(" << glm::to_string(player.position()) << ")";
 	Position::BlockInWorld player_block_pos(player.position());
 	ss << " | block" << player_block_pos;
@@ -193,13 +215,13 @@ void Game::draw()
 	ss << " | chunkblock" << Position::BlockInChunk(player_block_pos);
 	glfwSetWindowTitle(gfx.window, ss.str().c_str());
 
-	delta_time = fps.enforceFPS();
+	pImpl->delta_time = pImpl->fps.enforceFPS();
 }
 
 void Game::step_world()
 {
 	player.rotation = camera.rotation;
-	world.step(delta_time);
+	world.step(pImpl->delta_time);
 }
 
 void Game::draw_world()
@@ -216,8 +238,15 @@ void Game::draw_world(const glm::dvec3& position, const glm::dvec3& rotation)
 
 	gfx.set_camera_view(position, rotation);
 	Position::BlockInWorld render_origin(position);
-	RenderWorld::draw_world(world, gfx.block_shaders, gfx.matriks, render_origin, render_distance);
-	find_hovered_block();
+	RenderWorld::draw_world
+	(
+		world,
+		gfx.block_shaders,
+		gfx.matriks,
+		render_origin,
+		render_distance
+	);
+	pImpl->find_hovered_block();
 
 	if(wireframe)
 	{
@@ -328,32 +357,38 @@ BlockType Game::add_block_2(const std::string& name, const std::string& shader_p
 	return t;
 }
 
-void Game::find_hovered_block()
+void Game::impl::find_hovered_block()
 {
 	glm::dvec3 out_origin;
 	glm::dvec3 out_direction;
 	PhysicsUtil::ScreenPosToWorldRay
 	(
-		gfx.window_mid,
-		gfx.window_size,
-		gfx.view_matrix_graphical,
-		gfx.projection_matrix,
+		game.gfx.window_mid,
+		game.gfx.window_size,
+		game.gfx.view_matrix_graphical,
+		game.gfx.projection_matrix,
 		out_origin,
 		out_direction
 	);
 
-	glm::dvec3 offset = gfx.physical_position - gfx.graphical_position;
-	hovered_block = PhysicsUtil::raycast(world, out_origin + offset, out_direction, player.reach_distance);
-	if(hovered_block != nullptr)
+	glm::dvec3 offset = game.gfx.physical_position - game.gfx.graphical_position;
+	game.hovered_block = PhysicsUtil::raycast
+	(
+		game.world,
+		out_origin + offset,
+		out_direction,
+		game.player.reach_distance
+	);
+	if(game.hovered_block != nullptr)
 	{
-		const glm::dvec4 color = world.get_block(hovered_block->pos).selection_color();
-		gfx.draw_cube_outline(hovered_block->pos, color);
+		const glm::dvec4 color = game.world.get_block(game.hovered_block->pos).selection_color();
+		game.gfx.draw_cube_outline(game.hovered_block->pos, color);
 	}
 }
 
-void Game::add_commands()
+void Game::impl::add_commands()
 {
-	#define COMMAND_(name) commands.emplace_back(console, name, [](Game& game
+	#define COMMAND_(name) commands.emplace_back(game.console, name, [](Game& game
 	#define COMMAND(name) COMMAND_(name))
 	#define COMMAND_ARGS(name) COMMAND_(name), const std::vector<string>& args)
 
@@ -377,7 +412,6 @@ void Game::add_commands()
 		if(game.world.get_block(pos).type() != BlockType::none) // TODO: breakability check
 		{
 			game.world.set_block(pos, game.block_registry.make(BlockType::air));
-			game.find_hovered_block();
 			//event_manager.do_event(Event_break_block(pos, face));
 		}
 	});
