@@ -65,5 +65,6 @@ target_link_libraries(block_thingy
 	${GLFW_LDFLAGS}
 	${LIBPNG_LDFLAGS}
 	${MSGPACK_LDFLAGS}
+	-ldl
 	-lz
 )

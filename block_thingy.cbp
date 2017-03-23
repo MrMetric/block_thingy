@@ -101,6 +101,7 @@
 			<Add option="`pkg-config --libs glfw3`" />
 			<Add option="`pkg-config --libs libpng`" />
 			<Add option="`pkg-config --libs msgpack`" />
+			<Add option="-ldl" />
 			<Add option="-lz" />
 		</Linker>
 		<Unit filename="lib/inotify-cxx/inotify-cxx.cpp" />
@@ -248,6 +249,10 @@
 		<Unit filename="src/physics/PhysicsUtil.hpp" />
 		<Unit filename="src/physics/RaycastHit.cpp" />
 		<Unit filename="src/physics/RaycastHit.hpp" />
+		<Unit filename="src/plugin/Plugin.cpp" />
+		<Unit filename="src/plugin/Plugin.hpp" />
+		<Unit filename="src/plugin/PluginManager.cpp" />
+		<Unit filename="src/plugin/PluginManager.hpp" />
 		<Unit filename="src/position/BlockInChunk.cpp" />
 		<Unit filename="src/position/BlockInChunk.hpp" />
 		<Unit filename="src/position/BlockInWorld.cpp" />

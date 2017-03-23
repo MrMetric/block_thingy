@@ -41,6 +41,7 @@
 #include "graphics/GUI/Play.hpp"
 #include "physics/PhysicsUtil.hpp"
 #include "physics/RaycastHit.hpp"
+#include "plugin/PluginManager.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
@@ -75,6 +76,8 @@ struct Game::impl
 
 	double delta_time;
 	FPSManager fps;
+
+	PluginManager plugin_manager;
 
 	void find_hovered_block();
 
@@ -133,6 +136,8 @@ Game::Game()
 			Game::instance->player.set_analog_motion({ 0, 0 });
 		}
 	});
+
+	pImpl->plugin_manager.init_plugins(*this);
 }
 
 Game::~Game()

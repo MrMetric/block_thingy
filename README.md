@@ -77,6 +77,10 @@ To run, `block_thingy` needs to know where the game files are. It defaults to `.
 ./block_thingy ../bin
 ```
 
+## License
+
+GPLv3, with one exception: creating non-free plugins is permitted.
+
 ## TODO
  * add a more useful error message for when game files are not found
  * add frustum culling
