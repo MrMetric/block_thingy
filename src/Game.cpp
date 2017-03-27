@@ -1,6 +1,13 @@
 #include "Game.hpp"
 
 #include <cmath>
+#if __has_include(<filesystem>)
+	#include <filesystem>
+	namespace fs = std::filesystem;
+#else
+	#include <experimental/filesystem>
+	namespace fs = std::experimental::filesystem;
+#endif
 #include <fstream>
 #include <functional>
 #include <limits>
@@ -282,7 +289,7 @@ void Game::quit()
 
 void Game::screenshot(string filename)
 {
-	if(Util::create_directory("screenshots"))
+	if(fs::create_directory("screenshots"))
 	{
 		filename = "screenshots/" + filename;
 	}

@@ -78,6 +78,7 @@
 			<Add option="`pkg-config --cflags msgpack`" />
 			<Add option="-Weverything" />
 			<Add option="-Wno-c++98-compat-pedantic" />
+			<Add option="-Wno-documentation-unknown-command" />
 			<Add option="-Wno-exit-time-destructors" />
 			<Add option="-Wno-global-constructors" />
 			<Add option="-Wno-padded" />
@@ -104,6 +105,8 @@
 			<Add option="-ldl" />
 			<Add option="-lz" />
 		</Linker>
+		<Unit filename="lib/easylogging++/easylogging++.cpp" />
+		<Unit filename="lib/easylogging++/easylogging++.hpp" />
 		<Unit filename="lib/inotify-cxx/inotify-cxx.cpp" />
 		<Unit filename="lib/inotify-cxx/inotify-cxx.hpp" />
 		<Unit filename="src/Camera.cpp" />

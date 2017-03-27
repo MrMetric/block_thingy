@@ -802,12 +802,12 @@ const struct {
   double value;
   const base::type::char_t* unit;
 } kTimeFormats[] = {
-  { 1000.0f, ELPP_LITERAL("us") },
-  { 1000.0f, ELPP_LITERAL("ms") },
-  { 60.0f, ELPP_LITERAL("seconds") },
-  { 60.0f, ELPP_LITERAL("minutes") },
-  { 24.0f, ELPP_LITERAL("hours") },
-  { 7.0f, ELPP_LITERAL("days") }
+  { 1000.0, ELPP_LITERAL("us") },
+  { 1000.0, ELPP_LITERAL("ms") },
+  { 60.0, ELPP_LITERAL("seconds") },
+  { 60.0, ELPP_LITERAL("minutes") },
+  { 24.0, ELPP_LITERAL("hours") },
+  { 7.0, ELPP_LITERAL("days") }
 };
 static const int kTimeFormatsCount                           =      sizeof(kTimeFormats) / sizeof(kTimeFormats[0]);
 const struct {

@@ -65,7 +65,7 @@ void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> blo
 	shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
 
 	const Block::Base& old_block = get_block(block_pos);
-	const bool old_is_opaque = old_block.is_opaque();
+	const bool old_affects_light = old_block.is_opaque();
 	const Graphics::Color old_color = old_block.color();
 	// old_block is invalid after the call to set_block
 
@@ -74,10 +74,11 @@ void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> blo
 	update_chunk_neighbors(chunk_pos, pos);
 
 	const Block::Base& block = chunk->get_block(pos);
+	const bool affects_light = block.is_opaque();
 
 	chunks_to_save.emplace(chunk_pos);
 
-	if(block.is_opaque() && !old_is_opaque)
+	if(affects_light && !old_affects_light)
 	{
 		sub_light(block_pos);
 	}
@@ -92,7 +93,7 @@ void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> blo
 		add_light(block_pos, color, false);
 	}
 
-	if(block.is_opaque() != old_is_opaque)
+	if(affects_light != old_affects_light)
 	{
 		update_light_around(block_pos);
 	}
@@ -180,7 +181,12 @@ void World::process_light_add()
 			continue;
 		}
 
-		auto fill = [this, &pos, &color](const int8_t x, const int8_t y, const int8_t z)
+		auto fill = [this, &pos, &color]
+		(
+			const int8_t x,
+			const int8_t y,
+			const int8_t z
+		)
 		{
 			const BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
 			if(get_block(pos2).is_opaque())

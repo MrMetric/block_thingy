@@ -5,11 +5,11 @@
 #endif
 
 #if __has_include(<filesystem>)
-#include <filesystem>
-namespace fs = std::filesystem;
+	#include <filesystem>
+	namespace fs = std::filesystem;
 #else
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
+	#include <experimental/filesystem>
+	namespace fs = std::experimental::filesystem;
 #endif
 
 #include <vector>
@@ -30,7 +30,7 @@ PluginManager::PluginManager()
 :
 	pImpl(std::make_unique<impl>())
 {
-	Util::create_directories("plugins");
+	fs::create_directory("plugins");
 }
 
 PluginManager::~PluginManager()

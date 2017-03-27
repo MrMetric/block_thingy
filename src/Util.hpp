@@ -47,8 +47,6 @@ namespace Util
 	std::string join_path(const path&);
 
 	void change_directory(const std::string&);
-	bool create_directory(const std::string&);
-	bool create_directories(const std::string&);
 
 	template<typename T>
 	constexpr T clamp(T x, T min, T max)

@@ -65,6 +65,14 @@ ShaderProgram::ShaderProgram
 	inited = true;
 }
 
+ShaderProgram::~ShaderProgram()
+{
+	if(inited)
+	{
+		glDeleteProgram(name);
+	}
+}
+
 ShaderProgram::ShaderProgram(ShaderProgram&& that)
 {
 	name = that.name;
@@ -74,14 +82,6 @@ ShaderProgram::ShaderProgram(ShaderProgram&& that)
 		that.name = 0;
 		uniforms = std::move(that.uniforms);
 		that.inited = false;
-	}
-}
-
-ShaderProgram::~ShaderProgram()
-{
-	if(inited)
-	{
-		glDeleteProgram(name);
 	}
 }
 

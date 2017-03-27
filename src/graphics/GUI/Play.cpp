@@ -6,6 +6,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/gtx/io.hpp>
+
 #include "Camera.hpp"
 #include "Game.hpp"
 #include "Gfx.hpp"
@@ -96,11 +98,12 @@ void Play::draw_debug_text()
 	std::ostringstream ss;
 	ss << std::boolalpha;
 	const glm::dvec3 pos = game.player.position();
-	#define p(x) (x > 0 ? "+" : (x < 0 ? "" : " ")) << x
-	ss << "x: " << p(pos.x) << "\n";
-	ss << "y: " << p(pos.y) << "\n";
-	ss << "z: " << p(pos.z) << "\n";
-	#undef p
+	ss << glm::io::precision(4); // default is 3
+	ss << glm::io::width(10); // default is 9 (1 + 4 + 1 + default precision)
+	ss << "position: " << pos << "\n";
+	ss << "rotation: " << game.camera.rotation << "\n";
+	ss << "ticks: " << game.world.get_ticks() << "\n";
+	ss << "time: " << game.world.get_time() << "\n";
 	ss << "noclip: " << game.player.get_noclip() << "\n";
 	auto show_block = [](const Block::Base& block) -> string
 	{

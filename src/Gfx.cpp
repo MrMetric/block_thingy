@@ -133,6 +133,10 @@ GLFWwindow* Gfx::init_glfw()
 	});
 	glfwSetKeyCallback(window, [](GLFWwindow*, int key, int scancode, int action, int mods)
 	{
+		if(key == GLFW_KEY_UNKNOWN)
+		{
+			return;
+		}
 		Game::instance->keypress(key, scancode, action, Util::key_mods(mods));
 	});
 	glfwSetCharModsCallback(window, [](GLFWwindow*, unsigned int codepoint, int mods)

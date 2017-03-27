@@ -92,6 +92,8 @@ GPLv3, with one exception: creating non-free plugins is permitted.
  * move the commands from `Game` to somewhere else
  * separate chunk data / rendering (this decouples meshing from chunking, and has the side benefit of allowing mesh dimensions to not match chunks)
  * use events more (look at: keypress, mousemove, …)
+ * continue running when adding inotify watches fails
+ * watch files on Windows®
  * other stuff that I am too lazy to say here
 
 ## Note

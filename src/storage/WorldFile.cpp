@@ -1,5 +1,12 @@
 #include "WorldFile.hpp"
 
+#if __has_include(<filesystem>)
+	#include <filesystem>
+	namespace fs = std::filesystem;
+#else
+	#include <experimental/filesystem>
+	namespace fs = std::experimental::filesystem;
+#endif
 #include <fstream>
 #include <stdexcept>
 #include <string>
@@ -37,8 +44,8 @@ WorldFile::WorldFile(const string& world_dir, World& world)
 	chunk_dir(world_dir + "/chunks/"),
 	world(world)
 {
-	Util::create_directories(player_dir);
-	Util::create_directories(chunk_dir);
+	fs::create_directories(player_dir);
+	fs::create_directories(chunk_dir);
 
 	if(!Util::file_is_openable(world_path))
 	{

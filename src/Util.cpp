@@ -203,35 +203,6 @@ void Util::change_directory(const string& path)
 	#endif
 }
 
-// http://en.cppreference.com/w/cpp/experimental/fs/create_directory
-bool Util::create_directory(const string& path)
-{
-	#ifdef _WIN32
-	if(PathIsDirectory(path.c_str()))
-	#else
-	struct stat s;
-	if(stat(path.c_str(), &s) == 0 && s.st_mode & S_IFDIR)
-	#endif
-	{
-		return true;
-	}
-
-	return mkdir(path.c_str(), 0755) == 0;
-}
-
-bool Util::create_directories(const string& path)
-{
-	if(create_directory(path))
-	{
-		return true;
-	}
-	if(errno == ENOENT && create_directories(path.substr(0, path.find_last_of('/'))))
-	{
-		return create_directory(path);
-	}
-	return false;
-}
-
 int Util::stoi(const string& s)
 {
 	if(s.find_first_not_of("0123456789") != string::npos)
