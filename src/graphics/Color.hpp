@@ -13,6 +13,7 @@ struct Color
 	static value_type max;
 
 	Color();
+	Color(value_type);
 	Color(value_type r, value_type g, value_type b);
 	Color(const glm::dvec3&);
 

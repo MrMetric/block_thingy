@@ -19,6 +19,12 @@ Color::Color()
 {
 }
 
+Color::Color(value_type a)
+:
+	Color(a, a, a)
+{
+}
+
 Color::Color(value_type r, value_type g, value_type b)
 :
 	r(r),

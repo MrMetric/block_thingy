@@ -73,6 +73,11 @@ glm::dvec4 Base::selection_color() const
 	return {1, 1, 1, 1};
 }
 
+Graphics::Color Base::light_filter() const
+{
+	return {Graphics::Color::max};
+}
+
 BlockVisibilityType Base::visibility_type() const
 {
 	return BlockVisibilityType::opaque;

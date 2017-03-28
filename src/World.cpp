@@ -51,6 +51,20 @@ World::World
 {
 }
 
+static bool does_affect_light(const Block::Base& block)
+{
+	if(block.is_opaque())
+	{
+		return true;
+	}
+	static Graphics::Color max(Graphics::Color::max);
+	if(block.is_translucent() && block.light_filter() != max)
+	{
+		return true;
+	}
+	return false;
+}
+
 void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> block_ptr)
 {
 	{
@@ -65,7 +79,7 @@ void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> blo
 	shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
 
 	const Block::Base& old_block = get_block(block_pos);
-	const bool old_affects_light = old_block.is_opaque();
+	const bool old_affects_light = does_affect_light(old_block);
 	const Graphics::Color old_color = old_block.color();
 	// old_block is invalid after the call to set_block
 
@@ -74,10 +88,11 @@ void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> blo
 	update_chunk_neighbors(chunk_pos, pos);
 
 	const Block::Base& block = chunk->get_block(pos);
-	const bool affects_light = block.is_opaque();
+	const bool affects_light = does_affect_light(block);
 
 	chunks_to_save.emplace(chunk_pos);
 
+	// TODO: these checks might not work (a filter block could be overwritten by a different filter block)
 	if(affects_light && !old_affects_light)
 	{
 		sub_light(block_pos);
@@ -181,17 +196,26 @@ void World::process_light_add()
 			continue;
 		}
 
-		auto fill = [this, &pos, &color]
+		auto fill = [this, &pos]
 		(
 			const int8_t x,
 			const int8_t y,
-			const int8_t z
+			const int8_t z,
+			Graphics::Color color
 		)
 		{
 			const BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
-			if(get_block(pos2).is_opaque())
+			const Block::Base& block = get_block(pos2);
+			if(block.is_opaque())
 			{
 				return;
+			}
+			if(block.is_translucent())
+			{
+				Graphics::Color f = block.light_filter();
+				color.r = std::min(color.r, f[0]);
+				color.g = std::min(color.g, f[1]);
+				color.b = std::min(color.b, f[2]);
 			}
 			Graphics::Color color2 = get_light(pos2);
 			bool set = false;
@@ -210,12 +234,12 @@ void World::process_light_add()
 			}
 		};
 
-		fill( 0,  0, -1);
-		fill( 0,  0, +1);
-		fill( 0, -1,  0);
-		fill( 0, +1,  0);
-		fill(-1,  0,  0);
-		fill(+1,  0,  0);
+		fill( 0,  0, -1, color);
+		fill( 0,  0, +1, color);
+		fill( 0, -1,  0, color);
+		fill( 0, +1,  0, color);
+		fill(-1,  0,  0, color);
+		fill(+1,  0,  0, color);
 	}
 }
 

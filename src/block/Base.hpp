@@ -36,6 +36,8 @@ class Base
 		 */
 		virtual glm::dvec4 selection_color() const;
 
+		virtual Graphics::Color light_filter() const;
+
 		virtual BlockVisibilityType visibility_type() const;
 		bool is_opaque() const;
 		bool is_translucent() const;
