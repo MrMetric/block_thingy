@@ -82,9 +82,9 @@ bool BlockInWorld::operator!=(const BlockInWorld& that) const
 	return !(*this == that);
 }
 
-BlockInWorld::operator glm::vec3() const
+BlockInWorld::operator BlockInWorld::vec_type() const
 {
-	return glm::vec3(x, y, z);
+	return {x, y, z};
 }
 
 BlockInWorld operator+(const BlockInWorld& pos1, const BlockInWorld& pos2)

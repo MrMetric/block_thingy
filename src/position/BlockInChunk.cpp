@@ -80,6 +80,16 @@ bool BlockInChunk::operator==(const BlockInChunk& that) const
 	return (x == that.x) && (y == that.y) && (z == that.z);
 }
 
+bool BlockInChunk::operator!=(const BlockInChunk& that) const
+{
+	return !(*this == that);
+}
+
+BlockInChunk::operator BlockInChunk::vec_type() const
+{
+	return {x, y, z};
+}
+
 void BlockInChunk::check_bounds()
 {
 	if(x >= CHUNK_SIZE

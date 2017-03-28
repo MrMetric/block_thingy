@@ -58,6 +58,16 @@ bool ChunkInWorld::operator==(const ChunkInWorld& that) const
 	return (x == that.x) && (y == that.y) && (z == that.z);
 }
 
+bool ChunkInWorld::operator!=(const ChunkInWorld& that) const
+{
+	return !(*this == that);
+}
+
+ChunkInWorld::operator ChunkInWorld::vec_type() const
+{
+	return {x, y, z};
+}
+
 ChunkInWorld operator-(const ChunkInWorld& pos, const ChunkInWorld::value_type a)
 {
 	return ChunkInWorld(pos.x - a, pos.y - a, pos.z - a);

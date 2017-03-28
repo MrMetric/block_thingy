@@ -102,7 +102,9 @@ void Chunk::render(const bool transluscent_pass)
 	}
 
 	const ChunkInWorld render_position = position - ChunkInWorld(BlockInWorld(Game::instance->camera.position));
-	const BlockInWorld position_render_offset(render_position, {0, 0, 0});
+	// TODO: use double when available (for position_offset and global_time)
+	const glm::vec3 position_offset(static_cast<BlockInWorld::vec_type>(BlockInWorld(render_position, {0, 0, 0})));
+	const float global_time = static_cast<float>(owner.get_time());
 	std::size_t i = 0;
 	for(const auto& p : meshes)
 	{
@@ -117,8 +119,8 @@ void Chunk::render(const bool transluscent_pass)
 		auto& shader = Game::instance->gfx.get_block_shader(type);
 		glUseProgram(shader.get_name());
 
-		shader.uniform("position_offset", static_cast<glm::vec3>(position_render_offset));
-		shader.uniform("global_time", static_cast<float>(owner.get_time())); // TODO: use double when available
+		shader.uniform("position_offset", position_offset);
+		shader.uniform("global_time", global_time);
 
 		const Graphics::Color color = std::get<1>(key);
 		shader.uniform("light", static_cast<glm::vec3>(color));
