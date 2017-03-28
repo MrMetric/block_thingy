@@ -69,7 +69,7 @@ class FPSManager
 			frameEndTime(frameStartTime + 1),
 			frameDuration(1),
 			currentFPS(0),
-			targetFrameDuration(1.0 / theTargetFps),
+			targetFrameDuration(1 / theTargetFps),
 			lastReportTime(frameStartTime),
 			reportInterval(1),
 			frameCount(0)
@@ -121,7 +121,7 @@ class FPSManager
 			return frameDuration + (frameStartTime - frameEndTime);
 		}
 
-		double getFPS()
+		double getFPS() const
 		{
 			return currentFPS;
 		}

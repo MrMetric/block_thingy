@@ -12,7 +12,6 @@
 #include <functional>
 #include <limits>
 #include <memory>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -218,15 +217,6 @@ void Game::draw()
 		joymove(motion);
 	}
 
-	std::stringstream ss;
-	ss << "Baby's First Voxel Engine | " << pImpl->fps.getFPS() << " fps";
-	ss << " | player.pos(" << glm::to_string(player.position()) << ")";
-	Position::BlockInWorld player_block_pos(player.position());
-	ss << " | block" << player_block_pos;
-	ss << " | chunk" << Position::ChunkInWorld(player_block_pos);
-	ss << " | chunkblock" << Position::BlockInChunk(player_block_pos);
-	glfwSetWindowTitle(gfx.window, ss.str().c_str());
-
 	pImpl->delta_time = pImpl->fps.enforceFPS();
 }
 
@@ -287,7 +277,7 @@ void Game::quit()
 	glfwSetWindowShouldClose(gfx.window, GL_TRUE);
 }
 
-void Game::screenshot(string filename)
+void Game::screenshot(string filename) const
 {
 	if(fs::create_directory("screenshots"))
 	{
@@ -301,6 +291,11 @@ void Game::screenshot(string filename)
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
 	Gfx::write_png_RGB(filename.c_str(), pixels.get(), width, height, true);
+}
+
+double Game::get_fps() const
+{
+	return pImpl->fps.getFPS();
 }
 
 void Game::update_framebuffer_size(const window_size_t& window_size)

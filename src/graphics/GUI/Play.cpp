@@ -16,6 +16,9 @@
 #include "fwd/block/BlockType.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
+#include "position/BlockInChunk.hpp"
+#include "position/BlockInWorld.hpp"
+#include "position/ChunkInWorld.hpp"
 #include "util/key_mods.hpp"
 
 using std::string;
@@ -97,10 +100,26 @@ void Play::draw_debug_text()
 {
 	std::ostringstream ss;
 	ss << std::boolalpha;
+
+	ss << "framerate: " << game.get_fps() << '\n';
+
 	const glm::dvec3 pos = game.player.position();
 	ss << glm::io::precision(4); // default is 3
 	ss << glm::io::width(10); // default is 9 (1 + 4 + 1 + default precision)
 	ss << "position: " << pos << "\n";
+
+	std::ostringstream ss2;
+	ss2 << glm::io::precision(0);
+	ss2 << glm::io::width(5);
+	const Position::BlockInWorld player_block_pos(pos);
+	ss2 << "\tblock in world: "
+		<< static_cast<Position::BlockInWorld::vec_type>(player_block_pos) << '\n';
+	ss2 << "\tchunk in world: "
+		<< static_cast<Position::ChunkInWorld::vec_type>(Position::ChunkInWorld(player_block_pos)) << '\n';
+	ss2 << "\tblock in chunk: "
+		<< static_cast<Position::BlockInChunk::vec_type>(Position::BlockInChunk(player_block_pos)) << '\n';
+	ss << ss2.str();
+
 	ss << "rotation: " << game.camera.rotation << "\n";
 	ss << "ticks: " << game.world.get_ticks() << "\n";
 	ss << "time: " << game.world.get_time() << "\n";

@@ -41,7 +41,9 @@ class Game
 		void open_gui(std::unique_ptr<Graphics::GUI::Base>);
 		void quit();
 
-		void screenshot(std::string filename);
+		void screenshot(std::string filename) const;
+		double get_fps() const;
+
 		void update_framebuffer_size(const window_size_t&);
 		void keypress(int key, int scancode, int action, Util::key_mods);
 		void charpress(char32_t, Util::key_mods);
