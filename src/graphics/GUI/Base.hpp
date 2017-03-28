@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include <glm/vec2.hpp>
 
@@ -26,6 +27,8 @@ class Base
 		Base(Base&&) = delete;
 		Base(const Base&) = delete;
 		void operator=(const Base&) = delete;
+
+		virtual std::string type() const = 0;
 
 		virtual void init();
 		virtual void close();

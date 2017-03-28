@@ -52,6 +52,11 @@ Light::Light
 	b.add_modifier(border);
 }
 
+string Light::type() const
+{
+	return "light";
+}
+
 void Light::init()
 {
 	glfwSetInputMode(game.gfx.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

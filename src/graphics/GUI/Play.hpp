@@ -12,6 +12,8 @@ class Play : public Base
 	public:
 		Play(Game&);
 
+		std::string type() const override;
+
 		void init() override;
 		void close() override;
 		void draw() override;

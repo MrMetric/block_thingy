@@ -10,6 +10,8 @@
 #include "graphics/GUI/Widget/TextInput.hpp"
 #include "graphics/GUI/Widget/Component/Border.hpp"
 
+using std::string;
+
 namespace Graphics::GUI {
 
 Pause::Pause(Game& game)
@@ -48,6 +50,11 @@ Pause::Pause(Game& game)
 	btn_save.add_modifier(border);
 	btn_save_quit.add_modifier(border);
 	btn_quit.add_modifier(border);
+}
+
+string Pause::type() const
+{
+	return "pause";
 }
 
 void Pause::init()

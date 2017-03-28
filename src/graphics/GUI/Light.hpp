@@ -14,6 +14,8 @@ class Light : public Base
 	public:
 		Light(Game&, Block::Light&);
 
+		std::string type() const override;
+
 		void init() override;
 		void draw() override;
 

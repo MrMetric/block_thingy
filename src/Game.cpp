@@ -142,6 +142,21 @@ Game::Game()
 			Game::instance->player.set_analog_motion({ 0, 0 });
 		}
 	});
+	glfwSetWindowFocusCallback(gfx.window, [](GLFWwindow* window, int focused)
+	{
+		if(!focused)
+		{
+			Game::instance->console.run_line("open_gui pause");
+		}
+		// check if pause because a focus event is sent when the game starts
+		else if(Game::instance->gui->type() == "pause")
+		{
+			// when the game is paused after losing focus, the cursor stays hidden
+			// GLFW ignores setting the cursor to its current state, so re-hide it first
+			glfwSetInputMode(Game::instance->gfx.window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+			glfwSetInputMode(Game::instance->gfx.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+	});
 
 	pImpl->plugin_manager.init_plugins(*this);
 }
@@ -810,6 +825,10 @@ void Game::impl::add_commands()
 		unique_ptr<Graphics::GUI::Base> gui;
 		if(name == "pause")
 		{
+			if(game.gui->type() == "pause")
+			{
+				return;
+			}
 			gui = std::make_unique<Graphics::GUI::Pause>(game);
 		}
 		else if(name == "console")

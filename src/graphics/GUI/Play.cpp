@@ -31,6 +31,11 @@ Play::Play(Game& game)
 {
 }
 
+string Play::type() const
+{
+	return "play";
+}
+
 void Play::init()
 {
 	glClearColor(0, 0, 0.1f, 0);
