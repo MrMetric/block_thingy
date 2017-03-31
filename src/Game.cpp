@@ -292,7 +292,7 @@ void Game::quit()
 
 void Game::screenshot(string filename) const
 {
-	if(fs::create_directory("screenshots"))
+	if(fs::is_directory("screenshots") || fs::create_directory("screenshots"))
 	{
 		filename = "screenshots/" + filename;
 	}
