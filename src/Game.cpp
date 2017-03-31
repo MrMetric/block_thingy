@@ -83,8 +83,6 @@ struct Game::impl
 	double delta_time;
 	FPSManager fps;
 
-	PluginManager plugin_manager;
-
 	void find_hovered_block();
 
 	std::vector<Command> commands;
@@ -158,7 +156,7 @@ Game::Game()
 		}
 	});
 
-	pImpl->plugin_manager.init_plugins(*this);
+	PluginManager::instance->init_plugins();
 }
 
 Game::~Game()

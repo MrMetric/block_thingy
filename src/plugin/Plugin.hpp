@@ -11,8 +11,7 @@ class Plugin
 public:
 	Plugin
 	(
-		const std::string& path,
-		Game&
+		const std::string& path
 	);
 	~Plugin();
 
@@ -23,7 +22,8 @@ public:
 private:
 	friend class PluginManager;
 
-	void* handle;
+	void init();
+
 	struct impl;
 	std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;
 };

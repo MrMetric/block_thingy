@@ -26,19 +26,14 @@ struct PluginManager::impl
 	std::vector<Plugin> plugins;
 };
 
+PluginManager* PluginManager::instance = nullptr;
+
 PluginManager::PluginManager()
 :
+	set_instance(this),
 	pImpl(std::make_unique<impl>())
 {
 	fs::create_directory("plugins");
-}
-
-PluginManager::~PluginManager()
-{
-}
-
-void PluginManager::init_plugins(Game& game)
-{
 	for(const auto& dir : fs::directory_iterator("plugins"))
 	{
 		const fs::path sopath = dir.path() / "plugin.so";
@@ -46,6 +41,18 @@ void PluginManager::init_plugins(Game& game)
 		{
 			continue;
 		}
-		pImpl->plugins.emplace_back(sopath, game);
+		pImpl->plugins.emplace_back(sopath);
+	}
+}
+
+PluginManager::~PluginManager()
+{
+}
+
+void PluginManager::init_plugins()
+{
+	for(Plugin& plugin : pImpl->plugins)
+	{
+		plugin.init();
 	}
 }
