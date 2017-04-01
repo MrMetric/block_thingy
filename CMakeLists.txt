@@ -23,6 +23,19 @@ include_directories(
 )
 add_executable(block_thingy ${block_thingy_SRC})
 
+option(USE_LIBCPP "Use libc++ instead of libstdc++ (requires Clang)" FALSE)
+if(${USE_LIBCPP})
+	if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+		message(FATAL_ERROR "Using libc++ requires building with Clang")
+	endif()
+	message(STATUS "Using libc++")
+	set(CPP_FS_LIB -lc++experimental)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+else()
+	# TODO: libc++ is the default on Mac OS X, so this will not work
+	set(CPP_FS_LIB -lstdc++fs)
+endif()
+
 #[[
 set_property(TARGET block_thingy PROPERTY CXX_STANDARD 14)
 set_property(TARGET block_thingy PROPERTY CXX_STANDARD_REQUIRED ON)
@@ -57,10 +70,11 @@ target_compile_options(block_thingy PRIVATE
 	${MSGPACK_CFLAGS}
 )
 
+
 target_link_libraries(block_thingy
 	$<${DEBUG_BUILD}:${FSANITIZE}>
 	-flto
-	-lstdc++fs
+	${CPP_FS_LIB}
 	${FREETYPE_LDFLAGS}
 	${GLFW_LDFLAGS}
 	${LIBPNG_LDFLAGS}
