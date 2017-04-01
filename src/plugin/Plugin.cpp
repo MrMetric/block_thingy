@@ -27,6 +27,7 @@ struct Plugin::impl
 		if(handle == nullptr)
 		{
 			LOG(ERROR) << dlerror();
+			LOG(ERROR) << "unable to load " << path;
 		}
 	#endif
 	}
@@ -50,14 +51,14 @@ struct Plugin::impl
 
 	void* get_symbol(const string& name)
 	{
-		#ifdef HAVE_POSIX
+	#ifdef HAVE_POSIX
 		void* symbol = dlsym(handle, name.c_str());
 		if(symbol == nullptr)
 		{
 			throw std::runtime_error("Error getting symbol '" + name + "' in " + path + ": " + dlerror());
 		}
 		return symbol;
-		#endif
+	#endif
 	}
 
 	void* handle;
@@ -71,6 +72,10 @@ Plugin::Plugin
 :
 	pImpl(std::make_unique<impl>(path))
 {
+	if(pImpl->handle == nullptr)
+	{
+		pImpl = nullptr;
+	}
 }
 
 Plugin::~Plugin()
@@ -84,6 +89,8 @@ Plugin::Plugin(Plugin&& that)
 
 void Plugin::init()
 {
+	if(pImpl == nullptr) return;
+
 #ifdef HAVE_POSIX
 	using init_t = void(*)(Game&);
 	const auto init = *reinterpret_cast<init_t>(pImpl->get_symbol("init"));
