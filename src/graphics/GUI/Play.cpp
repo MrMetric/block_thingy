@@ -150,6 +150,7 @@ void Play::draw_debug_text()
 	{
 		const Block::Base& hovered = game.world.get_block(game.hovered_block->pos);
 		ss << "hovered: " << show_block(hovered) << "\n";
+		ss << "\tface: " << game.hovered_block->face() << '\n';
 	}
 	game.gfx.gui_text.draw(ss.str(), {8.0, 8.0});
 }

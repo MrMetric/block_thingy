@@ -2,6 +2,7 @@
 
 #include <glm/vec3.hpp>
 
+#include "block/Enum/Face.hpp"
 #include "position/BlockInWorld.hpp"
 
 struct RaycastHit
@@ -13,7 +14,8 @@ struct RaycastHit
 	);
 
 	Position::BlockInWorld pos;
-	glm::ivec3 face;
+	glm::ivec3 face_vec;
 
 	Position::BlockInWorld adjacent() const;
+	Block::Enum::Face face() const;
 };

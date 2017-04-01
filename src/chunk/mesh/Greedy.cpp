@@ -7,9 +7,11 @@
 
 #include "block/Base.hpp"
 #include "block/BlockType.hpp"
+#include "block/Enum/Face.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
+using Block::Enum::Face;
 using Position::BlockInChunk;
 
 namespace Mesher {
@@ -59,27 +61,27 @@ meshmap_t Greedy::make_mesh(const Chunk& chunk)
 void add_surface(const Chunk& chunk, meshmap_t& meshes, surface_t& surface, const Plane plane, const Side side)
 {
 	uint_fast8_t ix, iy, iz;
-	uint_fast8_t face;
+	Face face;
 	if(plane == Plane::XY)
 	{
 		ix = 0;
 		iy = 2;
 		iz = 1;
-		face = (side == Side::bottom) ? 0 : 1;
+		face = (side == Side::bottom) ? Face::front : Face::back;
 	}
 	else if(plane == Plane::XZ)
 	{
 		ix = 0;
 		iy = 1;
 		iz = 2;
-		face = (side == Side::top) ? 2 : 3;
+		face = (side == Side::top) ? Face::top : Face::bottom;
 	}
 	else // must be YZ
 	{
 		ix = 1;
 		iy = 0;
 		iz = 2;
-		face = (side == Side::bottom) ? 4 : 5;
+		face = (side == Side::bottom) ? Face::right : Face::left;
 	}
 
 	u8vec3 xyz;
@@ -124,7 +126,7 @@ void add_surface(const Chunk& chunk, meshmap_t& meshes, surface_t& surface, cons
 			v4[iz] = s(rekt.z + rekt.h);
 			#undef s
 
-			v1.w = v2.w = v3.w = v4.w = face;
+			v1.w = v2.w = v3.w = v4.w = static_cast<mesh_vertex_coord_t::value_type>(face);
 
 			mesh_t& mesh = meshes[rekt.key];
 			if((plane == Plane::XY && side == Side::bottom)

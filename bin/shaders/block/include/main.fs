@@ -4,9 +4,9 @@ void main()
 {
 	vec2 coords = get_face_coords();
 	vec2 uv = fract(coords);
-	if(face == FACE_RIGHT
-	|| face == FACE_BACK
-	|| face == FACE_TOP)
+	if(face == FACE_FRONT
+	|| face == FACE_TOP
+	|| face == FACE_LEFT)
 	{
 		uv.x = 1 - uv.x;
 	}
