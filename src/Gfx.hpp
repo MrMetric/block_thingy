@@ -56,8 +56,6 @@ class Gfx
 		Graphics::OpenGL::VertexBuffer outline_vbo;
 		Graphics::OpenGL::VertexArray outline_vao;
 
-		bool is_fullscreen;
-		bool cull_face;
 		double fov;
 
 		Graphics::Text gui_text;
@@ -77,13 +75,13 @@ class Gfx
 		void set_screen_shader(const std::string&);
 
 		/**
-		 * Toggle borderless window mode
+		 * Set borderless window (true) or normal window (false)
 		 *
 		 * @todo Add real fullscreen mode
 		 */
-		void toggle_fullscreen();
+		void set_fullscreen(bool);
 
-		void toggle_cull_face();
+		void set_cull_face(bool);
 		void update_projection_matrix();
 		void set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation);
 		void draw_cube_outline(const Position::BlockInWorld&, const glm::dvec4& color);

@@ -16,6 +16,7 @@ INITIALIZE_EASYLOGGINGPP
 
 #include "Game.hpp"
 #include "Gfx.hpp"
+#include "Settings.hpp"
 #include "Util.hpp"
 #include "plugin/PluginManager.hpp"
 #include "util/compiler_info.hpp"
@@ -95,6 +96,7 @@ int main(int argc, char** argv)
 	LOG(DEBUG) << "Compiled with GLFW " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION;
 	LOG(DEBUG) << "Running with GLFW " << glfwGetVersionString();
 
+	Settings::load();
 	unique_ptr<PluginManager> plugin_manager = std::make_unique<PluginManager>();
 	unique_ptr<Game> game = std::make_unique<Game>();
 	window = game->gfx.window;
@@ -109,6 +111,7 @@ int main(int argc, char** argv)
 	printOpenGLError();
 
 	plugin_manager.reset();
+	Settings::save();
 
 	}
 	catch(const std::runtime_error& error)

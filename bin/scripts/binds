@@ -14,12 +14,14 @@ bind l noclip
 bind n nazi
 bind ; 'save_pos cam_pos'
 bind p 'load_pos cam_pos'
+bind f1 'toggle_bool show_HUD'
 bind f2 screenshot
-bind f11 toggle_fullscreen
+bind f3 'toggle_bool show_debug_info'
+bind f11 'toggle_bool fullscreen'
 bind esc close_gui
 bind ` 'open_gui console'
-bind , toggle_wireframe
-bind b toggle_cull_face
+bind , 'toggle_bool wireframe'
+bind b 'toggle_bool cull_face'
 bind = render_distance++
 bind - render_distance--
 bind j block_type++

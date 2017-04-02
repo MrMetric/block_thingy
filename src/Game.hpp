@@ -91,8 +91,6 @@ class Game
 		KeybindManager keybinder;
 		std::unique_ptr<Graphics::GUI::Base> gui;
 
-		bool wireframe;
-
 	private:
 		void add_block(const std::string& name, BlockType);
 

@@ -32,6 +32,7 @@
 #include "Gfx.hpp"
 #include "Player.hpp"
 #include "ResourceManager.hpp"
+#include "Settings.hpp"
 #include "Util.hpp"
 #include "World.hpp"
 #include "block/Base.hpp"
@@ -99,7 +100,6 @@ Game::Game()
 	player(*player_ptr),
 	console(*this),
 	keybinder(console),
-	wireframe(false),
 	render_distance(1),
 	pImpl(std::make_unique<impl>(*this))
 {
@@ -192,13 +192,17 @@ void Game::draw()
 	gfx.screen_shader->uniform("time", static_cast<float>(world.get_time()));
 	gfx.quad_vao.draw(GL_TRIANGLES, 0, 6);
 
-	glViewport(3 * gfx.window_size.x / 4, 0, gfx.window_size.x / 4, gfx.window_size.y / 4);
-	glScissor(3 * gfx.window_size.x / 4, 0, gfx.window_size.x / 4, gfx.window_size.y / 4);
-	glEnable(GL_SCISSOR_TEST);
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	glDisable(GL_SCISSOR_TEST);
-	// TODO: split stepping and drawing to allow using gui->draw() here
-	draw_world(camera.position, camera.rotation);
+	// TODO: it might be faster to listen for the change event and set a private bool instead of getting the value every frame
+	if(Settings::get<string>("screen_shader") != "default")
+	{
+		glViewport(3 * gfx.window_size.x / 4, 0, gfx.window_size.x / 4, gfx.window_size.y / 4);
+		glScissor(3 * gfx.window_size.x / 4, 0, gfx.window_size.x / 4, gfx.window_size.y / 4);
+		glEnable(GL_SCISSOR_TEST);
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+		glDisable(GL_SCISSOR_TEST);
+		// TODO: split stepping and drawing to allow using gui->draw() here
+		draw_world(camera.position, camera.rotation);
+	}
 
 
 	glfwSwapBuffers(gfx.window);
@@ -246,6 +250,7 @@ void Game::draw_world()
 
 void Game::draw_world(const glm::dvec3& position, const glm::dvec3& rotation)
 {
+	const bool wireframe = Settings::get<bool>("wireframe");
 	if(wireframe)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -663,20 +668,57 @@ void Game::impl::add_commands()
 		}
 	});
 
-	COMMAND("toggle_fullscreen")
+	COMMAND_ARGS("set_bool")
 	{
-		game.gfx.toggle_fullscreen();
+		if(args.size() != 1)
+		{
+			LOG(ERROR) << "Usage: set_bool <name> <value>";
+			return;
+		}
+
+		const string value_str = args[1];
+		if(value_str != "true" && value_str != "false")
+		{
+			LOG(ERROR) << "Invalid bool value (must be \"true\" or \"false\")";
+			return;
+		}
+		const string name = args[0];
+		const bool value = (value_str == "true");
+		Settings::set(name, value);
 	});
-	COMMAND("toggle_wireframe")
+	COMMAND_ARGS("toggle_bool")
 	{
-		game.wireframe = !game.wireframe;
-		LOG(INFO) << "wireframe: " << game.wireframe;
+		if(args.size() != 1)
+		{
+			LOG(ERROR) << "Usage: toggle_bool <setting name>";
+			return;
+		}
+
+		const string name = args[0];
+		if(!Settings::has<bool>(name))
+		{
+			LOG(ERROR) << "Unknown bool name: " << name;
+			return;
+		}
+		bool value = Settings::get<bool>(name);
+		value = !value;
+		Settings::set(name, value);
+		LOG(INFO) << "set bool: " << name << " = " << (value ? "true" : "false");
 	});
-	COMMAND("toggle_cull_face")
+	COMMAND_ARGS("set_string")
 	{
-		game.gfx.toggle_cull_face();
-		LOG(INFO) << "cull face: " << game.gfx.cull_face;
+		if(args.size() != 2)
+		{
+			LOG(ERROR) << "Usage: set_string <name> <value>";
+			return;
+		}
+
+		const string name = args[0];
+		const string value = args[1];
+		Settings::set<string>(name, value);
+		LOG(INFO) << "set string: " << name << " = " << value;
 	});
+
 	COMMAND_ARGS("fov")
 	{
 		if(args.size() != 1 || args[0].length() == 0)
@@ -710,16 +752,6 @@ void Game::impl::add_commands()
 		}
 
 		game.gfx.update_projection_matrix();
-	});
-	COMMAND_ARGS("screen_shader")
-	{
-		if(args.size() != 1 || args[0].size() == 0)
-		{
-			LOG(ERROR) << "Usage: screen_shader <path>";
-			return;
-		}
-
-		game.gfx.set_screen_shader(args[0]);
 	});
 
 	COMMAND("render_distance++")

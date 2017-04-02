@@ -28,10 +28,12 @@
 #include "Camera.hpp"
 #include "Cube.hpp"
 #include "Game.hpp"
+#include "Settings.hpp"
 #include "block/BlockType.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
+#include "event/type/Event_change_setting.hpp"
 #include "event/type/Event_window_size_change.hpp"
 #include "graphics/primitive.hpp"
 #include "position/BlockInChunk.hpp"
@@ -65,7 +67,6 @@ Gfx::Gfx()
 	s_lines("shaders/lines"),
 	outline_vbo({3, GL_FLOAT}),
 	outline_vao(outline_vbo),
-	is_fullscreen(false),
 	fov(75),
 	gui_text("fonts/Anonymous Pro/Anonymous Pro.ttf", 24),
 	screen_rt(window_size, 8),
@@ -81,6 +82,23 @@ Gfx::Gfx()
 
 void Gfx::hook_events(EventManager& event_manager)
 {
+	event_manager.add_handler(EventType::change_setting, [this](const Event& event)
+	{
+		auto e = static_cast<const Event_change_setting&>(event);
+
+		if(e.name == "fullscreen")
+		{
+			set_fullscreen(*static_cast<const bool*>(e.value));
+		}
+		else if(e.name == "cull_face")
+		{
+			set_cull_face(*static_cast<const bool*>(e.value));
+		}
+		else if(e.name == "screen_shader")
+		{
+			set_screen_shader(*static_cast<const string*>(e.value));
+		}
+	});
 	event_manager.add_handler(EventType::window_size_change, [this](const Event& event)
 	{
 		auto e = static_cast<const Event_window_size_change&>(event);
@@ -109,7 +127,7 @@ GLFWwindow* Gfx::init_glfw()
 		throw std::runtime_error("glfwInit() failed");
 	}
 
-	GLFWwindow* window = make_window(false);
+	GLFWwindow* window = make_window(Settings::get<bool>("fullscreen"));
 
 	if(!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
@@ -167,14 +185,16 @@ void Gfx::opengl_setup()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
-	glEnable(GL_CULL_FACE);
-	cull_face = true;
+	if(Settings::get<bool>("cull_face"))
+	{
+		glEnable(GL_CULL_FACE);
+	}
 	glCullFace(GL_BACK);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	set_screen_shader("default");
+	set_screen_shader(Settings::get<string>("screen_shader"));
 
 	const GLbyte quad_vertex_buffer_data[] =
 	{
@@ -206,24 +226,20 @@ void Gfx::set_screen_shader(const string& name)
 	screen_shader->uniform("tex_size", static_cast<glm::vec2>(window_size));
 }
 
-void Gfx::toggle_fullscreen()
+void Gfx::set_fullscreen(const bool fullscreen)
 {
-	is_fullscreen = !is_fullscreen;
-	LOG(INFO) << "fullscreen: " << is_fullscreen;
-
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-	const int width = is_fullscreen ? mode->width : mode->width * 3 / 4;
-	const int height = is_fullscreen ? mode->height : mode->height * 3 / 4;
+	const int width = fullscreen ? mode->width : mode->width * 3 / 4;
+	const int height = fullscreen ? mode->height : mode->height * 3 / 4;
 
 	const auto x = (mode->width - width) / 2;
 	const auto y = (mode->height - height) / 2;
-	glfwSetWindowMonitor(window, is_fullscreen ? monitor : nullptr, x, y, width, height, mode->refreshRate);
+	glfwSetWindowMonitor(window, fullscreen ? monitor : nullptr, x, y, width, height, mode->refreshRate);
 }
 
-void Gfx::toggle_cull_face()
+void Gfx::set_cull_face(const bool cull_face)
 {
-	cull_face = !cull_face;
 	if(cull_face)
 	{
 		glEnable(GL_CULL_FACE);

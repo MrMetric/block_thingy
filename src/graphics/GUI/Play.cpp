@@ -12,6 +12,7 @@
 #include "Game.hpp"
 #include "Gfx.hpp"
 #include "Player.hpp"
+#include "Settings.hpp"
 #include "block/Base.hpp"
 #include "fwd/block/BlockType.hpp"
 #include "console/Console.hpp"
@@ -86,8 +87,14 @@ void Play::joymove(const glm::dvec2& motion)
 
 void Play::draw_gui()
 {
-	draw_crosshair();
-	draw_debug_text();
+	if(Settings::get<bool>("show_HUD"))
+	{
+		draw_crosshair();
+	}
+	if(Settings::get<bool>("show_debug_info"))
+	{
+		draw_debug_text();
+	}
 }
 
 void Play::draw_crosshair()
