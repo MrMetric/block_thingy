@@ -14,7 +14,6 @@
 #include "World.hpp"
 #include "block/BlockRegistry.hpp"
 #include "fwd/block/BlockType.hpp"
-#include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
 #include "event/EventManager.hpp"
 #include "graphics/GUI/Base.hpp"
@@ -87,7 +86,6 @@ class Game
 		World world;
 		std::shared_ptr<Player> player_ptr;
 		Player& player;
-		Console console;
 		KeybindManager keybinder;
 		std::unique_ptr<Graphics::GUI::Base> gui;
 

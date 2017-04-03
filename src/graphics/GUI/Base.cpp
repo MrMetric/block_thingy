@@ -71,17 +71,17 @@ void Base::keypress(const int key, const int scancode, const int action, const U
 	{
 		if(key == GLFW_KEY_ESCAPE)
 		{
-			game.console.run_line("close_gui");
+			Console::instance->run_line("close_gui");
 			return;
 		}
 		if(key == GLFW_KEY_F2)
 		{
-			game.console.run_line("screenshot");
+			Console::instance->run_line("screenshot");
 			return;
 		}
 		if(key == GLFW_KEY_F11)
 		{
-			game.console.run_line("toggle_fullscreen");
+			Console::instance->run_line("toggle_fullscreen");
 			return;
 		}
 	}

@@ -15,6 +15,7 @@ struct Settings
 
 private:
 	friend int main(int, char**);
+	static void add_command_handlers();
 	static void load();
 	static void save();
 };

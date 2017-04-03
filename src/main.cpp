@@ -18,6 +18,7 @@ INITIALIZE_EASYLOGGINGPP
 #include "Gfx.hpp"
 #include "Settings.hpp"
 #include "Util.hpp"
+#include "console/Console.hpp"
 #include "plugin/PluginManager.hpp"
 #include "util/compiler_info.hpp"
 #include "util/demangled_name.hpp"
@@ -96,6 +97,9 @@ int main(int argc, char** argv)
 	LOG(DEBUG) << "Compiled with GLFW " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION;
 	LOG(DEBUG) << "Running with GLFW " << glfwGetVersionString();
 
+	unique_ptr<Console> console = std::make_unique<Console>();
+	// maybe Settings should have a constructor
+	Settings::add_command_handlers();
 	Settings::load();
 	unique_ptr<PluginManager> plugin_manager = std::make_unique<PluginManager>();
 	unique_ptr<Game> game = std::make_unique<Game>();
@@ -112,6 +116,7 @@ int main(int argc, char** argv)
 
 	plugin_manager.reset();
 	Settings::save();
+	console.reset();
 
 	}
 	catch(const std::runtime_error& error)

@@ -6,10 +6,8 @@
 #include <unordered_map>
 #include <vector>
 
-class Game;
-
-using console_handler_t = std::function<void(Game&, const std::vector<std::string>& args)>;
-using console_handler_noargs_t = std::function<void(Game&)>;
+using console_handler_t = std::function<void(const std::vector<std::string>& args)>;
+using console_handler_noargs_t = std::function<void()>;
 
 class console_handler_wrapper
 {
@@ -17,7 +15,7 @@ class console_handler_wrapper
 		console_handler_wrapper(const console_handler_t&);
 		console_handler_wrapper(const console_handler_noargs_t&);
 
-		void operator()(Game&, const std::vector<std::string>& args) const;
+		void operator()(const std::vector<std::string>& args) const;
 
 	private:
 		bool has_args;
@@ -30,7 +28,7 @@ class console_handler_wrapper
 class Console
 {
 	public:
-		Console(Game&);
+		Console();
 
 		Console(Console&&) = delete;
 		Console(const Console&) = delete;
@@ -42,9 +40,10 @@ class Console
 		void run_command(const std::string& name, const std::string& argline = "") const;
 		void run_command(const std::string& name, const std::vector<std::string>& args) const;
 
+		static Console* instance;
+
 	private:
 		std::vector<std::string> parse_args(const std::string&);
 
-		Game& game;
 		std::unordered_map<std::string, console_handler_wrapper> handlers;
 };

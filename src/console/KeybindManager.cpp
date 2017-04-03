@@ -11,7 +11,6 @@
 #include <GLFW/glfw3.h>
 
 #include "Console.hpp"
-#include "Game.hpp"
 #include "Util.hpp"
 #include "util/key_mods.hpp"
 
@@ -21,7 +20,7 @@ KeybindManager::KeybindManager(Console& console)
 :
 	console(console)
 {
-	console.add_command("bind", {[&keybinder=*this](Game& game, const std::vector<string>& args)
+	console.add_command("bind", {[&keybinder=*this](const std::vector<string>& args)
 	{
 		if(args.size() != 2)
 		{
@@ -30,7 +29,7 @@ KeybindManager::KeybindManager(Console& console)
 		}
 		keybinder.bind_key(args[0], args[1]);
 	}});
-	console.add_command("unbind", {[&keybinder=*this](Game& game, const std::vector<string>& args)
+	console.add_command("unbind", {[&keybinder=*this](const std::vector<string>& args)
 	{
 		if(args.size() != 1)
 		{

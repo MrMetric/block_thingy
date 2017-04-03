@@ -98,8 +98,7 @@ Game::Game()
 	world(block_registry, "worlds/test"),
 	player_ptr(world.add_player("test_player")),
 	player(*player_ptr),
-	console(*this),
-	keybinder(console),
+	keybinder(*Console::instance),
 	render_distance(1),
 	pImpl(std::make_unique<impl>(*this))
 {
@@ -129,7 +128,7 @@ Game::Game()
 	gfx.hook_events(event_manager);
 
 	pImpl->add_commands();
-	console.run_line("exec binds");
+	Console::instance->run_line("exec binds");
 
 	update_framebuffer_size(gfx.window_size);
 
@@ -144,7 +143,7 @@ Game::Game()
 	{
 		if(!focused)
 		{
-			Game::instance->console.run_line("open_gui pause");
+			Console::instance->run_line("open_gui pause");
 		}
 		// check if pause because a focus event is sent when the game starts
 		else if(Game::instance->gui->type() == "pause")
@@ -413,9 +412,9 @@ void Game::impl::find_hovered_block()
 
 void Game::impl::add_commands()
 {
-	#define COMMAND_(name) commands.emplace_back(game.console, name, [](Game& game
+	#define COMMAND_(name) commands.emplace_back(*Console::instance, name, [&game=game](
 	#define COMMAND(name) COMMAND_(name))
-	#define COMMAND_ARGS(name) COMMAND_(name), const std::vector<string>& args)
+	#define COMMAND_ARGS(name) COMMAND_(name)const std::vector<string>& args)
 
 	COMMAND("save")
 	{
@@ -593,26 +592,6 @@ void Game::impl::add_commands()
 		LOG(INFO) << "set rotation to " << glm::to_string(rot);
 	});
 
-	COMMAND_ARGS("exec")
-	{
-		if(args.size() != 1)
-		{
-			LOG(ERROR) << "Usage: exec <string: filename>";
-			return;
-		}
-		const string name = args[0];
-		std::ifstream file("scripts/" + name);
-		if(!file.is_open())
-		{
-			LOG(ERROR) << "script not found: " << name;
-			return;
-		}
-		for(string line; std::getline(file, line); )
-		{
-			game.console.run_line(line);
-		}
-	});
-
 	COMMAND_ARGS("cam.rot")
 	{
 		if(args.size() != 2)
@@ -666,57 +645,6 @@ void Game::impl::add_commands()
 		{
 			LOG(ERROR) << "error saving screenshot: " << e.what();
 		}
-	});
-
-	COMMAND_ARGS("set_bool")
-	{
-		if(args.size() != 1)
-		{
-			LOG(ERROR) << "Usage: set_bool <name> <value>";
-			return;
-		}
-
-		const string value_str = args[1];
-		if(value_str != "true" && value_str != "false")
-		{
-			LOG(ERROR) << "Invalid bool value (must be \"true\" or \"false\")";
-			return;
-		}
-		const string name = args[0];
-		const bool value = (value_str == "true");
-		Settings::set(name, value);
-	});
-	COMMAND_ARGS("toggle_bool")
-	{
-		if(args.size() != 1)
-		{
-			LOG(ERROR) << "Usage: toggle_bool <setting name>";
-			return;
-		}
-
-		const string name = args[0];
-		if(!Settings::has<bool>(name))
-		{
-			LOG(ERROR) << "Unknown bool name: " << name;
-			return;
-		}
-		bool value = Settings::get<bool>(name);
-		value = !value;
-		Settings::set(name, value);
-		LOG(INFO) << "set bool: " << name << " = " << (value ? "true" : "false");
-	});
-	COMMAND_ARGS("set_string")
-	{
-		if(args.size() != 2)
-		{
-			LOG(ERROR) << "Usage: set_string <name> <value>";
-			return;
-		}
-
-		const string name = args[0];
-		const string value = args[1];
-		Settings::set<string>(name, value);
-		LOG(INFO) << "set string: " << name << " = " << value;
 	});
 
 	COMMAND_ARGS("fov")

@@ -8,15 +8,7 @@
 
 #include "ArgumentParser.hpp"
 
-#include "Game.hpp"
-
 using std::string;
-
-Console::Console(Game& game)
-:
-	game(game)
-{
-}
 
 console_handler_wrapper::console_handler_wrapper(const console_handler_t& handler)
 :
@@ -32,16 +24,43 @@ console_handler_wrapper::console_handler_wrapper(const console_handler_noargs_t&
 {
 }
 
-void console_handler_wrapper::operator()(Game& game, const std::vector<string>& args) const
+void console_handler_wrapper::operator()(const std::vector<string>& args) const
 {
 	if(has_args)
 	{
-		handler_args(game, args);
+		handler_args(args);
 	}
 	else
 	{
-		handler_noargs(game);
+		handler_noargs();
 	}
+}
+
+Console* Console::instance = nullptr;
+
+Console::Console()
+{
+	Console::instance = this;
+
+	add_command("exec", {[this](const std::vector<string>& args)
+	{
+		if(args.size() != 1)
+		{
+			LOG(ERROR) << "Usage: exec <string: filename>";
+			return;
+		}
+		const string name = args[0];
+		std::ifstream file("scripts/" + name);
+		if(!file.is_open())
+		{
+			LOG(ERROR) << "script not found: " << name;
+			return;
+		}
+		for(string line; std::getline(file, line); )
+		{
+			run_line(line);
+		}
+	}});
 }
 
 void Console::add_command(const string& name, const console_handler_wrapper& handler)
@@ -97,5 +116,5 @@ void Console::run_command(const string& name, const std::vector<string>& args) c
 		LOG(ERROR) << "unknown command: " << name;
 		return;
 	}
-	i->second(game, args);
+	i->second(args);
 }

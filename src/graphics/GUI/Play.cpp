@@ -46,7 +46,7 @@ void Play::init()
 
 void Play::close()
 {
-	game.console.run_line("open_gui pause");
+	Console::instance->run_line("open_gui pause");
 }
 
 void Play::draw()

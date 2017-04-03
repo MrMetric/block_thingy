@@ -23,26 +23,26 @@ Pause::Pause(Game& game)
 	auto& btn_resume = root.add<Widget::Button>("Resume",
 	[&game]()
 	{
-		game.console.run_line("close_gui");
+		Console::instance->run_line("close_gui");
 	});
 
 	auto& btn_save = root.add<Widget::Button>("Save",
 	[&game]()
 	{
-		game.console.run_line("save");
+		Console::instance->run_line("save");
 	});
 
 	auto& btn_save_quit = root.add<Widget::Button>("Save & Quit",
 	[&game]()
 	{
-		game.console.run_line("save");
-		game.console.run_line("quit");
+		Console::instance->run_line("save");
+		Console::instance->run_line("quit");
 	});
 
 	auto& btn_quit = root.add<Widget::Button>("Quit",
 	[&game]()
 	{
-		game.console.run_line("quit");
+		Console::instance->run_line("quit");
 	});
 
 	auto border = std::make_shared<Widget::Component::Border>(2, glm::dvec4(1));
