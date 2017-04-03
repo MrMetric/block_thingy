@@ -174,6 +174,10 @@ GLFWwindow* Gfx::init_glfw()
 		Game::instance->mousemove(x, y);
 	});
 
+	// TODO: loading screen
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	glfwSwapBuffers(window);
+
 	return window;
 }
 
@@ -197,6 +201,9 @@ void Gfx::opengl_setup()
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	// TODO
+	//glEnable(GL_FRAMEBUFFER_SRGB);
 
 	set_screen_shader(Settings::get<string>("screen_shader"));
 

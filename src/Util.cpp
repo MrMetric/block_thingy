@@ -26,16 +26,6 @@ using std::string;
 using std::to_string;
 using std::unique_ptr;
 
-// http://www.lighthouse3d.com/cg-topics/error-tracking-in-opengl/
-void printOglError(const string& file, const int line, const string& func)
-{
-	const GLenum glErr = glGetError();
-	if(glErr != GL_NO_ERROR)
-	{
-		LOG(ERROR) << "OpenGL error @ " << file << ":" << line << " (" << func << "): " << Util::gl_error_string(glErr);
-	}
-}
-
 bool Util::file_is_openable(const string& path)
 {
 	return std::ifstream(path).is_open();
@@ -59,62 +49,6 @@ string Util::read_file(const string& path)
 		LOG(ERROR) << "failed to read " << path;
 		throw;
 	}
-}
-
-string Util::gl_error_string(const GLenum code)
-{
-	switch(code)
-	{
-		case GL_NO_ERROR:
-		{
-			return "no error";
-		}
-		case GL_INVALID_ENUM:
-		{
-			return "invalid enum";
-		}
-		case GL_INVALID_VALUE:
-		{
-			return "invalid value";
-		}
-		case GL_INVALID_OPERATION:
-		{
-			return "invalid operation";
-		}
-		#ifdef GL_STACK_OVERFLOW
-		case GL_STACK_OVERFLOW:
-		{
-			return "stack overflow";
-		}
-		#endif
-		#ifdef GL_STACK_UNDERFLOW
-		case GL_STACK_UNDERFLOW:
-		{
-			return "stack underflow";
-		}
-		#endif
-		case GL_OUT_OF_MEMORY:
-		{
-			return "out of memory";
-		}
-		case GL_INVALID_FRAMEBUFFER_OPERATION:
-		{
-			return "invalid framebuffer operation";
-		}
-		#ifdef GL_CONTEXT_LOST
-		case GL_CONTEXT_LOST:
-		{
-			return "context lost";
-		}
-		#endif
-		#ifdef GL_TABLE_TOO_LARGE
-		case GL_TABLE_TOO_LARGE:
-		{
-			return "table too large";
-		}
-		#endif
-	}
-	return "unknown (" + to_string(code) + ")";
 }
 
 string Util::gl_object_log(const GLuint object)

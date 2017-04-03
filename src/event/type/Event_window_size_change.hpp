@@ -11,5 +11,5 @@ class Event_window_size_change : public Event
 			const window_size_t&
 		);
 
-		window_size_t window_size;
+		const window_size_t window_size;
 };

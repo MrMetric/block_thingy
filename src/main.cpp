@@ -108,12 +108,10 @@ int main(int argc, char** argv)
 	LOG(INFO) << "starting main loop";
 	while(!glfwWindowShouldClose(game->gfx.window))
 	{
-		game->draw(); printOpenGLError();
+		game->draw();
 	}
 
 	game.reset(); // destruct
-	printOpenGLError();
-
 	plugin_manager.reset();
 	Settings::save();
 	console.reset();

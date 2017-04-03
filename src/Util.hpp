@@ -5,11 +5,6 @@
 
 #include <glad/glad.h>
 
-// http://www.lighthouse3d.com/cg-topics/error-tracking-in-opengl/
-// http://www.lighthouse3d.com/cg-topics/error-tracking-in-opengl/
-void printOglError(const std::string& file, const int line, const std::string& func);
-#define printOpenGLError() printOglError(__FILE__, __LINE__, __func__)
-
 namespace Util
 {
 	inline bool string_starts_with(const std::string& value, const std::string& start)
@@ -34,7 +29,6 @@ namespace Util
 	bool file_is_openable(const std::string&);
 	std::string read_file(const std::string&);
 
-	std::string gl_error_string(GLenum code);
 	std::string gl_object_log(GLuint object);
 
 	struct path

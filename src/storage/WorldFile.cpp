@@ -111,14 +111,6 @@ unique_ptr<Player> WorldFile::load_player
 	return player;
 }
 
-void WorldFile::save_chunks()
-{
-	for(const auto& p : world.chunks)
-	{
-		save_chunk(*p.second);
-	}
-}
-
 void WorldFile::save_chunk(const Chunk& chunk)
 {
 	Position::ChunkInWorld position = chunk.get_position();

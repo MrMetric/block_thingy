@@ -4,9 +4,9 @@
 
 // see http://www.tinysg.de/techGuides/tg1_proceduralMarble.html for more info
 
-const int octave_count = 8;
 float sum_octaves(vec2 P)
 {
+	const int octave_count = 8;
 	float val = 0;
 	float freq = 1;
 	for(int i = 0; i < octave_count; i++)

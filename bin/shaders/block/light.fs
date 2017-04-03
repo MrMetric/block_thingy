@@ -1,10 +1,11 @@
 #include include/header.fs
 
-const float d = 0.2;
-const float r = 0.1;
-//const float ring_size = 0.05;
 vec4 color(vec2 uv)
 {
+	const float d = 0.2;
+	const float r = 0.1;
+	//const float ring_size = 0.05;
+
 	vec2 m = uv - 0.5;
 	vec2 o1 = d * vec2(cos(global_time), sin(global_time));
 	vec2 o2 = d * vec2(cos(global_time + M_TAU / 4), sin(global_time + M_TAU / 4));

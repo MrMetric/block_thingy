@@ -35,7 +35,8 @@ vec4 color(vec2 uv)
 		return vec4(c, c, 0, 1);
 	}
 
-	return vec4(0, 0, 0, 1);
+	// since one of the above checks will always match, it is safe to not return here
+	// also, my NVIDIA GPU has a bug that makes it skip the last check, so the left face was always black
 }
 
 #include include/main.fs

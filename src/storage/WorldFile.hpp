@@ -46,13 +46,6 @@ class WorldFile
 		);
 
 		/**
-		 * Save all chunks in the world
-		 *
-		 * @warning Does not skip chunks that are already saved
-		 */
-		void save_chunks();
-
-		/**
 		 * Save a chunk
 		 *
 		 * @note The chunk does not need to be in the world
