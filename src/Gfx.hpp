@@ -96,9 +96,4 @@ class Gfx
 		Graphics::OpenGL::VertexBuffer gui_rectangle_vbo;
 		Graphics::OpenGL::VertexArray gui_rectangle_vao;
 		void draw_rectangle(const glm::dvec2& position, const glm::dvec2& size, const glm::dvec4& color);
-
-	private:
-		static GLFWwindow* make_window(bool is_fullscreen);
-		static void shim_GL_ARB_direct_state_access();
-		static void shim_GL_ARB_separate_shader_objects();
 };

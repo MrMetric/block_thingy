@@ -59,6 +59,10 @@ static window_size_t get_window_size(GLFWwindow* window)
 	return {width, height};
 }
 
+static GLFWwindow* make_window(bool fullscreen);
+static void shim_GL_ARB_direct_state_access();
+static void shim_GL_ARB_separate_shader_objects();
+
 Gfx::Gfx()
 :
 	window(init_glfw()),
@@ -372,7 +376,7 @@ void Gfx::center_cursor()
 	glfwSetCursorPos(window, window_mid.x, window_mid.y);
 }
 
-GLFWwindow* Gfx::make_window(bool is_fullscreen)
+static GLFWwindow* make_window(bool fullscreen)
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -382,10 +386,10 @@ GLFWwindow* Gfx::make_window(bool is_fullscreen)
 
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-	const int width = is_fullscreen ? mode->width : mode->width * 3 / 4;
-	const int height = is_fullscreen ? mode->height : mode->height * 3 / 4;
+	const int width = fullscreen ? mode->width : mode->width * 3 / 4;
+	const int height = fullscreen ? mode->height : mode->height * 3 / 4;
 	LOG(DEBUG) << "window size: " << width << "×" << height;
-	GLFWwindow* window = glfwCreateWindow(width, height, "Baby's First Voxel Engine", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(width, height, "Baby's First Voxel Engine", fullscreen ? monitor : nullptr, nullptr);
 	if(window == nullptr)
 	{
 		glfwTerminate();
@@ -425,7 +429,7 @@ void Gfx::draw_rectangle(const glm::dvec2& position, const glm::dvec2& size, con
 	gui_rectangle_vao.draw(GL_TRIANGLES, 0, 6);
 }
 
-void Gfx::shim_GL_ARB_direct_state_access()
+static void shim_GL_ARB_direct_state_access()
 {
 	glCreateBuffers = [](GLsizei n, GLuint* ids) -> void
 	{
@@ -495,7 +499,7 @@ void Gfx::shim_GL_ARB_direct_state_access()
 	};
 }
 
-void Gfx::shim_GL_ARB_separate_shader_objects()
+static void shim_GL_ARB_separate_shader_objects()
 {
 	#define UNIFORM(name, type) \
 	glProgramUniform1##name = [](GLuint program, GLint location, const type x) -> void \
