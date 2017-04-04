@@ -2,6 +2,7 @@
 
 #include <utility>
 
+#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -34,7 +35,15 @@ Base::Base
 
 Base::~Base()
 {
-	game.event_manager.unadd_handler(event_handler);
+	try
+	{
+		game.event_manager.unadd_handler(event_handler);
+	}
+	catch(const std::runtime_error& e)
+	{
+		// should never happen, but best to be safe
+		LOG(ERROR) << "error unadding GUI event handler: " << e.what();
+	}
 }
 
 void Base::init()
