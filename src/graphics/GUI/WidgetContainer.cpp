@@ -32,7 +32,6 @@ void WidgetContainer::draw()
 		{
 			for(auto& widget : widgets)
 			{
-				if(widget == nullptr) continue; // this can happen when the GUI closes
 				widget->draw();
 			}
 			break;
@@ -42,7 +41,6 @@ void WidgetContainer::draw()
 		{
 			for(auto& container : containers)
 			{
-				if(container == nullptr) continue; // this can happen when the GUI closes
 				container->draw();
 			}
 			break;
@@ -58,7 +56,6 @@ void WidgetContainer::keypress(const int key, const int scancode, const int acti
 		{
 			for(auto& widget : widgets)
 			{
-				if(widget == nullptr) continue; // this can happen when the GUI closes
 				widget->keypress(key, scancode, action, mods);
 			}
 			break;
@@ -68,7 +65,6 @@ void WidgetContainer::keypress(const int key, const int scancode, const int acti
 		{
 			for(auto& container : containers)
 			{
-				if(container == nullptr) continue; // this can happen when the GUI closes
 				container->keypress(key, scancode, action, mods);
 			}
 			break;
@@ -84,7 +80,6 @@ void WidgetContainer::charpress(const char32_t codepoint, const Util::key_mods m
 		{
 			for(auto& widget : widgets)
 			{
-				if(widget == nullptr) continue; // this can happen when the GUI closes
 				widget->charpress(codepoint, mods);
 			}
 			break;
@@ -94,7 +89,6 @@ void WidgetContainer::charpress(const char32_t codepoint, const Util::key_mods m
 		{
 			for(auto& container : containers)
 			{
-				if(container == nullptr) continue; // this can happen when the GUI closes
 				container->charpress(codepoint, mods);
 			}
 			break;
@@ -110,7 +104,6 @@ void WidgetContainer::mousepress(const int button, const int action, const Util:
 		{
 			for(auto& widget : widgets)
 			{
-				if(widget == nullptr) continue; // this can happen when the GUI closes
 				widget->mousepress(button, action, mods);
 			}
 			break;
@@ -120,7 +113,6 @@ void WidgetContainer::mousepress(const int button, const int action, const Util:
 		{
 			for(auto& container : containers)
 			{
-				if(container == nullptr) continue; // this can happen when the GUI closes
 				container->mousepress(button, action, mods);
 			}
 			break;
@@ -136,7 +128,6 @@ void WidgetContainer::mousemove(const double x, const double y)
 		{
 			for(auto& widget : widgets)
 			{
-				if(widget == nullptr) continue; // this can happen when the GUI closes
 				widget->mousemove(x, y);
 			}
 			break;
@@ -146,7 +137,6 @@ void WidgetContainer::mousemove(const double x, const double y)
 		{
 			for(auto& container : containers)
 			{
-				if(container == nullptr) continue; // this can happen when the GUI closes
 				container->mousemove(x, y);
 			}
 			break;
@@ -213,7 +203,6 @@ void WidgetContainer::update_children()
 			double row_height = size.y / containers.size();
 			for(decltype(containers)::size_type i = 0; i < containers.size(); ++i)
 			{
-				if(containers[i] == nullptr) continue; // this can happen when the GUI closes
 				containers[i]->update_container({position.x, position.y + i * row_height}, {size.x, row_height});
 			}
 			break;
@@ -227,7 +216,6 @@ void WidgetContainer::update_children()
 			const double col_width = size.x / containers.size();
 			for(decltype(containers)::size_type i = 0; i < containers.size(); ++i)
 			{
-				if(containers[i] == nullptr) continue; // this can happen when the GUI closes
 				containers[i]->update_container({position.x + i * col_width, position.y}, {col_width, size.y});
 			}
 			break;

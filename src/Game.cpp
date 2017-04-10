@@ -88,6 +88,8 @@ struct Game::impl
 
 	std::vector<Command> commands;
 	void add_commands();
+
+	std::unique_ptr<Graphics::GUI::Base> temp_gui;
 };
 
 Game::Game()
@@ -164,6 +166,11 @@ Game::~Game()
 
 void Game::draw()
 {
+	if(pImpl->temp_gui != nullptr)
+	{
+		pImpl->temp_gui = nullptr;
+	}
+
 	resource_manager.check_updates();
 
 	glViewport(0, 0, gfx.window_size.x, gfx.window_size.y);
@@ -287,6 +294,16 @@ void Game::open_gui(unique_ptr<Graphics::GUI::Base> gui)
 	double x, y;
 	glfwGetCursorPos(gfx.window, &x, &y);
 	this->gui->mousemove(x, y);
+}
+
+void Game::close_gui()
+{
+	// code may be running in the GUI, such as from clicking the Resume button in the pause menu
+	// after destructing, WidgetContainer will continue its mousepress loop, which could crash the engine
+	// temp_gui keeps it for the rest of the frame
+	pImpl->temp_gui = std::move(gui);
+	gui = std::move(pImpl->temp_gui->parent);
+	gui->init();
 }
 
 void Game::quit()

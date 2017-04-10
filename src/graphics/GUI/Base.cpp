@@ -52,8 +52,7 @@ void Base::init()
 
 void Base::close()
 {
-	game.gui->parent->init();
-	game.gui = std::move(game.gui->parent);
+	game.close_gui();
 }
 
 void Base::draw()
