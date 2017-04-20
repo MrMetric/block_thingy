@@ -72,6 +72,8 @@ void TextInput::keypress(const int key, const int scancode, const int action, co
 	if(!focus) return;
 	if(action == GLFW_RELEASE) return; // must be press or repeat
 
+	trigger_on_keypress(key, scancode, action, mods);
+
 	const char* key_name_ = glfwGetKeyName(key, scancode);
 	const string key_name = key_name_ != nullptr ? key_name_ : "";
 
@@ -130,6 +132,11 @@ void TextInput::read_layout(const json& layout)
 	placeholder = get_layout_var<string>(layout, "placeholder", "");
 }
 
+string TextInput::get_text() const
+{
+	return content.get8();
+}
+
 void TextInput::set_text(const string& text)
 {
 	content = text;
@@ -146,6 +153,19 @@ void TextInput::trigger_on_change()
 	for(on_change_callback_t& callback : on_change_callbacks)
 	{
 		callback(*this, s);
+	}
+}
+
+void TextInput::on_keypress(on_keypress_callback_t callback)
+{
+	on_keypress_callbacks.emplace_back(callback);
+}
+
+void TextInput::trigger_on_keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
+{
+	for(on_keypress_callback_t& callback : on_keypress_callbacks)
+	{
+		callback(*this, key, scancode, action, mods);
 	}
 }
 

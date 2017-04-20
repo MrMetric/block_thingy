@@ -78,7 +78,7 @@ void Console::unadd_command(const string& name)
 
 void Console::run_line(const string& line)
 {
-	if(line.length() == 0)
+	if(line.empty())
 	{
 		return;
 	}

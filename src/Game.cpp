@@ -44,6 +44,7 @@
 #include "event/type/Event_window_size_change.hpp"
 #include "graphics/RenderWorld.hpp"
 #include "graphics/GUI/Base.hpp"
+#include "graphics/GUI/Console.hpp"
 #include "graphics/GUI/Pause.hpp"
 #include "graphics/GUI/Play.hpp"
 #include "physics/PhysicsUtil.hpp"
@@ -145,7 +146,10 @@ Game::Game()
 	{
 		if(!focused)
 		{
-			Console::instance->run_line("open_gui Pause");
+			if(Game::instance->gui->type() == "Play")
+			{
+				Console::instance->run_line("open_gui Pause");
+			}
 		}
 		// check if pause because a focus event is sent when the game starts
 		else if(Game::instance->gui->type() == "Pause")
@@ -799,17 +803,17 @@ void Game::impl::add_commands()
 		}
 		const string name = args[0];
 		unique_ptr<Graphics::GUI::Base> gui;
+		if(game.gui->type() == name)
+		{
+			return;
+		}
 		if(name == "Pause")
 		{
-			if(game.gui->type() == "Pause")
-			{
-				return;
-			}
 			gui = std::make_unique<Graphics::GUI::Pause>(game);
 		}
 		else if(name == "Console")
 		{
-			// TODO
+			gui = std::make_unique<Graphics::GUI::Console>(game);
 		}
 		else
 		{

@@ -1,0 +1,20 @@
+{
+	"pos" = "parent.pos"
+	"size" = "parent.size"
+	"widgets" =
+	[
+		{
+			"type" = "Text"
+			"text" = "Console"
+			"center.x" = "parent.center.x"
+			"pos.y" = 8
+		}
+		{
+			"type" = "TextInput"
+			"id" = "input"
+			"pos.x" = "parent.pos.x"
+			"end.y" = "parent.end.y"
+			"size.x" = "parent.size.x"
+		}
+	]
+}

@@ -99,9 +99,10 @@ void Base::read_layout(const json& layout)
 			}
 		}
 	};
-	translate_vec2("pos");
-	translate_vec2("end");
 	translate_vec2("center");
+	translate_vec2("end");
+	translate_vec2("pos");
+	translate_vec2("size");
 
 	for(json::const_iterator i = layout.cbegin(); i != layout.cend(); ++i)
 	{
