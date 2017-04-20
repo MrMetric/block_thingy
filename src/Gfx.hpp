@@ -58,8 +58,6 @@ class Gfx
 		Graphics::OpenGL::VertexBuffer outline_vbo;
 		Graphics::OpenGL::VertexArray outline_vao;
 
-		double fov;
-
 		Graphics::Text gui_text;
 		glm::dmat4 gui_projection_matrix;
 

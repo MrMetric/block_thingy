@@ -1,8 +1,8 @@
 #include "Settings.hpp"
 
 #include <algorithm>
-#include <map>
 #include <fstream>
+#include <map>
 #include <stdexcept>
 
 #include <easylogging++/easylogging++.hpp>
@@ -13,27 +13,24 @@
 
 using std::string;
 
-
-static std::map<const string, bool> bools =
+template<typename T>
+static std::map<const string, T>& get_map()
 {
-	{"cull_face", true},
-	{"fullscreen", false},
-	{"show_debug_info", true},
-	{"show_HUD", true},
-	{"wireframe", false},
-};
-
-template<>
-bool Settings::has<bool>(const string& name)
-{
-	return bools.count(name) > 0;
+	static std::map<const string, T> map;
+	return map;
 }
 
-template<>
-bool Settings::get(const string& name)
+template<typename T>
+bool Settings::has(const string& name)
 {
-	const auto i = bools.find(name);
-	if(i == bools.cend())
+	return get_map<T>().count(name) > 0;
+}
+
+template<typename T>
+T Settings::get(const string& name)
+{
+	const auto i = get_map<T>().find(name);
+	if(i == get_map<T>().cend())
 	{
 		// TODO: ?
 		throw std::runtime_error("unknown setting name: " + name);
@@ -41,58 +38,28 @@ bool Settings::get(const string& name)
 	return i->second;
 }
 
-template<>
-void Settings::set(const string& name, const bool value)
+template<typename T>
+void Settings::set(const string& name, T value)
 {
-	if(has<bool>(name) && get<bool>(name) == value)
+	if(has<T>(name) && get<T>(name) == value)
 	{
 		return;
 	}
-	bools[name] = value;
+	get_map<T>()[name] = std::move(value);
 	if(Game::instance != nullptr)
 	{
-		Game::instance->event_manager.do_event(Event_change_setting(name, &bools[name]));
+		Game::instance->event_manager.do_event(Event_change_setting(name, &get_map<T>()[name]));
 	}
 }
 
+#define INSTANTIATE(type) \
+template bool Settings::has<type>(const string&); \
+template type Settings::get(const string&); \
+template void Settings::set(const string&, type);
 
-static std::map<const string, string> strings =
-{
-	{"screen_shader", "default"},
-};
-
-template<>
-bool Settings::has<string>(const string& name)
-{
-	return strings.count(name) > 0;
-}
-
-template<>
-string Settings::get(const string& name)
-{
-	const auto i = strings.find(name);
-	if(i == strings.cend())
-	{
-		// TODO: ?
-		throw std::runtime_error("unknown setting name: " + name);
-	}
-	return i->second;
-}
-
-template<>
-void Settings::set(const string& name, const string value)
-{
-	if(has<string>(name) && get<string>(name) == value)
-	{
-		return;
-	}
-	strings[name] = std::move(value);
-	if(Game::instance != nullptr)
-	{
-		Game::instance->event_manager.do_event(Event_change_setting(name, &strings[name]));
-	}
-}
-
+INSTANTIATE(bool)
+INSTANTIATE(double)
+INSTANTIATE(string)
 
 void Settings::add_command_handlers()
 {
@@ -135,9 +102,52 @@ void Settings::add_command_handlers()
 		bool value = Settings::get<bool>(name);
 		value = !value;
 		Settings::set(name, value);
-		if(Game::instance != nullptr)
+		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
 			LOG(INFO) << "set bool: " << name << " = " << (value ? "true" : "false");
+		}
+	}});
+	Console::instance->add_command("set_number", {[](const std::vector<string>& args)
+	{
+		if(args.size() != 2)
+		{
+			LOG(ERROR) << "Usage: set_number <name> <value or +- difference>";
+			return;
+		}
+
+		const string name = args[0];
+		const string svalue = args[1];
+		double new_value = std::stod(svalue);
+		double value = Settings::has<double>(name) ? Settings::get<double>(name) : 0;
+		if(svalue[0] == '+' || svalue[0] == '-')
+		{
+			value += new_value;
+		}
+		else
+		{
+			value = new_value;
+		}
+
+		if(name == "fov")
+		{
+			if(value < 0)
+			{
+				value = std::fmod(value, 360) + 360;
+			}
+			else
+			{
+				value = std::fmod(value, 360);
+			}
+			if(value == 0) // avoid division by zero
+			{
+				value = 360;
+			}
+		}
+
+		Settings::set<double>(name, value);
+		if(Game::instance != nullptr) // not called from initial Settings::load()
+		{
+			LOG(INFO) << "set number: " << name << " = " << value;
 		}
 	}});
 	Console::instance->add_command("set_string", {[](const std::vector<string>& args)
@@ -151,7 +161,7 @@ void Settings::add_command_handlers()
 		const string name = args[0];
 		const string value = args[1];
 		Settings::set<string>(name, value);
-		if(Game::instance != nullptr)
+		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
 			LOG(INFO) << "set string: " << name << " = " << value;
 		}
@@ -160,6 +170,23 @@ void Settings::add_command_handlers()
 
 void Settings::load()
 {
+	get_map<bool>() =
+	{
+		{"cull_face", true},
+		{"fullscreen", false},
+		{"show_debug_info", true},
+		{"show_HUD", true},
+		{"wireframe", false},
+	};
+	get_map<double>() =
+	{
+		{"fov", 75},
+	};
+	get_map<string>() =
+	{
+		{"screen_shader", "default"},
+	};
+
 	Console::instance->run_line("exec settings");
 }
 
@@ -192,18 +219,16 @@ static string format_string(string s)
 void Settings::save()
 {
 	std::ofstream f("scripts/settings");
-	for(const auto& p : bools)
+	for(const auto& p : get_map<bool>())
 	{
-		const string name = p.first;
-		const bool value = p.second;
-
-		f << "set_bool " << format_string(name) << ' ' << (value ? "true" : "false") << '\n';
+		f << "set_bool " << format_string(p.first) << ' ' << (p.second ? "true" : "false") << '\n';
 	}
-	for(const auto& p : strings)
+	for(const auto& p : get_map<double>())
 	{
-		const string name = p.first;
-		const string value = p.second;
-
-		f << "set_string " << format_string(name) << ' ' << format_string(value) << '\n';
+		f << "set_number " << format_string(p.first) << ' ' << p.second << '\n';
+	}
+	for(const auto& p : get_map<string>())
+	{
+		f << "set_string " << format_string(p.first) << ' ' << format_string(p.second) << '\n';
 	}
 }

@@ -73,7 +73,6 @@ Gfx::Gfx()
 	s_lines("shaders/lines"),
 	outline_vbo({3, GL_FLOAT}),
 	outline_vao(outline_vbo),
-	fov(75),
 	gui_text("fonts/Anonymous Pro/Anonymous Pro.ttf", 24),
 	screen_rt(window_size, 8),
 	buf_rt(window_size),
@@ -104,6 +103,10 @@ void Gfx::hook_events(EventManager& event_manager)
 		else if(e.name == "screen_shader")
 		{
 			set_screen_shader(*static_cast<const string*>(e.value));
+		}
+		else if(e.name == "fov")
+		{
+			update_projection_matrix();
 		}
 	});
 }
@@ -270,7 +273,7 @@ void Gfx::update_projection_matrix()
 	const double width = window_size.x;
 	const double height = window_size.y;
 	const double aspect_ratio = (width > height) ? (width / height) : (height / width);
-	projection_matrix = glm::perspective(glm::radians(fov), aspect_ratio, near, far);
+	projection_matrix = glm::perspective(glm::radians(Settings::get<double>("fov")), aspect_ratio, near, far);
 }
 
 void Gfx::set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation)

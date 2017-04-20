@@ -669,41 +669,6 @@ void Game::impl::add_commands()
 		}
 	});
 
-	COMMAND_ARGS("fov")
-	{
-		if(args.size() != 1 || args[0].length() == 0)
-		{
-			LOG(ERROR) << "Usage: fov <exact number or +- difference>";
-			return;
-		}
-
-		const string svalue = args[0];
-		const double value = std::stod(svalue);
-		if(svalue[0] == '+' || svalue[0] == '-')
-		{
-			game.gfx.fov += value;
-		}
-		else
-		{
-			game.gfx.fov = value;
-		}
-
-		if(game.gfx.fov < 0)
-		{
-			game.gfx.fov = std::fmod(game.gfx.fov, 360) + 360;
-		}
-		else
-		{
-			game.gfx.fov = std::fmod(game.gfx.fov, 360);
-		}
-		if(game.gfx.fov == 0) // avoid division by zero
-		{
-			game.gfx.fov = 360;
-		}
-
-		game.gfx.update_projection_matrix();
-	});
-
 	COMMAND("render_distance++")
 	{
 		if(std::numeric_limits<decltype(game.render_distance)>::max() > game.render_distance)
