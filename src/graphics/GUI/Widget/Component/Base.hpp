@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fwd/graphics/GUI/Widget/Base.hpp"
+#include <glm/vec2.hpp>
 
 namespace Graphics::GUI::Widget::Component {
 
@@ -9,7 +9,7 @@ class Base
 	public:
 		virtual ~Base();
 
-		virtual void draw(const Widget::Base&) = 0;
+		virtual void draw(const glm::dvec2& w_position, const glm::dvec2& w_size) = 0;
 };
 
 }

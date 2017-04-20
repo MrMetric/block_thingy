@@ -145,10 +145,10 @@ Game::Game()
 	{
 		if(!focused)
 		{
-			Console::instance->run_line("open_gui pause");
+			Console::instance->run_line("open_gui Pause");
 		}
 		// check if pause because a focus event is sent when the game starts
-		else if(Game::instance->gui->type() == "pause")
+		else if(Game::instance->gui->type() == "Pause")
 		{
 			// when the game is paused after losing focus, the cursor stays hidden
 			// GLFW ignores setting the cursor to its current state, so re-hide it first
@@ -299,8 +299,8 @@ void Game::open_gui(unique_ptr<Graphics::GUI::Base> gui)
 void Game::close_gui()
 {
 	// code may be running in the GUI, such as from clicking the Resume button in the pause menu
-	// after destructing, WidgetContainer will continue its mousepress loop, which could crash the engine
-	// temp_gui keeps it for the rest of the frame
+	// after immediate destructing, Graphics::GUI::Widget::Container will continue its mousepress loop
+	// this could crash the engine, so temp_gui keeps it for the rest of the frame
 	pImpl->temp_gui = std::move(gui);
 	gui = std::move(pImpl->temp_gui->parent);
 	gui->init();
@@ -334,6 +334,7 @@ double Game::get_fps() const
 
 void Game::update_framebuffer_size(const window_size_t& window_size)
 {
+	gfx.update_framebuffer_size(window_size);
 	event_manager.do_event(Event_window_size_change(window_size));
 }
 
@@ -798,15 +799,15 @@ void Game::impl::add_commands()
 		}
 		const string name = args[0];
 		unique_ptr<Graphics::GUI::Base> gui;
-		if(name == "pause")
+		if(name == "Pause")
 		{
-			if(game.gui->type() == "pause")
+			if(game.gui->type() == "Pause")
 			{
 				return;
 			}
 			gui = std::make_unique<Graphics::GUI::Pause>(game);
 		}
-		else if(name == "console")
+		else if(name == "Console")
 		{
 			// TODO
 		}

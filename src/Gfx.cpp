@@ -63,6 +63,8 @@ static GLFWwindow* make_window(bool fullscreen);
 static void shim_GL_ARB_direct_state_access();
 static void shim_GL_ARB_separate_shader_objects();
 
+Gfx* Gfx::instance = nullptr;
+
 Gfx::Gfx()
 :
 	window(init_glfw()),
@@ -81,6 +83,7 @@ Gfx::Gfx()
 	gui_rectangle_vbo({2, GL_FLOAT}),
 	gui_rectangle_vao(gui_rectangle_vbo)
 {
+	Gfx::instance = this;
 	opengl_setup();
 }
 
@@ -102,25 +105,6 @@ void Gfx::hook_events(EventManager& event_manager)
 		{
 			set_screen_shader(*static_cast<const string*>(e.value));
 		}
-	});
-	event_manager.add_handler(EventType::window_size_change, [this](const Event& event)
-	{
-		auto e = static_cast<const Event_window_size_change&>(event);
-
-		window_size = e.window_size;
-		LOG(DEBUG) << "window size: " << window_size.x << "×" << window_size.y;
-		window_mid = glm::dvec2(window_size) / 2.0;
-		update_projection_matrix();
-
-		const double width = e.window_size.x;
-		const double height = e.window_size.y;
-		gui_projection_matrix = glm::ortho(0.0, width, height, 0.0, -1.0, 1.0);
-		gui_text.set_projection_matrix(gui_projection_matrix);
-		s_gui_shape.uniform("matriks", glm::mat4(gui_projection_matrix));
-
-		screen_rt.resize(window_size);
-		buf_rt.resize(window_size);
-		screen_shader->uniform("tex_size", static_cast<glm::vec2>(window_size));
 	});
 }
 
@@ -217,6 +201,24 @@ void Gfx::opengl_setup()
 		 1,  1, 0,
 	};
 	quad_vbo.data(sizeof(quad_vertex_buffer_data), quad_vertex_buffer_data, Graphics::OpenGL::VertexBuffer::UsageHint::static_draw);
+}
+
+void Gfx::update_framebuffer_size(const window_size_t& window_size)
+{
+	this->window_size = window_size;
+	LOG(DEBUG) << "window size: " << window_size.x << "×" << window_size.y;
+	window_mid = glm::dvec2(window_size) / 2.0;
+	update_projection_matrix();
+
+	const double width = window_size.x;
+	const double height = window_size.y;
+	gui_projection_matrix = glm::ortho(0.0, width, height, 0.0, -1.0, 1.0);
+	gui_text.set_projection_matrix(gui_projection_matrix);
+	s_gui_shape.uniform("matriks", glm::mat4(gui_projection_matrix));
+
+	screen_rt.resize(window_size);
+	buf_rt.resize(window_size);
+	screen_shader->uniform("tex_size", static_cast<glm::vec2>(window_size));
 }
 
 void Gfx::set_screen_shader(const string& name)
@@ -411,8 +413,11 @@ static GLFWwindow* make_window(bool fullscreen)
 	return window;
 }
 
-void Gfx::draw_rectangle(const glm::dvec2& position, const glm::dvec2& size, const glm::dvec4& color)
+void Gfx::draw_rectangle(glm::dvec2 position, glm::dvec2 size, const glm::dvec4& color)
 {
+	position = glm::round(position);
+	size = glm::round(size);
+
 	const float w = static_cast<float>(size.x);
 	const float h = static_cast<float>(size.y);
 	const float x = static_cast<float>(position.x);
@@ -420,9 +425,9 @@ void Gfx::draw_rectangle(const glm::dvec2& position, const glm::dvec2& size, con
 
 	float v[] =
 	{
-		x    , y    ,
-		x + w, y    ,
 		x + w, y + h,
+		x + w, y    ,
+		x    , y    ,
 
 		x    , y    ,
 		x    , y + h,

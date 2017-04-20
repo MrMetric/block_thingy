@@ -14,10 +14,11 @@ class TextInput : public Base
 	public:
 		TextInput
 		(
-			WidgetContainer&,
 			const std::string& content = "",
 			const std::string& placeholder = ""
 		);
+
+		std::string type() const override;
 
 		void draw() override;
 
@@ -25,6 +26,10 @@ class TextInput : public Base
 		void charpress(char32_t, Util::key_mods) override;
 		void mousepress(int button, int action, Util::key_mods) override;
 		void mousemove(double x, double y) override;
+
+		void read_layout(const json&) override;
+
+		void set_text(const std::string&);
 
 		using on_change_callback_t = std::function<void(TextInput&, const std::string&)>;
 		void on_change(on_change_callback_t);

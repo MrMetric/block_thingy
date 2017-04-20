@@ -7,7 +7,7 @@
 
 #include "fwd/Game.hpp"
 #include "fwd/event/EventManager.hpp"
-#include "graphics/GUI/WidgetContainer.hpp"
+#include "graphics/GUI/Widget/Container.hpp"
 #include "fwd/util/key_mods.hpp"
 
 #include "types/window_size_t.hpp"
@@ -20,7 +20,7 @@ class Base
 		Base
 		(
 			Game&,
-			WidgetContainerMode root_mode
+			const std::string& layout_path = ""
 		);
 		virtual ~Base();
 
@@ -48,10 +48,10 @@ class Base
 	protected:
 		virtual void draw_gui();
 		virtual void update_framebuffer_size(const window_size_t&);
-		WidgetContainer root;
+		Widget::Container root;
 
 	private:
 		event_handler_id_t event_handler;
 };
 
-} // namespace Graphics::GUI
+}

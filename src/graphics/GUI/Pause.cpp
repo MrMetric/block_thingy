@@ -16,45 +16,13 @@ namespace Graphics::GUI {
 
 Pause::Pause(Game& game)
 :
-	Base(game, WidgetContainerMode::widgets)
+	Base(game, "guis/Pause.btgui")
 {
-	root.add<Widget::Text>(glm::dvec2(0.5, 0.5), "Paused");
-
-	auto& btn_resume = root.add<Widget::Button>("Resume",
-	[&game]()
-	{
-		Console::instance->run_line("close_gui");
-	});
-
-	auto& btn_save = root.add<Widget::Button>("Save",
-	[&game]()
-	{
-		Console::instance->run_line("save");
-	});
-
-	auto& btn_save_quit = root.add<Widget::Button>("Save & Quit",
-	[&game]()
-	{
-		Console::instance->run_line("save");
-		Console::instance->run_line("quit");
-	});
-
-	auto& btn_quit = root.add<Widget::Button>("Quit",
-	[&game]()
-	{
-		Console::instance->run_line("quit");
-	});
-
-	auto border = std::make_shared<Widget::Component::Border>(2, glm::dvec4(1));
-	btn_resume.add_modifier(border);
-	btn_save.add_modifier(border);
-	btn_save_quit.add_modifier(border);
-	btn_quit.add_modifier(border);
 }
 
 string Pause::type() const
 {
-	return "pause";
+	return "Pause";
 }
 
 void Pause::init()
@@ -65,7 +33,8 @@ void Pause::init()
 void Pause::draw()
 {
 	parent->draw();
+	Gfx::instance->draw_rectangle({0, 0}, static_cast<glm::dvec2>(Gfx::instance->window_size), {0, 0, 0, 0.3});
 	Base::draw();
 }
 
-} // namespace Graphics::GUI
+}

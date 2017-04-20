@@ -1,6 +1,5 @@
 #include "Text.hpp"
 
-#include "Game.hpp"
 #include "Gfx.hpp"
 #include "util/unicode.hpp"
 
@@ -14,7 +13,7 @@ Text::Text(const string& s)
 	operator=(s);
 }
 
-void Text::draw(const Widget::Base& w)
+void Text::draw(const glm::dvec2& w_position, const glm::dvec2& w_size)
 {
 	// TODO
 }
@@ -80,7 +79,7 @@ glm::dvec2 Text::get_size() const
 
 void Text::update_info()
 {
-	size = Game::instance->gfx.gui_text.get_size(text);
+	size = Gfx::instance->gui_text.get_size(text);
 }
 
-} // namespace Graphics::GUI::Widget::Component
+}

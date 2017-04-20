@@ -36,6 +36,8 @@ class Gfx
 		Gfx(const Gfx&) = delete;
 		void operator=(const Gfx&) = delete;
 
+		static Gfx* instance;
+
 		GLFWwindow* window;
 		window_size_t window_size;
 		glm::dvec2 window_mid;
@@ -66,6 +68,8 @@ class Gfx
 		static void uninit_glfw(GLFWwindow*);
 		void opengl_setup();
 
+		void update_framebuffer_size(const window_size_t&);
+
 		Graphics::RenderTarget screen_rt;
 		Graphics::RenderTarget buf_rt;
 		std::map<std::string, Graphics::OpenGL::ShaderProgram> screen_shaders;
@@ -95,5 +99,5 @@ class Gfx
 		Graphics::OpenGL::ShaderProgram s_gui_shape;
 		Graphics::OpenGL::VertexBuffer gui_rectangle_vbo;
 		Graphics::OpenGL::VertexArray gui_rectangle_vao;
-		void draw_rectangle(const glm::dvec2& position, const glm::dvec2& size, const glm::dvec4& color);
+		void draw_rectangle(glm::dvec2 position, glm::dvec2 size, const glm::dvec4& color);
 };

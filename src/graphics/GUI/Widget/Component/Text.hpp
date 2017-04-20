@@ -12,7 +12,7 @@ class Text : public Base
 	public:
 		Text(const std::string&);
 
-		void draw(const Widget::Base&) override;
+		void draw(const glm::dvec2& w_position, const glm::dvec2& w_size) override;
 
 		std::string get8() const;
 		std::u32string get32() const;
@@ -37,4 +37,4 @@ class Text : public Base
 		void update_info();
 };
 
-} // namespace Graphics::GUI::Widget::Component
+}

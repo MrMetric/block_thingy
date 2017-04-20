@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <string>
+#include <vector>
 
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
@@ -14,15 +15,22 @@ class Button : public Base
 	public:
 		Button
 		(
-			WidgetContainer& owner,
-			const std::string& text,
-			std::function<void()> click_handler
+			const std::string& text = ""
 		);
 
-		void draw();
+		std::string type() const override;
 
-		void mousepress(int button, int action, Util::key_mods);
-		void mousemove(double x, double y);
+		void draw() override;
+
+		void mousepress(int button, int action, Util::key_mods) override;
+		void mousemove(double x, double y) override;
+
+		void read_layout(const json&) override;
+		void use_layout() override;
+
+		void set_text(const std::string&);
+
+		void on_click(std::function<void()> click_handler);
 
 		glm::dvec4 color;
 		glm::dvec4 hover_color;
@@ -33,7 +41,7 @@ class Button : public Base
 		std::string text;
 		glm::dvec2 text_size;
 		glm::dvec2 text_position;
-		std::function<void()> click_handler;
+		std::vector<std::function<void()>> click_handlers;
 };
 
-} // namespace Graphics::GUI::Widget
+}

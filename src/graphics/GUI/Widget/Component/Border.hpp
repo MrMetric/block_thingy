@@ -14,7 +14,7 @@ class Border : public Base
 			const glm::dvec4& color
 		);
 
-		void draw(const Widget::Base&) override;
+		void draw(const glm::dvec2& w_position, const glm::dvec2& w_size) override;
 
 	private:
 		double size;

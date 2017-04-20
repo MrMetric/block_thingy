@@ -1,0 +1,39 @@
+{
+	"auto_layout" =
+	{
+		"type" = "column"
+		"spacing" = 8
+	}
+	"center" = "parent.center"
+	"widgets" =
+	[
+		{
+			"type" = "Text"
+			"text" = "Paused"
+		}
+		{
+			"type" = "Button"
+			"text" = "Resume"
+			"command" = "close_gui"
+		}
+		{
+			"type" = "Button"
+			"text" = "Save"
+			"command" = "save"
+		}
+		{
+			"type" = "Button"
+			"text" = "Save & Quit"
+			"command" =
+			[
+				"save"
+				"quit"
+			]
+		}
+		{
+			"type" = "Button"
+			"text" = "Quit"
+			"command" = "quit"
+		}
+	]
+}

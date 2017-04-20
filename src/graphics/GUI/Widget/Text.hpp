@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include <glm/vec2.hpp>
-
 namespace Graphics::GUI::Widget {
 
 class Text : public Base
@@ -12,15 +10,17 @@ class Text : public Base
 	public:
 		Text
 		(
-			WidgetContainer& owner,
-			const glm::dvec2& origin,
-			const std::string& text
+			const std::string& text = ""
 		);
 
+		std::string type() const override;
+
 		void draw() override;
+
+		void read_layout(const json&) override;
 
 	private:
 		std::string text;
 };
 
-} // namespace Graphics::GUI::Widget
+}

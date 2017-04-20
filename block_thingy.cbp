@@ -187,8 +187,8 @@
 		<Unit filename="src/fwd/graphics/Color.hpp" />
 		<Unit filename="src/fwd/graphics/GUI/Widget/Base.hpp" />
 		<Unit filename="src/fwd/graphics/GUI/Widget/Component/Base.hpp" />
+		<Unit filename="src/fwd/graphics/GUI/Widget/Container.hpp" />
 		<Unit filename="src/fwd/graphics/GUI/Widget/TextInput.hpp" />
-		<Unit filename="src/fwd/graphics/GUI/WidgetContainer.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/Renderbuffer.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/ShaderProgram.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/Texture.hpp" />
@@ -218,12 +218,12 @@
 		<Unit filename="src/graphics/GUI/Widget/Component/Border.hpp" />
 		<Unit filename="src/graphics/GUI/Widget/Component/Text.cpp" />
 		<Unit filename="src/graphics/GUI/Widget/Component/Text.hpp" />
+		<Unit filename="src/graphics/GUI/Widget/Container.cpp" />
+		<Unit filename="src/graphics/GUI/Widget/Container.hpp" />
 		<Unit filename="src/graphics/GUI/Widget/Text.cpp" />
 		<Unit filename="src/graphics/GUI/Widget/Text.hpp" />
 		<Unit filename="src/graphics/GUI/Widget/TextInput.cpp" />
 		<Unit filename="src/graphics/GUI/Widget/TextInput.hpp" />
-		<Unit filename="src/graphics/GUI/WidgetContainer.cpp" />
-		<Unit filename="src/graphics/GUI/WidgetContainer.hpp" />
 		<Unit filename="src/graphics/OpenGL/Framebuffer.cpp" />
 		<Unit filename="src/graphics/OpenGL/Framebuffer.hpp" />
 		<Unit filename="src/graphics/OpenGL/Renderbuffer.cpp" />

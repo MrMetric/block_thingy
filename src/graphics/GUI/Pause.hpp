@@ -16,4 +16,4 @@ class Pause : public Base
 		void draw() override;
 };
 
-} // namespace Graphics::GUI
+}

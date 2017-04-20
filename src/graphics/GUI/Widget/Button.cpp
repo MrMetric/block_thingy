@@ -2,11 +2,11 @@
 
 #include <GLFW/glfw3.h>
 
+#include <easylogging++/easylogging++.hpp>
 #include <glm/common.hpp>
 
-#include "Game.hpp"
 #include "Gfx.hpp"
-#include "graphics/GUI/WidgetContainer.hpp"
+#include "console/Console.hpp"
 #include "util/key_mods.hpp"
 
 using std::string;
@@ -15,29 +15,30 @@ namespace Graphics::GUI::Widget {
 
 Button::Button
 (
-	WidgetContainer& owner,
-	const string& text,
-	std::function<void()> click_handler
+	const string& text
 )
 :
-	Base(owner, {256, 64}),
 	color(0.01, 0.01, 0.02, 0.85),
 	hover_color(0, 0, 0, 1),
 	hover(false),
-	mousedown(false),
-	text(text),
-	text_size(owner.game.gfx.gui_text.get_size(text)),
-	text_position((size - text_size) * glm::dvec2(0.5, 0.5)),
-	click_handler(click_handler)
+	mousedown(false)
 {
+	set_text(text);
+	style["size.x"] = 256.0;
+	style["size.y"] = 64.0;
+}
+
+std::string Button::type() const
+{
+	return "Button";
 }
 
 void Button::draw()
 {
 	Base::draw();
 
-	owner.game.gfx.draw_rectangle(real_position, size, hover ? hover_color : color);
-	owner.game.gfx.gui_text.draw(text, glm::round(real_position + text_position));
+	Gfx::instance->draw_rectangle(position, size, hover ? hover_color : color);
+	Gfx::instance->gui_text.draw(text, text_position);
 }
 
 void Button::mousepress(const int button, const int action, const Util::key_mods mods)
@@ -64,14 +65,82 @@ void Button::mousepress(const int button, const int action, const Util::key_mods
 	{
 		// mouse up (click)
 		mousedown = false;
-		click_handler();
+		for(const auto& handler : click_handlers)
+		{
+			handler();
+		}
 	}
 }
 
 void Button::mousemove(const double x, const double y)
 {
-	hover = x >= real_position.x && x < real_position.x + size.x
-		 && y >= real_position.y && y < real_position.y + size.y;
+	hover = x >= position.x && x < position.x + size.x
+		 && y >= position.y && y < position.y + size.y;
 }
 
-} // namespace Graphics::GUI::Widget
+void Button::read_layout(const json& layout)
+{
+	Base::read_layout(layout);
+
+	set_text(get_layout_var<string>(layout, "text", ""));
+
+	const json command = *layout.find("command");
+	if(command.is_string())
+	{
+		const string c = command;
+		on_click([c]()
+		{
+			Console::instance->run_line(c);
+		});
+	}
+	else if(command.is_array())
+	{
+		bool good = true;
+		for(const json& c : command)
+		{
+			if(!c.is_string())
+			{
+				LOG(ERROR) << "Button command list has a non-string (" << c.type_name() << ")";
+				good = false;
+			}
+		}
+		if(good)
+		{
+			const std::vector<string> commands = command;
+			on_click([commands]()
+			{
+				for(const string& c : commands)
+				{
+					Console::instance->run_line(c);
+				}
+			});
+		}
+	}
+	else
+	{
+		LOG(ERROR) << "Button command should be a string or a string list, but is " << command.type_name();
+	}
+}
+
+void Button::use_layout()
+{
+	Base::use_layout();
+
+	text_position = position + (size - text_size) * 0.5;
+}
+
+void Button::set_text(const string& text)
+{
+	if(this->text != text)
+	{
+		this->text = text;
+		text_size = Gfx::instance->gui_text.get_size(text);
+	}
+}
+
+void Button::on_click(std::function<void()> click_handler)
+{
+	click_handlers.emplace_back(std::move(click_handler));
+}
+
+}

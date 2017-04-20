@@ -28,13 +28,13 @@ namespace Graphics::GUI {
 
 Play::Play(Game& game)
 :
-	Base(game, WidgetContainerMode::rows)
+	Base(game)
 {
 }
 
 string Play::type() const
 {
-	return "play";
+	return "Play";
 }
 
 void Play::init()
@@ -46,7 +46,7 @@ void Play::init()
 
 void Play::close()
 {
-	Console::instance->run_line("open_gui pause");
+	Console::instance->run_line("open_gui Pause");
 }
 
 void Play::draw()
@@ -162,4 +162,4 @@ void Play::draw_debug_text()
 	game.gfx.gui_text.draw(ss.str(), {8.0, 8.0});
 }
 
-} // namespace Graphics::GUI
+}

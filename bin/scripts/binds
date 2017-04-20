@@ -19,7 +19,7 @@ bind f2 screenshot
 bind f3 'toggle_bool show_debug_info'
 bind f11 'toggle_bool fullscreen'
 bind esc close_gui
-bind ` 'open_gui console'
+bind ` 'open_gui Console'
 bind , 'toggle_bool wireframe'
 bind b 'toggle_bool cull_face'
 bind = render_distance++

@@ -30,4 +30,4 @@ class Play : public Base
 		void draw_debug_text();
 };
 
-} // namespace Graphics::GUI
+}

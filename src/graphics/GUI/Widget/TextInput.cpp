@@ -3,9 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Game.hpp"
 #include "Gfx.hpp"
-#include "graphics/GUI/WidgetContainer.hpp"
 #include "util/clipboard.hpp"
 #include "util/key_mods.hpp"
 
@@ -15,42 +13,47 @@ namespace Graphics::GUI::Widget {
 
 TextInput::TextInput
 (
-	WidgetContainer& owner,
 	const string& content,
 	const string& placeholder
 )
 :
-	Base(owner, {256, 40}),
 	invalid(false),
 	content(content),
 	placeholder(placeholder),
 	hover(false),
 	focus(false)
 {
+	style["size.x"] = 256.0;
+	style["size.y"] = 40.0;
+}
+
+std::string TextInput::type() const
+{
+	return "TextInput";
 }
 
 void TextInput::draw()
 {
 	Base::draw();
 
-	owner.game.gfx.draw_rectangle(real_position, size, invalid ? glm::dvec4(0.2, 0.01, 0.02, 0.85) : glm::dvec4(0.01, 0.01, 0.02, 0.85));
+	Gfx::instance->draw_rectangle(position, size, invalid ? glm::dvec4(0.2, 0.01, 0.02, 0.85) : glm::dvec4(0.01, 0.01, 0.02, 0.85));
 
 	bool has_content = content.get32().size() > 0;
 
 	glm::dvec2 content_size = has_content ? content.get_size() : glm::dvec2(0, placeholder.get_size().y);
 	glm::dvec2 text_pos =
 	{
-		real_position.x + 8,
-		real_position.y + (size.y - content_size.y) * 0.5,
+		position.x + 8,
+		position.y + (size.y - content_size.y) * 0.5,
 	};
 
 	if(has_content)
 	{
-		owner.game.gfx.gui_text.draw(content.get32(), glm::round(text_pos));
+		Gfx::instance->gui_text.draw(content.get32(), glm::round(text_pos));
 	}
 	else
 	{
-		owner.game.gfx.gui_text.draw(placeholder.get32(), glm::round(text_pos), glm::dvec3(0.6));
+		Gfx::instance->gui_text.draw(placeholder.get32(), glm::round(text_pos), glm::dvec3(0.6));
 	}
 
 	if(focus)
@@ -58,9 +61,9 @@ void TextInput::draw()
 		glm::dvec2 cursor_pos =
 		{
 			text_pos.x + content_size.x,
-			real_position.y + 2,
+			position.y + 2,
 		};
-		owner.game.gfx.draw_rectangle(cursor_pos, {2, size.y - 4}, {1, 1, 1, 1});
+		Gfx::instance->draw_rectangle(cursor_pos, {2, size.y - 4}, {1, 1, 1, 1});
 	}
 }
 
@@ -81,7 +84,7 @@ void TextInput::keypress(const int key, const int scancode, const int action, co
 
 	if(key == GLFW_KEY_BACKSPACE)
 	{
-		if(mods.none())
+		if(mods.none() || mods.is(true, false, false, false))
 		{
 			if(content.str_size() > 0)
 			{
@@ -115,8 +118,21 @@ void TextInput::mousepress(const int button, const int action, const Util::key_m
 
 void TextInput::mousemove(const double x, const double y)
 {
-	hover = x >= real_position.x && x < real_position.x + size.x
-		 && y >= real_position.y && y < real_position.y + size.y;
+	hover = x >= position.x && x < position.x + size.x
+		 && y >= position.y && y < position.y + size.y;
+}
+
+void TextInput::read_layout(const json& layout)
+{
+	Base::read_layout(layout);
+
+	content = get_layout_var<string>(layout, "text", "");
+	placeholder = get_layout_var<string>(layout, "placeholder", "");
+}
+
+void TextInput::set_text(const string& text)
+{
+	content = text;
 }
 
 void TextInput::on_change(on_change_callback_t callback)

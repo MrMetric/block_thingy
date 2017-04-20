@@ -5,26 +5,33 @@
 #include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <json.hpp>
 
 #include "Game.hpp"
 #include "Gfx.hpp"
+#include "Util.hpp"
 #include "console/Console.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"
 #include "util/key_mods.hpp"
 
+using std::string;
+
 namespace Graphics::GUI {
 
 Base::Base
 (
 	Game& game,
-	const WidgetContainerMode root_mode
+	const string& layout_path
 )
 :
-	game(game),
-	root(game, root_mode)
+	game(game)
 {
+	if(!layout_path.empty())
+	{
+		root.read_layout(json::parse(Util::read_file(layout_path)));
+	}
 	event_handler = game.event_manager.add_handler(EventType::window_size_change, [this](const Event& event)
 	{
 		auto e = static_cast<const Event_window_size_change&>(event);
@@ -89,7 +96,7 @@ void Base::keypress(const int key, const int scancode, const int action, const U
 		}
 		if(key == GLFW_KEY_F11)
 		{
-			Console::instance->run_line("toggle_fullscreen");
+			Console::instance->run_line("toggle_bool fullscreen");
 			return;
 		}
 	}
@@ -132,7 +139,23 @@ void Base::draw_gui()
 
 void Base::update_framebuffer_size(const window_size_t& window_size)
 {
-	root.update_container({0, 0}, glm::dvec2(window_size));
+	rhea::simplex_solver solver;
+
+	Widget::Base::style_vars_t window_vars;
+	solver.add_constraints
+	({
+		window_vars["pos.x"] == 0,
+		window_vars["pos.y"] == 0,
+		window_vars["size.x"] == Gfx::instance->window_size.x,
+		window_vars["size.y"] == Gfx::instance->window_size.y,
+		window_vars["end.x"] == window_vars["size.x"],
+		window_vars["end.y"] == window_vars["size.y"],
+		window_vars["center.x"] == window_vars["size.x"] / 2,
+		window_vars["center.y"] == window_vars["size.y"] / 2,
+	});
+
+	root.apply_layout(solver, window_vars);
+	root.use_layout();
 }
 
-} // namespace Graphics::GUI
+}

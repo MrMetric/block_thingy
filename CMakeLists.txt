@@ -15,6 +15,7 @@ file(GLOB_RECURSE block_thingy_SRC
 	"lib/easylogging++/easylogging++.cpp"
 	"lib/glad/glad.c"
 	"lib/inotify-cxx/inotify-cxx.cpp"
+	"lib/rhea/*.cpp"
 	"src/*.cpp"
 )
 include_directories(

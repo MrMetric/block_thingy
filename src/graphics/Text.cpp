@@ -61,13 +61,13 @@ void Text::draw(const string& s, const glm::dvec2& pos, const glm::dvec3& color)
 	draw(Util::utf8_to_utf32(s), pos, color);
 }
 
-void Text::draw(const u32string& s, glm::dvec2 pos, const glm::dvec3& color)
+void Text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec3& color)
 {
 	shader.uniform("color", glm::vec3(color));
 	glUseProgram(shader.get_name());
 	glActiveTexture(GL_TEXTURE0);
 
-	loop(s, pos, [this](const glm::dvec2& pos, Character& ch)
+	loop(s, glm::round(pos), [this](const glm::dvec2& pos, Character& ch)
 	{
 		float xpos = static_cast<float>(pos.x + ch.bearing.x);
 		float ypos = static_cast<float>(pos.y + (get_char('H').bearing.y - ch.bearing.y));
@@ -118,7 +118,11 @@ glm::dvec2 Text::get_size(u32string s)
 	});
 	widths.push_back(size.x);
 
-	return {*std::max_element(widths.cbegin(), widths.cend()), size.y};
+	return
+	{
+		*std::max_element(widths.cbegin(), widths.cend()),
+		size.y,
+	};
 }
 
 std::tuple<glm::dvec2, std::vector<double>> Text::loop

@@ -22,39 +22,27 @@ Light::Light
 	Block::Light& block
 )
 :
-	Base(game, WidgetContainerMode::widgets),
+	Base(game, "guis/Light.btgui"),
 	block(block)
 {
-	auto c = block.color();
-
-	auto& r = root.add<Widget::TextInput>(std::to_string(c.r), "red");
-	r.on_change([this](Widget::TextInput& w, const string& new_value)
+	const Graphics::Color c = block.color();
+	for(uint_fast8_t i = 0; i < 3; ++i)
 	{
-		on_change(0, w, new_value);
-	});
-
-	auto& g = root.add<Widget::TextInput>(std::to_string(c.g), "green");
-	g.on_change([this](Widget::TextInput& w, const string& new_value)
-	{
-		on_change(1, w, new_value);
-	});
-
-	auto& b = root.add<Widget::TextInput>(std::to_string(c.b), "blue");
-	b.on_change([this](Widget::TextInput& w, const string& new_value)
-	{
-		on_change(2, w, new_value);
-	});
-
-	// TODO: theme stuff
-	auto border = std::make_shared<Widget::Component::Border>(2, glm::dvec4(1));
-	r.add_modifier(border);
-	g.add_modifier(border);
-	b.add_modifier(border);
+		auto w = root.get_widget_by_id<Widget::TextInput>(std::to_string(i));
+		if(w != nullptr)
+		{
+			w->set_text(std::to_string(c[i]));
+			w->on_change([this, i](Widget::TextInput& w, const string& new_value)
+			{
+				on_change(i, w, new_value);
+			});
+		}
+	}
 }
 
 string Light::type() const
 {
-	return "light";
+	return "Light";
 }
 
 void Light::init()

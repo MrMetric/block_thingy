@@ -1,0 +1,30 @@
+{
+	"auto_layout" =
+	{
+		"type" = "column"
+		"spacing" = 8
+	}
+	"center" = "parent.center"
+	"widgets" =
+	[
+		{
+			"type" = "Text"
+			"text" = "Edit light"
+		}
+		{
+			"type" = "TextInput"
+			"id" = "0"
+			"placeholder" = "red"
+		}
+		{
+			"type" = "TextInput"
+			"id" = "1"
+			"placeholder" = "green"
+		}
+		{
+			"type" = "TextInput"
+			"id" = "2"
+			"placeholder" = "blue"
+		}
+	]
+}
