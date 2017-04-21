@@ -9,17 +9,33 @@ VertexArray::VertexArray(const VertexBuffer& vbo)
 	glCreateVertexArrays(1, &name);
 	inited = true;
 
-	attrib(0, true);
 	glBindVertexArray(name);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo.name);
-	glVertexAttribPointer(
-		0,
-		vbo.format.size,
-		vbo.format.type,
-		vbo.format.normalized,
-		vbo.format.stride,
-		reinterpret_cast<GLvoid*>(vbo.format.offset)
-	);
+	GLsizei stride = 0;
+	if(vbo.formats.size() > 1)
+	{
+		for(const auto& format : vbo.formats)
+		{
+			stride += format.size;
+		}
+	}
+	GLuint i = 0;
+	GLsizeiptr offset = 0;
+	for(const auto& format : vbo.formats)
+	{
+		glVertexAttribPointer
+		(
+			i,
+			format.size,
+			format.type,
+			format.normalized,
+			stride,
+			reinterpret_cast<GLvoid*>(offset)
+		);
+		attrib(i, true);
+		++i;
+		offset += format.size;
+	}
 }
 
 VertexArray::VertexArray(VertexArray&& that)

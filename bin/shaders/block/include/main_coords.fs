@@ -1,4 +1,3 @@
-uniform vec3 light;
 const float min_light = 0.06;
 void main()
 {

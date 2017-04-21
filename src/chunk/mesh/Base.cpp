@@ -14,7 +14,13 @@
 
 namespace Mesher {
 
-const meshmap_key_t Base::empty_key = { BlockType::none, Graphics::Color() };
+mesh_vertex_t::mesh_vertex_t()
+{
+}
+
+mesh_vertex_t::mesh_vertex_t(uint8_t)
+{
+}
 
 Base::Base()
 {

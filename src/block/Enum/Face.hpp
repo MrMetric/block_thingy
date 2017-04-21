@@ -1,10 +1,11 @@
 #pragma once
 
 #include <iosfwd>
+#include <stdint.h>
 
 namespace Block::Enum {
 
-enum class Face
+enum class Face : uint8_t
 {
 	front = 0,
 	back = 1,

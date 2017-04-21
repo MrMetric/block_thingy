@@ -6,9 +6,15 @@
 
 namespace Graphics::OpenGL {
 
-VertexBuffer::VertexBuffer(const Format& format)
+VertexBuffer::VertexBuffer(Format format)
 :
-	format(format)
+	VertexBuffer(std::vector<Format>{std::move(format)})
+{
+}
+
+VertexBuffer::VertexBuffer(std::vector<Format> formats)
+:
+	formats(std::move(formats))
 {
 	glCreateBuffers(1, &name);
 	inited = true;
@@ -22,7 +28,7 @@ VertexBuffer::VertexBuffer(VertexBuffer&& that)
 	{
 		that.name = 0;
 		that.inited = false;
-		format = std::move(that.format);
+		formats = std::move(that.formats);
 	}
 }
 

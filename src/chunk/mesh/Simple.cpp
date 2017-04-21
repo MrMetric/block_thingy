@@ -15,7 +15,7 @@ using Position::BlockInChunk;
 namespace Mesher {
 
 static void draw_cube(const Chunk&, meshmap_t&, const Block::Base& block, BlockInChunk::value_type, BlockInChunk::value_type, BlockInChunk::value_type);
-static void draw_face(mesh_t&, BlockInChunk::value_type, BlockInChunk::value_type, BlockInChunk::value_type, Face);
+static void draw_face(mesh_t&, BlockInChunk::value_type, BlockInChunk::value_type, BlockInChunk::value_type, Face, const Graphics::Color&);
 
 meshmap_t Simple::make_mesh(const Chunk& chunk)
 {
@@ -42,37 +42,45 @@ void draw_cube(const Chunk& chunk, meshmap_t& meshes, const Block::Base& block, 
 {
 	if(Base::block_visible_from(chunk, block, x, y, z - 1))
 	{
-		const meshmap_key_t key = { block.type(), Base::light_at(chunk, x, y, z - 1) };
-		draw_face(meshes[key], x, y, z, Face::front);
+		const meshmap_key_t key = block.type();
+		draw_face(meshes[key], x, y, z, Face::front, Base::light_at(chunk, x, y, z - 1));
 	}
 	if(Base::block_visible_from(chunk, block, x, y, z + 1))
 	{
-		const meshmap_key_t key = { block.type(), Base::light_at(chunk, x, y, z + 1) };
-		draw_face(meshes[key], x, y, z, Face::back);
+		const meshmap_key_t key = block.type();
+		draw_face(meshes[key], x, y, z, Face::back, Base::light_at(chunk, x, y, z + 1));
 	}
 	if(Base::block_visible_from(chunk, block, x, y + 1, z))
 	{
-		const meshmap_key_t key = { block.type(), Base::light_at(chunk, x, y + 1, z) };
-		draw_face(meshes[key], x, y, z, Face::top);
+		const meshmap_key_t key = block.type();
+		draw_face(meshes[key], x, y, z, Face::top, Base::light_at(chunk, x, y + 1, z));
 	}
 	if(Base::block_visible_from(chunk, block, x, y - 1, z))
 	{
-		const meshmap_key_t key = { block.type(), Base::light_at(chunk, x, y - 1, z) };
-		draw_face(meshes[key], x, y, z, Face::bottom);
+		const meshmap_key_t key = block.type();
+		draw_face(meshes[key], x, y, z, Face::bottom, Base::light_at(chunk, x, y - 1, z));
 	}
 	if(Base::block_visible_from(chunk, block, x - 1, y, z))
 	{
-		const meshmap_key_t key = { block.type(), Base::light_at(chunk, x - 1, y, z) };
-		draw_face(meshes[key], x, y, z, Face::right);
+		const meshmap_key_t key = block.type();
+		draw_face(meshes[key], x, y, z, Face::right, Base::light_at(chunk, x - 1, y, z));
 	}
 	if(Base::block_visible_from(chunk, block, x + 1, y, z))
 	{
-		const meshmap_key_t key = { block.type(), Base::light_at(chunk, x + 1, y, z) };
-		draw_face(meshes[key], x, y, z, Face::left);
+		const meshmap_key_t key = block.type();
+		draw_face(meshes[key], x, y, z, Face::left, Base::light_at(chunk, x + 1, y, z));
 	}
 }
 
-void draw_face(mesh_t& mesh, const BlockInChunk::value_type x, const BlockInChunk::value_type y, const BlockInChunk::value_type z, const Face face)
+void draw_face
+(
+	mesh_t& mesh,
+	const BlockInChunk::value_type x,
+	const BlockInChunk::value_type y,
+	const BlockInChunk::value_type z,
+	const Face face,
+	const Graphics::Color& light
+)
 {
 	auto offset = static_cast<std::size_t>(face) * 6;
 	for(uint_fast8_t i = 0; i < 2; ++i)
@@ -81,10 +89,11 @@ void draw_face(mesh_t& mesh, const BlockInChunk::value_type x, const BlockInChun
 		for(uint_fast8_t j = 0; j < 3; ++j)
 		{
 			uint_fast8_t element = 3 * Cube::cube_elements[offset++];
-			tri[j].x = Cube::cube_vertex[element++] + x;
-			tri[j].y = Cube::cube_vertex[element++] + y;
-			tri[j].z = Cube::cube_vertex[element++] + z;
-			tri[j].w = static_cast<mesh_vertex_coord_t::value_type>(face);
+			tri[j].pos.x = Cube::cube_vertex[element++] + x;
+			tri[j].pos.y = Cube::cube_vertex[element++] + y;
+			tri[j].pos.z = Cube::cube_vertex[element++] + z;
+			tri[j].light = light;
+			tri[j].face = face;
 		}
 		mesh.push_back(tri);
 	}

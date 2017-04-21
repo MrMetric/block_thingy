@@ -170,6 +170,13 @@ Game::~Game()
 
 void Game::draw()
 {
+	// TODO: use double when available
+	const float global_time = static_cast<float>(world.get_time());
+	for(auto& p : gfx.block_shaders)
+	{
+		p.second.uniform("global_time", global_time);
+	}
+
 	if(pImpl->temp_gui != nullptr)
 	{
 		pImpl->temp_gui = nullptr;

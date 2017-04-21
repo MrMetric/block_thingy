@@ -102,14 +102,12 @@ void Chunk::render(const bool transluscent_pass)
 	}
 
 	const ChunkInWorld render_position = position - ChunkInWorld(BlockInWorld(Game::instance->camera.position));
-	// TODO: use double when available (for position_offset and global_time)
+	// TODO?: use double when available
 	const glm::vec3 position_offset(static_cast<BlockInWorld::vec_type>(BlockInWorld(render_position, {0, 0, 0})));
-	const float global_time = static_cast<float>(owner.get_time());
 	std::size_t i = 0;
 	for(const auto& p : meshes)
 	{
-		const Mesher::meshmap_key_t& key = p.first;
-		const BlockType type = std::get<0>(key);
+		const BlockType type = p.first;
 		// TODO: get existing block instead of making one
 		if(owner.block_registry.make(type)->is_translucent() != transluscent_pass)
 		{
@@ -120,10 +118,6 @@ void Chunk::render(const bool transluscent_pass)
 		glUseProgram(shader.get_name());
 
 		shader.uniform("position_offset", position_offset);
-		shader.uniform("global_time", global_time);
-
-		const Graphics::Color color = std::get<1>(key);
-		shader.uniform("light", static_cast<glm::vec3>(color));
 
 		const std::size_t draw_count = p.second.size() * 3;
 		mesh_vaos[i].draw(GL_TRIANGLES, 0, draw_count);
@@ -164,7 +158,12 @@ void Chunk::update_vaos()
 		const std::size_t to_add = meshes.size() - mesh_vaos.size();
 		for(std::size_t i = 0; i < to_add; ++i)
 		{
-			Graphics::OpenGL::VertexBuffer vbo({4, GL_UNSIGNED_BYTE});
+			Graphics::OpenGL::VertexBuffer vbo
+			({
+				{3, GL_UNSIGNED_BYTE}, // relative position
+				{3, GL_UNSIGNED_BYTE}, // light
+				{1, GL_UNSIGNED_BYTE}, // face
+			});
 			Graphics::OpenGL::VertexArray vao(vbo);
 
 			mesh_vbos.emplace_back(std::move(vbo));

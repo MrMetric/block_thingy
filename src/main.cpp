@@ -3,6 +3,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -72,6 +73,16 @@ int main(int argc, char** argv)
 	// TODO: put this somewhere else
 	static_assert(GL_TRUE, "GL_TRUE is not true");
 	static_assert(!GL_FALSE, "GL_FALSE is not false");
+	static_assert(std::is_same<GLbyte  ,   int8_t>::value, "GLbyte is not int8_t");
+	static_assert(std::is_same<GLubyte ,  uint8_t>::value, "GLubyte is not uint8_t");
+	static_assert(std::is_same<GLshort ,  int16_t>::value, "GLshort is not int16_t");
+	static_assert(std::is_same<GLushort, uint16_t>::value, "GLushort is not uint16_t");
+	static_assert(std::is_same<GLint   ,  int32_t>::value, "GLint is not int32_t");
+	static_assert(std::is_same<GLuint  , uint32_t>::value, "GLuint is not uint32_t");
+	static_assert(std::is_same<GLint64 ,  int64_t>::value, "GLint64 is not int64_t");
+	static_assert(std::is_same<GLuint64, uint64_t>::value, "GLuint64 is not uint64_t");
+	static_assert(std::is_same<GLfloat ,    float>::value, "GLfloat is not float");
+	static_assert(std::is_same<GLdouble,   double>::value, "GLdouble is not double");
 
 	#ifdef _WIN32
 	CodePageHandler cp(CP_UTF8);

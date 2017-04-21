@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <vector>
 
 #include <glad/glad.h>
 
@@ -12,8 +13,8 @@ class VertexBuffer
 
 	public:
 		struct Format;
-		// TODO: allow multiple formats
-		VertexBuffer(const Format&);
+		VertexBuffer(Format);
+		VertexBuffer(std::vector<Format>);
 		~VertexBuffer();
 
 		VertexBuffer(VertexBuffer&&);
@@ -41,14 +42,12 @@ class VertexBuffer
 			GLint size;
 			GLenum type;
 			bool normalized = false;
-			GLsizei stride = 0;
-			GLsizei offset = 0;
 		};
 
 	private:
 		bool inited;
 		GLuint name;
-		Format format;
+		std::vector<Format> formats;
 };
 
 } // namespace Graphics::OpenGL

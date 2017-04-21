@@ -3,6 +3,7 @@
 const float M_TAU = 6.283185307179586476925286766559;
 
 in vec3 position;
+in vec3 light;
 flat in int face;
 out vec4 FragColor;
 uniform float global_time;
