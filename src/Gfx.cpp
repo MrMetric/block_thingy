@@ -464,7 +464,67 @@ void Gfx::draw_rectangle(glm::dvec2 position, glm::dvec2 size, const glm::dvec4&
 	s_gui_shape.uniform("color", glm::vec4(color));
 
 	gui_rectangle_vbo.data(sizeof(v), v, Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw);
-	gui_rectangle_vao.draw(GL_TRIANGLES, 0, 6);
+	gui_rectangle_vao.draw(GL_TRIANGLES, 0, sizeof(v) / sizeof(v[0]));
+}
+
+void Gfx::draw_border(glm::dvec2 position, glm::dvec2 size, glm::dvec4 border_size, const glm::dvec4& color)
+{
+	position = glm::round(position);
+	size = glm::round(size);
+
+	const float x = static_cast<float>(position.x);
+	const float y = static_cast<float>(position.y);
+	const float w = static_cast<float>(size.x);
+	const float h = static_cast<float>(size.y);
+	const float sx1 = static_cast<float>(border_size.x);
+	const float sx2 = static_cast<float>(border_size.y);
+	const float sy1 = static_cast<float>(border_size.z);
+	const float sy2 = static_cast<float>(border_size.w);
+
+	float v[] =
+	{
+		// left
+		x - sx1, y - sy1    ,
+		x      , y - sy1    ,
+		x      , y + h + sy2,
+
+		x - sx1, y - sy1    ,
+		x      , y + h + sy2,
+		x - sx1, y + h + sy2,
+
+		// right
+		x + w      , y - sy1    ,
+		x + w + sx2, y - sy1    ,
+		x + w + sx2, y + h + sy2,
+
+		x + w      , y - sy1    ,
+		x + w + sx2, y + h + sy2,
+		x + w      , y + h + sy2,
+
+		// top
+		x    , y - sy1,
+		x + w, y - sy1,
+		x + w, y      ,
+
+		x    , y - sy1,
+		x + w, y      ,
+		x    , y      ,
+
+		// bottom
+		x    , y + h      ,
+		x + w, y + h      ,
+		x + w, y + h + sy2,
+
+		x    , y + h      ,
+		x + w, y + h + sy2,
+		x    , y + h + sy2,
+	};
+
+	glUseProgram(s_gui_shape.get_name());
+	s_gui_shape.uniform("color", glm::vec4(color));
+
+	gui_rectangle_vbo.data(sizeof(v), v, Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw);
+	gui_rectangle_vao.draw(GL_TRIANGLES, 0, sizeof(v) / sizeof(v[0]));
 }
 
 static void shim_GL_ARB_direct_state_access()

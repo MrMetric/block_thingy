@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 #include <json.hpp>
 #include <rhea/simplex_solver.hpp>
 #include <rhea/variable.hpp>
@@ -36,6 +37,9 @@ class Base
 
 		void add_modifier(std::shared_ptr<Component::Base>);
 
+		void set_border_size(glm::dvec4);
+		void set_border_color(glm::dvec4);
+
 		using style_t = std::map<std::string, strict_variant::variant<std::string, double>>;
 		using style_vars_t = std::map<std::string, rhea::variable>;
 
@@ -50,6 +54,9 @@ class Base
 	protected:
 		glm::dvec2 size;
 		glm::dvec2 position;
+
+		glm::dvec4 border_size;
+		glm::dvec4 border_color;
 
 		template<typename T>
 		T get_layout_var

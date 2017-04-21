@@ -12,7 +12,6 @@
 #include "graphics/GUI/Widget/Button.hpp"
 #include "graphics/GUI/Widget/Text.hpp"
 #include "graphics/GUI/Widget/TextInput.hpp"
-#include "graphics/GUI/Widget/Component/Border.hpp"
 #include "util/key_mods.hpp"
 
 #include "std_make_unique.hpp"
@@ -35,6 +34,7 @@ void Container::draw()
 	if(Settings::get<bool>("show_debug_info"))
 	{
 		Gfx::instance->draw_rectangle(position, size, {0.2, 0.1, 0, 0.4});
+		Gfx::instance->draw_border(position, size, glm::dvec4(2), {0, 0, 0.1, 0.4});
 	}
 	for(auto& widget : widgets)
 	{
@@ -197,7 +197,6 @@ void Container::read_layout(const json& layout)
 		for(const json& w_layout : *i_widgets)
 		{
 			const string type = get_layout_var<string>(w_layout, "type");
-			static auto border = std::make_shared<Component::Border>(2, glm::dvec4(1));
 			Base* widget;
 			if(type == "Button")
 			{
@@ -223,7 +222,8 @@ void Container::read_layout(const json& layout)
 
 			if(type == "Button" || type == "TextInput")
 			{
-				widget->add_modifier(border);
+				widget->set_border_size(glm::dvec4(2));
+				widget->set_border_color(glm::dvec4(1));
 			}
 
 			widget->read_layout(w_layout);

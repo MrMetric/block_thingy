@@ -98,4 +98,5 @@ class Gfx
 		Graphics::OpenGL::VertexBuffer gui_rectangle_vbo;
 		Graphics::OpenGL::VertexArray gui_rectangle_vao;
 		void draw_rectangle(glm::dvec2 position, glm::dvec2 size, const glm::dvec4& color);
+		void draw_border(glm::dvec2 position, glm::dvec2 size, glm::dvec4 border_size, const glm::dvec4& color);
 };

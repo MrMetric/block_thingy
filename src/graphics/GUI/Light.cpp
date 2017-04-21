@@ -10,7 +10,6 @@
 #include "Util.hpp"
 #include "block/Light.hpp"
 #include "graphics/GUI/Widget/TextInput.hpp"
-#include "graphics/GUI/Widget/Component/Border.hpp"
 
 using std::string;
 

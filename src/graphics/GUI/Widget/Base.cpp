@@ -1,5 +1,6 @@
 #include "Base.hpp"
 
+#include "Gfx.hpp"
 #include "Util.hpp"
 #include "graphics/GUI/Widget/Component/Base.hpp"
 #include "util/key_mods.hpp"
@@ -18,6 +19,8 @@ Base::~Base()
 
 void Base::draw()
 {
+	Gfx::instance->draw_border(position, size, border_size, border_color);
+
 	for(auto& m : modifiers)
 	{
 		m->draw(position, size);
@@ -52,7 +55,6 @@ glm::dvec2 Base::get_size() const
 	{
 		size.y = *d;
 	}
-	// TODO: account for modifier size (such as border)
 	return size;
 }
 
@@ -64,6 +66,17 @@ glm::dvec2 Base::get_position() const
 void Base::add_modifier(std::shared_ptr<Component::Base> m)
 {
 	modifiers.emplace_back(m);
+}
+
+void Base::set_border_size(glm::dvec4 v)
+{
+	border_size = std::move(v);
+	// TODO: trigger layout recalculation
+}
+
+void Base::set_border_color(glm::dvec4 v)
+{
+	border_color = std::move(v);
 }
 
 void Base::read_layout(const json& layout)
@@ -172,10 +185,10 @@ void Base::apply_layout
 
 void Base::use_layout()
 {
-	position.x = style_vars["pos.x"].value();
-	position.y = style_vars["pos.y"].value();
-	size.x = style_vars["size.x"].value();
-	size.y = style_vars["size.y"].value();
+	position.x = style_vars["pos.x"].value() + border_size.x;
+	position.y = style_vars["pos.y"].value() + border_size.z;
+	size.x = style_vars["size.x"].value() - border_size.x - border_size.y;
+	size.y = style_vars["size.y"].value() - border_size.z - border_size.w;
 }
 
 template<>

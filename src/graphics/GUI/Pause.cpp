@@ -8,7 +8,6 @@
 #include "graphics/GUI/Widget/Button.hpp"
 #include "graphics/GUI/Widget/Text.hpp"
 #include "graphics/GUI/Widget/TextInput.hpp"
-#include "graphics/GUI/Widget/Component/Border.hpp"
 
 using std::string;
 
