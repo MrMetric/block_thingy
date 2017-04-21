@@ -180,10 +180,14 @@ void Settings::load()
 	};
 	get_map<double>() =
 	{
+		{"far_plane", 1500},
 		{"fov", 75},
+		{"near_plane", 0.1},
+		{"ortho_size", 6},
 	};
 	get_map<string>() =
 	{
+		{"projection_type", "default"},
 		{"screen_shader", "default"},
 	};
 

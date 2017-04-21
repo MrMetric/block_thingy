@@ -104,8 +104,14 @@ void Gfx::hook_events(EventManager& event_manager)
 		{
 			set_screen_shader(*static_cast<const string*>(e.value));
 		}
-		else if(e.name == "fov")
+		else if(e.name == "projection_type"
+			 || e.name == "fov"
+			 || e.name == "near_plane"
+			 || e.name == "far_plane"
+			 || e.name == "ortho_size"
+		)
 		{
+			// this is not always necessary, but checking for that is not worth doing
 			update_projection_matrix();
 		}
 	});
@@ -268,12 +274,29 @@ void Gfx::set_cull_face(const bool cull_face)
 
 void Gfx::update_projection_matrix()
 {
-	const double near = 0.1;
-	const double far  = 1500.0; // TODO: calculate from chunk render distance
 	const double width = window_size.x;
 	const double height = window_size.y;
-	const double aspect_ratio = (width > height) ? (width / height) : (height / width);
-	projection_matrix = glm::perspective(glm::radians(Settings::get<double>("fov")), aspect_ratio, near, far);
+	const double fov = glm::radians(Settings::get<double>("fov"));
+	const double near = Settings::get<double>("near_plane");
+	const double far  = Settings::get<double>("far_plane"); // TODO: calculate from chunk render distance
+	const string type = Settings::get<string>("projection_type");
+	if(type == "ortho")
+	{
+		const double size = Settings::get<double>("ortho_size");
+		projection_matrix = glm::ortho(0.0, size, 0.0, size * height / width, near, far);
+	}
+	else if(type == "infinite")
+	{
+		projection_matrix = glm::infinitePerspective(fov, width / height, near);
+	}
+	else
+	{
+		if(type != "default")
+		{
+			LOG(WARNING) << "unknown projection type: " << type;
+		}
+		projection_matrix = glm::perspectiveFov(fov, width, height, near, far);
+	}
 }
 
 void Gfx::set_camera_view(const glm::dvec3& position, const glm::dvec3& rotation)
