@@ -19,7 +19,9 @@
 #include "graphics/GUI/Base.hpp"
 #include "physics/RaycastHit.hpp"
 #include "position/ChunkInWorld.hpp"
-#include "fwd/util/key_mods.hpp"
+#include "fwd/util/char_press.hpp"
+#include "fwd/util/key_press.hpp"
+#include "fwd/util/mouse_press.hpp"
 
 #include "types/window_size_t.hpp"
 
@@ -45,9 +47,9 @@ class Game
 		double get_fps() const;
 
 		void update_framebuffer_size(const window_size_t&);
-		void keypress(int key, int scancode, int action, Util::key_mods);
-		void charpress(char32_t, Util::key_mods);
-		void mousepress(int button, int action, Util::key_mods);
+		void keypress(const Util::key_press&);
+		void charpress(const Util::char_press&);
+		void mousepress(const Util::mouse_press&);
 		void mousemove(double x, double y);
 		void joypress(int joystick, int button, bool pressed);
 		void joymove(const glm::dvec2& motion);

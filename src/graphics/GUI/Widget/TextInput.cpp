@@ -5,7 +5,9 @@
 
 #include "Gfx.hpp"
 #include "util/clipboard.hpp"
-#include "util/key_mods.hpp"
+#include "util/char_press.hpp"
+#include "util/key_press.hpp"
+#include "util/mouse_press.hpp"
 
 using std::string;
 
@@ -67,26 +69,26 @@ void TextInput::draw()
 	}
 }
 
-void TextInput::keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
+void TextInput::keypress(const Util::key_press& press)
 {
 	if(!focus) return;
-	if(action == GLFW_RELEASE) return; // must be press or repeat
+	if(press.action == GLFW_RELEASE) return; // must be press or repeat
 
-	trigger_on_keypress(key, scancode, action, mods);
+	trigger_on_keypress(press);
 
-	const char* key_name_ = glfwGetKeyName(key, scancode);
+	const char* key_name_ = glfwGetKeyName(press.key, press.scancode);
 	const string key_name = key_name_ != nullptr ? key_name_ : "";
 
-	if(mods.is(false, true, false, false) && key_name == "v")
+	if(press.mods.is(false, true, false, false) && key_name == "v")
 	{
 		content += Util::Clipboard::get_text();
 		trigger_on_change();
 		return;
 	}
 
-	if(key == GLFW_KEY_BACKSPACE)
+	if(press.key == GLFW_KEY_BACKSPACE)
 	{
-		if(mods.none() || mods.is(true, false, false, false))
+		if(press.mods.none() || press.mods.is(true, false, false, false))
 		{
 			if(content.str_size() > 0)
 			{
@@ -94,25 +96,25 @@ void TextInput::keypress(const int key, const int scancode, const int action, co
 				trigger_on_change();
 			}
 		}
-		else if(mods.is(false, true, false, false))
+		else if(press.mods.is(false, true, false, false))
 		{
 			// TODO
 		}
 	}
 }
 
-void TextInput::charpress(const char32_t codepoint, const Util::key_mods mods)
+void TextInput::charpress(const Util::char_press& press)
 {
 	if(!focus) return;
 
-	content += codepoint;
+	content += press.codepoint;
 	trigger_on_change();
 }
 
-void TextInput::mousepress(const int button, const int action, const Util::key_mods)
+void TextInput::mousepress(const Util::mouse_press& press)
 {
 	// TODO: option for left-handed mouse
-	if(button == GLFW_MOUSE_BUTTON_LEFT)
+	if(press.button == GLFW_MOUSE_BUTTON_LEFT)
 	{
 		focus = hover;
 	}
@@ -161,11 +163,11 @@ void TextInput::on_keypress(on_keypress_callback_t callback)
 	on_keypress_callbacks.emplace_back(callback);
 }
 
-void TextInput::trigger_on_keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
+void TextInput::trigger_on_keypress(const Util::key_press& press)
 {
 	for(on_keypress_callback_t& callback : on_keypress_callbacks)
 	{
-		callback(*this, key, scancode, action, mods);
+		callback(*this, press);
 	}
 }
 

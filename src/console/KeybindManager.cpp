@@ -12,7 +12,8 @@
 
 #include "Console.hpp"
 #include "Util.hpp"
-#include "util/key_mods.hpp"
+#include "util/key_press.hpp"
+#include "util/mouse_press.hpp"
 
 using std::string;
 
@@ -67,30 +68,28 @@ void KeybindManager::unbind_key(const int key)
 	keybinds.erase(key);
 }
 
-void KeybindManager::keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
+void KeybindManager::keypress(const Util::key_press& press)
 {
-	if(action == GLFW_PRESS || action == GLFW_REPEAT)
+	if(press.action == GLFW_PRESS || press.action == GLFW_REPEAT)
 	{
-		const auto i = keybinds.find(key);
+		const auto i = keybinds.find(press.key);
 		if(i != keybinds.cend())
 		{
 			const string command = i->second;
 			if(command[0] == '+')
 			{
-				if(action == GLFW_REPEAT)
+				if(press.action == GLFW_REPEAT)
 				{
 					return;
 				}
-				string command2 = command;
-				command2[0] = '-';
-				release_auto[key] = command2;
+				release_auto[press.key] = '-' + command.substr(1);
 			}
 			console.run_line(command);
 		}
 	}
-	else if(action == GLFW_RELEASE)
+	else if(press.action == GLFW_RELEASE)
 	{
-		const auto i = release_auto.find(key);
+		const auto i = release_auto.find(press.key);
 		if(i != release_auto.cend())
 		{
 			console.run_line(i->second);
@@ -98,13 +97,13 @@ void KeybindManager::keypress(const int key, const int scancode, const int actio
 	}
 	else
 	{
-		LOG(ERROR) << "unknown keypress action: " << action;
+		LOG(ERROR) << "unknown keypress action: " << press.action;
 	}
 }
 
-void KeybindManager::mousepress(const int button, const int action, const Util::key_mods mods)
+void KeybindManager::mousepress(const Util::mouse_press& press)
 {
-	keypress(button, 0, action, mods);
+	keypress({press.button, 0, press.action, press.mods});
 }
 
 void KeybindManager::joypress(const int joystick, const int button, const bool pressed)
@@ -120,20 +119,20 @@ void KeybindManager::joypress(const int joystick, const int button, const bool p
 	if(!pressed)
 	{
 		joystate[button] = 0;
-		keypress(key, 0, GLFW_RELEASE, Util::key_mods(0));
+		keypress({key, 0, GLFW_RELEASE, 0});
 		return;
 	}
 
 	++joystate[button];
 	if(joystate[button] == 1)
 	{
-		keypress(key, 0, GLFW_PRESS, Util::key_mods(0));
+		keypress({key, 0, GLFW_PRESS, 0});
 		return;
 	}
 
 	if(joystate[button] >= 30 && joystate[button] % 15 == 0)
 	{
-		keypress(key, 0, GLFW_REPEAT, Util::key_mods(0));
+		keypress({key, 0, GLFW_REPEAT, 0});
 		return;
 	}
 }

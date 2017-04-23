@@ -3,7 +3,6 @@
 #include "Gfx.hpp"
 #include "Util.hpp"
 #include "graphics/GUI/Widget/Component/Base.hpp"
-#include "util/key_mods.hpp"
 
 using std::string;
 
@@ -27,15 +26,15 @@ void Base::draw()
 	}
 }
 
-void Base::keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
+void Base::keypress(const Util::key_press& press)
 {
 }
 
-void Base::charpress(const char32_t codepoint, const Util::key_mods mods)
+void Base::charpress(const Util::char_press& press)
 {
 }
 
-void Base::mousepress(const int button, const int action, const Util::key_mods mods)
+void Base::mousepress(const Util::mouse_press& press)
 {
 }
 

@@ -7,7 +7,7 @@
 
 #include "Gfx.hpp"
 #include "console/Console.hpp"
-#include "util/key_mods.hpp"
+#include "util/mouse_press.hpp"
 
 using std::string;
 
@@ -41,27 +41,27 @@ void Button::draw()
 	Gfx::instance->gui_text.draw(text, text_position);
 }
 
-void Button::mousepress(const int button, const int action, const Util::key_mods mods)
+void Button::mousepress(const Util::mouse_press& press)
 {
 	// TODO: option for left-handed mouse
-	if(button != GLFW_MOUSE_BUTTON_LEFT)
+	if(press.button != GLFW_MOUSE_BUTTON_LEFT)
 	{
 		return;
 	}
 	if(!hover)
 	{
-		if(mousedown && action == GLFW_RELEASE)
+		if(mousedown && press.action == GLFW_RELEASE)
 		{
 			// click cancel
 			mousedown = false;
 		}
 	}
-	else if(action == GLFW_PRESS)
+	else if(press.action == GLFW_PRESS)
 	{
 		// mouse down
 		mousedown = true;
 	}
-	else if(mousedown && action == GLFW_RELEASE)
+	else if(mousedown && press.action == GLFW_RELEASE)
 	{
 		// mouse up (click)
 		mousedown = false;

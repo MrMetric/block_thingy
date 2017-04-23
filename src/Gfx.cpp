@@ -39,7 +39,9 @@
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
-#include "util/key_mods.hpp"
+#include "util/char_press.hpp"
+#include "util/key_press.hpp"
+#include "util/mouse_press.hpp"
 
 #ifdef near
 #undef near
@@ -152,15 +154,15 @@ GLFWwindow* Gfx::init_glfw()
 		{
 			return;
 		}
-		Game::instance->keypress(key, scancode, action, Util::key_mods(mods));
+		Game::instance->keypress({key, scancode, action, mods});
 	});
 	glfwSetCharModsCallback(window, [](GLFWwindow*, unsigned int codepoint, int mods)
 	{
-		Game::instance->charpress(static_cast<char32_t>(codepoint), Util::key_mods(mods));
+		Game::instance->charpress({static_cast<char32_t>(codepoint), mods});
 	});
 	glfwSetMouseButtonCallback(window, [](GLFWwindow*, int button, int action, int mods)
 	{
-		Game::instance->mousepress(button, action, Util::key_mods(mods));
+		Game::instance->mousepress({button, action, mods});
 	});
 	glfwSetCursorPosCallback(window, [](GLFWwindow*, double x, double y)
 	{

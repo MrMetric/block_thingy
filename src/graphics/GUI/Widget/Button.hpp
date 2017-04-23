@@ -22,7 +22,7 @@ class Button : public Base
 
 		void draw() override;
 
-		void mousepress(int button, int action, Util::key_mods) override;
+		void mousepress(const Util::mouse_press&) override;
 		void mousemove(double x, double y) override;
 
 		void read_layout(const json&) override;

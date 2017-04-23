@@ -59,14 +59,14 @@ void Play::draw()
 	Base::draw();
 }
 
-void Play::keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
+void Play::keypress(const Util::key_press& press)
 {
-	game.keybinder.keypress(key, scancode, action, mods);
+	game.keybinder.keypress(press);
 }
 
-void Play::mousepress(const int button, const int action, const Util::key_mods mods)
+void Play::mousepress(const Util::mouse_press& press)
 {
-	game.keybinder.mousepress(button, action, mods);
+	game.keybinder.mousepress(press);
 }
 
 void Play::mousemove(const double x, const double y)

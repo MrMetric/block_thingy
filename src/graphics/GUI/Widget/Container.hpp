@@ -9,9 +9,6 @@
 #include <glm/vec2.hpp>
 #include <json.hpp>
 
-#include "fwd/Game.hpp"
-#include "fwd/util/key_mods.hpp"
-
 #include "std_make_unique.hpp"
 
 namespace Graphics::GUI::Widget {
@@ -25,9 +22,9 @@ class Container : public Base
 
 		void draw() override;
 
-		void keypress(int key, int scancode, int action, Util::key_mods) override;
-		void charpress(char32_t, Util::key_mods) override;
-		void mousepress(int button, int action, Util::key_mods) override;
+		void keypress(const Util::key_press&) override;
+		void charpress(const Util::char_press&) override;
+		void mousepress(const Util::mouse_press&) override;
 		void mousemove(double x, double y) override;
 
 		glm::dvec2 get_size() const override;

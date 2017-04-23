@@ -5,7 +5,8 @@
 #include <unordered_map>
 
 #include "fwd/console/Console.hpp"
-#include "fwd/util/key_mods.hpp"
+#include "fwd/util/key_press.hpp"
+#include "fwd/util/mouse_press.hpp"
 
 class KeybindManager
 {
@@ -21,8 +22,8 @@ class KeybindManager
 		void bind_key(const std::string& key, const std::string& command);
 		void unbind_key(int key);
 
-		void keypress(int key, int scancode, int action, Util::key_mods);
-		void mousepress(int button, int action, Util::key_mods);
+		void keypress(const Util::key_press&);
+		void mousepress(const Util::mouse_press&);
 		void joypress(int joystick, int button, bool pressed);
 
 		// intentionally not const ref

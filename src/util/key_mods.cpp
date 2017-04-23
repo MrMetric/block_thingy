@@ -4,6 +4,12 @@
 
 namespace Util {
 
+key_mods::key_mods()
+:
+	key_mods(0)
+{
+}
+
 key_mods::key_mods(const int mods)
 :
 	mods(mods)

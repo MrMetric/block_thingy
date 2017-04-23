@@ -197,7 +197,10 @@
 		<Unit filename="src/fwd/position/BlockInWorld.hpp" />
 		<Unit filename="src/fwd/position/ChunkInWorld.hpp" />
 		<Unit filename="src/fwd/storage/Interface.hpp" />
+		<Unit filename="src/fwd/util/char_press.hpp" />
 		<Unit filename="src/fwd/util/key_mods.hpp" />
+		<Unit filename="src/fwd/util/key_press.hpp" />
+		<Unit filename="src/fwd/util/mouse_press.hpp" />
 		<Unit filename="src/graphics/Color.cpp" />
 		<Unit filename="src/graphics/Color.hpp" />
 		<Unit filename="src/graphics/GUI/Base.cpp" />
@@ -278,6 +281,8 @@
 		<Unit filename="src/storage/msgpack_util.hpp" />
 		<Unit filename="src/types/window_size_t.hpp" />
 		<Unit filename="src/util/Property.hpp" />
+		<Unit filename="src/util/char_press.cpp" />
+		<Unit filename="src/util/char_press.hpp" />
 		<Unit filename="src/util/clipboard.cpp" />
 		<Unit filename="src/util/clipboard.hpp" />
 		<Unit filename="src/util/compiler_info.cpp" />
@@ -288,6 +293,10 @@
 		<Unit filename="src/util/demangled_name.hpp" />
 		<Unit filename="src/util/key_mods.cpp" />
 		<Unit filename="src/util/key_mods.hpp" />
+		<Unit filename="src/util/key_press.cpp" />
+		<Unit filename="src/util/key_press.hpp" />
+		<Unit filename="src/util/mouse_press.cpp" />
+		<Unit filename="src/util/mouse_press.hpp" />
 		<Unit filename="src/util/unicode.cpp" />
 		<Unit filename="src/util/unicode.hpp" />
 		<Extensions>

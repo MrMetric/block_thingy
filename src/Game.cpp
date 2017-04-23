@@ -53,7 +53,6 @@
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
-#include "util/key_mods.hpp"
 
 #include "block/Air.hpp"
 #include "block/Glass.hpp"
@@ -349,19 +348,19 @@ void Game::update_framebuffer_size(const window_size_t& window_size)
 	event_manager.do_event(Event_window_size_change(window_size));
 }
 
-void Game::keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
+void Game::keypress(const Util::key_press& press)
 {
-	gui->keypress(key, scancode, action, mods);
+	gui->keypress(press);
 }
 
-void Game::charpress(const char32_t codepoint, const Util::key_mods mods)
+void Game::charpress(const Util::char_press& press)
 {
-	gui->charpress(codepoint, mods);
+	gui->charpress(press);
 }
 
-void Game::mousepress(const int button, const int action, const Util::key_mods mods)
+void Game::mousepress(const Util::mouse_press& press)
 {
-	gui->mousepress(button, action, mods);
+	gui->mousepress(press);
 }
 
 void Game::mousemove(const double x, const double y)

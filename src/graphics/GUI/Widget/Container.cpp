@@ -12,7 +12,6 @@
 #include "graphics/GUI/Widget/Button.hpp"
 #include "graphics/GUI/Widget/Text.hpp"
 #include "graphics/GUI/Widget/TextInput.hpp"
-#include "util/key_mods.hpp"
 
 #include "std_make_unique.hpp"
 
@@ -42,27 +41,27 @@ void Container::draw()
 	}
 }
 
-void Container::keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
+void Container::keypress(const Util::key_press& press)
 {
 	for(auto& widget : widgets)
 	{
-		widget->keypress(key, scancode, action, mods);
+		widget->keypress(press);
 	}
 }
 
-void Container::charpress(const char32_t codepoint, const Util::key_mods mods)
+void Container::charpress(const Util::char_press& press)
 {
 	for(auto& widget : widgets)
 	{
-		widget->charpress(codepoint, mods);
+		widget->charpress(press);
 	}
 }
 
-void Container::mousepress(const int button, const int action, const Util::key_mods mods)
+void Container::mousepress(const Util::mouse_press& press)
 {
 	for(auto& widget : widgets)
 	{
-		widget->mousepress(button, action, mods);
+		widget->mousepress(press);
 	}
 }
 

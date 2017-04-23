@@ -13,7 +13,9 @@
 #include <strict_variant/variant.hpp>
 
 #include "fwd/graphics/GUI/Widget/Component/Base.hpp"
-#include "fwd/util/key_mods.hpp"
+#include "fwd/util/char_press.hpp"
+#include "fwd/util/key_press.hpp"
+#include "fwd/util/mouse_press.hpp"
 
 namespace Graphics::GUI::Widget {
 
@@ -27,9 +29,9 @@ class Base
 
 		virtual void draw();
 
-		virtual void keypress(int key, int scancode, int action, Util::key_mods);
-		virtual void charpress(char32_t, Util::key_mods);
-		virtual void mousepress(int button, int action, Util::key_mods);
+		virtual void keypress(const Util::key_press&);
+		virtual void charpress(const Util::char_press&);
+		virtual void mousepress(const Util::mouse_press&);
 		virtual void mousemove(double x, double y);
 
 		virtual glm::dvec2 get_size() const;

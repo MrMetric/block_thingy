@@ -14,7 +14,7 @@
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"
-#include "util/key_mods.hpp"
+#include "util/key_press.hpp"
 
 using std::string;
 
@@ -79,38 +79,38 @@ void Base::draw()
 	if(depth_test) glEnable(GL_DEPTH_TEST);
 }
 
-void Base::keypress(const int key, const int scancode, const int action, const Util::key_mods mods)
+void Base::keypress(const Util::key_press& press)
 {
 	// TODO: proper input handling
-	if(action == GLFW_PRESS)
+	if(press.action == GLFW_PRESS)
 	{
-		if(key == GLFW_KEY_ESCAPE)
+		if(press.key == GLFW_KEY_ESCAPE)
 		{
 			Console::instance->run_line("close_gui");
 			return;
 		}
-		if(key == GLFW_KEY_F2)
+		if(press.key == GLFW_KEY_F2)
 		{
 			Console::instance->run_line("screenshot");
 			return;
 		}
-		if(key == GLFW_KEY_F11)
+		if(press.key == GLFW_KEY_F11)
 		{
 			Console::instance->run_line("toggle_bool fullscreen");
 			return;
 		}
 	}
-	root.keypress(key, scancode, action, mods);
+	root.keypress(press);
 }
 
-void Base::charpress(const char32_t codepoint, const Util::key_mods mods)
+void Base::charpress(const Util::char_press& press)
 {
-	root.charpress(codepoint, mods);
+	root.charpress(press);
 }
 
-void Base::mousepress(const int button, const int action, const Util::key_mods mods)
+void Base::mousepress(const Util::mouse_press& press)
 {
-	root.mousepress(button, action, mods);
+	root.mousepress(press);
 }
 
 void Base::mousemove(const double x, const double y)
