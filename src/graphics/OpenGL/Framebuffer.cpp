@@ -43,4 +43,4 @@ GLuint Framebuffer::get_name()
 	return name;
 }
 
-};
+}

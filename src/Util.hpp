@@ -59,4 +59,4 @@ namespace Util
 	int stoi(const std::string&);
 
 	std::string datetime();
-};
+}

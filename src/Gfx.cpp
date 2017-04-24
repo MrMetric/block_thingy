@@ -22,7 +22,14 @@
 #include <glm/gtx/transform.hpp>			// glm::rotate, glm::translate
 
 #include <easylogging++/easylogging++.hpp>
+#if defined(__clang__)
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wunused-macros"
+#endif
 #define PNG_SKIP_SETJMP_CHECK // for libpng < 1.5
+#if defined(__clang__)
+	#pragma clang diagnostic pop
+#endif
 #include <png.h>
 
 #include "Camera.hpp"
@@ -69,6 +76,7 @@ Gfx* Gfx::instance = nullptr;
 
 Gfx::Gfx()
 :
+	set_instance(this),
 	window(init_glfw()),
 	window_size(get_window_size(window)),
 	window_mid(glm::dvec2(window_size) / 2.0),
@@ -84,7 +92,6 @@ Gfx::Gfx()
 	gui_rectangle_vbo({2, GL_FLOAT}),
 	gui_rectangle_vao(gui_rectangle_vbo)
 {
-	Gfx::instance = this;
 	opengl_setup();
 }
 

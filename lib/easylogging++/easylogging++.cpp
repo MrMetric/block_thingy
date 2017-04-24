@@ -1114,7 +1114,7 @@ base::type::string_t DateTime::formatTime(unsigned long long time, base::Timesta
     if (time <= base::consts::kTimeFormats[i].value) {
       break;
     }
-    if (base::consts::kTimeFormats[i].value == 1000.0f && time / 1000.0f < 1.9f) {
+    if (base::consts::kTimeFormats[i].value == 1000 && time / 1000.0 < 1.9) {
       break;
     }
     time /= static_cast<decltype(time)>(base::consts::kTimeFormats[i].value);
@@ -1662,7 +1662,7 @@ std::string TypedConfigurations::resolveFilename(const std::string& filename) {
       if ((resultingFilename.size() > dateIndex) && (ptr[0] == '{')) {
         // User has provided format for date/time
         ++ptr;
-        int count = 1;  // Start by 1 in order to remove starting brace
+        std::size_t count = 1;  // Start by 1 in order to remove starting brace
         std::stringstream ss;
         for (; *ptr; ++ptr, ++count) {
           if (*ptr == '}') {

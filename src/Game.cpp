@@ -1,5 +1,6 @@
 #include "Game.hpp"
 
+#include <cassert>
 #include <cmath>
 #if __has_include(<filesystem>)
 	#include <filesystem>
@@ -143,6 +144,7 @@ Game::Game()
 	});
 	glfwSetWindowFocusCallback(gfx.window, [](GLFWwindow* window, int focused)
 	{
+		assert(window == Gfx::instance->window);
 		if(!focused)
 		{
 			if(Game::instance->gui->type() == "Play")

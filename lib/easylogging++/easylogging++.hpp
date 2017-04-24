@@ -1,3 +1,4 @@
+#pragma GCC system_header
 //
 //  Bismillah ar-Rahmaan ar-Raheem
 //
@@ -1779,6 +1780,8 @@ class Configurations : public base::utils::RegistryWithPred<Configuration, Confi
   Configurations(const std::string& configurationFile, bool useDefaultsForRemaining = true,
                  Configurations* base = nullptr);
 
+  Configurations& operator=(const Configurations&) = default;
+
   virtual ~Configurations(void) {
   }
 
@@ -2314,10 +2317,10 @@ template <typename T>\
 inline void FUNCTION_NAME(const T&);
 
   template <typename T, typename... Args>
-  inline void verbose(int, const char*, const T&, const Args&...);
+  inline void verbose(base::type::VerboseLevel, const char*, const T&, const Args&...);
 
   template <typename T>
-  inline void verbose(int, const T&);
+  inline void verbose(base::type::VerboseLevel, const T&);
 
   LOGGER_LEVEL_WRITERS_SIGNATURES(info)
   LOGGER_LEVEL_WRITERS_SIGNATURES(debug)
@@ -2354,10 +2357,10 @@ inline void FUNCTION_NAME(const T&);
 
 #if ELPP_VARIADIC_TEMPLATES_SUPPORTED
   template <typename T, typename... Args>
-  void log_(Level, int, const char*, const T&, const Args&...);
+  void log_(Level, base::type::VerboseLevel, const char*, const T&, const Args&...);
 
   template <typename T>
-  inline void log_(Level, int, const T&);
+  inline void log_(Level, base::type::VerboseLevel, const T&);
 
   template <typename T, typename... Args>
   void log(Level, const char*, const T&, const Args&...);
@@ -3281,7 +3284,7 @@ class PErrorWriter : public base::Writer {
 // Logging from Logger class. Why this is here? Because we have Storage and Writer class available
 #if ELPP_VARIADIC_TEMPLATES_SUPPORTED
 template <typename T, typename... Args>
-void Logger::log_(Level level, int vlevel, const char* s, const T& value, const Args&... args) {
+void Logger::log_(Level level, base::type::VerboseLevel vlevel, const char* s, const T& value, const Args&... args) {
   base::MessageBuilder b;
   b.initialize(this);
   while (*s) {
@@ -3302,7 +3305,7 @@ void Logger::log_(Level level, int vlevel, const char* s, const T& value, const 
   ELPP_INTERNAL_ERROR("Too many arguments provided. Unable to handle. Please provide more format specifiers", false);
 }
 template <typename T>
-void Logger::log_(Level level, int vlevel, const T& log) {
+void Logger::log_(Level level, base::type::VerboseLevel vlevel, const T& log) {
   if (level == Level::Verbose) {
     if (ELPP->vRegistry()->allowed(vlevel, __FILE__)) {
       base::Writer(Level::Verbose, "FILE", 0, "FUNCTION",
@@ -3326,22 +3329,22 @@ inline void Logger::log(Level level, const T& log) {
 }
 #  if ELPP_VERBOSE_LOG
 template <typename T, typename... Args>
-inline void Logger::verbose(int vlevel, const char* s, const T& value, const Args&... args) {
+inline void Logger::verbose(base::type::VerboseLevel vlevel, const char* s, const T& value, const Args&... args) {
   base::threading::ScopedLock scopedLock(lock());
   log_(el::Level::Verbose, vlevel, s, value, args...);
 }
 template <typename T>
-inline void Logger::verbose(int vlevel, const T& log) {
+inline void Logger::verbose(base::type::VerboseLevel vlevel, const T& log) {
   base::threading::ScopedLock scopedLock(lock());
   log_(el::Level::Verbose, vlevel, log);
 }
 #  else
 template <typename T, typename... Args>
-inline void Logger::verbose(int, const char*, const T&, const Args&...) {
+inline void Logger::verbose(base::type::VerboseLevel, const char*, const T&, const Args&...) {
   return;
 }
 template <typename T>
-inline void Logger::verbose(int, const T&) {
+inline void Logger::verbose(base::type::VerboseLevel, const T&) {
   return;
 }
 #  endif  // ELPP_VERBOSE_LOG

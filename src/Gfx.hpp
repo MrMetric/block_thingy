@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <map>
 #include <stdint.h>
 #include <string>
@@ -37,7 +38,17 @@ class Gfx
 		void operator=(const Gfx&) = delete;
 
 		static Gfx* instance;
+	private:
+		struct set_instance
+		{
+			set_instance(Gfx* ptr)
+			{
+				assert(Gfx::instance == nullptr);
+				Gfx::instance = ptr;
+			}
+		} set_instance;
 
+	public:
 		GLFWwindow* window;
 		window_size_t window_size;
 		glm::dvec2 window_mid;

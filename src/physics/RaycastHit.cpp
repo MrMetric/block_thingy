@@ -32,4 +32,6 @@ Face RaycastHit::face() const
 	if(face_vec.z == +1) return Face::back;
 	if(face_vec.z == -1) return Face::front;
 	assert(false);
+	// to satisfy -Werror
+	return Face::front;
 }

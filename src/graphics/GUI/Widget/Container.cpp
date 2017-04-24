@@ -73,7 +73,7 @@ void Container::mousemove(const double x, const double y)
 	}
 }
 
-double get_spacing(const Base::style_t& style)
+static double get_spacing(const Base::style_t& style)
 {
 	const double* d;
 	if(style.count("auto_layout.spacing") != 0
@@ -282,15 +282,13 @@ void Container::apply_layout
 			style_vars["size.y"] == total_size.y,
 		});
 
-		rhea::variable* prev_widget_y;
-		rhea::variable* prev_widget_size_y;
-		bool has_prev = false;
+		rhea::variable* prev_widget_y = nullptr;
+		rhea::variable* prev_widget_size_y = nullptr;
 		for(auto& widget : widgets)
 		{
-			if(!has_prev)
+			if(prev_widget_y == nullptr)
 			{
 				solver.add_constraint(widget->style_vars[pos_y] == style_vars[pos_y]);
-				has_prev = true;
 			}
 			else
 			{

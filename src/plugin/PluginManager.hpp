@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <memory>
 #include <experimental/propagate_const>
 
@@ -23,7 +24,7 @@ private:
 		public:
 			set_instance(PluginManager* ptr)
 			{
-				//assert(PluginManager::instance == nullptr);
+				assert(PluginManager::instance == nullptr);
 				PluginManager::instance = ptr;
 			}
 	} set_instance;

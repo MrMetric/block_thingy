@@ -236,7 +236,7 @@ Rectangle yield_rectangle(surface_t& surface)
 		}
 	}
 
-	return { BlockType::none, 0, 0, 0, 0 };
+	return { BlockType::none, 0, 0, 0, 0, {0} };
 }
 
 void add_face(mesh_t& mesh, const mesh_vertex_t& p1, const mesh_vertex_t& p2, const mesh_vertex_t& p3, const mesh_vertex_t& p4)

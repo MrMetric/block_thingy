@@ -6,7 +6,14 @@
 #ifndef __cpp_lib_make_unique
 	#if defined(_LIBCPP_STD_VER) || defined(_MSC_VER)
 		// ???
+		#if defined(__clang__)
+			#pragma clang diagnostic push
+			#pragma clang diagnostic ignored "-Wreserved-id-macro"
+		#endif
 		#define __cpp_lib_make_unique 201304
+		#if defined(__clang__)
+			#pragma clang diagnostic pop
+		#endif
 	#endif
 #endif
 

@@ -146,8 +146,8 @@ void Base::update_framebuffer_size(const window_size_t& window_size)
 	({
 		window_vars["pos.x"] == 0,
 		window_vars["pos.y"] == 0,
-		window_vars["size.x"] == Gfx::instance->window_size.x,
-		window_vars["size.y"] == Gfx::instance->window_size.y,
+		window_vars["size.x"] == window_size.x,
+		window_vars["size.y"] == window_size.y,
 		window_vars["end.x"] == window_vars["size.x"],
 		window_vars["end.y"] == window_vars["size.y"],
 		window_vars["center.x"] == window_vars["size.x"] / 2,

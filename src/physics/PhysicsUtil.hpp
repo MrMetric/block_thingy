@@ -29,4 +29,4 @@ namespace PhysicsUtil
 		const glm::dvec3& direction,
 		double radius
 	);
-};
+}

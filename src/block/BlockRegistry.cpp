@@ -1,5 +1,6 @@
 #include "BlockRegistry.hpp"
 
+#include <cassert>
 #include <stdexcept>
 #include <vector>
 
@@ -173,7 +174,8 @@ const BlockRegistry::extid_map_t& BlockRegistry::get_extid_map() const
 
 block_type_id_t BlockRegistry::get_max_id() const
 {
-	return block_makers.size();
+	assert(block_makers.size() <= std::numeric_limits<block_type_id_t>::max());
+	return static_cast<block_type_id_t>(block_makers.size());
 }
 
 void BlockRegistry::make_strid_to_extid_map()

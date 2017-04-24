@@ -35,9 +35,9 @@ using Position::ChunkInWorld;
 
 Chunk::Chunk(const ChunkInWorld& pos, World& owner)
 :
-	changed(false),
 	owner(owner),
-	position(pos)
+	position(pos),
+	changed(false)
 {
 }
 

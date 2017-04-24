@@ -17,6 +17,8 @@ std::ostream& operator<<(std::ostream& os, const Face face)
 		case Face::left  : return os << "left";
 	}
 	assert(false);
+	// to satisfy -Werror
+	return os << "ERROR";
 }
 
 }

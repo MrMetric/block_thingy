@@ -74,13 +74,8 @@ public:
 	 * \param[in] iErr error number (see errno.h)
 	 * \param[in] pSrc source
 	 */
-	InotifyException(const std::string& what_arg, int iErr = 0, void* pSrc = nullptr)
-	:
-		std::runtime_error(what_arg),
-		m_err(iErr),
-		m_pSrc(pSrc)
-	{
-	}
+	InotifyException(const std::string& what_arg, int iErr = 0, void* pSrc = nullptr);
+	virtual ~InotifyException();
 
 	/// Returns the exception error number.
 	/**
@@ -88,19 +83,13 @@ public:
 	 *
 	 * \return error number (standardized; see errno.h)
 	 */
-	int GetErrno() const
-	{
-		return m_err;
-	}
+	int GetErrno() const;
 
 	/// Returns the exception source.
 	/**
 	 * \return source
 	 */
-	void* GetSource() const
-	{
-		return m_pSrc;
-	}
+	void* GetSource() const;
 
 protected:
 	int m_err;            // error number

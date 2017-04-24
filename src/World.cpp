@@ -425,7 +425,8 @@ void World::gen_chunk(const ChunkInWorld& chunk_pos)
 	gen_at(BlockInWorld(chunk_pos, min), BlockInWorld(chunk_pos, max));
 }
 
-static double sum_octaves(
+static double sum_octaves
+(
 	const glm::dvec2& P,
 	const double base_freq,
 	const double freq_mul,
@@ -441,7 +442,7 @@ static double sum_octaves(
 		freq *= freq_mul;
 	}
 	return val;
-};
+}
 
 void World::gen_at(const BlockInWorld& min, const BlockInWorld& max)
 {

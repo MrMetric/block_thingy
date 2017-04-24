@@ -10,14 +10,17 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdocumentation"
-#pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
-#pragma clang diagnostic ignored "-Wold-style-cast"
-#pragma clang diagnostic ignored "-Wreserved-id-macro"
+#if defined(__clang__)
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wdocumentation"
+	#pragma clang diagnostic ignored "-Wold-style-cast"
+	#pragma clang diagnostic ignored "-Wreserved-id-macro"
+#endif
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#pragma clang diagnostic pop
+#if defined(__clang__)
+	#pragma clang diagnostic pop
+#endif
 
 #include "graphics/OpenGL/ShaderProgram.hpp"
 #include "graphics/OpenGL/Texture.hpp"

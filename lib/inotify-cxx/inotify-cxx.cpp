@@ -40,6 +40,28 @@
 
 #include "inotify-cxx.hpp"
 
+InotifyException::InotifyException(const std::string& what_arg, int iErr, void* pSrc)
+:
+	std::runtime_error(what_arg),
+	m_err(iErr),
+	m_pSrc(pSrc)
+{
+}
+
+InotifyException::~InotifyException()
+{
+}
+
+int InotifyException::GetErrno() const
+{
+	return m_err;
+}
+
+void* InotifyException::GetSource() const
+{
+	return m_pSrc;
+}
+
 uint32_t InotifyEvent::GetMask() const
 {
 	return m_uMask;

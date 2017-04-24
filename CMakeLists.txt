@@ -18,10 +18,6 @@ file(GLOB_RECURSE block_thingy_SRC
 	"lib/rhea/*.cpp"
 	"src/*.cpp"
 )
-include_directories(
-	"lib"
-	"src"
-)
 add_executable(block_thingy ${block_thingy_SRC})
 
 option(USE_LIBCPP "Use libc++ instead of libstdc++ (requires Clang)" FALSE)
@@ -51,6 +47,45 @@ pkg_search_module(MSGPACK REQUIRED msgpack>=2.0.0) # TODO: determine minimum ver
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	set(FSANITIZE -fsanitize=undefined,integer)
+	set(FLAGS
+		-isystem "${PROJECT_SOURCE_DIR}/lib"
+		-iquote "${PROJECT_SOURCE_DIR}/src"
+		-Weverything
+		-Werror=delete-incomplete
+		-Werror=deprecated
+		-Werror=extra-tokens
+		-Werror=inconsistent-missing-override
+		-Werror=invalid-pp-token
+		-Werror=missing-field-initializers
+		-Werror=return-type
+		-Werror=sign-compare
+		-Werror=uninitialized
+		-Werror=unknown-pragmas
+		-Werror=unknown-warning-option
+		-Wno-c++98-compat-pedantic
+		-Wno-deprecated-dynamic-exception-spec
+		-Wno-documentation-unknown-command
+		-Wno-exit-time-destructors
+		-Wno-float-equal
+		-Wno-global-constructors
+		-Wno-padded
+		-Wno-shadow
+		-Wno-undefined-func-template
+	)
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	set(FLAGS
+		-isystem "${PROJECT_SOURCE_DIR}/lib"
+		-iquote "${PROJECT_SOURCE_DIR}/src"
+		-pedantic
+		-Wall
+		-Wextra
+		-Werror=return-type
+	)
+else()
+	include_directories(
+		"lib"
+		"src"
+	)
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
@@ -69,6 +104,7 @@ target_compile_options(block_thingy PRIVATE
 	${GLFW_CFLAGS}
 	${LIBPNG_CFLAGS}
 	${MSGPACK_CFLAGS}
+	${FLAGS}
 )
 
 

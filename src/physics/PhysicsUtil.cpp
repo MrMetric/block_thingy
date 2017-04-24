@@ -35,10 +35,7 @@ constexpr double mod1(const double a)
 
 constexpr double intbound(double s, const double ds)
 {
-	#pragma clang diagnostic push
-	#pragma clang diagnostic ignored "-Wfloat-equal"
 	if(ds == 0)
-	#pragma clang diagnostic pop
 	{
 		return infinity;
 	}
