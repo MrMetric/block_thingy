@@ -28,8 +28,9 @@ class World
 	public:
 		World
 		(
+			const std::string& file_path,
 			Block::BlockRegistry&,
-			const std::string& file_path
+			std::unique_ptr<Mesher::Base>
 		);
 
 		World(World&&) = delete;
@@ -62,16 +63,17 @@ class World
 
 		void save();
 
-		std::unique_ptr<Mesher::Base> mesher;
-
 		uint64_t get_ticks();
 		double get_time();
+
+		Block::BlockRegistry& block_registry;
+
+		void set_mesher(std::unique_ptr<Mesher::Base>);
+		std::unique_ptr<Mesher::Base> mesher;
 
 		// for msgpack
 		template<typename T> void save(T&) const;
 		template<typename T> void load(const T&);
-
-		Block::BlockRegistry& block_registry;
 
 	private:
 		uint64_t ticks;

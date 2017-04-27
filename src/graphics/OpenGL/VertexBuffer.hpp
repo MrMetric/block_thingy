@@ -41,6 +41,7 @@ class VertexBuffer
 		{
 			GLint size;
 			GLenum type;
+			GLsizei byte_size = 0;
 			bool normalized = false;
 		};
 

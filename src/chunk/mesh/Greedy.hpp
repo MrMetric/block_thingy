@@ -10,13 +10,13 @@ namespace Mesher {
 
 class Greedy : public Base
 {
-	public:
-		meshmap_t make_mesh(const Chunk&) override;
+public:
+	meshmap_t make_mesh(const Chunk&) override;
 
-		using surface_t = std::array<std::array<std::tuple<BlockType, Graphics::Color>, CHUNK_SIZE>, CHUNK_SIZE>;
+	using surface_t = std::array<std::array<std::tuple<BlockType, Graphics::Color>, CHUNK_SIZE>, CHUNK_SIZE>;
 
-	private:
-		surface_t surface;
+private:
+	surface_t surface;
 };
 
 }

@@ -1,5 +1,6 @@
 #include "VertexBuffer.hpp"
 
+#include <stdexcept>
 #include <utility>
 
 #include <glad/glad.h>
@@ -17,6 +18,33 @@ VertexBuffer::VertexBuffer(std::vector<Format> formats)
 	formats(std::move(formats))
 {
 	glCreateBuffers(1, &name);
+
+	auto get_size = [](const GLenum type) -> GLsizei
+	{
+		switch(type)
+		{
+			case GL_BYTE:
+			case GL_UNSIGNED_BYTE:
+				return 1;
+			case GL_SHORT:
+			case GL_UNSIGNED_SHORT:
+			case GL_HALF_FLOAT:
+				return 2;
+			case GL_INT:
+			case GL_UNSIGNED_INT:
+			//case GL_FIXED:
+			case GL_FLOAT:
+				return 4;
+			case GL_DOUBLE:
+				return 8;
+		}
+		throw std::runtime_error("unknown OpenGL type: " + std::to_string(type));
+	};
+	for(Format& f : this->formats)
+	{
+		f.byte_size = f.size * get_size(f.type);
+	}
+
 	inited = true;
 }
 

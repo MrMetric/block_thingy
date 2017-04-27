@@ -3,7 +3,7 @@
 
 namespace Mesher {
 
-class Simple : public Base
+class SimpleAO : public Base
 {
 public:
 	meshmap_t make_mesh(const Chunk&) override;

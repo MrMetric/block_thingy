@@ -11,11 +11,10 @@ out vec3 position;
 out vec3 light;
 flat out int face;
 
-const float color_max = 16; // Graphics::Color::max
 void main()
 {
 	position = relative_position + position_offset;
-	light = light_in / color_max;
+	light = light_in;
 	face = int(face_in);
 	gl_Position = matriks * vec4(position, 1);
 }

@@ -187,6 +187,7 @@ void Settings::load()
 	};
 	get_map<string>() =
 	{
+		{"mesher", "SimpleAO"},
 		{"projection_type", "default"},
 		{"screen_shader", "default"},
 	};

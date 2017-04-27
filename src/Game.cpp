@@ -38,10 +38,15 @@
 #include "World.hpp"
 #include "block/Base.hpp"
 #include "block/BlockType.hpp"
+#include "chunk/mesh/Greedy.hpp"
+#include "chunk/mesh/Simple.hpp"
+#include "chunk/mesh/SimpleAO.hpp"
 #include "console/Command.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
 #include "event/EventManager.hpp"
+#include "event/EventType.hpp"
+#include "event/type/Event_change_setting.hpp"
 #include "event/type/Event_window_size_change.hpp"
 #include "graphics/RenderWorld.hpp"
 #include "graphics/GUI/Base.hpp"
@@ -93,12 +98,31 @@ struct Game::impl
 	std::unique_ptr<Graphics::GUI::Base> temp_gui;
 };
 
+static unique_ptr<Mesher::Base> make_mesher(const string& name)
+{
+	unique_ptr<Mesher::Base> mesher;
+	if(name == "Greedy")
+	{
+		return std::make_unique<Mesher::Greedy>();
+	}
+	else if(name == "Simple")
+	{
+		return std::make_unique<Mesher::Simple>();
+	}
+	else if(name == "SimpleAO")
+	{
+		return std::make_unique<Mesher::SimpleAO>();
+	}
+	LOG(ERROR) << "No such mesher: " << name;
+	return make_mesher("SimpleAO");
+}
+
 Game::Game()
 :
 	set_instance(this),
 	hovered_block(nullptr),
 	camera(gfx, event_manager),
-	world(block_registry, "worlds/test"),
+	world("worlds/test", block_registry, make_mesher(Settings::get<string>("mesher"))),
 	player_ptr(world.add_player("test_player")),
 	player(*player_ptr),
 	keybinder(*Console::instance),
@@ -159,6 +183,17 @@ Game::Game()
 			// GLFW ignores setting the cursor to its current state, so re-hide it first
 			glfwSetInputMode(Game::instance->gfx.window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 			glfwSetInputMode(Game::instance->gfx.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+	});
+
+	event_manager.add_handler(EventType::change_setting, [&game=*this](const Event& event)
+	{
+		auto e = static_cast<const Event_change_setting&>(event);
+
+		if(e.name == "mesher")
+		{
+			const string name = *static_cast<const string*>(e.value);
+			game.world.set_mesher(make_mesher(name));
 		}
 	});
 

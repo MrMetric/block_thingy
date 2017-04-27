@@ -1,6 +1,7 @@
 #include "World.hpp"
 
 #include <algorithm>
+#include <cassert>
 #include <cmath>
 #include <memory>
 #include <queue>
@@ -19,7 +20,6 @@
 #include "block/BlockType.hpp"
 #include "block/Interface/KnowsPosition.hpp"
 #include "chunk/Chunk.hpp"
-#include "chunk/mesh/Greedy.hpp"
 #include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
@@ -37,12 +37,13 @@ using Position::ChunkInWorld;
 
 World::World
 (
+	const string& file_path,
 	Block::BlockRegistry& block_registry,
-	const string& file_path
+	std::unique_ptr<Mesher::Base> mesher
 )
 :
-	mesher(std::make_unique<Mesher::Greedy>()),
 	block_registry(block_registry),
+	mesher(std::move(mesher)),
 	ticks(0),
 	chunks(0, Position::hasher<ChunkInWorld>),
 	last_chunk(nullptr),
@@ -538,6 +539,16 @@ uint_fast64_t World::get_ticks()
 double World::get_time()
 {
 	return ticks / 60.0;
+}
+
+void World::set_mesher(std::unique_ptr<Mesher::Base> mesher)
+{
+	assert(mesher != nullptr);
+	this->mesher = std::move(mesher);
+	for(auto& p : chunks)
+	{
+		p.second->update();
+	}
 }
 
 void World::update_chunk_neighbors
