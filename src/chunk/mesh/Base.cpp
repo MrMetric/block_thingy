@@ -40,20 +40,11 @@ static void add_square
 	const mesh_vertex_t& p1,
 	const mesh_vertex_t& p2,
 	const mesh_vertex_t& p3,
-	const mesh_vertex_t& p4,
-	const bool flip
+	const mesh_vertex_t& p4
 )
 {
-	if(flip)
-	{
-		mesh.emplace_back(p2, p3, p4);
-		mesh.emplace_back(p4, p1, p2);
-	}
-	else
-	{
-		mesh.emplace_back(p1, p2, p3);
-		mesh.emplace_back(p3, p4, p1);
-	}
+	mesh.emplace_back(p1, p2, p3);
+	mesh.emplace_back(p3, p4, p1);
 }
 
 void Base::add_face
@@ -63,13 +54,13 @@ void Base::add_face
 	const Face face,
 	const uint8_t offset_x,
 	const uint8_t offset_z,
-	const glm::tvec4<glm::vec3>& light,
-	const bool flip
+	const glm::tvec4<glm::vec3>& light
 )
 {
 	const u8vec3 i = get_i(face);
 
-	if(face == Face::back || face == Face::top || face == Face::left) // side == Side::top
+	const Side side = to_side(face);
+	if(side == Side::top)
 	{
 		xyz[i.y] += 1;
 	}
@@ -89,21 +80,16 @@ void Base::add_face
 	v2.pos = xyz + mod2;
 	v3.pos = xyz + mod3;
 	v4.pos = xyz + mod4;
-	v1.light = light[0];
-	v2.light = light[1];
-	v3.light = light[2];
-	v4.light = light[3];
+	v1.light = v2.light = v3.light = v4.light = light;
 	v1.face = v2.face = v3.face = v4.face = face;
 
-	if(face == Face::back	// plane == Plane::XY && side == Side::top
-	|| face == Face::top	// plane == Plane::XZ && side == Side::top
-	|| face == Face::left)	// plane == Plane::YZ && side == Side::top
+	if(side == Side::top)
 	{
-		add_square(mesh, v1, v2, v3, v4, flip);
+		add_square(mesh, v1, v2, v3, v4);
 	}
 	else
 	{
-		add_square(mesh, v4, v3, v2, v1, flip);
+		add_square(mesh, v4, v3, v2, v1);
 	}
 }
 
@@ -135,6 +121,11 @@ u8vec3 Base::get_i(const Face face)
 		assert(face == Face::right || face == Face::left);
 		return {1, 0, 2};
 	}
+}
+
+Side Base::to_side(const Face face)
+{
+	return (face == Face::top || face == Face::back || face == Face::left) ? Side::top : Side::bottom;
 }
 
 const Block::Base& Base::block_at

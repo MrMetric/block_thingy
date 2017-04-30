@@ -1,6 +1,7 @@
 #include "VertexBuffer.hpp"
 
 #include <stdexcept>
+#include <string>
 #include <utility>
 
 #include <glad/glad.h>

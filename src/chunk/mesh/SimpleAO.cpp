@@ -27,15 +27,6 @@ static uint8_t o_key(i8vec3 o)
 	);
 }
 
-static int vertexAO(bool side1, bool side2, bool corner)
-{
-	if(side1 && side2)
-	{
-		return 0;
-	}
-	return 3 - (side1 + side2 + corner);
-}
-
 meshmap_t SimpleAO::make_mesh(const Chunk& chunk)
 {
 	meshmap_t meshes;
@@ -62,23 +53,10 @@ meshmap_t SimpleAO::make_mesh(const Chunk& chunk)
 			return light;
 		};
 
-		std::unordered_map<i8vec3, bool, std::function<uint8_t(i8vec3)>> block_cache(0, o_key);
-		auto b = [&chunk, x, y, z, &block_cache](const i8vec3& o) -> bool
-		{
-			const auto i = block_cache.find(o);
-			if(i != block_cache.cend())
-			{
-				return i->second;
-			}
-			const bool is_opaque = block_at(chunk, x + o.x, y + o.y, z + o.z).is_opaque();
-			block_cache.emplace(o, is_opaque);
-			return is_opaque;
-		};
-
 		mesh_t& mesh = meshes[block.type()];
-		auto add_face = [&chunk, &block, &mesh, &b, &l, x, y, z](Face face)
+		auto add_face = [&chunk, &block, &mesh, &l, x, y, z](Face face)
 		{
-			const Side side = (face == Face::top || face == Face::back || face == Face::left) ? Side::top : Side::bottom;
+			const Side side = to_side(face);
 			const auto i = get_i(face);
 			i8vec3 x0_z0;
 			x0_z0[i.y] = static_cast<int8_t>(side);
@@ -112,10 +90,6 @@ meshmap_t SimpleAO::make_mesh(const Chunk& chunk)
 				xn_zp[i.z] = -1;
 				xn_zp[i.x] = +1;
 
-				int a1 = vertexAO(b(xn_z0), b(x0_zn), b(xn_zn));
-				int a2 = vertexAO(b(xp_z0), b(x0_zn), b(xp_zn));
-				int a3 = vertexAO(b(xp_z0), b(x0_zp), b(xp_zp));
-				int a4 = vertexAO(b(xn_z0), b(x0_zp), b(xn_zp));
 				glm::tvec4<glm::vec3> light =
 				{
 					(l(x0_z0) + l(x0_zn) + l(xn_zn) + l(xn_z0)) / 4.0f,
@@ -123,12 +97,8 @@ meshmap_t SimpleAO::make_mesh(const Chunk& chunk)
 					(l(x0_z0) + l(x0_zp) + l(xp_zp) + l(xp_z0)) / 4.0f,
 					(l(x0_z0) + l(x0_zn) + l(xp_zn) + l(xp_z0)) / 4.0f,
 				};
-				bool flip = a1 + a3 < a2 + a4;
-				if(side == Side::bottom)
-				{
-					flip = !flip;
-				}
-				Base::add_face(mesh, {x, y, z}, face   , 1, 1, light, flip);
+
+				Base::add_face(mesh, {x, y, z}, face, 1, 1, light);
 			}
 		};
 		add_face(Face::front);

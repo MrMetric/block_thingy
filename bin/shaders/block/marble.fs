@@ -30,4 +30,5 @@ vec4 color(vec2 coords)
 	return vec4(c, 1);
 }
 
-#include include/main_coords.fs
+#define USE_COORDS
+#include include/main.fs

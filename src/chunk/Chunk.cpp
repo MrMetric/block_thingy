@@ -161,8 +161,11 @@ void Chunk::update_vaos()
 			Graphics::OpenGL::VertexBuffer vbo
 			({
 				{3, GL_UNSIGNED_BYTE}, // relative position
-				{3, GL_FLOAT        }, // light
 				{1, GL_UNSIGNED_BYTE}, // face
+				{3, GL_FLOAT        }, // light1
+				{3, GL_FLOAT        }, // light2
+				{3, GL_FLOAT        }, // light3
+				{3, GL_FLOAT        }, // light4
 			});
 			Graphics::OpenGL::VertexArray vao(vbo);
 

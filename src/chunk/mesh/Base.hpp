@@ -24,8 +24,8 @@ struct mesh_vertex_t
 	mesh_vertex_t(uint8_t);
 
 	vertex_coord_t<uint8_t> pos;
-	glm::vec3 light;
 	Block::Enum::Face face;
+	glm::tvec4<glm::vec3> light;
 };
 #pragma pack(pop)
 
@@ -66,8 +66,7 @@ public:
 		const Block::Enum::Face face,
 		const uint8_t offset_x,
 		const uint8_t offset_z,
-		const glm::tvec4<glm::vec3>& light,
-		bool flip = false
+		const glm::tvec4<glm::vec3>& light
 	);
 	static void add_face
 	(
@@ -79,6 +78,8 @@ public:
 		const glm::vec3& light
 	);
 	static u8vec3 get_i(Block::Enum::Face);
+
+	static Side to_side(Block::Enum::Face);
 
 	static const Block::Base& block_at(const Chunk&, int_fast16_t x, int_fast16_t y, int_fast16_t z, bool allow_out_of_bounds = true);
 	static bool block_visible_from(const Chunk&, const Block::Base&, int_fast16_t, int_fast16_t, int_fast16_t);
