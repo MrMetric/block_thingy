@@ -174,7 +174,8 @@ void Settings::load()
 	{
 		{"cull_face", true},
 		{"fullscreen", false},
-		{"show_debug_info", true},
+		{"show_container_bounds", false},
+		{"show_debug_info", false},
 		{"show_HUD", true},
 		{"wireframe", false},
 	};

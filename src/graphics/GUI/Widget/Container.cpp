@@ -30,7 +30,7 @@ std::string Container::type() const
 
 void Container::draw()
 {
-	if(Settings::get<bool>("show_debug_info"))
+	if(Settings::get<bool>("show_container_bounds"))
 	{
 		Gfx::instance->draw_rectangle(position, size, {0.2, 0.1, 0, 0.4});
 		Gfx::instance->draw_border(position, size, glm::dvec4(2), {0, 0, 0.1, 0.4});
