@@ -1,7 +1,10 @@
 #include "RenderTarget.hpp"
 
+#include <algorithm>
 #include <stdexcept>
 #include <string>
+
+#include <easylogging++/easylogging++.hpp>
 
 namespace Graphics {
 
@@ -14,6 +17,27 @@ RenderTarget::RenderTarget(const window_size_t& window_size, GLsizei samples)
 	{
 		frame_texture.parameter(OpenGL::Texture::Parameter::min_filter, GL_LINEAR);
 		frame_texture.parameter(OpenGL::Texture::Parameter::mag_filter, GL_LINEAR);
+	}
+	else
+	{
+		static GLint max_samples = 0;
+		if(max_samples == 0)
+		{
+			GLint max_color_samples;
+			glGetIntegerv(GL_MAX_COLOR_TEXTURE_SAMPLES, &max_color_samples);
+			LOG(DEBUG) << "max color texture samples: " << max_color_samples;
+
+			GLint max_depth_samples;
+			glGetIntegerv(GL_MAX_DEPTH_TEXTURE_SAMPLES, &max_depth_samples);
+			LOG(DEBUG) << "max depth texture samples: " << max_color_samples;
+
+			max_samples = std::min(max_color_samples, max_depth_samples);
+		}
+		if(samples > max_samples)
+		{
+			LOG(WARNING) << samples << " samples requested, but max is " << max_samples;
+			this->samples = samples = max_samples;
+		}
 	}
 
 	resize(window_size);
@@ -38,7 +62,7 @@ void RenderTarget::resize(const window_size_t& window_size)
 		frame_texture.image2D_multisample
 		(
 			samples,
-			GL_RGB,
+			GL_RGB,				// internal format
 			width,
 			height,
 			true
