@@ -417,14 +417,19 @@ void Game::joymove(const glm::dvec2& motion)
 
 static void add_shader(Game& game, const BlockType t, const string& shader_path)
 {
+	bool is_new;
 	try
 	{
-		game.gfx.block_shaders.emplace(t, "shaders/block/" + shader_path);
+		is_new = game.gfx.block_shaders.emplace(t, "shaders/block/" + shader_path).second;
 	}
 	catch(const std::runtime_error& e)
 	{
 		LOG(ERROR) << "shader error:\n" << e.what();
-		game.gfx.block_shaders.emplace(t, "shaders/block/default");
+		is_new = game.gfx.block_shaders.emplace(t, "shaders/block/default").second;
+	}
+	if(is_new)
+	{
+		game.gfx.block_shaders[t].uniform("min_light", static_cast<float>(Settings::get<double>("min_light")));
 	}
 }
 

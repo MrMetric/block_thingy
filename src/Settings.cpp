@@ -183,6 +183,7 @@ void Settings::load()
 	{
 		{"far_plane", 1500},
 		{"fov", 75},
+		{"min_light", 0.005},
 		{"near_plane", 0.1},
 		{"ortho_size", 6},
 	};

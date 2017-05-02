@@ -1,4 +1,4 @@
-const float min_light = 0.005;
+uniform float min_light;
 void main()
 {
 	vec2 coords = get_face_coords();

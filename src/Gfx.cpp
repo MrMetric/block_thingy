@@ -123,6 +123,14 @@ void Gfx::hook_events(EventManager& event_manager)
 			// this is not always necessary, but checking for that is not worth doing
 			update_projection_matrix();
 		}
+		else if(e.name == "min_light")
+		{
+			const float min_light = static_cast<float>(*static_cast<const double*>(e.value));
+			for(auto& p : block_shaders)
+			{
+				p.second.uniform("min_light", min_light);
+			}
+		}
 	});
 }
 
