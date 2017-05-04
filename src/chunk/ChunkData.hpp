@@ -38,7 +38,7 @@ public:
 	}
 
 	ChunkData(const ChunkData&) = delete;
-	void operator=(const ChunkData&) = delete;
+	ChunkData& operator=(const ChunkData&) = delete;
 
 	const T& get(const Position::BlockInChunk& pos) const
 	{

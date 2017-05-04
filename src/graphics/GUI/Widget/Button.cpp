@@ -20,7 +20,6 @@ Button::Button
 :
 	color(0.01, 0.01, 0.02, 0.85),
 	hover_color(0, 0, 0, 1),
-	hover(false),
 	mousedown(false)
 {
 	set_text(text);
@@ -70,12 +69,6 @@ void Button::mousepress(const Util::mouse_press& press)
 			handler();
 		}
 	}
-}
-
-void Button::mousemove(const double x, const double y)
-{
-	hover = x >= position.x && x < position.x + size.x
-		 && y >= position.y && y < position.y + size.y;
 }
 
 void Button::read_layout(const json& layout)

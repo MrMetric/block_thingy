@@ -22,7 +22,6 @@ TextInput::TextInput
 	invalid(false),
 	content(content),
 	placeholder(placeholder),
-	hover(false),
 	focus(false)
 {
 	style["size.x"] = 256.0;
@@ -118,12 +117,6 @@ void TextInput::mousepress(const Util::mouse_press& press)
 	{
 		focus = hover;
 	}
-}
-
-void TextInput::mousemove(const double x, const double y)
-{
-	hover = x >= position.x && x < position.x + size.x
-		 && y >= position.y && y < position.y + size.y;
 }
 
 void TextInput::read_layout(const json& layout)

@@ -25,7 +25,6 @@ class TextInput : public Base
 		void keypress(const Util::key_press&) override;
 		void charpress(const Util::char_press&) override;
 		void mousepress(const Util::mouse_press&) override;
-		void mousemove(double x, double y) override;
 
 		void read_layout(const json&) override;
 
@@ -45,7 +44,6 @@ class TextInput : public Base
 	private:
 		Component::Text content;
 		Component::Text placeholder;
-		bool hover;
 		bool focus;
 		std::vector<on_change_callback_t> on_change_callbacks;
 		std::vector<on_keypress_callback_t> on_keypress_callbacks;

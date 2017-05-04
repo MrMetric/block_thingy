@@ -23,7 +23,6 @@ class Button : public Base
 		void draw() override;
 
 		void mousepress(const Util::mouse_press&) override;
-		void mousemove(double x, double y) override;
 
 		void read_layout(const json&) override;
 		void use_layout() override;
@@ -36,7 +35,6 @@ class Button : public Base
 		glm::dvec4 hover_color;
 
 	private:
-		bool hover;
 		bool mousedown;
 		std::string text;
 		glm::dvec2 text_size;

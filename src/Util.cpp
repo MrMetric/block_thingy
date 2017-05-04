@@ -26,12 +26,12 @@ using std::string;
 using std::to_string;
 using std::unique_ptr;
 
-bool Util::file_is_openable(const string& path)
+bool Util::file_is_openable(const fs::path& path)
 {
 	return std::ifstream(path).is_open();
 }
 
-string Util::read_file(const string& path)
+string Util::read_file(const fs::path& path)
 {
 	try
 	{
@@ -44,9 +44,10 @@ string Util::read_file(const string& path)
 		string bbb(aaa.get(), fsize);
 		return bbb;
 	}
-	catch(const std::ios_base::failure&)
+	// std::ios_base::failure is not always catchable: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66145
+	catch(const std::exception&)
 	{
-		LOG(ERROR) << "failed to read " << path;
+		LOG(ERROR) << "failed to read " << path.u8string();
 		throw;
 	}
 }
@@ -81,58 +82,17 @@ string Util::gl_object_log(const GLuint object)
 	return string(log.get());
 }
 
-Util::path Util::split_path(string path)
-{
-	string folder, file, ext;
-
-	const std::size_t slash_pos = path.find_last_of('/');
-	if(slash_pos != string::npos)
-	{
-		folder = path.substr(0, slash_pos);
-		path = path.substr(slash_pos + 1);
-	}
-
-	const std::size_t dot_pos = path.find_last_of('.');
-	if(dot_pos != string::npos)
-	{
-		file = path.substr(0, dot_pos);
-		ext = path.substr(dot_pos + 1);
-	}
-	else
-	{
-		file = path;
-	}
-
-	return { folder, file, ext };
-}
-
-string Util::join_path(const Util::path& path_parts)
-{
-	string path = path_parts.folder;
-	if(!path_parts.folder.empty())
-	{
-		path += "/";
-	}
-	path += path_parts.file;
-	if(!path_parts.ext.empty())
-	{
-		path += "." + path_parts.ext;
-	}
-	return path;
-}
-
-void Util::change_directory(const string& path)
+void Util::change_directory(const fs::path& path)
 {
 	#ifdef _WIN32
-	// TODO: unicode
-	if(!SetCurrentDirectoryA(path.c_str()))
+	if(!SetCurrentDirectoryW(path.wstring().c_str()))
 	{
-		throw std::runtime_error("error changing directory to " + path + ": " + to_string(GetLastError()));
+		throw std::runtime_error("error changing directory to " + path.u8string() + ": " + to_string(GetLastError()));
 	}
 	#else
 	if(chdir(path.c_str()) == -1)
 	{
-		throw std::runtime_error("error changing directory to " + path + ": " + strerror(errno) + "\n");
+		throw std::runtime_error("error changing directory to " + path.u8string() + ": " + strerror(errno) + "\n");
 	}
 	#endif
 }

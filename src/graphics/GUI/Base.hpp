@@ -11,6 +11,7 @@
 #include "fwd/util/char_press.hpp"
 #include "fwd/util/key_press.hpp"
 #include "fwd/util/mouse_press.hpp"
+#include "util/filesystem.hpp"
 
 #include "types/window_size_t.hpp"
 
@@ -22,7 +23,7 @@ class Base
 		Base
 		(
 			Game&,
-			const std::string& layout_path = ""
+			const fs::path& layout_path
 		);
 		virtual ~Base();
 

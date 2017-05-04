@@ -1,10 +1,5 @@
 #include "Plugin.hpp"
 
-#if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
-	#define HAVE_POSIX
-#endif
-
-
 #ifdef HAVE_POSIX
 	#include <dlfcn.h>
 #endif
@@ -17,17 +12,17 @@ using std::string;
 
 struct Plugin::impl
 {
-	impl(const string& path)
+	impl(const fs::path& path)
 	:
 		path(path)
 	{
 	#ifdef HAVE_POSIX
-		LOG(INFO) << "loading " << path;
+		LOG(INFO) << "loading " << path.u8string();
 		handle = dlopen(path.c_str(), RTLD_NOW);
 		if(handle == nullptr)
 		{
 			LOG(ERROR) << dlerror();
-			LOG(ERROR) << "unable to load " << path;
+			LOG(ERROR) << "unable to load " << path.u8string();
 		}
 	#endif
 	}
@@ -39,11 +34,11 @@ struct Plugin::impl
 		{
 			if(dlclose(handle) == 0)
 			{
-				LOG(INFO) << "unloaded " << path;
+				LOG(INFO) << "unloaded " << path.u8string();
 			}
 			else
 			{
-				LOG(WARNING) << "error unloading " << path << ": " << dlerror();
+				LOG(WARNING) << "error unloading " << path.u8string() << ": " << dlerror();
 			}
 		}
 	#endif
@@ -55,19 +50,21 @@ struct Plugin::impl
 		void* symbol = dlsym(handle, name.c_str());
 		if(symbol == nullptr)
 		{
-			throw std::runtime_error("Error getting symbol '" + name + "' in " + path + ": " + dlerror());
+			throw std::runtime_error("Error getting symbol '" + name + "' in " + path.u8string() + ": " + dlerror());
 		}
 		return symbol;
+	#else
+		return nullptr;
 	#endif
 	}
 
 	void* handle;
-	string path;
+	fs::path path;
 };
 
 Plugin::Plugin
 (
-	const string& path
+	const fs::path& path
 )
 :
 	pImpl(std::make_unique<impl>(path))
@@ -95,6 +92,6 @@ void Plugin::init()
 	using init_t = void(*)(Game&);
 	const auto init = *reinterpret_cast<init_t>(pImpl->get_symbol("init"));
 	init(*Game::instance);
-	LOG(INFO) << "initialized " << pImpl->path;
+	LOG(INFO) << "initialized " << pImpl->path.u8string();
 #endif
 }

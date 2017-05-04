@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <experimental/propagate_const>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -8,6 +9,7 @@
 
 #include "fwd/Game.hpp"
 #include "fwd/graphics/OpenGL/ShaderObject.hpp"
+#include "util/filesystem.hpp"
 
 template<typename T>
 class Resource
@@ -67,5 +69,9 @@ public:
 	void check_updates();
 	void load_blocks(Game&);
 
-	Resource<Graphics::OpenGL::ShaderObject> get_ShaderObject(std::string path, bool reload = false);
+	Resource<Graphics::OpenGL::ShaderObject> get_ShaderObject(fs::path, bool reload = false);
+
+private:
+	struct impl;
+	std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;
 };

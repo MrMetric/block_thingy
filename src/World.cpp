@@ -37,7 +37,7 @@ using Position::ChunkInWorld;
 
 World::World
 (
-	const string& file_path,
+	const fs::path& file_path,
 	Block::BlockRegistry& block_registry,
 	std::unique_ptr<Mesher::Base> mesher
 )

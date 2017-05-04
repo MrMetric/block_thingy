@@ -14,9 +14,9 @@
 using std::string;
 
 template<typename T>
-static std::map<const string, T>& get_map()
+static std::map<string, T>& get_map()
 {
-	static std::map<const string, T> map;
+	static std::map<string, T> map;
 	return map;
 }
 

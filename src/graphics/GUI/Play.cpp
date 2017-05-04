@@ -28,7 +28,7 @@ namespace Graphics::GUI {
 
 Play::Play(Game& game)
 :
-	Base(game)
+	Base(game, "")
 {
 }
 

@@ -2,16 +2,16 @@
 
 #include <memory>
 #include <experimental/propagate_const>
-#include <string>
 
 #include "fwd/Game.hpp"
+#include "util/filesystem.hpp"
 
 class Plugin
 {
 public:
 	Plugin
 	(
-		const std::string& path
+		const fs::path&
 	);
 	~Plugin();
 

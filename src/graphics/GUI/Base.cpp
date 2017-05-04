@@ -23,7 +23,7 @@ namespace Graphics::GUI {
 Base::Base
 (
 	Game& game,
-	const string& layout_path
+	const fs::path& layout_path
 )
 :
 	game(game)

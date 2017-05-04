@@ -2,13 +2,6 @@
 
 #include <cassert>
 #include <cmath>
-#if __has_include(<filesystem>)
-	#include <filesystem>
-	namespace fs = std::filesystem;
-#else
-	#include <experimental/filesystem>
-	namespace fs = std::experimental::filesystem;
-#endif
 #include <fstream>
 #include <functional>
 #include <limits>
@@ -59,6 +52,7 @@
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
+#include "util/filesystem.hpp"
 
 #include "block/Air.hpp"
 #include "block/Glass.hpp"
@@ -254,7 +248,7 @@ void Game::draw()
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		glDisable(GL_SCISSOR_TEST);
 		// TODO: split stepping and drawing to allow using gui->draw() here
-		draw_world(camera.position, camera.rotation);
+		draw_world();
 	}
 
 
@@ -298,10 +292,15 @@ void Game::step_world()
 
 void Game::draw_world()
 {
-	draw_world(camera.position, camera.rotation);
+	draw_world(camera.position, camera.rotation, gfx.projection_matrix);
 }
 
-void Game::draw_world(const glm::dvec3& position, const glm::dvec3& rotation)
+void Game::draw_world
+(
+	const glm::dvec3& position,
+	const glm::dvec3& rotation,
+	const glm::dmat4& projection_matrix
+)
 {
 	const bool wireframe = Settings::get<bool>("wireframe");
 	if(wireframe)
@@ -309,7 +308,7 @@ void Game::draw_world(const glm::dvec3& position, const glm::dvec3& rotation)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 
-	gfx.set_camera_view(position, rotation);
+	gfx.set_camera_view(position, rotation, projection_matrix);
 	Position::BlockInWorld render_origin(position);
 	RenderWorld::draw_world
 	(
@@ -415,12 +414,12 @@ void Game::joymove(const glm::dvec2& motion)
 	gui->joymove(motion);
 }
 
-static void add_shader(Game& game, const BlockType t, const string& shader_path)
+static void add_shader(Game& game, const BlockType t, const fs::path& shader_path)
 {
 	bool is_new;
 	try
 	{
-		is_new = game.gfx.block_shaders.emplace(t, "shaders/block/" + shader_path).second;
+		is_new = game.gfx.block_shaders.emplace(t, "shaders/block" / shader_path).second;
 	}
 	catch(const std::runtime_error& e)
 	{
@@ -443,7 +442,7 @@ void Game::add_block(const string& strid, BlockType t)
 	add_shader(*this, t, strid);
 }
 
-BlockType Game::add_block_2(const std::string& name, const std::string& shader_path)
+BlockType Game::add_block_2(const std::string& name, const fs::path& shader_path)
 {
 	BlockType t = block_registry.add<Block::Base>(name);
 	LOG(DEBUG) << "ID " << static_cast<block_type_id_t>(t) << ": " << name;

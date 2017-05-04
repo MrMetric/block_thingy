@@ -46,13 +46,13 @@ ShaderProgram::ShaderProgram(const string& path)
 
 ShaderProgram::ShaderProgram
 (
-	const std::vector<string>& file_paths,
+	const std::vector<fs::path>& file_paths,
 	const string& debug_name
 )
 :
 	debug_name(debug_name)
 {
-	for(const string& path : file_paths)
+	for(const auto& path : file_paths)
 	{
 		res.push_back(Game::instance->resource_manager.get_ShaderObject(path));
 		res.back().on_update([this]()

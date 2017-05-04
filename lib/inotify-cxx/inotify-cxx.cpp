@@ -377,7 +377,7 @@ bool Inotify::PeekEvent(InotifyEvent* pEvt)
 		throw InotifyException(IN_EXC_MSG("null pointer to event"), EINVAL, this);
 	}
 
-	bool b = !m_events.empty();
+	const bool b = !m_events.empty();
 	if(b)
 	{
 		*pEvt = m_events.front();
@@ -394,13 +394,18 @@ bool Inotify::PeekEvent(InotifyEvent& rEvt)
 InotifyWatch* Inotify::FindWatch(int iDescriptor)
 {
 	IN_WATCH_MAP::iterator it = m_watches.find(iDescriptor);
-	return it == m_watches.end() ? nullptr : (*it).second;
+	return it == m_watches.cend() ? nullptr : it->second;
 }
 
 InotifyWatch* Inotify::FindWatch(const std::string& rPath)
 {
 	IN_WP_MAP::iterator it = m_paths.find(rPath);
-	return it == m_paths.end() ? nullptr : (*it).second;
+	return it == m_paths.cend() ? nullptr : it->second;
+}
+
+bool Inotify::HasWatch(const std::string& path) const
+{
+	return m_paths.find(path) != m_paths.cend();
 }
 
 int Inotify::GetDescriptor() const

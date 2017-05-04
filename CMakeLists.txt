@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.1.0)
 project(block_thingy)
 
+message(STATUS "System name: ${CMAKE_SYSTEM_NAME}")
+
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE RelWithDebInfo)
 endif()
@@ -14,10 +16,20 @@ endif()
 file(GLOB_RECURSE block_thingy_SRC
 	"lib/easylogging++/easylogging++.cpp"
 	"lib/glad/glad.c"
-	"lib/inotify-cxx/inotify-cxx.cpp"
 	"lib/rhea/*.cpp"
 	"src/*.cpp"
 )
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+	list(APPEND block_thingy_SRC "lib/inotify-cxx/inotify-cxx.cpp")
+	add_definitions(
+		-DHAVE_POSIX
+		-DUSE_INOTIFY
+	)
+elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
+	add_definitions(
+		-DHAVE_POSIX
+	)
+endif()
 add_executable(block_thingy ${block_thingy_SRC})
 
 option(USE_LIBCPP "Use libc++ instead of libstdc++ (requires Clang)" FALSE)

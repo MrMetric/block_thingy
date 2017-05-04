@@ -22,7 +22,7 @@ namespace Graphics {
 
 Text::Character load_char(const FT_Face& face, char32_t);
 
-Text::Text(const string& font_path, const FT_UInt height)
+Text::Text(const fs::path& font_path, const FT_UInt height)
 :
 	height(height),
 	vbo({4, GL_FLOAT}),
@@ -36,7 +36,7 @@ Text::Text(const string& font_path, const FT_UInt height)
 
 	if(FT_New_Face(ft, font_path.c_str(), 0, &face))
 	{
-		throw std::runtime_error("failed to load font " + font_path);
+		throw std::runtime_error("failed to load font " + font_path.u8string());
 	}
 
 	FT_Set_Pixel_Sizes(face, 0, height);

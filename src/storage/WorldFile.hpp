@@ -7,13 +7,14 @@
 #include "fwd/World.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "fwd/position/ChunkInWorld.hpp"
+#include "util/filesystem.hpp"
 
 namespace Storage {
 
 class WorldFile
 {
 	public:
-		WorldFile(const std::string& world_dir, World& world);
+		WorldFile(const fs::path& world_dir, World& world);
 
 		WorldFile(WorldFile&&) = delete;
 		WorldFile(const WorldFile&) = delete;
@@ -59,9 +60,9 @@ class WorldFile
 		std::shared_ptr<Chunk> load_chunk(const Position::ChunkInWorld&);
 
 	private:
-		std::string world_path;
-		std::string player_dir;
-		std::string chunk_dir;
+		fs::path world_path;
+		fs::path player_dir;
+		fs::path chunk_dir;
 		World& world;
 };
 

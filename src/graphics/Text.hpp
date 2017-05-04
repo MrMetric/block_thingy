@@ -26,13 +26,14 @@
 #include "graphics/OpenGL/Texture.hpp"
 #include "graphics/OpenGL/VertexArray.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
+#include "util/filesystem.hpp"
 
 namespace Graphics {
 
 class Text
 {
 	public:
-		Text(const std::string& font_path, FT_UInt height);
+		Text(const fs::path& font_path, FT_UInt height);
 		~Text();
 
 		void set_projection_matrix(const glm::dmat4& projection_matrix);

@@ -4,20 +4,13 @@
 #include <dlfcn.h>
 #endif
 
-#if __has_include(<filesystem>)
-	#include <filesystem>
-	namespace fs = std::filesystem;
-#else
-	#include <experimental/filesystem>
-	namespace fs = std::experimental::filesystem;
-#endif
-
 #include <vector>
 
 #include <easylogging++/easylogging++.hpp>
 
 #include "Plugin.hpp"
 #include "Util.hpp"
+#include "util/filesystem.hpp"
 
 using std::string;
 
@@ -34,9 +27,9 @@ PluginManager::PluginManager()
 	pImpl(std::make_unique<impl>())
 {
 	fs::create_directory("plugins");
-	for(const auto& dir : fs::directory_iterator("plugins"))
+	for(const auto& entry : fs::directory_iterator("plugins"))
 	{
-		const fs::path sopath = dir.path() / "plugin.so";
+		const fs::path sopath = entry.path() / "plugin.so";
 		if(!fs::is_regular_file(sopath))
 		{
 			continue;

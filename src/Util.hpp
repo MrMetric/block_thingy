@@ -5,6 +5,8 @@
 
 #include <glad/glad.h>
 
+#include "util/filesystem.hpp"
+
 namespace Util
 {
 	inline bool string_starts_with(const std::string& value, const std::string& start)
@@ -26,21 +28,12 @@ namespace Util
 		return std::equal(ending.crbegin(), ending.crend(), value.crbegin());
 	}
 
-	bool file_is_openable(const std::string&);
-	std::string read_file(const std::string&);
+	bool file_is_openable(const fs::path&);
+	std::string read_file(const fs::path&);
 
 	std::string gl_object_log(GLuint object);
 
-	struct path
-	{
-		std::string folder;
-		std::string file;
-		std::string ext;
-	};
-	path split_path(std::string);
-	std::string join_path(const path&);
-
-	void change_directory(const std::string&);
+	void change_directory(const fs::path&);
 
 	template<typename T>
 	constexpr T clamp(T x, T min, T max)

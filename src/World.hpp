@@ -18,6 +18,7 @@
 #include "position/ChunkInWorld.hpp"
 #include "position/hash.hpp"
 #include "storage/WorldFile.hpp"
+#include "util/filesystem.hpp"
 
 using world_map_t = Position::unordered_map_t<Position::ChunkInWorld, std::shared_ptr<Chunk>>;
 
@@ -28,7 +29,7 @@ class World
 	public:
 		World
 		(
-			const std::string& file_path,
+			const fs::path& file_path,
 			Block::BlockRegistry&,
 			std::unique_ptr<Mesher::Base>
 		);

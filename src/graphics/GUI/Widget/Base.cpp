@@ -9,6 +9,8 @@ using std::string;
 namespace Graphics::GUI::Widget {
 
 Base::Base()
+:
+	hover(false)
 {
 }
 
@@ -40,6 +42,8 @@ void Base::mousepress(const Util::mouse_press& press)
 
 void Base::mousemove(const double x, const double y)
 {
+	hover = x >= position.x && x < position.x + size.x
+		 && y >= position.y && y < position.y + size.y;
 }
 
 glm::dvec2 Base::get_size() const

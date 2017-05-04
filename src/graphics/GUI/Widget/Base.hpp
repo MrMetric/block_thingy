@@ -60,6 +60,8 @@ class Base
 		glm::dvec4 border_size;
 		glm::dvec4 border_color;
 
+		bool hover;
+
 		template<typename T>
 		T get_layout_var
 		(

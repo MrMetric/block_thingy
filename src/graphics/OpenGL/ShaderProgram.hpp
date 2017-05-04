@@ -19,6 +19,7 @@
 #include <glm/vec4.hpp>
 
 #include "ResourceManager.hpp"
+#include "util/filesystem.hpp"
 
 namespace Graphics::OpenGL {
 
@@ -28,7 +29,7 @@ class ShaderProgram
 		ShaderProgram();
 		ShaderProgram(const char* path);
 		ShaderProgram(const std::string& path);
-		ShaderProgram(const std::vector<std::string>&, const std::string& name);
+		ShaderProgram(const std::vector<fs::path>&, const std::string& name);
 		~ShaderProgram();
 
 		ShaderProgram(ShaderProgram&&);

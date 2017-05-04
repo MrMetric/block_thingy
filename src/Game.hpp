@@ -21,6 +21,7 @@
 #include "physics/RaycastHit.hpp"
 #include "position/ChunkInWorld.hpp"
 #include "fwd/util/char_press.hpp"
+#include "util/filesystem.hpp"
 #include "fwd/util/key_press.hpp"
 #include "fwd/util/mouse_press.hpp"
 
@@ -52,7 +53,12 @@ class Game
 		void draw();
 		void step_world();
 		void draw_world();
-		void draw_world(const glm::dvec3& position, const glm::dvec3& rotation);
+		void draw_world
+		(
+			const glm::dvec3& position,
+			const glm::dvec3& rotation,
+			const glm::dmat4& projection_matrix
+		);
 		void open_gui(std::unique_ptr<Graphics::GUI::Base>);
 		void close_gui();
 		void quit();
@@ -76,7 +82,7 @@ class Game
 			return t;
 		}
 
-		BlockType add_block_2(const std::string& name, const std::string& shader_path);
+		BlockType add_block_2(const std::string& name, const fs::path& shader_path);
 
 		BlockType block_type;
 		std::unique_ptr<Block::Base> copied_block;

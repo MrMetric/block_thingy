@@ -13,7 +13,7 @@ using std::string;
 namespace Graphics::OpenGL {
 
 string get_log(const GLuint object);
-string do_include(const string& file_path);
+string do_include(const fs::path& file_path);
 
 ShaderObject::ShaderObject()
 :
@@ -22,9 +22,9 @@ ShaderObject::ShaderObject()
 {
 }
 
-ShaderObject::ShaderObject(const string& file_path, GLenum type)
+ShaderObject::ShaderObject(const fs::path& file_path, GLenum type)
 {
-	LOG(INFO) << "compiling shader: " << file_path;
+	LOG(INFO) << "compiling shader: " << file_path.u8string();
 
 	const string source = do_include(file_path);
 	const char* source_c = source.c_str();
@@ -38,7 +38,7 @@ ShaderObject::ShaderObject(const string& file_path, GLenum type)
 	if(compile_ok == GL_FALSE)
 	{
 		string log = Util::gl_object_log(name);
-		throw std::runtime_error("error compiling " + file_path + ":\n" + log);
+		throw std::runtime_error("error compiling " + file_path.u8string() + ":\n" + log);
 	}
 
 	inited = true;
@@ -69,10 +69,10 @@ GLuint ShaderObject::get_name()
 }
 
 static const string include_str = "#include";
-string do_include(const string& file_path)
+string do_include(const fs::path& file_path)
 {
 	const string source = Util::read_file(file_path);
-	const string folder = Util::split_path(file_path).folder + "/";
+	const fs::path folder = file_path.parent_path();
 
 	std::istringstream input(source);
 	std::ostringstream output;
@@ -90,10 +90,10 @@ string do_include(const string& file_path)
 		}
 		included.erase(0, included.find_first_not_of(" \t"));
 		included.erase(included.find_last_not_of(" \t") + 1);
-		const string path = folder + included;
+		const fs::path path = folder / included;
 		if(!Util::file_is_openable(path))
 		{
-			// TODO: log
+			LOG(ERROR) << "shader include not found: " << path.u8string();
 			continue;
 		}
 		output << do_include(path) << "\n";

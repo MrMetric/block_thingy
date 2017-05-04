@@ -426,7 +426,9 @@ public:
 	 *            used for the searched watch. Be careful about
 	 *            absolute/relative and case-insensitive paths.
 	 */
-	 InotifyWatch* FindWatch(const std::string& rPath);
+	InotifyWatch* FindWatch(const std::string& rPath);
+
+	bool HasWatch(const std::string& path) const;
 
 	/// Returns the file descriptor.
 	/**

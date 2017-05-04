@@ -4,13 +4,15 @@
 
 #include <glad/glad.h>
 
+#include "util/filesystem.hpp"
+
 namespace Graphics::OpenGL {
 
 class ShaderObject
 {
 	public:
 		ShaderObject();
-		ShaderObject(const std::string& file_path, GLenum type);
+		ShaderObject(const fs::path&, GLenum type);
 		~ShaderObject();
 
 		ShaderObject(ShaderObject&&);
