@@ -97,10 +97,11 @@ class Gfx
 		void set_cull_face(bool);
 		void update_projection_matrix();
 		static glm::dmat4 make_projection_matrix(double width, double height);
+		static glm::dmat4 make_view_matrix(const glm::dvec3& rotation);
 		void set_camera_view
 		(
 			const glm::dvec3& position,
-			const glm::dvec3& rotation,
+			const glm::dmat4& view_matrix,
 			const glm::dmat4& projection_matrix
 		);
 		void draw_cube_outline(const Position::BlockInWorld&, const glm::dvec4& color);

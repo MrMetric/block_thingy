@@ -29,7 +29,7 @@ meshmap_t Simple::make_mesh(const Chunk& chunk)
 		mesh_t& mesh = meshes[block.type()];
 		auto add_face = [&chunk, &block, &mesh, x, y, z](Face face)
 		{
-			const Side side = (face == Face::top || face == Face::back || face == Face::left) ? Side::top : Side::bottom;
+			const Side side = to_side(face);
 			const auto i = get_i(face);
 			glm::tvec3<int8_t> pos(x, y, z);
 			pos[i.y] += static_cast<int8_t>(side);

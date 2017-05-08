@@ -56,7 +56,7 @@ class Game
 		void draw_world
 		(
 			const glm::dvec3& position,
-			const glm::dvec3& rotation,
+			const glm::dmat4& view_matrix,
 			const glm::dmat4& projection_matrix
 		);
 		void open_gui(std::unique_ptr<Graphics::GUI::Base>);

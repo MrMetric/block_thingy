@@ -288,17 +288,19 @@ void Game::step_world()
 {
 	player.rotation = camera.rotation;
 	world.step(pImpl->delta_time);
+	pImpl->find_hovered_block();
 }
 
 void Game::draw_world()
 {
-	draw_world(camera.position, camera.rotation, gfx.projection_matrix);
+	glm::dmat4 view_matrix = Gfx::make_view_matrix(camera.rotation);
+	draw_world(camera.position, view_matrix, gfx.projection_matrix);
 }
 
 void Game::draw_world
 (
 	const glm::dvec3& position,
-	const glm::dvec3& rotation,
+	const glm::dmat4& view_matrix,
 	const glm::dmat4& projection_matrix
 )
 {
@@ -308,7 +310,7 @@ void Game::draw_world
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 
-	gfx.set_camera_view(position, rotation, projection_matrix);
+	gfx.set_camera_view(position, view_matrix, projection_matrix);
 	Position::BlockInWorld render_origin(position);
 	RenderWorld::draw_world
 	(
@@ -318,7 +320,12 @@ void Game::draw_world
 		render_origin,
 		render_distance
 	);
-	pImpl->find_hovered_block();
+
+	if(hovered_block != nullptr)
+	{
+		const glm::dvec4 color = world.get_block(hovered_block->pos).selection_color();
+		gfx.draw_cube_outline(hovered_block->pos, color);
+	}
 
 	if(wireframe)
 	{
@@ -472,11 +479,6 @@ void Game::impl::find_hovered_block()
 		out_direction,
 		game.player.reach_distance
 	);
-	if(game.hovered_block != nullptr)
-	{
-		const glm::dvec4 color = game.world.get_block(game.hovered_block->pos).selection_color();
-		game.gfx.draw_cube_outline(game.hovered_block->pos, color);
-	}
 }
 
 void Game::impl::add_commands()
