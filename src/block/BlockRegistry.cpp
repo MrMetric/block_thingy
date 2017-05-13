@@ -1,6 +1,7 @@
 #include "BlockRegistry.hpp"
 
 #include <cassert>
+#include <mutex>
 #include <stdexcept>
 #include <vector>
 
@@ -58,11 +59,16 @@ unique_ptr<Base> BlockRegistry::make(const BlockTypeExternal te) const
 	const auto i2 = strid_to_id.find(i->second);
 	if(i2 == strid_to_id.cend())
 	{
-		static std::vector<string> warning_for;
-		if(std::find(warning_for.cbegin(), warning_for.cend(), i->second) == warning_for.cend())
 		{
-			LOG(WARNING) << "invalid block type in extid map: " << i->second;
-			warning_for.push_back(i->second);
+			static std::mutex m;
+			std::lock_guard<std::mutex> g(m);
+
+			static std::vector<string> warning_for;
+			if(std::find(warning_for.cbegin(), warning_for.cend(), i->second) == warning_for.cend())
+			{
+				LOG(WARNING) << "invalid block type in extid map: " << i->second;
+				warning_for.push_back(i->second);
+			}
 		}
 
 		// templating and virtual functions are not combinable, so I can not do this:
