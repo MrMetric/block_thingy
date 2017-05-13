@@ -40,6 +40,12 @@
 
 #include "inotify-cxx.hpp"
 
+/// Event struct size
+constexpr std::size_t INOTIFY_EVENT_SIZE = sizeof(inotify_event);
+
+/// Event buffer length
+constexpr std::size_t INOTIFY_BUFLEN = 1024 * (INOTIFY_EVENT_SIZE + 16);
+
 InotifyException::InotifyException(const std::string& what_arg, int iErr, void* pSrc)
 :
 	std::runtime_error(what_arg),
@@ -146,7 +152,7 @@ void InotifyWatch::SetEnabled(bool fEnabled)
 			{
 				throw InotifyException(IN_EXC_MSG("enabling watch failed"), errno, this);
 			}
-			m_pInotify->m_watches.insert(IN_WATCH_MAP::value_type(m_wd, this));
+			m_pInotify->m_watches.emplace(m_wd, this);
 		}
 		else
 		{
@@ -236,10 +242,10 @@ void Inotify::Add(InotifyWatch* pWatch)
 		}
 
 		pWatch->m_wd = wd;
-		m_watches.insert(IN_WATCH_MAP::value_type(pWatch->m_wd, pWatch));
+		m_watches.emplace(pWatch->m_wd, pWatch);
 	}
 
-	m_paths.insert(IN_WP_MAP::value_type(pWatch->m_path, pWatch));
+	m_paths.emplace(pWatch->m_path, pWatch);
 	pWatch->m_pInotify = this;
 }
 
@@ -279,17 +285,15 @@ void Inotify::Remove(InotifyWatch& rWatch)
 
 void Inotify::RemoveAll()
 {
-	IN_WP_MAP::iterator it = m_paths.begin();
-	while(it != m_paths.end())
+	for(auto& p : m_paths)
 	{
-		InotifyWatch* pW = (*it).second;
+		InotifyWatch* pW = p.second;
 		if(pW->m_wd != -1)
 		{
 			inotify_rm_watch(m_fd, pW->m_wd);
 			pW->m_wd = -1;
 		}
 		pW->m_pInotify = nullptr;
-		++it;
 	}
 
 	m_watches.clear();
@@ -308,8 +312,8 @@ std::size_t Inotify::GetEnabledCount() const
 
 void Inotify::WaitForEvents(const bool fNoIntr)
 {
-	ssize_t len = 0;
-
+	ssize_t len;
+	unsigned char m_buf[INOTIFY_BUFLEN];
 	do
 	{
 		len = read(m_fd, m_buf, INOTIFY_BUFLEN);
@@ -325,7 +329,7 @@ void Inotify::WaitForEvents(const bool fNoIntr)
 		return;
 	}
 
-	for(ssize_t i = 0; i < len;)
+	for(std::size_t i = 0; i < static_cast<std::size_t>(len);)
 	{
 		inotify_event* pEvt = reinterpret_cast<inotify_event*>(&m_buf[i]);
 		InotifyWatch* pW = FindWatch(pEvt->wd);
@@ -393,14 +397,14 @@ bool Inotify::PeekEvent(InotifyEvent& rEvt)
 
 InotifyWatch* Inotify::FindWatch(int iDescriptor)
 {
-	IN_WATCH_MAP::iterator it = m_watches.find(iDescriptor);
-	return it == m_watches.cend() ? nullptr : it->second;
+	const auto i = m_watches.find(iDescriptor);
+	return i == m_watches.cend() ? nullptr : i->second;
 }
 
-InotifyWatch* Inotify::FindWatch(const std::string& rPath)
+InotifyWatch* Inotify::FindWatch(const std::string& path)
 {
-	IN_WP_MAP::iterator it = m_paths.find(rPath);
-	return it == m_paths.cend() ? nullptr : it->second;
+	const auto i = m_paths.find(path);
+	return i == m_paths.cend() ? nullptr : i->second;
 }
 
 bool Inotify::HasWatch(const std::string& path) const

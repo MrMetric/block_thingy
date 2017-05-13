@@ -3,6 +3,7 @@
 #include <cerrno>
 #include <cstdio>							// C FILE stuff (for libpng use)
 #include <cstring>							// strerror
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -385,8 +386,26 @@ Graphics::OpenGL::ShaderProgram& Gfx::get_block_shader(const BlockType type)
 	return i->second;
 }
 
-void Gfx::write_png_RGB(const char* filename, const uint8_t* data, const uint32_t width, const uint32_t height, const bool reverse_rows)
+void Gfx::write_png_RGB
+(
+	const fs::path& path,
+	const uint8_t* data,
+	const std::size_t width,
+	const std::size_t height,
+	const bool reverse_rows
+)
 {
+	// http://www.libpng.org/pub/png/spec/iso/index-object.html#3PNGfourByteUnSignedInteger
+	// http://www.libpng.org/pub/png/spec/iso/index-object.html#11IHDR
+	if(width == 0 || width > std::numeric_limits<int32_t>::max())
+	{
+		throw std::invalid_argument("width");
+	}
+	if(height == 0 || height > std::numeric_limits<int32_t>::max())
+	{
+		throw std::invalid_argument("height");
+	}
+
 	png_struct* png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if(png_ptr == nullptr)
 	{
@@ -399,7 +418,7 @@ void Gfx::write_png_RGB(const char* filename, const uint8_t* data, const uint32_
 		png_destroy_write_struct(&png_ptr, nullptr);
 		throw std::runtime_error("png_create_info_struct returned null");
 	}
-	FILE* fp = fopen(filename, "wb");
+	FILE* fp = fopen(path.c_str(), "wb");
 	if(fp == nullptr)
 	{
 		png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
@@ -408,21 +427,21 @@ void Gfx::write_png_RGB(const char* filename, const uint8_t* data, const uint32_
 	}
 	png_init_io(png_ptr, fp);
 	const int bit_depth = 8;
-	const uint32_t w = width;
-	const uint32_t h = height;
+	const uint32_t w = static_cast<uint32_t>(width);
+	const uint32_t h = static_cast<uint32_t>(height);
 	png_set_IHDR(png_ptr, info_ptr, w, h, bit_depth, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 	png_write_info(png_ptr, info_ptr);
-	const uint_fast32_t rowsize = png_get_rowbytes(png_ptr, info_ptr);
+	const std::size_t rowsize = png_get_rowbytes(png_ptr, info_ptr);
 	if(reverse_rows)
 	{
-		for(uint_fast32_t y = height; y > 0; --y)
+		for(std::size_t y = height; y > 0; --y)
 		{
 			png_write_row(png_ptr, const_cast<uint8_t*>(data + (y - 1) * rowsize));
 		}
 	}
 	else
 	{
-		for(uint_fast32_t y = 0; y < height; ++y)
+		for(std::size_t y = 0; y < height; ++y)
 		{
 			png_write_row(png_ptr, const_cast<uint8_t*>(data + y * rowsize));
 		}

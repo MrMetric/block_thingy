@@ -31,7 +31,7 @@ Face RaycastHit::face() const
 	if(face_vec.y == -1) return Face::bottom;
 	if(face_vec.z == +1) return Face::back;
 	if(face_vec.z == -1) return Face::front;
-	assert(false);
-	// to satisfy -Werror
+	// happens when the camera is in a block
+	assert(face_vec.x == 0 && face_vec.y == 0 && face_vec.z == 0);
 	return Face::front;
 }

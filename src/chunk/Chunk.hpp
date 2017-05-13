@@ -1,29 +1,24 @@
 #pragma once
 
-#include <array>
 #include <memory>
-#include <vector>
-
-#include "graphics/OpenGL/VertexArray.hpp"
-#include "graphics/OpenGL/VertexBuffer.hpp"
+#include <experimental/propagate_const>
 
 #include "fwd/World.hpp"
-#include "block/Base.hpp"
+#include "fwd/block/Base.hpp"
 #include "chunk/ChunkData.hpp"
-#include "chunk/mesh/Base.hpp"
-#include "graphics/Color.hpp"
-#include "position/BlockInChunk.hpp"
-#include "position/ChunkInWorld.hpp"
+#include "fwd/graphics/Color.hpp"
+#include "fwd/position/BlockInChunk.hpp"
+#include "fwd/position/ChunkInWorld.hpp"
 
 using chunk_blocks_t = ChunkData<std::unique_ptr<Block::Base>>;
 
 class Chunk
 {
 	friend class World;
-	friend class Mesher::Base;
 
 	public:
 		Chunk(const Position::ChunkInWorld&, World& owner);
+		~Chunk();
 
 		Chunk(Chunk&&) = delete;
 		Chunk(const Chunk&) = delete;
@@ -52,18 +47,8 @@ class Chunk
 		template<typename T> void load(const T&);
 
 	private:
-		World& owner;
-		Position::ChunkInWorld position;
-
 		chunk_blocks_t blocks;
-		std::unique_ptr<Block::Base> solid_block;
 
-		ChunkData<Graphics::Color> light;
-
-		bool changed;
-		Mesher::meshmap_t meshes;
-		std::vector<Graphics::OpenGL::VertexArray> mesh_vaos;
-		std::vector<Graphics::OpenGL::VertexBuffer> mesh_vbos;
-
-		void update_vaos();
+		struct impl;
+		std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;
 };

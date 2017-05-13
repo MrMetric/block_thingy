@@ -31,13 +31,6 @@
 // Please ensure that the following header file takes the right place
 #include <sys/inotify.h>
 
-
-/// Event struct size
-#define INOTIFY_EVENT_SIZE (sizeof(inotify_event))
-
-/// Event buffer length
-#define INOTIFY_BUFLEN (1024 * (INOTIFY_EVENT_SIZE + 16))
-
 /// Helper macro for creating exception messages.
 /**
  * It prepends the message by the function name.
@@ -259,13 +252,6 @@ private:
 };
 
 
-/// Mapping from watch descriptors to watch objects.
-using IN_WATCH_MAP = std::map<int32_t, InotifyWatch*>;
-
-/// Mapping from paths to watch objects.
-using IN_WP_MAP = std::map<std::string, InotifyWatch*>;
-
-
 /// inotify class
 /**
  * It holds information about the inotify device descriptor
@@ -419,14 +405,14 @@ public:
 	/**
 	 * It tries to find a watch by the given filesystem path.
 	 *
-	 * \param[in] rPath filesystem path
+	 * \param[in] path filesystem path
 	 * \return pointer to a watch; null if no such watch exists
 	 *
 	 * \attention The path must be exactly identical to the one
 	 *            used for the searched watch. Be careful about
 	 *            absolute/relative and case-insensitive paths.
 	 */
-	InotifyWatch* FindWatch(const std::string& rPath);
+	InotifyWatch* FindWatch(const std::string& path);
 
 	bool HasWatch(const std::string& path) const;
 
@@ -493,11 +479,10 @@ public:
 	static void SetCapability(InotifyCapability cap, uint32_t val);
 
 private:
-	int m_fd;                            // file descriptor
-	IN_WATCH_MAP m_watches;              // watches (by descriptors)
-	IN_WP_MAP m_paths;                   // watches (by paths)
-	unsigned char m_buf[INOTIFY_BUFLEN]; // buffer for events
-	std::deque<InotifyEvent> m_events;   // event queue
+	int m_fd;										// file descriptor
+	std::map<int32_t, InotifyWatch*> m_watches;		// watches (by descriptors)
+	std::map<std::string, InotifyWatch*> m_paths;	// watches (by paths)
+	std::deque<InotifyEvent> m_events;				// event queue
 
 	friend class InotifyWatch;
 

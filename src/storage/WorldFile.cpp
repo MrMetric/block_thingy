@@ -26,7 +26,6 @@
 
 using std::string;
 using std::to_string;
-using std::shared_ptr;
 using std::unique_ptr;
 
 namespace Storage {
@@ -65,7 +64,7 @@ void WorldFile::save_world()
 
 void WorldFile::save_players()
 {
-	for(const auto& p : world.players)
+	for(const auto& p : world.get_players())
 	{
 		save_player(*p.second);
 	}
@@ -108,10 +107,7 @@ unique_ptr<Player> WorldFile::load_player
 void WorldFile::save_chunk(const Chunk& chunk)
 {
 	Position::ChunkInWorld position = chunk.get_position();
-	string x = to_string(position.x);
-	string y = to_string(position.y);
-	string z = to_string(position.z);
-	fs::path file_path = chunk_dir / (x + "_" + y + "_" + z + ".gz");
+	fs::path file_path = chunk_path(position);
 	LOG(INFO) << "saving " << file_path.u8string();
 
 	std::ofstream stdstream(file_path, std::ofstream::binary);
@@ -119,13 +115,9 @@ void WorldFile::save_chunk(const Chunk& chunk)
 	msgpack::pack(stream, chunk);
 }
 
-// should return unique_ptr, but shared_ptr is easier to deal with in World
-shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
+unique_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 {
-	string x = to_string(position.x);
-	string y = to_string(position.y);
-	string z = to_string(position.z);
-	fs::path file_path = chunk_dir / (x + "_" + y + "_" + z + ".gz");
+	fs::path file_path = chunk_path(position);
 	if(!Util::file_is_openable(file_path))
 	{
 		return nullptr;
@@ -134,7 +126,7 @@ shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 	std::ifstream stdstream(file_path, std::ifstream::binary);
 	zstr::istream stream(stdstream);
 	string bytes = Util::read_stream(stream);
-	auto chunk = std::make_shared<Chunk>(position, world);
+	auto chunk = std::make_unique<Chunk>(position, world);
 	try
 	{
 		unpack_bytes(bytes, *chunk);
@@ -154,6 +146,20 @@ shared_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 	//catch(const std::exception& e)
 
 	return chunk;
+}
+
+bool WorldFile::has_chunk(const Position::ChunkInWorld& position)
+{
+	fs::path file_path = chunk_path(position);
+	return Util::file_is_openable(file_path);
+}
+
+fs::path WorldFile::chunk_path(const Position::ChunkInWorld& position)
+{
+	const string x = to_string(position.x);
+	const string y = to_string(position.y);
+	const string z = to_string(position.z);
+	return chunk_dir / (x + "_" + y + "_" + z + ".gz");
 }
 
 } // namespace Storage

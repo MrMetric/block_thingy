@@ -58,7 +58,7 @@ pkg_search_module(LIBPNG REQUIRED libpng)
 pkg_search_module(MSGPACK REQUIRED msgpack>=2.0.0) # TODO: determine minimum version
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	set(FSANITIZE -fsanitize=undefined,integer)
+	set(FSANITIZE -fsanitize=undefined,thread)
 	set(FLAGS
 		-isystem "${PROJECT_SOURCE_DIR}/lib"
 		-iquote "${PROJECT_SOURCE_DIR}/src"
@@ -129,5 +129,6 @@ target_link_libraries(block_thingy
 	${LIBPNG_LDFLAGS}
 	${MSGPACK_LDFLAGS}
 	-ldl
+	-lpthread
 	-lz
 )

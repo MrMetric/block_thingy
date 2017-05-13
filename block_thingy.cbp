@@ -177,12 +177,12 @@
 		<Unit filename="src/chunk/Chunk.hpp" />
 		<Unit filename="src/chunk/ChunkData.cpp" />
 		<Unit filename="src/chunk/ChunkData.hpp" />
-		<Unit filename="src/chunk/mesh/Base.cpp" />
-		<Unit filename="src/chunk/mesh/Base.hpp" />
-		<Unit filename="src/chunk/mesh/Greedy.cpp" />
-		<Unit filename="src/chunk/mesh/Greedy.hpp" />
-		<Unit filename="src/chunk/mesh/Simple.cpp" />
-		<Unit filename="src/chunk/mesh/Simple.hpp" />
+		<Unit filename="src/chunk/Mesher/Base.cpp" />
+		<Unit filename="src/chunk/Mesher/Base.hpp" />
+		<Unit filename="src/chunk/Mesher/Greedy.cpp" />
+		<Unit filename="src/chunk/Mesher/Greedy.hpp" />
+		<Unit filename="src/chunk/Mesher/Simple.cpp" />
+		<Unit filename="src/chunk/Mesher/Simple.hpp" />
 		<Unit filename="src/console/ArgumentParser.cpp" />
 		<Unit filename="src/console/ArgumentParser.hpp" />
 		<Unit filename="src/console/Command.cpp" />
@@ -213,6 +213,7 @@
 		<Unit filename="src/fwd/block/Enum/Face.hpp" />
 		<Unit filename="src/fwd/block/Light.hpp" />
 		<Unit filename="src/fwd/chunk/Chunk.hpp" />
+		<Unit filename="src/fwd/chunk/Mesher/Base.hpp" />
 		<Unit filename="src/fwd/console/Console.hpp" />
 		<Unit filename="src/fwd/event/Event.hpp" />
 		<Unit filename="src/fwd/event/EventManager.hpp" />
@@ -315,6 +316,7 @@
 		<Unit filename="src/storage/msgpack_util.hpp" />
 		<Unit filename="src/types/window_size_t.hpp" />
 		<Unit filename="src/util/Property.hpp" />
+		<Unit filename="src/util/ThreadThingy.hpp" />
 		<Unit filename="src/util/char_press.cpp" />
 		<Unit filename="src/util/char_press.hpp" />
 		<Unit filename="src/util/clipboard.cpp" />

@@ -133,28 +133,18 @@ const Block::Base& Base::block_at
 	const Chunk& chunk,
 	const int_fast16_t x,
 	const int_fast16_t y,
-	const int_fast16_t z,
-	const bool allow_out_of_bounds
+	const int_fast16_t z
 )
 {
 	if(x < 0 || x >= CHUNK_SIZE
 	|| y < 0 || y >= CHUNK_SIZE
 	|| z < 0 || z >= CHUNK_SIZE)
 	{
-		if(!allow_out_of_bounds)
-		{
-			static const std::unique_ptr<Block::Base> none = Game::instance->block_registry.make(BlockType::none);
-			return *none;
-		}
 		Position::BlockInWorld block_pos(chunk.get_position(), {0, 0, 0});
 		block_pos.x += x;
 		block_pos.y += y;
 		block_pos.z += z;
 		return chunk.get_owner().get_block(block_pos);
-	}
-	if(chunk.solid_block != nullptr)
-	{
-		return *chunk.solid_block;
 	}
 	#define s(a) static_cast<Position::BlockInChunk::value_type>(a)
 	return chunk.get_block({s(x), s(y), s(z)});

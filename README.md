@@ -24,13 +24,18 @@ If you have already cloned it and did not do that, then you need to init and upd
 If you are using Windows, you must run `fix_symlinks.bat` before building or running block_thingy. This is because Git incorrectly translates each symbolic link to be just a text file with the link path as the content.
 
 ### Dependencies
- * [FreeType 2](https://www.freetype.org/)
- * [GLM](https://github.com/g-truc/glm): included as a submodule
- * glad: included in the repository
- * [GLFW 3](https://github.com/glfw/glfw)
- * libpng
- * [msgpack-c](https://github.com/msgpack/msgpack-c/)
- * [webgl-noise](https://github.com/stegu/webgl-noise): included as a submodule
+thing | included?
+----- | ---------
+[FreeType 2](https://www.freetype.org/) | ❌
+[glad](https://github.com/Dav1dde/glad) | ✔ (direct)
+[GLFW 3](https://github.com/glfw/glfw) | ❌
+[GLM](https://github.com/g-truc/glm) | ✔ (submodule)
+libpng | ❌
+[moodycamel::ConcurrentQueue](https://github.com/cameron314/concurrentqueue) | ✔ (direct)
+[msgpack-c](https://github.com/msgpack/msgpack-c/) | ❌
+[rhea 0.3](https://github.com/Nocte-/rhea/tree/0.3) | ✔ (submodule)
+[strict variant](https://github.com/cbeck88/strict-variant) | ✔ (submodule)
+[webgl-noise](https://github.com/stegu/webgl-noise) | ✔ (submodule)
 
 ### Building (using CMake)
 

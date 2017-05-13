@@ -17,6 +17,14 @@ struct FileWatcher::impl
 	// unique_ptr to keep validity when vector resizes itself
 	std::vector<std::unique_ptr<InotifyWatch>> inotify_watches;
 #endif
+
+	~impl()
+	{
+	#ifdef USE_INOTIFY
+		// ~Inotify does this, but if inotify_watches destructs first, RemoveAll uses invalid pointers
+		inotify.RemoveAll();
+	#endif
+	}
 };
 
 FileWatcher::FileWatcher()

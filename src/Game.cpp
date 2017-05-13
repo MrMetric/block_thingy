@@ -31,9 +31,9 @@
 #include "World.hpp"
 #include "block/Base.hpp"
 #include "block/BlockType.hpp"
-#include "chunk/mesh/Greedy.hpp"
-#include "chunk/mesh/Simple.hpp"
-#include "chunk/mesh/SimpleAO.hpp"
+#include "chunk/Mesher/Greedy.hpp"
+#include "chunk/Mesher/Simple.hpp"
+#include "chunk/Mesher/SimpleAO.hpp"
 #include "console/Command.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
@@ -364,20 +364,20 @@ void Game::quit()
 	glfwSetWindowShouldClose(gfx.window, GL_TRUE);
 }
 
-void Game::screenshot(string filename) const
+void Game::screenshot(fs::path path) const
 {
 	if(fs::is_directory("screenshots") || fs::create_directory("screenshots"))
 	{
-		filename = "screenshots/" + filename;
+		path = "screenshots" / path;
 	}
 	// TODO: check file existence
-	LOG(INFO) << "saving screenshot to " << filename;
+	LOG(INFO) << "saving screenshot to " << path.u8string();
 	const auto width = gfx.window_size.x;
 	const auto height = gfx.window_size.y;
 	auto pixels = std::make_unique<GLubyte[]>(3 * width * height);
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
-	Gfx::write_png_RGB(filename.c_str(), pixels.get(), width, height, true);
+	Gfx::write_png_RGB(path, pixels.get(), width, height, true);
 }
 
 double Game::get_fps() const
@@ -506,7 +506,7 @@ void Game::impl::add_commands()
 		const Position::BlockInWorld pos = game.hovered_block->pos;
 		if(game.world.get_block(pos).type() != BlockType::none) // TODO: breakability check
 		{
-			game.world.set_block(pos, game.block_registry.make(BlockType::air));
+			game.world.set_block(pos, game.block_registry.make(BlockType::air), false);
 			//event_manager.do_event(Event_break_block(pos, face));
 		}
 	});
@@ -532,7 +532,7 @@ void Game::impl::add_commands()
 			}
 			if(game.player.can_place_block_at(pos) || !block->is_solid())
 			{
-				game.world.set_block(pos, std::move(block));
+				game.world.set_block(pos, std::move(block), false);
 				//event_manager.do_event(Event_place_block(pos, face));
 			}
 		}

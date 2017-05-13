@@ -13,7 +13,7 @@ template<>
 void World::save(msgpack::packer<std::ofstream>& o) const
 {
 	o.pack_array(2);
-	o.pack(ticks);
+	o.pack(get_ticks());
 
 	o.pack(block_registry.get_extid_map());
 }

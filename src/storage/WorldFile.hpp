@@ -57,13 +57,17 @@ class WorldFile
 		/**
 		 * Load the chunk that is at specified position. If the chunk does not exist, `nullptr` is returned.
 		 */
-		std::shared_ptr<Chunk> load_chunk(const Position::ChunkInWorld&);
+		std::unique_ptr<Chunk> load_chunk(const Position::ChunkInWorld&);
+
+		bool has_chunk(const Position::ChunkInWorld&);
 
 	private:
 		fs::path world_path;
 		fs::path player_dir;
 		fs::path chunk_dir;
 		World& world;
+
+		fs::path chunk_path(const Position::ChunkInWorld&);
 };
 
 } // namespace Storage

@@ -1,0 +1,4 @@
+namespace Mesher
+{
+	class Base;
+}

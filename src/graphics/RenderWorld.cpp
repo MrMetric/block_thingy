@@ -34,18 +34,17 @@ void RenderWorld::draw_world
 	const ChunkInWorld min = chunk_pos - render_distance;
 	const ChunkInWorld max = chunk_pos + render_distance;
 
-	// TODO (when threading is added): what if a chunk loads between passes?
+	// TODO: what if a chunk loads between passes?
 	auto draw_chunks = [&world, &min, &max](const bool transluscent_pass)
 	{
 		for(ChunkInWorld::value_type x = min.x; x <= max.x; ++x)
+		for(ChunkInWorld::value_type y = min.y; y <= max.y; ++y)
+		for(ChunkInWorld::value_type z = min.z; z <= max.z; ++z)
 		{
-			for(ChunkInWorld::value_type y = min.y; y <= max.y; ++y)
+			shared_ptr<Chunk> chunk = world.get_or_make_chunk({ x, y, z });
+			if(chunk != nullptr)
 			{
-				for(ChunkInWorld::value_type z = min.z; z <= max.z; ++z)
-				{
-					shared_ptr<Chunk> chunk = world.get_or_make_chunk({ x, y, z });
-					chunk->render(transluscent_pass);
-				}
+				chunk->render(transluscent_pass);
 			}
 		}
 	};

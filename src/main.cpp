@@ -122,18 +122,13 @@ int main(int argc, char** argv)
 		game->draw();
 	}
 
-	game.reset(); // destruct
-	plugin_manager.reset();
+	game = nullptr;
+	plugin_manager = nullptr;
 	Settings::save();
 	console.reset();
 
 	}
-	catch(const std::runtime_error& error)
-	{
-		log_exception(error);
-		return EXIT_FAILURE;
-	}
-	catch(const std::logic_error& error)
+	catch(const std::exception& error)
 	{
 		log_exception(error);
 		return EXIT_FAILURE;

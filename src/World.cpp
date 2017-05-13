@@ -4,7 +4,9 @@
 #include <cassert>
 #include <cmath>
 #include <memory>
+#include <mutex>
 #include <queue>
+#include <stdexcept>
 #include <stdint.h>
 #include <tuple>
 #include <unordered_set>
@@ -20,10 +22,14 @@
 #include "block/BlockType.hpp"
 #include "block/Interface/KnowsPosition.hpp"
 #include "chunk/Chunk.hpp"
+#include "chunk/Mesher/Base.hpp"
 #include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
+#include "position/hash.hpp"
+#include "storage/WorldFile.hpp"
+#include "util/ThreadThingy.hpp"
 
 #include "std_make_unique.hpp"
 
@@ -35,6 +41,81 @@ using Position::BlockInChunk;
 using Position::BlockInWorld;
 using Position::ChunkInWorld;
 
+struct World::impl
+{
+	impl
+	(
+		World& world,
+		const fs::path& file_path
+	)
+	:
+		world(world),
+		chunks(0, Position::hasher<ChunkInWorld>),
+		chunks_to_save(0, Position::hasher<ChunkInWorld>),
+		file(file_path, world),
+		gen_thread([this, &world](const ChunkInWorld& pos)
+		{
+			shared_ptr<Chunk> chunk = std::make_shared<Chunk>(pos, world);
+			gen_chunk(chunk);
+			generated_chunks.enqueue(chunk);
+		}, 2, Position::hasher<ChunkInWorld>),
+		load_thread([this](const ChunkInWorld& pos)
+		{
+			shared_ptr<Chunk> chunk(file.load_chunk(pos));
+			assert(chunk != nullptr);
+			loaded_chunks.enqueue(chunk);
+			mesh_thread.enqueue(chunk);
+		}, 2, Position::hasher<ChunkInWorld>),
+		mesh_thread([this](shared_ptr<Chunk>& chunk)
+		{
+			assert(chunk != nullptr);
+			chunk->update();
+			mesh_thread.dequeue(chunk);
+		}, 2)
+	{
+	}
+
+	World& world;
+
+	Position::unordered_map_t<ChunkInWorld, shared_ptr<Chunk>> chunks;
+	mutable std::mutex chunks_mutex;
+
+	std::queue<Position::BlockInWorld> light_add;
+
+	std::unordered_set<ChunkInWorld, Position::hasher_t<ChunkInWorld>> chunks_to_save;
+
+	std::unordered_map<std::string, shared_ptr<Player>> players;
+
+	Storage::WorldFile file;
+
+	void update_chunk_neighbors
+	(
+		const ChunkInWorld&,
+		bool thread = true
+	);
+	void update_chunk_neighbors
+	(
+		const ChunkInWorld&,
+		const BlockInChunk&,
+		bool thread = true
+	);
+	void update_chunk_neighbor
+	(
+		const ChunkInWorld&,
+		const ChunkInWorld&,
+		bool thread = true
+	);
+
+	Util::ThreadThingy<ChunkInWorld, Position::hasher_t<ChunkInWorld>> gen_thread;
+	moodycamel::ConcurrentQueue<shared_ptr<Chunk>> generated_chunks;
+	void gen_chunk(shared_ptr<Chunk>) const;
+
+	Util::ThreadThingy<ChunkInWorld, Position::hasher_t<ChunkInWorld>> load_thread;
+	moodycamel::ConcurrentQueue<shared_ptr<Chunk>> loaded_chunks;
+
+	Util::ThreadThingy<shared_ptr<Chunk>> mesh_thread;
+};
+
 World::World
 (
 	const fs::path& file_path,
@@ -45,11 +126,20 @@ World::World
 	block_registry(block_registry),
 	mesher(std::move(mesher)),
 	ticks(0),
-	chunks(0, Position::hasher<ChunkInWorld>),
-	last_chunk(nullptr),
-	chunks_to_save(0, Position::hasher<ChunkInWorld>),
-	file(file_path, *this)
+	pImpl(std::make_unique<impl>
+	(
+		*this,
+		file_path
+	))
 {
+}
+
+World::~World()
+{
+	// this does not work in ~impl
+	pImpl->gen_thread.stop();
+	pImpl->load_thread.stop();
+	pImpl->mesh_thread.stop();
 }
 
 static bool does_affect_light(const Block::Base& block)
@@ -66,8 +156,18 @@ static bool does_affect_light(const Block::Base& block)
 	return false;
 }
 
-void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> block_ptr)
+void World::set_block
+(
+	const BlockInWorld& block_pos,
+	unique_ptr<Block::Base> block_ptr,
+	bool thread
+)
 {
+	if(block_ptr == nullptr)
+	{
+		throw std::invalid_argument("block must not be null");
+	}
+
 	{
 		auto ptr = dynamic_cast<Block::Interface::KnowsPosition*>(block_ptr.get());
 		if(ptr != nullptr)
@@ -78,6 +178,11 @@ void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> blo
 
 	const ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
+	if(chunk == nullptr)
+	{
+		// TODO: handle this better
+		return;
+	}
 
 	const Block::Base& old_block = get_block(block_pos);
 	const bool old_affects_light = does_affect_light(old_block);
@@ -86,12 +191,11 @@ void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> blo
 
 	const BlockInChunk pos(block_pos);
 	chunk->set_block(pos, std::move(block_ptr));
-	update_chunk_neighbors(chunk_pos, pos);
 
 	const Block::Base& block = chunk->get_block(pos);
 	const bool affects_light = does_affect_light(block);
 
-	chunks_to_save.emplace(chunk_pos);
+	pImpl->chunks_to_save.emplace(chunk_pos);
 
 	// TODO: these checks might not work (a filter block could be overwritten by a different filter block)
 	if(affects_light && !old_affects_light)
@@ -113,12 +217,22 @@ void World::set_block(const BlockInWorld& block_pos, unique_ptr<Block::Base> blo
 	{
 		update_light_around(block_pos);
 	}
+
+	pImpl->update_chunk_neighbors(chunk_pos, pos, thread);
+	if(thread)
+	{
+		pImpl->mesh_thread.enqueue(chunk);
+	}
+	else
+	{
+		chunk->update();
+	}
 }
 
 const Block::Base& World::get_block(const BlockInWorld& block_pos) const
 {
 	const ChunkInWorld chunk_pos(block_pos);
-	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
+	const shared_ptr<const Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
 		static const std::unique_ptr<Block::Base> none = block_registry.make(BlockType::none);
@@ -132,7 +246,7 @@ const Block::Base& World::get_block(const BlockInWorld& block_pos) const
 Block::Base& World::get_block(const BlockInWorld& block_pos)
 {
 	const ChunkInWorld chunk_pos(block_pos);
-	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
+	const shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
 		static /*const*/ std::unique_ptr<Block::Base> none = block_registry.make(BlockType::none);
@@ -154,25 +268,35 @@ Graphics::Color World::get_light(const BlockInWorld& block_pos) const
 	return chunk->get_light(BlockInChunk(block_pos));
 }
 
-void World::set_light(const BlockInWorld& block_pos, const Graphics::Color& color, bool save)
+void World::set_light
+(
+	const BlockInWorld& block_pos,
+	const Graphics::Color& color,
+	bool save
+)
 {
 	const ChunkInWorld chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		// TODO?
+		// TODO: handle this better
 		return;
 	}
 	const BlockInChunk pos(block_pos);
 	chunk->set_light(pos, color);
-	update_chunk_neighbors(chunk_pos, pos);
+	pImpl->update_chunk_neighbors(chunk_pos, pos);
 	if(save)
 	{
-		chunks_to_save.emplace(chunk_pos);
+		pImpl->chunks_to_save.emplace(chunk_pos);
 	}
 }
 
-void World::add_light(const BlockInWorld& block_pos, const Graphics::Color& color, bool save)
+void World::add_light
+(
+	const BlockInWorld& block_pos,
+	const Graphics::Color& color,
+	bool save
+)
 {
 	set_light(block_pos, color, save);
 	if(color == 0)
@@ -181,23 +305,27 @@ void World::add_light(const BlockInWorld& block_pos, const Graphics::Color& colo
 	}
 
 	// see https://www.seedofandromeda.com/blogs/29-fast-flood-fill-lighting-in-a-blocky-voxel-game-pt-1
-	light_add.emplace(block_pos);
+	pImpl->light_add.emplace(block_pos);
 	process_light_add();
 }
 
 void World::process_light_add()
 {
-	while(!light_add.empty())
+	while(!pImpl->light_add.empty())
 	{
-		const BlockInWorld pos = light_add.front();
-		light_add.pop();
+		const BlockInWorld pos = pImpl->light_add.front();
+		pImpl->light_add.pop();
 		const Graphics::Color color = get_light(pos) - 1;
 		if(color == 0)
 		{
 			continue;
 		}
 
-		auto fill = [this, &pos]
+		auto fill =
+		[
+			this,
+			&pos
+		]
 		(
 			const int8_t x,
 			const int8_t y,
@@ -231,7 +359,7 @@ void World::process_light_add()
 			if(set)
 			{
 				set_light(pos2, color2, false);
-				light_add.emplace(pos2);
+				pImpl->light_add.emplace(pos2);
 			}
 		};
 
@@ -257,7 +385,18 @@ void World::sub_light(const BlockInWorld& block_pos)
 		const Graphics::Color color = std::get<1>(q.front());
 		q.pop();
 
-		auto fill = [this, &q, &pos](const Graphics::Color& color, const int8_t x, const int8_t y, const int8_t z)
+		auto fill =
+		[
+			this,
+			&q,
+			&pos
+		]
+		(
+			const Graphics::Color& color,
+			const int8_t x,
+			const int8_t y,
+			const int8_t z
+		)
 		{
 			const BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
 			Graphics::Color color2 = get_light(pos2);
@@ -275,7 +414,7 @@ void World::sub_light(const BlockInWorld& block_pos)
 				}
 				else if(color2[i] >= color[i])
 				{
-					light_add.emplace(pos2);
+					pImpl->light_add.emplace(pos2);
 				}
 			}
 			if(set)
@@ -296,7 +435,7 @@ void World::sub_light(const BlockInWorld& block_pos)
 
 void World::update_light_around(const BlockInWorld& block_pos)
 {
-	#define a(x_, y_, z_) light_add.emplace(block_pos.x + x_, block_pos.y + y_, block_pos.z + z_)
+	#define a(x_, y_, z_) pImpl->light_add.emplace(block_pos.x + x_, block_pos.y + y_, block_pos.z + z_)
 	a( 0,  0, -1);
 	a( 0,  0, +1);
 	a( 0, -1,  0);
@@ -310,20 +449,14 @@ void World::update_light_around(const BlockInWorld& block_pos)
 
 void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 {
-	if(last_chunk != nullptr && chunk_pos == last_key)
 	{
-		last_chunk = chunk;
-	}
-
-	if(!chunks.emplace(chunk_pos, chunk).second)
-	{
-		chunks[chunk_pos] = chunk;
+		std::lock_guard<std::mutex> g(pImpl->chunks_mutex);
+		pImpl->chunks.insert_or_assign(chunk_pos, chunk);
 	}
 	if(chunk == nullptr)
 	{
 		return;
 	}
-	update_chunk_neighbors(chunk_pos);
 
 	// update light at chunk sides to make it flow into the new chunk
 	{
@@ -339,10 +472,10 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 				BlockInWorld pos2(pos);
 
 				pos2[i3] = pos1[i3] - 1;
-				light_add.emplace(pos2);
+				pImpl->light_add.emplace(pos2);
 
 				pos2[i3] = pos1[i3] + CHUNK_SIZE;
-				light_add.emplace(pos2);
+				pImpl->light_add.emplace(pos2);
 			}
 		}
 		process_light_add();
@@ -373,29 +506,22 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 			}
 		}
 	}
+
+	pImpl->mesh_thread.enqueue(chunk);
+	pImpl->update_chunk_neighbors(chunk_pos);
 }
 
 shared_ptr<Chunk> World::get_chunk(const ChunkInWorld& chunk_pos) const
 {
-	if(last_chunk != nullptr && chunk_pos == last_key)
-	{
-		return last_chunk;
-	}
-
-	const auto i = chunks.find(chunk_pos);
-	if(i == chunks.cend())
+	std::lock_guard<std::mutex> g(pImpl->chunks_mutex);
+	const auto i = pImpl->chunks.find(chunk_pos);
+	if(i == pImpl->chunks.cend())
 	{
 		return nullptr;
 	}
-	shared_ptr<Chunk> chunk = i->second;
-	last_key = chunk_pos;
-	last_chunk = chunk;
-	return chunk;
+	return i->second;
 }
 
-// this does not set last_chunk/last_key because:
-// if the chunk is not null, get_chunk does it
-// if the chunk is null, set_chunk does it
 shared_ptr<Chunk> World::get_or_make_chunk(const ChunkInWorld& chunk_pos)
 {
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
@@ -404,26 +530,178 @@ shared_ptr<Chunk> World::get_or_make_chunk(const ChunkInWorld& chunk_pos)
 		return chunk;
 	}
 
-	chunk = file.load_chunk(chunk_pos);
-	if(chunk != nullptr)
+	if(pImpl->file.has_chunk(chunk_pos))
 	{
-		set_chunk(chunk_pos, chunk);
-		return chunk;
+		pImpl->load_thread.enqueue(chunk_pos);
+	}
+	else
+	{
+		pImpl->gen_thread.enqueue(chunk_pos);
 	}
 
+	return nullptr;
+}
+
+void World::step(double delta_time)
+{
+	shared_ptr<Chunk> chunk;
+	while(pImpl->loaded_chunks.try_dequeue(chunk))
 	{
-		chunk = std::make_shared<Chunk>(chunk_pos, *this);
-		set_chunk(chunk_pos, chunk);
-		gen_chunk(chunk_pos); // should this really be here?
-		return chunk;
+		ChunkInWorld pos = chunk->get_position();
+		set_chunk(pos, chunk);
+		pImpl->load_thread.dequeue(pos);
+	}
+	while(pImpl->generated_chunks.try_dequeue(chunk))
+	{
+		ChunkInWorld pos = chunk->get_position();
+		set_chunk(pos, chunk);
+		pImpl->gen_thread.dequeue(pos);
+		pImpl->chunks_to_save.emplace(pos);
+	}
+
+	delta_time = 1.0 / 60.0;
+	for(auto& p : pImpl->players)
+	{
+		p.second->step(delta_time);
+	}
+	ticks += 1;
+}
+
+shared_ptr<Player> World::add_player(const string& name)
+{
+	shared_ptr<Player> player = pImpl->file.load_player(name);
+	// never nullptr; if the file does not exist, WorldFile makes a new player
+	assert(player != nullptr);
+	pImpl->players.emplace(name, player);
+	return player;
+}
+
+shared_ptr<Player> World::get_player(const string& name)
+{
+	const auto i = pImpl->players.find(name);
+	if(i == pImpl->players.cend())
+	{
+		return nullptr;
+	}
+	return i->second;
+}
+
+const std::unordered_map<std::string, shared_ptr<Player>>& World::get_players()
+{
+	return pImpl->players;
+}
+
+void World::save()
+{
+	pImpl->file.save_world();
+	pImpl->file.save_players();
+
+	while(!pImpl->chunks_to_save.empty())
+	{
+		const auto i = pImpl->chunks_to_save.cbegin();
+		const ChunkInWorld position = *i;
+		pImpl->chunks_to_save.erase(i);
+		shared_ptr<Chunk> chunk = get_chunk(position);
+		if(chunk != nullptr)
+		{
+			pImpl->file.save_chunk(*chunk);
+		}
 	}
 }
 
-void World::gen_chunk(const ChunkInWorld& chunk_pos)
+uint_fast64_t World::get_ticks() const
 {
-	BlockInChunk min(0, 0, 0);
-	BlockInChunk max(CHUNK_SIZE - 1, CHUNK_SIZE - 1, CHUNK_SIZE - 1);
-	gen_at(BlockInWorld(chunk_pos, min), BlockInWorld(chunk_pos, max));
+	return ticks;
+}
+
+double World::get_time() const
+{
+	return ticks / 60.0;
+}
+
+void World::set_mesher(std::unique_ptr<Mesher::Base> mesher)
+{
+	assert(mesher != nullptr);
+	this->mesher = std::move(mesher);
+	for(auto& p : pImpl->chunks)
+	{
+		p.second->update();
+	}
+}
+
+void World::impl::update_chunk_neighbors
+(
+	const ChunkInWorld& chunk_pos,
+	const bool thread
+)
+{
+	update_chunk_neighbor(chunk_pos, {-1,  0,  0}, thread);
+	update_chunk_neighbor(chunk_pos, {+1,  0,  0}, thread);
+	update_chunk_neighbor(chunk_pos, { 0, -1,  0}, thread);
+	update_chunk_neighbor(chunk_pos, { 0, +1,  0}, thread);
+	update_chunk_neighbor(chunk_pos, { 0,  0, -1}, thread);
+	update_chunk_neighbor(chunk_pos, { 0,  0, +1}, thread);
+}
+
+void World::impl::update_chunk_neighbors
+(
+	const ChunkInWorld& chunk_pos,
+	const BlockInChunk& pos,
+	const bool thread
+)
+{
+	const auto x = pos.x;
+	const auto y = pos.y;
+	const auto z = pos.z;
+
+	// TODO: check if the neighbor chunk has a block beside this one (to avoid updating when the appearance won't change)
+	if(x == 0)
+	{
+		update_chunk_neighbor(chunk_pos, {-1, 0, 0}, thread);
+	}
+	else if(x == CHUNK_SIZE - 1)
+	{
+		update_chunk_neighbor(chunk_pos, {+1, 0, 0}, thread);
+	}
+
+	if(y == 0)
+	{
+		update_chunk_neighbor(chunk_pos, {0, -1, 0}, thread);
+	}
+	else if(y == CHUNK_SIZE - 1)
+	{
+		update_chunk_neighbor(chunk_pos, {0, +1, 0}, thread);
+	}
+
+	if(z == 0)
+	{
+		update_chunk_neighbor(chunk_pos, {0, 0, -1}, thread);
+	}
+	else if(z == CHUNK_SIZE - 1)
+	{
+		update_chunk_neighbor(chunk_pos, {0, 0, +1}, thread);
+	}
+}
+
+void World::impl::update_chunk_neighbor
+(
+	const ChunkInWorld& chunk_pos,
+	const ChunkInWorld& offset,
+	const bool thread
+)
+{
+	shared_ptr<Chunk> chunk = world.get_chunk(chunk_pos + offset);
+	if(chunk != nullptr)
+	{
+		if(thread)
+		{
+			mesh_thread.enqueue(chunk);
+		}
+		else
+		{
+			chunk->update();
+		}
+	}
 }
 
 static double sum_octaves
@@ -445,8 +723,14 @@ static double sum_octaves
 	return val;
 }
 
-void World::gen_at(const BlockInWorld& min, const BlockInWorld& max)
+void World::impl::gen_chunk(shared_ptr<Chunk> chunk) const
 {
+	assert(chunk != nullptr);
+
+	const ChunkInWorld chunk_pos = chunk->get_position();
+	const BlockInWorld min(chunk_pos, {0, 0, 0});
+	const BlockInWorld max(chunk_pos, {CHUNK_SIZE - 1, CHUNK_SIZE - 1, CHUNK_SIZE - 1});
+
 	BlockInWorld block_pos(0, 0, 0);
 	for(auto x = min.x; x <= max.x; ++x)
 	for(auto z = min.z; z <= max.z; ++z)
@@ -480,142 +764,7 @@ void World::gen_at(const BlockInWorld& min, const BlockInWorld& max)
 
 			// TODO: investigate performance of using strings here vs caching the IDs
 			const string t = y > -m / 2 ? "White" : "Black";
-			set_block(block_pos, block_registry.make(t));
+			chunk->set_block(BlockInChunk(block_pos), world.block_registry.make(t));
 		}
-	}
-}
-
-void World::step(double delta_time)
-{
-	delta_time = 1.0 / 60.0;
-	for(auto& p : players)
-	{
-		p.second->step(delta_time);
-	}
-	ticks += 1;
-}
-
-shared_ptr<Player> World::add_player(const string& name)
-{
-	shared_ptr<Player> player = file.load_player(name);
-	// never nullptr; if the file does not exist, WorldFile makes a new player
-	players.emplace(name, player);
-	return player;
-}
-
-shared_ptr<Player> World::get_player(const string& name)
-{
-	const auto i = players.find(name);
-	if(i == players.cend())
-	{
-		return nullptr;
-	}
-	return i->second;
-}
-
-void World::save()
-{
-	file.save_world();
-	file.save_players();
-
-	while(!chunks_to_save.empty())
-	{
-		const auto i = chunks_to_save.cbegin();
-		const ChunkInWorld position = *i;
-		chunks_to_save.erase(i);
-		shared_ptr<Chunk> chunk = get_chunk(position);
-		if(chunk != nullptr)
-		{
-			file.save_chunk(*chunk);
-		}
-	}
-}
-
-uint_fast64_t World::get_ticks()
-{
-	return ticks;
-}
-
-double World::get_time()
-{
-	return ticks / 60.0;
-}
-
-void World::set_mesher(std::unique_ptr<Mesher::Base> mesher)
-{
-	assert(mesher != nullptr);
-	this->mesher = std::move(mesher);
-	for(auto& p : chunks)
-	{
-		p.second->update();
-	}
-}
-
-void World::update_chunk_neighbors
-(
-	const ChunkInWorld& chunk_pos
-)
-const
-{
-	update_chunk_neighbor(chunk_pos, {-1,  0,  0});
-	update_chunk_neighbor(chunk_pos, {+1,  0,  0});
-	update_chunk_neighbor(chunk_pos, { 0, -1,  0});
-	update_chunk_neighbor(chunk_pos, { 0, +1,  0});
-	update_chunk_neighbor(chunk_pos, { 0,  0, -1});
-	update_chunk_neighbor(chunk_pos, { 0,  0, +1});
-}
-
-void World::update_chunk_neighbors
-(
-	const ChunkInWorld& chunk_pos,
-	const BlockInChunk pos
-)
-const
-{
-	const auto x = pos.x;
-	const auto y = pos.y;
-	const auto z = pos.z;
-
-	// TODO: check if the neighbor chunk has a block beside this one (to avoid updating when the appearance won't change)
-	if(x == 0)
-	{
-		update_chunk_neighbor(chunk_pos, {-1, 0, 0});
-	}
-	else if(x == CHUNK_SIZE - 1)
-	{
-		update_chunk_neighbor(chunk_pos, {+1, 0, 0});
-	}
-
-	if(y == 0)
-	{
-		update_chunk_neighbor(chunk_pos, {0, -1, 0});
-	}
-	else if(y == CHUNK_SIZE - 1)
-	{
-		update_chunk_neighbor(chunk_pos, {0, +1, 0});
-	}
-
-	if(z == 0)
-	{
-		update_chunk_neighbor(chunk_pos, {0, 0, -1});
-	}
-	else if(z == CHUNK_SIZE - 1)
-	{
-		update_chunk_neighbor(chunk_pos, {0, 0, +1});
-	}
-}
-
-void World::update_chunk_neighbor
-(
-	const ChunkInWorld& position,
-	ChunkInWorld chunk_pos
-)
-const
-{
-	chunk_pos += position;
-	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
-	if(chunk != nullptr)
-	{
-		chunk->changed = true;
 	}
 }

@@ -34,6 +34,7 @@ ChunkInWorld operator+(const ChunkInWorld&, ChunkInWorld::value_type);
 ChunkInWorld operator*(const ChunkInWorld&, ChunkInWorld::value_type);
 
 ChunkInWorld operator-(const ChunkInWorld&, const ChunkInWorld&);
+ChunkInWorld operator+(const ChunkInWorld&, const ChunkInWorld&);
 
 std::ostream& operator<<(std::ostream&, const ChunkInWorld&);
 

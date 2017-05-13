@@ -3,17 +3,24 @@
 #include "Game.hpp"
 #include "block/Base.hpp"
 
+using T = std::unique_ptr<Block::Base>;
+
 template<>
-ChunkData<std::unique_ptr<Block::Base>>::ChunkData()
+ChunkData<T>::ChunkData()
+:
+	ChunkData(Game::instance->block_registry.make(BlockType::air))
 {
-	fill(Game::instance->block_registry.make(BlockType::air));
 }
 
 template<>
-void ChunkData<std::unique_ptr<Block::Base>>::fill(const std::unique_ptr<Block::Base>& block)
+T ChunkData<T>::T_copy(const T& block) const
 {
-	std::generate(blocks.begin(), blocks.end(), [&block]()
-	{
-		return Game::instance->block_registry.make(*block);
-	});
+	return Game::instance->block_registry.make(*block);
+}
+
+template<>
+bool ChunkData<T>::T_equal(const T& a, const T& b) const
+{
+	// TODO: implement operator== for blocks
+	return false;
 }

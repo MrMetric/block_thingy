@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <memory>
+#include <mutex>
 
 #include "fwd/block/Base.hpp"
 #include "position/BlockInChunk.hpp"
@@ -15,26 +16,28 @@ class ChunkData
 public:
 	using chunk_data_t = std::array<T, CHUNK_BLOCK_COUNT>;
 	using size_type = typename chunk_data_t::size_type;
-	using const_iterator = typename chunk_data_t::const_iterator;
-	using iterator = typename chunk_data_t::iterator;
 
 	ChunkData()
 	{
 	}
 
-	ChunkData(const T& block)
+	ChunkData(T block)
 	{
-		fill(block);
+		fill(std::move(block));
 	}
 
 	ChunkData(ChunkData&& that)
 	:
+		solid_block(std::move(that.solid_block)),
 		blocks(std::move(that.blocks))
 	{
 	}
-	void operator=(ChunkData&& that)
+	ChunkData& operator=(ChunkData&& that)
 	{
+		std::lock_guard<std::mutex> g(mutex);
+		solid_block = std::move(that.solid_block);
 		blocks = std::move(that.blocks);
+		return *this;
 	}
 
 	ChunkData(const ChunkData&) = delete;
@@ -42,56 +45,79 @@ public:
 
 	const T& get(const Position::BlockInChunk& pos) const
 	{
-		return blocks[block_array_index(pos.x, pos.y, pos.z)];
+		std::lock_guard<std::mutex> g(mutex);
+		if(blocks == nullptr)
+		{
+			return solid_block;
+		}
+		return (*blocks)[block_array_index(pos.x, pos.y, pos.z)];
 	}
 
 	T& get(const Position::BlockInChunk& pos)
 	{
-		return blocks[block_array_index(pos.x, pos.y, pos.z)];
+		std::lock_guard<std::mutex> g(mutex);
+		if(blocks == nullptr)
+		{
+			fill_();
+		}
+		return (*blocks)[block_array_index(pos.x, pos.y, pos.z)];
 	}
 
 	void set(const Position::BlockInChunk& pos, T block)
 	{
+		std::lock_guard<std::mutex> g(mutex);
+		if(blocks == nullptr)
+		{
+			if(T_equal(solid_block, block))
+			{
+				return;
+			}
+			fill_();
+		}
 		const auto i = block_array_index(pos.x, pos.y, pos.z);
-		blocks[i] = std::move(block);
+		(*blocks)[i] = std::move(block);
 	}
 
-	void fill(const T& block)
+	void fill(T block)
 	{
-		std::generate(blocks.begin(), blocks.end(), [&block]()
+		std::lock_guard<std::mutex> g(mutex);
+		solid_block = std::move(block);
+		blocks = nullptr;
+	}
+
+	// for msgpack
+	template<typename O> void save(O&) const;
+	template<typename O> void load(const O&);
+
+private:
+	T solid_block;
+	std::unique_ptr<chunk_data_t> blocks;
+	mutable std::mutex mutex;
+
+	void fill_()
+	{
+		blocks = std::make_unique<chunk_data_t>();
+		std::generate(blocks->begin(), blocks->end(), [this]()
 		{
-			return block;
+			return T_copy(solid_block);
 		});
 	}
 
-	const_iterator cbegin() const
+	T T_copy(const T& block) const
 	{
-		return blocks.cbegin();
+		return block;
 	}
-	const_iterator cend() const
+	bool T_equal(const T& a, const T& b) const
 	{
-		return blocks.cend();
-	}
-	iterator begin()
-	{
-		return blocks.begin();
-	}
-	iterator end()
-	{
-		return blocks.end();
+		return a == b;
 	}
 
-	// public for msgpack
-	chunk_data_t blocks;
-
-private:
-	size_type block_array_index
+	static size_type block_array_index
 	(
 		const Position::BlockInChunk::value_type x,
 		const Position::BlockInChunk::value_type y,
 		const Position::BlockInChunk::value_type z
 	)
-	const
 	{
 		return CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
 	}
@@ -101,4 +127,7 @@ template<>
 ChunkData<std::unique_ptr<Block::Base>>::ChunkData();
 
 template<>
-void ChunkData<std::unique_ptr<Block::Base>>::fill(const std::unique_ptr<Block::Base>&);
+std::unique_ptr<Block::Base> ChunkData<std::unique_ptr<Block::Base>>::T_copy(const std::unique_ptr<Block::Base>&) const;
+
+template<>
+bool ChunkData<std::unique_ptr<Block::Base>>::T_equal(const std::unique_ptr<Block::Base>&, const std::unique_ptr<Block::Base>&) const;

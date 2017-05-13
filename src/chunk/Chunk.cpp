@@ -3,11 +3,14 @@
 #include <algorithm>
 #include <cstddef>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include <glad/glad.h>
 #include "graphics/OpenGL/ShaderProgram.hpp"
+#include "graphics/OpenGL/VertexArray.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
 
 #include <glm/vec3.hpp>
@@ -19,6 +22,7 @@
 #include "block/Base.hpp"
 #include "block/BlockRegistry.hpp"
 #include "block/BlockType.hpp"
+#include "chunk/Mesher/Base.hpp"
 #include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
@@ -33,22 +37,52 @@ using Position::BlockInChunk;
 using Position::BlockInWorld;
 using Position::ChunkInWorld;
 
-Chunk::Chunk(const ChunkInWorld& pos, World& owner)
+struct Chunk::impl
+{
+	impl
+	(
+		const ChunkInWorld& position,
+		World& owner
+	)
+	:
+		owner(owner),
+		position(position),
+		changed(false)
+	{
+	}
+
+	World& owner;
+	Position::ChunkInWorld position;
+
+	ChunkData<Graphics::Color> light;
+
+	bool changed;
+	Mesher::meshmap_t meshes;
+	std::vector<Graphics::OpenGL::VertexArray> mesh_vaos;
+	std::vector<Graphics::OpenGL::VertexBuffer> mesh_vbos;
+	mutable std::mutex mesh_mutex;
+
+	void update_vaos();
+};
+
+Chunk::Chunk(const ChunkInWorld& position, World& owner)
 :
-	owner(owner),
-	position(pos),
-	changed(false)
+	pImpl(std::make_unique<impl>(position, owner))
+{
+}
+
+Chunk::~Chunk()
 {
 }
 
 World& Chunk::get_owner() const
 {
-	return owner;
+	return pImpl->owner;
 }
 
 ChunkInWorld Chunk::get_position() const
 {
-	return position;
+	return pImpl->position;
 }
 
 const Block::Base& Chunk::get_block(const BlockInChunk& pos) const
@@ -63,53 +97,47 @@ Block::Base& Chunk::get_block(const BlockInChunk& pos)
 
 void Chunk::set_block(const BlockInChunk& pos, unique_ptr<Block::Base> block)
 {
-	solid_block = nullptr;
 	blocks.set(pos, std::move(block));
-	changed = true;
 }
 
 Graphics::Color Chunk::get_light(const BlockInChunk& pos) const
 {
-	return light.get(pos);
+	return pImpl->light.get(pos);
 }
 
 void Chunk::set_light(const BlockInChunk& pos, const Graphics::Color& color)
 {
-	light.set(pos, color);
-
-	// TODO: mark changed only when the color is different
-	changed = true;
+	pImpl->light.set(pos, color);
 }
 
 void Chunk::update()
 {
-	if(solid_block != nullptr && solid_block->is_invisible())
-	{
-		meshes.clear();
-		return;
-	}
+	Mesher::meshmap_t meshes = pImpl->owner.mesher->make_mesh(*this);
 
-	meshes = owner.mesher->make_mesh(*this);
-	update_vaos();
+	std::lock_guard<std::mutex> g(pImpl->mesh_mutex);
+	pImpl->meshes = std::move(meshes);
+	pImpl->changed = true;
 }
 
 void Chunk::render(const bool transluscent_pass)
 {
-	if(changed)
+	std::lock_guard<std::mutex> g(pImpl->mesh_mutex);
+
+	if(pImpl->changed)
 	{
-		update();
-		changed = false;
+		pImpl->update_vaos();
+		pImpl->changed = false;
 	}
 
-	const ChunkInWorld render_position = position - ChunkInWorld(BlockInWorld(Game::instance->camera.position));
+	const ChunkInWorld render_position = pImpl->position - ChunkInWorld(BlockInWorld(Game::instance->camera.position));
 	// TODO?: use double when available
 	const glm::vec3 position_offset(static_cast<BlockInWorld::vec_type>(BlockInWorld(render_position, {0, 0, 0})));
 	std::size_t i = 0;
-	for(const auto& p : meshes)
+	for(const auto& p : pImpl->meshes)
 	{
 		const BlockType type = p.first;
 		// TODO: get existing block instead of making one
-		if(owner.block_registry.make(type)->is_translucent() != transluscent_pass)
+		if(pImpl->owner.block_registry.make(type)->is_translucent() != transluscent_pass)
 		{
 			++i;
 			continue;
@@ -120,7 +148,7 @@ void Chunk::render(const bool transluscent_pass)
 		shader.uniform("position_offset", position_offset);
 
 		const std::size_t draw_count = p.second.size() * 3;
-		mesh_vaos[i].draw(GL_TRIANGLES, 0, draw_count);
+		pImpl->mesh_vaos[i].draw(GL_TRIANGLES, 0, draw_count);
 
 		++i;
 	}
@@ -128,16 +156,7 @@ void Chunk::render(const bool transluscent_pass)
 
 void Chunk::set_blocks(chunk_blocks_t new_blocks)
 {
-	for(const auto& b : new_blocks)
-	{
-		if(b == nullptr)
-		{
-			throw std::invalid_argument("Chunk::set_blocks(array): got a null block");
-		}
-	}
 	blocks = std::move(new_blocks);
-	solid_block = nullptr;
-	changed = true;
 }
 void Chunk::set_blocks(unique_ptr<Block::Base> block)
 {
@@ -145,13 +164,10 @@ void Chunk::set_blocks(unique_ptr<Block::Base> block)
 	{
 		throw std::invalid_argument("Chunk::set_blocks(single): got a null block");
 	}
-	// TODO: compare new block with current block
-	solid_block = std::move(block);
-	blocks.fill(solid_block);
-	changed = true;
+	blocks.fill(std::move(block));
 }
 
-void Chunk::update_vaos()
+void Chunk::impl::update_vaos()
 {
 	if(mesh_vaos.size() < meshes.size())
 	{

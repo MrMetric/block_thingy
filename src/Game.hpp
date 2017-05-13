@@ -63,7 +63,7 @@ class Game
 		void close_gui();
 		void quit();
 
-		void screenshot(std::string filename) const;
+		void screenshot(fs::path) const;
 		double get_fps() const;
 
 		void update_framebuffer_size(const window_size_t&);
