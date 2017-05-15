@@ -41,6 +41,7 @@
 #include "event/EventType.hpp"
 #include "event/type/Event_change_setting.hpp"
 #include "event/type/Event_window_size_change.hpp"
+#include "graphics/Image.hpp"
 #include "graphics/RenderWorld.hpp"
 #include "graphics/GUI/Base.hpp"
 #include "graphics/GUI/Console.hpp"
@@ -111,10 +112,11 @@ static unique_ptr<Mesher::Base> make_mesher(const string& name)
 	return make_mesher("SimpleAO");
 }
 
-Game::Game()
+Game::Game(GLFWwindow* window)
 :
 	set_instance(this),
 	hovered_block(nullptr),
+	gfx(window),
 	camera(gfx, event_manager),
 	world("worlds/test", block_registry, make_mesher(Settings::get<string>("mesher"))),
 	player_ptr(world.add_player("test_player")),
@@ -374,10 +376,10 @@ void Game::screenshot(fs::path path) const
 	LOG(INFO) << "saving screenshot to " << path.u8string();
 	const auto width = gfx.window_size.x;
 	const auto height = gfx.window_size.y;
-	auto pixels = std::make_unique<GLubyte[]>(3 * width * height);
+	std::vector<uint8_t> pixels(4 * width * height);
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
-	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels.get());
-	Gfx::write_png_RGB(path, pixels.get(), width, height, true);
+	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+	Graphics::Image(width, height, std::move(pixels)).write(path);
 }
 
 double Game::get_fps() const
@@ -439,22 +441,14 @@ static void add_shader(Game& game, const BlockType t, const fs::path& shader_pat
 	}
 }
 
-void Game::add_block(const string& strid, BlockType t)
+void Game::add_block(const string& strid, const BlockType t, const fs::path& shader_path)
 {
 	LOG(DEBUG) << "ID " << static_cast<block_type_id_t>(t) << ": " << strid;
 	if(t == BlockType::none || t == BlockType::air)
 	{
 		return;
 	}
-	add_shader(*this, t, strid);
-}
-
-BlockType Game::add_block_2(const std::string& name, const fs::path& shader_path)
-{
-	BlockType t = block_registry.add<Block::Base>(name);
-	LOG(DEBUG) << "ID " << static_cast<block_type_id_t>(t) << ": " << name;
 	add_shader(*this, t, shader_path);
-	return t;
 }
 
 void Game::impl::find_hovered_block()

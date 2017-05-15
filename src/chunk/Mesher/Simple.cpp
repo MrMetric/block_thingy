@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include "Cube.hpp"
+#include "Game.hpp"
 #include "block/Base.hpp"
 #include "block/Enum/Face.hpp"
 #include "fwd/chunk/Chunk.hpp"
@@ -26,8 +27,14 @@ meshmap_t Simple::make_mesh(const Chunk& chunk)
 			continue;
 		}
 
-		mesh_t& mesh = meshes[block.type()];
-		auto add_face = [&chunk, &block, &mesh, x, y, z](Face face)
+		auto add_face =
+		[
+			&chunk,
+			&meshes,
+			x, y, z,
+			&block
+		]
+		(Face face)
 		{
 			const Side side = to_side(face);
 			const auto i = get_i(face);
@@ -36,7 +43,13 @@ meshmap_t Simple::make_mesh(const Chunk& chunk)
 			if(block_visible_from(chunk, block, pos.x, pos.y, pos.z))
 			{
 				const glm::vec3 light = static_cast<glm::vec3>(light_at(chunk, pos.x, pos.y, pos.z));
-				Base::add_face(mesh, {x, y, z}, face, 1, 1, light);
+				const auto tex = Game::instance->resource_manager.get_block_texture(block.texture(face));
+				const meshmap_key_t key =
+				{
+					block.type(),
+					tex.unit,
+				};
+				Base::add_face(meshes[key], {x, y, z}, face, 1, 1, light, tex.index);
 			}
 		};
 		add_face(Face::front);

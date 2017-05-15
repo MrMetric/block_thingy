@@ -6,6 +6,8 @@
 
 #include "fwd/block/Base.hpp"
 #include "fwd/block/BlockType.hpp"
+#include "fwd/block/Enum/Face.hpp"
+#include "util/filesystem.hpp"
 
 #include "std_make_unique.hpp"
 
@@ -56,6 +58,8 @@ class BlockRegistry
 		const extid_map_t& get_extid_map() const;
 
 		block_type_id_t get_max_id() const;
+
+		fs::path texture(BlockType, Block::Enum::Face);
 
 	private:
 		void make_strid_to_extid_map();

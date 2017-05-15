@@ -1,0 +1,4 @@
+namespace Graphics
+{
+	class Image;
+}

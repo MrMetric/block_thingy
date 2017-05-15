@@ -135,7 +135,7 @@ void Chunk::render(const bool transluscent_pass)
 	std::size_t i = 0;
 	for(const auto& p : pImpl->meshes)
 	{
-		const BlockType type = p.first;
+		const BlockType type = p.first.block_type;
 		// TODO: get existing block instead of making one
 		if(pImpl->owner.block_registry.make(type)->is_translucent() != transluscent_pass)
 		{
@@ -146,6 +146,7 @@ void Chunk::render(const bool transluscent_pass)
 		glUseProgram(shader.get_name());
 
 		shader.uniform("position_offset", position_offset);
+		shader.uniform("tex", p.first.tex_unit);
 
 		const std::size_t draw_count = p.second.size() * 3;
 		pImpl->mesh_vaos[i].draw(GL_TRIANGLES, 0, draw_count);
@@ -182,6 +183,7 @@ void Chunk::impl::update_vaos()
 				{3, GL_FLOAT        }, // light2
 				{3, GL_FLOAT        }, // light3
 				{3, GL_FLOAT        }, // light4
+				{1, GL_SHORT        }, // texture index
 			});
 			Graphics::OpenGL::VertexArray vao(vbo);
 

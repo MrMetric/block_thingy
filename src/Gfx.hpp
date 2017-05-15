@@ -31,7 +31,7 @@ namespace Position
 class Gfx
 {
 	public:
-		Gfx();
+		Gfx(GLFWwindow*);
 
 		Gfx(Gfx&&) = delete;
 		Gfx(const Gfx&) = delete;
@@ -106,15 +106,6 @@ class Gfx
 		);
 		void draw_cube_outline(const Position::BlockInWorld&, const glm::dvec4& color);
 		Graphics::OpenGL::ShaderProgram& get_block_shader(BlockType);
-
-		static void write_png_RGB
-		(
-			const fs::path&,
-			const uint8_t* data,
-			std::size_t width,
-			std::size_t height,
-			bool reverse_rows = false
-		);
 
 		void center_cursor();
 

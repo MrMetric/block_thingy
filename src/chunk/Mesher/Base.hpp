@@ -26,12 +26,29 @@ struct mesh_vertex_t
 	vertex_coord_t<uint8_t> pos;
 	Block::Enum::Face face;
 	glm::tvec4<glm::vec3> light;
+	uint16_t tex_index;
 };
 #pragma pack(pop)
 
+struct meshmap_key_t
+{
+	BlockType block_type;
+	uint8_t tex_unit;
+
+	bool operator==(const meshmap_key_t& that) const
+	{
+		return block_type == that.block_type && tex_unit == that.tex_unit;
+	}
+
+	bool operator<(const meshmap_key_t& that) const
+	{
+		return block_type < that.block_type;
+	}
+};
+
 using mesh_triangle_t = glm::tvec3<mesh_vertex_t>;
 using mesh_t = std::vector<mesh_triangle_t>;
-using meshmap_t = std::map<BlockType, mesh_t>;
+using meshmap_t = std::map<meshmap_key_t, mesh_t>;
 using u8vec3 = glm::tvec3<uint8_t>;
 
 enum class Plane
@@ -66,7 +83,8 @@ public:
 		const Block::Enum::Face face,
 		const uint8_t offset_x,
 		const uint8_t offset_z,
-		const glm::tvec4<glm::vec3>& light
+		const glm::tvec4<glm::vec3>& light,
+		const uint16_t tex_index
 	);
 	static void add_face
 	(
@@ -75,7 +93,8 @@ public:
 		const Block::Enum::Face face,
 		const uint8_t offset_x,
 		const uint8_t offset_z,
-		const glm::vec3& light
+		const glm::vec3& light,
+		const uint16_t tex_index
 	);
 	static u8vec3 get_i(Block::Enum::Face);
 

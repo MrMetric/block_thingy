@@ -10,9 +10,12 @@
 #include "block/Base.hpp"
 #include "block/BlockType.hpp"
 #include "block/Unknown.hpp"
+#include "block/Enum/Face.hpp"
 
 using std::string;
 using std::unique_ptr;
+
+using Block::Enum::Face;
 
 namespace Block {
 
@@ -182,6 +185,12 @@ block_type_id_t BlockRegistry::get_max_id() const
 {
 	assert(block_makers.size() <= std::numeric_limits<block_type_id_t>::max());
 	return static_cast<block_type_id_t>(block_makers.size());
+}
+
+fs::path BlockRegistry::texture(const BlockType type, const Face face)
+{
+	// TODO
+	return {};
 }
 
 void BlockRegistry::make_strid_to_extid_map()

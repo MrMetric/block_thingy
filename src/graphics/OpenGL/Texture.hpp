@@ -37,6 +37,32 @@ class Texture
 			bool fixed_sample_locations
 		);
 
+		void image3D
+		(
+			GLint level,
+			GLint internal_format,
+			GLsizei width,
+			GLsizei height,
+			GLsizei depth,
+			GLenum format,
+			GLenum data_type,
+			const GLvoid* data
+		);
+
+		void image3D_sub
+		(
+			GLint level,
+			GLint xoffset,
+			GLint yoffset,
+			GLint zoffset,
+			GLsizei width,
+			GLsizei height,
+			GLsizei depth,
+			GLenum format,
+			GLenum data_type,
+			const GLvoid* data
+		);
+
 		// https://www.opengl.org/sdk/docs/man4/html/glTexParameter.xhtml
 		enum class Parameter : GLenum
 		{

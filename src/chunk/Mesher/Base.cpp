@@ -3,7 +3,6 @@
 #include <cassert>
 #include <stdint.h>
 
-#include "Game.hpp"
 #include "World.hpp"
 #include "block/Base.hpp"
 #include "block/BlockType.hpp"
@@ -54,7 +53,8 @@ void Base::add_face
 	const Face face,
 	const uint8_t offset_x,
 	const uint8_t offset_z,
-	const glm::tvec4<glm::vec3>& light
+	const glm::tvec4<glm::vec3>& light,
+	const uint16_t tex_index
 )
 {
 	const u8vec3 i = get_i(face);
@@ -80,8 +80,9 @@ void Base::add_face
 	v2.pos = xyz + mod2;
 	v3.pos = xyz + mod3;
 	v4.pos = xyz + mod4;
-	v1.light = v2.light = v3.light = v4.light = light;
 	v1.face = v2.face = v3.face = v4.face = face;
+	v1.light = v2.light = v3.light = v4.light = light;
+	v1.tex_index = v2.tex_index = v3.tex_index = v4.tex_index = tex_index;
 
 	if(side == Side::top)
 	{
@@ -100,10 +101,11 @@ void Base::add_face
 	const Block::Enum::Face face,
 	const uint8_t offset_x,
 	const uint8_t offset_z,
-	const glm::vec3& light
+	const glm::vec3& light,
+	const uint16_t tex_index
 )
 {
-	add_face(mesh, xyz, face, offset_x, offset_z, glm::tvec4<glm::vec3>(light));
+	add_face(mesh, xyz, face, offset_x, offset_z, glm::tvec4<glm::vec3>(light), tex_index);
 }
 
 u8vec3 Base::get_i(const Face face)

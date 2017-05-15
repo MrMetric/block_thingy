@@ -63,6 +63,11 @@ Graphics::Color Base::color() const
 	return {0, 0, 0};
 }
 
+fs::path Base::texture(const Enum::Face) const
+{
+	return {};
+}
+
 double Base::bounciness() const
 {
 	return 0;

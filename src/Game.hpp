@@ -30,7 +30,7 @@
 class Game
 {
 	public:
-		Game();
+		Game(GLFWwindow*);
 		~Game();
 
 		Game(Game&&) = delete;
@@ -75,14 +75,18 @@ class Game
 		void joymove(const glm::dvec2& motion);
 
 		template<typename T = Block::Base>
-		BlockType add_block(const std::string& name)
+		BlockType add_block(const std::string& strid)
 		{
-			BlockType t = block_registry.add<T>(name);
-			add_block(name, t);
-			return t;
+			return add_block<T>(strid, strid);
 		}
 
-		BlockType add_block_2(const std::string& name, const fs::path& shader_path);
+		template<typename T = Block::Base>
+		BlockType add_block(const std::string& strid, const fs::path& shader_path)
+		{
+			BlockType t = block_registry.add<T>(strid);
+			add_block(strid, t, shader_path);
+			return t;
+		}
 
 		BlockType block_type;
 		std::unique_ptr<Block::Base> copied_block;
@@ -103,7 +107,7 @@ class Game
 		std::unique_ptr<Graphics::GUI::Base> gui;
 
 	private:
-		void add_block(const std::string& name, BlockType);
+		void add_block(const std::string& strid, BlockType, const fs::path& shader_path);
 
 		Position::ChunkInWorld::value_type render_distance;
 

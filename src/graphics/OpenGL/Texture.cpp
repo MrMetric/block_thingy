@@ -69,6 +69,40 @@ void Texture::image2D_multisample
 	glTexImage2DMultisample(type, samples, internal_format, width, height, fixed_sample_locations);
 }
 
+void Texture::image3D
+(
+	GLint level,
+	GLint internal_format,
+	GLsizei width,
+	GLsizei height,
+	GLsizei depth,
+	GLenum format,
+	GLenum data_type,
+	const GLvoid* data
+)
+{
+	glBindTexture(type, name);
+	glTexImage3D(type, level, internal_format, width, height, depth, 0, format, data_type, data);
+}
+
+void Texture::image3D_sub
+(
+	GLint level,
+	GLint xoffset,
+	GLint yoffset,
+	GLint zoffset,
+	GLsizei width,
+	GLsizei height,
+	GLsizei depth,
+	GLenum format,
+	GLenum data_type,
+	const GLvoid* data
+)
+{
+	glBindTexture(type, name);
+	glTexSubImage3D(type, level, xoffset, yoffset, zoffset, width, height, depth, format, data_type, data);
+}
+
 void Texture::parameter(Texture::Parameter p, GLint value)
 {
 	if(glTextureParameteri != nullptr)

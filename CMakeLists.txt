@@ -80,6 +80,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Wno-exit-time-destructors
 		-Wno-float-equal
 		-Wno-global-constructors
+		-Wno-missing-braces
 		-Wno-padded
 		-Wno-shadow
 		-Wno-undefined-func-template

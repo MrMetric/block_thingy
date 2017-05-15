@@ -112,9 +112,11 @@ int main(int argc, char** argv)
 	// maybe Settings should have a constructor
 	Settings::add_command_handlers();
 	Settings::load();
+
+	window = Gfx::init_glfw();
+
 	unique_ptr<PluginManager> plugin_manager = std::make_unique<PluginManager>();
-	unique_ptr<Game> game = std::make_unique<Game>();
-	window = game->gfx.window;
+	unique_ptr<Game> game = std::make_unique<Game>(window);
 
 	LOG(INFO) << "starting main loop";
 	while(!glfwWindowShouldClose(game->gfx.window))

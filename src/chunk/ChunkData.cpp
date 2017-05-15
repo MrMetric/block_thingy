@@ -2,6 +2,7 @@
 
 #include "Game.hpp"
 #include "block/Base.hpp"
+#include "block/BlockType.hpp"
 
 using T = std::unique_ptr<Block::Base>;
 

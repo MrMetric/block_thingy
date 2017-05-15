@@ -4,10 +4,12 @@
 
 #include <glm/vec4.hpp>
 
-#include "block/BlockType.hpp"
+#include "fwd/block/BlockType.hpp"
+#include "fwd/block/Enum/Face.hpp"
 #include "fwd/block/BlockVisibilityType.hpp"
 #include "fwd/graphics/Color.hpp"
 #include "fwd/storage/Interface.hpp"
+#include "util/filesystem.hpp"
 
 namespace Block {
 
@@ -28,6 +30,8 @@ class Base
 		 * If non-zero, this block emits light of this color
 		 */
 		virtual Graphics::Color color() const;
+
+		virtual fs::path texture(Enum::Face) const;
 
 		virtual double bounciness() const;
 

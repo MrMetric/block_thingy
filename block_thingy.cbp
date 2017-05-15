@@ -171,6 +171,8 @@
 		<Unit filename="src/block/Teleporter.hpp" />
 		<Unit filename="src/block/Test.cpp" />
 		<Unit filename="src/block/Test.hpp" />
+		<Unit filename="src/block/Textured.cpp" />
+		<Unit filename="src/block/Textured.hpp" />
 		<Unit filename="src/block/Unknown.cpp" />
 		<Unit filename="src/block/Unknown.hpp" />
 		<Unit filename="src/chunk/Chunk.cpp" />
@@ -223,6 +225,7 @@
 		<Unit filename="src/fwd/graphics/GUI/Widget/Component/Base.hpp" />
 		<Unit filename="src/fwd/graphics/GUI/Widget/Container.hpp" />
 		<Unit filename="src/fwd/graphics/GUI/Widget/TextInput.hpp" />
+		<Unit filename="src/fwd/graphics/Image.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/Renderbuffer.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/ShaderObject.hpp" />
 		<Unit filename="src/fwd/graphics/OpenGL/ShaderProgram.hpp" />
@@ -262,6 +265,8 @@
 		<Unit filename="src/graphics/GUI/Widget/Text.hpp" />
 		<Unit filename="src/graphics/GUI/Widget/TextInput.cpp" />
 		<Unit filename="src/graphics/GUI/Widget/TextInput.hpp" />
+		<Unit filename="src/graphics/Image.cpp" />
+		<Unit filename="src/graphics/Image.hpp" />
 		<Unit filename="src/graphics/OpenGL/Framebuffer.cpp" />
 		<Unit filename="src/graphics/OpenGL/Framebuffer.hpp" />
 		<Unit filename="src/graphics/OpenGL/Renderbuffer.cpp" />

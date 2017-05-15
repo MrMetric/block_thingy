@@ -1,7 +1,6 @@
 #include "Gfx.hpp"
 
 #include <cerrno>
-#include <cstdio>							// C FILE stuff (for libpng use)
 #include <cstring>							// strerror
 #include <limits>
 #include <stdexcept>
@@ -23,15 +22,6 @@
 #include <glm/gtx/transform.hpp>			// glm::rotate, glm::translate
 
 #include <easylogging++/easylogging++.hpp>
-#if defined(__clang__)
-	#pragma clang diagnostic push
-	#pragma clang diagnostic ignored "-Wunused-macros"
-#endif
-#define PNG_SKIP_SETJMP_CHECK // for libpng < 1.5
-#if defined(__clang__)
-	#pragma clang diagnostic pop
-#endif
-#include <png.h>
 
 #include "Camera.hpp"
 #include "Cube.hpp"
@@ -75,10 +65,10 @@ static void shim_GL_ARB_separate_shader_objects();
 
 Gfx* Gfx::instance = nullptr;
 
-Gfx::Gfx()
+Gfx::Gfx(GLFWwindow* window)
 :
 	set_instance(this),
-	window(init_glfw()),
+	window(window),
 	window_size(get_window_size(window)),
 	window_mid(glm::dvec2(window_size) / 2.0),
 	s_lines("shaders/lines"),
@@ -384,72 +374,6 @@ Graphics::OpenGL::ShaderProgram& Gfx::get_block_shader(const BlockType type)
 		throw std::runtime_error("unknown block ID: " + std::to_string(static_cast<block_type_id_t>(type)));
 	}
 	return i->second;
-}
-
-void Gfx::write_png_RGB
-(
-	const fs::path& path,
-	const uint8_t* data,
-	const std::size_t width,
-	const std::size_t height,
-	const bool reverse_rows
-)
-{
-	// http://www.libpng.org/pub/png/spec/iso/index-object.html#3PNGfourByteUnSignedInteger
-	// http://www.libpng.org/pub/png/spec/iso/index-object.html#11IHDR
-	if(width == 0 || width > std::numeric_limits<int32_t>::max())
-	{
-		throw std::invalid_argument("width");
-	}
-	if(height == 0 || height > std::numeric_limits<int32_t>::max())
-	{
-		throw std::invalid_argument("height");
-	}
-
-	png_struct* png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-	if(png_ptr == nullptr)
-	{
-		throw std::runtime_error("png_create_write_struct returned null");
-	}
-	png_info* info_ptr = png_create_info_struct(png_ptr);
-	if(info_ptr == nullptr)
-	{
-		png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
-		png_destroy_write_struct(&png_ptr, nullptr);
-		throw std::runtime_error("png_create_info_struct returned null");
-	}
-	FILE* fp = fopen(path.c_str(), "wb");
-	if(fp == nullptr)
-	{
-		png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
-		png_destroy_write_struct(&png_ptr, &info_ptr);
-		throw std::runtime_error(string("error opening png file for writing: ") + strerror(errno));
-	}
-	png_init_io(png_ptr, fp);
-	const int bit_depth = 8;
-	const uint32_t w = static_cast<uint32_t>(width);
-	const uint32_t h = static_cast<uint32_t>(height);
-	png_set_IHDR(png_ptr, info_ptr, w, h, bit_depth, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-	png_write_info(png_ptr, info_ptr);
-	const std::size_t rowsize = png_get_rowbytes(png_ptr, info_ptr);
-	if(reverse_rows)
-	{
-		for(std::size_t y = height; y > 0; --y)
-		{
-			png_write_row(png_ptr, const_cast<uint8_t*>(data + (y - 1) * rowsize));
-		}
-	}
-	else
-	{
-		for(std::size_t y = 0; y < height; ++y)
-		{
-			png_write_row(png_ptr, const_cast<uint8_t*>(data + y * rowsize));
-		}
-	}
-	png_write_end(png_ptr, info_ptr);
-	fclose(fp);
-	png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
-	png_destroy_write_struct(&png_ptr, &info_ptr);
 }
 
 void Gfx::center_cursor()
