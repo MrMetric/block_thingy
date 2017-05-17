@@ -19,7 +19,7 @@
 #include "Player.hpp"
 #include "block/Base.hpp"
 #include "block/BlockRegistry.hpp"
-#include "block/BlockType.hpp"
+#include "block/Enum/Type.hpp"
 #include "block/Interface/KnowsPosition.hpp"
 #include "chunk/Chunk.hpp"
 #include "chunk/Mesher/Base.hpp"

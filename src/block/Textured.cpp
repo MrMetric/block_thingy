@@ -3,8 +3,8 @@
 #include <array>
 
 #include "Game.hpp"
-#include "block/BlockVisibilityType.hpp"
 #include "block/Enum/Face.hpp"
+#include "block/Enum/VisibilityType.hpp"
 
 using Block::Enum::Face;
 

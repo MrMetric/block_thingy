@@ -27,7 +27,7 @@
 #include "Cube.hpp"
 #include "Game.hpp"
 #include "Settings.hpp"
-#include "block/BlockType.hpp"
+#include "block/Enum/Type.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"

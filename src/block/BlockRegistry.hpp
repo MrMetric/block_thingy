@@ -5,8 +5,8 @@
 #include <string>
 
 #include "fwd/block/Base.hpp"
-#include "fwd/block/BlockType.hpp"
 #include "fwd/block/Enum/Face.hpp"
+#include "fwd/block/Enum/Type.hpp"
 #include "util/filesystem.hpp"
 
 #include "std_make_unique.hpp"

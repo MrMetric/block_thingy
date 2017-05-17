@@ -30,7 +30,7 @@
 #include "Util.hpp"
 #include "World.hpp"
 #include "block/Base.hpp"
-#include "block/BlockType.hpp"
+#include "block/Enum/Type.hpp"
 #include "chunk/Mesher/Greedy.hpp"
 #include "chunk/Mesher/Simple.hpp"
 #include "chunk/Mesher/SimpleAO.hpp"

@@ -14,7 +14,6 @@
 #include "Player.hpp"
 #include "Settings.hpp"
 #include "block/Base.hpp"
-#include "fwd/block/BlockType.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
 #include "position/BlockInChunk.hpp"

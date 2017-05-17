@@ -9,7 +9,7 @@
 #include "Game.hpp"
 #include "World.hpp"
 #include "block/Base.hpp"
-#include "block/BlockType.hpp"
+#include "block/Enum/Type.hpp"
 #include "event/EventManager.hpp"
 #include "event/type/Event_enter_block.hpp"
 #include "position/BlockInWorld.hpp"
@@ -93,7 +93,7 @@ void Player::move(const glm::dvec3& acceleration)
 			if(skip) continue;
 
 			const Position::BlockInWorld block_pos = block_pos_old + block_pos_offset;
-			if(!block_is_at(block_pos))
+			if(!game.world.get_block(block_pos).is_solid())
 			{
 				continue;
 			}
@@ -333,12 +333,6 @@ bool Player::get_noclip() const
 void Player::set_noclip(bool noclip)
 {
 	flags.noclip = noclip;
-}
-
-bool Player::block_is_at(const Position::BlockInWorld& block_pos)
-{
-	const Block::Base& block = game.world.get_block(block_pos);
-	return block.is_solid();
 }
 
 AABB Player::make_aabb(const glm::dvec3& position)

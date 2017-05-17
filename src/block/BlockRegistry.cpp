@@ -8,9 +8,9 @@
 #include <easylogging++/easylogging++.hpp>
 
 #include "block/Base.hpp"
-#include "block/BlockType.hpp"
 #include "block/Unknown.hpp"
 #include "block/Enum/Face.hpp"
+#include "block/Enum/Type.hpp"
 
 using std::string;
 using std::unique_ptr;
@@ -59,7 +59,8 @@ unique_ptr<Base> BlockRegistry::make(const BlockTypeExternal te) const
 	{
 		throw std::runtime_error("invalid external block ID: " + std::to_string(static_cast<block_type_id_t>(te)));
 	}
-	const auto i2 = strid_to_id.find(i->second);
+	const string strid = i->second;
+	const auto i2 = strid_to_id.find(strid);
 	if(i2 == strid_to_id.cend())
 	{
 		{
@@ -67,17 +68,17 @@ unique_ptr<Base> BlockRegistry::make(const BlockTypeExternal te) const
 			std::lock_guard<std::mutex> g(m);
 
 			static std::vector<string> warning_for;
-			if(std::find(warning_for.cbegin(), warning_for.cend(), i->second) == warning_for.cend())
+			if(std::find(warning_for.cbegin(), warning_for.cend(), strid) == warning_for.cend())
 			{
-				LOG(WARNING) << "invalid block type in extid map: " << i->second;
-				warning_for.push_back(i->second);
+				LOG(WARNING) << "invalid block type in extid map: " << strid;
+				warning_for.push_back(strid);
 			}
 		}
 
 		// templating and virtual functions are not combinable, so I can not do this:
-		//return make(BlockType::unknown, i->second);
+		//return make(BlockType::unknown, strid);
 
-		return std::make_unique<Unknown>(BlockType::unknown, i->second);
+		return std::make_unique<Unknown>(BlockType::unknown, strid);
 	}
 	const BlockType t = i2->second;
 	return make(t);

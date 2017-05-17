@@ -4,9 +4,9 @@
 
 #include <glm/vec4.hpp>
 
-#include "fwd/block/BlockType.hpp"
 #include "fwd/block/Enum/Face.hpp"
-#include "fwd/block/BlockVisibilityType.hpp"
+#include "fwd/block/Enum/Type.hpp"
+#include "fwd/block/Enum/VisibilityType.hpp"
 #include "fwd/graphics/Color.hpp"
 #include "fwd/storage/Interface.hpp"
 #include "util/filesystem.hpp"

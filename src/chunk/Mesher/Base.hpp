@@ -9,8 +9,8 @@
 #include <glm/vec4.hpp>
 
 #include "fwd/block/Base.hpp"
-#include "fwd/block/BlockType.hpp"
 #include "fwd/block/Enum/Face.hpp"
+#include "fwd/block/Enum/Type.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "graphics/Color.hpp"
 #include "graphics/primitive.hpp"
@@ -60,7 +60,7 @@ enum class Plane
 
 enum class Side : int8_t
 {
-	top = 1,
+	top    = +1,
 	bottom = -1,
 };
 

@@ -1,6 +1,6 @@
 #include "Glass.hpp"
 
-#include "block/BlockVisibilityType.hpp"
+#include "block/Enum/VisibilityType.hpp"
 
 namespace Block {
 

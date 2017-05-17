@@ -32,8 +32,8 @@ static void read_png
 static void write_png
 (
 	const fs::path&,
-	std::size_t width,
-	std::size_t height,
+	uint32_t width,
+	uint32_t height,
 	const uint8_t* data
 );
 
@@ -251,8 +251,8 @@ void read_png
 void write_png
 (
 	const fs::path& path,
-	const std::size_t width,
-	const std::size_t height,
+	const uint32_t width,
+	const uint32_t height,
 	const uint8_t* data
 )
 {

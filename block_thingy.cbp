@@ -155,10 +155,10 @@
 		<Unit filename="src/block/Base.hpp" />
 		<Unit filename="src/block/BlockRegistry.cpp" />
 		<Unit filename="src/block/BlockRegistry.hpp" />
-		<Unit filename="src/block/BlockType.hpp" />
-		<Unit filename="src/block/BlockVisibilityType.hpp" />
 		<Unit filename="src/block/Enum/Face.cpp" />
 		<Unit filename="src/block/Enum/Face.hpp" />
+		<Unit filename="src/block/Enum/Type.hpp" />
+		<Unit filename="src/block/Enum/VisibilityType.hpp" />
 		<Unit filename="src/block/Glass.cpp" />
 		<Unit filename="src/block/Glass.hpp" />
 		<Unit filename="src/block/Interface/KnowsPosition.cpp" />
@@ -210,9 +210,9 @@
 		<Unit filename="src/fwd/World.hpp" />
 		<Unit filename="src/fwd/block/Base.hpp" />
 		<Unit filename="src/fwd/block/BlockRegistry.hpp" />
-		<Unit filename="src/fwd/block/BlockType.hpp" />
-		<Unit filename="src/fwd/block/BlockVisibilityType.hpp" />
 		<Unit filename="src/fwd/block/Enum/Face.hpp" />
+		<Unit filename="src/fwd/block/Enum/Type.hpp" />
+		<Unit filename="src/fwd/block/Enum/VisibilityType.hpp" />
 		<Unit filename="src/fwd/block/Light.hpp" />
 		<Unit filename="src/fwd/chunk/Chunk.hpp" />
 		<Unit filename="src/fwd/chunk/Mesher/Base.hpp" />

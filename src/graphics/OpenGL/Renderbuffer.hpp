@@ -18,7 +18,13 @@ class Renderbuffer
 		 ** https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorageMultisample.xhtml
 		 * Set data storage, format, dimensions, and optionally sample count
 		 */
-		void storage(GLenum internal_format, GLsizei width, GLsizei height, GLsizei samples = 0);
+		void storage
+		(
+			GLenum internal_format,
+			uint32_t width,
+			uint32_t height,
+			GLsizei samples = 0
+		);
 
 		GLuint get_name();
 

@@ -120,7 +120,6 @@ target_compile_options(block_thingy PRIVATE
 	${FLAGS}
 )
 
-
 target_link_libraries(block_thingy
 	$<${DEBUG_BUILD}:${FSANITIZE}>
 	-flto

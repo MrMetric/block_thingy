@@ -8,8 +8,8 @@
 
 #include "Game.hpp"
 #include "block/Base.hpp"
-#include "block/BlockType.hpp"
 #include "block/Enum/Face.hpp"
+#include "block/Enum/Type.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
@@ -37,12 +37,12 @@ meshmap_t Greedy::make_mesh(const Chunk& chunk)
 {
 	meshmap_t meshes;
 
-	add_surface(chunk, meshes, surface, Face::back  );	// Plane::XY, Side::top
-	add_surface(chunk, meshes, surface, Face::front );	// Plane::XY, Side::bottom
-	add_surface(chunk, meshes, surface, Face::top   );	// Plane::XZ, Side::top
-	add_surface(chunk, meshes, surface, Face::bottom);	// Plane::XZ, Side::bottom
-	add_surface(chunk, meshes, surface, Face::left  );	// Plane::YZ, Side::top
-	add_surface(chunk, meshes, surface, Face::right );	// Plane::YZ, Side::bottom
+	add_surface(chunk, meshes, surface, Face::right );
+	add_surface(chunk, meshes, surface, Face::left  );
+	add_surface(chunk, meshes, surface, Face::top   );
+	add_surface(chunk, meshes, surface, Face::bottom);
+	add_surface(chunk, meshes, surface, Face::front );
+	add_surface(chunk, meshes, surface, Face::back  );
 
 	return meshes;
 }

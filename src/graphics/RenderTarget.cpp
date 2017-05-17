@@ -54,8 +54,8 @@ RenderTarget::RenderTarget(const window_size_t& window_size, GLsizei samples)
 
 void RenderTarget::resize(const window_size_t& window_size)
 {
-	GLsizei width = static_cast<GLsizei>(window_size.x);
-	GLsizei height = static_cast<GLsizei>(window_size.y);
+	const uint32_t width = window_size.x;
+	const uint32_t height = window_size.y;
 
 	if(samples > 0)
 	{

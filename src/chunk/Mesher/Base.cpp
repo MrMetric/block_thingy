@@ -5,8 +5,8 @@
 
 #include "World.hpp"
 #include "block/Base.hpp"
-#include "block/BlockType.hpp"
 #include "block/Enum/Face.hpp"
+#include "block/Enum/Type.hpp"
 #include "chunk/Chunk.hpp"
 #include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
@@ -110,9 +110,9 @@ void Base::add_face
 
 u8vec3 Base::get_i(const Face face)
 {
-	if(face == Face::front || face == Face::back)
+	if(face == Face::right || face == Face::left)
 	{
-		return {0, 2, 1};
+		return {1, 0, 2};
 	}
 	else if(face == Face::top || face == Face::bottom)
 	{
@@ -120,14 +120,14 @@ u8vec3 Base::get_i(const Face face)
 	}
 	else
 	{
-		assert(face == Face::right || face == Face::left);
-		return {1, 0, 2};
+		assert(face == Face::front || face == Face::back);
+		return {0, 2, 1};
 	}
 }
 
 Side Base::to_side(const Face face)
 {
-	return (face == Face::top || face == Face::back || face == Face::left) ? Side::top : Side::bottom;
+	return (face == Face::top || face == Face::front || face == Face::right) ? Side::top : Side::bottom;
 }
 
 const Block::Base& Base::block_at

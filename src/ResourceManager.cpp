@@ -71,6 +71,29 @@ struct ResourceManager::impl
 	{
 	}
 
+	block_texture& get_block_texture(uint32_t res)
+	{
+		const auto i = block_textures.find(res);
+		if(i != block_textures.cend())
+		{
+			return i->second;
+		}
+
+		if(std::this_thread::get_id() == main_thread_id)
+		{
+			return block_textures.emplace(res, block_texture(++units, res)).first->second;
+		}
+
+		std::atomic<bool> done(false);
+		work.enqueue([this, res, &done]()
+		{
+			block_textures.emplace(res, block_texture(++units, res));
+			done = true;
+		});
+		while(!done);
+		return block_textures.at(res);
+	}
+
 	Util::FileWatcher file_watcher;
 	moodycamel::ConcurrentQueue<std::function<void()>> work;
 	const std::thread::id main_thread_id;
@@ -173,8 +196,6 @@ ResourceManager::block_texture_info ResourceManager::get_block_texture(fs::path 
 
 	path = "textures" / path;
 
-	std::lock_guard<std::mutex> g(pImpl->block_textures_mutex);
-
 	Resource<Graphics::Image> image = get_Image(path);
 	const auto res = image->get_width();
 	if(res != image->get_height())
@@ -182,34 +203,16 @@ ResourceManager::block_texture_info ResourceManager::get_block_texture(fs::path 
 		throw std::runtime_error("bad block texture dimensions: " + std::to_string(res) + "×" + std::to_string(image->get_height()));
 	}
 
-	auto i = pImpl->block_textures.find(res);
-	if(i == pImpl->block_textures.cend())
-	{
-		if(std::this_thread::get_id() == pImpl->main_thread_id)
-		{
-			i = pImpl->block_textures.emplace(res, block_texture(++pImpl->units, res)).first;
-		}
-		else
-		{
-			std::atomic<bool> done(false);
-			pImpl->work.enqueue([this, res, &done]()
-			{
-				pImpl->block_textures.emplace(res, block_texture(++pImpl->units, res));
-				done = true;
-			});
-			while(!done);
-			i = pImpl->block_textures.find(res);
-		}
-	}
+	std::lock_guard<std::mutex> g(pImpl->block_textures_mutex);
 
-	block_texture& t = i->second;
-	const auto i2 = t.index.find(path);
-	if(i2 != t.index.cend())
+	block_texture& t = pImpl->get_block_texture(res);
+	const auto i = t.index.find(path);
+	if(i != t.index.cend())
 	{
 		return
 		{
 			t.unit,
-			i2->second,
+			i->second,
 		};
 	}
 
@@ -245,7 +248,7 @@ ResourceManager::block_texture_info ResourceManager::get_block_texture(fs::path 
 				LOG(ERROR) << "error reloading " << path.u8string() << ": the dimensions changed (old: " << old_res << "×; new: " << res << "×)";
 			}
 			std::lock_guard<std::mutex> g(pImpl->block_textures_mutex);
-			block_texture& t = pImpl->block_textures.at(res);
+			block_texture& t = pImpl->get_block_texture(res);
 			glActiveTexture(GL_TEXTURE0 + t.unit);
 			t.tex.image3D_sub(0, 0, 0, depth, res, res, 1, GL_RGBA, GL_UNSIGNED_BYTE, image->get_data());
 			glActiveTexture(GL_TEXTURE0);
@@ -257,7 +260,11 @@ ResourceManager::block_texture_info ResourceManager::get_block_texture(fs::path 
 		LOG(INFO) << "loaded " << path.u8string() << " as layer " << depth << " of unit " << std::to_string(t.unit);
 	});
 	t.index.emplace(path, depth);
-	return {t.unit, depth};
+	return
+	{
+		t.unit,
+		depth,
+	};
 }
 
 bool ResourceManager::texture_has_transparency(const fs::path& path)
@@ -333,7 +340,7 @@ Resource<ShaderObject> ResourceManager::get_ShaderObject(fs::path path, const bo
 		}
 		catch(const std::runtime_error& e)
 		{
-			cerr << "failed to update ShaderObject " << path.u8string() << ": " << e.what() << "\n";
+			LOG(ERROR) << "error reloading ShaderObject " << path.u8string() << ": " << e.what() << "\n";
 			return Resource<ShaderObject>(&i->second, path);
 		}
 		std::swap(p, i->second);

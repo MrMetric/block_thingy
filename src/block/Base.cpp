@@ -4,8 +4,8 @@
 #include <string>
 
 #include "Game.hpp"
-#include "block/BlockType.hpp"
-#include "block/BlockVisibilityType.hpp"
+#include "block/Enum/Type.hpp"
+#include "block/Enum/VisibilityType.hpp"
 #include "graphics/Color.hpp"
 #include "storage/Interface.hpp"
 #include "storage/msgpack/BlockType.hpp"

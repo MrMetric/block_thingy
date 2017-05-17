@@ -7,7 +7,7 @@
 
 #include "Game.hpp"
 #include "World.hpp"
-#include "block/BlockType.hpp"
+#include "block/Enum/Type.hpp"
 #include "graphics/GUI/Light.hpp"
 #include "storage/Interface.hpp"
 #include "storage/msgpack/Color.hpp"

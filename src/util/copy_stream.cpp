@@ -20,9 +20,9 @@ string read_stream(std::istream& src)
 	std::streamsize read;
 	do
 	{
-		src.read(&buf[0], buffer_size);
+		src.read(buf.data(), buffer_size);
 		read = src.gcount();
-		s.append(&buf[0], static_cast<std::size_t>(read));
+		s.append(buf.data(), static_cast<std::size_t>(read));
 	}
 	while(read == buffer_size);
 	return s;

@@ -52,12 +52,12 @@ meshmap_t Simple::make_mesh(const Chunk& chunk)
 				Base::add_face(meshes[key], {x, y, z}, face, 1, 1, light, tex.index);
 			}
 		};
-		add_face(Face::front);
-		add_face(Face::back);
-		add_face(Face::top);
-		add_face(Face::bottom);
 		add_face(Face::right);
 		add_face(Face::left);
+		add_face(Face::top);
+		add_face(Face::bottom);
+		add_face(Face::front);
+		add_face(Face::back);
 	}
 	return meshes;
 }

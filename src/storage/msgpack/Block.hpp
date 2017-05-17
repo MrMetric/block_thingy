@@ -4,7 +4,7 @@
 
 #include "Game.hpp"
 #include "block/Base.hpp"
-#include "block/BlockType.hpp"
+#include "block/Enum/Type.hpp"
 #include "storage/Interface.hpp"
 #include "storage/msgpack/BlockType.hpp"
 

@@ -20,8 +20,8 @@ class Texture
 		(
 			GLint level,
 			GLint internal_format,
-			GLsizei width,
-			GLsizei height,
+			uint32_t width,
+			uint32_t height,
 			GLenum format,
 			GLenum data_type,
 			const GLvoid* data
@@ -32,8 +32,8 @@ class Texture
 		(
 			GLsizei samples,
 			GLenum internal_format,
-			GLsizei width,
-			GLsizei height,
+			uint32_t width,
+			uint32_t height,
 			bool fixed_sample_locations
 		);
 
@@ -41,9 +41,9 @@ class Texture
 		(
 			GLint level,
 			GLint internal_format,
-			GLsizei width,
-			GLsizei height,
-			GLsizei depth,
+			uint32_t width,
+			uint32_t height,
+			uint32_t depth,
 			GLenum format,
 			GLenum data_type,
 			const GLvoid* data
@@ -55,9 +55,9 @@ class Texture
 			GLint xoffset,
 			GLint yoffset,
 			GLint zoffset,
-			GLsizei width,
-			GLsizei height,
-			GLsizei depth,
+			uint32_t width,
+			uint32_t height,
+			uint32_t depth,
 			GLenum format,
 			GLenum data_type,
 			const GLvoid* data

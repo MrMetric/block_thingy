@@ -21,7 +21,7 @@
 #include "World.hpp"
 #include "block/Base.hpp"
 #include "block/BlockRegistry.hpp"
-#include "block/BlockType.hpp"
+#include "block/Enum/Type.hpp"
 #include "chunk/Mesher/Base.hpp"
 #include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"

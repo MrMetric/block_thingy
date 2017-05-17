@@ -1,7 +1,7 @@
 #include "None.hpp"
 
-#include "block/BlockType.hpp"
-#include "block/BlockVisibilityType.hpp"
+#include "block/Enum/Type.hpp"
+#include "block/Enum/VisibilityType.hpp"
 
 namespace Block {
 

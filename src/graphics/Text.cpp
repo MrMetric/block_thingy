@@ -207,8 +207,8 @@ Text::Character load_char(const FT_Face& face, const char32_t c)
 	(
 		0,					// level
 		GL_RED,				// internal format
-		static_cast<GLsizei>(bitmap.width),
-		static_cast<GLsizei>(bitmap.rows),
+		bitmap.width,
+		bitmap.rows,
 		GL_RED,				// format
 		GL_UNSIGNED_BYTE,
 		bitmap.buffer

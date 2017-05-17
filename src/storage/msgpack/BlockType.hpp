@@ -1,6 +1,6 @@
 #pragma once
 
-#include "block/BlockType.hpp"
+#include "block/Enum/Type.hpp"
 
 namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {

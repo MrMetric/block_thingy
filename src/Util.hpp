@@ -35,20 +35,6 @@ namespace Util
 
 	void change_directory(const fs::path&);
 
-	template<typename T>
-	constexpr T clamp(T x, T min, T max)
-	{
-		if(x < min)
-		{
-			return min;
-		}
-		if(x > max)
-		{
-			return max;
-		}
-		return x;
-	}
-
 	int stoi(const std::string&);
 
 	std::string datetime();

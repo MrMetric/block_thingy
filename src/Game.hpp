@@ -14,7 +14,7 @@
 #include "ResourceManager.hpp"
 #include "World.hpp"
 #include "block/BlockRegistry.hpp"
-#include "fwd/block/BlockType.hpp"
+#include "fwd/block/Enum/Type.hpp"
 #include "console/KeybindManager.hpp"
 #include "event/EventManager.hpp"
 #include "graphics/GUI/Base.hpp"

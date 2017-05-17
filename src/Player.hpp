@@ -40,8 +40,8 @@ class Player
 		void move_right(bool);
 		void go_faster(bool);
 		void jump();
-		void toggle_noclip();
 
+		void toggle_noclip();
 		bool get_noclip() const;
 		void set_noclip(bool);
 
@@ -52,8 +52,6 @@ class Player
 
 	private:
 		Game& game;
-
-		bool block_is_at(const Position::BlockInWorld&);
 
 		const double abs_offset;
 		AABB aabb;
