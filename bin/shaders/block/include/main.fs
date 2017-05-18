@@ -7,9 +7,9 @@ void main()
 	vec4 c = color(coords);
 	#else
 	vec2 uv2 = uv;
-	if(face == FACE_FRONT
+	if(face == FACE_RIGHT
 	|| face == FACE_TOP
-	|| face == FACE_LEFT)
+	|| face == FACE_BACK)
 	{
 		uv2.x = 1 - uv2.x;
 	}

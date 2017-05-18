@@ -9,7 +9,7 @@ using T = std::unique_ptr<Block::Base>;
 template<>
 ChunkData<T>::ChunkData()
 :
-	ChunkData(Game::instance->block_registry.make(BlockType::air))
+	ChunkData(Game::instance->block_registry.make(Block::Enum::Type::air))
 {
 }
 

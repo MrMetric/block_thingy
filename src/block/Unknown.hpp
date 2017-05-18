@@ -10,8 +10,8 @@ namespace Block {
 class Unknown : public Base
 {
 public:
-	Unknown(BlockType);
-	Unknown(BlockType, const std::string& strid);
+	Unknown(Enum::Type);
+	Unknown(Enum::Type, const std::string& strid);
 
 	Unknown& operator=(const Base&) override;
 

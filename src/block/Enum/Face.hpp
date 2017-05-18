@@ -15,6 +15,6 @@ enum class Face : uint8_t
 	back   = 5, // -z
 };
 
-std::ostream& operator<<(std::ostream&, Block::Enum::Face);
+std::ostream& operator<<(std::ostream&, Face);
 
 }

@@ -9,8 +9,8 @@ namespace Block {
 class Light : public Base, public Interface::KnowsPosition
 {
 	public:
-		Light(BlockType);
-		Light(BlockType, const Graphics::Color&);
+		Light(Enum::Type);
+		Light(Enum::Type, const Graphics::Color&);
 
 		Light& operator=(const Base&) override;
 

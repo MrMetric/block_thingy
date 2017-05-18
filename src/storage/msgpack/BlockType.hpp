@@ -7,22 +7,22 @@ MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
 namespace adaptor {
 
 template<>
-struct pack<BlockTypeExternal>
+struct pack<Block::Enum::TypeExternal>
 {
 	template<typename Stream>
-	packer<Stream>& operator()(packer<Stream>& o, const BlockTypeExternal t) const
+	packer<Stream>& operator()(packer<Stream>& o, const Block::Enum::TypeExternal t) const
 	{
-		o.pack(static_cast<block_type_id_t>(t));
+		o.pack(static_cast<Block::Enum::Type_t>(t));
 		return o;
 	}
 };
 
 template<>
-struct convert<BlockTypeExternal>
+struct convert<Block::Enum::TypeExternal>
 {
-	const msgpack::object& operator()(const msgpack::object& o, BlockTypeExternal& t) const
+	const msgpack::object& operator()(const msgpack::object& o, Block::Enum::TypeExternal& t) const
 	{
-		t = static_cast<BlockTypeExternal>(o.as<block_type_id_t>());
+		t = static_cast<Block::Enum::TypeExternal>(o.as<Block::Enum::Type_t>());
 		return o;
 	}
 };

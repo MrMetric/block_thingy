@@ -16,7 +16,7 @@ using Position::ChunkInWorld;
 void RenderWorld::draw_world
 (
 	World& world,
-	std::map<BlockType, ShaderProgram>& block_shaders,
+	std::map<Block::Enum::Type, ShaderProgram>& block_shaders,
 	const glm::dmat4& matriks,
 	const Position::BlockInWorld& origin,
 	const ChunkInWorld::value_type render_distance

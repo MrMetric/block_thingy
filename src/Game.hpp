@@ -75,20 +75,20 @@ class Game
 		void joymove(const glm::dvec2& motion);
 
 		template<typename T = Block::Base>
-		BlockType add_block(const std::string& strid)
+		Block::Enum::Type add_block(const std::string& strid)
 		{
 			return add_block<T>(strid, strid);
 		}
 
 		template<typename T = Block::Base>
-		BlockType add_block(const std::string& strid, const fs::path& shader_path)
+		Block::Enum::Type add_block(const std::string& strid, const fs::path& shader_path)
 		{
-			BlockType t = block_registry.add<T>(strid);
+			const Block::Enum::Type t = block_registry.add<T>(strid);
 			add_block(strid, t, shader_path);
 			return t;
 		}
 
-		BlockType block_type;
+		Block::Enum::Type block_type;
 		std::unique_ptr<Block::Base> copied_block;
 		std::unique_ptr<RaycastHit> hovered_block;
 
@@ -107,7 +107,7 @@ class Game
 		std::unique_ptr<Graphics::GUI::Base> gui;
 
 	private:
-		void add_block(const std::string& strid, BlockType, const fs::path& shader_path);
+		void add_block(const std::string& strid, Block::Enum::Type, const fs::path& shader_path);
 
 		Position::ChunkInWorld::value_type render_distance;
 

@@ -62,7 +62,7 @@ class Gfx
 
 		glm::dmat4 matriks;
 
-		std::map<BlockType, Graphics::OpenGL::ShaderProgram> block_shaders;
+		std::map<Block::Enum::Type, Graphics::OpenGL::ShaderProgram> block_shaders;
 
 		Graphics::OpenGL::ShaderProgram s_lines;
 
@@ -105,7 +105,7 @@ class Gfx
 			const glm::dmat4& projection_matrix
 		);
 		void draw_cube_outline(const Position::BlockInWorld&, const glm::dvec4& color);
-		Graphics::OpenGL::ShaderProgram& get_block_shader(BlockType);
+		Graphics::OpenGL::ShaderProgram& get_block_shader(Block::Enum::Type);
 
 		void center_cursor();
 

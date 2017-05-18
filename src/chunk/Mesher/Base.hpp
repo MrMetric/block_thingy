@@ -32,7 +32,7 @@ struct mesh_vertex_t
 
 struct meshmap_key_t
 {
-	BlockType block_type;
+	Block::Enum::Type block_type;
 	uint8_t tex_unit;
 
 	bool operator==(const meshmap_key_t& that) const

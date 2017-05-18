@@ -226,8 +226,8 @@ void Player::step(const double delta_time)
 		if(new_position != old_position)
 		{
 			const Block::Base& block = game.world.get_block(new_position);
-			if(block.type() != BlockType::none
-			&& block.type() != BlockType::air
+			if(block.type() != Block::Enum::Type::none
+			&& block.type() != Block::Enum::Type::air
 			&& !block.is_solid())
 			{
 				game.event_manager.do_event(Event_enter_block(*this, block));

@@ -423,7 +423,7 @@ void Game::joymove(const glm::dvec2& motion)
 	gui->joymove(motion);
 }
 
-static void add_shader(Game& game, const BlockType t, const fs::path& shader_path)
+static void add_shader(Game& game, const Block::Enum::Type t, const fs::path& shader_path)
 {
 	bool is_new;
 	try
@@ -441,10 +441,10 @@ static void add_shader(Game& game, const BlockType t, const fs::path& shader_pat
 	}
 }
 
-void Game::add_block(const string& strid, const BlockType t, const fs::path& shader_path)
+void Game::add_block(const string& strid, const Block::Enum::Type t, const fs::path& shader_path)
 {
-	LOG(DEBUG) << "ID " << static_cast<block_type_id_t>(t) << ": " << strid;
-	if(t == BlockType::none || t == BlockType::air)
+	LOG(DEBUG) << "ID " << t << ": " << strid;
+	if(t == Block::Enum::Type::none || t == Block::Enum::Type::air)
 	{
 		return;
 	}
@@ -498,9 +498,9 @@ void Game::impl::add_commands()
 		}
 
 		const Position::BlockInWorld pos = game.hovered_block->pos;
-		if(game.world.get_block(pos).type() != BlockType::none) // TODO: breakability check
+		if(game.world.get_block(pos).type() != Block::Enum::Type::none) // TODO: breakability check
 		{
-			game.world.set_block(pos, game.block_registry.make(BlockType::air), false);
+			game.world.set_block(pos, game.block_registry.make(Block::Enum::Type::air), false);
 			//event_manager.do_event(Event_break_block(pos, face));
 		}
 	});
@@ -742,19 +742,19 @@ void Game::impl::add_commands()
 
 	COMMAND("block_type++")
 	{
-		block_type_id_t i = static_cast<block_type_id_t>(game.block_type);
+		auto i = static_cast<Block::Enum::Type_t>(game.block_type);
 		i = (i + 1) % game.block_registry.get_max_id();
-		if(i < 2)
+		if(i < 3)
 		{
-			i = 2;
+			i = 3;
 		}
-		game.block_type = static_cast<BlockType>(i);
+		game.block_type = static_cast<Block::Enum::Type>(i);
 		game.copied_block = nullptr;
 	});
 	COMMAND("block_type--")
 	{
-		block_type_id_t i = static_cast<block_type_id_t>(game.block_type);
-		if(i == 2)
+		auto i = static_cast<Block::Enum::Type_t>(game.block_type);
+		if(i == 3)
 		{
 			i = game.block_registry.get_max_id() - 1;
 		}
@@ -762,7 +762,7 @@ void Game::impl::add_commands()
 		{
 			i = (i - 1) % game.block_registry.get_max_id();
 		}
-		game.block_type = static_cast<BlockType>(i);
+		game.block_type = static_cast<Block::Enum::Type>(i);
 		game.copied_block = nullptr;
 	});
 
@@ -776,7 +776,7 @@ void Game::impl::add_commands()
 		const Position::BlockInWorld start_pos = game.hovered_block->adjacent();
 		const Position::BlockInWorld::value_type ysize = 9;
 		const Position::BlockInWorld::value_type xsize = 9;
-		block_type_id_t nazi[ysize][xsize]
+		Block::Enum::Type_t nazi[ysize][xsize]
 		{
 			{ 2, 1, 1, 1, 2, 2, 2, 2, 2, },
 			{ 2, 1, 1, 1, 2, 1, 1, 1, 1, },
@@ -795,7 +795,7 @@ void Game::impl::add_commands()
 			{
 				for(pos.z = 0; pos.z < 1; ++pos.z)
 				{
-					const BlockType type = static_cast<BlockType>(nazi[pos.y][pos.x]);
+					const auto type = static_cast<Block::Enum::Type>(nazi[pos.y][pos.x]);
 					game.world.set_block(pos + start_pos, game.block_registry.make(type));
 				}
 			}

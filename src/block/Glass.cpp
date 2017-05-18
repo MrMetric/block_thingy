@@ -4,15 +4,15 @@
 
 namespace Block {
 
-Glass::Glass(BlockType t)
+Glass::Glass(Enum::Type t)
 :
 	Base(t)
 {
 }
 
-BlockVisibilityType Glass::visibility_type() const
+Enum::VisibilityType Glass::visibility_type() const
 {
-	return BlockVisibilityType::translucent;
+	return Enum::VisibilityType::translucent;
 }
 
 }

@@ -4,15 +4,15 @@
 
 namespace Block {
 
-Teleporter::Teleporter(BlockType t)
+Teleporter::Teleporter(Enum::Type t)
 :
 	Base(t)
 {
 }
 
-BlockVisibilityType Teleporter::visibility_type() const
+Enum::VisibilityType Teleporter::visibility_type() const
 {
-	return BlockVisibilityType::translucent;
+	return Enum::VisibilityType::translucent;
 }
 
 bool Teleporter::is_solid() const

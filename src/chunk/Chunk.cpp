@@ -119,7 +119,7 @@ void Chunk::update()
 	pImpl->changed = true;
 }
 
-void Chunk::render(const bool transluscent_pass)
+void Chunk::render(const bool translucent_pass)
 {
 	std::lock_guard<std::mutex> g(pImpl->mesh_mutex);
 
@@ -135,9 +135,9 @@ void Chunk::render(const bool transluscent_pass)
 	std::size_t i = 0;
 	for(const auto& p : pImpl->meshes)
 	{
-		const BlockType type = p.first.block_type;
+		const Block::Enum::Type type = p.first.block_type;
 		// TODO: get existing block instead of making one
-		if(pImpl->owner.block_registry.make(type)->is_translucent() != transluscent_pass)
+		if(pImpl->owner.block_registry.make(type)->is_translucent() != translucent_pass)
 		{
 			++i;
 			continue;

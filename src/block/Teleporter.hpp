@@ -5,9 +5,9 @@ namespace Block {
 class Teleporter : public Base
 {
 	public:
-		Teleporter(BlockType);
+		Teleporter(Enum::Type);
 
-		BlockVisibilityType visibility_type() const override;
+		Enum::VisibilityType visibility_type() const override;
 		bool is_solid() const override;
 };
 

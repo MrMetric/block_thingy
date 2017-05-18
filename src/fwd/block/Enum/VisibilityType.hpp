@@ -1,5 +1,6 @@
 #include <stdint.h>
 
-using block_visibility_type_id_t = uint8_t;
-
-enum class BlockVisibilityType : block_visibility_type_id_t;
+namespace Block::Enum
+{
+	enum class VisibilityType : uint8_t;
+}

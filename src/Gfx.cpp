@@ -366,12 +366,12 @@ void Gfx::draw_cube_outline(const Position::BlockInWorld& block_pos, const glm::
 	outline_vao.draw(GL_LINE_STRIP, 0, 16);
 }
 
-Graphics::OpenGL::ShaderProgram& Gfx::get_block_shader(const BlockType type)
+Graphics::OpenGL::ShaderProgram& Gfx::get_block_shader(const Block::Enum::Type type)
 {
 	const auto i = block_shaders.find(type);
 	if(i == block_shaders.cend())
 	{
-		throw std::runtime_error("unknown block ID: " + std::to_string(static_cast<block_type_id_t>(type)));
+		throw std::runtime_error("unknown block ID: " + std::to_string(static_cast<Block::Enum::Type_t>(type)));
 	}
 	return i->second;
 }

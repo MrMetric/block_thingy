@@ -8,7 +8,7 @@
 
 namespace Block {
 
-Test::Test(BlockType t)
+Test::Test(Enum::Type t)
 :
 	Base(t)
 {

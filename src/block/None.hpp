@@ -6,9 +6,9 @@ namespace Block {
 class None : public Base
 {
 	public:
-		None(BlockType);
+		None(Enum::Type);
 
-		BlockVisibilityType visibility_type() const override;
+		Enum::VisibilityType visibility_type() const override;
 		glm::dvec4 selection_color() const override;
 };
 

@@ -17,13 +17,13 @@ class Base
 {
 	public:
 		Base();
-		Base(BlockType);
+		Base(Enum::Type);
 		virtual ~Base();
 
 		Base(const Base&);
 		virtual Base& operator=(const Base&);
 
-		BlockType type() const;
+		Enum::Type type() const;
 		virtual std::string name() const;
 
 		/**
@@ -42,7 +42,7 @@ class Base
 
 		virtual Graphics::Color light_filter() const;
 
-		virtual BlockVisibilityType visibility_type() const;
+		virtual Enum::VisibilityType visibility_type() const;
 		bool is_opaque() const;
 		bool is_translucent() const;
 		bool is_invisible() const;
@@ -68,7 +68,7 @@ class Base
 		virtual void load(Storage::InputInterface&);
 
 	private:
-		BlockType type_;
+		Enum::Type type_;
 };
 
 } // namespace Block

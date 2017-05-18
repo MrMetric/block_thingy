@@ -196,8 +196,8 @@ void read_png
 
 	width = png_get_image_width(png_ptr, info_ptr);
 	height = png_get_image_height(png_ptr, info_ptr);
-	int color_type = png_get_color_type(png_ptr, info_ptr);
-	int bit_depth = png_get_bit_depth(png_ptr, info_ptr);
+	const int color_type = png_get_color_type(png_ptr, info_ptr);
+	const int bit_depth = png_get_bit_depth(png_ptr, info_ptr);
 
 	if(bit_depth == 16)
 	{
@@ -224,7 +224,7 @@ void read_png
 		png_set_filler(png_ptr, 0xFF, PNG_FILLER_AFTER);
 	}
 
-	int number_of_passes = png_set_interlace_handling(png_ptr); // is this needed for reading?
+	const int number_of_passes = png_set_interlace_handling(png_ptr); // is this needed for reading?
 	png_read_update_info(png_ptr, info_ptr);
 
 	if(setjmp(png_jmpbuf(png_ptr)))

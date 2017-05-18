@@ -1,6 +1,9 @@
 #include <stdint.h>
 
-using block_type_id_t = uint16_t;
+namespace Block::Enum
+{
+	using Type_t = uint16_t;
 
-enum class BlockType : block_type_id_t;
-enum class BlockTypeExternal : block_type_id_t;
+	enum class Type : Type_t;
+	enum class TypeExternal : Type_t;
+}

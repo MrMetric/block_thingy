@@ -16,11 +16,11 @@ namespace Block {
 
 Base::Base()
 :
-	type_(BlockType::none)
+	type_(Enum::Type::none)
 {
 }
 
-Base::Base(const BlockType type)
+Base::Base(const Enum::Type type)
 :
 	type_(type)
 {
@@ -39,8 +39,8 @@ Base::Base(const Base& that)
 
 Base& Base::operator=(const Base& that)
 {
-	const auto type1 = static_cast<block_type_id_t>(type());
-	const auto type2 = static_cast<block_type_id_t>(that.type());
+	const auto type1 = static_cast<Enum::Type_t>(type());
+	const auto type2 = static_cast<Enum::Type_t>(that.type());
 	if(type1 != type2)
 	{
 		throw std::runtime_error("can not copy " + std::to_string(type2) + " to " + std::to_string(type1));
@@ -48,7 +48,7 @@ Base& Base::operator=(const Base& that)
 	return *this;
 }
 
-BlockType Base::type() const
+Enum::Type Base::type() const
 {
 	return type_;
 }
@@ -83,24 +83,24 @@ Graphics::Color Base::light_filter() const
 	return {Graphics::Color::max};
 }
 
-BlockVisibilityType Base::visibility_type() const
+Enum::VisibilityType Base::visibility_type() const
 {
-	return BlockVisibilityType::opaque;
+	return Enum::VisibilityType::opaque;
 }
 
 bool Base::is_opaque() const
 {
-	return visibility_type() == BlockVisibilityType::opaque;
+	return visibility_type() == Enum::VisibilityType::opaque;
 }
 
 bool Base::is_translucent() const
 {
-	return visibility_type() == BlockVisibilityType::translucent;
+	return visibility_type() == Enum::VisibilityType::translucent;
 }
 
 bool Base::is_invisible() const
 {
-	return visibility_type() == BlockVisibilityType::invisible;
+	return visibility_type() == Enum::VisibilityType::invisible;
 }
 
 bool Base::is_solid() const
@@ -124,8 +124,8 @@ void Base::use_start()
 
 void Base::save(Storage::OutputInterface& i) const
 {
-	BlockType t = (type_ == BlockType::none) ? BlockType::air : type_;
-	BlockTypeExternal te = Game::instance->block_registry.get_extid(t);
+	Enum::Type t = (type_ == Enum::Type::none) ? Enum::Type::air : type_;
+	Enum::TypeExternal te = Game::instance->block_registry.get_extid(t);
 	i.set("", te);
 }
 

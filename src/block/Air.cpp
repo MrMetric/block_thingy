@@ -5,15 +5,15 @@
 
 namespace Block {
 
-Air::Air(BlockType t)
+Air::Air(Enum::Type t)
 :
 	Base(t)
 {
 }
 
-BlockVisibilityType Air::visibility_type() const
+Enum::VisibilityType Air::visibility_type() const
 {
-	return BlockVisibilityType::invisible;
+	return Enum::VisibilityType::invisible;
 }
 
 bool Air::is_solid() const

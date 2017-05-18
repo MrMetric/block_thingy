@@ -14,6 +14,7 @@
 #include "Player.hpp"
 #include "Settings.hpp"
 #include "block/Base.hpp"
+#include "block/Enum/Type.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
 #include "position/BlockInChunk.hpp"
@@ -138,7 +139,7 @@ void Play::draw_debug_text()
 	auto show_block = [](const Block::Base& block) -> string
 	{
 		std::ostringstream ss;
-		ss << block.name() << " (" << static_cast<block_type_id_t>(block.type()) << ")";
+		ss << block.name() << " (" << block.type() << ")";
 		return ss.str();
 	};
 	if(game.copied_block != nullptr)
@@ -149,7 +150,7 @@ void Play::draw_debug_text()
 	{
 		ss << "block type: "
 			<< game.block_registry.get_strid(game.block_type)
-			<< " (" << static_cast<block_type_id_t>(game.block_type) << ")"
+			<< " (" << game.block_type << ")"
 			<< "\n";
 	}
 	if(game.hovered_block != nullptr)
@@ -158,6 +159,7 @@ void Play::draw_debug_text()
 		ss << "hovered: " << show_block(hovered) << "\n";
 		ss << "\tface: " << game.hovered_block->face() << '\n';
 	}
+
 	game.gfx.gui_text.draw(ss.str(), {8.0, 8.0});
 }
 

@@ -164,7 +164,7 @@ bool Base::block_visible_from
 {
 	const Block::Base& sibling = block_at(chunk, x, y, z);
 	return
-		   sibling.type() != BlockType::none
+		   sibling.type() != Block::Enum::Type::none
 		&& !block.is_invisible() // this block is visible
 		&& !sibling.is_opaque() // this block can be seen thru the adjacent block
 		&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks (of the same type)

@@ -235,7 +235,7 @@ const Block::Base& World::get_block(const BlockInWorld& block_pos) const
 	const shared_ptr<const Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static const std::unique_ptr<Block::Base> none = block_registry.make(BlockType::none);
+		static const std::unique_ptr<Block::Base> none = block_registry.make(Block::Enum::Type::none);
 		return *none;
 	}
 
@@ -249,7 +249,7 @@ Block::Base& World::get_block(const BlockInWorld& block_pos)
 	const shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static /*const*/ std::unique_ptr<Block::Base> none = block_registry.make(BlockType::none);
+		static /*const*/ std::unique_ptr<Block::Base> none = block_registry.make(Block::Enum::Type::none);
 		return *none;
 	}
 

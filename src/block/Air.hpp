@@ -6,9 +6,9 @@ namespace Block {
 class Air : public Base
 {
 	public:
-		Air(BlockType);
+		Air(Enum::Type);
 
-		BlockVisibilityType visibility_type() const override;
+		Enum::VisibilityType visibility_type() const override;
 		bool is_solid() const override;
 		bool is_selectable() const override;
 		bool is_replaceable() const override;

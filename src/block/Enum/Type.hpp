@@ -1,16 +1,23 @@
 #pragma once
 
+#include <iosfwd>
 #include <stdint.h>
 
-using block_type_id_t = uint16_t;
+namespace Block::Enum {
 
-enum class BlockType : block_type_id_t
+using Type_t = uint16_t;
+
+enum class Type : Type_t
 {
 	none,
 	air,
 	unknown,
 };
 
-enum class BlockTypeExternal : block_type_id_t
+std::ostream& operator<<(std::ostream&, Type);
+
+enum class TypeExternal : Type_t
 {
 };
+
+}

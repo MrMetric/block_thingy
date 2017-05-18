@@ -8,7 +8,7 @@ using std::string;
 
 namespace Block {
 
-Unknown::Unknown(const BlockType t)
+Unknown::Unknown(const Enum::Type t)
 :
 	Base(t)
 {
@@ -16,7 +16,7 @@ Unknown::Unknown(const BlockType t)
 
 Unknown::Unknown
 (
-	const BlockType t,
+	const Enum::Type t,
 	const string& strid
 )
 :

@@ -19,13 +19,13 @@ using Graphics::Color;
 
 namespace Block {
 
-Light::Light(BlockType t)
+Light::Light(Enum::Type t)
 :
 	Light(t, Color(glm::dvec3(1, 1, 1)))
 {
 }
 
-Light::Light(BlockType t, const Color& color)
+Light::Light(Enum::Type t, const Color& color)
 :
 	Base(t),
 	color_(color)

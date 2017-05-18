@@ -10,7 +10,7 @@ using Block::Enum::Face;
 
 namespace Block {
 
-Textured::Textured(const BlockType type)
+Textured::Textured(const Enum::Type type)
 :
 	Base(type)
 {
@@ -21,7 +21,7 @@ fs::path Textured::texture(Face face) const
 	return Game::instance->block_registry.texture(type(), face);
 }
 
-BlockVisibilityType Textured::visibility_type() const
+Enum::VisibilityType Textured::visibility_type() const
 {
 	std::array<fs::path, 6> texture_paths =
 	{
@@ -36,10 +36,10 @@ BlockVisibilityType Textured::visibility_type() const
 	{
 		if(Game::instance->resource_manager.texture_has_transparency(path))
 		{
-			return BlockVisibilityType::translucent;
+			return Enum::VisibilityType::translucent;
 		}
 	}
-	return BlockVisibilityType::opaque;
+	return Enum::VisibilityType::opaque;
 }
 
 }
