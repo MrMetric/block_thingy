@@ -20,12 +20,11 @@
 #include "graphics/GUI/Base.hpp"
 #include "physics/RaycastHit.hpp"
 #include "position/ChunkInWorld.hpp"
+#include "types/window_size_t.hpp"
 #include "fwd/util/char_press.hpp"
 #include "util/filesystem.hpp"
 #include "fwd/util/key_press.hpp"
 #include "fwd/util/mouse_press.hpp"
-
-#include "types/window_size_t.hpp"
 
 class Game
 {

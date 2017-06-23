@@ -12,7 +12,6 @@
 #include <easylogging++/easylogging++.hpp>
 INITIALIZE_EASYLOGGINGPP
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "Game.hpp"

@@ -13,7 +13,6 @@
 #include <glm/vec4.hpp>
 
 #include "RaycastHit.hpp"
-
 #include "World.hpp"
 #include "block/Base.hpp"
 #include "position/BlockInWorld.hpp"

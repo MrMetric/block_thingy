@@ -7,7 +7,6 @@
 
 #include "BlockInChunk.hpp"
 #include "ChunkInWorld.hpp"
-
 #include "chunk/Chunk.hpp"
 
 using std::to_string;
@@ -23,10 +22,11 @@ BlockInWorld::BlockInWorld()
 }
 
 BlockInWorld::BlockInWorld(const value_type x, const value_type y, const value_type z)
+:
+	x(x),
+	y(y),
+	z(z)
 {
-	this->x = x;
-	this->y = y;
-	this->z = z;
 }
 
 #undef t

@@ -8,7 +8,6 @@
 #include <glm/common.hpp>
 
 #include "BlockInWorld.hpp"
-
 #include "fwd/chunk/Chunk.hpp"
 
 using std::to_string;
@@ -24,10 +23,11 @@ BlockInChunk::BlockInChunk()
 }
 
 BlockInChunk::BlockInChunk(const value_type x, const value_type y, const value_type z)
+:
+	x(x),
+	y(y),
+	z(z)
 {
-	this->x = x;
-	this->y = y;
-	this->z = z;
 	check_bounds();
 }
 

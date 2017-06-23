@@ -6,9 +6,8 @@
 #include <mutex>
 
 #include "fwd/block/Base.hpp"
-#include "position/BlockInChunk.hpp"
-
 #include "fwd/chunk/Chunk.hpp"
+#include "position/BlockInChunk.hpp"
 
 template<typename T>
 class ChunkData

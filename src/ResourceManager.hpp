@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <memory>
 #include <experimental/propagate_const>
 #include <string>
@@ -20,9 +21,9 @@ class Resource
 
 		Resource(std::unique_ptr<T>* p, const std::string& id)
 		:
-			id(id)
+			id(id),
+			p(p)
 		{
-			this->p = p;
 			update_funcs.emplace(id, std::vector<update_func_t>(1));
 		}
 

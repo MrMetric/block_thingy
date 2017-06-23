@@ -1,8 +1,7 @@
 #include "Button.hpp"
 
-#include <GLFW/glfw3.h>
-
 #include <easylogging++/easylogging++.hpp>
+#include <GLFW/glfw3.h>
 #include <glm/common.hpp>
 
 #include "Gfx.hpp"

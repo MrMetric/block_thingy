@@ -52,8 +52,8 @@ target_compile_features(block_thingy PRIVATE cxx_relaxed_constexpr)
 ]]
 
 find_package(PkgConfig REQUIRED)
-pkg_search_module(GLFW REQUIRED glfw3>=3.2)
 pkg_search_module(FREETYPE REQUIRED freetype2)
+pkg_search_module(GLFW REQUIRED glfw3>=3.2)
 pkg_search_module(LIBPNG REQUIRED libpng)
 pkg_search_module(MSGPACK REQUIRED msgpack>=2.0.0) # TODO: determine minimum version
 

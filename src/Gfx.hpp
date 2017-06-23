@@ -5,28 +5,21 @@
 #include <stdint.h>
 #include <string>
 
+#include <GLFW/glfw3.h>
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
+#include "fwd/block/Enum/Type.hpp"
+#include "fwd/event/EventManager.hpp"
 #include "graphics/RenderTarget.hpp"
 #include "graphics/Text.hpp"
 #include "graphics/OpenGL/ShaderProgram.hpp"
 #include "graphics/OpenGL/VertexArray.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
-
-#include "fwd/block/Enum/Type.hpp"
-
+#include "fwd/position/BlockInWorld.hpp"
 #include "types/window_size_t.hpp"
-
-struct GLFWwindow;
-
-class EventManager;
-namespace Position
-{
-	struct BlockInWorld;
-}
 
 class Gfx
 {

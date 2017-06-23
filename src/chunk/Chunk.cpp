@@ -9,10 +9,6 @@
 #include <vector>
 
 #include <glad/glad.h>
-#include "graphics/OpenGL/ShaderProgram.hpp"
-#include "graphics/OpenGL/VertexArray.hpp"
-#include "graphics/OpenGL/VertexBuffer.hpp"
-
 #include <glm/vec3.hpp>
 
 #include "Camera.hpp"
@@ -24,6 +20,9 @@
 #include "block/Enum/Type.hpp"
 #include "chunk/Mesher/Base.hpp"
 #include "graphics/Color.hpp"
+#include "graphics/OpenGL/ShaderProgram.hpp"
+#include "graphics/OpenGL/VertexArray.hpp"
+#include "graphics/OpenGL/VertexBuffer.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"

@@ -3,7 +3,6 @@
 #include "graphics/OpenGL/Framebuffer.hpp"
 #include "graphics/OpenGL/Renderbuffer.hpp"
 #include "graphics/OpenGL/Texture.hpp"
-
 #include "types/window_size_t.hpp"
 
 namespace Graphics {

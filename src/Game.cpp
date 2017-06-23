@@ -14,7 +14,6 @@
 #include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -29,7 +28,14 @@
 #include "Settings.hpp"
 #include "Util.hpp"
 #include "World.hpp"
+#include "block/Air.hpp"
 #include "block/Base.hpp"
+#include "block/Glass.hpp"
+#include "block/Light.hpp"
+#include "block/None.hpp"
+#include "block/Teleporter.hpp"
+#include "block/Test.hpp"
+#include "block/Unknown.hpp"
 #include "block/Enum/Type.hpp"
 #include "chunk/Mesher/Greedy.hpp"
 #include "chunk/Mesher/Simple.hpp"
@@ -54,14 +60,6 @@
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 #include "util/filesystem.hpp"
-
-#include "block/Air.hpp"
-#include "block/Glass.hpp"
-#include "block/Light.hpp"
-#include "block/None.hpp"
-#include "block/Test.hpp"
-#include "block/Teleporter.hpp"
-#include "block/Unknown.hpp"
 
 #include "std_make_unique.hpp"
 

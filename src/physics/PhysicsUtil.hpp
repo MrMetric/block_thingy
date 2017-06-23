@@ -8,7 +8,6 @@
 
 #include "fwd/World.hpp"
 #include "fwd/physics/RaycastHit.hpp"
-
 #include "types/window_size_t.hpp"
 
 namespace PhysicsUtil

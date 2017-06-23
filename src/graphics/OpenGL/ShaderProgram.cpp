@@ -9,10 +9,9 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "ShaderObject.hpp"
-
 #include "Game.hpp"
 #include "ResourceManager.hpp"
+#include "ShaderObject.hpp"
 #include "Util.hpp"
 
 #include "std_make_unique.hpp"

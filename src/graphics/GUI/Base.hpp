@@ -8,12 +8,11 @@
 #include "fwd/Game.hpp"
 #include "fwd/event/EventManager.hpp"
 #include "graphics/GUI/Widget/Container.hpp"
+#include "types/window_size_t.hpp"
 #include "fwd/util/char_press.hpp"
 #include "fwd/util/key_press.hpp"
 #include "fwd/util/mouse_press.hpp"
 #include "util/filesystem.hpp"
-
-#include "types/window_size_t.hpp"
 
 namespace Graphics::GUI {
 

@@ -7,12 +7,9 @@
 #include <string>
 #include <utility>
 
+#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "graphics/OpenGL/ShaderProgram.hpp"
-#include "graphics/OpenGL/VertexArray.hpp"
-#include "graphics/OpenGL/VertexBuffer.hpp"
-
 #include <glm/common.hpp>					// glm::mod
 #include <glm/mat4x4.hpp>
 #include <glm/trigonometric.hpp>			// glm::radians
@@ -20,8 +17,6 @@
 #include <glm/vec4.hpp>
 #include <glm/gtc/matrix_transform.hpp>		// glm::perspective
 #include <glm/gtx/transform.hpp>			// glm::rotate, glm::translate
-
-#include <easylogging++/easylogging++.hpp>
 
 #include "Camera.hpp"
 #include "Cube.hpp"
@@ -34,6 +29,9 @@
 #include "event/type/Event_change_setting.hpp"
 #include "event/type/Event_window_size_change.hpp"
 #include "graphics/primitive.hpp"
+#include "graphics/OpenGL/ShaderProgram.hpp"
+#include "graphics/OpenGL/VertexArray.hpp"
+#include "graphics/OpenGL/VertexBuffer.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
