@@ -162,7 +162,7 @@ std::tuple<glm::dvec2, std::vector<double>> Text::loop
 		pos.x += ch.x_offset;
 	}
 
-	return std::tuple(pos, widths);
+	return {pos, widths};
 }
 
 Text::Character& Text::get_char(const char32_t c)

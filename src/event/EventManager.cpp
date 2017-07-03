@@ -23,7 +23,7 @@ event_handler_id_t EventManager::add_handler(const event_handler_t& handler)
 event_handler_id_t EventManager::add_handler(const EventType type, const event_handler_t& handler)
 {
 	auto id = max_id++;
-	handlers[id] = std::pair(type, handler);
+	handlers[id] = {type, handler};
 	return id;
 }
 
