@@ -20,7 +20,7 @@
 #include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 
-#include "std_make_unique.hpp"
+#include "shim/make_unique.hpp"
 
 using std::string;
 using std::to_string;

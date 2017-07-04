@@ -9,7 +9,7 @@
 #include <glm/vec2.hpp>
 #include <json.hpp>
 
-#include "std_make_unique.hpp"
+#include "shim/make_unique.hpp"
 
 namespace Graphics::GUI::Widget {
 

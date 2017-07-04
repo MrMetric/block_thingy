@@ -28,10 +28,9 @@
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 #include "position/hash.hpp"
+#include "shim/make_unique.hpp"
 #include "storage/WorldFile.hpp"
 #include "util/ThreadThingy.hpp"
-
-#include "std_make_unique.hpp"
 
 using std::string;
 using std::shared_ptr;

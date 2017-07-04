@@ -9,10 +9,9 @@
 #include "World.hpp"
 #include "block/Enum/Type.hpp"
 #include "graphics/GUI/Light.hpp"
+#include "shim/make_unique.hpp"
 #include "storage/Interface.hpp"
 #include "storage/msgpack/Color.hpp"
-
-#include "std_make_unique.hpp"
 
 using std::string;
 using Graphics::Color;

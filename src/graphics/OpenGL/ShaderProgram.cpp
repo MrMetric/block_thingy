@@ -13,8 +13,7 @@
 #include "ResourceManager.hpp"
 #include "ShaderObject.hpp"
 #include "Util.hpp"
-
-#include "std_make_unique.hpp"
+#include "shim/make_unique.hpp"
 
 using std::string;
 using std::unique_ptr;

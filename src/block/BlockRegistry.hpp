@@ -7,9 +7,8 @@
 #include "fwd/block/Base.hpp"
 #include "fwd/block/Enum/Face.hpp"
 #include "fwd/block/Enum/Type.hpp"
+#include "shim/make_unique.hpp"
 #include "util/filesystem.hpp"
-
-#include "std_make_unique.hpp"
 
 namespace Block {
 
