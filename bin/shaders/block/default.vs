@@ -8,7 +8,7 @@ layout(location = 4) in vec3 light3_in;
 layout(location = 5) in vec3 light4_in;
 layout(location = 6) in float tex_index_in;
 
-uniform mat4 matriks;
+uniform mat4 mvp_matrix;
 uniform vec3 position_offset;
 
 out vec3 position;
@@ -28,5 +28,5 @@ void main()
 	light3 = light3_in;
 	light4 = light4_in;
 	tex_index = int(tex_index_in);
-	gl_Position = matriks * vec4(position, 1);
+	gl_Position = mvp_matrix * vec4(position, 1);
 }

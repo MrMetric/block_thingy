@@ -96,6 +96,10 @@ Block::Base& Chunk::get_block(const BlockInChunk& pos)
 
 void Chunk::set_block(const BlockInChunk& pos, unique_ptr<Block::Base> block)
 {
+	if(block == nullptr)
+	{
+		throw std::invalid_argument("Chunk::set_block: got a null block");
+	}
 	blocks.set(pos, std::move(block));
 }
 
@@ -141,14 +145,13 @@ void Chunk::render(const bool translucent_pass)
 			++i;
 			continue;
 		}
-		auto& shader = Game::instance->gfx.get_block_shader(type);
-		glUseProgram(shader.get_name());
 
+		auto& shader = Game::instance->gfx.get_block_shader(type);
 		shader.uniform("position_offset", position_offset);
 		shader.uniform("tex", p.first.tex_unit);
 
-		const std::size_t draw_count = p.second.size() * 3;
-		pImpl->mesh_vaos[i].draw(GL_TRIANGLES, 0, draw_count);
+		shader.use();
+		pImpl->mesh_vaos[i].draw(GL_TRIANGLES, 0, p.second.size() * 3);
 
 		++i;
 	}

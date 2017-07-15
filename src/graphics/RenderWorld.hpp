@@ -16,7 +16,7 @@ namespace RenderWorld
 	(
 		World& world,
 		std::map<Block::Enum::Type, Graphics::OpenGL::ShaderProgram>& block_shaders,
-		const glm::dmat4& matriks,
+		const glm::dmat4& vp_matrix,
 		const Position::BlockInWorld& origin,
 		Position::ChunkInWorld::value_type render_distance
 	);

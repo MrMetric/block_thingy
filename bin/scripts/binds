@@ -11,7 +11,6 @@ bind mouse2 place_block
 bind mouse3 copy_block
 bind r respawn
 bind l noclip
-bind n nazi
 bind ; 'save_pos cam_pos'
 bind p 'load_pos cam_pos'
 bind f1 'toggle_bool show_HUD'
@@ -21,7 +20,6 @@ bind f11 'toggle_bool fullscreen'
 bind esc close_gui
 bind ` 'open_gui Console'
 bind , 'toggle_bool wireframe'
-bind b 'toggle_bool cull_face'
 bind = render_distance++
 bind - render_distance--
 bind j block_type++

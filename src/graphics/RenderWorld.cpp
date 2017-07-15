@@ -17,7 +17,7 @@ void RenderWorld::draw_world
 (
 	World& world,
 	std::map<Block::Enum::Type, ShaderProgram>& block_shaders,
-	const glm::dmat4& matriks,
+	const glm::dmat4& vp_matrix,
 	const Position::BlockInWorld& origin,
 	const ChunkInWorld::value_type render_distance
 )
@@ -25,7 +25,7 @@ void RenderWorld::draw_world
 	for(auto& p : block_shaders)
 	{
 		ShaderProgram& shader = p.second;
-		shader.uniform("matriks", glm::mat4(matriks));
+		shader.uniform("mvp_matrix", glm::mat4(vp_matrix));
 	}
 
 	// TODO: frustrum culling

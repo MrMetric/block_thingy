@@ -54,8 +54,8 @@ class Player
 		Game& game;
 
 		const double abs_offset;
-		AABB aabb;
-		AABB make_aabb(const glm::dvec3& position);
+		Physics::AABB aabb;
+		Physics::AABB make_aabb(const glm::dvec3& position);
 		void set_aabb();
 		double eye_height;
 		double height;

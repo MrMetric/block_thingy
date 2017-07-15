@@ -64,7 +64,7 @@ void Text::draw(const string& s, const glm::dvec2& pos, const glm::dvec3& color)
 void Text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec3& color)
 {
 	shader.uniform("color", glm::vec3(color));
-	glUseProgram(shader.get_name());
+	shader.use();
 	glActiveTexture(GL_TEXTURE0);
 
 	loop(s, glm::round(pos), [this](const glm::dvec2& pos, Character& ch)

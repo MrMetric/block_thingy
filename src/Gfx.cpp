@@ -19,7 +19,6 @@
 #include <glm/gtx/transform.hpp>			// glm::rotate, glm::translate
 
 #include "Camera.hpp"
-#include "Cube.hpp"
 #include "Game.hpp"
 #include "Settings.hpp"
 #include "block/Enum/Type.hpp"
@@ -32,6 +31,7 @@
 #include "graphics/OpenGL/ShaderProgram.hpp"
 #include "graphics/OpenGL/VertexArray.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
+#include "physics/AABB.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
@@ -229,7 +229,7 @@ void Gfx::update_framebuffer_size(const window_size_t& window_size)
 	const double height = window_size.y;
 	gui_projection_matrix = glm::ortho(0.0, width, height, 0.0, -1.0, 1.0);
 	gui_text.set_projection_matrix(gui_projection_matrix);
-	s_gui_shape.uniform("matriks", glm::mat4(gui_projection_matrix));
+	s_gui_shape.uniform("mvp_matrix", glm::mat4(gui_projection_matrix));
 
 	screen_rt.resize(window_size);
 	buf_rt.resize(window_size);
@@ -305,63 +305,91 @@ glm::dmat4 Gfx::make_projection_matrix(const double width, const double height)
 	return glm::perspectiveFov(fov, width, height, near, far);
 }
 
-glm::dmat4 Gfx::make_view_matrix(const glm::dvec3& rotation)
+glm::dmat4 Gfx::make_rotation_matrix(const glm::dvec3& rotation)
 {
-	glm::dmat4 view_matrix(1);
-	view_matrix *= glm::rotate(glm::radians(rotation.x), glm::dvec3(1, 0, 0));
-	view_matrix *= glm::rotate(glm::radians(rotation.y), glm::dvec3(0, 1, 0));
-	view_matrix *= glm::rotate(glm::radians(rotation.z), glm::dvec3(0, 0, 1));
-	return view_matrix;
+	return
+	  glm::rotate(glm::radians(rotation.x), glm::dvec3(1, 0, 0))
+	* glm::rotate(glm::radians(rotation.y), glm::dvec3(0, 1, 0))
+	* glm::rotate(glm::radians(rotation.z), glm::dvec3(0, 0, 1));
 }
 
 void Gfx::set_camera_view
 (
 	const glm::dvec3& position,
-	const glm::dmat4& view_matrix,
+	const glm::dmat4& rotation,
 	const glm::dmat4& projection_matrix
 )
 {
 	physical_position = position;
-	view_matrix_physical = view_matrix * glm::translate(-1.0 * physical_position);
+	view_matrix_physical = rotation * glm::translate(-1.0 * physical_position);
 
 	graphical_position = glm::mod(position, static_cast<double>(CHUNK_SIZE));
-	view_matrix_graphical = view_matrix * glm::translate(-1.0 * graphical_position);
+	view_matrix_graphical = rotation * glm::translate(-1.0 * graphical_position);
 
-	matriks = projection_matrix * view_matrix_graphical;
+	vp_matrix = projection_matrix * view_matrix_graphical;
 }
 
-// TODO: use GL_LINES
-void Gfx::draw_cube_outline(const Position::BlockInWorld& block_pos, const glm::dvec4& color)
+void Gfx::draw_box_outline(const glm::dvec3& min_, const glm::dvec3& max_, const glm::dvec4& color)
 {
-	const Position::ChunkInWorld chunk_pos(block_pos);
-	const auto chunk_pos_graphical = chunk_pos - Position::ChunkInWorld(Position::BlockInWorld(Game::instance->camera.position));
-	const Position::BlockInWorld pos(chunk_pos_graphical, Position::BlockInChunk(block_pos));
+	const glm::dvec3 o = graphical_position - physical_position;
+	const glm::vec3 min(min_ + o);
+	const glm::vec3 max(max_ + o);
 
-	vertex_coord_t<GLfloat> vertexes[16];
-	// damn thing is not Eulerian
-	// TODO: determine shortest path
-	GLuint elements[] = {
-		0, 1, 3, 2, 0,
-		4, 5, 7, 6, 4,
-		5, 1, 3, 7, 6, 2
+	GLfloat vertexes[] = {
+		min.x, min.y, min.z,
+		max.x, min.y, min.z,
+
+		min.x, min.y, min.z,
+		min.x, max.y, min.z,
+
+		min.x, min.y, min.z,
+		min.x, min.y, max.z,
+
+		max.x, max.y, max.z,
+		min.x, max.y, max.z,
+
+		max.x, max.y, max.z,
+		max.x, min.y, max.z,
+
+		max.x, max.y, max.z,
+		max.x, max.y, min.z,
+
+		min.x, min.y, max.z,
+		min.x, max.y, max.z,
+
+		min.x, min.y, max.z,
+		max.x, min.y, max.z,
+
+		min.x, max.y, min.z,
+		max.x, max.y, min.z,
+
+		min.x, max.y, min.z,
+		min.x, max.y, max.z,
+
+		max.x, min.y, min.z,
+		max.x, max.y, min.z,
+
+		max.x, min.y, min.z,
+		max.x, min.y, max.z,
 	};
-	for(uint_fast8_t e = 0; e < 16; ++e)
-	{
-		const uint_fast32_t o2 = 3 * elements[e];
-		for(uint_fast8_t i = 0; i < 3; ++i)
-		{
-			vertexes[e][i] = Cube::cube_vertex[o2 + i] + pos[i];
-		}
-	}
+	outline_vbo.data(sizeof(vertexes), vertexes, Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw);
 
-	const auto usage_hint = Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw;
-	outline_vbo.data(sizeof(vertexes), vertexes, usage_hint);
-
-	glUseProgram(s_lines.get_name());
-	s_lines.uniform("matriks", glm::mat4(matriks));
+	s_lines.uniform("mvp_matrix", glm::mat4(vp_matrix));
 	s_lines.uniform("color", glm::vec4(color));
 
-	outline_vao.draw(GL_LINE_STRIP, 0, 16);
+	s_lines.use();
+	outline_vao.draw(GL_LINES, 0, 12*2);
+}
+
+void Gfx::draw_box_outline(const Physics::AABB& aabb, const glm::dvec4& color)
+{
+	draw_box_outline(aabb.min, aabb.max, color);
+}
+
+void Gfx::draw_block_outline(const Position::BlockInWorld& block_pos, const glm::dvec4& color)
+{
+	glm::dvec3 min(block_pos.x, block_pos.y, block_pos.z);
+	draw_box_outline(min, min + 1.0, color);
 }
 
 Graphics::OpenGL::ShaderProgram& Gfx::get_block_shader(const Block::Enum::Type type)
@@ -427,11 +455,11 @@ void Gfx::draw_rectangle(glm::dvec2 position, glm::dvec2 size, const glm::dvec4&
 		x    , y + h,
 		x + w, y + h,
 	};
+	gui_rectangle_vbo.data(sizeof(v), v, Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw);
 
-	glUseProgram(s_gui_shape.get_name());
 	s_gui_shape.uniform("color", glm::vec4(color));
 
-	gui_rectangle_vbo.data(sizeof(v), v, Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw);
+	s_gui_shape.use();
 	gui_rectangle_vao.draw(GL_TRIANGLES, 0, sizeof(v) / sizeof(v[0]));
 }
 
@@ -487,11 +515,11 @@ void Gfx::draw_border(glm::dvec2 position, glm::dvec2 size, glm::dvec4 border_si
 		x + w, y + h + sy2,
 		x    , y + h + sy2,
 	};
+	gui_rectangle_vbo.data(sizeof(v), v, Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw);
 
-	glUseProgram(s_gui_shape.get_name());
 	s_gui_shape.uniform("color", glm::vec4(color));
 
-	gui_rectangle_vbo.data(sizeof(v), v, Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw);
+	s_gui_shape.use();
 	gui_rectangle_vao.draw(GL_TRIANGLES, 0, sizeof(v) / sizeof(v[0]));
 }
 

@@ -65,7 +65,7 @@ string Util::gl_object_log(const GLuint object)
 	}
 	else
 	{
-		throw std::runtime_error("Error printing log: object is not a shader or a program\n");
+		throw std::runtime_error("Error printing log: object is not a shader or a program");
 	}
 
 	unique_ptr<char[]> log = std::make_unique<char[]>(static_cast<std::size_t>(log_length));
@@ -92,7 +92,7 @@ void Util::change_directory(const fs::path& path)
 	#else
 	if(chdir(path.c_str()) == -1)
 	{
-		throw std::runtime_error("error changing directory to " + path.u8string() + ": " + strerror(errno) + "\n");
+		throw std::runtime_error("error changing directory to " + path.u8string() + ": " + strerror(errno));
 	}
 	#endif
 }

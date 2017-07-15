@@ -18,6 +18,7 @@
 #include "graphics/OpenGL/ShaderProgram.hpp"
 #include "graphics/OpenGL/VertexArray.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
+#include "fwd/physics/AABB.hpp"
 #include "fwd/position/BlockInWorld.hpp"
 #include "types/window_size_t.hpp"
 
@@ -53,7 +54,7 @@ class Gfx
 		glm::dvec3 physical_position;
 		glm::dvec3 graphical_position;
 
-		glm::dmat4 matriks;
+		glm::dmat4 vp_matrix; // view (graphical) and projection
 
 		std::map<Block::Enum::Type, Graphics::OpenGL::ShaderProgram> block_shaders;
 
@@ -90,14 +91,16 @@ class Gfx
 		void set_cull_face(bool);
 		void update_projection_matrix();
 		static glm::dmat4 make_projection_matrix(double width, double height);
-		static glm::dmat4 make_view_matrix(const glm::dvec3& rotation);
+		static glm::dmat4 make_rotation_matrix(const glm::dvec3& rotation);
 		void set_camera_view
 		(
 			const glm::dvec3& position,
-			const glm::dmat4& view_matrix,
+			const glm::dmat4& rotation,
 			const glm::dmat4& projection_matrix
 		);
-		void draw_cube_outline(const Position::BlockInWorld&, const glm::dvec4& color);
+		void draw_box_outline(const glm::dvec3& min, const glm::dvec3& max, const glm::dvec4& color);
+		void draw_box_outline(const Physics::AABB&, const glm::dvec4& color);
+		void draw_block_outline(const Position::BlockInWorld&, const glm::dvec4& color);
 		Graphics::OpenGL::ShaderProgram& get_block_shader(Block::Enum::Type);
 
 		void center_cursor();

@@ -2,7 +2,16 @@
 
 #include "position/BlockInWorld.hpp"
 
+namespace Physics {
+
 AABB::AABB()
+{
+}
+
+AABB::AABB(const glm::dvec3& min, const glm::dvec3& max)
+:
+	min(min),
+	max(max)
 {
 }
 
@@ -45,4 +54,6 @@ glm::dvec3 AABB::offset(const AABB& b2, const glm::vec3& direction_sign)
 	set(1);
 	set(2);
 	return offset;
+}
+
 }

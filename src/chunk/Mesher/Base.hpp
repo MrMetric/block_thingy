@@ -80,21 +80,21 @@ public:
 	(
 		mesh_t& mesh,
 		u8vec3 xyz,
-		const Block::Enum::Face face,
-		const uint8_t offset_x,
-		const uint8_t offset_z,
+		Block::Enum::Face face,
+		uint8_t offset_x,
+		uint8_t offset_z,
 		const glm::tvec4<glm::vec3>& light,
-		const uint16_t tex_index
+		uint16_t tex_index
 	);
 	static void add_face
 	(
 		mesh_t& mesh,
 		u8vec3 xyz,
-		const Block::Enum::Face face,
-		const uint8_t offset_x,
-		const uint8_t offset_z,
+		Block::Enum::Face face,
+		uint8_t offset_x,
+		uint8_t offset_z,
 		const glm::vec3& light,
-		const uint16_t tex_index
+		uint16_t tex_index
 	);
 	static u8vec3 get_i(Block::Enum::Face);
 

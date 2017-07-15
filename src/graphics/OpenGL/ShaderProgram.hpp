@@ -38,6 +38,7 @@ class ShaderProgram
 
 		GLuint get_name();
 		GLint get_uniform_location(const std::string&) const;
+		void use() const;
 
 		// https://www.opengl.org/sdk/docs/man/html/glUniform.xhtml
 		// https://www.opengl.org/registry/specs/ARB/gpu_shader_fp64.txt

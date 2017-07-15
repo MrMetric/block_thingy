@@ -448,6 +448,11 @@ void World::update_light_around(const BlockInWorld& block_pos)
 
 void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 {
+	const std::shared_ptr<Chunk> prev_chunk = get_chunk(chunk_pos);
+	if(prev_chunk == chunk)
+	{
+		return;
+	}
 	{
 		std::lock_guard<std::mutex> g(pImpl->chunks_mutex);
 		pImpl->chunks.insert_or_assign(chunk_pos, chunk);

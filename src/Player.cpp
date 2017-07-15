@@ -79,7 +79,7 @@ void Player::move(const glm::dvec3& acceleration)
 		return;
 	}
 
-	AABB new_aabb = make_aabb(new_position);
+	Physics::AABB new_aabb = make_aabb(new_position);
 	const Position::BlockInWorld block_pos_old(position);
 	auto loop = [this, &move_vec, &new_position, &new_aabb, &block_pos_old](const bool corners)
 	{
@@ -97,7 +97,7 @@ void Player::move(const glm::dvec3& acceleration)
 			{
 				continue;
 			}
-			AABB block_aabb(block_pos);
+			Physics::AABB block_aabb(block_pos);
 			if(!new_aabb.collide(block_aabb))
 			{
 				continue;
@@ -286,7 +286,7 @@ bool Player::can_place_block_at(const Position::BlockInWorld& block_pos)
 	{
 		return true;
 	}
-	AABB block_aabb(block_pos);
+	Physics::AABB block_aabb(block_pos);
 	return !aabb.collide(block_aabb);
 }
 
@@ -335,13 +335,14 @@ void Player::set_noclip(bool noclip)
 	flags.noclip = noclip;
 }
 
-AABB Player::make_aabb(const glm::dvec3& position)
+Physics::AABB Player::make_aabb(const glm::dvec3& position)
 {
 	const glm::dvec3 size(abs_offset, height, abs_offset);
-	AABB aabb;
-	aabb.min = {position.x - size.x, position.y         , position.z - size.z};
-	aabb.max = {position.x + size.x, position.y + size.y, position.z + size.z};
-	return aabb;
+	return
+	{
+		{position.x - size.x, position.y         , position.z - size.z},
+		{position.x + size.x, position.y + size.y, position.z + size.z},
+	};
 }
 
 void Player::set_aabb()

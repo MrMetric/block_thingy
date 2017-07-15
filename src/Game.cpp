@@ -234,8 +234,8 @@ void Game::draw()
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(gfx.buf_rt.frame_texture.type, gfx.buf_rt.frame_texture.get_name());
-	glUseProgram(gfx.screen_shader->get_name());
 	gfx.screen_shader->uniform("time", static_cast<float>(world.get_time()));
+	gfx.screen_shader->use();
 	gfx.quad_vao.draw(GL_TRIANGLES, 0, 6);
 
 	// TODO: it might be faster to listen for the change event and set a private bool instead of getting the value every frame
@@ -292,14 +292,23 @@ void Game::step_world()
 
 void Game::draw_world()
 {
-	glm::dmat4 view_matrix = Gfx::make_view_matrix(camera.rotation);
-	draw_world(camera.position, view_matrix, gfx.projection_matrix);
+	draw_world(camera.position, camera.rotation, gfx.projection_matrix);
 }
 
 void Game::draw_world
 (
-	const glm::dvec3& position,
-	const glm::dmat4& view_matrix,
+	const glm::dvec3& cam_position,
+	const glm::dvec3& cam_rotation,
+	const glm::dmat4& projection_matrix
+)
+{
+	draw_world(cam_position, Gfx::make_rotation_matrix(cam_rotation), projection_matrix);
+}
+
+void Game::draw_world
+(
+	const glm::dvec3& cam_position,
+	const glm::dmat4& cam_rotation,
 	const glm::dmat4& projection_matrix
 )
 {
@@ -309,13 +318,13 @@ void Game::draw_world
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 
-	gfx.set_camera_view(position, view_matrix, projection_matrix);
-	Position::BlockInWorld render_origin(position);
+	gfx.set_camera_view(cam_position, cam_rotation, projection_matrix);
+	Position::BlockInWorld render_origin(cam_position);
 	RenderWorld::draw_world
 	(
 		world,
 		gfx.block_shaders,
-		gfx.matriks,
+		gfx.vp_matrix,
 		render_origin,
 		render_distance
 	);
@@ -323,7 +332,7 @@ void Game::draw_world
 	if(hovered_block != nullptr)
 	{
 		const glm::dvec4 color = world.get_block(hovered_block->pos).selection_color();
-		gfx.draw_cube_outline(hovered_block->pos, color);
+		gfx.draw_block_outline(hovered_block->pos, color);
 	}
 
 	if(wireframe)

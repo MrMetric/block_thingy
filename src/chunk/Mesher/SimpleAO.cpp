@@ -3,7 +3,6 @@
 #include <functional>
 #include <unordered_map>
 
-#include "Cube.hpp"
 #include "Game.hpp"
 #include "block/Base.hpp"
 #include "block/Enum/Face.hpp"

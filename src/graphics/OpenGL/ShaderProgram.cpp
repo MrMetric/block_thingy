@@ -98,6 +98,11 @@ GLint ShaderProgram::get_uniform_location(const string& name) const
 	return i->second;
 }
 
+void ShaderProgram::use() const
+{
+	glUseProgram(name);
+}
+
 void ShaderProgram::uniform(const string& u, const GLint x)
 {
 	glProgramUniform1i(name, get_uniform_location(u), x);
