@@ -8,6 +8,7 @@
 #include "fwd/block/Enum/Type.hpp"
 #include "fwd/block/Enum/VisibilityType.hpp"
 #include "fwd/graphics/Color.hpp"
+#include "fwd/position/BlockInWorld.hpp"
 #include "fwd/storage/Interface.hpp"
 #include "util/filesystem.hpp"
 
@@ -62,7 +63,7 @@ class Base
 		 */
 		virtual bool is_replaceable() const;
 
-		virtual void use_start();
+		virtual void use_start(const Position::BlockInWorld&, Enum::Face);
 
 		virtual void save(Storage::OutputInterface&) const;
 		virtual void load(Storage::InputInterface&);

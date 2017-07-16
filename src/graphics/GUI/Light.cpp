@@ -18,11 +18,13 @@ namespace Graphics::GUI {
 Light::Light
 (
 	Game& game,
-	Block::Light& block
+	Block::Light& block,
+	const Position::BlockInWorld& block_pos
 )
 :
 	Base(game, "guis/Light.btgui"),
-	block(block)
+	block(block),
+	block_pos(block_pos)
 {
 	const Graphics::Color c = block.color();
 	for(uint_fast8_t i = 0; i < 3; ++i)
@@ -86,7 +88,9 @@ void Light::on_change(uint_fast8_t i, Widget::TextInput& w, const string& new_va
 	if(v != c[i])
 	{
 		c[i] = static_cast<Graphics::Color::value_type>(v);
+		Game::instance->world.sub_light(block_pos);
 		block.color(c);
+		Game::instance->world.add_light(block_pos, c, true);
 	}
 }
 

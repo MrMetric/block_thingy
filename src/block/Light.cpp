@@ -53,14 +53,12 @@ Color Light::color() const
 
 void Light::color(const Color& c)
 {
-	Game::instance->world.sub_light(position);
 	color_ = c;
-	Game::instance->world.add_light(position, color_, true);
 }
 
-void Light::use_start()
+void Light::use_start(const Position::BlockInWorld& pos, const Enum::Face)
 {
-	Game::instance->open_gui(std::make_unique<Graphics::GUI::Light>(*Game::instance, *this));
+	Game::instance->open_gui(std::make_unique<Graphics::GUI::Light>(*Game::instance, *this, pos));
 }
 
 void Light::save(Storage::OutputInterface& i) const

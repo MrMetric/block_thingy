@@ -1,12 +1,11 @@
 #pragma once
 #include "Base.hpp"
-#include "Interface/KnowsPosition.hpp"
 
 #include "graphics/Color.hpp"
 
 namespace Block {
 
-class Light : public Base, public Interface::KnowsPosition
+class Light : public Base
 {
 	public:
 		Light(Enum::Type);
@@ -19,7 +18,7 @@ class Light : public Base, public Interface::KnowsPosition
 		Graphics::Color color() const override;
 		void color(const Graphics::Color&);
 
-		void use_start() override;
+		void use_start(const Position::BlockInWorld&, Enum::Face) override;
 
 		void save(Storage::OutputInterface&) const override;
 		void load(Storage::InputInterface&) override;

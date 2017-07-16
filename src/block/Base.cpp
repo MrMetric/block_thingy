@@ -118,7 +118,7 @@ bool Base::is_replaceable() const
 	return false;
 }
 
-void Base::use_start()
+void Base::use_start(const Position::BlockInWorld&, const Enum::Face)
 {
 }
 

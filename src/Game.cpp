@@ -592,7 +592,7 @@ void Game::impl::add_commands()
 	{
 		if(game.hovered_block != nullptr)
 		{
-			game.world.get_block(game.hovered_block->pos).use_start();
+			game.world.get_block(game.hovered_block->pos).use_start(game.hovered_block->pos, game.hovered_block->face());
 		}
 	});
 	COMMAND("-use")
