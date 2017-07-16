@@ -151,6 +151,19 @@ void Image::write(const fs::path& path) const
 	}
 }
 
+static string png_color_type_name(const int color_type)
+{
+	switch(color_type)
+	{
+		case PNG_COLOR_TYPE_GRAY      : return "GRAY";
+		case PNG_COLOR_TYPE_PALETTE   : return "PALETTE";
+		case PNG_COLOR_TYPE_RGB       : return "RGB";
+		case PNG_COLOR_TYPE_RGBA      : return "RGBA";
+		case PNG_COLOR_TYPE_GRAY_ALPHA: return "GRAY_ALPHA";
+	}
+	return std::to_string(color_type);
+}
+
 void read_png
 (
 	const fs::path& path,
@@ -211,7 +224,8 @@ void read_png
 	{
 		png_set_palette_to_rgb(png_ptr);
 	}
-	if(png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
+	const bool has_tRNS = png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS);
+	if(has_tRNS)
 	{
 		png_set_tRNS_to_alpha(png_ptr);
 	}
@@ -219,7 +233,7 @@ void read_png
 	{
 		png_set_expand_gray_1_2_4_to_8(png_ptr);
 	}
-	if(color_type == PNG_COLOR_TYPE_RGB)
+	if(color_type == PNG_COLOR_TYPE_RGB || (color_type == PNG_COLOR_TYPE_PALETTE && !has_tRNS))
 	{
 		png_set_filler(png_ptr, 0xFF, PNG_FILLER_AFTER);
 	}
@@ -236,10 +250,10 @@ void read_png
 
 	LOG(DEBUG) << path.u8string() << ": " << width << "×" << height
 			   << "; bit depth = " << bit_depth
-			   << "; color type = " << color_type
+			   << "; color type = " << png_color_type_name(color_type)
 			   << "; pass count = " << number_of_passes
 			   << "; rowbytes = " << rowbytes
-			   << "\n";
+			;
 
 	data.resize(height * rowbytes);
 	for(std::size_t y = height; y > 0; --y)
