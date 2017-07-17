@@ -72,6 +72,12 @@ public:
 		queued.erase(i);
 	}
 
+	bool has(const T& thing) const
+	{
+		std::lock_guard<std::mutex> g(queued_mutex);
+		return queued.find(thing) != queued.cend();
+	}
+
 	void stop()
 	{
 		if(running)
@@ -87,7 +93,7 @@ public:
 private:
 	moodycamel::ConcurrentQueue<T> things;
 	std::unordered_set<T, Hash> queued;
-	std::mutex queued_mutex;
+	mutable std::mutex queued_mutex;
 	std::atomic<bool> running;
 	std::vector<std::thread> threads;
 };

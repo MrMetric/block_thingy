@@ -633,6 +633,20 @@ void World::set_mesher(std::unique_ptr<Mesher::Base> mesher)
 	}
 }
 
+bool World::is_meshing_queued(const std::shared_ptr<Chunk>& chunk) const
+{
+	if(chunk == nullptr)
+	{
+		return false;
+	}
+	return pImpl->mesh_thread.has(chunk);
+}
+
+bool World::is_meshing_queued(const ChunkInWorld& chunk_pos) const
+{
+	return is_meshing_queued(get_chunk(chunk_pos));
+}
+
 void World::impl::update_chunk_neighbors
 (
 	const ChunkInWorld& chunk_pos,

@@ -16,6 +16,7 @@ bind p 'load_pos cam_pos'
 bind f1 'toggle_bool show_HUD'
 bind f2 screenshot
 bind f3 'toggle_bool show_debug_info'
+bind f9 'toggle_bool show_chunk_outlines'
 bind f11 'toggle_bool fullscreen'
 bind esc close_gui
 bind ` 'open_gui Console'

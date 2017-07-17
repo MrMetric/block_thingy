@@ -80,6 +80,8 @@ class World
 
 		void set_mesher(std::unique_ptr<Mesher::Base>);
 		std::unique_ptr<Mesher::Base> mesher;
+		bool is_meshing_queued(const std::shared_ptr<Chunk>&) const;
+		bool is_meshing_queued(const Position::ChunkInWorld&) const;
 
 		// for msgpack
 		template<typename T> void save(T&) const;

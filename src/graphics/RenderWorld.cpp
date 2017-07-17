@@ -3,14 +3,18 @@
 #include <memory>
 #include <utility>
 
+#include "Gfx.hpp"
+#include "Settings.hpp"
 #include "World.hpp"
 #include "chunk/Chunk.hpp"
 #include "graphics/OpenGL/ShaderProgram.hpp"
+#include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 
 using std::shared_ptr;
 
 using Graphics::OpenGL::ShaderProgram;
+using Position::BlockInWorld;
 using Position::ChunkInWorld;
 
 void RenderWorld::draw_world
@@ -34,14 +38,35 @@ void RenderWorld::draw_world
 	const ChunkInWorld min = chunk_pos - render_distance;
 	const ChunkInWorld max = chunk_pos + render_distance;
 
+	const bool show_chunk_outlines = Settings::get<bool>("show_chunk_outlines");
 	// TODO: what if a chunk loads between passes?
-	auto draw_chunks = [&world, &min, &max](const bool transluscent_pass)
+	auto draw_chunks = [&world, &min, &max, show_chunk_outlines](const bool transluscent_pass)
 	{
-		for(ChunkInWorld::value_type x = min.x; x <= max.x; ++x)
-		for(ChunkInWorld::value_type y = min.y; y <= max.y; ++y)
-		for(ChunkInWorld::value_type z = min.z; z <= max.z; ++z)
+		ChunkInWorld pos;
+		for(pos.x = min.x; pos.x <= max.x; ++pos.x)
+		for(pos.y = min.y; pos.y <= max.y; ++pos.y)
+		for(pos.z = min.z; pos.z <= max.z; ++pos.z)
 		{
-			shared_ptr<Chunk> chunk = world.get_or_make_chunk({ x, y, z });
+			shared_ptr<Chunk> chunk = world.get_or_make_chunk(pos);
+			if(!transluscent_pass && show_chunk_outlines)
+			{
+				const glm::dvec3 min(static_cast<BlockInWorld::vec_type>(BlockInWorld(pos, {})));
+				const glm::dvec3 max(min + static_cast<double>(CHUNK_SIZE));
+				glm::dvec4 color;
+				if(chunk == nullptr)
+				{
+					color = glm::dvec4(1, 0, 0, 1);
+				}
+				else if(world.is_meshing_queued(chunk))
+				{
+					color = glm::dvec4(1, 1, 0, 1);
+				}
+				else
+				{
+					color = glm::dvec4(0, 1, 0, 1);
+				}
+				Gfx::instance->draw_box_outline(min, max, color);
+			}
 			if(chunk != nullptr)
 			{
 				chunk->render(transluscent_pass);
