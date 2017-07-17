@@ -22,7 +22,16 @@ uint64_t hasher(const T& pos)
 template<typename P>
 using hasher_t = std::function<uint64_t(P)>;
 
+template<typename T>
+struct hasher_struct
+{
+	uint64_t operator()(const T& pos) const
+	{
+		return hasher(pos);
+	}
+};
+
 template<typename P, typename T>
-using unordered_map_t = std::unordered_map<P, T, hasher_t<P>>;
+using unordered_map_t = std::unordered_map<P, T, hasher_struct<P>>;
 
 }

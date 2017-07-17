@@ -49,8 +49,6 @@ struct World::impl
 	)
 	:
 		world(world),
-		chunks(0, Position::hasher<ChunkInWorld>),
-		chunks_to_save(0, Position::hasher<ChunkInWorld>),
 		file(file_path, world),
 		gen_thread([this, &world](const ChunkInWorld& pos)
 		{
@@ -81,7 +79,7 @@ struct World::impl
 
 	std::queue<Position::BlockInWorld> light_add;
 
-	std::unordered_set<ChunkInWorld, Position::hasher_t<ChunkInWorld>> chunks_to_save;
+	std::unordered_set<ChunkInWorld, Position::hasher_struct<ChunkInWorld>> chunks_to_save;
 
 	std::unordered_map<std::string, shared_ptr<Player>> players;
 
