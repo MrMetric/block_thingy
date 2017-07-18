@@ -1,7 +1,9 @@
 #pragma once
 
+#include <stdint.h>
 #include <string>
 
+#include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
 #include "fwd/block/Enum/Face.hpp"
@@ -33,6 +35,10 @@ class Base
 		virtual Graphics::Color color() const;
 
 		virtual fs::path texture(Enum::Face) const;
+
+		glm::tvec3<uint8_t> rotation() const;
+		virtual uint8_t rotation(Enum::Face) const;
+		virtual void rotate_around(Enum::Face, int8_t direction);
 
 		virtual double bounciness() const;
 
@@ -67,6 +73,9 @@ class Base
 
 		virtual void save(Storage::OutputInterface&) const;
 		virtual void load(Storage::InputInterface&);
+
+	protected:
+		glm::tvec3<uint8_t> rotation_;
 
 	private:
 		Enum::Type type_;

@@ -1,9 +1,20 @@
 uniform float min_light;
+
+vec2 rotate_uv(vec2 uv)
+{
+	if(rotation == 1) return vec2(uv.y, 1 - uv.x);
+	if(rotation == 2) return 1 - uv;
+	if(rotation == 3) return vec2(1 - uv.y, uv.x);
+	// assume 0
+	return uv;
+}
+
 void main()
 {
 	vec2 coords = get_face_coords();
 	vec2 uv = fract(coords);
 	#ifdef USE_COORDS
+	coords = floor(coords) + rotate_uv(uv);
 	vec4 c = color(coords);
 	#else
 	vec2 uv2 = uv;
@@ -13,6 +24,7 @@ void main()
 	{
 		uv2.x = 1 - uv2.x;
 	}
+	uv2 = rotate_uv(uv2);
 	vec4 c = color(uv2);
 	#endif
 

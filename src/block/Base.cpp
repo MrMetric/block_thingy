@@ -4,11 +4,13 @@
 #include <string>
 
 #include "Game.hpp"
+#include "block/RotationUtil.hpp"
 #include "block/Enum/Type.hpp"
 #include "block/Enum/VisibilityType.hpp"
 #include "graphics/Color.hpp"
 #include "storage/Interface.hpp"
 #include "storage/msgpack/BlockType.hpp"
+#include "storage/msgpack/glm_vec3.hpp"
 
 using std::string;
 
@@ -45,6 +47,7 @@ Base& Base::operator=(const Base& that)
 	{
 		throw std::runtime_error("can not copy " + std::to_string(type2) + " to " + std::to_string(type1));
 	}
+	rotation_ = that.rotation_;
 	return *this;
 }
 
@@ -66,6 +69,38 @@ Graphics::Color Base::color() const
 fs::path Base::texture(const Enum::Face) const
 {
 	return {};
+}
+
+glm::tvec3<uint8_t> Base::rotation() const
+{
+	return rotation_;
+}
+
+uint8_t Base::rotation(const Enum::Face face) const
+{
+	return RotationUtil::face_rotation_LUT.at(rotation_)[face];
+}
+
+void Base::rotate_around(const Enum::Face face, int8_t direction)
+{
+	auto r
+	 = RotationUtil::rotate(rotation_.x, {1, 0, 0})
+	 * RotationUtil::rotate(rotation_.y, {0, 1, 0})
+	 * RotationUtil::rotate(rotation_.z, {0, 0, 1});
+
+	RotationUtil::ivec3 axis(glm::uninitialize);
+	switch(face)
+	{
+		case Enum::Face::front : direction *= +1; axis = {0, 0, 1}; break;
+		case Enum::Face::back  : direction *= -1; axis = {0, 0, 1}; break;
+		case Enum::Face::top   : direction *= +1; axis = {0, 1, 0}; break;
+		case Enum::Face::bottom: direction *= -1; axis = {0, 1, 0}; break;
+		case Enum::Face::right : direction *= +1; axis = {1, 0, 0}; break;
+		case Enum::Face::left  : direction *= -1; axis = {1, 0, 0}; break;
+	}
+	r *= RotationUtil::rotate(direction, axis);
+
+	rotation_ = RotationUtil::mat_to_rot(r);
 }
 
 double Base::bounciness() const
@@ -127,11 +162,16 @@ void Base::save(Storage::OutputInterface& i) const
 	Enum::Type t = (type_ == Enum::Type::none) ? Enum::Type::air : type_;
 	Enum::TypeExternal te = Game::instance->block_registry.get_extid(t);
 	i.set("", te);
+	if(rotation_ != glm::tvec3<uint8_t>(0, 0, 0))
+	{
+		i.set("r", rotation_);
+	}
 }
 
-void Base::load(Storage::InputInterface&)
+void Base::load(Storage::InputInterface& i)
 {
 	// type is set before loading
+	i.maybe_get("r", rotation_);
 }
 
 }

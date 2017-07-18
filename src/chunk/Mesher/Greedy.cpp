@@ -27,6 +27,7 @@ struct Rectangle
 	BlockInChunk::value_type w, h;
 	Graphics::Color light;
 	uint16_t tex_index;
+	uint8_t rotation;
 };
 
 static void add_surface(const Chunk&, meshmap_t&, surface_t&, Face);
@@ -75,7 +76,7 @@ void add_surface
 			xyz[i.y] = pos.y;
 			xyz[i.z] = rekt.z;
 
-			Base::add_face(meshes[rekt.key], xyz, face, rekt.w, rekt.h, rekt.light, rekt.tex_index);
+			Base::add_face(meshes[rekt.key], xyz, face, rekt.w, rekt.h, rekt.light, rekt.tex_index, rekt.rotation);
 		}
 	}
 }
@@ -114,6 +115,7 @@ void generate_surface
 					},
 					light,
 					tex.index,
+					block.rotation(face),
 				};
 			}
 			else
@@ -125,6 +127,7 @@ void generate_surface
 						0,
 					},
 					light,
+					0,
 					0,
 				};
 			}
@@ -197,11 +200,12 @@ Rectangle yield_rectangle(surface_t& surface)
 				w, h,
 				std::get<1>(key), // light
 				std::get<2>(key), // tex_index
+				std::get<3>(key), // rotation
 			};
 		}
 	}
 
-	return { {Block::Enum::Type::none, 0}, 0, 0, 0, 0, {0}, 0 };
+	return { {Block::Enum::Type::none, 0}, 0, 0, 0, 0, {0}, 0, 0 };
 }
 
 }

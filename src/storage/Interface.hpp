@@ -37,7 +37,20 @@ class InputInterface
 		{
 			T value;
 			find_in_map_or_throw(map, key, value);
-			return value;
+			return std::move(value);
+		}
+
+		template<typename T>
+		T get_or(const std::string& key, T value)
+		{
+			find_in_map(map, key, value);
+			return std::move(value);
+		}
+
+		template<typename T>
+		bool maybe_get(const std::string& key, T& value)
+		{
+			return find_in_map(map, key, value);
 		}
 
 		std::map<std::string, msgpack::object_handle> copy_all();

@@ -12,6 +12,7 @@ flat in vec3 light2;
 flat in vec3 light3;
 flat in vec3 light4;
 flat in int tex_index;
+flat in int rotation;
 
 out vec4 FragColor;
 

@@ -27,6 +27,7 @@ struct mesh_vertex_t
 	Block::Enum::Face face;
 	glm::tvec4<glm::vec3> light;
 	uint16_t tex_index;
+	uint8_t rotation;
 };
 #pragma pack(pop)
 
@@ -84,7 +85,8 @@ public:
 		uint8_t offset_x,
 		uint8_t offset_z,
 		const glm::tvec4<glm::vec3>& light,
-		uint16_t tex_index
+		uint16_t tex_index,
+		uint8_t rotation
 	);
 	static void add_face
 	(
@@ -94,7 +96,8 @@ public:
 		uint8_t offset_x,
 		uint8_t offset_z,
 		const glm::vec3& light,
-		uint16_t tex_index
+		uint16_t tex_index,
+		uint8_t rotation
 	);
 	static u8vec3 get_i(Block::Enum::Face);
 

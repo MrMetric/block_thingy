@@ -186,6 +186,7 @@ void Chunk::impl::update_vaos()
 				{3, GL_FLOAT        }, // light3
 				{3, GL_FLOAT        }, // light4
 				{1, GL_SHORT        }, // texture index
+				{1, GL_UNSIGNED_BYTE}, // rotation
 			});
 			Graphics::OpenGL::VertexArray vao(vbo);
 

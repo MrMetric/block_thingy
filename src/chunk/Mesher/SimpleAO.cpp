@@ -110,7 +110,7 @@ meshmap_t SimpleAO::make_mesh(const Chunk& chunk)
 					block.type(),
 					tex.unit,
 				};
-				Base::add_face(meshes[key], {x, y, z}, face, 1, 1, light, tex.index);
+				Base::add_face(meshes[key], {x, y, z}, face, 1, 1, light, tex.index, block.rotation(face));
 			}
 		};
 		add_face(Face::right);

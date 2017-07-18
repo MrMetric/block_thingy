@@ -54,7 +54,8 @@ void Base::add_face
 	const uint8_t offset_x,
 	const uint8_t offset_z,
 	const glm::tvec4<glm::vec3>& light,
-	const uint16_t tex_index
+	const uint16_t tex_index,
+	const uint8_t rotation
 )
 {
 	const u8vec3 i = get_i(face);
@@ -83,6 +84,7 @@ void Base::add_face
 	v1.face = v2.face = v3.face = v4.face = face;
 	v1.light = v2.light = v3.light = v4.light = light;
 	v1.tex_index = v2.tex_index = v3.tex_index = v4.tex_index = tex_index;
+	v1.rotation = v2.rotation = v3.rotation = v4.rotation = rotation;
 
 	if(side == Side::top)
 	{
@@ -102,10 +104,11 @@ void Base::add_face
 	const uint8_t offset_x,
 	const uint8_t offset_z,
 	const glm::vec3& light,
-	const uint16_t tex_index
+	const uint16_t tex_index,
+	const uint8_t rotation
 )
 {
-	add_face(mesh, xyz, face, offset_x, offset_z, glm::tvec4<glm::vec3>(light), tex_index);
+	add_face(mesh, xyz, face, offset_x, offset_z, glm::tvec4<glm::vec3>(light), tex_index, rotation);
 }
 
 u8vec3 Base::get_i(const Face face)
