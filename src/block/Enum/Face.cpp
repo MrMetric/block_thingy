@@ -7,18 +7,17 @@ namespace Block::Enum {
 
 glm::ivec3 face_to_vec(const Face face)
 {
-	glm::ivec3 face_vec;
 	switch(face)
 	{
-		case Face::right : face_vec.x = +1; break;
-		case Face::left  : face_vec.x = -1; break;
-		case Face::top   : face_vec.y = +1; break;
-		case Face::bottom: face_vec.y = -1; break;
-		case Face::front : face_vec.z = +1; break;
-		case Face::back  : face_vec.z = -1; break;
+		case Face::right : return {+1,  0,  0};
+		case Face::left  : return {-1,  0,  0};
+		case Face::top   : return { 0, +1,  0};
+		case Face::bottom: return { 0, -1,  0};
+		case Face::front : return { 0,  0, +1};
+		case Face::back  : return { 0,  0, -1};
 	}
 	assert(false);
-	return face_vec; // to satisfy -Werror
+	return {}; // to satisfy -Werror
 }
 
 Face vec_to_face(const glm::ivec3& vec)
