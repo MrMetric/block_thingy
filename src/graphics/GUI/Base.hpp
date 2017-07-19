@@ -18,42 +18,42 @@ namespace Graphics::GUI {
 
 class Base
 {
-	public:
-		Base
-		(
-			Game&,
-			const fs::path& layout_path
-		);
-		virtual ~Base();
+public:
+	Base
+	(
+		Game&,
+		const fs::path& layout_path
+	);
+	virtual ~Base();
 
-		Base(Base&&) = delete;
-		Base(const Base&) = delete;
-		void operator=(const Base&) = delete;
+	Base(Base&&) = delete;
+	Base(const Base&) = delete;
+	void operator=(const Base&) = delete;
 
-		virtual std::string type() const = 0;
+	virtual std::string type() const = 0;
 
-		virtual void init();
-		virtual void close();
-		virtual void draw();
+	virtual void init();
+	virtual void close();
+	virtual void draw();
 
-		virtual void keypress(const Util::key_press&);
-		virtual void charpress(const Util::char_press&);
-		virtual void mousepress(const Util::mouse_press&);
-		virtual void mousemove(double x, double y);
-		virtual void joypress(int joystick, int button, bool pressed);
-		virtual void joymove(const glm::dvec2& motion);
+	virtual void keypress(const Util::key_press&);
+	virtual void charpress(const Util::char_press&);
+	virtual void mousepress(const Util::mouse_press&);
+	virtual void mousemove(double x, double y);
+	virtual void joypress(int joystick, int button, bool pressed);
+	virtual void joymove(const glm::dvec2& motion);
 
-		std::unique_ptr<Base> parent;
+	std::unique_ptr<Base> parent;
 
-		Game& game;
+	Game& game;
 
-	protected:
-		virtual void draw_gui();
-		virtual void update_framebuffer_size(const window_size_t&);
-		Widget::Container root;
+protected:
+	virtual void draw_gui();
+	virtual void update_framebuffer_size(const window_size_t&);
+	Widget::Container root;
 
-	private:
-		event_handler_id_t event_handler;
+private:
+	event_handler_id_t event_handler;
 };
 
 }

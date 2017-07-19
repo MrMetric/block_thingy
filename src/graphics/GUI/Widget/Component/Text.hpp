@@ -9,32 +9,32 @@ namespace Graphics::GUI::Widget::Component {
 
 class Text : public Base
 {
-	public:
-		Text(const std::string&);
+public:
+	Text(const std::string&);
 
-		void draw(const glm::dvec2& w_position, const glm::dvec2& w_size) override;
+	void draw(const glm::dvec2& w_position, const glm::dvec2& w_size) override;
 
-		std::string get8() const;
-		std::u32string get32() const;
+	std::string get8() const;
+	std::u32string get32() const;
 
-		Text& operator=(char32_t);
-		Text& operator=(const std::string&);
-		Text& operator=(const std::u32string&);
+	Text& operator=(char32_t);
+	Text& operator=(const std::string&);
+	Text& operator=(const std::u32string&);
 
-		Text& operator+=(const char32_t);
-		Text& operator+=(const std::string&);
-		Text& operator+=(const std::u32string&);
+	Text& operator+=(const char32_t);
+	Text& operator+=(const std::string&);
+	Text& operator+=(const std::u32string&);
 
-		void pop_back();
-		std::size_t str_size() const;
+	void pop_back();
+	std::size_t str_size() const;
 
-		glm::dvec2 get_size() const;
+	glm::dvec2 get_size() const;
 
-	private:
-		std::u32string text;
-		glm::dvec2 size;
+private:
+	std::u32string text;
+	glm::dvec2 size;
 
-		void update_info();
+	void update_info();
 };
 
 }

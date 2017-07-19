@@ -8,21 +8,21 @@
 
 class Camera
 {
-	public:
-		Camera(Gfx&, EventManager&);
+public:
+	Camera(Gfx&, EventManager&);
 
-		Camera(Camera&&) = delete;
-		Camera(const Camera&) = delete;
-		void operator=(const Camera&) = delete;
+	Camera(Camera&&) = delete;
+	Camera(const Camera&) = delete;
+	void operator=(const Camera&) = delete;
 
-		void mousemove(double mouseX, double mouseY, bool joystick = false);
+	void mousemove(double mouseX, double mouseY, bool joystick = false);
 
-		glm::dvec3 position;
-		glm::dvec3 rotation;
+	glm::dvec3 position;
+	glm::dvec3 rotation;
 
-	private:
-		double sensitivity;
-		double joy_sensitivity;
+private:
+	double sensitivity;
+	double joy_sensitivity;
 
-		Gfx& gfx;
+	Gfx& gfx;
 };

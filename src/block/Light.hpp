@@ -7,24 +7,24 @@ namespace Block {
 
 class Light : public Base
 {
-	public:
-		Light(Enum::Type);
-		Light(Enum::Type, const Graphics::Color&);
+public:
+	Light(Enum::Type);
+	Light(Enum::Type, const Graphics::Color&);
 
-		Light& operator=(const Base&) override;
+	Light& operator=(const Base&) override;
 
-		std::string name() const override;
+	std::string name() const override;
 
-		Graphics::Color color() const override;
-		void color(const Graphics::Color&);
+	Graphics::Color color() const override;
+	void color(const Graphics::Color&);
 
-		void use_start(const Position::BlockInWorld&, Enum::Face) override;
+	void use_start(const Position::BlockInWorld&, Enum::Face) override;
 
-		void save(Storage::OutputInterface&) const override;
-		void load(Storage::InputInterface&) override;
+	void save(Storage::OutputInterface&) const override;
+	void load(Storage::InputInterface&) override;
 
-	private:
-		Graphics::Color color_;
+private:
+	Graphics::Color color_;
 };
 
 }

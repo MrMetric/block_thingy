@@ -7,13 +7,13 @@ namespace Graphics::GUI {
 
 class Pause : public Base
 {
-	public:
-		Pause(Game&);
+public:
+	Pause(Game&);
 
-		std::string type() const override;
+	std::string type() const override;
 
-		void init() override;
-		void draw() override;
+	void init() override;
+	void draw() override;
 };
 
 }

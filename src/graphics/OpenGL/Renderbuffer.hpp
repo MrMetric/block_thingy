@@ -6,30 +6,30 @@ namespace Graphics::OpenGL {
 
 class Renderbuffer
 {
-	public:
-		Renderbuffer();
-		~Renderbuffer();
+public:
+	Renderbuffer();
+	~Renderbuffer();
 
-		Renderbuffer(Renderbuffer&&);
-		Renderbuffer(const Renderbuffer&) = delete;
-		void operator=(const Renderbuffer&) = delete;
+	Renderbuffer(Renderbuffer&&);
+	Renderbuffer(const Renderbuffer&) = delete;
+	void operator=(const Renderbuffer&) = delete;
 
-		/** https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorage.xhtml
-		 ** https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorageMultisample.xhtml
-		 * Set data storage, format, dimensions, and optionally sample count
-		 */
-		void storage
-		(
-			GLenum internal_format,
-			uint32_t width,
-			uint32_t height,
-			GLsizei samples = 0
-		);
+	/** https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorage.xhtml
+	 ** https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorageMultisample.xhtml
+	 * Set data storage, format, dimensions, and optionally sample count
+	 */
+	void storage
+	(
+		GLenum internal_format,
+		uint32_t width,
+		uint32_t height,
+		GLsizei samples = 0
+	);
 
-		GLuint get_name();
+	GLuint get_name();
 
-	private:
-		GLuint name;
+private:
+	GLuint name;
 };
 
 }

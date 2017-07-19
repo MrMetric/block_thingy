@@ -28,94 +28,94 @@
 
 class Game
 {
-	public:
-		Game(GLFWwindow*);
-		~Game();
+public:
+	Game(GLFWwindow*);
+	~Game();
 
-		Game(Game&&) = delete;
-		Game(const Game&) = delete;
-		void operator=(const Game&) = delete;
+	Game(Game&&) = delete;
+	Game(const Game&) = delete;
+	void operator=(const Game&) = delete;
 
-		static Game* instance;
-	private:
-		class set_instance
-		{
-			public:
-				set_instance(Game* ptr)
-				{
-					assert(Game::instance == nullptr);
-					Game::instance = ptr;
-				}
-		} set_instance;
+	static Game* instance;
+private:
+	class set_instance
+	{
+		public:
+			set_instance(Game* ptr)
+			{
+				assert(Game::instance == nullptr);
+				Game::instance = ptr;
+			}
+	} set_instance;
 
-	public:
-		void draw();
-		void step_world();
-		void draw_world();
-		void draw_world
-		(
-			const glm::dvec3& cam_position,
-			const glm::dvec3& cam_rotation,
-			const glm::dmat4& projection_matrix
-		);
-		void draw_world
-		(
-			const glm::dvec3& cam_position,
-			const glm::dmat4& cam_rotation,
-			const glm::dmat4& projection_matrix
-		);
-		void open_gui(std::unique_ptr<Graphics::GUI::Base>);
-		void close_gui();
-		void quit();
+public:
+	void draw();
+	void step_world();
+	void draw_world();
+	void draw_world
+	(
+		const glm::dvec3& cam_position,
+		const glm::dvec3& cam_rotation,
+		const glm::dmat4& projection_matrix
+	);
+	void draw_world
+	(
+		const glm::dvec3& cam_position,
+		const glm::dmat4& cam_rotation,
+		const glm::dmat4& projection_matrix
+	);
+	void open_gui(std::unique_ptr<Graphics::GUI::Base>);
+	void close_gui();
+	void quit();
 
-		void screenshot(fs::path) const;
-		double get_fps() const;
+	void screenshot(fs::path) const;
+	double get_fps() const;
 
-		void update_framebuffer_size(const window_size_t&);
-		void keypress(const Util::key_press&);
-		void charpress(const Util::char_press&);
-		void mousepress(const Util::mouse_press&);
-		void mousemove(double x, double y);
-		void joypress(int joystick, int button, bool pressed);
-		void joymove(const glm::dvec2& motion);
+	void update_framebuffer_size(const window_size_t&);
+	void keypress(const Util::key_press&);
+	void charpress(const Util::char_press&);
+	void mousepress(const Util::mouse_press&);
+	void mousemove(double x, double y);
+	void joypress(int joystick, int button, bool pressed);
+	void joymove(const glm::dvec2& motion);
 
-		template<typename T = Block::Base>
-		Block::Enum::Type add_block(const std::string& strid)
-		{
-			return add_block<T>(strid, strid);
-		}
+	template<typename T = Block::Base>
+	Block::Enum::Type add_block(const std::string& strid)
+	{
+		return add_block<T>(strid, strid);
+	}
 
-		template<typename T = Block::Base>
-		Block::Enum::Type add_block(const std::string& strid, const fs::path& shader_path)
-		{
-			const Block::Enum::Type t = block_registry.add<T>(strid);
-			add_block(strid, t, shader_path);
-			return t;
-		}
+	template<typename T = Block::Base>
+	Block::Enum::Type add_block(const std::string& strid, const fs::path& shader_path)
+	{
+		const Block::Enum::Type t = block_registry.add<T>(strid);
+		add_block(strid, t, shader_path);
+		return t;
+	}
 
-		Block::Enum::Type block_type;
-		std::unique_ptr<Block::Base> copied_block;
-		std::unique_ptr<RaycastHit> hovered_block;
+	Block::Enum::Type block_type;
+	std::unique_ptr<Block::Base> copied_block;
+	std::unique_ptr<RaycastHit> hovered_block;
 
-		ResourceManager resource_manager;
+	ResourceManager resource_manager;
 
-		// event_manager must be initialized before others!
-		EventManager event_manager;
-		Gfx gfx;
+	// event_manager must be initialized before others!
+	EventManager event_manager;
+	Gfx gfx;
 
-		Camera camera;
-		Block::BlockRegistry block_registry; // must be initialized before world
-		World world;
-		std::shared_ptr<Player> player_ptr;
-		Player& player;
-		KeybindManager keybinder;
-		std::unique_ptr<Graphics::GUI::Base> gui;
+	Camera camera;
+	Block::BlockRegistry block_registry; // must be initialized before world
+	World world;
+	std::shared_ptr<Player> player_ptr;
+	Player& player;
+	KeybindManager keybinder;
+	std::unique_ptr<Graphics::GUI::Base> gui;
 
-	private:
-		void add_block(const std::string& strid, Block::Enum::Type, const fs::path& shader_path);
+private:
+	void add_block(const std::string& strid, Block::Enum::Type, const fs::path& shader_path);
 
-		Position::ChunkInWorld::value_type render_distance;
+	Position::ChunkInWorld::value_type render_distance;
 
-		struct impl;
-		std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;
+	struct impl;
+	std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;
 };

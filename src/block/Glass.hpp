@@ -5,10 +5,10 @@ namespace Block {
 
 class Glass : public Base
 {
-	public:
-		Glass(Enum::Type);
+public:
+	Glass(Enum::Type);
 
-		Enum::VisibilityType visibility_type() const;
+	Enum::VisibilityType visibility_type() const;
 };
 
 }

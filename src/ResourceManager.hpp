@@ -16,48 +16,48 @@
 template<typename T>
 class Resource
 {
-	public:
-		using update_func_t = std::function<void()>;
+public:
+	using update_func_t = std::function<void()>;
 
-		Resource(std::unique_ptr<T>* p, const std::string& id)
-		:
-			id(id),
-			p(p)
-		{
-			update_funcs.emplace(id, std::vector<update_func_t>(1));
-		}
+	Resource(std::unique_ptr<T>* p, const std::string& id)
+	:
+		id(id),
+		p(p)
+	{
+		update_funcs.emplace(id, std::vector<update_func_t>(1));
+	}
 
-		T& operator*() const
-		{
-			return **p;
-		}
+	T& operator*() const
+	{
+		return **p;
+	}
 
-		T* operator->() const
-		{
-			return p->get();
-		}
+	T* operator->() const
+	{
+		return p->get();
+	}
 
-		void on_update(update_func_t f) const
-		{
-			update_funcs[id].emplace_back(f);
-		}
+	void on_update(update_func_t f) const
+	{
+		update_funcs[id].emplace_back(f);
+	}
 
-		void update() const
+	void update() const
+	{
+		for(const update_func_t& f : update_funcs[id])
 		{
-			for(const update_func_t& f : update_funcs[id])
+			if(f)
 			{
-				if(f)
-				{
-					f();
-				}
+				f();
 			}
 		}
+	}
 
-		const std::string id;
+	const std::string id;
 
-	private:
-		static std::unordered_map<std::string, std::vector<update_func_t>> update_funcs;
-		std::unique_ptr<T>* p;
+private:
+	static std::unordered_map<std::string, std::vector<update_func_t>> update_funcs;
+	std::unique_ptr<T>* p;
 };
 template<typename T>
 std::unordered_map<std::string, std::vector<typename Resource<T>::update_func_t>> Resource<T>::update_funcs;

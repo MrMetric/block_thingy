@@ -12,19 +12,19 @@ namespace Graphics::GUI {
 
 class Light : public Base
 {
-	public:
-		Light(Game&, Block::Light&, const Position::BlockInWorld&);
+public:
+	Light(Game&, Block::Light&, const Position::BlockInWorld&);
 
-		std::string type() const override;
+	std::string type() const override;
 
-		void init() override;
-		void draw() override;
+	void init() override;
+	void draw() override;
 
-	private:
-		Block::Light& block;
-		Position::BlockInWorld block_pos;
+private:
+	Block::Light& block;
+	Position::BlockInWorld block_pos;
 
-		void on_change(uint_fast8_t, Widget::TextInput&, const std::string&);
+	void on_change(uint_fast8_t, Widget::TextInput&, const std::string&);
 };
 
 }

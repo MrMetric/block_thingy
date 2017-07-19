@@ -4,11 +4,11 @@
 
 class Event
 {
-	public:
-		explicit Event(EventType);
+public:
+	explicit Event(EventType);
 
-		EventType type() const;
+	EventType type() const;
 
-	private:
-		EventType type_;
+private:
+	EventType type_;
 };

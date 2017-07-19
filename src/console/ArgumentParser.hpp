@@ -4,27 +4,27 @@
 
 class ArgumentParser
 {
-	public:
-		ArgumentParser();
+public:
+	ArgumentParser();
 
-		ArgumentParser(ArgumentParser&&) = delete;
-		ArgumentParser(const ArgumentParser&) = delete;
-		void operator=(const ArgumentParser&) = delete;
+	ArgumentParser(ArgumentParser&&) = delete;
+	ArgumentParser(const ArgumentParser&) = delete;
+	void operator=(const ArgumentParser&) = delete;
 
-		std::vector<std::string> parse_args(const std::string& argline);
+	std::vector<std::string> parse_args(const std::string& argline);
 
-	private:
-		std::string::const_iterator iterator;
-		std::string::const_iterator end;
+private:
+	std::string::const_iterator iterator;
+	std::string::const_iterator end;
 
-		std::string read_string(char endchar);
+	std::string read_string(char endchar);
 };
 
 class truncated_argument : public std::runtime_error
 {
-	public:
-		explicit truncated_argument(const char* what_arg);
-		explicit truncated_argument(const std::string& what_arg);
-		truncated_argument(const truncated_argument&) = default;
-		virtual ~truncated_argument();
+public:
+	explicit truncated_argument(const char* what_arg);
+	explicit truncated_argument(const std::string& what_arg);
+	truncated_argument(const truncated_argument&) = default;
+	virtual ~truncated_argument();
 };

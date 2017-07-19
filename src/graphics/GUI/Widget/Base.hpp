@@ -21,64 +21,64 @@ namespace Graphics::GUI::Widget {
 
 class Base
 {
-	public:
-		Base();
-		virtual ~Base();
+public:
+	Base();
+	virtual ~Base();
 
-		virtual std::string type() const = 0;
+	virtual std::string type() const = 0;
 
-		virtual void draw();
+	virtual void draw();
 
-		virtual void keypress(const Util::key_press&);
-		virtual void charpress(const Util::char_press&);
-		virtual void mousepress(const Util::mouse_press&);
-		virtual void mousemove(double x, double y);
+	virtual void keypress(const Util::key_press&);
+	virtual void charpress(const Util::char_press&);
+	virtual void mousepress(const Util::mouse_press&);
+	virtual void mousemove(double x, double y);
 
-		virtual glm::dvec2 get_size() const;
-		glm::dvec2 get_position() const;
+	virtual glm::dvec2 get_size() const;
+	glm::dvec2 get_position() const;
 
-		void add_modifier(std::shared_ptr<Component::Base>);
+	void add_modifier(std::shared_ptr<Component::Base>);
 
-		void set_border_size(glm::dvec4);
-		void set_border_color(glm::dvec4);
+	void set_border_size(glm::dvec4);
+	void set_border_color(glm::dvec4);
 
-		using style_t = std::map<std::string, strict_variant::variant<std::string, double>>;
-		using style_vars_t = std::map<std::string, rhea::variable>;
+	using style_t = std::map<std::string, strict_variant::variant<std::string, double>>;
+	using style_vars_t = std::map<std::string, rhea::variable>;
 
-		virtual void read_layout(const json&);
-		virtual void apply_layout(rhea::simplex_solver&, style_vars_t& parent_vars);
-		virtual void use_layout();
+	virtual void read_layout(const json&);
+	virtual void apply_layout(rhea::simplex_solver&, style_vars_t& parent_vars);
+	virtual void use_layout();
 
-		style_t style;
-		style_vars_t style_vars;
-		std::string id;
+	style_t style;
+	style_vars_t style_vars;
+	std::string id;
 
-	protected:
-		glm::dvec2 size;
-		glm::dvec2 position;
+protected:
+	glm::dvec2 size;
+	glm::dvec2 position;
 
-		glm::dvec4 border_size;
-		glm::dvec4 border_color;
+	glm::dvec4 border_size;
+	glm::dvec4 border_color;
 
-		bool hover;
+	bool hover;
 
-		template<typename T>
-		T get_layout_var
-		(
-			const json& layout,
-			const std::string& key,
-			const T* default_ = nullptr
-		);
-		template<typename T>
-		T get_layout_var
-		(
-			const json& layout,
-			const std::string& key,
-			const T& default_
-		);
+	template<typename T>
+	T get_layout_var
+	(
+		const json& layout,
+		const std::string& key,
+		const T* default_ = nullptr
+	);
+	template<typename T>
+	T get_layout_var
+	(
+		const json& layout,
+		const std::string& key,
+		const T& default_
+	);
 
-	private:
-		std::vector<std::shared_ptr<Component::Base>> modifiers;
+private:
+	std::vector<std::shared_ptr<Component::Base>> modifiers;
 };
 
 template<> char Base::get_layout_var(const json&, const std::string&, const char*) = delete;

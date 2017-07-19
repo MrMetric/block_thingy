@@ -25,60 +25,60 @@ msgpack::object_handle copy_object(const msgpack::object&);
 
 class InputInterface
 {
-	public:
-		InputInterface(const std::map<std::string, msgpack::object>& map)
-		:
-			map(map)
-		{
-		}
+public:
+	InputInterface(const std::map<std::string, msgpack::object>& map)
+	:
+		map(map)
+	{
+	}
 
-		template<typename T>
-		T get(const std::string& key)
-		{
-			T value;
-			find_in_map_or_throw(map, key, value);
-			return std::move(value);
-		}
+	template<typename T>
+	T get(const std::string& key)
+	{
+		T value;
+		find_in_map_or_throw(map, key, value);
+		return std::move(value);
+	}
 
-		template<typename T>
-		T get_or(const std::string& key, T value)
-		{
-			find_in_map(map, key, value);
-			return std::move(value);
-		}
+	template<typename T>
+	T get_or(const std::string& key, T value)
+	{
+		find_in_map(map, key, value);
+		return std::move(value);
+	}
 
-		template<typename T>
-		bool maybe_get(const std::string& key, T& value)
-		{
-			return find_in_map(map, key, value);
-		}
+	template<typename T>
+	bool maybe_get(const std::string& key, T& value)
+	{
+		return find_in_map(map, key, value);
+	}
 
-		std::map<std::string, msgpack::object_handle> copy_all();
+	std::map<std::string, msgpack::object_handle> copy_all();
 
-	private:
-		const std::map<std::string, msgpack::object>& map;
+private:
+	const std::map<std::string, msgpack::object>& map;
 };
 
 class OutputInterface
 {
-	public:
-		template<typename T>
-		void set(const std::string& key, const T& value)
-		{
-			msgpack::sbuffer buffer;
-			msgpack::pack(buffer, value);
-			map.emplace(key, std::move(buffer));
-		}
+public:
+	template<typename T>
+	void set(const std::string& key, const T& value)
+	{
+		msgpack::sbuffer buffer;
+		msgpack::pack(buffer, value);
+		map.emplace(key, std::move(buffer));
+	}
 
-		template<typename Stream>
-		void flush(msgpack::packer<Stream>& o)
-		{
-			o.pack(map);
-			map.clear();
-		}
+	template<typename Stream>
+	void flush(msgpack::packer<Stream>& o)
+	{
+		o.pack(map);
+		map.clear();
+	}
 
-	private:
-		std::map<std::string, msgpack::sbuffer> map;
+private:
+	std::map<std::string, msgpack::sbuffer> map;
 };
 
 } // namespace Storage
