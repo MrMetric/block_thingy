@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <string>
 
+#include <glm/common.hpp>
+
 using std::to_string;
 
 namespace Graphics {
@@ -145,6 +147,12 @@ Color::operator glm::vec3() const
 		std::min(1.0f, b / m),
 	};
 	return v;
+}
+
+
+Color::operator glm::tvec3<uint8_t>() const
+{
+	return glm::tvec3<uint8_t>(glm::round(static_cast<glm::vec3>(*this) * 255.0f));
 }
 
 std::ostream& operator<<(std::ostream& o, const Color& c)

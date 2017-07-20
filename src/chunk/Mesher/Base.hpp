@@ -17,28 +17,42 @@
 
 namespace Mesher {
 
+using u8vec3 = glm::tvec3<uint8_t>;
+
 #pragma pack(push, 1)
 struct mesh_vertex_t
 {
 	mesh_vertex_t();
 	mesh_vertex_t(uint8_t);
 
+	mesh_vertex_t
+	(
+		const vertex_coord_t<uint8_t>& pos,
+		Block::Enum::Face,
+		uint8_t rotation,
+		const glm::tvec4<u8vec3>& light,
+		uint16_t tex_index
+	);
+
 	vertex_coord_t<uint8_t> pos;
-	Block::Enum::Face face;
-	glm::tvec4<glm::vec3> light;
+	uint8_t face_and_rotation;
+	glm::tvec4<u8vec3> light;
 	uint16_t tex_index;
-	uint8_t rotation;
 };
 #pragma pack(pop)
 
 struct meshmap_key_t
 {
 	Block::Enum::Type block_type;
+	bool is_translucent;
 	uint8_t tex_unit;
 
 	bool operator==(const meshmap_key_t& that) const
 	{
-		return block_type == that.block_type && tex_unit == that.tex_unit;
+		return
+			block_type == that.block_type
+		 && is_translucent == that.is_translucent
+		 && tex_unit == that.tex_unit;
 	}
 
 	bool operator<(const meshmap_key_t& that) const
@@ -50,7 +64,6 @@ struct meshmap_key_t
 using mesh_triangle_t = glm::tvec3<mesh_vertex_t>;
 using mesh_t = std::vector<mesh_triangle_t>;
 using meshmap_t = std::map<meshmap_key_t, mesh_t>;
-using u8vec3 = glm::tvec3<uint8_t>;
 
 enum class Plane
 {
@@ -84,7 +97,7 @@ public:
 		Block::Enum::Face face,
 		uint8_t offset_x,
 		uint8_t offset_z,
-		const glm::tvec4<glm::vec3>& light,
+		const glm::tvec4<u8vec3>& light,
 		uint16_t tex_index,
 		uint8_t rotation
 	);
@@ -95,7 +108,7 @@ public:
 		Block::Enum::Face face,
 		uint8_t offset_x,
 		uint8_t offset_z,
-		const glm::vec3& light,
+		const u8vec3& light,
 		uint16_t tex_index,
 		uint8_t rotation
 	);

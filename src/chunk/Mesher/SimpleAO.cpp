@@ -97,17 +97,18 @@ meshmap_t SimpleAO::make_mesh(const Chunk& chunk)
 				xn_zp[i.z] = -1;
 				xn_zp[i.x] = +1;
 
-				glm::tvec4<glm::vec3> light =
+				glm::tvec4<u8vec3> light =
 				{
-					(l(x0_z0) + l(x0_zn) + l(xn_zn) + l(xn_z0)) / 4.0f,
-					(l(x0_z0) + l(x0_zp) + l(xn_zp) + l(xn_z0)) / 4.0f,
-					(l(x0_z0) + l(x0_zp) + l(xp_zp) + l(xp_z0)) / 4.0f,
-					(l(x0_z0) + l(x0_zn) + l(xp_zn) + l(xp_z0)) / 4.0f,
+					glm::round((l(x0_z0) + l(x0_zn) + l(xn_zn) + l(xn_z0)) / 4.0f * 255.0f),
+					glm::round((l(x0_z0) + l(x0_zp) + l(xn_zp) + l(xn_z0)) / 4.0f * 255.0f),
+					glm::round((l(x0_z0) + l(x0_zp) + l(xp_zp) + l(xp_z0)) / 4.0f * 255.0f),
+					glm::round((l(x0_z0) + l(x0_zn) + l(xp_zn) + l(xp_z0)) / 4.0f * 255.0f),
 				};
 				const auto tex = Game::instance->resource_manager.get_block_texture(block.texture(face));
 				const meshmap_key_t key =
 				{
 					block.type(),
+					block.is_translucent(),
 					tex.unit,
 				};
 				Base::add_face(meshes[key], {x, y, z}, face, 1, 1, light, tex.index, block.rotation(face));

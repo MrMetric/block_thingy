@@ -25,6 +25,22 @@ mesh_vertex_t::mesh_vertex_t(uint8_t)
 {
 }
 
+mesh_vertex_t::mesh_vertex_t
+(
+	const vertex_coord_t<uint8_t>& pos,
+	const Block::Enum::Face face,
+	const uint8_t rotation,
+	const glm::tvec4<u8vec3>& light,
+	const uint16_t tex_index
+)
+:
+	pos(pos),
+	face_and_rotation(static_cast<uint8_t>(face) | (rotation << 3)),
+	light(light),
+	tex_index(tex_index)
+{
+}
+
 Base::Base()
 {
 }
@@ -53,7 +69,7 @@ void Base::add_face
 	const Face face,
 	const uint8_t offset_x,
 	const uint8_t offset_z,
-	const glm::tvec4<glm::vec3>& light,
+	const glm::tvec4<u8vec3>& light,
 	const uint16_t tex_index,
 	const uint8_t rotation
 )
@@ -76,15 +92,16 @@ void Base::add_face
 	u8vec3 mod4;
 	mod4[i.z] = offset_z;
 
-	mesh_vertex_t v1, v2, v3, v4;
-	v1.pos = xyz;
-	v2.pos = xyz + mod2;
-	v3.pos = xyz + mod3;
-	v4.pos = xyz + mod4;
-	v1.face = v2.face = v3.face = v4.face = face;
-	v1.light = v2.light = v3.light = v4.light = light;
-	v1.tex_index = v2.tex_index = v3.tex_index = v4.tex_index = tex_index;
-	v1.rotation = v2.rotation = v3.rotation = v4.rotation = rotation;
+	mesh_vertex_t v1(xyz, face, rotation, light, tex_index);
+
+	mesh_vertex_t v2 = v1;
+	v2.pos += mod2;
+
+	mesh_vertex_t v3 = v1;
+	v3.pos += mod3;
+
+	mesh_vertex_t v4 = v1;
+	v4.pos += mod4;
 
 	if(side == Side::top)
 	{
@@ -103,12 +120,12 @@ void Base::add_face
 	const Block::Enum::Face face,
 	const uint8_t offset_x,
 	const uint8_t offset_z,
-	const glm::vec3& light,
+	const u8vec3& light,
 	const uint16_t tex_index,
 	const uint8_t rotation
 )
 {
-	add_face(mesh, xyz, face, offset_x, offset_z, glm::tvec4<glm::vec3>(light), tex_index, rotation);
+	add_face(mesh, xyz, face, offset_x, offset_z, glm::tvec4<u8vec3>(light), tex_index, rotation);
 }
 
 u8vec3 Base::get_i(const Face face)

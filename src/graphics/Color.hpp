@@ -34,6 +34,7 @@ struct Color
 	Color& operator-=(value_type);
 
 	operator glm::vec3() const;
+	operator glm::tvec3<uint8_t>() const;
 
 	value_type r;
 	value_type g;

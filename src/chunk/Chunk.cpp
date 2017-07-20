@@ -138,14 +138,13 @@ void Chunk::render(const bool translucent_pass)
 	std::size_t i = 0;
 	for(const auto& p : pImpl->meshes)
 	{
-		const Block::Enum::Type type = p.first.block_type;
-		// TODO: get existing block instead of making one
-		if(pImpl->owner.block_registry.make(type)->is_translucent() != translucent_pass)
+		if(p.first.is_translucent != translucent_pass)
 		{
 			++i;
 			continue;
 		}
 
+		const Block::Enum::Type type = p.first.block_type;
 		auto& shader = Game::instance->gfx.get_block_shader(type);
 		shader.uniform("position_offset", position_offset);
 		shader.uniform("tex", p.first.tex_unit);
@@ -179,14 +178,13 @@ void Chunk::impl::update_vaos()
 		{
 			Graphics::OpenGL::VertexBuffer vbo
 			({
-				{3, GL_UNSIGNED_BYTE}, // relative position
-				{1, GL_UNSIGNED_BYTE}, // face
-				{3, GL_FLOAT        }, // light1
-				{3, GL_FLOAT        }, // light2
-				{3, GL_FLOAT        }, // light3
-				{3, GL_FLOAT        }, // light4
-				{1, GL_SHORT        }, // texture index
-				{1, GL_UNSIGNED_BYTE}, // rotation
+				{3, GL_UNSIGNED_BYTE      }, // relative position
+				{1, GL_UNSIGNED_BYTE      }, // face (3 bits) and rotation (2 bits)
+				{3, GL_UNSIGNED_BYTE, true}, // light1
+				{3, GL_UNSIGNED_BYTE, true}, // light2
+				{3, GL_UNSIGNED_BYTE, true}, // light3
+				{3, GL_UNSIGNED_BYTE, true}, // light4
+				{1, GL_SHORT              }, // texture index
 			});
 			Graphics::OpenGL::VertexArray vao(vbo);
 

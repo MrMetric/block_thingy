@@ -111,6 +111,7 @@ void generate_surface
 				{
 					{
 						block.type(),
+						block.is_translucent(),
 						tex.unit,
 					},
 					light,
@@ -124,6 +125,7 @@ void generate_surface
 				{
 					{
 						Block::Enum::Type::none,
+						false,
 						0,
 					},
 					light,
@@ -194,6 +196,7 @@ Rectangle yield_rectangle(surface_t& surface)
 			{
 				{
 					std::get<0>(key).block_type,
+					std::get<0>(key).is_translucent,
 					std::get<0>(key).tex_unit,
 				},
 				start_x, start_z,
@@ -205,7 +208,19 @@ Rectangle yield_rectangle(surface_t& surface)
 		}
 	}
 
-	return { {Block::Enum::Type::none, 0}, 0, 0, 0, 0, {0}, 0, 0 };
+	return
+	{
+		{
+			Block::Enum::Type::none,
+			false,
+			0,
+		},
+		0, 0,
+		0, 0,
+		{0},
+		0,
+		0,
+	};
 }
 
 }

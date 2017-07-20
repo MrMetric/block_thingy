@@ -41,8 +41,8 @@ public:
 	{
 		GLint size;
 		GLenum type;
-		GLsizei byte_size = 0;
 		bool normalized = false;
+		GLsizei byte_size = 0;
 	};
 
 private:
