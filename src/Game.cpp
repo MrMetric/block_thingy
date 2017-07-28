@@ -39,7 +39,6 @@
 #include "block/Enum/Type.hpp"
 #include "chunk/Mesher/Greedy.hpp"
 #include "chunk/Mesher/Simple.hpp"
-#include "chunk/Mesher/SimpleAO.hpp"
 #include "console/Command.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
@@ -101,12 +100,8 @@ static unique_ptr<Mesher::Base> make_mesher(const string& name)
 	{
 		return std::make_unique<Mesher::Simple>();
 	}
-	else if(name == "SimpleAO")
-	{
-		return std::make_unique<Mesher::SimpleAO>();
-	}
 	LOG(ERROR) << "No such mesher: " << name;
-	return make_mesher("SimpleAO");
+	return make_mesher("Simple");
 }
 
 Game::Game(GLFWwindow* window)
@@ -443,7 +438,10 @@ static void add_shader(Game& game, const Block::Enum::Type t, const fs::path& sh
 	}
 	if(is_new)
 	{
-		game.gfx.block_shaders[t].uniform("min_light", static_cast<float>(Settings::get<double>("min_light")));
+		auto& shader = game.gfx.block_shaders[t];
+		shader.uniform("light", 1);
+		shader.uniform("light_smoothing", static_cast<int>(Settings::get<int64_t>("light_smoothing")));
+		shader.uniform("min_light", static_cast<float>(Settings::get<double>("min_light")));
 	}
 }
 

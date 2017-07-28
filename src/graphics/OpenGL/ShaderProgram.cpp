@@ -6,6 +6,7 @@
 #include <utility>
 #include <vector>
 
+#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -338,14 +339,15 @@ static GLuint make_program(const std::vector<GLuint>& objects, const string& deb
 		throw std::runtime_error("error linking program " + debug_name + ":\n" + log);
 	}
 
+	#ifdef DEBUG_BUILD
 	glValidateProgram(program);
 	glGetProgramiv(program, GL_VALIDATE_STATUS, &izgud);
 	if(izgud == GL_FALSE)
 	{
 		string log = Util::gl_object_log(program);
-		glDeleteProgram(program);
-		throw std::runtime_error("program validation failed in " + debug_name + ":\n" + log);
+		LOG(WARNING) << "program validation failed in " << debug_name << ":\n" << log;
 	}
+	#endif
 
 	// shader objects are not needed after linking, so memory can be freed by deleting them
 	// but a shader object will not be deleted until it is detached

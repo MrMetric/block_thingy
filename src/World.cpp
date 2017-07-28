@@ -282,6 +282,56 @@ void World::set_light
 	const BlockInChunk pos(block_pos);
 	chunk->set_light(pos, color);
 	pImpl->update_chunk_neighbors(chunk_pos, pos);
+
+	// update light in neighboring chunks
+	{
+		glm::tvec3<bool> xyz(false, false, false);
+		glm::tvec3<bool> zero(glm::uninitialize);
+		auto do_it = [this, &chunk_pos, &color, &pos, &zero](const glm::tvec3<bool>& xyz)
+		{
+			ChunkInWorld chunk_pos_2 = chunk_pos;
+			if(xyz.x) chunk_pos_2.x += (zero.x ? -1 : 1);
+			if(xyz.y) chunk_pos_2.y += (zero.y ? -1 : 1);
+			if(xyz.z) chunk_pos_2.z += (zero.z ? -1 : 1);
+			auto chunk2 = get_chunk(chunk_pos_2);
+			if(chunk2 != nullptr)
+			{
+				glm::ivec3 pos2(glm::uninitialize);
+				pos2.x = xyz.x ? (zero.x ? CHUNK_SIZE : -1) : pos.x;
+				pos2.y = xyz.y ? (zero.y ? CHUNK_SIZE : -1) : pos.y;
+				pos2.z = xyz.z ? (zero.z ? CHUNK_SIZE : -1) : pos.z;
+				chunk2->set_neighbor_light(pos2, color);
+			}
+		};
+		for(int i = 0; i < 3; ++i)
+		{
+			if(pos[i] == 0 || pos[i] == CHUNK_SIZE - 1)
+			{
+				xyz[i] = true;
+				zero[i] = (pos[i] == 0);
+			}
+		}
+		for(int i = 0; i < 3; ++i)
+		{
+			int j = (i + 1) % 3;
+			if(xyz[i])
+			{
+				glm::tvec3<bool> xyz2(false, false, false);
+				xyz2[i] = true;
+				do_it(xyz2);
+				if(xyz[j])
+				{
+					xyz2[j] = true;
+					do_it(xyz2);
+				}
+			}
+		}
+		if(xyz.x && xyz.y && xyz.z)
+		{
+			do_it({true, true, true});
+		}
+	}
+
 	if(save)
 	{
 		pImpl->chunks_to_save.emplace(chunk_pos);
@@ -505,6 +555,43 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 			if(color != 0)
 			{
 				add_light({chunk_pos, pos}, color, false);
+			}
+		}
+	}
+
+	{
+		glm::ivec3 pos2;
+		for(pos2.x = -1; pos2.x < CHUNK_SIZE + 1; ++pos2.x)
+		for(pos2.y = -1; pos2.y < CHUNK_SIZE + 1; ++pos2.y)
+		for(pos2.z = -1; pos2.z < CHUNK_SIZE + 1; ++pos2.z)
+		{
+			ChunkInWorld chunk_pos_2 = chunk_pos;
+			BlockInChunk pos;
+			for(int i = 0; i < 3; ++i)
+			{
+				if(pos2[i] == -1)
+				{
+					chunk_pos_2[i] -= 1;
+					pos[i] = CHUNK_SIZE - 1;
+				}
+				else if(pos2[i] == CHUNK_SIZE)
+				{
+					chunk_pos_2[i] += 1;
+					pos[i] = 0;
+				}
+				else
+				{
+					pos[i] = pos2[i];
+				}
+			}
+			if(chunk_pos_2 == chunk_pos)
+			{
+				continue;
+			}
+			const auto chunk2 = get_chunk(chunk_pos_2);
+			if(chunk2 != nullptr)
+			{
+				chunk->set_neighbor_light(pos2, chunk2->get_light(pos));
 			}
 		}
 	}

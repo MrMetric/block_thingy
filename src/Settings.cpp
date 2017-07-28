@@ -52,15 +52,6 @@ void Settings::set(const string& name, T value)
 	}
 }
 
-#define INSTANTIATE(type) \
-template bool Settings::has<type>(const string&); \
-template type Settings::get(const string&); \
-template void Settings::set(const string&, type);
-
-INSTANTIATE(bool)
-INSTANTIATE(double)
-INSTANTIATE(string)
-
 void Settings::add_command_handlers()
 {
 	Console::instance->add_command("set_bool", {[](const std::vector<string>& args)
@@ -107,11 +98,11 @@ void Settings::add_command_handlers()
 			LOG(INFO) << "set bool: " << name << " = " << (value ? "true" : "false");
 		}
 	}});
-	Console::instance->add_command("set_number", {[](const std::vector<string>& args)
+	Console::instance->add_command("set_float", {[](const std::vector<string>& args)
 	{
 		if(args.size() != 2)
 		{
-			LOG(ERROR) << "Usage: set_number <name> <value or +- difference>";
+			LOG(ERROR) << "Usage: set_float <name> <value or +- difference>";
 			return;
 		}
 
@@ -147,7 +138,34 @@ void Settings::add_command_handlers()
 		Settings::set<double>(name, value);
 		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
-			LOG(INFO) << "set number: " << name << " = " << value;
+			LOG(INFO) << "set float: " << name << " = " << value;
+		}
+	}});
+	Console::instance->add_command("set_int", {[](const std::vector<string>& args)
+	{
+		if(args.size() != 2)
+		{
+			LOG(ERROR) << "Usage: set_int <name> <value or +- difference>";
+			return;
+		}
+
+		const string name = args[0];
+		const string svalue = args[1];
+		int64_t new_value = std::stoll(svalue);
+		int64_t value = Settings::has<int64_t>(name) ? Settings::get<int64_t>(name) : 0;
+		if(svalue[0] == '+' || svalue[0] == '-')
+		{
+			value += new_value;
+		}
+		else
+		{
+			value = new_value;
+		}
+
+		Settings::set<int64_t>(name, value);
+		if(Game::instance != nullptr) // not called from initial Settings::load()
+		{
+			LOG(INFO) << "set int: " << name << " = " << value;
 		}
 	}});
 	Console::instance->add_command("set_string", {[](const std::vector<string>& args)
@@ -188,9 +206,13 @@ void Settings::load()
 		{"near_plane", 0.1},
 		{"ortho_size", 6},
 	};
+	get_map<int64_t>() =
+	{
+		{"light_smoothing", 2},
+	};
 	get_map<string>() =
 	{
-		{"mesher", "SimpleAO"},
+		{"mesher", "Simple"},
 		{"projection_type", "default"},
 		{"screen_shader", "default"},
 	};
@@ -233,7 +255,11 @@ void Settings::save()
 	}
 	for(const auto& p : get_map<double>())
 	{
-		f << "set_number " << format_string(p.first) << ' ' << p.second << '\n';
+		f << "set_float " << format_string(p.first) << ' ' << p.second << '\n';
+	}
+	for(const auto& p : get_map<int64_t>())
+	{
+		f << "set_int " << format_string(p.first) << ' ' << p.second << '\n';
 	}
 	for(const auto& p : get_map<string>())
 	{

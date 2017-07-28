@@ -25,7 +25,6 @@ struct Rectangle
 	meshmap_key_t key;
 	BlockInChunk::value_type x, z;
 	BlockInChunk::value_type w, h;
-	Graphics::Color light;
 	uint16_t tex_index;
 	uint8_t rotation;
 };
@@ -76,7 +75,7 @@ void add_surface
 			xyz[i.y] = pos.y;
 			xyz[i.z] = rekt.z;
 
-			Base::add_face(meshes[rekt.key], xyz, face, rekt.w, rekt.h, rekt.light, rekt.tex_index, rekt.rotation);
+			Base::add_face(meshes[rekt.key], xyz, face, rekt.w, rekt.h, rekt.tex_index, rekt.rotation);
 		}
 	}
 }
@@ -103,7 +102,6 @@ void generate_surface
 			o[i.y] = offset;
 
 			const Block::Base& block = Base::block_at(chunk, x, y, z);
-			const Graphics::Color light = Base::light_at(chunk, x + o[0], y + o[1], z + o[2]);
 			if(Base::block_visible_from(chunk, block, x + o[0], y + o[1], z + o[2]))
 			{
 				const auto tex = Game::instance->resource_manager.get_block_texture(block.texture(face));
@@ -114,7 +112,6 @@ void generate_surface
 						block.is_translucent(),
 						tex.unit,
 					},
-					light,
 					tex.index,
 					block.rotation(face),
 				};
@@ -128,7 +125,6 @@ void generate_surface
 						false,
 						0,
 					},
-					light,
 					0,
 					0,
 				};
@@ -201,9 +197,8 @@ Rectangle yield_rectangle(surface_t& surface)
 				},
 				start_x, start_z,
 				w, h,
-				std::get<1>(key), // light
-				std::get<2>(key), // tex_index
-				std::get<3>(key), // rotation
+				std::get<1>(key), // tex_index
+				std::get<2>(key), // rotation
 			};
 		}
 	}
@@ -217,7 +212,6 @@ Rectangle yield_rectangle(surface_t& surface)
 		},
 		0, 0,
 		0, 0,
-		{0},
 		0,
 		0,
 	};

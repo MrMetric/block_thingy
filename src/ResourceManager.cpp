@@ -67,7 +67,7 @@ struct ResourceManager::impl
 	impl()
 	:
 		main_thread_id(std::this_thread::get_id()),
-		units(0)
+		units(1)
 	{
 	}
 

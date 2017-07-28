@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <mutex>
 #include <stdint.h>
 #include <unordered_map>
 #include <utility>			// std::pair
@@ -29,4 +30,5 @@ public:
 private:
 	event_handler_id_t max_id;
 	std::unordered_map<event_handler_id_t, std::pair<EventType, event_handler_t>> handlers;
+	mutable std::mutex mutex;
 };

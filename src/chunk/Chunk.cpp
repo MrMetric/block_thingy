@@ -14,13 +14,18 @@
 #include "Camera.hpp"
 #include "Game.hpp"
 #include "Gfx.hpp"
+#include "Settings.hpp"
 #include "World.hpp"
 #include "block/Base.hpp"
 #include "block/BlockRegistry.hpp"
 #include "block/Enum/Type.hpp"
 #include "chunk/Mesher/Base.hpp"
+#include "event/EventManager.hpp"
+#include "event/EventType.hpp"
+#include "event/type/Event_change_setting.hpp"
 #include "graphics/Color.hpp"
 #include "graphics/OpenGL/ShaderProgram.hpp"
+#include "graphics/OpenGL/Texture.hpp"
 #include "graphics/OpenGL/VertexArray.hpp"
 #include "graphics/OpenGL/VertexBuffer.hpp"
 #include "position/BlockInChunk.hpp"
@@ -36,6 +41,8 @@ using Position::BlockInChunk;
 using Position::BlockInWorld;
 using Position::ChunkInWorld;
 
+constexpr int_fast32_t CHUNK_SIZE_2 = CHUNK_SIZE + 2;
+
 struct Chunk::impl
 {
 	impl
@@ -46,14 +53,59 @@ struct Chunk::impl
 	:
 		owner(owner),
 		position(position),
+		light_changed(false),
 		changed(false)
 	{
+		light_tex_buf.fill(0);
+
+		light_smoothing_eid = Game::instance->event_manager.add_handler(EventType::change_setting, [this](const Event& event)
+		{
+			auto e = static_cast<const Event_change_setting&>(event);
+
+			if(light_tex == nullptr)
+			{
+				return;
+			}
+
+			if(e.name == "light_smoothing")
+			{
+				const int64_t light_smoothing = static_cast<int64_t>(*static_cast<const int64_t*>(e.value));
+				const GLenum mag_filter = (light_smoothing == 0) ? GL_NEAREST : GL_LINEAR;
+				light_tex->parameter(Graphics::OpenGL::Texture::Parameter::mag_filter, mag_filter);
+			}
+		});
+	}
+
+	~impl()
+	{
+		Game::instance->event_manager.unadd_handler(light_smoothing_eid);
+	}
+
+	void init_light_tex()
+	{
+		light_tex = std::make_unique<Graphics::OpenGL::Texture>(GL_TEXTURE_3D);
+		set_light_tex_data();
+		light_tex->parameter(Graphics::OpenGL::Texture::Parameter::wrap_s, GL_CLAMP_TO_EDGE);
+		light_tex->parameter(Graphics::OpenGL::Texture::Parameter::wrap_t, GL_CLAMP_TO_EDGE);
+		light_tex->parameter(Graphics::OpenGL::Texture::Parameter::min_filter, GL_NEAREST);
+		const GLenum mag_filter = (Settings::get<int64_t>("light_smoothing") == 0) ? GL_NEAREST : GL_LINEAR;
+		light_tex->parameter(Graphics::OpenGL::Texture::Parameter::mag_filter, mag_filter);
+		light_changed = false;
+	}
+
+	void set_light_tex_data()
+	{
+		light_tex->image3D(0, GL_RGB, CHUNK_SIZE_2, CHUNK_SIZE_2, CHUNK_SIZE_2, GL_RGB, GL_UNSIGNED_BYTE, light_tex_buf.data());
 	}
 
 	World& owner;
 	Position::ChunkInWorld position;
 
 	ChunkData<Graphics::Color> light;
+	std::unique_ptr<Graphics::OpenGL::Texture> light_tex;
+	std::array<uint8_t, CHUNK_SIZE_2 * CHUNK_SIZE_2 * CHUNK_SIZE_2 * 3> light_tex_buf;
+	bool light_changed;
+	event_handler_id_t light_smoothing_eid;
 
 	bool changed;
 	Mesher::meshmap_t meshes;
@@ -111,6 +163,17 @@ Graphics::Color Chunk::get_light(const BlockInChunk& pos) const
 void Chunk::set_light(const BlockInChunk& pos, const Graphics::Color& color)
 {
 	pImpl->light.set(pos, color);
+	set_neighbor_light({pos.x, pos.y, pos.z}, color);
+}
+
+void Chunk::set_neighbor_light(const glm::ivec3& pos, const Graphics::Color& color)
+{
+	const size_t i = (CHUNK_SIZE_2 * CHUNK_SIZE_2 * (pos.z + 1) + CHUNK_SIZE_2 * (pos.y + 1) + pos.x + 1) * 3;
+	pImpl->light_tex_buf[i    ] = std::round(color.r * 255.0 / Graphics::Color::max);
+	pImpl->light_tex_buf[i + 1] = std::round(color.g * 255.0 / Graphics::Color::max);
+	pImpl->light_tex_buf[i + 2] = std::round(color.b * 255.0 / Graphics::Color::max);
+
+	pImpl->light_changed = true;
 }
 
 void Chunk::update()
@@ -128,9 +191,27 @@ void Chunk::render(const bool translucent_pass)
 
 	if(pImpl->changed)
 	{
+		if(pImpl->light_tex == nullptr)
+		{
+			pImpl->init_light_tex();
+		}
+
 		pImpl->update_vaos();
 		pImpl->changed = false;
 	}
+
+	if(pImpl->meshes.empty())
+	{
+		return;
+	}
+
+	if(pImpl->light_changed && pImpl->light_tex != nullptr)
+	{
+		pImpl->set_light_tex_data();
+	}
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(pImpl->light_tex->type, pImpl->light_tex->get_name());
 
 	const ChunkInWorld render_position = pImpl->position - ChunkInWorld(BlockInWorld(Game::instance->camera.position));
 	// TODO?: use double when available
@@ -178,13 +259,9 @@ void Chunk::impl::update_vaos()
 		{
 			Graphics::OpenGL::VertexBuffer vbo
 			({
-				{3, GL_UNSIGNED_BYTE      }, // relative position
-				{1, GL_UNSIGNED_BYTE      }, // face (3 bits) and rotation (2 bits)
-				{3, GL_UNSIGNED_BYTE, true}, // light1
-				{3, GL_UNSIGNED_BYTE, true}, // light2
-				{3, GL_UNSIGNED_BYTE, true}, // light3
-				{3, GL_UNSIGNED_BYTE, true}, // light4
-				{1, GL_SHORT              }, // texture index
+				{3, GL_UNSIGNED_BYTE}, // relative position
+				{1, GL_UNSIGNED_BYTE}, // face (3 bits) and rotation (2 bits)
+				{1, GL_SHORT        }, // texture index
 			});
 			Graphics::OpenGL::VertexArray vao(vbo);
 
