@@ -281,7 +281,6 @@ void World::set_light
 	}
 	const BlockInChunk pos(block_pos);
 	chunk->set_light(pos, color);
-	pImpl->update_chunk_neighbors(chunk_pos, pos);
 
 	// update light in neighboring chunks
 	{
