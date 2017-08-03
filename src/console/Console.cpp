@@ -6,35 +6,9 @@
 
 #include <easylogging++/easylogging++.hpp>
 
-#include "ArgumentParser.hpp"
+#include "console/ArgumentParser.hpp"
 
 using std::string;
-
-console_handler_wrapper::console_handler_wrapper(const console_handler_t& handler)
-:
-	has_args(true),
-	handler_args(handler)
-{
-}
-
-console_handler_wrapper::console_handler_wrapper(const console_handler_noargs_t& handler)
-:
-	has_args(false),
-	handler_noargs(handler)
-{
-}
-
-void console_handler_wrapper::operator()(const std::vector<string>& args) const
-{
-	if(has_args)
-	{
-		handler_args(args);
-	}
-	else
-	{
-		handler_noargs();
-	}
-}
 
 Console* Console::instance = nullptr;
 
@@ -42,7 +16,10 @@ Console::Console()
 {
 	Console::instance = this;
 
-	add_command("exec", {[this](const std::vector<string>& args)
+	add_command("exec", {[this]
+	(
+		const std::vector<string>& args
+	)
 	{
 		if(args.size() != 1)
 		{
@@ -63,7 +40,7 @@ Console::Console()
 	}});
 }
 
-void Console::add_command(const string& name, const console_handler_wrapper& handler)
+void Console::add_command(const string& name, const console_handler_t& handler)
 {
 	if(!handlers.insert({name, handler}).second)
 	{

@@ -16,6 +16,7 @@
 #include "block/Enum/Type.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
+#include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
@@ -113,6 +114,7 @@ void Play::draw_debug_text()
 	ss << std::boolalpha;
 
 	ss << "framerate: " << game.get_fps() << '\n';
+	ss << "render distance: " << game.get_render_distance() << '\n';
 
 	const glm::dvec3 pos = game.player.position();
 	ss << glm::io::precision(4); // default is 3
@@ -158,6 +160,7 @@ void Play::draw_debug_text()
 		ss << "hovered: " << show_block(hovered) << "\n";
 		ss << "\tface: " << game.hovered_block->face() << '\n';
 		ss << "\trotation: " << glm::io::width(2) << hovered.rotation() << '\n';
+		ss << "\tlight: " << game.world.get_light(game.hovered_block->adjacent()) << '\n';
 	}
 
 	game.gfx.gui_text.draw(ss.str(), {8.0, 8.0});

@@ -96,6 +96,7 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		-pedantic
 		-Wall
 		-Wextra
+		-Werror=missing-field-initializers
 		-Werror=return-type
 	)
 else()

@@ -6,8 +6,6 @@
 
 #include <easylogging++/easylogging++.hpp>
 
-#include "Game.hpp"
-
 using std::string;
 
 struct Plugin::impl
@@ -84,14 +82,14 @@ Plugin::Plugin(Plugin&& that)
 	pImpl = std::move(that.pImpl);
 }
 
-void Plugin::init()
+void Plugin::init(Game& game)
 {
 	if(pImpl == nullptr) return;
 
 #ifdef HAVE_POSIX
 	using init_t = void(*)(Game&);
 	const auto init = *reinterpret_cast<init_t>(pImpl->get_symbol("init"));
-	init(*Game::instance);
+	init(game);
 	LOG(INFO) << "initialized " << pImpl->path.u8string();
 #endif
 }

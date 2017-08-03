@@ -63,10 +63,10 @@ static void shim_GL_ARB_separate_shader_objects();
 
 Gfx* Gfx::instance = nullptr;
 
-Gfx::Gfx(GLFWwindow* window)
+Gfx::Gfx()
 :
 	set_instance(this),
-	window(window),
+	window(Gfx::init_glfw()),
 	window_size(get_window_size(window)),
 	window_mid(glm::dvec2(window_size) / 2.0),
 	s_lines("shaders/lines"),
@@ -92,15 +92,15 @@ void Gfx::hook_events(EventManager& event_manager)
 
 		if(e.name == "fullscreen")
 		{
-			set_fullscreen(*static_cast<const bool*>(e.value));
+			set_fullscreen(*e.value.get<bool>());
 		}
 		else if(e.name == "cull_face")
 		{
-			set_cull_face(*static_cast<const bool*>(e.value));
+			set_cull_face(*e.value.get<bool>());
 		}
 		else if(e.name == "screen_shader")
 		{
-			set_screen_shader(*static_cast<const string*>(e.value));
+			set_screen_shader(*e.value.get<string>());
 		}
 		else if(e.name == "projection_type"
 			 || e.name == "fov"
@@ -114,15 +114,15 @@ void Gfx::hook_events(EventManager& event_manager)
 		}
 		else if(e.name == "light_smoothing")
 		{
-			const int64_t light_smoothing = static_cast<int64_t>(*static_cast<const int64_t*>(e.value));
+			const int light_smoothing = static_cast<int>(*e.value.get<int64_t>());
 			for(auto& p : block_shaders)
 			{
-				p.second.uniform("light_smoothing", static_cast<int>(light_smoothing));
+				p.second.uniform("light_smoothing", light_smoothing);
 			}
 		}
 		else if(e.name == "min_light")
 		{
-			const float min_light = static_cast<float>(*static_cast<const double*>(e.value));
+			const float min_light = static_cast<float>(*e.value.get<double>());
 			for(auto& p : block_shaders)
 			{
 				p.second.uniform("min_light", min_light);

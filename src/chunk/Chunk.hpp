@@ -14,8 +14,6 @@ using chunk_blocks_t = ChunkData<std::unique_ptr<Block::Base>>;
 
 class Chunk
 {
-friend class World;
-
 public:
 	Chunk(const Position::ChunkInWorld&, World& owner);
 	~Chunk();
@@ -49,7 +47,9 @@ public:
 	template<typename T> void load(const T&);
 
 private:
-	chunk_blocks_t blocks;
+	friend class World;
+
+	chunk_blocks_t blocks; // this here (instead of in impl) for msgpack saving
 
 	struct impl;
 	std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;

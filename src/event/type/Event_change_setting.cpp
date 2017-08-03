@@ -5,7 +5,7 @@
 Event_change_setting::Event_change_setting
 (
 	const std::string& name,
-	const void* value
+	const value_t value
 )
 :
 	Event(EventType::change_setting),

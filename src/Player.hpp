@@ -1,11 +1,13 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 #include "fwd/Game.hpp"
+#include "fwd/graphics/GUI/Base.hpp"
 #include "physics/AABB.hpp"
 #include "fwd/position/BlockInWorld.hpp"
 #include "util/Property.hpp"
@@ -44,6 +46,8 @@ public:
 	void toggle_noclip();
 	bool get_noclip() const;
 	void set_noclip(bool);
+
+	void open_gui(std::unique_ptr<Graphics::GUI::Base>);
 
 	glm::dvec3 spawn_position;
 	Property<glm::dvec3> position;

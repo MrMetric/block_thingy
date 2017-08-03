@@ -172,6 +172,11 @@ imat4 rotate(uint8_t turns, const ivec3& axis)
 
 Enum::Face rotate_face(const Enum::Face face, const uvec3& rot)
 {
+	if(rot.x == 0 && rot.y == 0 && rot.z == 0)
+	{
+		return face;
+	}
+
 	imat4 r
 	 = rotate(rot.x, {1, 0, 0})
 	 * rotate(rot.y, {0, 1, 0})

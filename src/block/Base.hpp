@@ -6,6 +6,9 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
+#include "fwd/Game.hpp"
+#include "fwd/Player.hpp"
+#include "fwd/World.hpp"
 #include "fwd/block/Enum/Face.hpp"
 #include "fwd/block/Enum/Type.hpp"
 #include "fwd/block/Enum/VisibilityType.hpp"
@@ -34,7 +37,7 @@ public:
 	 */
 	virtual Graphics::Color color() const;
 
-	virtual fs::path texture(Enum::Face) const;
+	fs::path texture(Enum::Face) const;
 
 	glm::tvec3<uint8_t> rotation() const;
 	virtual uint8_t rotation(Enum::Face) const;
@@ -65,20 +68,28 @@ public:
 	virtual bool is_selectable() const;
 
 	/**
-	 * Is this block overwritable when attempting to place a block at its position?
+	 * Is this block overwritable when attempting to place the given block at its position?
 	 */
-	virtual bool is_replaceable() const;
+	virtual bool is_replaceable_by(const Base&) const;
 
-	virtual void use_start(const Position::BlockInWorld&, Enum::Face);
+	virtual void use_start
+	(
+		Game&,
+		World&,
+		Player&,
+		const Position::BlockInWorld&,
+		Enum::Face
+	);
 
 	virtual void save(Storage::OutputInterface&) const;
 	virtual void load(Storage::InputInterface&);
 
 protected:
-	glm::tvec3<uint8_t> rotation_;
+	virtual fs::path texture_(Enum::Face) const;
 
 private:
 	Enum::Type type_;
+	glm::tvec3<uint8_t> rotation_;
 };
 
 } // namespace Block

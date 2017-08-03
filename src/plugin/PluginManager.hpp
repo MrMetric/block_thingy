@@ -4,6 +4,8 @@
 #include <memory>
 #include <experimental/propagate_const>
 
+#include "fwd/Game.hpp"
+
 class PluginManager
 {
 public:
@@ -14,7 +16,7 @@ public:
 	PluginManager(const PluginManager&) = delete;
 	void operator=(const PluginManager&) = delete;
 
-	void init_plugins();
+	void init_plugins(Game&);
 
 	static PluginManager* instance;
 

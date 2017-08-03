@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Game.hpp"
+#include "Player.hpp"
 #include "block/RotationUtil.hpp"
 #include "block/Enum/Type.hpp"
 #include "block/Enum/VisibilityType.hpp"
@@ -66,9 +67,9 @@ Graphics::Color Base::color() const
 	return {0, 0, 0};
 }
 
-fs::path Base::texture(const Enum::Face) const
+fs::path Base::texture(const Enum::Face face) const
 {
-	return {};
+	return texture_(RotationUtil::rotate_face(face, rotation()));
 }
 
 glm::tvec3<uint8_t> Base::rotation() const
@@ -148,13 +149,21 @@ bool Base::is_selectable() const
 	return true;
 }
 
-bool Base::is_replaceable() const
+bool Base::is_replaceable_by(const Base&) const
 {
 	return false;
 }
 
-void Base::use_start(const Position::BlockInWorld&, const Enum::Face)
+void Base::use_start
+(
+	Game&,
+	World&,
+	Player& player,
+	const Position::BlockInWorld& pos,
+	const Enum::Face face
+)
 {
+	LOG(DEBUG) << "+use on block " << pos << ":" << face << " by player " << player.name;
 }
 
 void Base::save(Storage::OutputInterface& i) const
@@ -162,7 +171,7 @@ void Base::save(Storage::OutputInterface& i) const
 	Enum::Type t = (type_ == Enum::Type::none) ? Enum::Type::air : type_;
 	Enum::TypeExternal te = Game::instance->block_registry.get_extid(t);
 	i.set("", te);
-	if(rotation_ != glm::tvec3<uint8_t>(0, 0, 0))
+	if(rotation_.x != 0 || rotation_.y != 0 || rotation_.z != 0)
 	{
 		i.set("r", rotation_);
 	}
@@ -172,6 +181,11 @@ void Base::load(Storage::InputInterface& i)
 {
 	// type is set before loading
 	i.maybe_get("r", rotation_);
+}
+
+fs::path Base::texture_(const Enum::Face) const
+{
+	return {};
 }
 
 }

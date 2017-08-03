@@ -37,19 +37,23 @@ static void write_png
 	const uint8_t* data
 );
 
+static void write_raw
+(
+	const fs::path&,
+	const std::vector<uint8_t>& data
+);
+
 struct Image::impl
 {
 	impl()
 	:
 		width(0),
 		height(0),
-		trans_set(false)
+		has_transparency(false)
 	{
 	}
 
 	impl(const fs::path& path)
-	:
-		trans_set(false)
 	{
 		if(path.extension() == ".png")
 		{
@@ -60,26 +64,40 @@ struct Image::impl
 			throw std::invalid_argument("unknown image format: " + path.extension().u8string());
 		}
 		assert(data.size() == 4 * width * height);
+		check_transparency();
 	}
 
 	impl(const uint32_t width, const uint32_t height, std::vector<uint8_t> data)
 	:
 		data(std::move(data)),
 		width(width),
-		height(height),
-		trans_set(false)
+		height(height)
 	{
 		if(this->data.size() != 4 * width * height)
 		{
 			throw std::invalid_argument("bad image data size");
 		}
+		check_transparency();
+	}
+
+	void check_transparency()
+	{
+		assert(data.size() % 4 == 0);
+		for(std::size_t i = 3; i < data.size(); i += 4)
+		{
+			if(data[i] != 255)
+			{
+				has_transparency = true;
+				return;
+			}
+		}
+		has_transparency = false;
 	}
 
 	std::vector<uint8_t> data;
 	uint32_t width;
 	uint32_t height;
-	mutable bool trans_set;
-	mutable bool trans;
+	bool has_transparency;
 };
 
 Image::Image()
@@ -121,22 +139,7 @@ const uint8_t* Image::get_data() const
 
 bool Image::has_transparency() const
 {
-	if(pImpl->trans_set)
-	{
-		return pImpl->trans;
-	}
-	pImpl->trans = false;
-	assert(pImpl->data.size() % 4 == 0);
-	for(std::size_t i = 3; i < pImpl->data.size(); i += 4)
-	{
-		if(pImpl->data[i] != 255)
-		{
-			pImpl->trans = true;
-			break;
-		}
-	}
-	pImpl->trans_set = true;
-	return pImpl->trans;
+	return pImpl->has_transparency;
 }
 
 void Image::write(const fs::path& path) const
@@ -144,6 +147,10 @@ void Image::write(const fs::path& path) const
 	if(path.extension() == ".png")
 	{
 		write_png(path, pImpl->width, pImpl->height, get_data());
+	}
+	else if(path.extension() == ".raw")
+	{
+		write_raw(path, pImpl->data);
 	}
 	else
 	{
@@ -315,6 +322,16 @@ void write_png
 	fclose(fp);
 	png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
 	png_destroy_write_struct(&png_ptr, &info_ptr);
+}
+
+void write_raw
+(
+	const fs::path& path,
+	const std::vector<uint8_t>& data
+)
+{
+	std::ofstream f(path, std::ofstream::binary);
+	f.write(reinterpret_cast<const char*>(data.data()), data.size());
 }
 
 } // namespace Graphics

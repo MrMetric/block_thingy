@@ -22,7 +22,7 @@ public:
 private:
 	friend class PluginManager;
 
-	void init();
+	void init(Game&);
 
 	struct impl;
 	std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;

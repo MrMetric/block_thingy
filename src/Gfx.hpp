@@ -25,7 +25,7 @@
 class Gfx
 {
 public:
-	Gfx(GLFWwindow*);
+	Gfx();
 
 	Gfx(Gfx&&) = delete;
 	Gfx(const Gfx&) = delete;

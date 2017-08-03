@@ -104,11 +104,10 @@ static unique_ptr<Mesher::Base> make_mesher(const string& name)
 	return make_mesher("Simple");
 }
 
-Game::Game(GLFWwindow* window)
+Game::Game()
 :
 	set_instance(this),
 	hovered_block(nullptr),
-	gfx(window),
 	camera(gfx, event_manager),
 	world("worlds/test", block_registry, make_mesher(Settings::get<string>("mesher"))),
 	player_ptr(world.add_player("test_player")),
@@ -180,16 +179,17 @@ Game::Game(GLFWwindow* window)
 
 		if(e.name == "mesher")
 		{
-			const string name = *static_cast<const string*>(e.value);
+			const string name = *e.value.get<string>();
 			game.world.set_mesher(make_mesher(name));
 		}
 	});
 
-	PluginManager::instance->init_plugins();
+	PluginManager::instance->init_plugins(*this);
 }
 
 Game::~Game()
 {
+	Settings::save();
 }
 
 void Game::draw()
@@ -388,6 +388,11 @@ double Game::get_fps() const
 	return pImpl->fps.getFPS();
 }
 
+Position::ChunkInWorld::value_type Game::get_render_distance() const
+{
+	return render_distance;
+}
+
 void Game::update_framebuffer_size(const window_size_t& window_size)
 {
 	gfx.update_framebuffer_size(window_size);
@@ -481,9 +486,10 @@ void Game::impl::find_hovered_block()
 
 void Game::impl::add_commands()
 {
-	#define COMMAND_(name) commands.emplace_back(*Console::instance, name, [&game=game](
-	#define COMMAND(name) COMMAND_(name))
-	#define COMMAND_ARGS(name) COMMAND_(name)const std::vector<string>& args)
+	#define COMMAND(name) commands.emplace_back(*Console::instance, name, [&game=game, &player=game.player] \
+	( \
+		__attribute__((unused)) const std::vector<string>& args \
+	)
 
 	COMMAND("save")
 	{
@@ -515,24 +521,21 @@ void Game::impl::add_commands()
 			return;
 		}
 
-		const Position::BlockInWorld pos = game.hovered_block->adjacent();
-		if(game.world.get_block(pos).is_replaceable())
+		unique_ptr<Block::Base> block;
+		if(game.copied_block != nullptr)
 		{
-			// TODO: check solidity without constructing
-			unique_ptr<Block::Base> block;
-			if(game.copied_block != nullptr)
-			{
-				block = game.block_registry.make(*game.copied_block);
-			}
-			else
-			{
-				block = game.block_registry.make(game.block_type);
-			}
-			if(game.player.can_place_block_at(pos) || !block->is_solid())
-			{
-				game.world.set_block(pos, std::move(block), false);
-				//event_manager.do_event(Event_place_block(pos, face));
-			}
+			block = game.block_registry.make(*game.copied_block);
+		}
+		else
+		{
+			block = game.block_registry.make(game.block_type);
+		}
+		const Position::BlockInWorld pos = game.hovered_block->adjacent();
+		if(game.world.get_block(pos).is_replaceable_by(*block)
+		&& (player.can_place_block_at(pos) || !block->is_solid()))
+		{
+			game.world.set_block(pos, std::move(block), false);
+			//event_manager.do_event(Event_place_block(pos, face));
 		}
 	});
 	COMMAND("copy_block")
@@ -552,45 +555,52 @@ void Game::impl::add_commands()
 	// TODO: less copy/paste
 	COMMAND("+forward")
 	{
-		game.player.move_forward(true);
+		player.move_forward(true);
 	});
 	COMMAND("-forward")
 	{
-		game.player.move_forward(false);
+		player.move_forward(false);
 	});
 	COMMAND("+backward")
 	{
-		game.player.move_backward(true);
+		player.move_backward(true);
 	});
 	COMMAND("-backward")
 	{
-		game.player.move_backward(false);
+		player.move_backward(false);
 	});
 	COMMAND("+left")
 	{
-		game.player.move_left(true);
+		player.move_left(true);
 	});
 	COMMAND("-left")
 	{
-		game.player.move_left(false);
+		player.move_left(false);
 	});
 	COMMAND("+right")
 	{
-		game.player.move_right(true);
+		player.move_right(true);
 	});
 	COMMAND("-right")
 	{
-		game.player.move_right(false);
+		player.move_right(false);
 	});
 	COMMAND("jump")
 	{
-		game.player.jump();
+		player.jump();
 	});
 	COMMAND("+use")
 	{
 		if(game.hovered_block != nullptr)
 		{
-			game.world.get_block(game.hovered_block->pos).use_start(game.hovered_block->pos, game.hovered_block->face());
+			game.world.get_block(game.hovered_block->pos).use_start
+			(
+				game,
+				game.world,
+				player,
+				game.hovered_block->pos,
+				game.hovered_block->face()
+			);
 		}
 	});
 	COMMAND("-use")
@@ -599,24 +609,24 @@ void Game::impl::add_commands()
 	});
 	COMMAND("+sprint")
 	{
-		game.player.go_faster(true);
+		player.go_faster(true);
 	});
 	COMMAND("-sprint")
 	{
-		game.player.go_faster(false);
+		player.go_faster(false);
 	});
 
 	COMMAND("noclip")
 	{
-		game.player.toggle_noclip();
+		player.toggle_noclip();
 	});
 	COMMAND("respawn")
 	{
-		game.player.respawn();
-		LOG(INFO) << "respawned at " << glm::to_string(game.player.position());
+		player.respawn();
+		LOG(INFO) << "respawned at " << glm::to_string(player.position());
 	});
 
-	COMMAND_ARGS("save_pos")
+	COMMAND("save_pos")
 	{
 		if(args.size() != 1)
 		{
@@ -627,16 +637,16 @@ void Game::impl::add_commands()
 		std::ofstream streem(save_name);
 		streem.precision(std::numeric_limits<double>::max_digits10);
 
-		const glm::dvec3 pos = game.player.position();
+		const glm::dvec3 pos = player.position();
 		streem << pos.x << " " << pos.y << " " << pos.z << "\n";
 
-		const glm::dvec3 rot = game.player.rotation();
+		const glm::dvec3 rot = player.rotation();
 		streem << rot.x << " " << rot.y << " " << rot.z;
 
 		streem.flush();
 		LOG(INFO) << "saved position and rotation to " << save_name;
 	});
-	COMMAND_ARGS("load_pos")
+	COMMAND("load_pos")
 	{
 		if(args.size() != 1)
 		{
@@ -650,18 +660,18 @@ void Game::impl::add_commands()
 		streem >> pos.x;
 		streem >> pos.y;
 		streem >> pos.z;
-		game.player.position = pos;
+		player.position = pos;
 		LOG(INFO) << "set position to " << glm::to_string(pos);
 
 		glm::dvec3 rot;
 		streem >> rot.x;
 		streem >> rot.y;
 		streem >> rot.z;
-		game.player.rotation = rot;
+		player.rotation = rot;
 		LOG(INFO) << "set rotation to " << glm::to_string(rot);
 	});
 
-	COMMAND_ARGS("cam.rot")
+	COMMAND("cam.rot")
 	{
 		if(args.size() != 2)
 		{
@@ -690,7 +700,7 @@ void Game::impl::add_commands()
 		LOG(INFO) << "camera rotation: " << glm::to_string(game.camera.rotation);
 	});
 
-	COMMAND_ARGS("screenshot")
+	COMMAND("screenshot")
 	{
 		string filename;
 		if(args.size() == 0)
@@ -735,13 +745,13 @@ void Game::impl::add_commands()
 	});
 	COMMAND("reach_distance++")
 	{
-		game.player.reach_distance += 1;
-		LOG(INFO) << "reach distance: " << game.player.reach_distance;
+		player.reach_distance += 1;
+		LOG(INFO) << "reach distance: " << player.reach_distance;
 	});
 	COMMAND("reach_distance--")
 	{
-		game.player.reach_distance -= 1;
-		LOG(INFO) << "reach distance: " << game.player.reach_distance;
+		player.reach_distance -= 1;
+		LOG(INFO) << "reach distance: " << player.reach_distance;
 	});
 
 	COMMAND("block_type++")
@@ -806,7 +816,7 @@ void Game::impl::add_commands()
 		}
 	});
 
-	COMMAND_ARGS("open_gui")
+	COMMAND("open_gui")
 	{
 		if(args.size() != 1)
 		{
@@ -839,7 +849,5 @@ void Game::impl::add_commands()
 		game.gui->close();
 	});
 
-	#undef COMMAND_ARGS
 	#undef COMMAND
-	#undef COMMAND_
 }

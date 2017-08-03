@@ -2,7 +2,6 @@
 
 #include <GLFW/glfw3.h>
 
-#include "Game.hpp"
 #include "Gfx.hpp"
 
 using std::string;
@@ -11,7 +10,7 @@ namespace Util::Clipboard {
 
 string get_text()
 {
-	const char* text = glfwGetClipboardString(Game::instance->gfx.window);
+	const char* text = glfwGetClipboardString(Gfx::instance->window);
 	if(text == nullptr)
 	{
 		return "";
@@ -21,7 +20,7 @@ string get_text()
 
 void set_text(const string& s)
 {
-	glfwSetClipboardString(Game::instance->gfx.window, s.c_str());
+	glfwSetClipboardString(Gfx::instance->window, s.c_str());
 }
 
 }

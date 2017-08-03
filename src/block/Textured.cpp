@@ -3,7 +3,6 @@
 #include <array>
 
 #include "Game.hpp"
-#include "block/RotationUtil.hpp"
 #include "block/Enum/Face.hpp"
 #include "block/Enum/VisibilityType.hpp"
 
@@ -17,30 +16,22 @@ Textured::Textured(const Enum::Type type)
 {
 }
 
-fs::path Textured::texture(const Face face) const
-{
-	return Game::instance->block_registry.texture(type(), RotationUtil::rotate_face(face, rotation_));
-}
-
 Enum::VisibilityType Textured::visibility_type() const
 {
-	std::array<fs::path, 6> texture_paths =
+	for(uint8_t face_i = 0; face_i < 6; ++face_i)
 	{
-		texture(Face::right),
-		texture(Face::left),
-		texture(Face::top),
-		texture(Face::bottom),
-		texture(Face::front),
-		texture(Face::back),
-	};
-	for(const fs::path& path : texture_paths)
-	{
+		const fs::path path = texture(static_cast<Face>(face_i));
 		if(Game::instance->resource_manager.texture_has_transparency(path))
 		{
 			return Enum::VisibilityType::translucent;
 		}
 	}
 	return Enum::VisibilityType::opaque;
+}
+
+fs::path Textured::texture_(const Face face) const
+{
+	return Game::instance->block_registry.texture(type(), face);
 }
 
 }

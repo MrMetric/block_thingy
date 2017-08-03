@@ -18,7 +18,7 @@ public:
 	Graphics::Color color() const override;
 	void color(const Graphics::Color&);
 
-	void use_start(const Position::BlockInWorld&, Enum::Face) override;
+	void use_start(Game&, World&, Player&, const Position::BlockInWorld&, Enum::Face) override;
 
 	void save(Storage::OutputInterface&) const override;
 	void load(Storage::InputInterface&) override;

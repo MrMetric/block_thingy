@@ -9,8 +9,6 @@ namespace Graphics::OpenGL {
 
 class VertexBuffer
 {
-friend class VertexArray;
-
 public:
 	struct Format;
 	VertexBuffer(Format);
@@ -46,6 +44,8 @@ public:
 	};
 
 private:
+	friend class VertexArray;
+
 	bool inited;
 	GLuint name;
 	std::vector<Format> formats;

@@ -26,15 +26,9 @@ meshmap_t Simple::make_mesh(const Chunk& chunk)
 			continue;
 		}
 
-		auto add_face =
-		[
-			&chunk,
-			&meshes,
-			x, y, z,
-			&block
-		]
-		(Face face)
+		for(uint8_t face_i = 0; face_i < 6; ++face_i)
 		{
+			const Face face = static_cast<Face>(face_i);
 			const Side side = to_side(face);
 			const auto i = get_i(face);
 			glm::tvec3<int8_t> pos(x, y, z);
@@ -50,13 +44,7 @@ meshmap_t Simple::make_mesh(const Chunk& chunk)
 				};
 				Base::add_face(meshes[key], {x, y, z}, face, 1, 1, tex.index, block.rotation(face));
 			}
-		};
-		add_face(Face::right);
-		add_face(Face::left);
-		add_face(Face::top);
-		add_face(Face::bottom);
-		add_face(Face::front);
-		add_face(Face::back);
+		}
 	}
 	return meshes;
 }

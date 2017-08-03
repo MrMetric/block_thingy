@@ -1,9 +1,11 @@
 #include "ResourceManager.hpp"
 
 #include <atomic>
+#include <chrono>
 #include <iostream>
 #include <mutex>
 #include <sstream>
+#include <thread>
 #include <unordered_map>
 
 #include <concurrentqueue/concurrentqueue.hpp>
@@ -90,7 +92,11 @@ struct ResourceManager::impl
 			block_textures.emplace(res, block_texture(++units, res));
 			done = true;
 		});
-		while(!done);
+		while(!done)
+		{
+			using namespace std::chrono_literals;
+			std::this_thread::sleep_for(2ms);
+		}
 		return block_textures.at(res);
 	}
 

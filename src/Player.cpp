@@ -15,6 +15,7 @@
 #include "position/BlockInWorld.hpp"
 
 using std::string;
+using std::unique_ptr;
 
 Player::Player
 (
@@ -333,6 +334,12 @@ bool Player::get_noclip() const
 void Player::set_noclip(bool noclip)
 {
 	flags.noclip = noclip;
+}
+
+void Player::open_gui(unique_ptr<Graphics::GUI::Base> gui)
+{
+	// TODO
+	game.open_gui(std::move(gui));
 }
 
 Physics::AABB Player::make_aabb(const glm::dvec3& position)

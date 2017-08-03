@@ -42,10 +42,10 @@ PluginManager::~PluginManager()
 {
 }
 
-void PluginManager::init_plugins()
+void PluginManager::init_plugins(Game& game)
 {
 	for(Plugin& plugin : pImpl->plugins)
 	{
-		plugin.init();
+		plugin.init(game);
 	}
 }

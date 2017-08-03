@@ -6,6 +6,7 @@
 #include <glm/vec3.hpp>
 
 #include "Game.hpp"
+#include "Player.hpp"
 #include "World.hpp"
 #include "block/Enum/Type.hpp"
 #include "graphics/GUI/Light.hpp"
@@ -56,9 +57,16 @@ void Light::color(const Color& c)
 	color_ = c;
 }
 
-void Light::use_start(const Position::BlockInWorld& pos, const Enum::Face)
+void Light::use_start
+(
+	Game& game,
+	World& world,
+	Player& player,
+	const Position::BlockInWorld& pos,
+	const Enum::Face
+)
 {
-	Game::instance->open_gui(std::make_unique<Graphics::GUI::Light>(*Game::instance, *this, pos));
+	player.open_gui(std::make_unique<Graphics::GUI::Light>(game, world, *this, pos));
 }
 
 void Light::save(Storage::OutputInterface& i) const

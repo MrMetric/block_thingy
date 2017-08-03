@@ -4,6 +4,7 @@
 #include <string>
 
 #include "fwd/Game.hpp"
+#include "fwd/World.hpp"
 #include "fwd/block/Light.hpp"
 #include "fwd/graphics/GUI/Widget/TextInput.hpp"
 #include "position/BlockInWorld.hpp"
@@ -13,7 +14,7 @@ namespace Graphics::GUI {
 class Light : public Base
 {
 public:
-	Light(Game&, Block::Light&, const Position::BlockInWorld&);
+	Light(Game&, World&, Block::Light&, const Position::BlockInWorld&);
 
 	std::string type() const override;
 
@@ -21,6 +22,7 @@ public:
 	void draw() override;
 
 private:
+	World& world;
 	Block::Light& block;
 	Position::BlockInWorld block_pos;
 

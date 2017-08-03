@@ -26,7 +26,7 @@ bool Air::is_selectable() const
 	return false;
 }
 
-bool Air::is_replaceable() const
+bool Air::is_replaceable_by(const Base&) const
 {
 	return true;
 }

@@ -11,7 +11,7 @@ public:
 	Enum::VisibilityType visibility_type() const override;
 	bool is_solid() const override;
 	bool is_selectable() const override;
-	bool is_replaceable() const override;
+	bool is_replaceable_by(const Base&) const override;
 };
 
 } // namespace Block

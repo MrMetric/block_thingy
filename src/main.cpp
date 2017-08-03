@@ -111,10 +111,9 @@ int main(int argc, char** argv)
 	Settings::add_command_handlers();
 	Settings::load();
 
-	window = Gfx::init_glfw();
-
 	unique_ptr<PluginManager> plugin_manager = std::make_unique<PluginManager>();
-	unique_ptr<Game> game = std::make_unique<Game>(window);
+	unique_ptr<Game> game = std::make_unique<Game>();
+	window = game->gfx.window;
 
 	LOG(INFO) << "starting main loop";
 	while(!glfwWindowShouldClose(game->gfx.window))
@@ -124,8 +123,7 @@ int main(int argc, char** argv)
 
 	game = nullptr;
 	plugin_manager = nullptr;
-	Settings::save();
-	console.reset();
+	console = nullptr;
 
 	}
 	catch(const std::exception& error)

@@ -69,7 +69,7 @@ struct Chunk::impl
 
 			if(e.name == "light_smoothing")
 			{
-				const int64_t light_smoothing = static_cast<int64_t>(*static_cast<const int64_t*>(e.value));
+				const int64_t light_smoothing = *e.value.get<int64_t>();
 				const GLenum mag_filter = (light_smoothing == 0) ? GL_NEAREST : GL_LINEAR;
 				light_tex->parameter(Graphics::OpenGL::Texture::Parameter::mag_filter, mag_filter);
 			}

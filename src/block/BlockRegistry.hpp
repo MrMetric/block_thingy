@@ -25,7 +25,7 @@ template<typename T>
 class BlockMakerInstance : public BlockMaker
 {
 public:
-	std::unique_ptr<Base> make(Enum::Type t) const override
+	std::unique_ptr<Base> make(const Enum::Type t) const override
 	{
 		return std::make_unique<T>(t);
 	}
@@ -37,18 +37,18 @@ public:
 	BlockRegistry();
 
 	template<typename T = Base>
-	Enum::Type add(const std::string& name)
+	Enum::Type add(const std::string& strid)
 	{
-		return add(name, std::make_unique<BlockMakerInstance<T>>());
+		return add(strid, std::make_unique<BlockMakerInstance<T>>());
 	}
 
 	std::unique_ptr<Base> make(Enum::Type) const;
 	std::unique_ptr<Base> make(Enum::TypeExternal) const;
-	std::unique_ptr<Base> make(const std::string& name) const;
+	std::unique_ptr<Base> make(const std::string& strid) const;
 	std::unique_ptr<Base> make(const Base&) const;
 
 	std::string get_strid(Enum::Type) const;
-	Enum::Type get_id(const std::string&) const;
+	Enum::Type get_id(const std::string& strid) const;
 	Enum::TypeExternal get_extid(Enum::Type) const;
 
 	using extid_map_t = std::map<Enum::TypeExternal, std::string>;
@@ -71,7 +71,7 @@ private:
 	std::map<std::string, Enum::TypeExternal> strid_to_extid;
 	Enum::TypeExternal max_extid;
 
-	Enum::Type add(const std::string& name, std::unique_ptr<BlockMaker>);
+	Enum::Type add(const std::string& strid, std::unique_ptr<BlockMaker>);
 };
 
 } // namespace Block

@@ -23,7 +23,7 @@ event_handler_id_t EventManager::add_handler(const event_handler_t& handler)
 event_handler_id_t EventManager::add_handler(const EventType type, const event_handler_t& handler)
 {
 	std::lock_guard<std::mutex> g(mutex);
-	auto id = max_id++;
+	const auto id = max_id++;
 	handlers[id] = {type, handler};
 	return id;
 }

@@ -26,6 +26,12 @@ void main()
 	vec4 c = color(uv2);
 	#endif
 
+	if(min_light > 0.999 && min_light < 1.001)
+	{
+		FragColor = c;
+		return;
+	}
+
 	int ix, iy, iz;
 	if(face == FACE_RIGHT || face == FACE_LEFT)
 	{
@@ -71,6 +77,8 @@ void main()
 		l = texture(light, (lpos + 1) / 34.0).rgb;
 	}
 
-	c.rgb *= pow((l * l + min_light) / (1 + min_light), vec3(1 / 2.2));
-	FragColor = c;
+	float z = -min_light / (min_light - 1);
+	c.rgb *= pow((l * l + z) / (1 + z), vec3(1 / 2.2));
+
+	FragColor = clamp(c, 0, 1);
 }

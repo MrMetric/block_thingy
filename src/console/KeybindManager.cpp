@@ -21,7 +21,10 @@ KeybindManager::KeybindManager(Console& console)
 :
 	console(console)
 {
-	console.add_command("bind", {[&keybinder=*this](const std::vector<string>& args)
+	console.add_command("bind", {[&keybinder=*this]
+	(
+		const std::vector<string>& args
+	)
 	{
 		if(args.size() != 2)
 		{
@@ -30,7 +33,10 @@ KeybindManager::KeybindManager(Console& console)
 		}
 		keybinder.bind_key(args[0], args[1]);
 	}});
-	console.add_command("unbind", {[&keybinder=*this](const std::vector<string>& args)
+	console.add_command("unbind", {[&keybinder=*this]
+	(
+		const std::vector<string>& args
+	)
 	{
 		if(args.size() != 1)
 		{
