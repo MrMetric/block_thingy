@@ -5,7 +5,7 @@
 
 namespace Block {
 
-None::None(Enum::Type t)
+None::None(const Enum::Type t)
 :
 	Base(t)
 {

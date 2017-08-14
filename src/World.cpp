@@ -156,17 +156,17 @@ static bool does_affect_light(const Block::Base& block)
 void World::set_block
 (
 	const BlockInWorld& block_pos,
-	unique_ptr<Block::Base> block_ptr,
+	shared_ptr<Block::Base> block,
 	bool thread
 )
 {
-	if(block_ptr == nullptr)
+	if(block == nullptr)
 	{
 		throw std::invalid_argument("block must not be null");
 	}
 
 	{
-		auto ptr = dynamic_cast<Block::Interface::KnowsPosition*>(block_ptr.get());
+		auto ptr = dynamic_cast<Block::Interface::KnowsPosition*>(block.get());
 		if(ptr != nullptr)
 		{
 			ptr->set_position(block_pos);
@@ -181,18 +181,21 @@ void World::set_block
 		return;
 	}
 
-	const Block::Base& old_block = get_block(block_pos);
-	const bool old_affects_light = does_affect_light(old_block);
-	const Graphics::Color old_color = old_block.color();
-	// old_block is invalid after the call to set_block
+	const shared_ptr<Block::Base> old_block = get_block(block_pos);
+	if(old_block == block)
+	{
+		return;
+	}
 
 	const BlockInChunk pos(block_pos);
-	chunk->set_block(pos, std::move(block_ptr));
-
-	const Block::Base& block = chunk->get_block(pos);
-	const bool affects_light = does_affect_light(block);
-
+	chunk->set_block(pos, block);
 	pImpl->chunks_to_save.emplace(chunk_pos);
+
+	const bool old_affects_light = does_affect_light(*old_block);
+	const bool affects_light = does_affect_light(*block);
+
+	const Graphics::Color old_color = old_block->color();
+	const Graphics::Color color = block->color();
 
 	// TODO: these checks might not work (a filter block could be overwritten by a different filter block)
 	if(affects_light && !old_affects_light)
@@ -200,7 +203,6 @@ void World::set_block
 		sub_light(block_pos);
 	}
 
-	const Graphics::Color color = block.color();
 	if(old_color != color)
 	{
 		if(old_color != 0)
@@ -226,28 +228,28 @@ void World::set_block
 	}
 }
 
-const Block::Base& World::get_block(const BlockInWorld& block_pos) const
+const shared_ptr<Block::Base> World::get_block(const BlockInWorld& block_pos) const
 {
 	const ChunkInWorld chunk_pos(block_pos);
 	const shared_ptr<const Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static const std::unique_ptr<Block::Base> none = block_registry.make(Block::Enum::Type::none);
-		return *none;
+		static const std::shared_ptr<Block::Base> none = block_registry.get_default(Block::Enum::Type::none);
+		return none;
 	}
 
 	BlockInChunk pos(block_pos);
 	return chunk->get_block(pos);
 }
 
-Block::Base& World::get_block(const BlockInWorld& block_pos)
+shared_ptr<Block::Base> World::get_block(const BlockInWorld& block_pos)
 {
 	const ChunkInWorld chunk_pos(block_pos);
 	const shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static /*const*/ std::unique_ptr<Block::Base> none = block_registry.make(Block::Enum::Type::none);
-		return *none;
+		static /*const*/ std::shared_ptr<Block::Base> none = block_registry.get_default(Block::Enum::Type::none);
+		return none;
 	}
 
 	BlockInChunk pos(block_pos);
@@ -380,14 +382,14 @@ void World::process_light_add()
 		)
 		{
 			const BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
-			const Block::Base& block = get_block(pos2);
-			if(block.is_opaque())
+			const shared_ptr<Block::Base> block = get_block(pos2);
+			if(block->is_opaque())
 			{
 				return;
 			}
-			if(block.is_translucent())
+			if(block->is_translucent())
 			{
-				Graphics::Color f = block.light_filter();
+				Graphics::Color f = block->light_filter();
 				color.r = std::min(color.r, f[0]);
 				color.g = std::min(color.g, f[1]);
 				color.b = std::min(color.b, f[2]);
@@ -539,18 +541,18 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 		for(pos.y = 0; pos.y < CHUNK_SIZE; ++pos.y)
 		for(pos.z = 0; pos.z < CHUNK_SIZE; ++pos.z)
 		{
-			Block::Base& block = chunk->get_block(pos);
+			shared_ptr<Block::Base> block = chunk->get_block(pos);
 
 			// might as well do it here rather than making a second loop
 			{
-				auto ptr = dynamic_cast<Block::Interface::KnowsPosition*>(&block);
+				auto ptr = dynamic_cast<Block::Interface::KnowsPosition*>(block.get());
 				if(ptr != nullptr)
 				{
 					ptr->set_position(BlockInWorld(chunk_pos, pos));
 				}
 			}
 
-			const Graphics::Color color = block.color();
+			const Graphics::Color color = block->color();
 			if(color != 0)
 			{
 				add_light({chunk_pos, pos}, color, false);
@@ -866,7 +868,7 @@ void World::impl::gen_chunk(shared_ptr<Chunk> chunk) const
 
 			// TODO: investigate performance of using strings here vs caching the IDs
 			const string t = y > -m / 2 ? "White" : "Black";
-			chunk->set_block(BlockInChunk(block_pos), world.block_registry.make(t));
+			chunk->set_block(BlockInChunk(block_pos), world.block_registry.get_default(t));
 		}
 	}
 }

@@ -5,7 +5,7 @@
 
 namespace Block {
 
-Air::Air(Enum::Type t)
+Air::Air(const Enum::Type t)
 :
 	Base(t)
 {

@@ -136,23 +136,23 @@ ChunkInWorld Chunk::get_position() const
 	return pImpl->position;
 }
 
-const Block::Base& Chunk::get_block(const BlockInChunk& pos) const
+const shared_ptr<Block::Base> Chunk::get_block(const BlockInChunk& pos) const
 {
-	return *blocks.get(pos);
+	return blocks.get(pos);
 }
 
-Block::Base& Chunk::get_block(const BlockInChunk& pos)
+shared_ptr<Block::Base> Chunk::get_block(const BlockInChunk& pos)
 {
-	return *blocks.get(pos);
+	return blocks.get(pos);
 }
 
-void Chunk::set_block(const BlockInChunk& pos, unique_ptr<Block::Base> block)
+void Chunk::set_block(const BlockInChunk& pos, shared_ptr<Block::Base> block)
 {
 	if(block == nullptr)
 	{
 		throw std::invalid_argument("Chunk::set_block: got a null block");
 	}
-	blocks.set(pos, std::move(block));
+	blocks.set(pos, block);
 }
 
 Graphics::Color Chunk::get_light(const BlockInChunk& pos) const
@@ -225,12 +225,11 @@ void Chunk::render(const bool translucent_pass)
 			continue;
 		}
 
-		const Block::Enum::Type type = p.first.block_type;
-		auto& shader = Game::instance->gfx.get_block_shader(type);
-		shader.uniform("position_offset", position_offset);
-		shader.uniform("tex", p.first.tex_unit);
+		Resource<Graphics::OpenGL::ShaderProgram> shader = Game::instance->resource_manager.get_ShaderProgram(p.first.shader_path);
+		shader->uniform("position_offset", position_offset);
+		shader->uniform("tex", p.first.tex_unit);
 
-		shader.use();
+		shader->use();
 		pImpl->mesh_vaos[i].draw(GL_TRIANGLES, 0, p.second.size() * 3);
 
 		++i;
@@ -241,13 +240,13 @@ void Chunk::set_blocks(chunk_blocks_t new_blocks)
 {
 	blocks = std::move(new_blocks);
 }
-void Chunk::set_blocks(unique_ptr<Block::Base> block)
+void Chunk::set_blocks(shared_ptr<Block::Base> block)
 {
 	if(block == nullptr)
 	{
 		throw std::invalid_argument("Chunk::set_blocks(single): got a null block");
 	}
-	blocks.fill(std::move(block));
+	blocks.fill(block);
 }
 
 void Chunk::impl::update_vaos()

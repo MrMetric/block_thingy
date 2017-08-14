@@ -67,6 +67,11 @@ Graphics::Color Base::color() const
 	return {0, 0, 0};
 }
 
+fs::path Base::shader(const Enum::Face face) const
+{
+	return shader_(RotationUtil::rotate_face(face, rotation()));
+}
+
 fs::path Base::texture(const Enum::Face face) const
 {
 	return texture_(RotationUtil::rotate_face(face, rotation()));
@@ -181,6 +186,11 @@ void Base::load(Storage::InputInterface& i)
 {
 	// type is set before loading
 	i.maybe_get("r", rotation_);
+}
+
+fs::path Base::shader_(const Enum::Face) const
+{
+	return {};
 }
 
 fs::path Base::texture_(const Enum::Face) const

@@ -1,8 +1,9 @@
-#include "Base.hpp"
+#pragma once
+#include "SimpleShader.hpp"
 
 namespace Block {
 
-class Teleporter : public Base
+class Teleporter : public SimpleShader
 {
 public:
 	Teleporter(Enum::Type);

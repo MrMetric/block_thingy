@@ -80,22 +80,7 @@ public:
 	void joypress(int joystick, int button, bool pressed);
 	void joymove(const glm::dvec2& motion);
 
-	template<typename T = Block::Base>
-	Block::Enum::Type add_block(const std::string& strid)
-	{
-		return add_block<T>(strid, strid);
-	}
-
-	template<typename T = Block::Base>
-	Block::Enum::Type add_block(const std::string& strid, const fs::path& shader_path)
-	{
-		const Block::Enum::Type t = block_registry.add<T>(strid);
-		add_block(strid, t, shader_path);
-		return t;
-	}
-
-	Block::Enum::Type block_type;
-	std::unique_ptr<Block::Base> copied_block;
+	std::shared_ptr<Block::Base> copied_block;
 	std::unique_ptr<RaycastHit> hovered_block;
 
 	ResourceManager resource_manager;
@@ -113,8 +98,6 @@ public:
 	std::unique_ptr<Graphics::GUI::Base> gui;
 
 private:
-	void add_block(const std::string& strid, Block::Enum::Type, const fs::path& shader_path);
-
 	Position::ChunkInWorld::value_type render_distance;
 
 	struct impl;

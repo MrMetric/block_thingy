@@ -34,13 +34,13 @@ public:
 	World(const World&) = delete;
 	void operator=(const World&) = delete;
 
-	const Block::Base& get_block(const Position::BlockInWorld&) const;
-	Block::Base& get_block(const Position::BlockInWorld&);
+	const std::shared_ptr<Block::Base> get_block(const Position::BlockInWorld&) const;
+	std::shared_ptr<Block::Base> get_block(const Position::BlockInWorld&);
 
 	void set_block
 	(
 		const Position::BlockInWorld&,
-		std::unique_ptr<Block::Base>,
+		std::shared_ptr<Block::Base>,
 		bool thread = true
 	);
 

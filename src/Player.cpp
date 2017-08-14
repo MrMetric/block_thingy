@@ -15,6 +15,7 @@
 #include "position/BlockInWorld.hpp"
 
 using std::string;
+using std::shared_ptr;
 using std::unique_ptr;
 
 Player::Player
@@ -94,7 +95,7 @@ void Player::move(const glm::dvec3& acceleration)
 			if(skip) continue;
 
 			const Position::BlockInWorld block_pos = block_pos_old + block_pos_offset;
-			if(!game.world.get_block(block_pos).is_solid())
+			if(!game.world.get_block(block_pos)->is_solid())
 			{
 				continue;
 			}
@@ -131,8 +132,8 @@ void Player::move(const glm::dvec3& acceleration)
 		if(move_vec.y < 0)
 		{
 			const Position::BlockInWorld pos_feet_new(glm::dvec3(position.x, position.y + move_vec.y, position.z));
-			const Block::Base& block = game.world.get_block(pos_feet_new);
-			if(block.is_solid())
+			const shared_ptr<Block::Base> block = game.world.get_block(pos_feet_new);
+			if(block->is_solid())
 			{
 				position.y = pos_feet_new.y + 1;
 				if(flags.on_ground)
@@ -141,7 +142,7 @@ void Player::move(const glm::dvec3& acceleration)
 				}
 				else
 				{
-					velocity.y *= -block.bounciness();
+					velocity.y *= -block->bounciness();
 					flags.on_ground = true;
 				}
 			}
@@ -153,11 +154,11 @@ void Player::move(const glm::dvec3& acceleration)
 		else if(move_vec.y > 0)
 		{
 			const Position::BlockInWorld pos_head_new(glm::dvec3(position.x, position.y + move_vec.y + height, position.z));
-			const Block::Base& block = game.world.get_block(pos_head_new);
-			if(block.is_solid())
+			const shared_ptr<Block::Base> block = game.world.get_block(pos_head_new);
+			if(block->is_solid())
 			{
 				position.y = pos_head_new.y - height;
-				velocity.y *= -block.bounciness();
+				velocity.y *= -block->bounciness();
 			}
 			flags.on_ground = false;
 		}
@@ -226,12 +227,12 @@ void Player::step(const double delta_time)
 		const Position::BlockInWorld new_position(position());
 		if(new_position != old_position)
 		{
-			const Block::Base& block = game.world.get_block(new_position);
-			if(block.type() != Block::Enum::Type::none
-			&& block.type() != Block::Enum::Type::air
-			&& !block.is_solid())
+			const shared_ptr<Block::Base> block = game.world.get_block(new_position);
+			if(block->type() != Block::Enum::Type::none
+			&& block->type() != Block::Enum::Type::air
+			&& !block->is_solid())
 			{
-				game.event_manager.do_event(Event_enter_block(*this, block));
+				game.event_manager.do_event(Event_enter_block(game.world, *this, block));
 			}
 		}
 

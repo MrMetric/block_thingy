@@ -2,6 +2,7 @@
 
 #include <map>
 #include <stdint.h>
+#include <tuple>
 #include <vector>
 
 #include <glad/glad.h>
@@ -14,6 +15,7 @@
 #include "fwd/chunk/Chunk.hpp"
 #include "graphics/Color.hpp"
 #include "graphics/primitive.hpp"
+#include "util/filesystem.hpp"
 
 namespace Mesher {
 
@@ -23,7 +25,6 @@ using u8vec3 = glm::tvec3<uint8_t>;
 struct mesh_vertex_t
 {
 	mesh_vertex_t();
-	mesh_vertex_t(uint8_t);
 
 	mesh_vertex_t
 	(
@@ -41,21 +42,23 @@ struct mesh_vertex_t
 
 struct meshmap_key_t
 {
-	Block::Enum::Type block_type;
+	fs::path shader_path;
 	bool is_translucent;
 	uint8_t tex_unit;
 
 	bool operator==(const meshmap_key_t& that) const
 	{
 		return
-			block_type == that.block_type
+			shader_path == that.shader_path
 		 && is_translucent == that.is_translucent
 		 && tex_unit == that.tex_unit;
 	}
 
+	// for std::map
 	bool operator<(const meshmap_key_t& that) const
 	{
-		return block_type < that.block_type;
+		return std::tie(shader_path, is_translucent, tex_unit)
+			 < std::tie(that.shader_path, that.is_translucent, that.tex_unit);
 	}
 };
 

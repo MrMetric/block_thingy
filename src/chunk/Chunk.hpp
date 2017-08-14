@@ -10,7 +10,7 @@
 #include "fwd/position/BlockInChunk.hpp"
 #include "fwd/position/ChunkInWorld.hpp"
 
-using chunk_blocks_t = ChunkData<std::unique_ptr<Block::Base>>;
+using chunk_blocks_t = ChunkData<std::shared_ptr<Block::Base>>;
 
 class Chunk
 {
@@ -25,10 +25,10 @@ public:
 	World& get_owner() const; // eeh
 	Position::ChunkInWorld get_position() const;
 
-	const Block::Base& get_block(const Position::BlockInChunk&) const;
-	Block::Base& get_block(const Position::BlockInChunk&);
+	const std::shared_ptr<Block::Base> get_block(const Position::BlockInChunk&) const;
+	std::shared_ptr<Block::Base> get_block(const Position::BlockInChunk&);
 
-	void set_block(const Position::BlockInChunk&, const std::unique_ptr<Block::Base>);
+	void set_block(const Position::BlockInChunk&, const std::shared_ptr<Block::Base>);
 
 	Graphics::Color get_light(const Position::BlockInChunk&) const;
 	void set_light(const Position::BlockInChunk&, const Graphics::Color&);
@@ -39,7 +39,7 @@ public:
 
 	// for loading
 	void set_blocks(chunk_blocks_t);
-	void set_blocks(std::unique_ptr<Block::Base>);
+	void set_blocks(std::shared_ptr<Block::Base>);
 
 
 	// for msgpack

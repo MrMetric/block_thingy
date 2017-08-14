@@ -37,6 +37,7 @@ public:
 	 */
 	virtual Graphics::Color color() const;
 
+	fs::path shader(Enum::Face) const;
 	fs::path texture(Enum::Face) const;
 
 	glm::tvec3<uint8_t> rotation() const;
@@ -85,6 +86,7 @@ public:
 	virtual void load(Storage::InputInterface&);
 
 protected:
+	virtual fs::path shader_(Enum::Face) const;
 	virtual fs::path texture_(Enum::Face) const;
 
 private:

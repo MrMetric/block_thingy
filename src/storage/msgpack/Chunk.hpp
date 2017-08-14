@@ -16,7 +16,7 @@ void Chunk::save(msgpack::packer<zstr::ostream>& o) const
 template<>
 void Chunk::load(const msgpack::object& o)
 {
-	this->set_blocks(o.as<ChunkData<std::unique_ptr<Block::Base>>>());
+	this->set_blocks(o.as<ChunkData<std::shared_ptr<Block::Base>>>());
 }
 
 namespace msgpack {

@@ -21,10 +21,6 @@ mesh_vertex_t::mesh_vertex_t()
 {
 }
 
-mesh_vertex_t::mesh_vertex_t(uint8_t)
-{
-}
-
 mesh_vertex_t::mesh_vertex_t
 (
 	const vertex_coord_t<uint8_t>& pos,
@@ -148,10 +144,10 @@ const Block::Base& Base::block_at
 		block_pos.x += x;
 		block_pos.y += y;
 		block_pos.z += z;
-		return chunk.get_owner().get_block(block_pos);
+		return *chunk.get_owner().get_block(block_pos);
 	}
 	#define s(a) static_cast<Position::BlockInChunk::value_type>(a)
-	return chunk.get_block({s(x), s(y), s(z)});
+	return *chunk.get_block({s(x), s(y), s(z)});
 	#undef s
 }
 

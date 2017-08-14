@@ -1,23 +1,37 @@
 #pragma once
 
+#include <unordered_map>
+#include <vector>
+
 #include "chunk/ChunkData.hpp"
 
-using T = std::unique_ptr<Block::Base>;
+using T = std::shared_ptr<Block::Base>;
 
 template<>
 template<>
 void ChunkData<T>::save(msgpack::packer<zstr::ostream>& o) const
 {
 	o.pack_array(2);
-	const bool is_solid = (blocks == nullptr);
-	o.pack(is_solid);
-	if(is_solid)
+
+	std::vector<std::shared_ptr<Block::Base>> block_vec;
+	std::unordered_map<Block::Base*, uint32_t> block_map;
+	uint32_t block_i = 0;
+	for(auto& block : this->blocks)
 	{
-		o.pack(solid_block);
+		auto i = block_map.find(block.get());
+		if(i == block_map.cend())
+		{
+			block_vec.emplace_back(block);
+			block_map.emplace(block.get(), block_i++);
+		}
 	}
-	else
+
+	o.pack(block_vec);
+
+	o.pack_array(this->blocks.size());
+	for(auto& block : this->blocks)
 	{
-		o.pack(*blocks);
+		o.pack(block_map[block.get()]);
 	}
 }
 
@@ -25,28 +39,31 @@ template<>
 template<>
 void ChunkData<T>::load(const msgpack::object& o)
 {
-	const auto v = o.as<std::vector<msgpack::object>>();
-	decltype(v)::size_type i = 0;
-
-	const bool is_solid = v.at(i++).as<bool>();
-	if(is_solid)
+	if(o.type != msgpack::type::ARRAY)
 	{
-		fill(v.at(i++).as<T>());
+		throw msgpack::type_error();
 	}
-	else
+	if(o.via.array.size != 2)
 	{
-		const msgpack::object& o = v.at(i++);
-		// these checks are separate to distinguish them when debugging
-		if(o.type != msgpack::type::ARRAY)
-		{
-			throw msgpack::type_error();
-		}
-		// msgpack errors on > instead of !=
-		if(o.via.array.size != CHUNK_BLOCK_COUNT)
-		{
-			throw msgpack::type_error();
-		}
-		blocks = o.as<std::unique_ptr<typename ChunkData<T>::chunk_data_t>>();
+		throw msgpack::type_error();
+	}
+	const auto v = o.as<std::array<msgpack::object, 2>>();
+
+	const auto block_vec = v[0].as<std::vector<std::shared_ptr<Block::Base>>>();
+
+	if(v[1].type != msgpack::type::ARRAY)
+	{
+	 throw msgpack::type_error();
+	}
+	// msgpack errors on > instead of !=
+	if(v[1].via.array.size != CHUNK_BLOCK_COUNT)
+	{
+		throw msgpack::type_error();
+	}
+	const auto block_map = v[1].as<std::array<uint32_t, CHUNK_BLOCK_COUNT>>();
+	for(std::size_t i = 0; i < CHUNK_BLOCK_COUNT; ++i)
+	{
+		this->blocks[i] = block_vec[block_map[i]];
 	}
 }
 

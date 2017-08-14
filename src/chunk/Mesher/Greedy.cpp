@@ -65,7 +65,7 @@ void add_surface
 		while(true)
 		{
 			const Rectangle rekt = yield_rectangle(surface);
-			if(rekt.key.block_type == Block::Enum::Type::none)
+			if(rekt.key.shader_path.empty())
 			{
 				break;
 			}
@@ -108,7 +108,7 @@ void generate_surface
 				surface[pos[2]][pos[0]] =
 				{
 					{
-						block.type(),
+						block.shader(face),
 						block.is_translucent(),
 						tex.unit,
 					},
@@ -121,7 +121,7 @@ void generate_surface
 				surface[pos[2]][pos[0]] =
 				{
 					{
-						Block::Enum::Type::none,
+						{},
 						false,
 						0,
 					},
@@ -141,8 +141,8 @@ Rectangle yield_rectangle(surface_t& surface)
 		for(BlockInChunk::value_type x = 0; x < CHUNK_SIZE; ++x)
 		{
 			const auto key = row[x];
-			const Block::Enum::Type type = std::get<0>(key).block_type;
-			if(type == Block::Enum::Type::none)
+			const fs::path shader_path = std::get<0>(key).shader_path;
+			if(shader_path.empty())
 			{
 				continue;
 			}
@@ -150,12 +150,12 @@ Rectangle yield_rectangle(surface_t& surface)
 			const BlockInChunk::value_type start_x = x;
 			BlockInChunk::value_type w = 1;
 			BlockInChunk::value_type h = 1;
-			std::get<0>(row[x]).block_type = Block::Enum::Type::none;
+			std::get<0>(row[x]).shader_path.clear();
 			++x;
 			while(x < CHUNK_SIZE && row[x] == key)
 			{
 				w += 1;
-				std::get<0>(row[x]).block_type = Block::Enum::Type::none;
+				std::get<0>(row[x]).shader_path.clear();
 				++x;
 			}
 			++z;
@@ -182,7 +182,7 @@ Rectangle yield_rectangle(surface_t& surface)
 				}
 				for(size_t i = start_x; i < start_x + w2; ++i)
 				{
-					std::get<0>(row2[start_x]).block_type = Block::Enum::Type::none;
+					std::get<0>(row2[start_x]).shader_path.clear();
 				}
 
 				++z;
@@ -191,7 +191,7 @@ Rectangle yield_rectangle(surface_t& surface)
 			return
 			{
 				{
-					std::get<0>(key).block_type,
+					std::get<0>(key).shader_path,
 					std::get<0>(key).is_translucent,
 					std::get<0>(key).tex_unit,
 				},
@@ -206,7 +206,7 @@ Rectangle yield_rectangle(surface_t& surface)
 	return
 	{
 		{
-			Block::Enum::Type::none,
+			{},
 			false,
 			0,
 		},

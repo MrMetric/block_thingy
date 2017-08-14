@@ -27,9 +27,9 @@ struct pack<Block::Base>
 };
 
 template<>
-struct convert<std::unique_ptr<Block::Base>>
+struct convert<std::shared_ptr<Block::Base>>
 {
-	const msgpack::object& operator()(const msgpack::object& o, std::unique_ptr<Block::Base>& block) const
+	const msgpack::object& operator()(const msgpack::object& o, std::shared_ptr<Block::Base>& block) const
 	{
 		if(o.type != msgpack::type::MAP) throw msgpack::type_error();
 		if(o.via.map.size < 1) throw msgpack::type_error();
@@ -38,7 +38,7 @@ struct convert<std::unique_ptr<Block::Base>>
 
 		Block::Enum::TypeExternal t;
 		find_in_map_or_throw(map, "", t);
-		block = Game::instance->block_registry.make(t);
+		block = Game::instance->block_registry.make(Game::instance->block_registry.get_default(t)); // TODO
 		Storage::InputInterface i(map);
 		block->load(i);
 

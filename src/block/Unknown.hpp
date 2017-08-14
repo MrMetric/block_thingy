@@ -1,5 +1,5 @@
 #pragma once
-#include "Base.hpp"
+#include "SimpleShader.hpp"
 
 #include <map>
 
@@ -7,7 +7,7 @@
 
 namespace Block {
 
-class Unknown : public Base
+class Unknown : public SimpleShader
 {
 public:
 	Unknown(Enum::Type);

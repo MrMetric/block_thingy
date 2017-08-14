@@ -1,9 +1,9 @@
 #pragma once
-#include "Base.hpp"
+#include "SimpleShader.hpp"
 
 namespace Block {
 
-class Glass : public Base
+class Glass : public SimpleShader
 {
 public:
 	Glass(Enum::Type);

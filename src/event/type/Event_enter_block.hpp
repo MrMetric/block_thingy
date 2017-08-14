@@ -1,7 +1,10 @@
 #pragma once
 #include "event/Event.hpp"
 
+#include <memory>
+
 #include "fwd/Player.hpp"
+#include "fwd/World.hpp"
 #include "fwd/block/Base.hpp"
 
 class Event_enter_block : public Event
@@ -9,10 +12,12 @@ class Event_enter_block : public Event
 public:
 	Event_enter_block
 	(
+		World&,
 		Player&,
-		const Block::Base&
+		std::shared_ptr<Block::Base>
 	);
 
+	World& world;
 	Player& player;
-	const Block::Base& block;
+	std::shared_ptr<Block::Base> block;
 };

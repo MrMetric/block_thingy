@@ -7,11 +7,19 @@
 
 #include <easylogging++/easylogging++.hpp>
 
+#include "block/Air.hpp"
 #include "block/Base.hpp"
+#include "block/Glass.hpp"
+#include "block/Light.hpp"
+#include "block/None.hpp"
+#include "block/Teleporter.hpp"
+#include "block/Test.hpp"
+#include "block/Textured.hpp"
 #include "block/Unknown.hpp"
 #include "block/Enum/Face.hpp"
 #include "block/Enum/Type.hpp"
 
+using std::shared_ptr;
 using std::string;
 using std::unique_ptr;
 
@@ -31,7 +39,7 @@ BlockMaker::~BlockMaker()
 {
 }
 
-unique_ptr<Base> BlockMaker::make(Enum::Type) const
+shared_ptr<Base> BlockMaker::make(Enum::Type) const
 {
 	return nullptr;
 }
@@ -40,9 +48,50 @@ BlockRegistry::BlockRegistry()
 :
 	max_extid(static_cast<Enum::TypeExternal>(0))
 {
+	// these must be added first (in this order!) to get the correct IDs
+	add<Block::None>("none");
+	add<Block::Air>("air");
+	add<Block::Unknown>("unknown");
+
+	add<Block::Test>("test");
+	add<Block::Teleporter>("teleporter");
+	add<Block::Light>("light");
+	add<Block::Glass>("glass");
+	add<Block::Textured>("Side Test 2",
+		std::unordered_map<Block::Enum::Face, fs::path>
+		{
+			{Block::Enum::Face::right , "side test/right.png"},
+			{Block::Enum::Face::left  , "side test/left.png"},
+			{Block::Enum::Face::top   , "side test/top.png"},
+			{Block::Enum::Face::bottom, "side test/bottom.png"},
+			{Block::Enum::Face::front , "side test/front.png"},
+			{Block::Enum::Face::back  , "side test/back.png"},
+		}
+	);
 }
 
-unique_ptr<Base> BlockRegistry::make(const Enum::Type t) const
+shared_ptr<Base> BlockRegistry::get_default(const Enum::Type t) const
+{
+	std::lock_guard<std::mutex> g(default_blocks_mutex);
+	const auto i = default_blocks.find(t);
+	if(i == default_blocks.cend())
+	{
+		throw std::runtime_error("no default block for ID: " + std::to_string(static_cast<Enum::Type_t>(t)));
+	}
+	return i->second;
+}
+
+shared_ptr<Base> BlockRegistry::get_default(const Enum::TypeExternal te) const
+{
+	return get_default(get_id(get_strid(te)));
+}
+
+shared_ptr<Base> BlockRegistry::get_default(const std::string& strid) const
+{
+	return get_default(get_id(strid));
+}
+
+shared_ptr<Base> BlockRegistry::make(const Enum::Type t) const
 {
 	const auto i = block_makers.find(t);
 	if(i == block_makers.cend())
@@ -52,14 +101,9 @@ unique_ptr<Base> BlockRegistry::make(const Enum::Type t) const
 	return i->second->make(t);
 }
 
-unique_ptr<Base> BlockRegistry::make(const Enum::TypeExternal te) const
+shared_ptr<Base> BlockRegistry::make(const Enum::TypeExternal te) const
 {
-	const auto i = extid_to_strid.find(te);
-	if(i == extid_to_strid.cend())
-	{
-		throw std::runtime_error("invalid external block ID: " + std::to_string(static_cast<Enum::Type_t>(te)));
-	}
-	const string strid = i->second;
+	const string strid = get_strid(te);
 	const auto i2 = strid_to_id.find(strid);
 	if(i2 == strid_to_id.cend())
 	{
@@ -84,21 +128,26 @@ unique_ptr<Base> BlockRegistry::make(const Enum::TypeExternal te) const
 	return make(t);
 }
 
-unique_ptr<Base> BlockRegistry::make(const string& strid) const
+shared_ptr<Base> BlockRegistry::make(const string& strid) const
+{
+	return make(get_id(strid));
+}
+
+shared_ptr<Base> BlockRegistry::make(const shared_ptr<Base> block) const
+{
+	shared_ptr<Base> new_block = make(block->type());
+	*new_block = *block;
+	return new_block;
+}
+
+Enum::Type BlockRegistry::get_id(const string& strid) const
 {
 	const auto i = strid_to_id.find(strid);
 	if(i == strid_to_id.cend())
 	{
 		throw std::runtime_error("unknown block type: " + strid);
 	}
-	return make(i->second);
-}
-
-unique_ptr<Base> BlockRegistry::make(const Base& block) const
-{
-	unique_ptr<Base> new_block = make(block.type());
-	*new_block = block;
-	return new_block;
+	return i->second;
 }
 
 string BlockRegistry::get_strid(const Enum::Type t) const
@@ -111,12 +160,12 @@ string BlockRegistry::get_strid(const Enum::Type t) const
 	return i->second;
 }
 
-Enum::Type BlockRegistry::get_id(const string& strid) const
+string BlockRegistry::get_strid(const Enum::TypeExternal te) const
 {
-	const auto i = strid_to_id.find(strid);
-	if(i == strid_to_id.cend())
+	const auto i = extid_to_strid.find(te);
+	if(i == extid_to_strid.cend())
 	{
-		throw std::runtime_error("unknown block type: " + strid);
+		throw std::runtime_error("invalid external block ID: " + std::to_string(static_cast<Enum::Type_t>(te)));
 	}
 	return i->second;
 }
@@ -155,7 +204,7 @@ static Enum::TypeExternal get_max_extid
 			max_extid = p.first;
 		}
 	}
-	return max_extid;
+	return static_cast<Enum::TypeExternal>(static_cast<Enum::Type_t>(max_extid) + 1);
 }
 
 void BlockRegistry::set_extid_map(extid_map_t map)
@@ -170,9 +219,9 @@ void BlockRegistry::set_extid_map(extid_map_t map)
 		const string& strid = p.first;
 		if(strid_to_extid.find(strid) == strid_to_extid.cend())
 		{
-			max_extid = static_cast<Enum::TypeExternal>(static_cast<Enum::Type_t>(max_extid) + 1);
 			extid_to_strid.emplace(max_extid, strid);
 			strid_to_extid.emplace(strid, max_extid);
+			max_extid = static_cast<Enum::TypeExternal>(static_cast<Enum::Type_t>(max_extid) + 1);
 		}
 	}
 }
@@ -188,12 +237,6 @@ Enum::Type_t BlockRegistry::get_max_id() const
 	return static_cast<Enum::Type_t>(block_makers.size());
 }
 
-fs::path BlockRegistry::texture(const Enum::Type type, const Face face)
-{
-	// TODO
-	return {};
-}
-
 void BlockRegistry::make_strid_to_extid_map()
 {
 	strid_to_extid.clear();
@@ -203,7 +246,7 @@ void BlockRegistry::make_strid_to_extid_map()
 	}
 }
 
-Enum::Type BlockRegistry::add
+Enum::Type BlockRegistry::add_
 (
 	const string& strid,
 	std::unique_ptr<BlockMaker> maker
@@ -223,9 +266,9 @@ Enum::Type BlockRegistry::add
 	// this might not be needed later
 	if(strid_to_extid.find(strid) == strid_to_extid.cend())
 	{
-		max_extid = static_cast<Enum::TypeExternal>(static_cast<Enum::Type_t>(max_extid) + 1);
 		extid_to_strid.emplace(max_extid, strid);
 		strid_to_extid.emplace(strid, max_extid);
+		max_extid = static_cast<Enum::TypeExternal>(static_cast<Enum::Type_t>(max_extid) + 1);
 	}
 
 	return t;

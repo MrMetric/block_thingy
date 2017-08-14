@@ -4,9 +4,9 @@
 
 namespace Block {
 
-Teleporter::Teleporter(Enum::Type t)
+Teleporter::Teleporter(const Enum::Type t)
 :
-	Base(t)
+	SimpleShader(t, "teleporter")
 {
 }
 

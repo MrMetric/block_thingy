@@ -22,6 +22,7 @@
 #include "position/ChunkInWorld.hpp"
 #include "util/key_mods.hpp"
 
+using std::shared_ptr;
 using std::string;
 
 namespace Graphics::GUI {
@@ -147,19 +148,12 @@ void Play::draw_debug_text()
 	{
 		ss << "copied block: " << show_block(*game.copied_block) << "\n";
 	}
-	else
-	{
-		ss << "block type: "
-			<< game.block_registry.get_strid(game.block_type)
-			<< " (" << game.block_type << ")"
-			<< "\n";
-	}
 	if(game.hovered_block != nullptr)
 	{
-		const Block::Base& hovered = game.world.get_block(game.hovered_block->pos);
-		ss << "hovered: " << show_block(hovered) << "\n";
+		const shared_ptr<Block::Base> hovered = game.world.get_block(game.hovered_block->pos);
+		ss << "hovered: " << show_block(*hovered) << "\n";
 		ss << "\tface: " << game.hovered_block->face() << '\n';
-		ss << "\trotation: " << glm::io::width(2) << hovered.rotation() << '\n';
+		ss << "\trotation: " << glm::io::width(2) << hovered->rotation() << '\n';
 		ss << "\tlight: " << game.world.get_light(game.hovered_block->adjacent()) << '\n';
 	}
 

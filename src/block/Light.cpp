@@ -19,15 +19,15 @@ using Graphics::Color;
 
 namespace Block {
 
-Light::Light(Enum::Type t)
+Light::Light(const Enum::Type t)
 :
 	Light(t, Color(glm::dvec3(1, 1, 1)))
 {
 }
 
-Light::Light(Enum::Type t, const Color& color)
+Light::Light(const Enum::Type t, const Color& color)
 :
-	Base(t),
+	SimpleShader(t, "light"),
 	color_(color)
 {
 }

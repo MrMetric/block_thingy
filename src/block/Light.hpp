@@ -1,11 +1,11 @@
 #pragma once
-#include "Base.hpp"
+#include "SimpleShader.hpp"
 
 #include "graphics/Color.hpp"
 
 namespace Block {
 
-class Light : public Base
+class Light : public SimpleShader
 {
 public:
 	Light(Enum::Type);

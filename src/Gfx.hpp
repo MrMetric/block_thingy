@@ -56,8 +56,6 @@ public:
 
 	glm::dmat4 vp_matrix; // view (graphical) and projection
 
-	std::map<Block::Enum::Type, Graphics::OpenGL::ShaderProgram> block_shaders;
-
 	Graphics::OpenGL::ShaderProgram s_lines;
 
 	Graphics::OpenGL::VertexBuffer outline_vbo;
@@ -101,7 +99,6 @@ public:
 	void draw_box_outline(const glm::dvec3& min, const glm::dvec3& max, const glm::dvec4& color);
 	void draw_box_outline(const Physics::AABB&, const glm::dvec4& color);
 	void draw_block_outline(const Position::BlockInWorld&, const glm::dvec4& color);
-	Graphics::OpenGL::ShaderProgram& get_block_shader(Block::Enum::Type);
 
 	void center_cursor();
 

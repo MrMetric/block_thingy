@@ -8,9 +8,9 @@
 
 namespace Block {
 
-Test::Test(Enum::Type t)
+Test::Test(const Enum::Type t)
 :
-	Base(t)
+	SimpleShader(t, "test")
 {
 }
 

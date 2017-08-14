@@ -21,6 +21,7 @@
 #include "Camera.hpp"
 #include "Game.hpp"
 #include "Settings.hpp"
+#include "Util.hpp"
 #include "block/Enum/Type.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "event/EventManager.hpp"
@@ -48,6 +49,7 @@
 #endif
 
 using std::string;
+using Graphics::OpenGL::ShaderProgram;
 
 static window_size_t get_window_size(GLFWwindow* window)
 {
@@ -115,18 +117,24 @@ void Gfx::hook_events(EventManager& event_manager)
 		else if(e.name == "light_smoothing")
 		{
 			const int light_smoothing = static_cast<int>(*e.value.get<int64_t>());
-			for(auto& p : block_shaders)
+			Game::instance->resource_manager.foreach_ShaderProgram([light_smoothing](Resource<ShaderProgram> r)
 			{
-				p.second.uniform("light_smoothing", light_smoothing);
-			}
+				if(Util::string_starts_with(r.get_id(), "shaders/block/"))
+				{
+					r->uniform("light_smoothing", light_smoothing);
+				}
+			});
 		}
 		else if(e.name == "min_light")
 		{
 			const float min_light = static_cast<float>(*e.value.get<double>());
-			for(auto& p : block_shaders)
+			Game::instance->resource_manager.foreach_ShaderProgram([min_light](Resource<ShaderProgram> r)
 			{
-				p.second.uniform("min_light", min_light);
-			}
+				if(Util::string_starts_with(r.get_id(), "shaders/block/"))
+				{
+					r->uniform("min_light", min_light);
+				}
+			});
 		}
 	});
 }
@@ -398,16 +406,6 @@ void Gfx::draw_block_outline(const Position::BlockInWorld& block_pos, const glm:
 {
 	glm::dvec3 min(block_pos.x, block_pos.y, block_pos.z);
 	draw_box_outline(min, min + 1.0, color);
-}
-
-Graphics::OpenGL::ShaderProgram& Gfx::get_block_shader(const Block::Enum::Type type)
-{
-	const auto i = block_shaders.find(type);
-	if(i == block_shaders.cend())
-	{
-		throw std::runtime_error("unknown block ID: " + std::to_string(static_cast<Block::Enum::Type_t>(type)));
-	}
-	return i->second;
 }
 
 void Gfx::center_cursor()

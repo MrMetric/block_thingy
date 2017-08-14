@@ -4,7 +4,9 @@
 #include <utility>
 
 #include "Gfx.hpp"
+#include "ResourceManager.hpp"
 #include "Settings.hpp"
+#include "Util.hpp"
 #include "World.hpp"
 #include "chunk/Chunk.hpp"
 #include "graphics/OpenGL/ShaderProgram.hpp"
@@ -20,17 +22,20 @@ using Position::ChunkInWorld;
 void RenderWorld::draw_world
 (
 	World& world,
-	std::map<Block::Enum::Type, ShaderProgram>& block_shaders,
-	const glm::dmat4& vp_matrix,
+	ResourceManager& resource_manager,
+	const glm::dmat4& vp_matrix_,
 	const Position::BlockInWorld& origin,
 	const ChunkInWorld::value_type render_distance
 )
 {
-	for(auto& p : block_shaders)
+	const glm::mat4 vp_matrix(vp_matrix_);
+	resource_manager.foreach_ShaderProgram([&vp_matrix](Resource<Graphics::OpenGL::ShaderProgram> r)
 	{
-		ShaderProgram& shader = p.second;
-		shader.uniform("mvp_matrix", glm::mat4(vp_matrix));
-	}
+		if(Util::string_starts_with(r.get_id(), "shaders/block/"))
+		{
+			r->uniform("mvp_matrix", vp_matrix);
+		}
+	});
 
 	// TODO: frustrum culling
 

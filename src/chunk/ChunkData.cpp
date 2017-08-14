@@ -4,24 +4,9 @@
 #include "block/Base.hpp"
 #include "block/Enum/Type.hpp"
 
-using T = std::unique_ptr<Block::Base>;
-
 template<>
-ChunkData<T>::ChunkData()
+ChunkData<std::shared_ptr<Block::Base>>::ChunkData()
 :
-	ChunkData(Game::instance->block_registry.make(Block::Enum::Type::air))
+	ChunkData(Game::instance->block_registry.get_default(Block::Enum::Type::air))
 {
-}
-
-template<>
-T ChunkData<T>::T_copy(const T& block) const
-{
-	return Game::instance->block_registry.make(*block);
-}
-
-template<>
-bool ChunkData<T>::T_equal(const T& a, const T& b) const
-{
-	// TODO: implement operator== for blocks
-	return false;
 }

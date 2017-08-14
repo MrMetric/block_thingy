@@ -28,14 +28,7 @@
 #include "Settings.hpp"
 #include "Util.hpp"
 #include "World.hpp"
-#include "block/Air.hpp"
 #include "block/Base.hpp"
-#include "block/Glass.hpp"
-#include "block/Light.hpp"
-#include "block/None.hpp"
-#include "block/Teleporter.hpp"
-#include "block/Test.hpp"
-#include "block/Unknown.hpp"
 #include "block/Enum/Type.hpp"
 #include "chunk/Mesher/Greedy.hpp"
 #include "chunk/Mesher/Simple.hpp"
@@ -61,6 +54,7 @@
 #include "shim/make_unique.hpp"
 #include "util/filesystem.hpp"
 
+using std::shared_ptr;
 using std::string;
 using std::unique_ptr;
 
@@ -116,16 +110,6 @@ Game::Game()
 	render_distance(1),
 	pImpl(std::make_unique<impl>(*this))
 {
-	// these must be added first (in this order!) to get the correct IDs
-	add_block<Block::None>("none");
-	add_block<Block::Air>("air");
-	add_block<Block::Unknown>("unknown");
-
-	add_block<Block::Test>("test");
-	add_block<Block::Teleporter>("teleporter");
-	add_block<Block::Light>("light");
-	add_block<Block::Glass>("glass");
-
 	resource_manager.load_blocks(*this);
 
 	if(block_registry.get_extid_map().size() == 0)
@@ -134,7 +118,7 @@ Game::Game()
 		block_registry.reset_extid_map();
 	}
 
-	block_type = block_registry.get_id("White");
+	copied_block = block_registry.get_default("White");
 
 	gui = std::make_unique<Graphics::GUI::Play>(*this);
 	gui->init();
@@ -196,10 +180,10 @@ void Game::draw()
 {
 	// TODO: use double when available
 	const float global_time = static_cast<float>(world.get_time());
-	for(auto& p : gfx.block_shaders)
+	resource_manager.foreach_ShaderProgram([global_time](Resource<Graphics::OpenGL::ShaderProgram> r)
 	{
-		p.second.uniform("global_time", global_time);
-	}
+		r->uniform("global_time", global_time);
+	});
 
 	if(pImpl->temp_gui != nullptr)
 	{
@@ -318,15 +302,15 @@ void Game::draw_world
 	RenderWorld::draw_world
 	(
 		world,
-		gfx.block_shaders,
+		resource_manager,
 		gfx.vp_matrix,
 		render_origin,
 		render_distance
 	);
 
-	if(hovered_block != nullptr)
+	if(hovered_block != nullptr && Settings::get<bool>("show_HUD"))
 	{
-		const glm::dvec4 color = world.get_block(hovered_block->pos).selection_color();
+		const glm::dvec4 color = world.get_block(hovered_block->pos)->selection_color();
 		gfx.draw_block_outline(hovered_block->pos, color);
 	}
 
@@ -429,37 +413,6 @@ void Game::joymove(const glm::dvec2& motion)
 	gui->joymove(motion);
 }
 
-static void add_shader(Game& game, const Block::Enum::Type t, const fs::path& shader_path)
-{
-	bool is_new;
-	try
-	{
-		is_new = game.gfx.block_shaders.emplace(t, "shaders/block" / shader_path).second;
-	}
-	catch(const std::runtime_error& e)
-	{
-		LOG(ERROR) << "shader error:\n" << e.what();
-		is_new = game.gfx.block_shaders.emplace(t, "shaders/block/default").second;
-	}
-	if(is_new)
-	{
-		auto& shader = game.gfx.block_shaders[t];
-		shader.uniform("light", 1);
-		shader.uniform("light_smoothing", static_cast<int>(Settings::get<int64_t>("light_smoothing")));
-		shader.uniform("min_light", static_cast<float>(Settings::get<double>("min_light")));
-	}
-}
-
-void Game::add_block(const string& strid, const Block::Enum::Type t, const fs::path& shader_path)
-{
-	LOG(DEBUG) << "ID " << t << ": " << strid;
-	if(t == Block::Enum::Type::none || t == Block::Enum::Type::air)
-	{
-		return;
-	}
-	add_shader(*this, t, shader_path);
-}
-
 void Game::impl::find_hovered_block()
 {
 	glm::dvec3 out_origin;
@@ -508,48 +461,35 @@ void Game::impl::add_commands()
 		}
 
 		const Position::BlockInWorld pos = game.hovered_block->pos;
-		if(game.world.get_block(pos).type() != Block::Enum::Type::none) // TODO: breakability check
+		shared_ptr<Block::Base> block = game.world.get_block(pos);
+		if(block->type() != Block::Enum::Type::none) // TODO: breakability check
 		{
-			game.world.set_block(pos, game.block_registry.make(Block::Enum::Type::air), false);
+			game.world.set_block(pos, game.block_registry.get_default(Block::Enum::Type::air), false);
 			//event_manager.do_event(Event_break_block(pos, face));
 		}
 	});
 	COMMAND("place_block")
 	{
-		if(game.hovered_block == nullptr)
+		if(game.hovered_block == nullptr || game.copied_block == nullptr)
 		{
 			return;
 		}
 
-		unique_ptr<Block::Base> block;
-		if(game.copied_block != nullptr)
-		{
-			block = game.block_registry.make(*game.copied_block);
-		}
-		else
-		{
-			block = game.block_registry.make(game.block_type);
-		}
+		shared_ptr<Block::Base> block = game.copied_block;
 		const Position::BlockInWorld pos = game.hovered_block->adjacent();
-		if(game.world.get_block(pos).is_replaceable_by(*block)
+		if(game.world.get_block(pos)->is_replaceable_by(*block)
 		&& (player.can_place_block_at(pos) || !block->is_solid()))
 		{
-			game.world.set_block(pos, std::move(block), false);
+			game.world.set_block(pos, block, false);
 			//event_manager.do_event(Event_place_block(pos, face));
 		}
 	});
 	COMMAND("copy_block")
 	{
-		if(game.hovered_block == nullptr)
+		if(game.hovered_block != nullptr)
 		{
-			game.copied_block = nullptr;
-			return;
+			game.copied_block = game.world.get_block(game.hovered_block->pos);
 		}
-
-		const Position::BlockInWorld pos = game.hovered_block->pos;
-		const Block::Base& block = game.world.get_block(pos);
-		game.block_type = block.type();
-		game.copied_block = game.block_registry.make(block);
 	});
 
 	// TODO: less copy/paste
@@ -593,7 +533,7 @@ void Game::impl::add_commands()
 	{
 		if(game.hovered_block != nullptr)
 		{
-			game.world.get_block(game.hovered_block->pos).use_start
+			game.world.get_block(game.hovered_block->pos)->use_start
 			(
 				game,
 				game.world,
@@ -754,35 +694,9 @@ void Game::impl::add_commands()
 		LOG(INFO) << "reach distance: " << player.reach_distance;
 	});
 
-	COMMAND("block_type++")
-	{
-		auto i = static_cast<Block::Enum::Type_t>(game.block_type);
-		i = (i + 1) % game.block_registry.get_max_id();
-		if(i < 3)
-		{
-			i = 3;
-		}
-		game.block_type = static_cast<Block::Enum::Type>(i);
-		game.copied_block = nullptr;
-	});
-	COMMAND("block_type--")
-	{
-		auto i = static_cast<Block::Enum::Type_t>(game.block_type);
-		if(i == 3)
-		{
-			i = game.block_registry.get_max_id() - 1;
-		}
-		else
-		{
-			i = (i - 1) % game.block_registry.get_max_id();
-		}
-		game.block_type = static_cast<Block::Enum::Type>(i);
-		game.copied_block = nullptr;
-	});
-
 	COMMAND("nazi")
 	{
-		if(game.hovered_block == nullptr)
+		if(game.hovered_block == nullptr || game.copied_block == nullptr)
 		{
 			return;
 		}
@@ -790,17 +704,18 @@ void Game::impl::add_commands()
 		const Position::BlockInWorld start_pos = game.hovered_block->adjacent();
 		const Position::BlockInWorld::value_type ysize = 9;
 		const Position::BlockInWorld::value_type xsize = 9;
+		const Block::Enum::Type_t i = static_cast<Block::Enum::Type_t>(game.copied_block->type()); // TODO: use copied_block instance
 		Block::Enum::Type_t nazi[ysize][xsize]
 		{
-			{ 2, 1, 1, 1, 2, 2, 2, 2, 2, },
-			{ 2, 1, 1, 1, 2, 1, 1, 1, 1, },
-			{ 2, 1, 1, 1, 2, 1, 1, 1, 1, },
-			{ 2, 1, 1, 1, 2, 1, 1, 1, 1, },
-			{ 2, 2, 2, 2, 2, 2, 2, 2, 2, },
-			{ 1, 1, 1, 1, 2, 1, 1, 1, 2, },
-			{ 1, 1, 1, 1, 2, 1, 1, 1, 2, },
-			{ 1, 1, 1, 1, 2, 1, 1, 1, 2, },
-			{ 2, 2, 2, 2, 2, 1, 1, 1, 2, },
+			{ i, 1, 1, 1, i, i, i, i, i, },
+			{ i, 1, 1, 1, i, 1, 1, 1, 1, },
+			{ i, 1, 1, 1, i, 1, 1, 1, 1, },
+			{ i, 1, 1, 1, i, 1, 1, 1, 1, },
+			{ i, i, i, i, i, i, i, i, i, },
+			{ 1, 1, 1, 1, i, 1, 1, 1, i, },
+			{ 1, 1, 1, 1, i, 1, 1, 1, i, },
+			{ 1, 1, 1, 1, i, 1, 1, 1, i, },
+			{ i, i, i, i, i, 1, 1, 1, i, },
 		};
 		Position::BlockInWorld pos;
 		for(pos.x = 0; pos.x < xsize; ++pos.x)
@@ -810,7 +725,7 @@ void Game::impl::add_commands()
 				for(pos.z = 0; pos.z < 1; ++pos.z)
 				{
 					const auto type = static_cast<Block::Enum::Type>(nazi[pos.y][pos.x]);
-					game.world.set_block(pos + start_pos, game.block_registry.make(type));
+					game.world.set_block(pos + start_pos, game.block_registry.get_default(type));
 				}
 			}
 		}

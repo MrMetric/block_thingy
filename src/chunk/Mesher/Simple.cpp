@@ -38,7 +38,7 @@ meshmap_t Simple::make_mesh(const Chunk& chunk)
 				const auto tex = Game::instance->resource_manager.get_block_texture(block.texture(face));
 				const meshmap_key_t key =
 				{
-					block.type(),
+					block.shader(face),
 					block.is_translucent(),
 					tex.unit,
 				};

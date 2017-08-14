@@ -11,6 +11,7 @@
 #include "fwd/Game.hpp"
 #include "fwd/graphics/Image.hpp"
 #include "fwd/graphics/OpenGL/ShaderObject.hpp"
+#include "fwd/graphics/OpenGL/ShaderProgram.hpp"
 #include "util/filesystem.hpp"
 
 template<typename T>
@@ -53,10 +54,14 @@ public:
 		}
 	}
 
-	const std::string id;
+	std::string get_id() const
+	{
+		return id;
+	}
 
 private:
 	static std::unordered_map<std::string, std::vector<update_func_t>> update_funcs;
+	std::string id;
 	std::unique_ptr<T>* p;
 };
 template<typename T>
@@ -80,8 +85,16 @@ public:
 	block_texture_info get_block_texture(fs::path);
 	bool texture_has_transparency(const fs::path&);
 
+	bool has_Image(const fs::path&) const;
 	Resource<Graphics::Image> get_Image(const fs::path&, bool reload = false);
+
+	bool has_ShaderObject(const fs::path&) const;
 	Resource<Graphics::OpenGL::ShaderObject> get_ShaderObject(fs::path, bool reload = false);
+
+	bool has_ShaderProgram(const fs::path&) const;
+	// TODO: shaders can be constructed with a file list
+	Resource<Graphics::OpenGL::ShaderProgram> get_ShaderProgram(const fs::path&, bool reload = false);
+	void foreach_ShaderProgram(const std::function<void(Resource<Graphics::OpenGL::ShaderProgram>)>&);
 
 private:
 	struct impl;

@@ -10,7 +10,7 @@ namespace Block {
 
 Unknown::Unknown(const Enum::Type t)
 :
-	Base(t)
+	Unknown(t, "")
 {
 }
 
@@ -20,7 +20,7 @@ Unknown::Unknown
 	const string& strid
 )
 :
-	Base(t),
+	SimpleShader(t),
 	strid(strid)
 {
 }

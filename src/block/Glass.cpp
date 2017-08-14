@@ -4,9 +4,9 @@
 
 namespace Block {
 
-Glass::Glass(Enum::Type t)
+Glass::Glass(const Enum::Type t)
 :
-	Base(t)
+	SimpleShader(t, "glass")
 {
 }
 
