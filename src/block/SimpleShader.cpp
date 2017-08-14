@@ -19,6 +19,14 @@ SimpleShader::SimpleShader
 {
 }
 
+SimpleShader& SimpleShader::operator=(const Base& block)
+{
+	Base::operator=(block);
+	const SimpleShader* that = static_cast<const SimpleShader*>(&block);
+	shader_path = that->shader_path;
+	return *this;
+}
+
 fs::path SimpleShader::shader_(const Enum::Face) const
 {
 	return shader_path;
