@@ -161,8 +161,6 @@
 		<Unit filename="src/block/Enum/VisibilityType.hpp" />
 		<Unit filename="src/block/Glass.cpp" />
 		<Unit filename="src/block/Glass.hpp" />
-		<Unit filename="src/block/Interface/KnowsPosition.cpp" />
-		<Unit filename="src/block/Interface/KnowsPosition.hpp" />
 		<Unit filename="src/block/Light.cpp" />
 		<Unit filename="src/block/Light.hpp" />
 		<Unit filename="src/block/None.cpp" />

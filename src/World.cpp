@@ -20,7 +20,6 @@
 #include "block/Base.hpp"
 #include "block/BlockRegistry.hpp"
 #include "block/Enum/Type.hpp"
-#include "block/Interface/KnowsPosition.hpp"
 #include "chunk/Chunk.hpp"
 #include "chunk/Mesher/Base.hpp"
 #include "graphics/Color.hpp"
@@ -163,14 +162,6 @@ void World::set_block
 	if(block == nullptr)
 	{
 		throw std::invalid_argument("block must not be null");
-	}
-
-	{
-		auto ptr = dynamic_cast<Block::Interface::KnowsPosition*>(block.get());
-		if(ptr != nullptr)
-		{
-			ptr->set_position(block_pos);
-		}
 	}
 
 	const ChunkInWorld chunk_pos(block_pos);
@@ -542,15 +533,6 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 		for(pos.z = 0; pos.z < CHUNK_SIZE; ++pos.z)
 		{
 			shared_ptr<Block::Base> block = chunk->get_block(pos);
-
-			// might as well do it here rather than making a second loop
-			{
-				auto ptr = dynamic_cast<Block::Interface::KnowsPosition*>(block.get());
-				if(ptr != nullptr)
-				{
-					ptr->set_position(BlockInWorld(chunk_pos, pos));
-				}
-			}
 
 			const Graphics::Color color = block->color();
 			if(color != 0)
