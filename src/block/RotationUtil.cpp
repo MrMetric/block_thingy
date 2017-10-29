@@ -1,5 +1,7 @@
 #include "RotationUtil.hpp"
 
+#include <string>
+
 #include <glm/vec4.hpp>
 
 using Block::Enum::Face;
