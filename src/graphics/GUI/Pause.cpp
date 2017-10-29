@@ -8,6 +8,7 @@
 #include "graphics/GUI/Widget/Button.hpp"
 #include "graphics/GUI/Widget/Text.hpp"
 #include "graphics/GUI/Widget/TextInput.hpp"
+#include "graphics/OpenGL/PushState.hpp"
 
 using std::string;
 
@@ -33,13 +34,10 @@ void Pause::draw()
 {
 	parent->draw();
 
-	GLboolean depth_test;
-	glGetBooleanv(GL_DEPTH_TEST, &depth_test);
-	if(depth_test) glDisable(GL_DEPTH_TEST);
-
-	Gfx::instance->draw_rectangle({0, 0}, static_cast<glm::dvec2>(Gfx::instance->window_size), {0, 0, 0, 0.3});
-
-	if(depth_test) glEnable(GL_DEPTH_TEST);
+	{
+		OpenGL::PushState<GLboolean> depth_test(GL_DEPTH_TEST, false);
+		Gfx::instance->draw_rectangle({0, 0}, static_cast<glm::dvec2>(Gfx::instance->window_size), {0, 0, 0, 0.3});
+	}
 
 	Base::draw();
 }

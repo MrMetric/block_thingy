@@ -14,6 +14,7 @@
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"
+#include "graphics/OpenGL/PushState.hpp"
 #include "util/key_press.hpp"
 
 using std::string;
@@ -64,19 +65,11 @@ void Base::close()
 
 void Base::draw()
 {
-	GLboolean depth_test;
-	glGetBooleanv(GL_DEPTH_TEST, &depth_test);
-	if(depth_test) glDisable(GL_DEPTH_TEST);
-
-	GLboolean cull_face;
-	glGetBooleanv(GL_CULL_FACE, &cull_face);
-	if(cull_face) glDisable(GL_CULL_FACE);
+	OpenGL::PushState<GLboolean> depth_test(GL_DEPTH_TEST, false);
+	OpenGL::PushState<GLboolean> cull_face(GL_CULL_FACE, false);
 
 	root.draw();
 	draw_gui();
-
-	if(cull_face) glEnable(GL_CULL_FACE);
-	if(depth_test) glEnable(GL_DEPTH_TEST);
 }
 
 void Base::keypress(const Util::key_press& press)
