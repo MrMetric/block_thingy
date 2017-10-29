@@ -144,7 +144,7 @@ imat4 rotate(uint8_t turns, const ivec3& axis)
 		return {};
 	}
 
-	turns = mod4(turns);
+	turns %= 4;
 
 	const int8_t c = tcos(turns);
 	const int8_t s = tsin(turns);

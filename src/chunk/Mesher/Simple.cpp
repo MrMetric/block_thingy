@@ -5,7 +5,7 @@
 #include "Game.hpp"
 #include "block/Base.hpp"
 #include "block/Enum/Face.hpp"
-#include "fwd/chunk/Chunk.hpp"
+#include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
 using Block::Enum::Face;
@@ -20,7 +20,7 @@ meshmap_t Simple::make_mesh(const Chunk& chunk)
 	for(BlockInChunk::value_type y = 0; y < CHUNK_SIZE; ++y)
 	for(BlockInChunk::value_type z = 0; z < CHUNK_SIZE; ++z)
 	{
-		const Block::Base& block = block_at(chunk, x, y, z);
+		const Block::Base& block = *chunk.get_block({x, y, z});
 		if(block.is_invisible())
 		{
 			continue;

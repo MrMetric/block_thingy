@@ -49,7 +49,7 @@ void Base::mousemove(const double x, const double y)
 glm::dvec2 Base::get_size() const
 {
 	glm::dvec2 size;
-	const double* d;
+	const double* d = nullptr; // init to nullptr to silence false positive warning
 	if(style.count("size.x") != 0 && (d = style.at("size.x").get<double>()) != nullptr)
 	{
 		size.x = *d;

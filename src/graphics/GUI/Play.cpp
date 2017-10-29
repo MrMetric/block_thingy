@@ -154,7 +154,7 @@ void Play::draw_debug_text()
 		ss << "hovered: " << show_block(*hovered) << "\n";
 		ss << "\tface: " << game.hovered_block->face() << '\n';
 		ss << "\trotation: " << glm::io::width(2) << hovered->rotation() << '\n';
-		ss << "\tlight: " << game.world.get_light(game.hovered_block->adjacent()) << '\n';
+		ss << "\tlight: " << game.world.get_blocklight(game.hovered_block->adjacent()) << '\n';
 	}
 
 	game.gfx.gui_text.draw(ss.str(), {8.0, 8.0});

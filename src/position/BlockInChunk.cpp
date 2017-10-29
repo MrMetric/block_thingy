@@ -28,7 +28,9 @@ BlockInChunk::BlockInChunk(const value_type x, const value_type y, const value_t
 	y(y),
 	z(z)
 {
+	#ifdef DEBUG_BUILD
 	check_bounds();
+	#endif
 }
 
 /*
@@ -50,28 +52,14 @@ BlockInChunk::BlockInChunk(const BlockInWorld& pos)
 	z = t(pos.z);
 }
 
-BlockInChunk::value_type BlockInChunk::operator[](const uint_fast8_t i) const
-{
-	if(i == 0) return x;
-	if(i == 1) return y;
-	if(i == 2) return z;
-	throw std::out_of_range("Position::BlockInChunk::operator[]: " + to_string(i) + " > 2");
-}
-
-BlockInChunk::value_type& BlockInChunk::operator[](const uint_fast8_t i)
-{
-	if(i == 0) return x;
-	if(i == 1) return y;
-	if(i == 2) return z;
-	throw std::out_of_range("Position::BlockInChunk::operator[]: " + to_string(i) + " > 2");
-}
-
 BlockInChunk& BlockInChunk::operator+=(const BlockInChunk& that)
 {
 	x += that.x;
 	y += that.y;
 	z += that.z;
+	#ifdef DEBUG_BUILD
 	check_bounds();
+	#endif
 	return *this;
 }
 
@@ -90,6 +78,7 @@ BlockInChunk::operator BlockInChunk::vec_type() const
 	return {x, y, z};
 }
 
+#ifdef DEBUG_BUILD
 void BlockInChunk::check_bounds()
 {
 	if(x >= CHUNK_SIZE
@@ -101,6 +90,7 @@ void BlockInChunk::check_bounds()
 		throw std::logic_error(ss.str());
 	}
 }
+#endif
 
 std::ostream& operator<<(std::ostream& os, const BlockInChunk& pos)
 {

@@ -80,7 +80,7 @@ private:
 		const Position::BlockInChunk::value_type z
 	)
 	{
-		return CHUNK_SIZE * CHUNK_SIZE * y + CHUNK_SIZE * z + x;
+		return CHUNK_SIZE * CHUNK_SIZE * x + CHUNK_SIZE * y + z;
 	}
 };
 

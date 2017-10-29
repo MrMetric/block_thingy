@@ -90,9 +90,8 @@ void Light::on_change(uint_fast8_t i, Widget::TextInput& w, const string& new_va
 	if(v != c[i])
 	{
 		c[i] = static_cast<Graphics::Color::value_type>(v);
-		world.sub_light(block_pos);
 		block.color(c);
-		world.add_light(block_pos, c, true);
+		world.update_blocklight(block_pos, c, true);
 	}
 }
 

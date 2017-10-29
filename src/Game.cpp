@@ -118,8 +118,6 @@ Game::Game()
 		block_registry.reset_extid_map();
 	}
 
-	copied_block = block_registry.get_default("White");
-
 	gui = std::make_unique<Graphics::GUI::Play>(*this);
 	gui->init();
 
@@ -159,7 +157,7 @@ Game::Game()
 
 	event_manager.add_handler(EventType::change_setting, [&game=*this](const Event& event)
 	{
-		auto e = static_cast<const Event_change_setting&>(event);
+		const auto& e = static_cast<const Event_change_setting&>(event);
 
 		if(e.name == "mesher")
 		{
@@ -169,6 +167,8 @@ Game::Game()
 	});
 
 	PluginManager::instance->init_plugins(*this);
+
+	copied_block = block_registry.get_default("light");
 }
 
 Game::~Game()
@@ -244,11 +244,11 @@ void Game::draw()
 			joypress(1, i, buttons[i] != 0);
 		}
 
-		auto fix_axis = [](float axis)
+		auto fix_axis = [](const float axis) -> float
 		{
 			if(std::abs(axis) < 0.1f)
 			{
-				return 0.0f;
+				return 0;
 			}
 			return axis;
 		};
@@ -439,7 +439,11 @@ void Game::impl::find_hovered_block()
 
 void Game::impl::add_commands()
 {
-	#define COMMAND(name) commands.emplace_back(*Console::instance, name, [&game=game, &player=game.player] \
+	#define COMMAND(name) commands.emplace_back(*Console::instance, name, \
+	[ \
+		&game=game, \
+		&player=game.player \
+	] \
 	( \
 		__attribute__((unused)) const std::vector<string>& args \
 	)
@@ -465,7 +469,6 @@ void Game::impl::add_commands()
 		if(block->type() != Block::Enum::Type::none) // TODO: breakability check
 		{
 			game.world.set_block(pos, game.block_registry.get_default(Block::Enum::Type::air), false);
-			//event_manager.do_event(Event_break_block(pos, face));
 		}
 	});
 	COMMAND("place_block")
@@ -481,7 +484,6 @@ void Game::impl::add_commands()
 		&& (player.can_place_block_at(pos) || !block->is_solid()))
 		{
 			game.world.set_block(pos, block, false);
-			//event_manager.do_event(Event_place_block(pos, face));
 		}
 	});
 	COMMAND("copy_block")

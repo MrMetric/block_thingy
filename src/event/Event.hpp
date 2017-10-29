@@ -7,6 +7,11 @@ class Event
 public:
 	explicit Event(EventType);
 
+	Event(Event&&) = delete;
+	Event(const Event&) = delete;
+	void operator=(Event&&) = delete;
+	void operator=(const Event&) = delete;
+
 	EventType type() const;
 
 private:

@@ -20,15 +20,36 @@ struct Color
 	value_type operator[](uint_fast8_t) const;
 	value_type& operator[](uint_fast8_t);
 
-	bool operator==(const Color&) const;
-	bool operator!=(const Color&) const;
+	bool operator==(const Color& that) const
+	{
+		return (r == that.r) && (g == that.g) && (b == that.b);
+	}
+	bool operator!=(const Color& that) const
+	{
+		return (r != that.r) || (g != that.g) || (b != that.b);
+	}
 	bool operator<(const Color&) const; // defined for std::tuple hashing
+
 	Color operator+(const Color&) const;
 	Color operator-(const Color&) const;
 
-	bool operator==(value_type) const;
-	bool operator!=(value_type) const;
-	bool operator<(value_type) const;
+	bool operator==(const value_type x) const
+	{
+		return (r == x) && (g == x) && (b == x);
+	}
+	bool operator!=(const value_type x) const
+	{
+		return (r != x) || (g != x) || (b != x);
+	}
+	bool operator<(const value_type x) const
+	{
+		return (r < x) && (g < x) && (b < x);
+	}
+	bool operator>(const value_type x) const
+	{
+		return (r > x) && (g > x) && (b > x);
+	}
+
 	Color operator+(value_type) const;
 	Color operator-(value_type) const;
 	Color& operator-=(value_type);

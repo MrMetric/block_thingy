@@ -34,6 +34,7 @@ public:
 
 	Game(Game&&) = delete;
 	Game(const Game&) = delete;
+	void operator=(Game&&) = delete;
 	void operator=(const Game&) = delete;
 
 	static Game* instance;

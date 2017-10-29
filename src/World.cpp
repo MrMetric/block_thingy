@@ -76,11 +76,9 @@ struct World::impl
 	Position::unordered_map_t<ChunkInWorld, shared_ptr<Chunk>> chunks;
 	mutable std::mutex chunks_mutex;
 
-	std::queue<Position::BlockInWorld> light_add;
-
 	std::unordered_set<ChunkInWorld, Position::hasher_struct<ChunkInWorld>> chunks_to_save;
 
-	std::unordered_map<std::string, shared_ptr<Player>> players;
+	std::unordered_map<string, shared_ptr<Player>> players;
 
 	Storage::WorldFile file;
 
@@ -110,13 +108,19 @@ struct World::impl
 	moodycamel::ConcurrentQueue<shared_ptr<Chunk>> loaded_chunks;
 
 	Util::ThreadThingy<shared_ptr<Chunk>> mesh_thread;
+
+	std::queue<BlockInWorld> blocklight_add;
+	void add_blocklight(const BlockInWorld&, const Graphics::Color&, bool save);
+	void process_blocklight_add();
+	void sub_blocklight(const BlockInWorld&);
+	void update_blocklight_around(const BlockInWorld&);
 };
 
 World::World
 (
 	const fs::path& file_path,
 	Block::BlockRegistry& block_registry,
-	std::unique_ptr<Mesher::Base> mesher
+	unique_ptr<Mesher::Base> mesher
 )
 :
 	block_registry(block_registry),
@@ -191,21 +195,21 @@ void World::set_block
 	// TODO: these checks might not work (a filter block could be overwritten by a different filter block)
 	if(affects_light && !old_affects_light)
 	{
-		sub_light(block_pos);
+		pImpl->sub_blocklight(block_pos);
 	}
 
 	if(old_color != color)
 	{
 		if(old_color != 0)
 		{
-			sub_light(block_pos);
+			pImpl->sub_blocklight(block_pos);
 		}
-		add_light(block_pos, color, false);
+		pImpl->add_blocklight(block_pos, color, false);
 	}
 
 	if(affects_light != old_affects_light)
 	{
-		update_light_around(block_pos);
+		pImpl->update_blocklight_around(block_pos);
 	}
 
 	pImpl->update_chunk_neighbors(chunk_pos, pos, thread);
@@ -225,7 +229,7 @@ const shared_ptr<Block::Base> World::get_block(const BlockInWorld& block_pos) co
 	const shared_ptr<const Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static const std::shared_ptr<Block::Base> none = block_registry.get_default(Block::Enum::Type::none);
+		static const shared_ptr<Block::Base> none = block_registry.get_default(Block::Enum::Type::none);
 		return none;
 	}
 
@@ -239,7 +243,7 @@ shared_ptr<Block::Base> World::get_block(const BlockInWorld& block_pos)
 	const shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static /*const*/ std::shared_ptr<Block::Base> none = block_registry.get_default(Block::Enum::Type::none);
+		static /*const*/ shared_ptr<Block::Base> none = block_registry.get_default(Block::Enum::Type::none);
 		return none;
 	}
 
@@ -247,18 +251,18 @@ shared_ptr<Block::Base> World::get_block(const BlockInWorld& block_pos)
 	return chunk->get_block(pos);
 }
 
-Graphics::Color World::get_light(const BlockInWorld& block_pos) const
+Graphics::Color World::get_blocklight(const BlockInWorld& block_pos) const
 {
 	const ChunkInWorld chunk_pos(block_pos);
 	const shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		return Graphics::Color();
+		return {0, 0, 0};
 	}
-	return chunk->get_light(BlockInChunk(block_pos));
+	return chunk->get_blocklight(BlockInChunk(block_pos));
 }
 
-void World::set_light
+void World::set_blocklight
 (
 	const BlockInWorld& block_pos,
 	const Graphics::Color& color,
@@ -269,11 +273,11 @@ void World::set_light
 	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		// TODO: handle this better
+		// TODO?: handle this better
 		return;
 	}
 	const BlockInChunk pos(block_pos);
-	chunk->set_light(pos, color);
+	chunk->set_blocklight(pos, color);
 
 	// update light in neighboring chunks
 	{
@@ -292,7 +296,7 @@ void World::set_light
 				pos2.x = xyz.x ? (zero.x ? CHUNK_SIZE : -1) : pos.x;
 				pos2.y = xyz.y ? (zero.y ? CHUNK_SIZE : -1) : pos.y;
 				pos2.z = xyz.z ? (zero.z ? CHUNK_SIZE : -1) : pos.z;
-				chunk2->set_neighbor_light(pos2, color);
+				chunk2->set_texbuflight(pos2, color);
 			}
 		};
 		for(int i = 0; i < 3; ++i)
@@ -330,31 +334,51 @@ void World::set_light
 	}
 }
 
-void World::add_light
+void World::update_blocklight
+(
+	const BlockInWorld& block_pos,
+	const bool save
+)
+{
+	update_blocklight(block_pos, get_block(block_pos)->color(), save);
+}
+
+void World::update_blocklight
 (
 	const BlockInWorld& block_pos,
 	const Graphics::Color& color,
-	bool save
+	const bool save
 )
 {
-	set_light(block_pos, color, save);
+	pImpl->sub_blocklight(block_pos);
+	pImpl->add_blocklight(block_pos, color, save);
+}
+
+void World::impl::add_blocklight
+(
+	const BlockInWorld& block_pos,
+	const Graphics::Color& color,
+	const bool save
+)
+{
+	world.set_blocklight(block_pos, color, save);
 	if(color == 0)
 	{
 		return;
 	}
 
 	// see https://www.seedofandromeda.com/blogs/29-fast-flood-fill-lighting-in-a-blocky-voxel-game-pt-1
-	pImpl->light_add.emplace(block_pos);
-	process_light_add();
+	blocklight_add.emplace(block_pos);
+	process_blocklight_add();
 }
 
-void World::process_light_add()
+void World::impl::process_blocklight_add()
 {
-	while(!pImpl->light_add.empty())
+	while(!blocklight_add.empty())
 	{
-		const BlockInWorld pos = pImpl->light_add.front();
-		pImpl->light_add.pop();
-		const Graphics::Color color = get_light(pos) - 1;
+		const BlockInWorld pos = blocklight_add.front();
+		blocklight_add.pop();
+		const Graphics::Color color = world.get_blocklight(pos) - 1;
 		if(color == 0)
 		{
 			continue;
@@ -373,32 +397,33 @@ void World::process_light_add()
 		)
 		{
 			const BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
-			const shared_ptr<Block::Base> block = get_block(pos2);
+			const shared_ptr<Chunk> chunk = world.get_chunk(ChunkInWorld(pos2));
+			if(chunk == nullptr)
+			{
+				return;
+			}
+			const BlockInChunk pos2b(pos2);
+			const shared_ptr<Block::Base> block = chunk->get_block(pos2b);
 			if(block->is_opaque())
 			{
 				return;
 			}
 			if(block->is_translucent())
 			{
-				Graphics::Color f = block->light_filter();
-				color.r = std::min(color.r, f[0]);
-				color.g = std::min(color.g, f[1]);
-				color.b = std::min(color.b, f[2]);
+				const Graphics::Color f = block->light_filter();
+				color.r = std::min(color.r, f.r);
+				color.g = std::min(color.g, f.g);
+				color.b = std::min(color.b, f.b);
 			}
-			Graphics::Color color2 = get_light(pos2);
+			Graphics::Color color2 = chunk->get_blocklight(pos2b);
 			bool set = false;
-			for(uint_fast8_t i = 0; i < 3; ++i)
-			{
-				if(color2[i] < color[i])
-				{
-					color2[i] = color[i];
-					set = true;
-				}
-			}
+			if(color2.r < color.r) { color2.r = color.r; set = true; }
+			if(color2.g < color.g) { color2.g = color.g; set = true; }
+			if(color2.b < color.b) { color2.b = color.b; set = true; }
 			if(set)
 			{
-				set_light(pos2, color2, false);
-				pImpl->light_add.emplace(pos2);
+				world.set_blocklight(pos2, color2, false);
+				blocklight_add.emplace(pos2);
 			}
 		};
 
@@ -411,10 +436,14 @@ void World::process_light_add()
 	}
 }
 
-void World::sub_light(const BlockInWorld& block_pos)
+void World::impl::sub_blocklight(const BlockInWorld& block_pos)
 {
-	Graphics::Color color = get_light(block_pos);
-	set_light(block_pos, {0, 0, 0}, false);
+	const Graphics::Color color = world.get_blocklight(block_pos);
+	if(color == 0)
+	{
+		return;
+	}
+	world.set_blocklight(block_pos, {0, 0, 0}, false);
 
 	std::queue<std::tuple<BlockInWorld, Graphics::Color>> q;
 	q.emplace(block_pos, color);
@@ -438,7 +467,7 @@ void World::sub_light(const BlockInWorld& block_pos)
 		)
 		{
 			const BlockInWorld pos2{pos.x + x, pos.y + y, pos.z + z};
-			Graphics::Color color2 = get_light(pos2);
+			Graphics::Color color2 = world.get_blocklight(pos2);
 			Graphics::Color color_set = color2;
 			Graphics::Color color_put(0, 0, 0);
 
@@ -453,12 +482,12 @@ void World::sub_light(const BlockInWorld& block_pos)
 				}
 				else if(color2[i] >= color[i])
 				{
-					pImpl->light_add.emplace(pos2);
+					blocklight_add.emplace(pos2);
 				}
 			}
 			if(set)
 			{
-				set_light(pos2, color_set, false);
+				world.set_blocklight(pos2, color_set, false);
 				q.emplace(pos2, color_put);
 			}
 		};
@@ -472,9 +501,9 @@ void World::sub_light(const BlockInWorld& block_pos)
 	}
 }
 
-void World::update_light_around(const BlockInWorld& block_pos)
+void World::impl::update_blocklight_around(const BlockInWorld& block_pos)
 {
-	#define a(x_, y_, z_) pImpl->light_add.emplace(block_pos.x + x_, block_pos.y + y_, block_pos.z + z_)
+	#define a(x_, y_, z_) blocklight_add.emplace(block_pos.x + x_, block_pos.y + y_, block_pos.z + z_)
 	a( 0,  0, -1);
 	a( 0,  0, +1);
 	a( 0, -1,  0);
@@ -482,13 +511,12 @@ void World::update_light_around(const BlockInWorld& block_pos)
 	a(-1,  0,  0);
 	a(+1,  0,  0);
 	#undef a
-
-	process_light_add();
+	process_blocklight_add();
 }
 
 void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 {
-	const std::shared_ptr<Chunk> prev_chunk = get_chunk(chunk_pos);
+	const shared_ptr<Chunk> prev_chunk = get_chunk(chunk_pos);
 	if(prev_chunk == chunk)
 	{
 		return;
@@ -516,13 +544,13 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 				BlockInWorld pos2(pos);
 
 				pos2[i3] = pos1[i3] - 1;
-				pImpl->light_add.emplace(pos2);
+				pImpl->blocklight_add.emplace(pos2);
 
 				pos2[i3] = pos1[i3] + CHUNK_SIZE;
-				pImpl->light_add.emplace(pos2);
+				pImpl->blocklight_add.emplace(pos2);
 			}
 		}
-		process_light_add();
+		pImpl->process_blocklight_add();
 	}
 
 	// update light in chunk
@@ -537,7 +565,7 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 			const Graphics::Color color = block->color();
 			if(color != 0)
 			{
-				add_light({chunk_pos, pos}, color, false);
+				pImpl->add_blocklight({chunk_pos, pos}, color, false);
 			}
 		}
 	}
@@ -574,7 +602,7 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 			const auto chunk2 = get_chunk(chunk_pos_2);
 			if(chunk2 != nullptr)
 			{
-				chunk->set_neighbor_light(pos2, chunk2->get_light(pos));
+				chunk->set_texbuflight(pos2, chunk2->get_blocklight(pos));
 			}
 		}
 	}
@@ -616,6 +644,8 @@ shared_ptr<Chunk> World::get_or_make_chunk(const ChunkInWorld& chunk_pos)
 
 void World::step(double delta_time)
 {
+	delta_time = 1.0 / 60.0; // TODO
+
 	shared_ptr<Chunk> chunk;
 	while(pImpl->loaded_chunks.try_dequeue(chunk))
 	{
@@ -631,11 +661,11 @@ void World::step(double delta_time)
 		pImpl->chunks_to_save.emplace(pos);
 	}
 
-	delta_time = 1.0 / 60.0;
 	for(auto& p : pImpl->players)
 	{
 		p.second->step(delta_time);
 	}
+
 	ticks += 1;
 }
 
@@ -658,7 +688,7 @@ shared_ptr<Player> World::get_player(const string& name)
 	return i->second;
 }
 
-const std::unordered_map<std::string, shared_ptr<Player>>& World::get_players()
+const std::unordered_map<string, shared_ptr<Player>>& World::get_players()
 {
 	return pImpl->players;
 }
@@ -691,7 +721,7 @@ double World::get_time() const
 	return ticks / 60.0;
 }
 
-void World::set_mesher(std::unique_ptr<Mesher::Base> mesher)
+void World::set_mesher(unique_ptr<Mesher::Base> mesher)
 {
 	assert(mesher != nullptr);
 	this->mesher = std::move(mesher);
@@ -701,7 +731,7 @@ void World::set_mesher(std::unique_ptr<Mesher::Base> mesher)
 	}
 }
 
-bool World::is_meshing_queued(const std::shared_ptr<Chunk>& chunk) const
+bool World::is_meshing_queued(const shared_ptr<Chunk>& chunk) const
 {
 	if(chunk == nullptr)
 	{
@@ -840,7 +870,8 @@ void World::impl::gen_chunk(shared_ptr<Chunk> chunk) const
 			return (d == 0 ? b : 1 - b) - 1;
 		};
 
-		auto max_y = max.y <= -m ? max.y : std::min(max.y, static_cast<BlockInWorld::value_type>(get_max_y(x, z) * m));
+		const auto real_max_y = static_cast<BlockInWorld::value_type>(std::round(get_max_y(x, z) * m));
+		const auto max_y = max.y <= -m ? max.y : std::min(max.y, real_max_y);
 
 		block_pos.x = x;
 		block_pos.z = z;

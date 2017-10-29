@@ -2,6 +2,9 @@
 
 #include <iosfwd>
 #include <stdint.h>
+#ifdef DEBUG_BUILD
+	#include <string>
+#endif
 
 #include <glm/vec3.hpp>
 #include <glm/gtx/io.hpp>
@@ -19,8 +22,26 @@ struct BlockInChunk
 	BlockInChunk(value_type x, value_type y, value_type z);
 	explicit BlockInChunk(const BlockInWorld&);
 
-	value_type operator[](uint_fast8_t) const;
-	value_type& operator[](uint_fast8_t);
+	value_type operator[](const uint_fast8_t i) const
+	{
+		#ifdef DEBUG_BUILD
+		if(i > 2)
+		{
+			throw std::out_of_range("Position::BlockInChunk::operator[]: " + std::to_string(i) + " > 2");
+		}
+		#endif
+		return (&x)[i];
+	}
+	value_type& operator[](const uint_fast8_t i)
+	{
+		#ifdef DEBUG_BUILD
+		if(i > 2)
+		{
+			throw std::out_of_range("Position::BlockInChunk::operator[]: " + std::to_string(i) + " > 2");
+		}
+		#endif
+		return (&x)[i];
+	}
 	BlockInChunk& operator+=(const BlockInChunk&);
 	bool operator==(const BlockInChunk&) const;
 	bool operator!=(const BlockInChunk&) const;
@@ -30,7 +51,9 @@ struct BlockInChunk
 	value_type x, y, z;
 
 private:
+	#ifdef DEBUG_BUILD
 	void check_bounds();
+	#endif
 };
 
 std::ostream& operator<<(std::ostream&, const BlockInChunk&);

@@ -60,7 +60,7 @@ struct Chunk::impl
 
 		light_smoothing_eid = Game::instance->event_manager.add_handler(EventType::change_setting, [this](const Event& event)
 		{
-			auto e = static_cast<const Event_change_setting&>(event);
+			const auto& e = static_cast<const Event_change_setting&>(event);
 
 			if(light_tex == nullptr)
 			{
@@ -98,12 +98,14 @@ struct Chunk::impl
 		light_tex->image3D(0, GL_RGB, CHUNK_SIZE_2, CHUNK_SIZE_2, CHUNK_SIZE_2, GL_RGB, GL_UNSIGNED_BYTE, light_tex_buf.data());
 	}
 
+	Graphics::Color get_blocklight(const BlockInChunk&) const;
+	void set_blocklight(const BlockInChunk&, const Graphics::Color& color);
+	void set_texbuflight(const glm::ivec3& pos, const Graphics::Color& color);
+
 	World& owner;
 	Position::ChunkInWorld position;
 
-	ChunkData<Graphics::Color> light;
 	std::unique_ptr<Graphics::OpenGL::Texture> light_tex;
-	std::array<uint8_t, CHUNK_SIZE_2 * CHUNK_SIZE_2 * CHUNK_SIZE_2 * 3> light_tex_buf;
 	bool light_changed;
 	event_handler_id_t light_smoothing_eid;
 
@@ -114,6 +116,10 @@ struct Chunk::impl
 	mutable std::mutex mesh_mutex;
 
 	void update_vaos();
+
+private:
+	ChunkData<Graphics::Color> blocklight;
+	std::array<uint8_t, CHUNK_SIZE_2 * CHUNK_SIZE_2 * CHUNK_SIZE_2 * 3> light_tex_buf;
 };
 
 Chunk::Chunk(const ChunkInWorld& position, World& owner)
@@ -155,25 +161,44 @@ void Chunk::set_block(const BlockInChunk& pos, shared_ptr<Block::Base> block)
 	blocks.set(pos, block);
 }
 
-Graphics::Color Chunk::get_light(const BlockInChunk& pos) const
+Graphics::Color Chunk::get_blocklight(const BlockInChunk& pos) const
 {
-	return pImpl->light.get(pos);
+	return pImpl->get_blocklight(pos);
+}
+Graphics::Color Chunk::impl::get_blocklight(const BlockInChunk& pos) const
+{
+	return blocklight.get(pos);
 }
 
-void Chunk::set_light(const BlockInChunk& pos, const Graphics::Color& color)
+void Chunk::set_blocklight
+(
+	const BlockInChunk& pos,
+	const Graphics::Color& color
+)
 {
-	pImpl->light.set(pos, color);
-	set_neighbor_light({pos.x, pos.y, pos.z}, color);
+	pImpl->set_blocklight(pos, color);
+}
+void Chunk::impl::set_blocklight
+(
+	const BlockInChunk& pos,
+	const Graphics::Color& color
+)
+{
+	blocklight.set(pos, color);
+	set_texbuflight({pos.x, pos.y, pos.z}, color);
 }
 
-void Chunk::set_neighbor_light(const glm::ivec3& pos, const Graphics::Color& color)
+void Chunk::set_texbuflight(const glm::ivec3& pos, const Graphics::Color& color)
 {
-	const size_t i = (CHUNK_SIZE_2 * CHUNK_SIZE_2 * (pos.z + 1) + CHUNK_SIZE_2 * (pos.y + 1) + pos.x + 1) * 3;
-	pImpl->light_tex_buf[i    ] = std::round(color.r * 255.0 / Graphics::Color::max);
-	pImpl->light_tex_buf[i + 1] = std::round(color.g * 255.0 / Graphics::Color::max);
-	pImpl->light_tex_buf[i + 2] = std::round(color.b * 255.0 / Graphics::Color::max);
-
-	pImpl->light_changed = true;
+	pImpl->set_texbuflight(pos, color);
+}
+void Chunk::impl::set_texbuflight(const glm::ivec3& pos, const Graphics::Color& color)
+{
+	const size_t i = (CHUNK_SIZE_2 * CHUNK_SIZE_2 * (pos.z + 1) + CHUNK_SIZE_2 * (pos.y + 1) + (pos.x + 1)) * 3;
+	light_tex_buf[i    ] = color.r;
+	light_tex_buf[i + 1] = color.g;
+	light_tex_buf[i + 2] = color.b;
+	light_changed = true;
 }
 
 void Chunk::update()
@@ -197,6 +222,7 @@ void Chunk::render(const bool translucent_pass)
 		}
 
 		pImpl->update_vaos();
+
 		pImpl->changed = false;
 	}
 

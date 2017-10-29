@@ -28,7 +28,8 @@ void ChunkData<T>::save(msgpack::packer<zstr::ostream>& o) const
 
 	o.pack(block_vec);
 
-	o.pack_array(this->blocks.size());
+	assert(this->blocks.size() <= std::numeric_limits<uint32_t>::max());
+	o.pack_array(static_cast<uint32_t>(this->blocks.size()));
 	for(auto& block : this->blocks)
 	{
 		o.pack(block_map[block.get()]);

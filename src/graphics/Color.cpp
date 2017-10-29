@@ -59,16 +59,6 @@ Color::value_type& Color::operator[](const uint_fast8_t i)
 	throw std::out_of_range("Graphics::Color::operator[]: " + to_string(i) + " > 2");
 }
 
-bool Color::operator==(const Color& that) const
-{
-	return (r == that.r) && (g == that.g) && (b == that.b);
-}
-
-bool Color::operator!=(const Color& that) const
-{
-	return (r != that.r) || (g != that.g) || (b != that.b);
-}
-
 // defined for std::tuple hashing
 bool Color::operator<(const Color& that) const
 {
@@ -93,21 +83,6 @@ Color Color::operator-(const Color& that) const
 		g - that.g,
 		b - that.b
 	);
-}
-
-bool Color::operator==(const value_type x) const
-{
-	return (r == x) && (g == x) && (b == x);
-}
-
-bool Color::operator!=(const value_type x) const
-{
-	return (r != x) || (g != x) || (b != x);
-}
-
-bool Color::operator<(const value_type x) const
-{
-	return (r < x) && (g < x) && (b < x);
 }
 
 Color Color::operator+(const value_type x) const

@@ -34,7 +34,7 @@ Base::Base
 	}
 	event_handler = game.event_manager.add_handler(EventType::window_size_change, [this](const Event& event)
 	{
-		auto e = static_cast<const Event_window_size_change&>(event);
+		const auto& e = static_cast<const Event_window_size_change&>(event);
 		update_framebuffer_size(e.window_size);
 	});
 	update_framebuffer_size(game.gfx.window_size);

@@ -77,6 +77,8 @@ void main()
 		l = texture(light, (lpos + 1) / 34.0).rgb;
 	}
 
+	l *= 255.0 / 16.0;
+
 	float z = -min_light / (min_light - 1);
 	c.rgb *= pow((l * l + z) / (1 + z), vec3(1 / 2.2));
 

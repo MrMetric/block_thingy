@@ -90,7 +90,7 @@ void Gfx::hook_events(EventManager& event_manager)
 {
 	event_manager.add_handler(EventType::change_setting, [this](const Event& event)
 	{
-		auto e = static_cast<const Event_change_setting&>(event);
+		const auto& e = static_cast<const Event_change_setting&>(event);
 
 		if(e.name == "fullscreen")
 		{

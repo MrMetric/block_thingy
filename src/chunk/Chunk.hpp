@@ -30,9 +30,9 @@ public:
 
 	void set_block(const Position::BlockInChunk&, const std::shared_ptr<Block::Base>);
 
-	Graphics::Color get_light(const Position::BlockInChunk&) const;
-	void set_light(const Position::BlockInChunk&, const Graphics::Color&);
-	void set_neighbor_light(const glm::ivec3&, const Graphics::Color&);
+	Graphics::Color get_blocklight(const Position::BlockInChunk&) const;
+	void set_blocklight(const Position::BlockInChunk&, const Graphics::Color&);
+	void set_texbuflight(const glm::ivec3& pos, const Graphics::Color&);
 
 	void update();
 	void render(bool transluscent_pass);

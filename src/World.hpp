@@ -44,22 +44,10 @@ public:
 		bool thread = true
 	);
 
-	Graphics::Color get_light(const Position::BlockInWorld&) const;
-	void set_light
-	(
-		const Position::BlockInWorld&,
-		const Graphics::Color&,
-		bool save
-	);
-	void add_light
-	(
-		const Position::BlockInWorld&,
-		const Graphics::Color&,
-		bool save
-	);
-	void process_light_add();
-	void sub_light(const Position::BlockInWorld&);
-	void update_light_around(const Position::BlockInWorld&);
+	Graphics::Color get_blocklight(const Position::BlockInWorld&) const;
+	void set_blocklight(const Position::BlockInWorld&, const Graphics::Color&, bool save);
+	void update_blocklight(const Position::BlockInWorld&, bool save);
+	void update_blocklight(const Position::BlockInWorld&, const Graphics::Color&, bool save);
 
 	std::shared_ptr<Chunk> get_chunk(const Position::ChunkInWorld&) const;
 	std::shared_ptr<Chunk> get_or_make_chunk(const Position::ChunkInWorld&);

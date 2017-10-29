@@ -87,6 +87,7 @@ public:
 
 	Base(Base&&) = delete;
 	Base(const Base&) = delete;
+	void operator=(Base&&) = delete;
 	void operator=(const Base&) = delete;
 
 	virtual meshmap_t make_mesh(const Chunk&) = 0;

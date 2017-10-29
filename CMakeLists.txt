@@ -67,13 +67,20 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-isystem "${PROJECT_SOURCE_DIR}/lib"
 		-iquote "${PROJECT_SOURCE_DIR}/src"
 		-Weverything
+		#-Werror=conversion
 		-Werror=delete-incomplete
 		-Werror=deprecated
 		-Werror=extra-tokens
+		-Werror=float-conversion
 		-Werror=inconsistent-missing-override
 		-Werror=invalid-pp-token
 		-Werror=missing-field-initializers
+		-Werror=newline-eof
+		-Werror=non-virtual-dtor
+		#-Werror=old-style-cast
 		-Werror=return-type
+		-Werror=self-move
+		-Werror=shorten-64-to-32
 		-Werror=sign-compare
 		-Werror=uninitialized
 		-Werror=unknown-pragmas
@@ -96,7 +103,10 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		-pedantic
 		-Wall
 		-Wextra
+		-Wnull-dereference
+		-Wuseless-cast
 		-Werror=missing-field-initializers
+		#-Werror=old-style-cast
 		-Werror=return-type
 	)
 else()
@@ -106,7 +116,7 @@ else()
 	)
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 target_compile_options(block_thingy PRIVATE
 	$<${DEBUG_BUILD}:${FSANITIZE}>
 	-march=native

@@ -30,7 +30,7 @@ mesh_vertex_t::mesh_vertex_t
 )
 :
 	pos(pos),
-	face_and_rotation(static_cast<uint8_t>(face) | (rotation << 3)),
+	face_and_rotation(static_cast<uint8_t>(face) | static_cast<uint8_t>(rotation << 3)),
 	tex_index(tex_index)
 {
 }
