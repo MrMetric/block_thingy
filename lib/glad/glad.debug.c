@@ -24,6 +24,12 @@
 #include <string.h>
 #include "glad.h"
 
+#ifdef __clang__
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wdouble-promotion"
+	#pragma clang diagnostic ignored "-Wmissing-prototypes"
+#endif
+
 void _pre_call_callback_default(const char *name, void *funcptr, int len_args, ...) {
     (void) name;
     (void) funcptr;
@@ -55,7 +61,7 @@ void glad_set_post_callback(GLADcallback cb) {
 struct gladGLversionStruct GLVersion;
 
 #if defined(GL_ES_VERSION_3_0) || defined(GL_VERSION_3_0)
-#define _GLAD_IS_SOME_NEW_VERSION 1
+#define GLAD_IS_SOME_NEW_VERSION 1
 #endif
 
 static int max_loaded_major;
@@ -66,11 +72,11 @@ static int num_exts_i = 0;
 static const char **exts_i = NULL;
 
 static int get_exts(void) {
-#ifdef _GLAD_IS_SOME_NEW_VERSION
+#ifdef GLAD_IS_SOME_NEW_VERSION
     if(max_loaded_major < 3) {
 #endif
         exts = (const char *)glGetString(GL_EXTENSIONS);
-#ifdef _GLAD_IS_SOME_NEW_VERSION
+#ifdef GLAD_IS_SOME_NEW_VERSION
     } else {
         unsigned int index;
 
@@ -100,7 +106,7 @@ static void free_exts(void) {
 }
 
 static int has_ext(const char *ext) {
-#ifdef _GLAD_IS_SOME_NEW_VERSION
+#ifdef GLAD_IS_SOME_NEW_VERSION
     if(max_loaded_major < 3) {
 #endif
         const char *extensions;
@@ -124,7 +130,7 @@ static int has_ext(const char *ext) {
             }
             extensions = terminator;
         }
-#ifdef _GLAD_IS_SOME_NEW_VERSION
+#ifdef GLAD_IS_SOME_NEW_VERSION
     } else {
         int index;
 
@@ -3946,6 +3952,11 @@ void APIENTRY glad_debug_impl_glGetProgramPipelineInfoLog(GLuint arg0, GLsizei a
     _post_call_callback("glGetProgramPipelineInfoLog", (void*)glGetProgramPipelineInfoLog, 4, arg0, arg1, arg2, arg3);
 }
 PFNGLGETPROGRAMPIPELINEINFOLOGPROC glad_debug_glGetProgramPipelineInfoLog = glad_debug_impl_glGetProgramPipelineInfoLog;
+
+#ifdef __clang__
+	#pragma clang diagnostic pop
+#endif
+
 static void load_GL_VERSION_1_0(GLADloadproc load) {
 	if(!GLAD_GL_VERSION_1_0) return;
 	glad_glCullFace = (PFNGLCULLFACEPROC)load("glCullFace");
@@ -4609,4 +4620,3 @@ int gladLoadGLLoader(GLADloadproc load) {
 	load_GL_ARB_separate_shader_objects(load);
 	return GLVersion.major != 0 || GLVersion.minor != 0;
 }
-

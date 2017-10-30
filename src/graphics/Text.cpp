@@ -113,7 +113,7 @@ glm::dvec2 Text::get_size(u32string s)
 
 	glm::dvec2 size(0, get_char('H').size.y);
 	std::vector<double> widths;
-	std::tie(size, widths) = loop(s, size, [](const glm::dvec2& size, const Character& ch)
+	std::tie(size, widths) = loop(s, size, [](const glm::dvec2&, const Character&)
 	{
 	});
 	widths.push_back(size.x);

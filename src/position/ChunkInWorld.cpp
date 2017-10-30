@@ -2,13 +2,9 @@
 
 #include <cmath>
 #include <iostream>
-#include <stdexcept>
-#include <string>
 
 #include "BlockInWorld.hpp"
 #include "fwd/chunk/Chunk.hpp"
-
-using std::to_string;
 
 namespace Position {
 
@@ -36,14 +32,6 @@ ChunkInWorld::ChunkInWorld(const BlockInWorld& pos)
 	z = t(pos.z);
 }
 #undef t
-
-ChunkInWorld::value_type& ChunkInWorld::operator[](const uint_fast8_t i)
-{
-	if(i == 0) return x;
-	if(i == 1) return y;
-	if(i == 2) return z;
-	throw std::out_of_range("Position::ChunkInWorld::operator[]: " + to_string(i) + " > 2");
-}
 
 ChunkInWorld& ChunkInWorld::operator+=(const ChunkInWorld& that)
 {

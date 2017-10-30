@@ -1,8 +1,11 @@
 #pragma once
 
+#include <cstddef>
 #include <iosfwd>
 #include <stdint.h>
+
 #ifdef DEBUG_BUILD
+	#include <stdexcept>
 	#include <string>
 #endif
 
@@ -22,7 +25,7 @@ struct BlockInChunk
 	BlockInChunk(value_type x, value_type y, value_type z);
 	explicit BlockInChunk(const BlockInWorld&);
 
-	value_type operator[](const uint_fast8_t i) const
+	value_type operator[](const std::ptrdiff_t i) const
 	{
 		#ifdef DEBUG_BUILD
 		if(i > 2)
@@ -32,7 +35,7 @@ struct BlockInChunk
 		#endif
 		return (&x)[i];
 	}
-	value_type& operator[](const uint_fast8_t i)
+	value_type& operator[](const std::ptrdiff_t i)
 	{
 		#ifdef DEBUG_BUILD
 		if(i > 2)

@@ -74,7 +74,7 @@ void Container::mousemove(const double x, const double y)
 
 static double get_spacing(const Base::style_t& style)
 {
-	const double* d;
+	const double* d = nullptr; // init to silence false-positive warning
 	if(style.count("auto_layout.spacing") != 0
 	&& (d = style.at("auto_layout.spacing").get<double>()) != nullptr)
 	{

@@ -299,7 +299,7 @@ void World::set_blocklight
 				chunk2->set_texbuflight(pos2, color);
 			}
 		};
-		for(int i = 0; i < 3; ++i)
+		for(uint_fast8_t i = 0; i < 3; ++i)
 		{
 			if(pos[i] == 0 || pos[i] == CHUNK_SIZE - 1)
 			{
@@ -307,9 +307,9 @@ void World::set_blocklight
 				zero[i] = (pos[i] == 0);
 			}
 		}
-		for(int i = 0; i < 3; ++i)
+		for(uint_fast8_t i = 0; i < 3; ++i)
 		{
-			int j = (i + 1) % 3;
+			const uint_fast8_t j = (i + 1) % 3;
 			if(xyz[i])
 			{
 				glm::tvec3<bool> xyz2(false, false, false);
@@ -578,7 +578,7 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 		{
 			ChunkInWorld chunk_pos_2 = chunk_pos;
 			BlockInChunk pos;
-			for(int i = 0; i < 3; ++i)
+			for(uint_fast8_t i = 0; i < 3; ++i)
 			{
 				if(pos2[i] == -1)
 				{
@@ -592,7 +592,7 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 				}
 				else
 				{
-					pos[i] = pos2[i];
+					pos[i] = static_cast<BlockInChunk::value_type>(pos2[i]);
 				}
 			}
 			if(chunk_pos_2 == chunk_pos)

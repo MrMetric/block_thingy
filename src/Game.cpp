@@ -135,7 +135,7 @@ Game::Game()
 			Game::instance->player.set_analog_motion({ 0, 0 });
 		}
 	});
-	glfwSetWindowFocusCallback(gfx.window, [](GLFWwindow* window, int focused)
+	glfwSetWindowFocusCallback(gfx.window, []([[maybe_unused]] GLFWwindow* window, int focused)
 	{
 		assert(window == Gfx::instance->window);
 		if(!focused)
@@ -439,13 +439,15 @@ void Game::impl::find_hovered_block()
 
 void Game::impl::add_commands()
 {
+	// [[maybe_unused]] does not work with lambda captures
+	// preprocessor directives do not work in #define, so I can not use #pragma clang diagnostic ...
 	#define COMMAND(name) commands.emplace_back(*Console::instance, name, \
 	[ \
 		&game=game, \
 		&player=game.player \
 	] \
 	( \
-		__attribute__((unused)) const std::vector<string>& args \
+		[[maybe_unused]] const std::vector<string>& args \
 	)
 
 	COMMAND("save")

@@ -129,24 +129,23 @@ static uint8_t tatan2(const int8_t y, const int8_t x)
 	throw std::invalid_argument("tatan got x = " + std::to_string(x) + " and y = " + std::to_string(y));
 }
 
-static uint8_t mod4(const int8_t turns)
+static uint8_t mod4(const int8_t x)
 {
-	if(turns < 0)
-	{
-		return 4 - ((-turns) % 4);
-	}
-	return turns % 4;
+	/*
+	adding 128 shifts int8_t range to exactly uint8_t range
+	this is valid because 128 % 4 == 0
+	when negative numbers are represented with two's complement, clang 5.0.0 and gcc 7.2.0 optimize this to return x & 3;
+	*/
+	return static_cast<uint8_t>(x + 128) % 4;
 }
 
 // derived from glm::rotate
-imat4 rotate(uint8_t turns, const ivec3& axis)
+static imat4 rotate_(uint8_t turns, const ivec3& axis)
 {
 	if(turns == 0)
 	{
 		return {};
 	}
-
-	turns %= 4;
 
 	const int8_t c = tcos(turns);
 	const int8_t s = tsin(turns);
@@ -170,6 +169,16 @@ imat4 rotate(uint8_t turns, const ivec3& axis)
 	m[3] = {0, 0, 0, 1};
 
 	return m;
+}
+
+imat4 rotate(const int8_t turns, const ivec3& axis)
+{
+	return rotate_(mod4(turns), axis);
+}
+
+imat4 rotate(const uint8_t turns, const ivec3& axis)
+{
+	return rotate_(turns % 4, axis);
 }
 
 Enum::Face rotate_face(const Enum::Face face, const uvec3& rot)
@@ -196,9 +205,9 @@ uvec3 mat_to_rot(const imat4& m)
 	const uint8_t T3 = tatan2(S1 * m[0][2] - C1 * m[0][1], C1 * m[1][1] - S1 * m[1][2]);
 	const uvec3 rot
 	{
-		mod4(-T1),
-		mod4(-T2),
-		mod4(-T3),
+		mod4(-static_cast<int8_t>(T1)),
+		mod4(-static_cast<int8_t>(T2)),
+		mod4(-static_cast<int8_t>(T3)),
 	};
 	return rot;
 }

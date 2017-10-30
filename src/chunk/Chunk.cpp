@@ -41,7 +41,7 @@ using Position::BlockInChunk;
 using Position::BlockInWorld;
 using Position::ChunkInWorld;
 
-constexpr int_fast32_t CHUNK_SIZE_2 = CHUNK_SIZE + 2;
+constexpr uint32_t CHUNK_SIZE_2 = CHUNK_SIZE + 2;
 
 struct Chunk::impl
 {
@@ -70,7 +70,7 @@ struct Chunk::impl
 			if(e.name == "light_smoothing")
 			{
 				const int64_t light_smoothing = *e.value.get<int64_t>();
-				const GLenum mag_filter = (light_smoothing == 0) ? GL_NEAREST : GL_LINEAR;
+				const GLint mag_filter = static_cast<GLint>((light_smoothing == 0) ? GL_NEAREST : GL_LINEAR);
 				light_tex->parameter(Graphics::OpenGL::Texture::Parameter::mag_filter, mag_filter);
 			}
 		});
@@ -88,7 +88,7 @@ struct Chunk::impl
 		light_tex->parameter(Graphics::OpenGL::Texture::Parameter::wrap_s, GL_CLAMP_TO_EDGE);
 		light_tex->parameter(Graphics::OpenGL::Texture::Parameter::wrap_t, GL_CLAMP_TO_EDGE);
 		light_tex->parameter(Graphics::OpenGL::Texture::Parameter::min_filter, GL_NEAREST);
-		const GLenum mag_filter = (Settings::get<int64_t>("light_smoothing") == 0) ? GL_NEAREST : GL_LINEAR;
+		const GLint mag_filter = static_cast<GLint>((Settings::get<int64_t>("light_smoothing") == 0) ? GL_NEAREST : GL_LINEAR);
 		light_tex->parameter(Graphics::OpenGL::Texture::Parameter::mag_filter, mag_filter);
 		light_changed = false;
 	}
@@ -194,7 +194,11 @@ void Chunk::set_texbuflight(const glm::ivec3& pos, const Graphics::Color& color)
 }
 void Chunk::impl::set_texbuflight(const glm::ivec3& pos, const Graphics::Color& color)
 {
-	const size_t i = (CHUNK_SIZE_2 * CHUNK_SIZE_2 * (pos.z + 1) + CHUNK_SIZE_2 * (pos.y + 1) + (pos.x + 1)) * 3;
+	const std::size_t i = 3 * (
+			  static_cast<std::size_t>(pos.z + 1) * CHUNK_SIZE_2 * CHUNK_SIZE_2
+			+ static_cast<std::size_t>(pos.y + 1) * CHUNK_SIZE_2
+			+ static_cast<std::size_t>(pos.x + 1)
+		);
 	light_tex_buf[i    ] = color.r;
 	light_tex_buf[i + 1] = color.g;
 	light_tex_buf[i + 2] = color.b;

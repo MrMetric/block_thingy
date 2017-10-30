@@ -83,7 +83,7 @@ void Player::move(const glm::dvec3& acceleration)
 
 	Physics::AABB new_aabb = make_aabb(new_position);
 	const Position::BlockInWorld block_pos_old(position);
-	auto loop = [this, &move_vec, &new_position, &new_aabb, &block_pos_old](const bool corners)
+	auto loop = [this, &new_position, &new_aabb, &block_pos_old](const bool corners)
 	{
 		Position::BlockInWorld block_pos_offset;
 		for(block_pos_offset.y = 0; block_pos_offset.y <= std::floor(height); ++block_pos_offset.y)

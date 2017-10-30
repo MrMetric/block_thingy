@@ -1,6 +1,7 @@
 #include "BlockRegistry.hpp"
 
 #include <cassert>
+#include <limits>
 #include <mutex>
 #include <stdexcept>
 #include <vector>

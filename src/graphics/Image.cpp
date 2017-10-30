@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cstdio>
+#include <limits>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -330,8 +331,9 @@ void write_raw
 	const std::vector<uint8_t>& data
 )
 {
+	assert(data.size() <= std::numeric_limits<std::streamsize>::max());
 	std::ofstream f(path, std::ofstream::binary);
-	f.write(reinterpret_cast<const char*>(data.data()), data.size());
+	f.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size()));
 }
 
 } // namespace Graphics

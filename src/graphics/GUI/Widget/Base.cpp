@@ -28,15 +28,15 @@ void Base::draw()
 	}
 }
 
-void Base::keypress(const Util::key_press& press)
+void Base::keypress(const Util::key_press&)
 {
 }
 
-void Base::charpress(const Util::char_press& press)
+void Base::charpress(const Util::char_press&)
 {
 }
 
-void Base::mousepress(const Util::mouse_press& press)
+void Base::mousepress(const Util::mouse_press&)
 {
 }
 
@@ -49,7 +49,7 @@ void Base::mousemove(const double x, const double y)
 glm::dvec2 Base::get_size() const
 {
 	glm::dvec2 size;
-	const double* d = nullptr; // init to nullptr to silence false positive warning
+	const double* d = nullptr; // init to silence false-positive warning
 	if(style.count("size.x") != 0 && (d = style.at("size.x").get<double>()) != nullptr)
 	{
 		size.x = *d;

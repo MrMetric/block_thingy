@@ -2,8 +2,11 @@
 
 #include <ostream>
 #include <sstream>
-#include <stdexcept>
 #include <string>
+
+#ifdef DEBUG_BUILD
+	#include <stdexcept>
+#endif
 
 #include <glm/common.hpp>
 

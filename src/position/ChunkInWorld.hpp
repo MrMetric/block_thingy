@@ -1,7 +1,13 @@
 #pragma once
 
+#include <cstddef>
 #include <iosfwd>
 #include <stdint.h>
+
+#ifdef DEBUG_BUILD
+	#include <stdexcept>
+	#include <string>
+#endif
 
 #include <glm/vec3.hpp>
 
@@ -18,8 +24,26 @@ struct ChunkInWorld
 	ChunkInWorld(value_type x, value_type y, value_type z);
 	explicit ChunkInWorld(const BlockInWorld&);
 
-	value_type operator[](uint_fast8_t) const;
-	value_type& operator[](uint_fast8_t);
+	value_type operator[](const std::ptrdiff_t i) const
+	{
+		#ifdef DEBUG_BUILD
+		if(i > 2)
+		{
+			throw std::out_of_range("Position::ChunkInWorld::operator[]: " + std::to_string(i) + " > 2");
+		}
+		#endif
+		return (&x)[i];
+	}
+	value_type& operator[](const std::ptrdiff_t i)
+	{
+		#ifdef DEBUG_BUILD
+		if(i > 2)
+		{
+			throw std::out_of_range("Position::ChunkInWorld::operator[]: " + std::to_string(i) + " > 2");
+		}
+		#endif
+		return (&x)[i];
+	}
 	ChunkInWorld& operator+=(const ChunkInWorld&);
 	bool operator==(const ChunkInWorld&) const;
 	bool operator!=(const ChunkInWorld&) const;

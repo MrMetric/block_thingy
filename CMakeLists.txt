@@ -67,6 +67,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-isystem "${PROJECT_SOURCE_DIR}/lib"
 		-iquote "${PROJECT_SOURCE_DIR}/src"
 		-Weverything
+		-Werror=cast-qual
 		#-Werror=conversion
 		-Werror=delete-incomplete
 		-Werror=deprecated
@@ -82,9 +83,12 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=self-move
 		-Werror=shorten-64-to-32
 		-Werror=sign-compare
+		#-Werror=sign-conversion
+		-Werror=strict-prototypes
 		-Werror=uninitialized
 		-Werror=unknown-pragmas
 		-Werror=unknown-warning-option
+		#-Werror=weak-vtables
 		-Wno-c++98-compat-pedantic
 		-Wno-deprecated-dynamic-exception-spec
 		-Wno-documentation-unknown-command
@@ -104,7 +108,6 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		-Wall
 		-Wextra
 		-Wnull-dereference
-		-Wuseless-cast
 		-Werror=missing-field-initializers
 		#-Werror=old-style-cast
 		-Werror=return-type

@@ -1172,7 +1172,7 @@ char* DateTime::parseFormat(char* buf, std::size_t bufSz, const char* format, co
         --format;
         break;
       case 'd':  // Day
-        buf = base::utils::Str::convertAndAddToBuff(tInfo->tm_mday, 2, buf, bufLim);
+        buf = base::utils::Str::convertAndAddToBuff(static_cast<std::size_t>(tInfo->tm_mday), 2, buf, bufLim);
         continue;
       case 'a':  // Day of week (short)
         buf = base::utils::Str::addToBuff(base::consts::kDaysAbbrev[tInfo->tm_wday], buf, bufLim);
@@ -1181,7 +1181,7 @@ char* DateTime::parseFormat(char* buf, std::size_t bufSz, const char* format, co
         buf = base::utils::Str::addToBuff(base::consts::kDays[tInfo->tm_wday], buf, bufLim);
         continue;
       case 'M':  // month
-        buf = base::utils::Str::convertAndAddToBuff(tInfo->tm_mon + 1, 2, buf, bufLim);
+        buf = base::utils::Str::convertAndAddToBuff(static_cast<std::size_t>(tInfo->tm_mon) + 1, 2, buf, bufLim);
         continue;
       case 'b':  // month (short)
         buf = base::utils::Str::addToBuff(base::consts::kMonthsAbbrev[tInfo->tm_mon], buf, bufLim);
@@ -1190,22 +1190,22 @@ char* DateTime::parseFormat(char* buf, std::size_t bufSz, const char* format, co
         buf = base::utils::Str::addToBuff(base::consts::kMonths[tInfo->tm_mon], buf, bufLim);
         continue;
       case 'y':  // year (two digits)
-        buf = base::utils::Str::convertAndAddToBuff(tInfo->tm_year + base::consts::kYearBase, 2, buf, bufLim);
+        buf = base::utils::Str::convertAndAddToBuff(static_cast<std::size_t>(tInfo->tm_year + base::consts::kYearBase), 2, buf, bufLim);
         continue;
       case 'Y':  // year (four digits)
-        buf = base::utils::Str::convertAndAddToBuff(tInfo->tm_year + base::consts::kYearBase, 4, buf, bufLim);
+        buf = base::utils::Str::convertAndAddToBuff(static_cast<std::size_t>(tInfo->tm_year + base::consts::kYearBase), 4, buf, bufLim);
         continue;
       case 'h':  // hour (12-hour)
         buf = base::utils::Str::convertAndAddToBuff(tInfo->tm_hour % 12, 2, buf, bufLim);
         continue;
       case 'H':  // hour (24-hour)
-        buf = base::utils::Str::convertAndAddToBuff(tInfo->tm_hour, 2, buf, bufLim);
+        buf = base::utils::Str::convertAndAddToBuff(static_cast<std::size_t>(tInfo->tm_hour), 2, buf, bufLim);
         continue;
       case 'm':  // minute
-        buf = base::utils::Str::convertAndAddToBuff(tInfo->tm_min, 2, buf, bufLim);
+        buf = base::utils::Str::convertAndAddToBuff(static_cast<std::size_t>(tInfo->tm_min), 2, buf, bufLim);
         continue;
       case 's':  // second
-        buf = base::utils::Str::convertAndAddToBuff(tInfo->tm_sec, 2, buf, bufLim);
+        buf = base::utils::Str::convertAndAddToBuff(static_cast<std::size_t>(tInfo->tm_sec), 2, buf, bufLim);
         continue;
       case 'z':  // subsecond part
       case 'g':
@@ -1451,7 +1451,7 @@ void LogFormat::updateDateFormat(std::size_t index, base::type::string_t& currFo
   if ((currFormat.size() > index) && (ptr[0] == '{')) {
     // User has provided format for date/time
     ++ptr;
-    int count = 1;  // Start by 1 in order to remove starting brace
+    std::size_t count = 1;  // Start by 1 in order to remove starting brace
     std::stringstream ss;
     for (; *ptr; ++ptr, ++count) {
       if (*ptr == '}') {
@@ -1643,7 +1643,7 @@ unsigned long TypedConfigurations::getULong(std::string confVal) {
     ELPP_ASSERT(valid, "Configuration value not a valid integer [" << confVal << "]");
     return 0;
   }
-  return atol(confVal.c_str());
+  return std::stoul(confVal);
 }
 
 std::string TypedConfigurations::resolveFilename(const std::string& filename) {

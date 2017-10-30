@@ -2,14 +2,10 @@
 
 #include <cmath>
 #include <iostream>
-#include <stdexcept>
-#include <string>
 
 #include "BlockInChunk.hpp"
 #include "ChunkInWorld.hpp"
 #include "chunk/Chunk.hpp"
-
-using std::to_string;
 
 namespace Position {
 
@@ -47,22 +43,6 @@ BlockInWorld::BlockInWorld(const glm::dvec3& vec)
 	z = t(vec.z);
 }
 #undef t
-
-BlockInWorld::value_type BlockInWorld::operator[](const uint_fast8_t i) const
-{
-	if(i == 0) return x;
-	if(i == 1) return y;
-	if(i == 2) return z;
-	throw std::out_of_range("Position::BlockInWorld::operator[]: " + to_string(i) + " > 2");
-}
-
-BlockInWorld::value_type& BlockInWorld::operator[](const uint_fast8_t i)
-{
-	if(i == 0) return x;
-	if(i == 1) return y;
-	if(i == 2) return z;
-	throw std::out_of_range("Position::BlockInWorld::operator[]: " + to_string(i) + " > 2");
-}
 
 BlockInWorld& BlockInWorld::operator+=(const BlockInWorld& that)
 {
