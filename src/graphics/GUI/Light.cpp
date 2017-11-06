@@ -35,7 +35,7 @@ Light::Light
 		if(w != nullptr)
 		{
 			w->set_text(std::to_string(c[i]));
-			w->on_change([this, i](Widget::TextInput& w, const string& new_value)
+			w->on_change([this, i](Widget::TextInput& w, const string& /*old_value*/, const string& new_value)
 			{
 				on_change(i, w, new_value);
 			});

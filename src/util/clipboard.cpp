@@ -4,6 +4,8 @@
 
 #include "Gfx.hpp"
 
+#include "util/unicode.hpp"
+
 using std::string;
 
 namespace Util::Clipboard {
@@ -21,6 +23,11 @@ string get_text()
 void set_text(const string& s)
 {
 	glfwSetClipboardString(Gfx::instance->window, s.c_str());
+}
+
+void set_text(const std::u32string& s)
+{
+	set_text(Util::utf32_to_utf8(s));
 }
 
 }

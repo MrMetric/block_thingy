@@ -28,6 +28,16 @@ inline bool string_ends_with(const std::string& value, const std::string& ending
 	return std::equal(ending.crbegin(), ending.crend(), value.crbegin());
 }
 
+template<typename T>
+inline void delete_element(T& t, typename T::value_type e)
+{
+	auto i = std::remove(t.begin(), t.end(), e);
+	if(i != t.end())
+	{
+		t.erase(i, t.end());
+	}
+}
+
 bool file_is_openable(const fs::path&);
 std::string read_file(const fs::path&);
 

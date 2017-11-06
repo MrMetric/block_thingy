@@ -13,6 +13,10 @@ struct key_mods
 	bool ctrl() const;
 	bool alt() const;
 	bool super() const;
+	bool shift_only() const;
+	bool ctrl_only() const;
+	bool alt_only() const;
+	bool super_only() const;
 
 	const int mods;
 };

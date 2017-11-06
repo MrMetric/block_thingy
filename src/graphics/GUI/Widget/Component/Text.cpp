@@ -15,7 +15,16 @@ Text::Text(const string& s)
 
 void Text::draw(const glm::dvec2& w_position, const glm::dvec2& w_size)
 {
-	// TODO
+	Gfx::instance->gui_text.draw(text, draw_position(w_position, w_size));
+}
+
+glm::dvec2 Text::draw_position(const glm::dvec2& w_position, const glm::dvec2& w_size) const
+{
+	return glm::round(glm::dvec2
+	{
+		w_position.x + 8,
+		w_position.y + (w_size.y - size.y) * 0.5,
+	});
 }
 
 string Text::get8() const
@@ -25,6 +34,16 @@ string Text::get8() const
 u32string Text::get32() const
 {
 	return text;
+}
+
+bool Text::empty() const
+{
+	return text.empty();
+}
+
+void Text::clear()
+{
+	operator=(u32string());
 }
 
 Text& Text::operator=(const char32_t c)

@@ -66,6 +66,7 @@ void Settings::load()
 	};
 	get_map<double>() =
 	{
+		{"cursor_blink_rate", 0.5}, // TODO: ensure > 0
 		{"far_plane", 1500},
 		{"fov", 75},
 		{"min_light", 0.005},

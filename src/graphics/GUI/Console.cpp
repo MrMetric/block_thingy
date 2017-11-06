@@ -23,9 +23,10 @@ Console::Console(Game& game)
 			if(press.key == GLFW_KEY_ENTER)
 			{
 				::Console::instance->run_line(input.get_text());
-				input.set_text("");
+				input.clear();
 			}
 		});
+		input->set_focus(true);
 	}
 }
 

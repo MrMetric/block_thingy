@@ -53,6 +53,7 @@
 #include "position/ChunkInWorld.hpp"
 #include "shim/make_unique.hpp"
 #include "util/filesystem.hpp"
+#include "util/key_press.hpp"
 
 using std::shared_ptr;
 using std::string;
@@ -66,7 +67,12 @@ struct Game::impl
 	:
 		game(game),
 		delta_time(0),
-		fps(999)
+		fps(999),
+		just_opened_gui(false),
+		last_key(0),
+		last_key_scancode(0),
+		consume_key_release(0),
+		consume_key_release_scancode(0)
 	{
 	}
 
@@ -81,6 +87,12 @@ struct Game::impl
 	void add_commands();
 
 	std::unique_ptr<Graphics::GUI::Base> temp_gui;
+
+	bool just_opened_gui;
+	int last_key;
+	int last_key_scancode;
+	int consume_key_release;
+	int consume_key_release_scancode;
 };
 
 static unique_ptr<Mesher::Base> make_mesher(const string& name)
@@ -233,6 +245,7 @@ void Game::draw()
 	glfwSwapBuffers(gfx.window);
 
 	glfwPollEvents();
+	pImpl->just_opened_gui = false;
 
 	if(glfwJoystickPresent(GLFW_JOYSTICK_1))
 	{
@@ -334,6 +347,8 @@ void Game::open_gui(unique_ptr<Graphics::GUI::Base> gui)
 	double x, y;
 	glfwGetCursorPos(gfx.window, &x, &y);
 	this->gui->mousemove(x, y);
+
+	pImpl->just_opened_gui = true;
 }
 
 void Game::close_gui()
@@ -385,11 +400,29 @@ void Game::update_framebuffer_size(const window_size_t& window_size)
 
 void Game::keypress(const Util::key_press& press)
 {
+	if(pImpl->consume_key_release == press.key && pImpl->consume_key_release_scancode == press.scancode)
+	{
+		pImpl->consume_key_release = 0;
+		pImpl->consume_key_release_scancode = 0;
+		if(press.action == GLFW_RELEASE)
+		{
+			return;
+		}
+	}
+	pImpl->last_key = press.key;
+	pImpl->last_key_scancode = press.scancode;
 	gui->keypress(press);
 }
 
 void Game::charpress(const Util::char_press& press)
 {
+	if(pImpl->just_opened_gui)
+	{
+		// when a GUI is opened with a keybind, the GUI should not receive the key release event
+		pImpl->consume_key_release = pImpl->last_key;
+		pImpl->consume_key_release_scancode = pImpl->last_key_scancode;
+		return;
+	}
 	gui->charpress(press);
 }
 

@@ -30,10 +30,13 @@ public:
 
 	std::string get_text() const;
 	void set_text(const std::string&);
+	void clear();
 
-	using on_change_callback_t = std::function<void(TextInput&, const std::string&)>;
+	void set_focus(bool);
+
+	using on_change_callback_t = std::function<void(TextInput&, const std::string& old_value, const std::string& new_value)>;
 	void on_change(on_change_callback_t);
-	void trigger_on_change();
+	void trigger_on_change(const std::string& old_value);
 
 	using on_keypress_callback_t = std::function<void(TextInput&, const Util::key_press&)>;
 	void on_keypress(on_keypress_callback_t);
@@ -45,8 +48,13 @@ private:
 	Component::Text content;
 	Component::Text placeholder;
 	bool focus;
+	double blink_start_time;
+	std::size_t cursor_pos;
+	std::size_t selection_start;
 	std::vector<on_change_callback_t> on_change_callbacks;
 	std::vector<on_keypress_callback_t> on_keypress_callbacks;
+
+	void delete_selection();
 };
 
 }

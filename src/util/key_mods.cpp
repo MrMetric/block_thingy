@@ -50,4 +50,24 @@ bool key_mods::super() const
 	return mods & GLFW_MOD_SUPER;
 }
 
+bool key_mods::shift_only() const
+{
+	return mods == GLFW_MOD_SHIFT;
+}
+
+bool key_mods::ctrl_only() const
+{
+	return mods == GLFW_MOD_CONTROL;
+}
+
+bool key_mods::alt_only() const
+{
+	return mods == GLFW_MOD_ALT;
+}
+
+bool key_mods::super_only() const
+{
+	return mods == GLFW_MOD_SUPER;
+}
+
 }

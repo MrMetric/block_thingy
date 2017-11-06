@@ -13,9 +13,12 @@ public:
 	Text(const std::string&);
 
 	void draw(const glm::dvec2& w_position, const glm::dvec2& w_size) override;
+	glm::dvec2 draw_position(const glm::dvec2& w_position, const glm::dvec2& w_size) const;
 
 	std::string get8() const;
 	std::u32string get32() const;
+	bool empty() const;
+	void clear();
 
 	Text& operator=(char32_t);
 	Text& operator=(const std::string&);
