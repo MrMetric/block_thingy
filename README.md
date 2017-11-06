@@ -14,12 +14,16 @@ I mek GAme
 ### Cloning
 As this repository has submodules, you need to clone it recursively:
 
-    $ git clone --recursive https://gitlab.com/MrMetric/block_thingy.git
+```shell
+$ git clone --recursive https://gitlab.com/MrMetric/block_thingy.git
+```
 
 If you have already cloned it and did not do that, then you need to init and update submodules:
 
-    $ cd block_thingy
-    $ git submodule update --init --recursive
+```shell
+$ cd block_thingy
+$ git submodule update --init --recursive
+```
 
 If you are using Windows, you must run `fix_symlinks.bat` before building or running block_thingy. This is because Git incorrectly translates each symbolic link to be just a text file with the link path as the content.
 
@@ -39,16 +43,19 @@ libpng | ❌
 
 ### Building (using CMake)
 
-Compiler version requirements:
+The only compilers that I guarantee will work are:
 
- * GCC: >= 6
- * Clang: >= 3.6
+ * GCC == 7.2.0
+ * Clang == 5.0.0
+
+Other versions of these compilers might work, but I do not guarantee that they do. I also do not guarantee that any other compilers work, although I do try to stick to standard C++ and use `#ifdef`s around non-standard features.
 
 Make a directory to build in, and run `cmake <repo root path>`, along with whatever options you want CMake to use.
 For example, in the repo root:
 
 ```shell
 $ mkdir build
+$ cd build
 $ cmake ..
 $ make
 ```
@@ -79,7 +86,7 @@ $ cmake .. -DCMAKE_C_COMPILER="/usr/local/bin/clang" -DCMAKE_CXX_COMPILER="/usr/
 To run, `block_thingy` needs to know where the game files are. It defaults to `.`, which is incorrect here—the folder is `<repo root>/bin`. Following from the above example, do this:
 
 ```shell
-./block_thingy ../bin
+$ ./block_thingy ../bin
 ```
 
 ## License
@@ -89,8 +96,9 @@ GPLv3, with one exception: creating non-free plugins is permitted.
 ## TODO
  * add a more useful error message for when game files are not found
  * add frustum culling
+ * make meshing faster
  * add other meshing methods [[1]](http://0fps.net/2012/07/07/meshing-minecraft-part-2/) [[2]](https://blackflux.wordpress.com/2014/02/23/meshing-in-voxel-engines-part-1/)
- * add texturing
+ * make texturing suck less
  * allow using image formats other than PNG
  * improve build instructions
  * make physics framerate-independent
