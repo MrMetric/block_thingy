@@ -2752,6 +2752,8 @@ class Storage : base::NoCopy, public base::threading::ThreadSafe {
 extern ELPP_EXPORT base::type::StoragePointer elStorage;
 #define ELPP el::base::elStorage
 class DefaultLogDispatchCallback : public LogDispatchCallback {
+ public:
+  DefaultLogDispatchCallback() : m_data(nullptr) {}
  protected:
   void handle(const LogDispatchData* data);
  private:

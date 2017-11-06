@@ -103,6 +103,7 @@ InotifyWatch::InotifyWatch(const std::string& path, uint32_t mask, bool enabled)
 	m_path(path),
 	m_uMask(mask),
 	m_wd(-1),
+	m_pInotify(nullptr),
 	m_fEnabled(enabled)
 {
 }

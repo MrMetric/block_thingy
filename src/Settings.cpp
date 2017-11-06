@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <limits>
 #include <map>
 #include <stdexcept>
 
@@ -116,6 +117,7 @@ static string format_string(string s)
 void Settings::save()
 {
 	std::ofstream f("scripts/settings");
+	f.precision(std::numeric_limits<double>::max_digits10);
 	for(const auto& p : get_map<bool>())
 	{
 		f << "set_bool " << format_string(p.first) << ' ' << (p.second ? "true" : "false") << '\n';

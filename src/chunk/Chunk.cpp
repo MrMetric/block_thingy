@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 
+#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 #include <glm/vec3.hpp>
 
@@ -78,7 +79,17 @@ struct Chunk::impl
 
 	~impl()
 	{
-		Game::instance->event_manager.unadd_handler(light_smoothing_eid);
+		try
+		{
+			Game::instance->event_manager.unadd_handler(light_smoothing_eid);
+		}
+		catch(const std::runtime_error& e)
+		{
+			// should never happen
+			// this catch is to satisfy Coverity Scan (destructors are noexcept)
+			LOG(ERROR) << "caught std::runtime_error in Chunk::impl destructor\n"
+					   << "  what():  " << e.what();
+		}
 	}
 
 	void init_light_tex()

@@ -1229,11 +1229,11 @@ char* DateTime::parseFormat(char* buf, std::size_t bufSz, const char* format, co
 void CommandLineArgs::setArgs(int argc, char** argv) {
   m_params.clear();
   m_paramsWithValue.clear();
+  m_argc = argc;
+  m_argv = argv;
   if (argc == 0 || argv == nullptr) {
     return;
   }
-  m_argc = argc;
-  m_argv = argv;
   for (int i = 1; i < m_argc; ++i) {
     const char* v = (strstr(m_argv[i], "="));
     if (v != nullptr && strlen(v) > 0) {

@@ -102,11 +102,15 @@ glm::dvec2 Text::get_size(const string& s_utf8)
 
 glm::dvec2 Text::get_size(u32string s)
 {
+	if(s.empty())
+	{
+		return {0, 0};
+	}
 	while(s.back() == '\n' || s.back() == '\t')
 	{
 		s.pop_back();
 	}
-	if(s.size() == 0)
+	if(s.empty())
 	{
 		return {0, 0};
 	}

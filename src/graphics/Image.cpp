@@ -186,8 +186,8 @@ void read_png
 		throw std::runtime_error("unable to read " + path.u8string());
 	}
 	png_byte header[8];
-	std::fread(header, 1, 8, file.get());
-	if(png_sig_cmp(header, 0, 8))
+	const std::size_t png_sig_size = std::fread(header, 1, 8, file.get());
+	if(png_sig_size != 8 || png_sig_cmp(header, 0, 8))
 	{
 		throw std::runtime_error("not a PNG file: " + path.u8string());
 	}

@@ -101,6 +101,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Wno-undefined-func-template
 	)
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	set(FSANITIZE -fsanitize=undefined,thread)
 	set(FLAGS
 		-isystem "${PROJECT_SOURCE_DIR}/lib"
 		-iquote "${PROJECT_SOURCE_DIR}/src"
