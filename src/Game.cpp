@@ -173,7 +173,7 @@ Game::Game()
 
 		if(e.name == "mesher")
 		{
-			const string name = *e.value.get<string>();
+			const string name = *e.new_value.get<string>();
 			game.world.set_mesher(make_mesher(name));
 		}
 	});

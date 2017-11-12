@@ -14,9 +14,11 @@ public:
 	Event_change_setting
 	(
 		const std::string& name,
-		const value_t value
+		const value_t old_value,
+		const value_t new_value
 	);
 
 	const std::string name;
-	const value_t value;
+	const value_t old_value;
+	const value_t new_value;
 };

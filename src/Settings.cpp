@@ -46,10 +46,11 @@ void Settings::set(const string& name, T value)
 	{
 		return;
 	}
+	const T old_value = std::move(get_map<T>()[name]);
 	get_map<T>()[name] = std::move(value);
 	if(Game::instance != nullptr)
 	{
-		Game::instance->event_manager.do_event(Event_change_setting(name, get_map<T>()[name]));
+		Game::instance->event_manager.do_event(Event_change_setting(name, old_value, get_map<T>()[name]));
 	}
 }
 
@@ -76,10 +77,12 @@ void Settings::load()
 	};
 	get_map<int64_t>() =
 	{
+		{"font_size", 24},
 		{"light_smoothing", 2},
 	};
 	get_map<string>() =
 	{
+		{"font", "fonts/Anonymous Pro/Anonymous Pro.ttf"},
 		{"mesher", "Simple"},
 		{"projection_type", "default"},
 		{"screen_shader", "default"},

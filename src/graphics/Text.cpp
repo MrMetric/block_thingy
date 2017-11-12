@@ -24,6 +24,7 @@ Text::Character load_char(const FT_Face& face, char32_t);
 
 Text::Text(const fs::path& font_path, const FT_UInt height)
 :
+	font_path(font_path),
 	height(height),
 	vbo({4, GL_FLOAT}),
 	vao(vbo),
@@ -48,6 +49,59 @@ Text::~Text()
 {
 	FT_Done_Face(face);
 	FT_Done_FreeType(ft);
+}
+
+void Text::set_font(const fs::path& path, const FT_UInt height)
+{
+	if(path == font_path && height == this->height)
+	{
+		return;
+	}
+
+	if(path != font_path)
+	{
+		FT_Face new_face;
+		if(FT_New_Face(ft, path.c_str(), 0, &new_face))
+		{
+			throw std::runtime_error("failed to load font " + path.u8string());
+		}
+		FT_Done_Face(face);
+		face = new_face;
+		font_path = path;
+	}
+	FT_Set_Pixel_Sizes(face, 0, height);
+	this->height = height;
+	chars.clear();
+}
+
+void Text::set_font(const fs::path& path)
+{
+	if(path == font_path)
+	{
+		return;
+	}
+
+	FT_Face new_face;
+	if(FT_New_Face(ft, path.c_str(), 0, &new_face))
+	{
+		throw std::runtime_error("failed to load font " + path.u8string());
+	}
+	FT_Done_Face(face);
+	face = new_face;
+	font_path = path;
+	FT_Set_Pixel_Sizes(face, 0, height);
+	chars.clear();
+}
+
+void Text::set_font_size(const FT_UInt height)
+{
+	if(height == this->height)
+	{
+		return;
+	}
+	FT_Set_Pixel_Sizes(face, 0, height);
+	this->height = height;
+	chars.clear();
 }
 
 void Text::set_projection_matrix(const glm::dmat4& projection_matrix)

@@ -41,6 +41,7 @@ void EventManager::unadd_handler(const event_handler_id_t event_id)
 
 void EventManager::do_event(const Event& event) const
 {
+	// TODO: avoid deadlocking when triggering an event from an event handler; perhaps an event queue would be useful
 	std::lock_guard<std::mutex> g(mutex);
 	for(auto pair0 : handlers)
 	{

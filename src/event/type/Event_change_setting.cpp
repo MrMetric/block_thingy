@@ -5,11 +5,13 @@
 Event_change_setting::Event_change_setting
 (
 	const std::string& name,
-	const value_t value
+	const value_t old_value,
+	const value_t new_value
 )
 :
 	Event(EventType::change_setting),
 	name(name),
-	value(value)
+	old_value(old_value),
+	new_value(new_value)
 {
 }

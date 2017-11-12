@@ -36,6 +36,15 @@ public:
 	Text(const fs::path& font_path, FT_UInt height);
 	~Text();
 
+	Text(Text&&) = delete;
+	Text(const Text&) = delete;
+	void operator=(Text&&) = delete;
+	void operator=(const Text&) = delete;
+
+	void set_font(const fs::path& path, FT_UInt height);
+	void set_font(const fs::path& path);
+	void set_font_size(const FT_UInt height);
+
 	void set_projection_matrix(const glm::dmat4& projection_matrix);
 	void draw(const std::string&, const glm::dvec2& pos, const glm::dvec3& color = glm::dvec3(1.0));
 	void draw(const std::u32string&, const glm::dvec2& pos, const glm::dvec3& color = glm::dvec3(1.0));
@@ -56,6 +65,7 @@ public:
 
 private:
 	FT_Library ft;
+	fs::path font_path;
 	FT_Face face;
 	FT_UInt height;
 	std::unordered_map<char32_t, Character> chars;

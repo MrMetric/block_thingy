@@ -74,7 +74,7 @@ Gfx::Gfx()
 	s_lines("shaders/lines"),
 	outline_vbo({3, GL_FLOAT}),
 	outline_vao(outline_vbo),
-	gui_text("fonts/Anonymous Pro/Anonymous Pro.ttf", 24),
+	gui_text(Settings::get<string>("font"), static_cast<FT_UInt>(Settings::get<int64_t>("font_size"))),
 	screen_rt(window_size, 8),
 	buf_rt(window_size),
 	quad_vbo({3, GL_BYTE}),
@@ -94,15 +94,15 @@ void Gfx::hook_events(EventManager& event_manager)
 
 		if(e.name == "fullscreen")
 		{
-			set_fullscreen(*e.value.get<bool>());
+			set_fullscreen(*e.old_value.get<bool>());
 		}
 		else if(e.name == "cull_face")
 		{
-			set_cull_face(*e.value.get<bool>());
+			set_cull_face(*e.old_value.get<bool>());
 		}
 		else if(e.name == "screen_shader")
 		{
-			set_screen_shader(*e.value.get<string>());
+			set_screen_shader(*e.old_value.get<string>());
 		}
 		else if(e.name == "projection_type"
 			 || e.name == "fov"
@@ -116,7 +116,7 @@ void Gfx::hook_events(EventManager& event_manager)
 		}
 		else if(e.name == "light_smoothing")
 		{
-			const int light_smoothing = static_cast<int>(*e.value.get<int64_t>());
+			const int light_smoothing = static_cast<int>(*e.new_value.get<int64_t>());
 			Game::instance->resource_manager.foreach_ShaderProgram([light_smoothing](Resource<ShaderProgram> r)
 			{
 				if(Util::string_starts_with(r.get_id(), "shaders/block/"))
@@ -127,7 +127,7 @@ void Gfx::hook_events(EventManager& event_manager)
 		}
 		else if(e.name == "min_light")
 		{
-			const float min_light = static_cast<float>(*e.value.get<double>());
+			const float min_light = static_cast<float>(*e.new_value.get<double>());
 			Game::instance->resource_manager.foreach_ShaderProgram([min_light](Resource<ShaderProgram> r)
 			{
 				if(Util::string_starts_with(r.get_id(), "shaders/block/"))
@@ -135,6 +135,26 @@ void Gfx::hook_events(EventManager& event_manager)
 					r->uniform("min_light", min_light);
 				}
 			});
+		}
+		else if(e.name == "font")
+		{
+			const string font_path = *e.new_value.get<string>();
+			try
+			{
+				gui_text.set_font(font_path);
+			}
+			catch(const std::runtime_error& error)
+			{
+				LOG(ERROR) << error.what();
+				// TODO: cancel current event
+				// triggering an event from an event handler deadlocks
+				//Settings::set<string>("font", *e.old_value.get<string>());
+			}
+		}
+		else if(e.name == "font_size")
+		{
+			const FT_UInt font_size = static_cast<FT_UInt>(*e.new_value.get<int64_t>());
+			gui_text.set_font_size(font_size);
 		}
 	});
 }
