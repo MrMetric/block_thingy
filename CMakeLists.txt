@@ -49,11 +49,8 @@ else()
 	endif()
 endif()
 
-#[[
-set_property(TARGET block_thingy PROPERTY CXX_STANDARD 14)
+set_property(TARGET block_thingy PROPERTY CXX_STANDARD 17)
 set_property(TARGET block_thingy PROPERTY CXX_STANDARD_REQUIRED ON)
-target_compile_features(block_thingy PRIVATE cxx_relaxed_constexpr)
-]]
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(FREETYPE REQUIRED freetype2)
@@ -71,10 +68,12 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		#-Werror=conversion
 		-Werror=delete-incomplete
 		-Werror=deprecated
+		-Werror=extra-semi
 		-Werror=extra-tokens
 		-Werror=float-conversion
 		-Werror=inconsistent-missing-override
 		-Werror=invalid-pp-token
+		-Werror=mismatched-tags
 		-Werror=missing-field-initializers
 		-Werror=newline-eof
 		-Werror=non-virtual-dtor
@@ -85,10 +84,12 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=sign-compare
 		#-Werror=sign-conversion
 		-Werror=strict-prototypes
+		-Werror=string-plus-int
 		-Werror=uninitialized
 		-Werror=unknown-pragmas
 		-Werror=unknown-warning-option
 		#-Werror=weak-vtables
+		-Werror=zero-as-null-pointer-constant
 		-Wno-c++98-compat-pedantic
 		-Wno-deprecated-dynamic-exception-spec
 		-Wno-documentation-unknown-command
@@ -120,10 +121,11 @@ else()
 	)
 endif()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 target_compile_options(block_thingy PRIVATE
 	$<${DEBUG_BUILD}:${FSANITIZE}>
 	-march=native
+	-fno-math-errno
+	-fno-signed-zeros
 	$<${DEBUG_BUILD}:-DDEBUG_BUILD>
 	-DGLFW_INCLUDE_NONE
 	-DGLM_ENABLE_EXPERIMENTAL

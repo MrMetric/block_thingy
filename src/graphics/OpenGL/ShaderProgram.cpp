@@ -57,6 +57,7 @@ ShaderProgram::ShaderProgram
 		res.back().on_update([this]()
 		{
 			init();
+			// TODO!: keep previous uniform values
 		});
 	}
 	init();

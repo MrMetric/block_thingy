@@ -1,6 +1,7 @@
 #pragma once
 #include "Base.hpp"
 
+#include <cstddef>
 #include <string>
 
 #include <glm/vec2.hpp>

@@ -1,5 +1,6 @@
 #include "Util.hpp"
 
+#include <cstddef>
 #include <cerrno>
 #include <chrono>
 #include <cstring>
@@ -8,10 +9,8 @@
 #include <iomanip>
 #include <memory>
 #include <stdexcept>
-#include <stdint.h>
 #ifdef _WIN32
-#include <shlwapi.h> // PathIsDirectory
-#include <windows.h> // SetCurrentDirectoryA
+#include <windows.h> // SetCurrentDirectoryW
 #else
 #include <sys/stat.h>
 #include <unistd.h>
@@ -37,12 +36,11 @@ string Util::read_file(const fs::path& path)
 	{
 		std::ifstream inpoot(path, std::ifstream::ate | std::ifstream::binary);
 		inpoot.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-		uint_fast64_t fsize = static_cast<uint_fast64_t>(inpoot.tellg());
+		const std::size_t fsize = static_cast<std::size_t>(inpoot.tellg());
 		inpoot.seekg(0, std::ifstream::beg);
-		unique_ptr<char[]> aaa = std::make_unique<char[]>(fsize);
-		inpoot.read(aaa.get(), static_cast<std::streamsize>(fsize));
-		string bbb(aaa.get(), fsize);
-		return bbb;
+		unique_ptr<char[]> buf = std::make_unique<char[]>(fsize);
+		inpoot.read(buf.get(), static_cast<std::streamsize>(fsize));
+		return string(buf.get(), fsize);
 	}
 	// std::ios_base::failure is not always catchable: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66145
 	catch(const std::exception&)

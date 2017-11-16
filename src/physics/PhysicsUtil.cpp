@@ -61,7 +61,10 @@ static glm::dvec3 intbound(const glm::dvec3& origin, const glm::dvec3& direction
 
 constexpr double delta(const double x)
 {
-	if(x == 0) return infinity;
+	if(x == 0)
+	{
+		return infinity;
+	}
 	return 1 / std::abs(x);
 }
 

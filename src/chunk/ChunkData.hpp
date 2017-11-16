@@ -51,7 +51,7 @@ public:
 
 	void set(const Position::BlockInChunk& pos, T block)
 	{
-		const auto i = block_array_index(pos.x, pos.y, pos.z);
+		const std::size_t i = block_array_index(pos.x, pos.y, pos.z);
 		std::lock_guard<std::mutex> g(blocks_mutex);
 		blocks[i] = std::move(block);
 	}

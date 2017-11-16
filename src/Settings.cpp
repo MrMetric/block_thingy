@@ -46,6 +46,8 @@ void Settings::set(const string& name, T value)
 	{
 		return;
 	}
+	// TODO: prevent having the same name in multiple types
+	// TODO!: there is not always an old value
 	const T old_value = std::move(get_map<T>()[name]);
 	get_map<T>()[name] = std::move(value);
 	if(Game::instance != nullptr)

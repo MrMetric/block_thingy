@@ -1,5 +1,6 @@
 #include "TextInput.hpp"
 
+#include <algorithm>
 #include <cassert>
 
 #include <glad/glad.h>
@@ -13,6 +14,8 @@
 #include "util/key_press.hpp"
 #include "util/mouse_press.hpp"
 #include "util/unicode.hpp"
+
+#define M_TAU 6.283185307179586476925286766559005768
 
 using std::string;
 
@@ -100,7 +103,7 @@ void TextInput::draw()
 		if(blink_rate == 0.5)
 		{
 			// the constant is acos(0.25)
-			alpha = std::clamp(2*std::cos(M_PI*2 * time - 1.318116071652818) + 0.5, 0.0, 1.0);
+			alpha = std::clamp(2*std::cos(M_TAU * time - 1.318116071652818) + 0.5, 0.0, 1.0);
 		}
 		else
 		{
