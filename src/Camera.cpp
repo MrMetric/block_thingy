@@ -1,7 +1,6 @@
 #include "Camera.hpp"
 
 #include <glm/common.hpp>
-#include <glm/vec3.hpp>
 
 #include "Gfx.hpp"
 #include "Util.hpp"
