@@ -1,7 +1,5 @@
 #include "Simple.hpp"
 
-#include <unordered_map>
-
 #include "Game.hpp"
 #include "block/Base.hpp"
 #include "block/Enum/Face.hpp"

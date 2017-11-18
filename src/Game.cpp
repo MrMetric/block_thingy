@@ -32,6 +32,7 @@
 #include "block/Enum/Type.hpp"
 #include "chunk/Mesher/Greedy.hpp"
 #include "chunk/Mesher/Simple.hpp"
+#include "chunk/Mesher/Simple2.hpp"
 #include "console/Command.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
@@ -106,8 +107,12 @@ static unique_ptr<Mesher::Base> make_mesher(const string& name)
 	{
 		return std::make_unique<Mesher::Simple>();
 	}
+	else if(name == "Simple2")
+	{
+		return std::make_unique<Mesher::Simple2>();
+	}
 	LOG(ERROR) << "No such mesher: " << name;
-	return make_mesher("Simple");
+	return make_mesher("Simple2");
 }
 
 Game::Game()
