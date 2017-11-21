@@ -1,8 +1,10 @@
 #include "Greedy.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <stdint.h>
+#include <tuple>
 
 #include <glm/vec3.hpp>
 
@@ -10,7 +12,6 @@
 #include "block/Base.hpp"
 #include "block/Enum/Face.hpp"
 #include "block/Enum/Type.hpp"
-#include "fwd/chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
 using Block::Enum::Face;
@@ -18,7 +19,7 @@ using Position::BlockInChunk;
 
 namespace Mesher {
 
-using surface_t = Greedy::surface_t;
+using surface_t = std::array<std::array<std::tuple<meshmap_key_t, uint16_t, uint8_t>, CHUNK_SIZE>, CHUNK_SIZE>;
 
 struct Rectangle
 {
@@ -37,6 +38,7 @@ meshmap_t Greedy::make_mesh(const Chunk& chunk)
 {
 	meshmap_t meshes;
 
+	surface_t surface;
 	add_surface(chunk, meshes, surface, Face::right );
 	add_surface(chunk, meshes, surface, Face::left  );
 	add_surface(chunk, meshes, surface, Face::top   );
