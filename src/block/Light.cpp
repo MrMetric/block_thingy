@@ -9,6 +9,7 @@
 #include "Player.hpp"
 #include "World.hpp"
 #include "block/Enum/Type.hpp"
+#include "block/Enum/VisibilityType.hpp"
 #include "graphics/GUI/Light.hpp"
 #include "shim/make_unique.hpp"
 #include "storage/Interface.hpp"
@@ -25,36 +26,18 @@ Light::Light(const Enum::Type t)
 {
 }
 
-Light::Light(const Enum::Type t, const Color& color)
+Light::Light(const Enum::Type t, const Color& light)
 :
-	SimpleShader(t, "light"),
-	color_(color)
+	Base(t, Enum::VisibilityType::opaque, "light")
 {
-}
-
-Light& Light::operator=(const Base& block)
-{
-	Base::operator=(block);
-	const Light* that = static_cast<const Light*>(&block);
-	color_ = that->color_;
-	return *this;
+	light_ = light;
 }
 
 string Light::name() const
 {
 	std::ostringstream ss;
-	ss << "Light " << color();
+	ss << "Light " << light();
 	return ss.str();
-}
-
-Color Light::color() const
-{
-	return color_;
-}
-
-void Light::color(const Color& c)
-{
-	color_ = c;
 }
 
 void Light::use_start
@@ -72,13 +55,13 @@ void Light::use_start
 void Light::save(Storage::OutputInterface& i) const
 {
 	Base::save(i);
-	i.set("color", color_);
+	i.set("light", light_);
 }
 
 void Light::load(Storage::InputInterface& i)
 {
 	Base::load(i);
-	color_ = i.get<Color>("color");
+	light_ = i.get<Color>("light");
 }
 
 }

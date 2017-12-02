@@ -6,13 +6,8 @@ namespace Block {
 
 Teleporter::Teleporter(const Enum::Type t)
 :
-	SimpleShader(t, "teleporter")
+	Base(t, Enum::VisibilityType::translucent, "teleporter")
 {
-}
-
-Enum::VisibilityType Teleporter::visibility_type() const
-{
-	return Enum::VisibilityType::translucent;
 }
 
 bool Teleporter::is_solid() const

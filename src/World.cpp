@@ -189,8 +189,8 @@ void World::set_block
 	const bool old_affects_light = does_affect_light(*old_block);
 	const bool affects_light = does_affect_light(*block);
 
-	const Graphics::Color old_color = old_block->color();
-	const Graphics::Color color = block->color();
+	const Graphics::Color old_light = old_block->light();
+	const Graphics::Color light = block->light();
 
 	// TODO: these checks might not work (a filter block could be overwritten by a different filter block)
 	if(affects_light && !old_affects_light)
@@ -198,13 +198,13 @@ void World::set_block
 		pImpl->sub_blocklight(block_pos);
 	}
 
-	if(old_color != color)
+	if(old_light != light)
 	{
-		if(old_color != 0)
+		if(old_light != 0)
 		{
 			pImpl->sub_blocklight(block_pos);
 		}
-		pImpl->add_blocklight(block_pos, color, false);
+		pImpl->add_blocklight(block_pos, light, false);
 	}
 
 	if(affects_light != old_affects_light)
@@ -340,7 +340,7 @@ void World::update_blocklight
 	const bool save
 )
 {
-	update_blocklight(block_pos, get_block(block_pos)->color(), save);
+	update_blocklight(block_pos, get_block(block_pos)->light(), save);
 }
 
 void World::update_blocklight
@@ -562,10 +562,10 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 		{
 			shared_ptr<Block::Base> block = chunk->get_block(pos);
 
-			const Graphics::Color color = block->color();
-			if(color != 0)
+			const Graphics::Color light = block->light();
+			if(light != 0)
 			{
-				pImpl->add_blocklight({chunk_pos, pos}, color, false);
+				pImpl->add_blocklight({chunk_pos, pos}, light, false);
 			}
 		}
 	}
@@ -880,7 +880,7 @@ void World::impl::gen_chunk(shared_ptr<Chunk> chunk) const
 			block_pos.y = y;
 
 			// TODO: investigate performance of using strings here vs caching the IDs
-			const string t = y > -m / 2 ? "White" : "Black";
+			const string t = y > -m / 2 ? "test_white" : "test_black";
 			chunk->set_block(BlockInChunk(block_pos), world.block_registry.get_default(t));
 		}
 	}

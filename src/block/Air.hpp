@@ -8,7 +8,6 @@ class Air : public Base
 public:
 	Air(Enum::Type);
 
-	Enum::VisibilityType visibility_type() const override;
 	bool is_solid() const override;
 	bool is_selectable() const override;
 	bool is_replaceable_by(const Base&) const override;

@@ -19,14 +19,39 @@ namespace Block {
 
 Base::Base()
 :
-	type_(Enum::Type::none)
+	Base(Enum::Type::none, Enum::VisibilityType::opaque)
 {
 }
 
 Base::Base(const Enum::Type type)
 :
+	Base(type, Enum::VisibilityType::opaque)
+{
+}
+
+Base::Base(const Enum::Type type, const Enum::VisibilityType visibility_type_)
+:
+	Base(type, visibility_type_, "default")
+{
+}
+
+Base::Base(const Enum::Type type, const Enum::VisibilityType visibility_type_, const fs::path& shader)
+:
+	visibility_type_(visibility_type_),
 	type_(type)
 {
+	shader_.fill("shaders/block" / shader);
+}
+
+Base::Base(const Enum::Type type, const Enum::VisibilityType visibility_type_, const std::array<fs::path, 6>& shaders)
+:
+	visibility_type_(visibility_type_),
+	type_(type)
+{
+	for(std::size_t i = 0; i < 6; ++i)
+	{
+		shader_[i] = "shaders/block" / shaders[i];
+	}
 }
 
 Base::~Base()
@@ -48,33 +73,34 @@ Base& Base::operator=(const Base& that)
 	{
 		throw std::runtime_error("can not copy " + std::to_string(type2) + " to " + std::to_string(type1));
 	}
+
+	visibility_type_ = that.visibility_type_;
+	light_ = that.light_;
+	shader_ = that.shader_;
+	texture_ = that.texture_;
+
 	rotation_ = that.rotation_;
 	return *this;
 }
 
-Enum::Type Base::type() const
-{
-	return type_;
-}
-
 string Base::name() const
 {
-	return Game::instance->block_registry.get_strid(type());
+	return Game::instance->block_registry.get_name(type());
 }
 
-Graphics::Color Base::color() const
+void Base::light(const Graphics::Color& light)
 {
-	return {0, 0, 0};
+	light_ = light;
 }
 
 fs::path Base::shader(const Enum::Face face) const
 {
-	return shader_(RotationUtil::rotate_face(face, rotation()));
+	return shader_[static_cast<std::size_t>(RotationUtil::rotate_face(face, rotation()))];
 }
 
 fs::path Base::texture(const Enum::Face face) const
 {
-	return texture_(RotationUtil::rotate_face(face, rotation()));
+	return texture_[static_cast<std::size_t>(RotationUtil::rotate_face(face, rotation()))];
 }
 
 glm::tvec3<uint8_t> Base::rotation() const
@@ -124,26 +150,6 @@ Graphics::Color Base::light_filter() const
 	return {Graphics::Color::max};
 }
 
-Enum::VisibilityType Base::visibility_type() const
-{
-	return Enum::VisibilityType::opaque;
-}
-
-bool Base::is_opaque() const
-{
-	return visibility_type() == Enum::VisibilityType::opaque;
-}
-
-bool Base::is_translucent() const
-{
-	return visibility_type() == Enum::VisibilityType::translucent;
-}
-
-bool Base::is_invisible() const
-{
-	return visibility_type() == Enum::VisibilityType::invisible;
-}
-
 bool Base::is_solid() const
 {
 	return true;
@@ -186,16 +192,6 @@ void Base::load(Storage::InputInterface& i)
 {
 	// type is set before loading
 	i.maybe_get("r", rotation_);
-}
-
-fs::path Base::shader_(const Enum::Face) const
-{
-	return {};
-}
-
-fs::path Base::texture_(const Enum::Face) const
-{
-	return {};
 }
 
 }

@@ -1,30 +1,21 @@
 #pragma once
-#include "SimpleShader.hpp"
+#include "Base.hpp"
 
-#include <unordered_map>
+#include <array>
+#include <string>
 
 namespace Block {
 
-class Textured : public SimpleShader
+class Textured : public Base
 {
 public:
-	Textured(Enum::Type);
-	Textured(Enum::Type, const fs::path& texture_path);
-	Textured(Enum::Type, const std::unordered_map<Enum::Face, fs::path> texture_paths);
+	Textured(Enum::Type, const fs::path& texture         , const fs::path& shader);
+	Textured(Enum::Type, const fs::path& texture         , const std::array<fs::path, 6>& shaders);
+	Textured(Enum::Type, std::array<fs::path, 6> textures, const fs::path& shader);
+	Textured(Enum::Type, std::array<fs::path, 6> textures, const std::array<fs::path, 6>& shaders);
+	virtual ~Textured();
 
-	Block::Textured& operator=(const Block::Base& block) override;
-
-	Enum::VisibilityType visibility_type() const override
-	{
-		return visibility_type_;
-	}
-
-protected:
-	fs::path texture_(Enum::Face) const override;
-
-private:
-	std::unordered_map<Enum::Face, fs::path> texture_paths;
-	Enum::VisibilityType visibility_type_;
+	Textured(Enum::Type); // temporary; needed due to a design flaw
 };
 
 }

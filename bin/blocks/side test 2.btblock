@@ -1,0 +1,7 @@
+id				side_test_2
+texture_right	'side test/right.png'
+texture_left	'side test/left.png'
+texture_top		'side test/top.png'
+texture_bottom	'side test/bottom.png'
+texture_front	'side test/front.png'
+texture_back	'side test/back.png'

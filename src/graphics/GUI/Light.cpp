@@ -28,7 +28,7 @@ Light::Light
 	block(block),
 	block_pos(block_pos)
 {
-	const Graphics::Color c = block.color();
+	const Graphics::Color c = block.light();
 	for(uint_fast8_t i = 0; i < 3; ++i)
 	{
 		auto w = root.get_widget_by_id<Widget::TextInput>(std::to_string(i));
@@ -86,11 +86,11 @@ void Light::on_change(uint_fast8_t i, Widget::TextInput& w, const string& new_va
 		invalid = true;
 	}
 	w.invalid = invalid;
-	auto c = block.color();
+	auto c = block.light();
 	if(v != c[i])
 	{
 		c[i] = static_cast<Graphics::Color::value_type>(v);
-		block.color(c);
+		block.light(c);
 		world.update_blocklight(block_pos, c, true);
 	}
 }

@@ -5,12 +5,13 @@
 
 #include "Game.hpp"
 #include "World.hpp"
+#include "block/Enum/VisibilityType.hpp"
 
 namespace Block {
 
 Test::Test(const Enum::Type t)
 :
-	SimpleShader(t, "test")
+	Base(t, Enum::VisibilityType::opaque, "test")
 {
 }
 

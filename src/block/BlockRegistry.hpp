@@ -61,6 +61,9 @@ public:
 	std::string get_strid(Enum::Type) const;
 	std::string get_strid(Enum::TypeExternal) const;
 
+	std::string get_name(Enum::Type) const;
+	std::string get_name(const std::string& strid) const;
+
 	Enum::TypeExternal get_extid(Enum::Type) const;
 
 	using extid_map_t = std::map<Enum::TypeExternal, std::string>;

@@ -8,7 +8,6 @@ class None : public Base
 public:
 	None(Enum::Type);
 
-	Enum::VisibilityType visibility_type() const override;
 	glm::dvec4 selection_color() const override;
 };
 

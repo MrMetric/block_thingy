@@ -10,7 +10,6 @@
 
 #include "block/Air.hpp"
 #include "block/Base.hpp"
-#include "block/Glass.hpp"
 #include "block/Light.hpp"
 #include "block/None.hpp"
 #include "block/Teleporter.hpp"
@@ -57,18 +56,6 @@ BlockRegistry::BlockRegistry()
 	add<Block::Test>("test");
 	add<Block::Teleporter>("teleporter");
 	add<Block::Light>("light");
-	add<Block::Glass>("glass");
-	add<Block::Textured>("Side Test 2",
-		std::unordered_map<Block::Enum::Face, fs::path>
-		{
-			{Block::Enum::Face::right , "side test/right.png"},
-			{Block::Enum::Face::left  , "side test/left.png"},
-			{Block::Enum::Face::top   , "side test/top.png"},
-			{Block::Enum::Face::bottom, "side test/bottom.png"},
-			{Block::Enum::Face::front , "side test/front.png"},
-			{Block::Enum::Face::back  , "side test/back.png"},
-		}
-	);
 }
 
 shared_ptr<Base> BlockRegistry::get_default(const Enum::Type t) const
@@ -169,6 +156,18 @@ string BlockRegistry::get_strid(const Enum::TypeExternal te) const
 		throw std::runtime_error("invalid external block ID: " + std::to_string(static_cast<Enum::Type_t>(te)));
 	}
 	return i->second;
+}
+
+string BlockRegistry::get_name(const Enum::Type t) const
+{
+	// TODO
+	return get_strid(t);
+}
+
+string BlockRegistry::get_name(const string& strid) const
+{
+	// TODO
+	return strid;
 }
 
 Enum::TypeExternal BlockRegistry::get_extid(const Enum::Type t) const

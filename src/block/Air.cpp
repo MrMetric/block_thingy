@@ -7,13 +7,8 @@ namespace Block {
 
 Air::Air(const Enum::Type t)
 :
-	Base(t)
+	Base(t, Enum::VisibilityType::invisible)
 {
-}
-
-Enum::VisibilityType Air::visibility_type() const
-{
-	return Enum::VisibilityType::invisible;
 }
 
 bool Air::is_solid() const

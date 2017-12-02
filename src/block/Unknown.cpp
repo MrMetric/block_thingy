@@ -2,6 +2,7 @@
 
 #include <easylogging++/easylogging++.hpp>
 
+#include "block/Enum/VisibilityType.hpp"
 #include "storage/Interface.hpp"
 
 using std::string;
@@ -20,7 +21,7 @@ Unknown::Unknown
 	const string& strid
 )
 :
-	SimpleShader(t),
+	Base(t, Enum::VisibilityType::opaque),
 	strid(strid)
 {
 }

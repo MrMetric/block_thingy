@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <stdint.h>
 #include <string>
 
@@ -11,8 +12,8 @@
 #include "fwd/World.hpp"
 #include "fwd/block/Enum/Face.hpp"
 #include "fwd/block/Enum/Type.hpp"
-#include "fwd/block/Enum/VisibilityType.hpp"
-#include "fwd/graphics/Color.hpp"
+#include "block/Enum/VisibilityType.hpp"
+#include "graphics/Color.hpp"
 #include "fwd/position/BlockInWorld.hpp"
 #include "fwd/storage/Interface.hpp"
 #include "util/filesystem.hpp"
@@ -24,18 +25,28 @@ class Base
 public:
 	Base();
 	Base(Enum::Type);
+	Base(Enum::Type, Enum::VisibilityType);
+	Base(Enum::Type, Enum::VisibilityType, const fs::path& shader);
+	Base(Enum::Type, Enum::VisibilityType, const std::array<fs::path, 6>& shaders);
 	virtual ~Base();
 
 	Base(const Base&);
 	virtual Base& operator=(const Base&);
 
-	Enum::Type type() const;
+	Enum::Type type() const
+	{
+		return type_;
+	}
 	virtual std::string name() const;
 
 	/**
 	 * If non-zero, this block emits light of this color
 	 */
-	virtual Graphics::Color color() const;
+	Graphics::Color light() const
+	{
+		return light_;
+	}
+	virtual void light(const Graphics::Color&);
 
 	fs::path shader(Enum::Face) const;
 	fs::path texture(Enum::Face) const;
@@ -53,10 +64,22 @@ public:
 
 	virtual Graphics::Color light_filter() const;
 
-	virtual Enum::VisibilityType visibility_type() const;
-	bool is_opaque() const;
-	bool is_translucent() const;
-	bool is_invisible() const;
+	Enum::VisibilityType visibility_type() const
+	{
+		return visibility_type_;
+	}
+	bool is_opaque() const
+	{
+		return visibility_type_ == Enum::VisibilityType::opaque;
+	}
+	bool is_translucent() const
+	{
+		return visibility_type_ == Enum::VisibilityType::translucent;
+	}
+	bool is_invisible() const
+	{
+		return visibility_type_ == Enum::VisibilityType::invisible;
+	}
 
 	/**
 	 * Can entities collide with this block?
@@ -86,8 +109,10 @@ public:
 	virtual void load(Storage::InputInterface&);
 
 protected:
-	virtual fs::path shader_(Enum::Face) const;
-	virtual fs::path texture_(Enum::Face) const;
+	Enum::VisibilityType visibility_type_;
+	Graphics::Color light_;
+	std::array<fs::path, 6> shader_;
+	std::array<fs::path, 6> texture_;
 
 private:
 	Enum::Type type_;
