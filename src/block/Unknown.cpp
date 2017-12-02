@@ -29,8 +29,9 @@ Unknown::Unknown
 Unknown& Unknown::operator=(const Base& block)
 {
 	Base::operator=(block);
-	const Unknown* that = static_cast<const Unknown*>(&block);
-	for(const auto& p : that->data)
+	const Unknown& that = *static_cast<const Unknown*>(&block);
+	strid = that.strid;
+	for(const auto& p : that.data)
 	{
 		data.emplace(p.first, Storage::copy_object(p.second.get()));
 	}

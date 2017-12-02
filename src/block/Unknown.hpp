@@ -21,7 +21,7 @@ public:
 	void load(Storage::InputInterface&) override;
 
 private:
-	const std::string strid;
+	std::string strid;
 	std::map<std::string, msgpack::object_handle> data;
 };
 

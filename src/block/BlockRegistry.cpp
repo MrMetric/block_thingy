@@ -71,7 +71,13 @@ shared_ptr<Base> BlockRegistry::get_default(const Enum::Type t) const
 
 shared_ptr<Base> BlockRegistry::get_default(const Enum::TypeExternal te) const
 {
-	return get_default(get_id(get_strid(te)));
+	const string strid = get_strid(te);
+	if(strid_to_id.count(strid) == 0)
+	{
+		// TODO: should I put this in a map (like default_blocks)?
+		return std::make_unique<Unknown>(Enum::Type::unknown, strid);
+	}
+	return get_default(get_id(strid));
 }
 
 shared_ptr<Base> BlockRegistry::get_default(const std::string& strid) const
