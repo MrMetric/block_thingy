@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <string>
 
-#include <easylogging++/easylogging++.hpp>
+#include "util/logger.hpp"
 
 namespace Graphics {
 
@@ -25,17 +25,17 @@ RenderTarget::RenderTarget(const window_size_t& window_size, GLsizei samples)
 		{
 			GLint max_color_samples;
 			glGetIntegerv(GL_MAX_COLOR_TEXTURE_SAMPLES, &max_color_samples);
-			LOG(DEBUG) << "max color texture samples: " << max_color_samples;
+			LOG(DEBUG) << "max color texture samples: " << max_color_samples << '\n';
 
 			GLint max_depth_samples;
 			glGetIntegerv(GL_MAX_DEPTH_TEXTURE_SAMPLES, &max_depth_samples);
-			LOG(DEBUG) << "max depth texture samples: " << max_color_samples;
+			LOG(DEBUG) << "max depth texture samples: " << max_color_samples << '\n';
 
 			max_samples = std::min(max_color_samples, max_depth_samples);
 		}
 		if(samples > max_samples)
 		{
-			LOG(WARNING) << samples << " samples requested, but max is " << max_samples;
+			LOG(WARN) << samples << " samples requested, but max is " << max_samples << '\n';
 			this->samples = samples = max_samples;
 		}
 	}

@@ -6,7 +6,6 @@
 #include <utility>
 #include <vector>
 
-#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -15,6 +14,7 @@
 #include "ShaderObject.hpp"
 #include "Util.hpp"
 #include "shim/make_unique.hpp"
+#include "util/logger.hpp"
 
 using std::string;
 using std::unique_ptr;
@@ -346,7 +346,7 @@ static GLuint make_program(const std::vector<GLuint>& objects, const string& deb
 	if(izgud == GL_FALSE)
 	{
 		string log = Util::gl_object_log(program);
-		LOG(WARNING) << "program validation failed in " << debug_name << ":\n" << log;
+		LOG(WARN) << "program validation failed in " << debug_name << ":\n" << log << '\n';
 	}
 	#endif
 

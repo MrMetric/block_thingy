@@ -1,11 +1,11 @@
 #include "Button.hpp"
 
-#include <easylogging++/easylogging++.hpp>
 #include <GLFW/glfw3.h>
 #include <glm/common.hpp>
 
 #include "Gfx.hpp"
 #include "console/Console.hpp"
+#include "util/logger.hpp"
 #include "util/mouse_press.hpp"
 
 using std::string;
@@ -92,7 +92,7 @@ void Button::read_layout(const json& layout)
 		{
 			if(!c.is_string())
 			{
-				LOG(ERROR) << "Button command list has a non-string (" << c.type_name() << ")";
+				LOG(ERROR) << "Button command list has a non-string (" << c.type_name() << ")\n";
 				good = false;
 			}
 		}
@@ -110,7 +110,7 @@ void Button::read_layout(const json& layout)
 	}
 	else
 	{
-		LOG(ERROR) << "Button command should be a string or a string list, but is " << command.type_name();
+		LOG(ERROR) << "Button command should be a string or a string list, but is " << command.type_name() << '\n';
 	}
 }
 

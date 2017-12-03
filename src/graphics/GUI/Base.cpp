@@ -2,7 +2,6 @@
 
 #include <utility>
 
-#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <json.hpp>
@@ -16,6 +15,7 @@
 #include "event/type/Event_window_size_change.hpp"
 #include "graphics/OpenGL/PushState.hpp"
 #include "util/key_press.hpp"
+#include "util/logger.hpp"
 
 using std::string;
 
@@ -50,7 +50,7 @@ Base::~Base()
 	catch(const std::runtime_error& e)
 	{
 		// should never happen, but best to be safe
-		LOG(ERROR) << "error unadding GUI event handler: " << e.what();
+		LOG(ERROR) << "error unadding GUI event handler: " << e.what() << '\n';
 	}
 }
 

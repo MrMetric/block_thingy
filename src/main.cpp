@@ -9,9 +9,6 @@
 #include <windows.h>
 #endif
 
-#include <easylogging++/easylogging++.hpp>
-INITIALIZE_EASYLOGGINGPP
-
 #include <GLFW/glfw3.h>
 
 #include "Game.hpp"
@@ -23,6 +20,7 @@ INITIALIZE_EASYLOGGINGPP
 #include "shim/make_unique.hpp"
 #include "util/compiler_info.hpp"
 #include "util/demangled_name.hpp"
+#include "util/logger.hpp"
 
 using std::string;
 using std::unique_ptr;
@@ -49,19 +47,18 @@ class CodePageHandler
 static void log_exception(const std::exception& error)
 {
 	LOG(ERROR) << "uncaught exception (" << Util::demangled_name(error) << ")\n"
-			   << "  what():  " << error.what();
+			   << "  what():  " << error.what() << '\n';
 }
 
 static void error_callback(const int error, const char* description)
 {
-	LOG(ERROR) << "GLFW error " << error << ": " << description;
+	LOG(ERROR) << "GLFW error " << error << ": " << description << '\n';
 }
 
 int main(int argc, char** argv)
 {
 	std::cout << std::boolalpha;
 	std::cerr << std::boolalpha;
-	START_EASYLOGGINGPP(argc, argv);
 
 	GLFWwindow* window;
 
@@ -87,13 +84,13 @@ int main(int argc, char** argv)
 	#endif
 
 	#ifdef DEBUG_BUILD
-	LOG(INFO) << "This is a debug build";
+	LOG(INFO) << "This is a debug build\n";
 	#endif
 
 	const string compiler_info = Util::compiler_info();
 	if(compiler_info != "")
 	{
-		LOG(DEBUG) << "Compiled by " << compiler_info;
+		LOG(DEBUG) << "Compiled by " << compiler_info << '\n';
 	}
 
 	if(argc > 1)
@@ -103,8 +100,8 @@ int main(int argc, char** argv)
 
 	glfwSetErrorCallback(error_callback);
 
-	LOG(DEBUG) << "Compiled with GLFW " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION;
-	LOG(DEBUG) << "Running with GLFW " << glfwGetVersionString();
+	LOG(DEBUG) << "Compiled with GLFW " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << '\n';
+	LOG(DEBUG) << "Running with GLFW " << glfwGetVersionString() << '\n';
 
 	unique_ptr<Console> console = std::make_unique<Console>();
 	// maybe Settings should have a constructor
@@ -115,7 +112,7 @@ int main(int argc, char** argv)
 	unique_ptr<Game> game = std::make_unique<Game>();
 	window = game->gfx.window;
 
-	LOG(INFO) << "starting main loop";
+	LOG(INFO) << "starting main loop" << '\n';
 	while(!glfwWindowShouldClose(game->gfx.window))
 	{
 		game->draw();

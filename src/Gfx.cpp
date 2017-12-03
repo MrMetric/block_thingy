@@ -7,7 +7,6 @@
 #include <string>
 #include <utility>
 
-#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/common.hpp>					// glm::mod
@@ -38,6 +37,7 @@
 #include "position/ChunkInWorld.hpp"
 #include "util/char_press.hpp"
 #include "util/key_press.hpp"
+#include "util/logger.hpp"
 #include "util/mouse_press.hpp"
 
 #ifdef near
@@ -145,7 +145,7 @@ void Gfx::hook_events(EventManager& event_manager)
 			}
 			catch(const std::runtime_error& error)
 			{
-				LOG(ERROR) << error.what();
+				LOG(ERROR) << error.what() << '\n';
 				// TODO: cancel current event
 				// triggering an event from an event handler deadlocks
 				//Settings::set<string>("font", *e.old_value.get<string>());
@@ -172,15 +172,15 @@ GLFWwindow* Gfx::init_glfw()
 	{
 		throw std::runtime_error("Error loading GLAD");
 	}
-	LOG(DEBUG) << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded";
+	LOG(DEBUG) << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
 	if(!GLAD_GL_ARB_direct_state_access)
 	{
-		LOG(WARNING) << "OpenGL extension not found: GL_ARB_direct_state_access";
+		LOG(WARN) << "OpenGL extension not found: GL_ARB_direct_state_access\n";
 		shim_GL_ARB_direct_state_access();
 	}
 	if(!GLAD_GL_ARB_separate_shader_objects)
 	{
-		LOG(WARNING) << "OpenGL extension not found: GL_ARB_separate_shader_objects";
+		LOG(WARN) << "OpenGL extension not found: GL_ARB_separate_shader_objects\n";
 		shim_GL_ARB_separate_shader_objects();
 	}
 
@@ -257,7 +257,7 @@ void Gfx::opengl_setup()
 void Gfx::update_framebuffer_size(const window_size_t& window_size)
 {
 	this->window_size = window_size;
-	LOG(DEBUG) << "window size: " << window_size.x << "×" << window_size.y;
+	LOG(DEBUG) << "window size: " << window_size.x << "×" << window_size.y << '\n';
 	window_mid = glm::dvec2(window_size) / 2.0;
 	update_projection_matrix();
 
@@ -336,7 +336,7 @@ glm::dmat4 Gfx::make_projection_matrix(const double width, const double height)
 	}
 	if(type != "default")
 	{
-		LOG(WARNING) << "unknown projection type: " << type;
+		LOG(WARN) << "unknown projection type: " << type << '\n';
 	}
 	return glm::perspectiveFov(fov, width, height, near, far);
 }
@@ -445,7 +445,7 @@ static GLFWwindow* make_window(bool fullscreen)
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 	const int width = fullscreen ? mode->width : mode->width * 3 / 4;
 	const int height = fullscreen ? mode->height : mode->height * 3 / 4;
-	LOG(DEBUG) << "window size: " << width << "×" << height;
+	LOG(DEBUG) << "window size: " << width << "×" << height << '\n';
 	GLFWwindow* window = glfwCreateWindow(width, height, "Baby's First Voxel Engine", fullscreen ? monitor : nullptr, nullptr);
 	if(window == nullptr)
 	{

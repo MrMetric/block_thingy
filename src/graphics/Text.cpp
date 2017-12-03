@@ -5,10 +5,10 @@
 #include <stdint.h>
 #include <vector>
 
-#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 
 #include "graphics/OpenGL/Texture.hpp"
+#include "util/logger.hpp"
 #include "util/unicode.hpp"
 
 using std::string;
@@ -238,7 +238,7 @@ Text::Character load_char(const FT_Face& face, const char32_t c)
 {
 	if(FT_Load_Char(face, c, FT_LOAD_RENDER))
 	{
-		LOG(ERROR) << "failed to load character: " << c;
+		LOG(ERROR) << "failed to load character: " << c << '\n';
 		return
 		{
 			{},

@@ -2,12 +2,13 @@
 
 #include <cassert>
 #include <cstdio>
+#include <cstring>
+#include <fstream>
 #include <limits>
 #include <memory>
 #include <stdexcept>
 #include <string>
 
-#include <easylogging++/easylogging++.hpp>
 #if defined(__clang__)
 	#pragma clang diagnostic push
 	#pragma clang diagnostic ignored "-Wunused-macros"
@@ -17,6 +18,8 @@
 	#pragma clang diagnostic pop
 #endif
 #include <png.h>
+
+#include "util/logger.hpp"
 
 using std::string;
 using std::unique_ptr;
@@ -261,6 +264,7 @@ void read_png
 			   << "; color type = " << png_color_type_name(color_type)
 			   << "; pass count = " << number_of_passes
 			   << "; rowbytes = " << rowbytes
+			   << '\n'
 			;
 
 	data.resize(height * rowbytes);

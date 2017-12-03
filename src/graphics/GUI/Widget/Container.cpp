@@ -3,8 +3,6 @@
 #include <stdexcept>
 #include <string>
 
-#include <easylogging++/easylogging++.hpp>
-
 #include "Gfx.hpp"
 #include "Settings.hpp"
 #include "Util.hpp"

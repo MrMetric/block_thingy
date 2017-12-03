@@ -12,6 +12,7 @@
 #include "storage/Interface.hpp"
 #include "storage/msgpack/BlockType.hpp"
 #include "storage/msgpack/glm_vec3.hpp"
+#include "util/logger.hpp"
 
 using std::string;
 
@@ -174,7 +175,7 @@ void Base::use_start
 	const Enum::Face face
 )
 {
-	LOG(DEBUG) << "+use on block " << pos << ":" << face << " by player " << player.name;
+	LOG(DEBUG) << "+use on block " << pos << ":" << face << " by player " << player.name << '\n';
 }
 
 void Base::save(Storage::OutputInterface& i) const

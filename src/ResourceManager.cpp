@@ -10,7 +10,6 @@
 #include <unordered_map>
 
 #include <concurrentqueue/concurrentqueue.hpp>
-#include <easylogging++/easylogging++.hpp>
 
 #include "Game.hpp"
 #include "Settings.hpp"
@@ -24,6 +23,7 @@
 #include "graphics/OpenGL/Texture.hpp"
 #include "util/filesystem.hpp"
 #include "util/FileWatcher.hpp"
+#include "util/logger.hpp"
 
 using std::cerr;
 using std::string;
@@ -273,7 +273,7 @@ void ResourceManager::load_blocks(Game& game)
 		if(t == block_type::invalid)
 		{
 			// TODO
-			LOG(WARNING) << "ignoring invalid block " << path.u8string();
+			LOG(WARN) << "ignoring invalid block " << path.u8string() << '\n';
 			continue;
 		}
 
@@ -341,7 +341,7 @@ void ResourceManager::load_blocks(Game& game)
 		}
 		else
 		{
-			LOG(ERROR) << "attempted to load unhandled block type: " << std::to_string(static_cast<int>(t)) << " (this is a bug!)";
+			LOG(ERROR) << "attempted to load unhandled block type: " << std::to_string(static_cast<int>(t)) << " (this is a bug!)\n";
 			continue;
 		}
 
@@ -409,25 +409,25 @@ ResourceManager::block_texture_info ResourceManager::get_block_texture(fs::path 
 			const auto res = image->get_width();
 			if(res != image->get_height())
 			{
-				LOG(ERROR) << "error reloading " << path.u8string() << ": bad block texture dimensions: " << res << "×" << image->get_height();
+				LOG(ERROR) << "error reloading " << path.u8string() << ": bad block texture dimensions: " << res << "×" << image->get_height() << '\n';
 				return;
 			}
 			if(res != old_res)
 			{
 				// TODO: allow this
-				LOG(ERROR) << "error reloading " << path.u8string() << ": the dimensions changed (old: " << old_res << "×; new: " << res << "×)";
+				LOG(ERROR) << "error reloading " << path.u8string() << ": the dimensions changed (old: " << old_res << "×; new: " << res << "×)\n";
 			}
 			std::lock_guard<std::mutex> g(pImpl->block_textures_mutex);
 			block_texture& t = pImpl->get_block_texture(res);
 			glActiveTexture(GL_TEXTURE0 + t.unit);
 			t.tex.image3D_sub(0, 0, 0, depth, res, res, 1, GL_RGBA, GL_UNSIGNED_BYTE, image->get_data());
 			glActiveTexture(GL_TEXTURE0);
-			LOG(INFO) << "reloaded " << path.u8string() << " (layer " << depth << " of unit " << std::to_string(t.unit) << ')';
+			LOG(INFO) << "reloaded " << path.u8string() << " (layer " << depth << " of unit " << std::to_string(t.unit) << ")\n";
 		});
 		glActiveTexture(GL_TEXTURE0 + t.unit);
 		t.tex.image3D_sub(0, 0, 0, depth, res, res, 1, GL_RGBA, GL_UNSIGNED_BYTE, image->get_data());
 		glActiveTexture(GL_TEXTURE0);
-		LOG(INFO) << "loaded " << path.u8string() << " as layer " << depth << " of unit " << std::to_string(t.unit);
+		LOG(INFO) << "loaded " << path.u8string() << " as layer " << depth << " of unit " << std::to_string(t.unit) << '\n';
 	});
 	t.index.emplace(path, depth);
 	return
@@ -466,7 +466,7 @@ Resource<Graphics::Image> ResourceManager::get_Image(const fs::path& path, const
 		}
 		catch(const std::runtime_error& e)
 		{
-			LOG(ERROR) << "failed to update image " << path.u8string() << ": " << e.what();
+			LOG(ERROR) << "failed to update image " << path.u8string() << ": " << e.what() << '\n';
 			return Resource<Graphics::Image>(&i->second, path);
 		}
 		std::swap(p, i->second);
@@ -524,7 +524,7 @@ Resource<ShaderObject> ResourceManager::get_ShaderObject(fs::path path, const bo
 		}
 		catch(const std::runtime_error& e)
 		{
-			LOG(ERROR) << "error reloading ShaderObject " << path.u8string() << ": " << e.what();
+			LOG(ERROR) << "error reloading ShaderObject " << path.u8string() << ": " << e.what() << '\n';
 			return Resource<ShaderObject>(&i->second, path);
 		}
 		std::swap(p, i->second);
@@ -566,7 +566,7 @@ Resource<ShaderProgram> ResourceManager::get_ShaderProgram(const fs::path& path,
 		}
 		catch(const std::runtime_error& e)
 		{
-			LOG(ERROR) << "error reloading ShaderProgam " << path.u8string() << ": " << e.what();
+			LOG(ERROR) << "error reloading ShaderProgam " << path.u8string() << ": " << e.what() << '\n';
 			return Resource<ShaderProgram>(&i->second, path);
 		}
 		std::swap(p, i->second);

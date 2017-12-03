@@ -16,10 +16,10 @@
 #include <unistd.h>
 #endif
 
-#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 
 #include "shim/make_unique.hpp"
+#include "util/logger.hpp"
 
 using std::string;
 using std::to_string;

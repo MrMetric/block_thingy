@@ -1,12 +1,12 @@
 #include "Console.hpp"
 
+#include <fstream>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
-#include <easylogging++/easylogging++.hpp>
-
 #include "console/ArgumentParser.hpp"
+#include "util/logger.hpp"
 
 using std::string;
 
@@ -23,14 +23,14 @@ Console::Console()
 	{
 		if(args.size() != 1)
 		{
-			LOG(ERROR) << "Usage: exec <string: filename>";
+			LOG(ERROR) << "Usage: exec <string: filename>\n";
 			return;
 		}
 		const string name = args[0];
 		std::ifstream file("scripts/" + name);
 		if(!file.is_open())
 		{
-			LOG(ERROR) << "script not found: " << name;
+			LOG(ERROR) << "script not found: " << name << '\n';
 			return;
 		}
 		for(string line; std::getline(file, line); )
@@ -90,7 +90,7 @@ void Console::run_command(const string& name, const std::vector<string>& args) c
 	const auto i = handlers.find(name);
 	if(i == handlers.cend())
 	{
-		LOG(ERROR) << "unknown command: " << name;
+		LOG(ERROR) << "unknown command: " << name << '\n';
 		return;
 	}
 	i->second(args);

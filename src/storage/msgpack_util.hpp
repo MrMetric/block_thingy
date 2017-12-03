@@ -4,10 +4,10 @@
 #include <string>
 #include <typeinfo>
 
-#include <easylogging++/easylogging++.hpp>
 #include <msgpack.hpp>
 
 #include "util/demangled_name.hpp"
+#include "util/logger.hpp"
 #include "util/Property.hpp"
 
 template<typename T>
@@ -55,7 +55,7 @@ void find_in_map_or_throw
 	if(!find_in_map(map, key, v))
 	{
 		// TODO: put message string in type_error
-		LOG(ERROR) << "did not find '" << key << "' of type " << Util::demangled_name(v);
+		LOG(ERROR) << "did not find '" << key << "' of type " << Util::demangled_name(v) << '\n';
 		throw msgpack::type_error();
 	}
 }

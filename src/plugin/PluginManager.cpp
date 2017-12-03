@@ -6,8 +6,6 @@
 
 #include <vector>
 
-#include <easylogging++/easylogging++.hpp>
-
 #include "Plugin.hpp"
 #include "Util.hpp"
 #include "util/filesystem.hpp"

@@ -5,7 +5,6 @@
 #include <string>
 #include <utility>
 
-#include <easylogging++/easylogging++.hpp>
 #include <msgpack.hpp>
 #include <zstr/zstr.hpp>
 
@@ -22,6 +21,7 @@
 #include "storage/msgpack/Chunk.hpp"
 #include "util/copy_stream.hpp"
 #include "util/filesystem.hpp"
+#include "util/logger.hpp"
 
 using std::string;
 using std::to_string;
@@ -43,7 +43,7 @@ WorldFile::WorldFile(const fs::path& world_dir, World& world)
 	{
 		return;
 	}
-	LOG(INFO) << "loading world: " << world_path.u8string();
+	LOG(INFO) << "loading world: " << world_path.u8string() << '\n';
 	string bytes = Util::read_file(world_path);
 	try
 	{
@@ -88,7 +88,7 @@ unique_ptr<Player> WorldFile::load_player
 		return player;
 	}
 
-	LOG(INFO) << "loading player: " << file_path.u8string();
+	LOG(INFO) << "loading player: " << file_path.u8string() << '\n';
 
 	string bytes = Util::read_file(file_path);
 	try
@@ -107,7 +107,7 @@ void WorldFile::save_chunk(const Chunk& chunk)
 {
 	Position::ChunkInWorld position = chunk.get_position();
 	fs::path file_path = chunk_path(position);
-	LOG(INFO) << "saving " << file_path.u8string();
+	LOG(INFO) << "saving " << file_path.u8string() << '\n';
 
 	std::ofstream stdstream(file_path, std::ofstream::binary);
 	zstr::ostream stream(stdstream);
@@ -133,12 +133,12 @@ unique_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 	catch(const msgpack::v1::insufficient_bytes& e)
 	{
 		// TODO: load truncated chunks
-		LOG(ERROR) << "error loading " << file_path.u8string() << ": " << e.what();
+		LOG(ERROR) << "error loading " << file_path.u8string() << ": " << e.what() << '\n';
 		return nullptr;
 	}
 	catch(const msgpack::type_error& e)
 	{
-		LOG(ERROR) << "error loading " << file_path.u8string() << ": " << e.what();
+		LOG(ERROR) << "error loading " << file_path.u8string() << ": " << e.what() << '\n';
 		// TODO: rename the bad file so the user can attempt to recover it (because the new chunk will overwrite it)
 		return nullptr;
 	}

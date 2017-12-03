@@ -4,7 +4,7 @@
 	#include <dlfcn.h>
 #endif
 
-#include <easylogging++/easylogging++.hpp>
+#include "util/logger.hpp"
 
 using std::string;
 
@@ -15,12 +15,12 @@ struct Plugin::impl
 		path(path)
 	{
 	#ifdef HAVE_POSIX
-		LOG(INFO) << "loading " << path.u8string();
+		LOG(INFO) << "loading " << path.u8string() << '\n';
 		handle = dlopen(path.c_str(), RTLD_NOW);
 		if(handle == nullptr)
 		{
-			LOG(ERROR) << dlerror();
-			LOG(ERROR) << "unable to load " << path.u8string();
+			LOG(ERROR) << dlerror() << '\n';
+			LOG(ERROR) << "unable to load " << path.u8string() << '\n';
 		}
 	#endif
 	}
@@ -32,11 +32,11 @@ struct Plugin::impl
 		{
 			if(dlclose(handle) == 0)
 			{
-				LOG(INFO) << "unloaded " << path.u8string();
+				LOG(INFO) << "unloaded " << path.u8string() << '\n';
 			}
 			else
 			{
-				LOG(WARNING) << "error unloading " << path.u8string() << ": " << dlerror();
+				LOG(WARN) << "error unloading " << path.u8string() << ": " << dlerror() << '\n';
 			}
 		}
 	#endif
@@ -90,6 +90,6 @@ void Plugin::init(Game& game)
 	using init_t = void(*)(Game&);
 	const auto init = *reinterpret_cast<init_t>(pImpl->get_symbol("init"));
 	init(game);
-	LOG(INFO) << "initialized " << pImpl->path.u8string();
+	LOG(INFO) << "initialized " << pImpl->path.u8string() << '\n';
 #endif
 }

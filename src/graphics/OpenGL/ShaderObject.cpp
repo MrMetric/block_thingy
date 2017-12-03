@@ -3,10 +3,10 @@
 #include <sstream>
 #include <stdexcept>
 
-#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 
 #include "Util.hpp"
+#include "util/logger.hpp"
 
 using std::string;
 
@@ -24,7 +24,7 @@ ShaderObject::ShaderObject()
 
 ShaderObject::ShaderObject(const fs::path& file_path, GLenum type)
 {
-	LOG(INFO) << "compiling shader: " << file_path.u8string();
+	LOG(INFO) << "compiling shader: " << file_path.u8string() << '\n';
 
 	const string source = do_include(file_path);
 	const char* source_c = source.c_str();
@@ -93,7 +93,7 @@ string do_include(const fs::path& file_path)
 		const fs::path path = folder / included;
 		if(!Util::file_is_openable(path))
 		{
-			LOG(ERROR) << "shader include not found: " << path.u8string();
+			LOG(ERROR) << "shader include not found: " << path.u8string() << '\n';
 			continue;
 		}
 		output << do_include(path) << "\n";

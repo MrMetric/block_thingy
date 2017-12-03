@@ -1,7 +1,5 @@
 #include "Unknown.hpp"
 
-#include <easylogging++/easylogging++.hpp>
-
 #include "block/Enum/VisibilityType.hpp"
 #include "storage/Interface.hpp"
 

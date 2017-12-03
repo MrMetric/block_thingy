@@ -11,7 +11,6 @@
 #include <utility>
 #include <vector>
 
-#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/mat4x4.hpp>
@@ -55,6 +54,7 @@
 #include "shim/make_unique.hpp"
 #include "util/filesystem.hpp"
 #include "util/key_press.hpp"
+#include "util/logger.hpp"
 
 using std::shared_ptr;
 using std::string;
@@ -111,7 +111,7 @@ static unique_ptr<Mesher::Base> make_mesher(const string& name)
 	{
 		return std::make_unique<Mesher::Simple2>();
 	}
-	LOG(ERROR) << "No such mesher: " << name;
+	LOG(ERROR) << "No such mesher: " << name << '\n';
 	return make_mesher("Simple2");
 }
 
@@ -342,7 +342,7 @@ void Game::open_gui(unique_ptr<Graphics::GUI::Base> gui)
 {
 	if(gui == nullptr)
 	{
-		LOG(WARNING) << "Tried to open a null GUI";
+		LOG(WARN) << "Tried to open a null GUI\n";
 		return;
 	}
 	gui->init();
@@ -378,7 +378,7 @@ void Game::screenshot(fs::path path) const
 		path = "screenshots" / path;
 	}
 	// TODO: check file existence
-	LOG(INFO) << "saving screenshot to " << path.u8string();
+	LOG(INFO) << "saving screenshot to " << path.u8string() << '\n';
 	const auto width = gfx.window_size.x;
 	const auto height = gfx.window_size.y;
 	std::vector<uint8_t> pixels(4 * width * height);
@@ -605,14 +605,14 @@ void Game::impl::add_commands()
 	COMMAND("respawn")
 	{
 		player.respawn();
-		LOG(INFO) << "respawned at " << glm::to_string(player.position());
+		LOG(INFO) << "respawned at " << glm::to_string(player.position()) << '\n';
 	});
 
 	COMMAND("save_pos")
 	{
 		if(args.size() != 1)
 		{
-			LOG(ERROR) << "Usage: save_pos <string: filename>";
+			LOG(ERROR) << "Usage: save_pos <string: filename>\n";
 			return;
 		}
 		const string save_name = args[0];
@@ -626,13 +626,13 @@ void Game::impl::add_commands()
 		streem << rot.x << " " << rot.y << " " << rot.z;
 
 		streem.flush();
-		LOG(INFO) << "saved position and rotation to " << save_name;
+		LOG(INFO) << "saved position and rotation to " << save_name << '\n';
 	});
 	COMMAND("load_pos")
 	{
 		if(args.size() != 1)
 		{
-			LOG(ERROR) << "Usage: load_pos <string: filename>";
+			LOG(ERROR) << "Usage: load_pos <string: filename>\n";
 			return;
 		}
 		const string save_name = args[0];
@@ -643,21 +643,21 @@ void Game::impl::add_commands()
 		streem >> pos.y;
 		streem >> pos.z;
 		player.position = pos;
-		LOG(INFO) << "set position to " << glm::to_string(pos);
+		LOG(INFO) << "set position to " << glm::to_string(pos) << '\n';
 
 		glm::dvec3 rot;
 		streem >> rot.x;
 		streem >> rot.y;
 		streem >> rot.z;
 		player.rotation = rot;
-		LOG(INFO) << "set rotation to " << glm::to_string(rot);
+		LOG(INFO) << "set rotation to " << glm::to_string(rot) << '\n';
 	});
 
 	COMMAND("cam.rot")
 	{
 		if(args.size() != 2)
 		{
-			LOG(ERROR) << "Usage: cam.rot x|y|z <float: degrees>";
+			LOG(ERROR) << "Usage: cam.rot x|y|z <float: degrees>\n";
 			return;
 		}
 		const string part = args[0];
@@ -676,10 +676,10 @@ void Game::impl::add_commands()
 		}
 		else
 		{
-			LOG(ERROR) << "component name must be x, y, or z";
+			LOG(ERROR) << "component name must be x, y, or z\n";
 			return;
 		}
-		LOG(INFO) << "camera rotation: " << glm::to_string(game.camera.rotation);
+		LOG(INFO) << "camera rotation: " << glm::to_string(game.camera.rotation) << '\n';
 	});
 
 	COMMAND("screenshot")
@@ -695,7 +695,7 @@ void Game::impl::add_commands()
 		}
 		else
 		{
-			LOG(ERROR) << "Usage: screenshot [string: filename]";
+			LOG(ERROR) << "Usage: screenshot [string: filename]\n";
 			return;
 		}
 		try
@@ -704,7 +704,7 @@ void Game::impl::add_commands()
 		}
 		catch(const std::runtime_error& e)
 		{
-			LOG(ERROR) << "error saving screenshot: " << e.what();
+			LOG(ERROR) << "error saving screenshot: " << e.what() << '\n';
 		}
 	});
 
@@ -714,7 +714,7 @@ void Game::impl::add_commands()
 		{
 			game.render_distance += 1;
 		}
-		LOG(INFO) << "render distance: " << game.render_distance;
+		LOG(INFO) << "render distance: " << game.render_distance << '\n';
 	});
 	COMMAND("render_distance--")
 	{
@@ -723,17 +723,17 @@ void Game::impl::add_commands()
 		{
 			game.render_distance = 0;
 		}
-		LOG(INFO) << "render distance: " << game.render_distance;
+		LOG(INFO) << "render distance: " << game.render_distance << '\n';
 	});
 	COMMAND("reach_distance++")
 	{
 		player.reach_distance += 1;
-		LOG(INFO) << "reach distance: " << player.reach_distance;
+		LOG(INFO) << "reach distance: " << player.reach_distance << '\n';
 	});
 	COMMAND("reach_distance--")
 	{
 		player.reach_distance -= 1;
-		LOG(INFO) << "reach distance: " << player.reach_distance;
+		LOG(INFO) << "reach distance: " << player.reach_distance << '\n';
 	});
 
 	COMMAND("nazi")
@@ -777,7 +777,7 @@ void Game::impl::add_commands()
 	{
 		if(args.size() != 1)
 		{
-			LOG(ERROR) << "Usage: open_gui <GUI name>";
+			LOG(ERROR) << "Usage: open_gui <GUI name>\n";
 			return;
 		}
 		const string name = args[0];
@@ -796,7 +796,7 @@ void Game::impl::add_commands()
 		}
 		else
 		{
-			LOG(ERROR) << "No such GUI: " << name;
+			LOG(ERROR) << "No such GUI: " << name << '\n';
 			return;
 		}
 		game.open_gui(std::move(gui));

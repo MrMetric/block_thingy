@@ -6,8 +6,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include <easylogging++/easylogging++.hpp>
-
 #include "block/Air.hpp"
 #include "block/Base.hpp"
 #include "block/Light.hpp"
@@ -18,6 +16,7 @@
 #include "block/Unknown.hpp"
 #include "block/Enum/Face.hpp"
 #include "block/Enum/Type.hpp"
+#include "util/logger.hpp"
 
 using std::shared_ptr;
 using std::string;
@@ -108,7 +107,7 @@ shared_ptr<Base> BlockRegistry::make(const Enum::TypeExternal te) const
 			static std::vector<string> warning_for;
 			if(std::find(warning_for.cbegin(), warning_for.cend(), strid) == warning_for.cend())
 			{
-				LOG(WARNING) << "invalid block type in extid map: " << strid;
+				LOG(WARN) << "invalid block type in extid map: " << strid << '\n';
 				warning_for.push_back(strid);
 			}
 		}

@@ -6,11 +6,10 @@
 #include <map>
 #include <stdexcept>
 
-#include <easylogging++/easylogging++.hpp>
-
 #include "console/Console.hpp"
 #include "Game.hpp"
 #include "event/type/Event_change_setting.hpp"
+#include "util/logger.hpp"
 
 using std::string;
 
@@ -150,7 +149,7 @@ void Settings::add_command_handlers()
 	{
 		if(args.size() != 2)
 		{
-			LOG(ERROR) << "Usage: set_bool <name> <value>";
+			LOG(ERROR) << "Usage: set_bool <name> <value>\n";
 			return;
 		}
 
@@ -158,14 +157,14 @@ void Settings::add_command_handlers()
 		const string value_str = args[1];
 		if(value_str != "true" && value_str != "false")
 		{
-			LOG(ERROR) << "Invalid bool value for " << name << " (must be \"true\" or \"false\")";
+			LOG(ERROR) << "Invalid bool value for " << name << " (must be \"true\" or \"false\")\n";
 			return;
 		}
 		const bool value = (value_str == "true");
 		Settings::set(name, value);
 		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
-			LOG(INFO) << "set bool: " << name << " = " << (value ? "true" : "false");
+			LOG(INFO) << "set bool: " << name << " = " << (value ? "true" : "false") << '\n';
 		}
 	}});
 	Console::instance->add_command("toggle_bool", {[]
@@ -175,14 +174,14 @@ void Settings::add_command_handlers()
 	{
 		if(args.size() != 1)
 		{
-			LOG(ERROR) << "Usage: toggle_bool <setting name>";
+			LOG(ERROR) << "Usage: toggle_bool <setting name>\n";
 			return;
 		}
 
 		const string name = args[0];
 		if(!Settings::has<bool>(name))
 		{
-			LOG(ERROR) << "Unknown bool name: " << name;
+			LOG(ERROR) << "Unknown bool name: " << name << '\n';
 			return;
 		}
 		bool value = Settings::get<bool>(name);
@@ -190,7 +189,7 @@ void Settings::add_command_handlers()
 		Settings::set(name, value);
 		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
-			LOG(INFO) << "set bool: " << name << " = " << (value ? "true" : "false");
+			LOG(INFO) << "set bool: " << name << " = " << (value ? "true" : "false") << '\n';
 		}
 	}});
 	Console::instance->add_command("set_float", {[]
@@ -200,7 +199,7 @@ void Settings::add_command_handlers()
 	{
 		if(args.size() != 2)
 		{
-			LOG(ERROR) << "Usage: set_float <name> <value or + difference>";
+			LOG(ERROR) << "Usage: set_float <name> <value or + difference>\n";
 			return;
 		}
 
@@ -235,7 +234,7 @@ void Settings::add_command_handlers()
 		Settings::set<double>(name, value);
 		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
-			LOG(INFO) << "set float: " << name << " = " << value;
+			LOG(INFO) << "set float: " << name << " = " << value << '\n';
 		}
 	}});
 	Console::instance->add_command("set_int", {[]
@@ -245,7 +244,7 @@ void Settings::add_command_handlers()
 	{
 		if(args.size() != 2)
 		{
-			LOG(ERROR) << "Usage: set_int <name> <value or + difference>";
+			LOG(ERROR) << "Usage: set_int <name> <value or + difference>\n";
 			return;
 		}
 
@@ -264,7 +263,7 @@ void Settings::add_command_handlers()
 		Settings::set<int64_t>(name, value);
 		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
-			LOG(INFO) << "set int: " << name << " = " << value;
+			LOG(INFO) << "set int: " << name << " = " << value << '\n';
 		}
 	}});
 	Console::instance->add_command("set_string", {[]
@@ -274,7 +273,7 @@ void Settings::add_command_handlers()
 	{
 		if(args.size() != 2)
 		{
-			LOG(ERROR) << "Usage: set_string <name> <value>";
+			LOG(ERROR) << "Usage: set_string <name> <value>\n";
 			return;
 		}
 
@@ -283,7 +282,7 @@ void Settings::add_command_handlers()
 		Settings::set<string>(name, value);
 		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
-			LOG(INFO) << "set string: " << name << " = " << value;
+			LOG(INFO) << "set string: " << name << " = " << value << '\n';
 		}
 	}});
 }

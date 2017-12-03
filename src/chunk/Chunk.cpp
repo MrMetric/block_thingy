@@ -8,7 +8,6 @@
 #include <utility>
 #include <vector>
 
-#include <easylogging++/easylogging++.hpp>
 #include <glad/glad.h>
 #include <glm/vec3.hpp>
 
@@ -32,6 +31,7 @@
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
+#include "util/logger.hpp"
 
 using std::string;
 using std::to_string;
@@ -88,7 +88,7 @@ struct Chunk::impl
 			// should never happen
 			// this catch is to satisfy Coverity Scan (destructors are noexcept)
 			LOG(ERROR) << "caught std::runtime_error in Chunk::impl destructor\n"
-					   << "  what():  " << e.what();
+					   << "  what():  " << e.what() << '\n';
 		}
 	}
 
