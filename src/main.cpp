@@ -20,6 +20,7 @@
 #include "shim/make_unique.hpp"
 #include "util/compiler_info.hpp"
 #include "util/demangled_name.hpp"
+#include "util/filesystem.hpp"
 #include "util/logger.hpp"
 
 using std::string;
@@ -97,6 +98,19 @@ int main(int argc, char** argv)
 	{
 		Util::change_directory(argv[1]);
 	}
+	#ifdef _WIN32
+	else
+	{
+		const string pwd = fs::current_path().string();
+		const auto i = pwd.find("\\projects\\vs");
+		if(i != string::npos)
+		{
+			const fs::path bin = fs::path(pwd.substr(0, i)) / "bin";
+			LOG(INFO) << "Using detected bin path: " << bin << '\n';
+			Util::change_directory(bin);
+		}
+	}
+	#endif
 
 	glfwSetErrorCallback(error_callback);
 

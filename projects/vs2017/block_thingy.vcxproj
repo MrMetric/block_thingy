@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\lib\glad\glad.c" />
+    <ClCompile Include="..\..\lib\rhea\abstract_variable.cpp" />
+    <ClCompile Include="..\..\lib\rhea\action_variable.cpp" />
+    <ClCompile Include="..\..\lib\rhea\errors.cpp" />
+    <ClCompile Include="..\..\lib\rhea\float_variable.cpp" />
+    <ClCompile Include="..\..\lib\rhea\link_variable.cpp" />
+    <ClCompile Include="..\..\lib\rhea\simplex_solver.cpp" />
+    <ClCompile Include="..\..\lib\rhea\symbol.cpp" />
+    <ClCompile Include="..\..\src\block\Air.cpp" />
+    <ClCompile Include="..\..\src\block\Base.cpp" />
+    <ClCompile Include="..\..\src\block\BlockRegistry.cpp" />
+    <ClCompile Include="..\..\src\block\Enum\Face.cpp" />
+    <ClCompile Include="..\..\src\block\Enum\Type.cpp" />
+    <ClCompile Include="..\..\src\block\Light.cpp" />
+    <ClCompile Include="..\..\src\block\None.cpp" />
+    <ClCompile Include="..\..\src\block\RotationUtil.cpp" />
+    <ClCompile Include="..\..\src\block\Teleporter.cpp" />
+    <ClCompile Include="..\..\src\block\Test.cpp" />
+    <ClCompile Include="..\..\src\block\Textured.cpp" />
+    <ClCompile Include="..\..\src\block\Unknown.cpp" />
+    <ClCompile Include="..\..\src\Camera.cpp" />
+    <ClCompile Include="..\..\src\chunk\Chunk.cpp" />
+    <ClCompile Include="..\..\src\chunk\ChunkData.cpp" />
+    <ClCompile Include="..\..\src\chunk\Mesher\Base.cpp" />
+    <ClCompile Include="..\..\src\chunk\Mesher\Greedy.cpp" />
+    <ClCompile Include="..\..\src\chunk\Mesher\Simple.cpp" />
+    <ClCompile Include="..\..\src\chunk\Mesher\Simple2.cpp" />
+    <ClCompile Include="..\..\src\console\ArgumentParser.cpp" />
+    <ClCompile Include="..\..\src\console\Command.cpp" />
+    <ClCompile Include="..\..\src\console\Console.cpp" />
+    <ClCompile Include="..\..\src\console\KeybindManager.cpp" />
+    <ClCompile Include="..\..\src\event\Event.cpp" />
+    <ClCompile Include="..\..\src\event\EventManager.cpp" />
+    <ClCompile Include="..\..\src\event\type\Event_change_setting.cpp" />
+    <ClCompile Include="..\..\src\event\type\Event_enter_block.cpp" />
+    <ClCompile Include="..\..\src\event\type\Event_window_size_change.cpp" />
+    <ClCompile Include="..\..\src\Game.cpp" />
+    <ClCompile Include="..\..\src\Gfx.cpp" />
+    <ClCompile Include="..\..\src\graphics\Color.cpp" />
+    <ClCompile Include="..\..\src\graphics\GUI\Base.cpp" />
+    <ClCompile Include="..\..\src\graphics\GUI\Console.cpp" />
+    <ClCompile Include="..\..\src\graphics\GUI\Light.cpp" />
+    <ClCompile Include="..\..\src\graphics\GUI\Pause.cpp" />
+    <ClCompile Include="..\..\src\graphics\GUI\Play.cpp" />
+    <ClCompile Include="..\..\src\graphics\GUI\Widget\Base.cpp" />
+    <ClCompile Include="..\..\src\graphics\GUI\Widget\Button.cpp" />
+    <ClCompile Include="..\..\src\graphics\GUI\Widget\Component\Base.cpp" />
+    <ClCompile Include="..\..\src\graphics\GUI\Widget\Component\Text.cpp" />
+    <ClCompile Include="..\..\src\graphics\GUI\Widget\Container.cpp" />
+    <ClCompile Include="..\..\src\graphics\GUI\Widget\Text.cpp" />
+    <ClCompile Include="..\..\src\graphics\GUI\Widget\TextInput.cpp" />
+    <ClCompile Include="..\..\src\graphics\Image.cpp" />
+    <ClCompile Include="..\..\src\graphics\OpenGL\Framebuffer.cpp" />
+    <ClCompile Include="..\..\src\graphics\OpenGL\Renderbuffer.cpp" />
+    <ClCompile Include="..\..\src\graphics\OpenGL\ShaderObject.cpp" />
+    <ClCompile Include="..\..\src\graphics\OpenGL\ShaderProgram.cpp" />
+    <ClCompile Include="..\..\src\graphics\OpenGL\Texture.cpp" />
+    <ClCompile Include="..\..\src\graphics\OpenGL\VertexArray.cpp" />
+    <ClCompile Include="..\..\src\graphics\OpenGL\VertexBuffer.cpp" />
+    <ClCompile Include="..\..\src\graphics\RenderTarget.cpp" />
+    <ClCompile Include="..\..\src\graphics\RenderWorld.cpp" />
+    <ClCompile Include="..\..\src\graphics\Text.cpp" />
+    <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="..\..\src\physics\AABB.cpp" />
+    <ClCompile Include="..\..\src\physics\PhysicsUtil.cpp" />
+    <ClCompile Include="..\..\src\physics\RaycastHit.cpp" />
+    <ClCompile Include="..\..\src\Player.cpp" />
+    <ClCompile Include="..\..\src\plugin\Plugin.cpp" />
+    <ClCompile Include="..\..\src\plugin\PluginManager.cpp" />
+    <ClCompile Include="..\..\src\position\BlockInChunk.cpp" />
+    <ClCompile Include="..\..\src\position\BlockInWorld.cpp" />
+    <ClCompile Include="..\..\src\position\ChunkInWorld.cpp" />
+    <ClCompile Include="..\..\src\ResourceManager.cpp" />
+    <ClCompile Include="..\..\src\Settings.cpp" />
+    <ClCompile Include="..\..\src\storage\Interface.cpp" />
+    <ClCompile Include="..\..\src\storage\WorldFile.cpp" />
+    <ClCompile Include="..\..\src\Util.cpp" />
+    <ClCompile Include="..\..\src\util\char_press.cpp" />
+    <ClCompile Include="..\..\src\util\clipboard.cpp" />
+    <ClCompile Include="..\..\src\util\compiler_info.cpp" />
+    <ClCompile Include="..\..\src\util\copy_stream.cpp" />
+    <ClCompile Include="..\..\src\util\demangled_name.cpp" />
+    <ClCompile Include="..\..\src\util\FileWatcher.cpp" />
+    <ClCompile Include="..\..\src\util\key_mods.cpp" />
+    <ClCompile Include="..\..\src\util\key_press.cpp" />
+    <ClCompile Include="..\..\src\util\logger.cpp" />
+    <ClCompile Include="..\..\src\util\mouse_press.cpp" />
+    <ClCompile Include="..\..\src\util\unicode.cpp" />
+    <ClCompile Include="..\..\src\World.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\glad\glad.h" />
+    <ClInclude Include="..\..\lib\rhea\abstract_variable.hpp" />
+    <ClInclude Include="..\..\lib\rhea\action_variable.hpp" />
+    <ClInclude Include="..\..\lib\rhea\approx.hpp" />
+    <ClInclude Include="..\..\lib\rhea\constraint.hpp" />
+    <ClInclude Include="..\..\lib\rhea\errors.hpp" />
+    <ClInclude Include="..\..\lib\rhea\expression.hpp" />
+    <ClInclude Include="..\..\lib\rhea\float_variable.hpp" />
+    <ClInclude Include="..\..\lib\rhea\iostream.hpp" />
+    <ClInclude Include="..\..\lib\rhea\linear_expression.hpp" />
+    <ClInclude Include="..\..\lib\rhea\link_variable.hpp" />
+    <ClInclude Include="..\..\lib\rhea\relation.hpp" />
+    <ClInclude Include="..\..\lib\rhea\simplex_solver.hpp" />
+    <ClInclude Include="..\..\lib\rhea\stays.hpp" />
+    <ClInclude Include="..\..\lib\rhea\strength.hpp" />
+    <ClInclude Include="..\..\lib\rhea\symbol.hpp" />
+    <ClInclude Include="..\..\lib\rhea\variable.hpp" />
+    <ClInclude Include="..\..\src\block\Air.hpp" />
+    <ClInclude Include="..\..\src\block\Base.hpp" />
+    <ClInclude Include="..\..\src\block\BlockRegistry.hpp" />
+    <ClInclude Include="..\..\src\block\Enum\Face.hpp" />
+    <ClInclude Include="..\..\src\block\Enum\Type.hpp" />
+    <ClInclude Include="..\..\src\block\Enum\VisibilityType.hpp" />
+    <ClInclude Include="..\..\src\block\Light.hpp" />
+    <ClInclude Include="..\..\src\block\None.hpp" />
+    <ClInclude Include="..\..\src\block\RotationUtil.hpp" />
+    <ClInclude Include="..\..\src\block\Teleporter.hpp" />
+    <ClInclude Include="..\..\src\block\Test.hpp" />
+    <ClInclude Include="..\..\src\block\Textured.hpp" />
+    <ClInclude Include="..\..\src\block\Unknown.hpp" />
+    <ClInclude Include="..\..\src\Camera.hpp" />
+    <ClInclude Include="..\..\src\chunk\Chunk.hpp" />
+    <ClInclude Include="..\..\src\chunk\ChunkData.hpp" />
+    <ClInclude Include="..\..\src\chunk\Mesher\Base.hpp" />
+    <ClInclude Include="..\..\src\chunk\Mesher\Greedy.hpp" />
+    <ClInclude Include="..\..\src\chunk\Mesher\Simple.hpp" />
+    <ClInclude Include="..\..\src\chunk\Mesher\Simple2.hpp" />
+    <ClInclude Include="..\..\src\console\ArgumentParser.hpp" />
+    <ClInclude Include="..\..\src\console\Command.hpp" />
+    <ClInclude Include="..\..\src\console\Console.hpp" />
+    <ClInclude Include="..\..\src\console\KeybindManager.hpp" />
+    <ClInclude Include="..\..\src\event\Event.hpp" />
+    <ClInclude Include="..\..\src\event\EventManager.hpp" />
+    <ClInclude Include="..\..\src\event\EventType.hpp" />
+    <ClInclude Include="..\..\src\event\type\Event_change_setting.hpp" />
+    <ClInclude Include="..\..\src\event\type\Event_enter_block.hpp" />
+    <ClInclude Include="..\..\src\event\type\Event_window_size_change.hpp" />
+    <ClInclude Include="..\..\src\FPSManager.hpp" />
+    <ClInclude Include="..\..\src\fwd\block\Base.hpp" />
+    <ClInclude Include="..\..\src\fwd\block\BlockRegistry.hpp" />
+    <ClInclude Include="..\..\src\fwd\block\Enum\Face.hpp" />
+    <ClInclude Include="..\..\src\fwd\block\Enum\Type.hpp" />
+    <ClInclude Include="..\..\src\fwd\block\Enum\VisibilityType.hpp" />
+    <ClInclude Include="..\..\src\fwd\block\Light.hpp" />
+    <ClInclude Include="..\..\src\fwd\chunk\Chunk.hpp" />
+    <ClInclude Include="..\..\src\fwd\chunk\Mesher\Base.hpp" />
+    <ClInclude Include="..\..\src\fwd\console\Console.hpp" />
+    <ClInclude Include="..\..\src\fwd\event\Event.hpp" />
+    <ClInclude Include="..\..\src\fwd\event\EventManager.hpp" />
+    <ClInclude Include="..\..\src\fwd\event\EventType.hpp" />
+    <ClInclude Include="..\..\src\fwd\Game.hpp" />
+    <ClInclude Include="..\..\src\fwd\Gfx.hpp" />
+    <ClInclude Include="..\..\src\fwd\graphics\Color.hpp" />
+    <ClInclude Include="..\..\src\fwd\graphics\GUI\Base.hpp" />
+    <ClInclude Include="..\..\src\fwd\graphics\GUI\Widget\Base.hpp" />
+    <ClInclude Include="..\..\src\fwd\graphics\GUI\Widget\Component\Base.hpp" />
+    <ClInclude Include="..\..\src\fwd\graphics\GUI\Widget\Container.hpp" />
+    <ClInclude Include="..\..\src\fwd\graphics\GUI\Widget\TextInput.hpp" />
+    <ClInclude Include="..\..\src\fwd\graphics\Image.hpp" />
+    <ClInclude Include="..\..\src\fwd\physics\AABB.hpp" />
+    <ClInclude Include="..\..\src\fwd\physics\RaycastHit.hpp" />
+    <ClInclude Include="..\..\src\fwd\Player.hpp" />
+    <ClInclude Include="..\..\src\fwd\position\BlockInChunk.hpp" />
+    <ClInclude Include="..\..\src\fwd\position\BlockInWorld.hpp" />
+    <ClInclude Include="..\..\src\fwd\position\ChunkInWorld.hpp" />
+    <ClInclude Include="..\..\src\fwd\ResourceManager.hpp" />
+    <ClInclude Include="..\..\src\fwd\storage\Interface.hpp" />
+    <ClInclude Include="..\..\src\fwd\util\char_press.hpp" />
+    <ClInclude Include="..\..\src\fwd\util\key_mods.hpp" />
+    <ClInclude Include="..\..\src\fwd\util\key_press.hpp" />
+    <ClInclude Include="..\..\src\fwd\util\mouse_press.hpp" />
+    <ClInclude Include="..\..\src\fwd\World.hpp" />
+    <ClInclude Include="..\..\src\Game.hpp" />
+    <ClInclude Include="..\..\src\Gfx.hpp" />
+    <ClInclude Include="..\..\src\graphics\Color.hpp" />
+    <ClInclude Include="..\..\src\graphics\GUI\Base.hpp" />
+    <ClInclude Include="..\..\src\graphics\GUI\Console.hpp" />
+    <ClInclude Include="..\..\src\graphics\GUI\Light.hpp" />
+    <ClInclude Include="..\..\src\graphics\GUI\Pause.hpp" />
+    <ClInclude Include="..\..\src\graphics\GUI\Play.hpp" />
+    <ClInclude Include="..\..\src\graphics\GUI\Widget\Base.hpp" />
+    <ClInclude Include="..\..\src\graphics\GUI\Widget\Button.hpp" />
+    <ClInclude Include="..\..\src\graphics\GUI\Widget\Component\Base.hpp" />
+    <ClInclude Include="..\..\src\graphics\GUI\Widget\Component\Text.hpp" />
+    <ClInclude Include="..\..\src\graphics\GUI\Widget\Container.hpp" />
+    <ClInclude Include="..\..\src\graphics\GUI\Widget\Text.hpp" />
+    <ClInclude Include="..\..\src\graphics\GUI\Widget\TextInput.hpp" />
+    <ClInclude Include="..\..\src\graphics\Image.hpp" />
+    <ClInclude Include="..\..\src\graphics\OpenGL\Framebuffer.hpp" />
+    <ClInclude Include="..\..\src\graphics\OpenGL\PushState.hpp" />
+    <ClInclude Include="..\..\src\graphics\OpenGL\Renderbuffer.hpp" />
+    <ClInclude Include="..\..\src\graphics\OpenGL\ShaderObject.hpp" />
+    <ClInclude Include="..\..\src\graphics\OpenGL\ShaderProgram.hpp" />
+    <ClInclude Include="..\..\src\graphics\OpenGL\Texture.hpp" />
+    <ClInclude Include="..\..\src\graphics\OpenGL\VertexArray.hpp" />
+    <ClInclude Include="..\..\src\graphics\OpenGL\VertexBuffer.hpp" />
+    <ClInclude Include="..\..\src\graphics\primitive.hpp" />
+    <ClInclude Include="..\..\src\graphics\RenderTarget.hpp" />
+    <ClInclude Include="..\..\src\graphics\RenderWorld.hpp" />
+    <ClInclude Include="..\..\src\graphics\Text.hpp" />
+    <ClInclude Include="..\..\src\physics\AABB.hpp" />
+    <ClInclude Include="..\..\src\physics\PhysicsUtil.hpp" />
+    <ClInclude Include="..\..\src\physics\RaycastHit.hpp" />
+    <ClInclude Include="..\..\src\Player.hpp" />
+    <ClInclude Include="..\..\src\plugin\Plugin.hpp" />
+    <ClInclude Include="..\..\src\plugin\PluginManager.hpp" />
+    <ClInclude Include="..\..\src\position\BlockInChunk.hpp" />
+    <ClInclude Include="..\..\src\position\BlockInWorld.hpp" />
+    <ClInclude Include="..\..\src\position\ChunkInWorld.hpp" />
+    <ClInclude Include="..\..\src\position\hash.hpp" />
+    <ClInclude Include="..\..\src\ResourceManager.hpp" />
+    <ClInclude Include="..\..\src\Settings.hpp" />
+    <ClInclude Include="..\..\src\shim\make_unique.hpp" />
+    <ClInclude Include="..\..\src\shim\propagate_const.hpp" />
+    <ClInclude Include="..\..\src\storage\Interface.hpp" />
+    <ClInclude Include="..\..\src\storage\msgpack\Block.hpp" />
+    <ClInclude Include="..\..\src\storage\msgpack\BlockType.hpp" />
+    <ClInclude Include="..\..\src\storage\msgpack\Chunk.hpp" />
+    <ClInclude Include="..\..\src\storage\msgpack\ChunkData.hpp" />
+    <ClInclude Include="..\..\src\storage\msgpack\Color.hpp" />
+    <ClInclude Include="..\..\src\storage\msgpack\glm_vec3.hpp" />
+    <ClInclude Include="..\..\src\storage\msgpack\glm_vec4.hpp" />
+    <ClInclude Include="..\..\src\storage\msgpack\Player.hpp" />
+    <ClInclude Include="..\..\src\storage\msgpack\Property.hpp" />
+    <ClInclude Include="..\..\src\storage\msgpack\World.hpp" />
+    <ClInclude Include="..\..\src\storage\msgpack_util.hpp" />
+    <ClInclude Include="..\..\src\storage\WorldFile.hpp" />
+    <ClInclude Include="..\..\src\types\window_size_t.hpp" />
+    <ClInclude Include="..\..\src\Util.hpp" />
+    <ClInclude Include="..\..\src\util\char_press.hpp" />
+    <ClInclude Include="..\..\src\util\clipboard.hpp" />
+    <ClInclude Include="..\..\src\util\compiler_info.hpp" />
+    <ClInclude Include="..\..\src\util\copy_stream.hpp" />
+    <ClInclude Include="..\..\src\util\demangled_name.hpp" />
+    <ClInclude Include="..\..\src\util\filesystem.hpp" />
+    <ClInclude Include="..\..\src\util\FileWatcher.hpp" />
+    <ClInclude Include="..\..\src\util\key_mods.hpp" />
+    <ClInclude Include="..\..\src\util\key_press.hpp" />
+    <ClInclude Include="..\..\src\util\logger.hpp" />
+    <ClInclude Include="..\..\src\util\mouse_press.hpp" />
+    <ClInclude Include="..\..\src\util\Property.hpp" />
+    <ClInclude Include="..\..\src\util\ThreadThingy.hpp" />
+    <ClInclude Include="..\..\src\util\unicode.hpp" />
+    <ClInclude Include="..\..\src\World.hpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{2110D47A-DEB9-4046-9162-C81A431B2455}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>blockthingy</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;DEBUG_BUILD;GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <AdditionalIncludeDirectories>..\..\lib;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)%(RelativeDir)\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)%(RelativeDir)\</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)%(RelativeDir)\vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <XMLDocumentationFileName>$(IntDir)%(RelativeDir)\</XMLDocumentationFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;DEBUG_BUILD;GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <AdditionalIncludeDirectories>..\..\lib;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)%(RelativeDir)\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)%(RelativeDir)\</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)%(RelativeDir)\vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <XMLDocumentationFileName>$(IntDir)%(RelativeDir)\</XMLDocumentationFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <AdditionalIncludeDirectories>..\..\lib;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)%(RelativeDir)\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)%(RelativeDir)\</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)%(RelativeDir)\vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <XMLDocumentationFileName>$(IntDir)%(RelativeDir)\</XMLDocumentationFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <AdditionalIncludeDirectories>..\..\lib;..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)%(RelativeDir)\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)%(RelativeDir)\</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)%(RelativeDir)\vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <XMLDocumentationFileName>$(IntDir)%(RelativeDir)\</XMLDocumentationFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

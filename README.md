@@ -10,8 +10,7 @@ I mek GAme
  * Y2K-compliant
  * has a license (GPL v3)
 
-## How to get it
-### Cloning
+## How to clone
 As this repository has submodules, you need to clone it recursively:
 
 ```shell
@@ -27,7 +26,7 @@ $ git submodule update --init --recursive
 
 If you are using Windows, you must run `fix_symlinks.bat` before building or running block_thingy. This is because Git incorrectly translates each symbolic link to be just a text file with the link path as the content.
 
-### Dependencies
+## Dependencies
 thing | included?
 ----- | ---------
 [FreeType 2](https://www.freetype.org/) | ❌
@@ -40,6 +39,8 @@ libpng | ❌
 [rhea 0.3](https://github.com/Nocte-/rhea/tree/0.3) | ✔ (submodule)
 [strict variant](https://github.com/cbeck88/strict-variant) | ✔ (submodule)
 [webgl-noise](https://github.com/stegu/webgl-noise) | ✔ (submodule)
+
+## GNU/Linux
 
 ### Building (using CMake)
 
@@ -75,7 +76,11 @@ $ cmake .. -DCMAKE_BUILD_TYPE=release
 
 Note: the build types are not case-sensitive.
 
-To use a different compiler:
+To use a different compiler, there are two methods:
+
+```shell
+$ CC=/usr/local/bin/clang CXX=/usr/local/bin/clang++ cmake .."
+```
 
 ```shell
 $ cmake .. -DCMAKE_C_COMPILER="/usr/local/bin/clang" -DCMAKE_CXX_COMPILER="/usr/local/bin/clang++"
@@ -88,6 +93,26 @@ To run, `block_thingy` needs to know where the game files are. It defaults to `.
 ```shell
 $ ./block_thingy ../bin
 ```
+
+## Windows
+
+### Building
+
+I have tested these instructions with Visual Studio Community 2017 version 15.4.5. I do not guarantee that any other version will work, but future 2017 versions should be fine.
+
+Install [vcpkg](https://github.com/Microsoft/vcpkg) according to its instructions. Note that vcpkg's defaults to installing 32-bit libraries. Install the dependencies like this:
+
+```
+vcpkg --triplet x64-windows freetype glfw3 libpng msgpack
+```
+
+If you are building for 32-bit, omit `--triplet x64-windows`.
+
+Next, open `projects/vc2017/block_thingy.sln` with Visual Studio. Choose your desired configuration and architecture and build it (Build → Build Solution, or press F6).
+
+### Running
+
+Just run block_thingy.exe. It should automatically detect where the bin directory is. If it does not, specify the path as the first argument (refer to the GNU/Linux instructions above).
 
 ## License
 
