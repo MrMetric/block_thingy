@@ -77,7 +77,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=missing-field-initializers
 		-Werror=newline-eof
 		-Werror=non-virtual-dtor
-		#-Werror=old-style-cast
+		-Werror=old-style-cast
 		-Werror=return-type
 		-Werror=self-move
 		-Werror=shorten-64-to-32
@@ -88,10 +88,9 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=uninitialized
 		-Werror=unknown-pragmas
 		-Werror=unknown-warning-option
-		#-Werror=weak-vtables
+		-Werror=weak-vtables
 		-Werror=zero-as-null-pointer-constant
 		-Wno-c++98-compat-pedantic
-		-Wno-deprecated-dynamic-exception-spec
 		-Wno-documentation-unknown-command
 		-Wno-exit-time-destructors
 		-Wno-float-equal

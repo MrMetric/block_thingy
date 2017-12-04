@@ -6,7 +6,7 @@
 	url = https://github.com/stegu/webgl-noise.git
 [submodule "submodules/rhea"]
 	path = submodules/rhea
-	url = https://github.com/Nocte-/rhea.git
+	url = https://github.com/MrMetric/rhea.git
 [submodule "submodules/strict_variant"]
 	path = submodules/strict_variant
 	url = https://github.com/cbeck88/strict-variant.git
