@@ -820,20 +820,19 @@ void World::impl::update_chunk_neighbor
 	}
 }
 
-static double sum_octaves
+static double sum_noise
 (
 	const glm::dvec2& P,
 	const double base_freq,
 	const double freq_mul,
-	const uint_fast8_t octave_count
+	const std::size_t iterations
 )
 {
 	double val = 0;
 	double freq = base_freq;
-	for(uint_fast8_t i = 0; i < octave_count; i++)
+	for(std::size_t i = 0; i < iterations; i++)
 	{
-		const glm::dvec2 Pm(P.x * freq, P.y * freq);
-		val += std::abs(glm::simplex(Pm) / freq);
+		val += std::abs(glm::simplex(P * freq) / freq);
 		freq *= freq_mul;
 	}
 	return val;
@@ -862,7 +861,7 @@ void World::impl::gen_chunk(shared_ptr<Chunk> chunk) const
 		{
 			// coords must not be (0, 0) (it makes this function always return 0)
 			const glm::dvec2 coords = (x == 0 && z == 0) ? glm::dvec2(0.0001) : glm::dvec2(x, z) / 1024.0;
-			const glm::dvec2 n(-sum_octaves(coords, 1, 2.07, 8));
+			const glm::dvec2 n(-sum_noise(coords, 1, 2.07, 8));
 
 			const double a = n.x * n.y;
 			const double b = glm::mod(a, 1.0);

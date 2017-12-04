@@ -44,7 +44,7 @@ void Console::add_command(const string& name, const console_handler_t& handler)
 {
 	if(!handlers.insert({name, handler}).second)
 	{
-		throw std::runtime_error("tried to add duplicate command: "  + name);
+		throw std::runtime_error("tried to add duplicate command: " + name);
 	}
 }
 

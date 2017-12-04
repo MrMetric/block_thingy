@@ -121,10 +121,11 @@ static string format_string(string s)
 void Settings::save()
 {
 	std::ofstream f("scripts/settings");
+	f << std::boolalpha;
 	f.precision(std::numeric_limits<double>::max_digits10);
 	for(const auto& p : get_map<bool>())
 	{
-		f << "set_bool " << format_string(p.first) << ' ' << (p.second ? "true" : "false") << '\n';
+		f << "set_bool " << format_string(p.first) << ' ' << p.second << '\n';
 	}
 	for(const auto& p : get_map<double>())
 	{
@@ -149,7 +150,7 @@ void Settings::add_command_handlers()
 	{
 		if(args.size() != 2)
 		{
-			LOG(ERROR) << "Usage: set_bool <name> <value>\n";
+			LOG(ERROR) << "Usage: set_bool <string: name> <bool: value>\n";
 			return;
 		}
 
@@ -164,7 +165,7 @@ void Settings::add_command_handlers()
 		Settings::set(name, value);
 		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
-			LOG(INFO) << "set bool: " << name << " = " << (value ? "true" : "false") << '\n';
+			LOG(INFO) << "set bool: " << name << " = " << value << '\n';
 		}
 	}});
 	Console::instance->add_command("toggle_bool", {[]
@@ -174,7 +175,7 @@ void Settings::add_command_handlers()
 	{
 		if(args.size() != 1)
 		{
-			LOG(ERROR) << "Usage: toggle_bool <setting name>\n";
+			LOG(ERROR) << "Usage: toggle_bool <string: name>\n";
 			return;
 		}
 
@@ -189,7 +190,7 @@ void Settings::add_command_handlers()
 		Settings::set(name, value);
 		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
-			LOG(INFO) << "set bool: " << name << " = " << (value ? "true" : "false") << '\n';
+			LOG(INFO) << "set bool: " << name << " = " << value << '\n';
 		}
 	}});
 	Console::instance->add_command("set_float", {[]
@@ -199,7 +200,7 @@ void Settings::add_command_handlers()
 	{
 		if(args.size() != 2)
 		{
-			LOG(ERROR) << "Usage: set_float <name> <value or + difference>\n";
+			LOG(ERROR) << "Usage: set_float <string: name> <number: value or + difference>\n";
 			return;
 		}
 
@@ -244,7 +245,7 @@ void Settings::add_command_handlers()
 	{
 		if(args.size() != 2)
 		{
-			LOG(ERROR) << "Usage: set_int <name> <value or + difference>\n";
+			LOG(ERROR) << "Usage: set_int <string: name> <integer: value or + difference>\n";
 			return;
 		}
 
@@ -273,7 +274,7 @@ void Settings::add_command_handlers()
 	{
 		if(args.size() != 2)
 		{
-			LOG(ERROR) << "Usage: set_string <name> <value>\n";
+			LOG(ERROR) << "Usage: set_string <string: name> <string: value>\n";
 			return;
 		}
 

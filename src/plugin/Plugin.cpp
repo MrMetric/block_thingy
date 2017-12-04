@@ -84,7 +84,10 @@ Plugin::Plugin(Plugin&& that)
 
 void Plugin::init(Game& game)
 {
-	if(pImpl == nullptr) return;
+	if(pImpl == nullptr)
+	{
+		return;
+	}
 
 #ifdef HAVE_POSIX
 	using init_t = void(*)(Game&);

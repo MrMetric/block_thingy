@@ -1,7 +1,6 @@
 #include "Gfx.hpp"
 
 #include <cerrno>
-#include <cstring>							// strerror
 #include <limits>
 #include <stdexcept>
 #include <string>

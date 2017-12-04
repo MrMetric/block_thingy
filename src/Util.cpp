@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iomanip>
 #include <memory>
+#include <sstream>
 #include <stdexcept>
 #ifdef _WIN32
 #include <windows.h> // SetCurrentDirectoryW
@@ -90,7 +91,7 @@ void Util::change_directory(const fs::path& path)
 	#else
 	if(chdir(path.c_str()) == -1)
 	{
-		throw std::runtime_error("error changing directory to " + path.u8string() + ": " + strerror(errno));
+		throw std::runtime_error("error changing directory to " + path.u8string() + ": " + std::strerror(errno));
 	}
 	#endif
 }
@@ -106,11 +107,11 @@ int Util::stoi(const string& s)
 
 string Util::datetime()
 {
-	auto now = std::chrono::system_clock::now();
-	auto us = std::chrono::time_point_cast<std::chrono::microseconds>(now) - std::chrono::time_point_cast<std::chrono::seconds>(now);
-	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
-	std::tm* tm = std::localtime(&now_c);
-	std::stringstream ss;
+	const auto now = std::chrono::system_clock::now();
+	const auto us = std::chrono::time_point_cast<std::chrono::microseconds>(now) - std::chrono::time_point_cast<std::chrono::seconds>(now);
+	const std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+	const std::tm* tm = std::localtime(&now_c);
+	std::ostringstream ss;
 	ss << std::put_time(tm, "%F %T.")
 	   << std::setfill('0') << std::setw(6) << us.count()
 	   << std::put_time(tm, " %z");

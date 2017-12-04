@@ -80,6 +80,7 @@ private:
 		std::function<void(const glm::dvec2&, Character&)>
 	);
 	Character& get_char(char32_t);
+	Character load_char(char32_t) const;
 };
 
 } // namespace Graphics

@@ -533,6 +533,22 @@ void Game::impl::add_commands()
 			game.copied_block = game.world.get_block(game.hovered_block->pos);
 		}
 	});
+	COMMAND("set_block")
+	{
+		if(args.size() != 1)
+		{
+			LOG(ERROR) << "Usage: set_block <string: strid>\n";
+			return;
+		}
+		try
+		{
+			game.copied_block = game.block_registry.get_default(args[0]);
+		}
+		catch(const std::runtime_error& e)
+		{
+			LOG(ERROR) << e.what() << '\n';
+		}
+	});
 
 	// TODO: less copy/paste
 	COMMAND("+forward")
@@ -657,7 +673,7 @@ void Game::impl::add_commands()
 	{
 		if(args.size() != 2)
 		{
-			LOG(ERROR) << "Usage: cam.rot x|y|z <float: degrees>\n";
+			LOG(ERROR) << "Usage: cam.rot x|y|z <number: degrees>\n";
 			return;
 		}
 		const string part = args[0];
@@ -777,7 +793,7 @@ void Game::impl::add_commands()
 	{
 		if(args.size() != 1)
 		{
-			LOG(ERROR) << "Usage: open_gui <GUI name>\n";
+			LOG(ERROR) << "Usage: open_gui <string: name>\n";
 			return;
 		}
 		const string name = args[0];

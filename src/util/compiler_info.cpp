@@ -19,7 +19,7 @@ string compiler_info()
 #elif defined(__GNUC__)
 	return "GCC " __VERSION__;
 #elif defined(_MSC_VER)
-	std::stringstream s;
+	std::ostringstream s;
 	s << std::setfill('0');
 	s << std::setw(2) << _MSC_VER / 100 << '.';
 	s << std::setw(2) << _MSC_VER % 100 << '.';

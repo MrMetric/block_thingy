@@ -310,7 +310,7 @@ void write_png
 	{
 		png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
 		png_destroy_write_struct(&png_ptr, &info_ptr);
-		throw std::runtime_error(string("error opening png file for writing: ") + strerror(errno));
+		throw std::runtime_error(string("error opening png file for writing: ") + std::strerror(errno));
 	}
 	png_init_io(png_ptr, fp);
 	const int bit_depth = 8;

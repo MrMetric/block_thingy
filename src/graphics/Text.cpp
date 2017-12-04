@@ -228,17 +228,18 @@ Text::Character& Text::get_char(const char32_t c)
 	auto i = chars.find(c);
 	if(i == chars.cend())
 	{
-		chars.emplace(c, load_char(face, c));
+		chars.emplace(c, load_char(c));
 		i = chars.find(c);
 	}
 	return i->second;
 }
 
-Text::Character load_char(const FT_Face& face, const char32_t c)
+Text::Character Text::load_char(const char32_t c) const
 {
 	if(FT_Load_Char(face, c, FT_LOAD_RENDER))
 	{
-		LOG(ERROR) << "failed to load character: " << c << '\n';
+		// TODO: ensure character is printed legibly
+		LOG(ERROR) << "failed to load character '" << c << "' in " << font_path.u8string() << '\n';
 		return
 		{
 			{},

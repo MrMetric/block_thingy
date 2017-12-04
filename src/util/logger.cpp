@@ -11,11 +11,12 @@ namespace block_thingy {
 class nullbuf : public std::streambuf
 {
 public:
-	int overflow(int c)
-	{
-		return c;
-	}
+	int_type overflow(int_type c) override;
 };
+std::streambuf::int_type nullbuf::overflow(std::streambuf::int_type c)
+{
+	return c;
+}
 
 std::ostream& log(const string& category)
 {

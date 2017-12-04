@@ -73,6 +73,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=inconsistent-missing-override
 		-Werror=invalid-pp-token
 		-Werror=mismatched-tags
+		-Werror=missing-declarations
 		-Werror=missing-field-initializers
 		-Werror=newline-eof
 		-Werror=non-virtual-dtor
@@ -95,6 +96,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Wno-exit-time-destructors
 		-Wno-float-equal
 		-Wno-global-constructors
+		-Wno-logical-op-parentheses
 		-Wno-missing-braces
 		-Wno-padded
 		-Wno-shadow

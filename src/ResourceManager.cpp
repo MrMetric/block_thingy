@@ -276,6 +276,7 @@ void ResourceManager::load_blocks(Game& game)
 			LOG(WARN) << "ignoring invalid block " << path.u8string() << '\n';
 			continue;
 		}
+		LOG(DEBUG) << "loading block: " << path.u8string() << '\n';
 
 		Block::Enum::VisibilityType visibility_type;
 		if(block.count("visibility_type") == 0)

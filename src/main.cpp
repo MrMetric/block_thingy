@@ -112,7 +112,7 @@ int main(int argc, char** argv)
 	unique_ptr<Game> game = std::make_unique<Game>();
 	window = game->gfx.window;
 
-	LOG(INFO) << "starting main loop" << '\n';
+	LOG(DEBUG) << "starting main loop" << '\n';
 	while(!glfwWindowShouldClose(game->gfx.window))
 	{
 		game->draw();
