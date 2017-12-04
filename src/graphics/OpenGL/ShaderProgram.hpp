@@ -27,9 +27,8 @@ class ShaderProgram
 {
 public:
 	ShaderProgram();
-	ShaderProgram(const char* path);
-	ShaderProgram(const std::string& path);
-	ShaderProgram(const std::vector<fs::path>&, const std::string& name);
+	ShaderProgram(const fs::path&);
+	ShaderProgram(const std::vector<fs::path>&, const std::string& debug_name);
 	~ShaderProgram();
 
 	ShaderProgram(ShaderProgram&&);

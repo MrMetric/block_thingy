@@ -83,6 +83,3 @@ private:
 		return CHUNK_SIZE * CHUNK_SIZE * x + CHUNK_SIZE * y + z;
 	}
 };
-
-template<>
-ChunkData<std::shared_ptr<Block::Base>>::ChunkData();

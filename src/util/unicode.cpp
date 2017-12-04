@@ -8,7 +8,7 @@ using std::u32string;
 
 namespace Util {
 
-#if defined(_MSC_VER) && _MSC_VER == 1900 // a bug prevents linking
+#if defined(_MSC_VER) && _MSC_VER >= 1900 // a bug prevents linking
 #define bugfix
 static std::wstring_convert<std::codecvt_utf8<int32_t>, int32_t> convert;
 #else

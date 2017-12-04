@@ -110,7 +110,13 @@ string Util::datetime()
 	const auto now = std::chrono::system_clock::now();
 	const auto us = std::chrono::time_point_cast<std::chrono::microseconds>(now) - std::chrono::time_point_cast<std::chrono::seconds>(now);
 	const std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+#ifdef _MSC_VER
+	std::tm tm_;
+	localtime_s(&tm_, &now_c);
+	const std::tm* tm = &tm_;
+#else
 	const std::tm* tm = std::localtime(&now_c);
+#endif
 	std::ostringstream ss;
 	ss << std::put_time(tm, "%F %T.")
 	   << std::setfill('0') << std::setw(6) << us.count()

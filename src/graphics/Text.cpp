@@ -35,7 +35,7 @@ Text::Text(const fs::path& font_path, const FT_UInt height)
 		throw std::runtime_error("failed to init FreeType");
 	}
 
-	if(FT_New_Face(ft, font_path.c_str(), 0, &face))
+	if(FT_New_Face(ft, font_path.string().c_str(), 0, &face))
 	{
 		throw std::runtime_error("failed to load font " + font_path.u8string());
 	}
@@ -61,7 +61,7 @@ void Text::set_font(const fs::path& path, const FT_UInt height)
 	if(path != font_path)
 	{
 		FT_Face new_face;
-		if(FT_New_Face(ft, path.c_str(), 0, &new_face))
+		if(FT_New_Face(ft, path.string().c_str(), 0, &new_face))
 		{
 			throw std::runtime_error("failed to load font " + path.u8string());
 		}
@@ -82,7 +82,7 @@ void Text::set_font(const fs::path& path)
 	}
 
 	FT_Face new_face;
-	if(FT_New_Face(ft, path.c_str(), 0, &new_face))
+	if(FT_New_Face(ft, path.string().c_str(), 0, &new_face))
 	{
 		throw std::runtime_error("failed to load font " + path.u8string());
 	}

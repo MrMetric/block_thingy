@@ -31,15 +31,9 @@ ShaderProgram::ShaderProgram()
 {
 }
 
-ShaderProgram::ShaderProgram(const char* path)
+ShaderProgram::ShaderProgram(const fs::path& path)
 :
-	ShaderProgram(string(path))
-{
-}
-
-ShaderProgram::ShaderProgram(const string& path)
-:
-	ShaderProgram({ path + ".vs", path + ".fs" }, path)
+	ShaderProgram({ { path.string() + ".vs" }, { path.string() + ".fs" } }, path.string())
 {
 }
 

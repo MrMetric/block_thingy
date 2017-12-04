@@ -182,7 +182,7 @@ Rectangle yield_rectangle(surface_t& surface)
 				{
 					break;
 				}
-				for(size_t i = start_x; i < start_x + w2; ++i)
+				for(BlockInChunk::value_type i = start_x; i < start_x + w2; ++i)
 				{
 					std::get<0>(row2[start_x]).shader_path.clear();
 				}

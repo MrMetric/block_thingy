@@ -113,6 +113,7 @@ struct ResourceManager::impl
 	uint8_t units;
 	mutable std::mutex block_textures_mutex;
 
+	// note: fs::path can not be a key because it can not be hashed
 	std::unordered_map<std::string, std::unique_ptr<Graphics::Image>> cache_Image;
 	mutable std::mutex cache_Image_mutex;
 
@@ -377,7 +378,7 @@ ResourceManager::block_texture_info ResourceManager::get_block_texture(fs::path 
 	std::lock_guard<std::mutex> g(pImpl->block_textures_mutex);
 
 	block_texture& t = pImpl->get_block_texture(res);
-	const auto i = t.index.find(path);
+	const auto i = t.index.find(path.string());
 	if(i != t.index.cend())
 	{
 		return
@@ -430,7 +431,7 @@ ResourceManager::block_texture_info ResourceManager::get_block_texture(fs::path 
 		glActiveTexture(GL_TEXTURE0);
 		LOG(INFO) << "loaded " << path.u8string() << " as layer " << depth << " of unit " << std::to_string(t.unit) << '\n';
 	});
-	t.index.emplace(path, depth);
+	t.index.emplace(path.string(), depth);
 	return
 	{
 		t.unit,
@@ -446,16 +447,16 @@ bool ResourceManager::texture_has_transparency(const fs::path& path)
 bool ResourceManager::has_Image(const fs::path& path) const
 {
 	std::lock_guard<std::mutex> g(pImpl->cache_Image_mutex);
-	return pImpl->cache_Image.find(path) != pImpl->cache_Image.cend();
+	return pImpl->cache_Image.find(path.string()) != pImpl->cache_Image.cend();
 }
 
 Resource<Graphics::Image> ResourceManager::get_Image(const fs::path& path, const bool reload)
 {
 	std::lock_guard<std::mutex> g(pImpl->cache_Image_mutex);
-	auto i = pImpl->cache_Image.find(path);
+	auto i = pImpl->cache_Image.find(path.string());
 	if(i == pImpl->cache_Image.cend())
 	{
-		i = pImpl->cache_Image.emplace(path, std::make_unique<Graphics::Image>(path)).first;
+		i = pImpl->cache_Image.emplace(path.string(), std::make_unique<Graphics::Image>(path)).first;
 		pImpl->file_watcher.add_watch(path);
 	}
 	else if(reload)
@@ -468,20 +469,20 @@ Resource<Graphics::Image> ResourceManager::get_Image(const fs::path& path, const
 		catch(const std::runtime_error& e)
 		{
 			LOG(ERROR) << "failed to update image " << path.u8string() << ": " << e.what() << '\n';
-			return Resource<Graphics::Image>(&i->second, path);
+			return Resource<Graphics::Image>(&i->second, path.string());
 		}
 		std::swap(p, i->second);
-		Resource<Graphics::Image> r(&i->second, path);
+		Resource<Graphics::Image> r(&i->second, path.string());
 		r.update();
 		return r;
 	}
-	return Resource<Graphics::Image>(&i->second, path);
+	return Resource<Graphics::Image>(&i->second, path.string());
 }
 
 bool ResourceManager::has_ShaderObject(const fs::path& path) const
 {
 	std::lock_guard<std::mutex> g(pImpl->cache_ShaderObject_mutex);
-	return pImpl->cache_ShaderObject.find(path) != pImpl->cache_ShaderObject.cend();
+	return pImpl->cache_ShaderObject.find(path.string()) != pImpl->cache_ShaderObject.cend();
 }
 
 Resource<ShaderObject> ResourceManager::get_ShaderObject(fs::path path, const bool reload)
@@ -509,11 +510,11 @@ Resource<ShaderObject> ResourceManager::get_ShaderObject(fs::path path, const bo
 			throw std::runtime_error("shader not found and no default exists: " + orig.u8string());
 		}
 	}
-	auto i = pImpl->cache_ShaderObject.find(path);
+	auto i = pImpl->cache_ShaderObject.find(path.string());
 	if(i == pImpl->cache_ShaderObject.cend())
 	{
 		// the shader object is not in the cache, so compile and add it
-		i = pImpl->cache_ShaderObject.emplace(path, std::make_unique<ShaderObject>(path, type)).first;
+		i = pImpl->cache_ShaderObject.emplace(path.string(), std::make_unique<ShaderObject>(path, type)).first;
 		pImpl->file_watcher.add_watch(path);
 	}
 	else if(reload)
@@ -526,32 +527,32 @@ Resource<ShaderObject> ResourceManager::get_ShaderObject(fs::path path, const bo
 		catch(const std::runtime_error& e)
 		{
 			LOG(ERROR) << "error reloading ShaderObject " << path.u8string() << ": " << e.what() << '\n';
-			return Resource<ShaderObject>(&i->second, path);
+			return Resource<ShaderObject>(&i->second, path.string());
 		}
 		std::swap(p, i->second);
-		Resource<ShaderObject> r(&i->second, path);
+		Resource<ShaderObject> r(&i->second, path.string());
 		r.update();
 		return r;
 	}
-	return Resource<ShaderObject>(&i->second, path);
+	return Resource<ShaderObject>(&i->second, path.string());
 }
 
 bool ResourceManager::has_ShaderProgram(const fs::path& path) const
 {
 	std::lock_guard<std::mutex> g(pImpl->cache_ShaderProgram_mutex);
-	return pImpl->cache_ShaderProgram.find(path) != pImpl->cache_ShaderProgram.cend();
+	return pImpl->cache_ShaderProgram.find(path.string()) != pImpl->cache_ShaderProgram.cend();
 }
 
 Resource<ShaderProgram> ResourceManager::get_ShaderProgram(const fs::path& path, bool reload)
 {
 	std::lock_guard<std::mutex> g(pImpl->cache_ShaderProgram_mutex);
-	auto i = pImpl->cache_ShaderProgram.find(path);
+	auto i = pImpl->cache_ShaderProgram.find(path.string());
 	if(i == pImpl->cache_ShaderProgram.cend())
 	{
-		i = pImpl->cache_ShaderProgram.emplace(path, std::make_unique<ShaderProgram>(path)).first;
+		i = pImpl->cache_ShaderProgram.emplace(path.string(), std::make_unique<ShaderProgram>(path)).first;
 
 		// TODO: find a better place for this
-		if(Util::string_starts_with(path, "shaders/block/"))
+		if(Util::string_starts_with(path.string(), "shaders/block/"))
 		{
 			i->second->uniform("light", 1); // the texture unit
 			i->second->uniform("light_smoothing", static_cast<int>(Settings::get<int64_t>("light_smoothing")));
@@ -568,14 +569,14 @@ Resource<ShaderProgram> ResourceManager::get_ShaderProgram(const fs::path& path,
 		catch(const std::runtime_error& e)
 		{
 			LOG(ERROR) << "error reloading ShaderProgam " << path.u8string() << ": " << e.what() << '\n';
-			return Resource<ShaderProgram>(&i->second, path);
+			return Resource<ShaderProgram>(&i->second, path.string());
 		}
 		std::swap(p, i->second);
-		Resource<ShaderProgram> r(&i->second, path);
+		Resource<ShaderProgram> r(&i->second, path.string());
 		r.update();
 		return r;
 	}
-	return Resource<ShaderProgram>(&i->second, path);
+	return Resource<ShaderProgram>(&i->second, path.string());
 }
 
 void ResourceManager::foreach_ShaderProgram(const std::function<void(Resource<Graphics::OpenGL::ShaderProgram>)>& f)
