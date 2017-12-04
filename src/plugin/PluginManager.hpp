@@ -2,9 +2,9 @@
 
 #include <cassert>
 #include <memory>
-#include <experimental/propagate_const>
 
 #include "fwd/Game.hpp"
+#include "shim/propagate_const.hpp"
 
 class PluginManager
 {
@@ -32,5 +32,5 @@ private:
 	} set_instance;
 
 	struct impl;
-	std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;
+	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };

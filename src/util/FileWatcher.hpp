@@ -1,9 +1,9 @@
 #pragma once
 
 #include <memory>
-#include <experimental/propagate_const>
 #include <vector>
 
+#include "shim/propagate_const.hpp"
 #include "util/filesystem.hpp"
 
 namespace Util {
@@ -20,7 +20,7 @@ public:
 
 private:
 	struct impl;
-	std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;
+	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };
 
 }

@@ -1,10 +1,10 @@
 #pragma once
 
 #include <memory>
-#include <experimental/propagate_const>
 #include <stdint.h>
 #include <vector>
 
+#include "shim/propagate_const.hpp"
 #include "util/filesystem.hpp"
 
 namespace Graphics {
@@ -26,7 +26,7 @@ public:
 
 private:
 	struct impl;
-	std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;
+	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };
 
 } // namespace Graphics

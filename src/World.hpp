@@ -2,7 +2,6 @@
 
 #include <functional>
 #include <memory>
-#include <experimental/propagate_const>
 #include <queue>
 #include <stdint.h>
 #include <string>
@@ -17,6 +16,7 @@
 #include "fwd/graphics/Color.hpp"
 #include "fwd/position/BlockInWorld.hpp"
 #include "fwd/position/ChunkInWorld.hpp"
+#include "shim/propagate_const.hpp"
 #include "util/filesystem.hpp"
 
 class World
@@ -79,5 +79,5 @@ private:
 	uint64_t ticks;
 
 	struct impl;
-	std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;
+	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };

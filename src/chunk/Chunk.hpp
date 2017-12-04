@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <experimental/propagate_const>
 
 #include "fwd/World.hpp"
 #include "fwd/block/Base.hpp"
@@ -9,6 +8,7 @@
 #include "fwd/graphics/Color.hpp"
 #include "fwd/position/BlockInChunk.hpp"
 #include "fwd/position/ChunkInWorld.hpp"
+#include "shim/propagate_const.hpp"
 
 using chunk_blocks_t = ChunkData<std::shared_ptr<Block::Base>>;
 
@@ -52,5 +52,5 @@ private:
 	chunk_blocks_t blocks; // this here (instead of in impl) for msgpack saving
 
 	struct impl;
-	std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;
+	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };

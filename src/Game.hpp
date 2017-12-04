@@ -2,7 +2,6 @@
 
 #include <cassert>
 #include <memory>
-#include <experimental/propagate_const>
 #include <string>
 
 #include <glm/mat4x4.hpp>
@@ -20,6 +19,7 @@
 #include "graphics/GUI/Base.hpp"
 #include "physics/RaycastHit.hpp"
 #include "position/ChunkInWorld.hpp"
+#include "shim/propagate_const.hpp"
 #include "types/window_size_t.hpp"
 #include "fwd/util/char_press.hpp"
 #include "util/filesystem.hpp"
@@ -102,5 +102,5 @@ private:
 	Position::ChunkInWorld::value_type render_distance;
 
 	struct impl;
-	std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;
+	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };

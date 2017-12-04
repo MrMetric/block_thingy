@@ -1,9 +1,9 @@
 #pragma once
 
 #include <memory>
-#include <experimental/propagate_const>
 
 #include "fwd/Game.hpp"
+#include "shim/propagate_const.hpp"
 #include "util/filesystem.hpp"
 
 class Plugin
@@ -25,5 +25,5 @@ private:
 	void init(Game&);
 
 	struct impl;
-	std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;
+	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };

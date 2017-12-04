@@ -2,7 +2,6 @@
 
 #include <functional>
 #include <memory>
-#include <experimental/propagate_const>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -12,6 +11,7 @@
 #include "fwd/graphics/Image.hpp"
 #include "fwd/graphics/OpenGL/ShaderObject.hpp"
 #include "fwd/graphics/OpenGL/ShaderProgram.hpp"
+#include "shim/propagate_const.hpp"
 #include "util/filesystem.hpp"
 
 template<typename T>
@@ -98,5 +98,5 @@ public:
 
 private:
 	struct impl;
-	std::experimental::propagate_const<std::unique_ptr<impl>> pImpl;
+	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };
