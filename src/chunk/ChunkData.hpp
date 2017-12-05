@@ -4,8 +4,11 @@
 #include <array>
 #include <memory>
 #include <mutex>
+#include <type_traits>
 
-#include "fwd/block/Base.hpp"
+#include "Game.hpp"
+#include "block/Base.hpp"
+#include "block/Enum/Type.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
@@ -15,6 +18,13 @@ class ChunkData
 public:
 	ChunkData()
 	{
+		// explicit template instantiation does not work with both MSVC and GCC/Clang
+		// with MSVC, putting a prototype in this file with the definition in a cpp file causes a linking error
+		// with GCC/Clang, putting the definition in this file breaks the one-definition rule
+		if constexpr(std::is_same<T, std::shared_ptr<Block::Base>>::value)
+		{
+			fill(Game::instance->block_registry.get_default(Block::Enum::Type::air));
+		}
 	}
 
 	ChunkData(T block)
