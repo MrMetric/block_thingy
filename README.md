@@ -103,7 +103,7 @@ I have tested these instructions with Visual Studio Community 2017 version 15.4.
 Install [vcpkg](https://github.com/Microsoft/vcpkg) according to its instructions. Note that vcpkg's defaults to installing 32-bit libraries. Install the dependencies like this:
 
 ```
-vcpkg --triplet x64-windows freetype glfw3 libpng msgpack
+vcpkg install --triplet x64-windows freetype glfw3 libpng msgpack
 ```
 
 If you are building for 32-bit, omit `--triplet x64-windows`.
