@@ -5,6 +5,7 @@
 #include <limits>
 #include <map>
 #include <stdexcept>
+#include <type_traits>
 
 #include "console/Console.hpp"
 #include "Game.hpp"
@@ -13,80 +14,129 @@
 
 using std::string;
 
-template<typename T>
-static std::map<string, T>& get_map()
+static std::map<string, Settings::value_t> settings;
+
+static string get_type_name(const Settings::value_t& s)
 {
-	static std::map<string, T> map;
-	return map;
+	static_assert(std::is_same<Settings::value_t, strict_variant::variant<bool, double, int64_t, std::string>>::value);
+	switch(s.which())
+	{
+		case 0: return "bool";
+		case 1: return "float";
+		case 2: return "int";
+		case 3: return "string";
+	}
+	LOG(ERROR) << "setting has an unknown type (this is a bug!)\n";
+	return "ERROR";
 }
+
+static string get_type_name(const string& name)
+{
+	return get_type_name(Settings::get(name));
+}
+
+template<typename T>
+string get_type_name_T()
+{
+	LOG(ERROR) << "setting has unexpected type (this is a bug!)\n";
+	return "ERROR";
+}
+template<> string get_type_name_T<bool   >() { return "bool"; }
+template<> string get_type_name_T<double >() { return "float"; }
+template<> string get_type_name_T<int64_t>() { return "int"; }
+template<> string get_type_name_T<string >() { return "string"; }
 
 template<typename T>
 bool Settings::has(const string& name)
 {
-	return get_map<T>().count(name) > 0;
+	const auto i = settings.find(name);
+	if(i == settings.cend())
+	{
+		return false;
+	}
+	return i->second.get<T>() != nullptr;
 }
 
 template<typename T>
 T Settings::get(const string& name)
 {
-	const auto i = get_map<T>().find(name);
-	if(i == get_map<T>().cend())
+	const auto i = settings.find(name);
+	if(i == settings.cend())
 	{
-		// TODO: ?
 		throw std::runtime_error("unknown setting name: " + name);
 	}
-	return i->second;
+	const T* s = i->second.get<T>();
+	if(s == nullptr)
+	{
+		throw std::runtime_error("can not get " + get_type_name(i->second) + " setting " + name + " as " + get_type_name_T<T>());
+	}
+	return *s;
 }
 
 template<typename T>
 void Settings::set(const string& name, T value)
 {
-	if(has<T>(name) && get<T>(name) == value)
+	if(has<T>(name))
 	{
-		return;
+		if(get<T>(name) == value)
+		{
+			return;
+		}
+
+		const Settings::value_t old_value = get(name);
+		settings[name] = std::move(value);
+		if(Game::instance != nullptr)
+		{
+			Game::instance->event_manager.do_event(Event_change_setting(name, old_value, settings[name]));
+		}
 	}
-	// TODO: prevent having the same name in multiple types
-	// TODO!: there is not always an old value
-	const T old_value = std::move(get_map<T>()[name]);
-	get_map<T>()[name] = std::move(value);
-	if(Game::instance != nullptr)
+	else if(has(name))
 	{
-		Game::instance->event_manager.do_event(Event_change_setting(name, old_value, get_map<T>()[name]));
+		throw std::runtime_error("can not set " + get_type_name(name) + " setting " + name + " to " + get_type_name_T<T>());
 	}
+
+	settings.emplace(name, std::move(value));
+	// TODO: event
+}
+
+bool Settings::has(const string& name)
+{
+	return settings.find(name) != settings.cend();
+}
+
+Settings::value_t Settings::get(const string& name)
+{
+	const auto i = settings.find(name);
+	if(i == settings.cend())
+	{
+		throw std::runtime_error("unknown setting name: " + name);
+	}
+	return i->second;
 }
 
 void Settings::load()
 {
-	get_map<bool>() =
+	settings =
 	{
-		{"cull_face", true},
-		{"fullscreen", false},
-		{"show_chunk_outlines", false},
+		{"cull_face"			, true},
+		{"cursor_blink_rate"	, 0.5}, // TODO: ensure > 0
+		{"far_plane"			, 1500.0},
+		{"font"					, "fonts/Anonymous Pro/Anonymous Pro.ttf"},
+		{"font_size"			, 24},
+		{"fov"					, 75.0},
+		{"fullscreen"			, false},
+		{"light_smoothing"		, 2},
+		{"mesher"				, "Simple"},
+		{"min_light"			, 0.005},
+		{"near_plane"			, 0.1},
+		{"ortho_size"			, 6.0},
+		{"projection_type"		, "default"},
+		{"screen_shader"		, "default"},
+		{"show_chunk_outlines"	, false},
 		{"show_container_bounds", false},
-		{"show_debug_info", false},
-		{"show_HUD", true},
-		{"wireframe", false},
-	};
-	get_map<double>() =
-	{
-		{"cursor_blink_rate", 0.5}, // TODO: ensure > 0
-		{"far_plane", 1500},
-		{"fov", 75},
-		{"min_light", 0.005},
-		{"near_plane", 0.1},
-		{"ortho_size", 6},
-	};
-	get_map<int64_t>() =
-	{
-		{"font_size", 24},
-		{"light_smoothing", 2},
-	};
-	get_map<string>() =
-	{
-		{"font", "fonts/Anonymous Pro/Anonymous Pro.ttf"},
-		{"mesher", "Simple"},
-		{"projection_type", "default"},
-		{"screen_shader", "default"},
+		{"show_debug_info"		, false},
+		{"show_HUD"				, true},
+		{"wireframe"			, false},
 	};
 
 	Console::instance->run_line("exec settings");
@@ -123,21 +173,30 @@ void Settings::save()
 	std::ofstream f("scripts/settings");
 	f << std::boolalpha;
 	f.precision(std::numeric_limits<double>::max_digits10);
-	for(const auto& p : get_map<bool>())
+	for(const auto& p : settings)
 	{
-		f << "set_bool " << format_string(p.first) << ' ' << p.second << '\n';
-	}
-	for(const auto& p : get_map<double>())
-	{
-		f << "set_float " << format_string(p.first) << ' ' << p.second << '\n';
-	}
-	for(const auto& p : get_map<int64_t>())
-	{
-		f << "set_int " << format_string(p.first) << ' ' << p.second << '\n';
-	}
-	for(const auto& p : get_map<string>())
-	{
-		f << "set_string " << format_string(p.first) << ' ' << format_string(p.second) << '\n';
+		const string name = format_string(p.first);
+		const auto& setting = p.second;
+		if(const bool* s = setting.get<bool>())
+		{
+			f << "set_bool " << name << ' ' << *s << '\n';
+		}
+		else if(const double* s = setting.get<double>())
+		{
+			f << "set_float " << name << ' ' << *s << '\n';
+		}
+		else if(const int64_t* s = setting.get<int64_t>())
+		{
+			f << "set_int " << name << ' ' << *s << '\n';
+		}
+		else if(const string* s = setting.get<string>())
+		{
+			f << "set_string " << name << ' ' << format_string(*s) << '\n';
+		}
+		else
+		{
+			LOG(ERROR) << "unable to save setting " << name << ": not a bool, double, int64_t, or std::string\n";
+		}
 	}
 }
 
@@ -162,7 +221,15 @@ void Settings::add_command_handlers()
 			return;
 		}
 		const bool value = (value_str == "true");
-		Settings::set(name, value);
+		try
+		{
+			Settings::set(name, value);
+		}
+		catch(const std::runtime_error& e)
+		{
+			LOG(ERROR) << "error setting bool " << name << " = " << value << ": " << e.what() << '\n';
+			return;
+		}
 		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
 			LOG(INFO) << "set bool: " << name << " = " << value << '\n';
@@ -180,14 +247,17 @@ void Settings::add_command_handlers()
 		}
 
 		const string name = args[0];
-		if(!Settings::has<bool>(name))
+		bool value;
+		try
 		{
-			LOG(ERROR) << "Unknown bool name: " << name << '\n';
+			value = !Settings::get<bool>(name);
+			Settings::set(name, value);
+		}
+		catch(const std::runtime_error& e)
+		{
+			LOG(ERROR) << "error toggling bool " << name << ": " << e.what() << '\n';
 			return;
 		}
-		bool value = Settings::get<bool>(name);
-		value = !value;
-		Settings::set(name, value);
 		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
 			LOG(INFO) << "set bool: " << name << " = " << value << '\n';
@@ -216,6 +286,7 @@ void Settings::add_command_handlers()
 			value = std::stod(svalue);
 		}
 
+		// TODO: find a home for this
 		if(name == "fov")
 		{
 			if(value < 0)
@@ -232,7 +303,15 @@ void Settings::add_command_handlers()
 			}
 		}
 
-		Settings::set<double>(name, value);
+		try
+		{
+			Settings::set<double>(name, value);
+		}
+		catch(const std::runtime_error& e)
+		{
+			LOG(ERROR) << "error setting float " << name << " = " << value << ": " << e.what() << '\n';
+			return;
+		}
 		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
 			LOG(INFO) << "set float: " << name << " = " << value << '\n';
@@ -261,7 +340,15 @@ void Settings::add_command_handlers()
 			value = std::stoll(svalue);
 		}
 
-		Settings::set<int64_t>(name, value);
+		try
+		{
+			Settings::set<int64_t>(name, value);
+		}
+		catch(const std::runtime_error& e)
+		{
+			LOG(ERROR) << "error setting int " << name << " = " << value << ": " << e.what() << '\n';
+			return;
+		}
 		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
 			LOG(INFO) << "set int: " << name << " = " << value << '\n';
@@ -280,7 +367,15 @@ void Settings::add_command_handlers()
 
 		const string name = args[0];
 		const string value = args[1];
-		Settings::set<string>(name, value);
+		try
+		{
+			Settings::set(name, value);
+		}
+		catch(const std::runtime_error& e)
+		{
+			LOG(ERROR) << "error setting string " << name << " = " << value << ": " << e.what() << '\n';
+			return;
+		}
 		if(Game::instance != nullptr) // not called from initial Settings::load()
 		{
 			LOG(INFO) << "set string: " << name << " = " << value << '\n';

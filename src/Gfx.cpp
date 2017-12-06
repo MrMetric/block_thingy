@@ -93,15 +93,15 @@ void Gfx::hook_events(EventManager& event_manager)
 
 		if(e.name == "fullscreen")
 		{
-			set_fullscreen(*e.old_value.get<bool>());
+			set_fullscreen(*e.new_value.get<bool>());
 		}
 		else if(e.name == "cull_face")
 		{
-			set_cull_face(*e.old_value.get<bool>());
+			set_cull_face(*e.new_value.get<bool>());
 		}
 		else if(e.name == "screen_shader")
 		{
-			set_screen_shader(*e.old_value.get<string>());
+			set_screen_shader(*e.new_value.get<string>());
 		}
 		else if(e.name == "projection_type"
 			 || e.name == "fov"

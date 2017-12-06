@@ -5,8 +5,8 @@
 Event_change_setting::Event_change_setting
 (
 	const std::string& name,
-	const value_t old_value,
-	const value_t new_value
+	const Settings::value_t old_value,
+	const Settings::value_t new_value
 )
 :
 	Event(EventType::change_setting),
