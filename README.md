@@ -1,14 +1,16 @@
 # block thingy [![Coverity Scan Build Status](https://scan.coverity.com/projects/7790/badge.svg)](https://scan.coverity.com/projects/mrmetric-block_thingy)
 I mek GAme
 
-## Features
- * can render tens of blocks at once
+## What is this?
+
+block_thingy is a Free and Open-Source voxel game engine. It is very much a work-in-progress, so don't expect to see lots of fancy features (yet). It is not a clone of Minecraft, although making a Minecraft clone with it will be possible once the required features are implemented.
+
+## Some features
+ * uses cubic chunks and has no arbitrary low height limit
+ * has 3-channel (RGB) flood fill lighting
+ * FOSS (license is GPLv3)
  * [will not delete your home folder](https://github.com/valvesoftware/steam-for-linux/issues/3671)
- * free for at least 1 more day
- * has no bugs (that I know of)
- * never gonna give you up
  * Y2K-compliant
- * has a license (GPL v3)
 
 ## How to clone
 As this repository has submodules, you need to clone it recursively:
@@ -98,7 +100,7 @@ $ ./block_thingy ../bin
 
 ### Building
 
-I have tested these instructions with Visual Studio Community 2017 version 15.4.5. I do not guarantee that any other version will work, but future 2017 versions should be fine.
+I have tested these instructions with Visual Studio Community 2017 version 15.5.0. I do not guarantee that any other version will work, but future 2017 versions should be fine.
 
 Install [vcpkg](https://github.com/Microsoft/vcpkg) according to its instructions. Note that vcpkg's defaults to installing 32-bit libraries. Install the dependencies like this:
 
@@ -108,7 +110,7 @@ vcpkg install --triplet x64-windows freetype glfw3 libpng msgpack
 
 If you are building for 32-bit, omit `--triplet x64-windows`.
 
-Next, open `projects/vc2017/block_thingy.sln` with Visual Studio. Choose your desired configuration and architecture and build it (Build → Build Solution, or press F6).
+Next, open `projects/vc2017/block_thingy.sln` with Visual Studio. Choose your desired configuration and architecture and build it (Build → Build Solution).
 
 ### Running
 
@@ -116,22 +118,21 @@ Just run block_thingy.exe. It should automatically detect where the bin director
 
 ## License
 
-GPLv3, with one exception: creating non-free plugins is permitted.
+GPLv3, with one exception: creating non-free plugins is permitted. Opinions as to whether or not the GPL allows this vary, so I am explicitly allowing it here. If the maintainers of any GPL libraries I use object to this, let me know and I will stop using your library.
 
 ## TODO
  * add a more useful error message for when game files are not found
- * add frustum culling
- * make meshing faster
+ * add frustum culling for chunks
+ * make block accesses faster (this will make meshing and light propagation faster)
  * add other meshing methods [[1]](http://0fps.net/2012/07/07/meshing-minecraft-part-2/) [[2]](https://blackflux.wordpress.com/2014/02/23/meshing-in-voxel-engines-part-1/)
- * make texturing suck less
- * allow using image formats other than PNG
- * improve build instructions
+ * allow using image formats other than PNG (JPEG, WebP, BMP, …)
  * make physics framerate-independent
  * move the commands from `Game` to somewhere else
  * separate chunk data / rendering (this decouples meshing from chunking, and has the side benefit of allowing mesh dimensions to not match chunks)
- * use events more (look at: keypress, mousemove, …)
+ * use an event queue and use events more (look at: keypress, mousemove, …)
  * continue running when adding inotify watches fails
  * watch files on Windows®
+ * add more things to the feature list
  * other stuff that I am too lazy to say here
 
 ## Note
