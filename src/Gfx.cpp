@@ -258,6 +258,13 @@ void Gfx::update_framebuffer_size(const window_size_t& window_size)
 	this->window_size = window_size;
 	LOG(DEBUG) << "window size: " << window_size.x << "×" << window_size.y << '\n';
 	window_mid = glm::dvec2(window_size) / 2.0;
+
+	if(window_size.x == 0 || window_size.y == 0)
+	{
+		// happens when minimizing on Windows
+		return;
+	}
+
 	update_projection_matrix();
 
 	const double width = window_size.x;
