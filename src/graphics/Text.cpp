@@ -130,7 +130,7 @@ void Text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec3& col
 		const float h = ch.size.y;
 		const float y1 = ch.flip ? 1.0f : 0.0f;
 		const float y2 = 1.0f - ch.flip;
-		const float vertices[] =
+		const float vertexes[] =
 		{
 			xpos,     ypos + h, 0.0f, y2,
 			xpos,     ypos,     0.0f, y1,
@@ -143,8 +143,8 @@ void Text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec3& col
 
 		glBindTexture(GL_TEXTURE_2D, ch.texture.get_name());
 
-		vbo.data(sizeof(vertices), vertices, OpenGL::VertexBuffer::UsageHint::dynamic_draw);
-		vao.draw(GL_TRIANGLES, 0, 6);
+		vbo.data(sizeof(vertexes), vertexes, OpenGL::VertexBuffer::UsageHint::dynamic_draw);
+		vao.draw(GL_TRIANGLES, 0, sizeof(vertexes) / sizeof(vertexes[0]) / 4);
 	});
 }
 
