@@ -198,9 +198,6 @@
     <ClCompile Include="..\..\src\chunk\Chunk.cpp">
       <Filter>Source Files\chunk</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\chunk\ChunkData.cpp">
-      <Filter>Source Files\chunk</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\chunk\Mesher\Base.cpp">
       <Filter>Source Files\chunk\Mesher</Filter>
     </ClCompile>
