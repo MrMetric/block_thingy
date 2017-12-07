@@ -91,7 +91,7 @@ string do_include(const fs::path& file_path)
 		included.erase(0, included.find_first_not_of(" \t"));
 		included.erase(included.find_last_not_of(" \t") + 1);
 		const fs::path path = folder / included;
-		if(!Util::file_is_openable(path))
+		if(!fs::exists(path))
 		{
 			LOG(ERROR) << "shader include not found: " << path.u8string() << '\n';
 			continue;

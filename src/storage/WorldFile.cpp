@@ -38,7 +38,7 @@ WorldFile::WorldFile(const fs::path& world_dir, World& world)
 	fs::create_directories(player_dir);
 	fs::create_directories(chunk_dir);
 
-	if(!Util::file_is_openable(world_path))
+	if(!fs::exists(world_path))
 	{
 		return;
 	}
@@ -82,7 +82,7 @@ unique_ptr<Player> WorldFile::load_player
 	auto player = std::make_unique<Player>(*Game::instance, name);
 
 	fs::path file_path = player_dir / name;
-	if(!Util::file_is_openable(file_path))
+	if(!fs::exists(file_path))
 	{
 		return player;
 	}
@@ -116,7 +116,7 @@ void WorldFile::save_chunk(const Chunk& chunk)
 unique_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 {
 	fs::path file_path = chunk_path(position);
-	if(!Util::file_is_openable(file_path))
+	if(!fs::exists(file_path))
 	{
 		return nullptr;
 	}
@@ -149,7 +149,7 @@ unique_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 bool WorldFile::has_chunk(const Position::ChunkInWorld& position)
 {
 	fs::path file_path = chunk_path(position);
-	return Util::file_is_openable(file_path);
+	return fs::exists(file_path);
 }
 
 fs::path WorldFile::chunk_path(const Position::ChunkInWorld& position)

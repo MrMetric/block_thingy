@@ -42,10 +42,9 @@ string Util::read_file(const fs::path& path)
 		inpoot.read(buf.get(), static_cast<std::streamsize>(fsize));
 		return string(buf.get(), fsize);
 	}
-	// std::ios_base::failure is not always catchable: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66145
-	catch(const std::exception&)
+	catch(const std::ios_base::failure&)
 	{
-		LOG(ERROR) << "failed to read " << path.u8string();
+		LOG(ERROR) << "failed to read " << path.u8string() << '\n';
 		throw;
 	}
 }

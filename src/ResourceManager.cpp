@@ -499,11 +499,11 @@ Resource<ShaderObject> ResourceManager::get_ShaderObject(fs::path path, const bo
 	{
 		throw std::invalid_argument("bad shader path: " + path.u8string());
 	}
-	if(!Util::file_is_openable(path))
+	if(!fs::exists(path))
 	{
 		const fs::path orig = path;
 		path.replace_filename("default" + path.extension().string()); // no replace_stem?
-		if(!Util::file_is_openable(path))
+		if(!fs::exists(path))
 		{
 			throw std::runtime_error("shader not found and no default exists: " + orig.u8string());
 		}
