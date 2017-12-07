@@ -1,5 +1,6 @@
 #include "Util.hpp"
 
+#include <algorithm>
 #include <cstddef>
 #include <cerrno>
 #include <chrono>
@@ -30,7 +31,17 @@ bool Util::file_is_openable(const fs::path& path)
 	return std::ifstream(path).is_open();
 }
 
+string Util::read_text(const fs::path& path)
+{
+	return read_file(path, true);
+}
+
 string Util::read_file(const fs::path& path)
+{
+	return read_file(path, false);
+}
+
+string Util::read_file(const fs::path& path, const bool is_text)
 {
 	try
 	{
@@ -40,7 +51,12 @@ string Util::read_file(const fs::path& path)
 		inpoot.seekg(0, std::ifstream::beg);
 		unique_ptr<char[]> buf = std::make_unique<char[]>(fsize);
 		inpoot.read(buf.get(), static_cast<std::streamsize>(fsize));
-		return string(buf.get(), fsize);
+		string s(buf.get(), fsize);
+		if(is_text && s.find('\r') != string::npos)
+		{
+			s.erase(std::remove(s.begin(), s.end(), '\r'), s.end());
+		}
+		return s;
 	}
 	catch(const std::ios_base::failure&)
 	{

@@ -267,7 +267,7 @@ void ResourceManager::load_blocks(Game& game)
 			continue;
 		}
 
-		auto block = parse_block(Util::read_file(path));
+		auto block = parse_block(Util::read_text(path));
 		const block_type t = get_block_type(block);
 		if(t == block_type::invalid)
 		{

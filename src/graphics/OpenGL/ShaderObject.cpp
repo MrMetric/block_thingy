@@ -71,7 +71,7 @@ GLuint ShaderObject::get_name()
 static const string include_str = "#include";
 string do_include(const fs::path& file_path)
 {
-	const string source = Util::read_file(file_path);
+	const string source = Util::read_text(file_path);
 	const fs::path folder = file_path.parent_path();
 
 	std::istringstream input(source);

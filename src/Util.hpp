@@ -39,7 +39,9 @@ inline void delete_element(T& t, typename T::value_type e)
 }
 
 bool file_is_openable(const fs::path&);
+std::string read_text(const fs::path&);
 std::string read_file(const fs::path&);
+std::string read_file(const fs::path&, bool is_text);
 
 std::string gl_object_log(GLuint object);
 
