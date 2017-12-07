@@ -120,7 +120,7 @@ void Play::draw_debug_text()
 	const glm::dvec3 pos = game.player.position();
 	ss << glm::io::precision(4); // default is 3
 	ss << glm::io::width(10); // default is 9 (1 + 4 + 1 + default precision)
-	ss << "position: " << pos << "\n";
+	ss << "position: " << pos << '\n';
 
 	std::ostringstream ss2;
 	ss2 << glm::io::precision(0);
@@ -134,24 +134,24 @@ void Play::draw_debug_text()
 		<< static_cast<Position::BlockInChunk::vec_type>(Position::BlockInChunk(player_block_pos)) << '\n';
 	ss << ss2.str();
 
-	ss << "rotation: " << game.camera.rotation << "\n";
-	ss << "ticks: " << game.world.get_ticks() << "\n";
-	ss << "time: " << game.world.get_time() << "\n";
-	ss << "noclip: " << game.player.get_noclip() << "\n";
+	ss << "rotation: " << game.camera.rotation << '\n';
+	ss << "ticks: " << game.world.get_ticks() << '\n';
+	ss << "time: " << game.world.get_time() << '\n';
+	ss << "noclip: " << game.player.get_noclip() << '\n';
 	auto show_block = [](const Block::Base& block) -> string
 	{
 		std::ostringstream ss;
-		ss << block.name() << " (" << block.type() << ")";
+		ss << block.name() << " (" << block.type() << ')';
 		return ss.str();
 	};
 	if(game.copied_block != nullptr)
 	{
-		ss << "copied block: " << show_block(*game.copied_block) << "\n";
+		ss << "copied block: " << show_block(*game.copied_block) << '\n';
 	}
 	if(game.hovered_block != nullptr)
 	{
 		const shared_ptr<Block::Base> hovered = game.world.get_block(game.hovered_block->pos);
-		ss << "hovered: " << show_block(*hovered) << "\n";
+		ss << "hovered: " << show_block(*hovered) << '\n';
 		ss << "\tface: " << game.hovered_block->face() << '\n';
 		ss << "\trotation: " << glm::io::width(2) << hovered->rotation() << '\n';
 		ss << "\temitted light: " << hovered->light() << '\n';

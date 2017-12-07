@@ -279,4 +279,4 @@ Text::Character Text::load_char(const char32_t c) const
 	return ch;
 }
 
-} // namespace Graphics
+}

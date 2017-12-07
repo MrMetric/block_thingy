@@ -13,4 +13,4 @@ public:
 	bool is_replaceable_by(const Base&) const override;
 };
 
-} // namespace Block
+}

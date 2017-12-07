@@ -49,8 +49,8 @@ Base::~Base()
 	}
 	catch(const std::runtime_error& e)
 	{
-		// should never happen, but best to be safe
-		LOG(ERROR) << "error unadding GUI event handler: " << e.what() << '\n';
+		// should never happen, but it is best to be safe (destructors are noexcept)
+		LOG(BUG) << "error unadding event handler in Graphics::GUI::Base destructor: " << e.what() << '\n';
 	}
 }
 

@@ -64,7 +64,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-iquote "${PROJECT_SOURCE_DIR}/src"
 		-Weverything
 		-Werror=cast-qual
-		#-Werror=conversion
+		-Werror=conversion
 		-Werror=delete-incomplete
 		-Werror=deprecated
 		-Werror=extra-semi
@@ -82,7 +82,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=self-move
 		-Werror=shorten-64-to-32
 		-Werror=sign-compare
-		#-Werror=sign-conversion
+		-Werror=sign-conversion
 		-Werror=strict-prototypes
 		-Werror=string-plus-int
 		-Werror=uninitialized

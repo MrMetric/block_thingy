@@ -103,7 +103,7 @@ void KeybindManager::keypress(const Util::key_press& press)
 	}
 	else
 	{
-		LOG(ERROR) << "unknown keypress action: " << press.action << '\n';
+		LOG(BUG) << "unknown keypress action: " << press.action << '\n';
 	}
 }
 

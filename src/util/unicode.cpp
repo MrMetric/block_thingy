@@ -35,4 +35,4 @@ string utf32_to_utf8(const u32string& s)
 	#endif
 }
 
-} // namespace Util
+}

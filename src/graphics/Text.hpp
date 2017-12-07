@@ -83,4 +83,4 @@ private:
 	Character load_char(char32_t) const;
 };
 
-} // namespace Graphics
+}

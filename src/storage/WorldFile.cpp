@@ -14,7 +14,6 @@
 #include "World.hpp"
 #include "chunk/Chunk.hpp"
 #include "position/ChunkInWorld.hpp"
-#include "shim/make_unique.hpp"
 #include "storage/msgpack_util.hpp"
 #include "storage/msgpack/Player.hpp"
 #include "storage/msgpack/World.hpp"
@@ -158,7 +157,7 @@ fs::path WorldFile::chunk_path(const Position::ChunkInWorld& position)
 	const string x = to_string(position.x);
 	const string y = to_string(position.y);
 	const string z = to_string(position.z);
-	return chunk_dir / (x + "_" + y + "_" + z + ".gz");
+	return chunk_dir / (x + '_' + y + '_' + z + ".gz");
 }
 
-} // namespace Storage
+}

@@ -9,7 +9,6 @@
 #include "fwd/block/Base.hpp"
 #include "fwd/block/Enum/Face.hpp"
 #include "fwd/block/Enum/Type.hpp"
-#include "shim/make_unique.hpp"
 #include "util/filesystem.hpp"
 
 namespace Block {
@@ -88,4 +87,4 @@ private:
 	Enum::TypeExternal max_extid;
 };
 
-} // namespace Block
+}

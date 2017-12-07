@@ -79,4 +79,4 @@ void VertexBuffer::data(const std::size_t size, const void* data, const UsageHin
 	glNamedBufferData(name, size, data, static_cast<GLenum>(usage));
 }
 
-} // namespace Graphics::OpenGL
+}

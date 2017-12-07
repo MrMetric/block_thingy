@@ -17,7 +17,6 @@
 #include "Util.hpp"
 #include "console/Console.hpp"
 #include "plugin/PluginManager.hpp"
-#include "shim/make_unique.hpp"
 #include "util/compiler_info.hpp"
 #include "util/demangled_name.hpp"
 #include "util/filesystem.hpp"

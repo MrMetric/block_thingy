@@ -108,7 +108,7 @@ ChunkInWorld operator+(const ChunkInWorld& pos1, const ChunkInWorld& pos2)
 
 std::ostream& operator<<(std::ostream& os, const ChunkInWorld& pos)
 {
-	return os << "(" << pos.x << "," << pos.y << "," << pos.z << ")";
+	return os << '(' << pos.x << ',' << pos.y << ',' << pos.z << ')';
 }
 
 }

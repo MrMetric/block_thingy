@@ -80,7 +80,7 @@ string do_include(const fs::path& file_path)
 	{
 		if(!Util::string_starts_with(line, include_str))
 		{
-			output << line << "\n";
+			output << line << '\n';
 			continue;
 		}
 		string included = line.substr(include_str.length());
@@ -96,10 +96,10 @@ string do_include(const fs::path& file_path)
 			LOG(ERROR) << "shader include not found: " << path.u8string() << '\n';
 			continue;
 		}
-		output << do_include(path) << "\n";
+		output << do_include(path) << '\n';
 	}
 
 	return output.str();
 }
 
-} // namespace Graphics::OpenGL
+}

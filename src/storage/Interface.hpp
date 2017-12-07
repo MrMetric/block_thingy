@@ -81,4 +81,4 @@ private:
 	std::map<std::string, msgpack::sbuffer> map;
 };
 
-} // namespace Storage
+}

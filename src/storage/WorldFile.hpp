@@ -70,4 +70,4 @@ private:
 	fs::path chunk_path(const Position::ChunkInWorld&);
 };
 
-} // namespace Storage
+}

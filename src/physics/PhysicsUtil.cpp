@@ -16,7 +16,6 @@
 #include "World.hpp"
 #include "block/Base.hpp"
 #include "position/BlockInWorld.hpp"
-#include "shim/make_unique.hpp"
 
 using std::unique_ptr;
 

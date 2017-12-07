@@ -19,7 +19,6 @@
 
 #include <glad/glad.h>
 
-#include "shim/make_unique.hpp"
 #include "util/logger.hpp"
 
 using std::string;
@@ -64,7 +63,7 @@ string Util::gl_object_log(const GLuint object)
 	}
 	else
 	{
-		throw std::runtime_error("Error printing log: object is not a shader or a program");
+		throw std::runtime_error("can not get log for an OpenGL object that is not a shader or a program");
 	}
 
 	unique_ptr<char[]> log = std::make_unique<char[]>(static_cast<std::size_t>(log_length));

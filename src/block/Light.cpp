@@ -11,7 +11,6 @@
 #include "block/Enum/Type.hpp"
 #include "block/Enum/VisibilityType.hpp"
 #include "graphics/GUI/Light.hpp"
-#include "shim/make_unique.hpp"
 #include "storage/Interface.hpp"
 #include "storage/msgpack/Color.hpp"
 

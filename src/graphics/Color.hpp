@@ -64,4 +64,4 @@ struct Color
 
 std::ostream& operator<<(std::ostream&, const Color&);
 
-} // namespace graphics
+}

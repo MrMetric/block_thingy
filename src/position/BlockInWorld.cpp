@@ -79,7 +79,7 @@ BlockInWorld operator+(const BlockInWorld& pos, const glm::ivec3& vec)
 
 std::ostream& operator<<(std::ostream& os, const BlockInWorld& pos)
 {
-	return os << "(" << pos.x << "," << pos.y << "," << pos.z << ")";
+	return os << '(' << pos.x << ',' << pos.y << ',' << pos.z << ')';
 }
 
 }

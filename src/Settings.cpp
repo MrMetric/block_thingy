@@ -10,6 +10,7 @@
 #include "console/Console.hpp"
 #include "Game.hpp"
 #include "event/type/Event_change_setting.hpp"
+#include "util/demangled_name.hpp"
 #include "util/logger.hpp"
 
 using std::string;
@@ -26,7 +27,7 @@ static string get_type_name(const Settings::value_t& s)
 		case 2: return "int";
 		case 3: return "string";
 	}
-	LOG(ERROR) << "setting has an unknown type (this is a bug!)\n";
+	LOG(BUG) << "setting has an unknown type\n";
 	return "ERROR";
 }
 
@@ -38,8 +39,9 @@ static string get_type_name(const string& name)
 template<typename T>
 string get_type_name_T()
 {
-	LOG(ERROR) << "setting has unexpected type (this is a bug!)\n";
-	return "ERROR";
+	const string name = Util::demangled_name<T>();
+	LOG(BUG) << "setting has unexpected type " << name << '\n';
+	return name;
 }
 template<> string get_type_name_T<bool   >() { return "bool"; }
 template<> string get_type_name_T<double >() { return "float"; }
@@ -195,7 +197,7 @@ void Settings::save()
 		}
 		else
 		{
-			LOG(ERROR) << "unable to save setting " << name << ": not a bool, double, int64_t, or std::string\n";
+			LOG(BUG) << "unable to save setting " << name << ": not a bool, double, int64_t, or std::string\n";
 		}
 	}
 }

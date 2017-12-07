@@ -27,7 +27,6 @@
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 #include "position/hash.hpp"
-#include "shim/make_unique.hpp"
 #include "storage/WorldFile.hpp"
 #include "util/ThreadThingy.hpp"
 
@@ -561,7 +560,7 @@ void World::set_chunk(const ChunkInWorld& chunk_pos, shared_ptr<Chunk> chunk)
 		for(pos.z = 0; pos.z < CHUNK_SIZE; ++pos.z)
 		{
 			shared_ptr<Block::Base> block = chunk->get_block(pos);
-
+			assert(block != nullptr);
 			const Graphics::Color light = block->light();
 			if(light != 0)
 			{

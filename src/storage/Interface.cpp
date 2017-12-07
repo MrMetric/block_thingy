@@ -14,7 +14,6 @@ packer<zstr::ostream>& packer<zstr::ostream>::pack(const msgpack::sbuffer& v)
 } // namespace v1
 } // namespace msgpack
 
-
 namespace Storage {
 
 msgpack::object_handle copy_object(const msgpack::object& o)

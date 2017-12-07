@@ -54,7 +54,7 @@ meshmap_t Simple2::make_mesh(const Chunk& chunk)
 			&& pos.y >= 0 && pos.y < CHUNK_SIZE
 			&& pos.z >= 0 && pos.z < CHUNK_SIZE)
 			{
-				const std::size_t sibling_i = CHUNK_SIZE * CHUNK_SIZE * pos.x + CHUNK_SIZE * pos.y + pos.z;
+				const std::size_t sibling_i = static_cast<std::size_t>(CHUNK_SIZE * CHUNK_SIZE * pos.x + CHUNK_SIZE * pos.y + pos.z);
 				const Block::Base& sibling = *cache[sibling_i];
 				is_visible =
 					   sibling.type() != Block::Enum::Type::none

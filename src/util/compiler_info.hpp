@@ -9,4 +9,4 @@ namespace Util {
  */
 std::string compiler_info();
 
-} // namespace Util
+}

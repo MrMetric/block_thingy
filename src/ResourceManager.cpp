@@ -2,7 +2,6 @@
 
 #include <atomic>
 #include <chrono>
-#include <iostream>
 #include <mutex>
 #include <regex>
 #include <sstream>
@@ -25,7 +24,6 @@
 #include "util/FileWatcher.hpp"
 #include "util/logger.hpp"
 
-using std::cerr;
 using std::string;
 using Graphics::OpenGL::ShaderObject;
 using Graphics::OpenGL::ShaderProgram;
@@ -169,7 +167,7 @@ static std::unordered_map<string, string> parse_block(const string& s)
 		if(parts.size() != 2)
 		{
 			// TODO
-			cerr << "invalid line: " << line << "\n";
+			LOG(ERROR) << "invalid line in block: " << line << '\n';
 			continue;
 		}
 		things.emplace(parts[0], parts[1]);
@@ -343,7 +341,7 @@ void ResourceManager::load_blocks(Game& game)
 		}
 		else
 		{
-			LOG(ERROR) << "attempted to load unhandled block type: " << std::to_string(static_cast<int>(t)) << " (this is a bug!)\n";
+			LOG(BUG) << "attempted to load unhandled block type: " << std::to_string(static_cast<int>(t)) << '\n';
 			continue;
 		}
 

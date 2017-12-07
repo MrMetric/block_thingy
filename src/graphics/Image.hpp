@@ -29,4 +29,4 @@ private:
 	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };
 
-} // namespace Graphics
+}

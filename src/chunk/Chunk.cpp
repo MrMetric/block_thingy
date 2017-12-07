@@ -85,10 +85,8 @@ struct Chunk::impl
 		}
 		catch(const std::runtime_error& e)
 		{
-			// should never happen
-			// this catch is to satisfy Coverity Scan (destructors are noexcept)
-			LOG(ERROR) << "caught std::runtime_error in Chunk::impl destructor\n"
-					   << "  what():  " << e.what() << '\n';
+			// should never happen, but it is best to be safe (destructors are noexcept)
+			LOG(BUG) << "error unadding event handler in Chunk::impl destructor: " << e.what() << '\n';
 		}
 	}
 

@@ -51,7 +51,6 @@
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
-#include "shim/make_unique.hpp"
 #include "util/filesystem.hpp"
 #include "util/key_press.hpp"
 #include "util/logger.hpp"
@@ -636,10 +635,10 @@ void Game::impl::add_commands()
 		streem.precision(std::numeric_limits<double>::max_digits10);
 
 		const glm::dvec3 pos = player.position();
-		streem << pos.x << " " << pos.y << " " << pos.z << "\n";
+		streem << pos.x << ' ' << pos.y << ' ' << pos.z << '\n';
 
 		const glm::dvec3 rot = player.rotation();
-		streem << rot.x << " " << rot.y << " " << rot.z;
+		streem << rot.x << ' ' << rot.y << ' ' << rot.z << '\n';
 
 		streem.flush();
 		LOG(INFO) << "saved position and rotation to " << save_name << '\n';

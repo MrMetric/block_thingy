@@ -51,4 +51,4 @@ private:
 	std::vector<Format> formats;
 };
 
-} // namespace Graphics::OpenGL
+}

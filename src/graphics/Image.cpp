@@ -340,4 +340,4 @@ void write_raw
 	f.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size()));
 }
 
-} // namespace Graphics
+}

@@ -148,4 +148,4 @@ GLuint Texture::get_name()
 	return name;
 }
 
-} // namespace Graphics::OpenGL
+}

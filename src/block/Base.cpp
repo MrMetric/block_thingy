@@ -175,7 +175,7 @@ void Base::use_start
 	const Enum::Face face
 )
 {
-	LOG(DEBUG) << "+use on block " << pos << ":" << face << " by player " << player.name << '\n';
+	LOG(DEBUG) << "+use on block " << pos << ':' << face << " by player " << player.name << '\n';
 }
 
 void Base::save(Storage::OutputInterface& i) const

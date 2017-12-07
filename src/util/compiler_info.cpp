@@ -31,4 +31,4 @@ string compiler_info()
 #endif
 }
 
-} // namespace Util
+}

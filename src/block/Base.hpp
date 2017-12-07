@@ -119,4 +119,4 @@ private:
 	glm::tvec3<uint8_t> rotation_;
 };
 
-} // namespace Block
+}

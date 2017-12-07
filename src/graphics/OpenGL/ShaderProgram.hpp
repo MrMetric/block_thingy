@@ -107,4 +107,4 @@ private:
 	void init();
 };
 
-} // namespace Graphics::OpenGL
+}

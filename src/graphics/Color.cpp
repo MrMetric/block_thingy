@@ -138,4 +138,4 @@ std::ostream& operator<<(std::ostream& o, const Color& c)
 			<< std::to_string(c.b) << ')';
 }
 
-} // namespace graphics
+}

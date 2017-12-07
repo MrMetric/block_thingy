@@ -89,7 +89,7 @@ void BlockInChunk::check_bounds()
 	|| z >= CHUNK_SIZE)
 	{
 		std::ostringstream ss;
-		ss << "Position::BlockInChunk has invalid coordinates: (" << int(x) << "," << int(y) << "," << int(z) << ")";
+		ss << "Position::BlockInChunk has invalid coordinates: (" << int(x) << ',' << int(y) << ',' << int(z) << ')';
 		throw std::logic_error(ss.str());
 	}
 }

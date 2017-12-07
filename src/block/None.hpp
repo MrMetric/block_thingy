@@ -11,4 +11,4 @@ public:
 	glm::dvec4 selection_color() const override;
 };
 
-} // namespace Block
+}

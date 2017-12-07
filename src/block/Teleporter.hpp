@@ -11,4 +11,4 @@ public:
 	bool is_solid() const override;
 };
 
-} // namespace Block
+}

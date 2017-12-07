@@ -13,7 +13,6 @@
 #include "ResourceManager.hpp"
 #include "ShaderObject.hpp"
 #include "Util.hpp"
-#include "shim/make_unique.hpp"
 #include "util/logger.hpp"
 
 using std::string;
@@ -374,4 +373,4 @@ static std::vector<string> get_uniform_names(const GLuint program)
 	return uniform_names;
 }
 
-} // namespace Graphics::OpenGL
+}

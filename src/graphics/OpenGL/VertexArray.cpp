@@ -82,4 +82,4 @@ void VertexArray::draw(const GLenum mode, const GLint first, const std::size_t c
 	glDrawArrays(mode, first, count);
 }
 
-} // namespace Graphics::OpenGL
+}

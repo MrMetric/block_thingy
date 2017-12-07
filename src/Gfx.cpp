@@ -171,7 +171,7 @@ GLFWwindow* Gfx::init_glfw()
 	{
 		throw std::runtime_error("Error loading GLAD");
 	}
-	LOG(DEBUG) << "OpenGL " << GLVersion.major << "." << GLVersion.minor << " loaded\n";
+	LOG(DEBUG) << "OpenGL " << GLVersion.major << '.' << GLVersion.minor << " loaded\n";
 	if(!GLAD_GL_ARB_direct_state_access)
 	{
 		LOG(WARN) << "OpenGL extension not found: GL_ARB_direct_state_access\n";

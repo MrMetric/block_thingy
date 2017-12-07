@@ -26,4 +26,4 @@ private:
 	GLuint name;
 };
 
-} // namespace Graphics::OpenGL
+}
