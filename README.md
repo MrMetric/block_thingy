@@ -26,7 +26,7 @@ $ cd block_thingy
 $ git submodule update --init --recursive
 ```
 
-If you are using Windows, you must run `fix_symlinks.bat` before building or running block_thingy. This is because Git incorrectly translates each symbolic link to be just a text file with the link path as the content.
+If you are using Windows, you must run `fix_symlinks.bat` before building or running block_thingy. This is because Git incorrectly translates each symbolic link to be just a text file with the link path as the content. If you are using Windows 10, you must enable [developer mode](https://docs.microsoft.com/en-us/windows/uwp/get-started/enable-your-device-for-development) for `fix_symlinks.bat` to work. Refer to this official Windows blog post for more information: [Symlinks in Windows 10!](https://blogs.windows.com/buildingapps/2016/12/02/symlinks-windows-10/).
 
 ## Dependencies
 thing | included?
