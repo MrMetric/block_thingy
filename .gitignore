@@ -3,6 +3,14 @@ bin/screenshots/
 bin/scripts/settings
 bin/worlds/
 build/
+projects/**/*.idb
+projects/**/*.nativecodeanalysis.xml
+projects/**/*.obj
+projects/**/*.pdb
+projects/vs2017/.vs/
+projects/vs2017/Debug/
+projects/vs2017/Release/
+projects/vs2017/x64/
 
 # for symlinked submodules on Windows
 bin/shaders/noise/
