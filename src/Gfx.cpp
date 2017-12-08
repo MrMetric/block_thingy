@@ -1,5 +1,6 @@
 #include "Gfx.hpp"
 
+#include <cassert>
 #include <cerrno>
 #include <limits>
 #include <stdexcept>
@@ -25,7 +26,6 @@
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_change_setting.hpp"
-#include "event/type/Event_window_size_change.hpp"
 #include "graphics/primitive.hpp"
 #include "graphics/OpenGL/ShaderProgram.hpp"
 #include "graphics/OpenGL/VertexArray.hpp"
@@ -185,6 +185,13 @@ GLFWwindow* Gfx::init_glfw()
 
 	glfwSetFramebufferSizeCallback(window, [](GLFWwindow*, int width, int height)
 	{
+		assert(width >= 0);
+		assert(height >= 0);
+		if(width == 0 || height == 0)
+		{
+			// happens when minimizing on Windows
+			return;
+		}
 		Game::instance->update_framebuffer_size(window_size_t(width, height));
 	});
 	glfwSetKeyCallback(window, [](GLFWwindow*, int key, int scancode, int action, int mods)
@@ -258,12 +265,6 @@ void Gfx::update_framebuffer_size(const window_size_t& window_size)
 	this->window_size = window_size;
 	LOG(DEBUG) << "window size: " << window_size.x << "×" << window_size.y << '\n';
 	window_mid = glm::dvec2(window_size) / 2.0;
-
-	if(window_size.x == 0 || window_size.y == 0)
-	{
-		// happens when minimizing on Windows
-		return;
-	}
 
 	update_projection_matrix();
 
