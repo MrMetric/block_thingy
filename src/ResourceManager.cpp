@@ -550,7 +550,11 @@ Resource<ShaderProgram> ResourceManager::get_ShaderProgram(const fs::path& path,
 		i = pImpl->cache_ShaderProgram.emplace(path.string(), std::make_unique<ShaderProgram>(path)).first;
 
 		// TODO: find a better place for this
-		if(Util::string_starts_with(path.string(), "shaders/block/"))
+		#ifdef _WIN32
+		if(Util::string_starts_with(path.string(), "shaders\\block\\"))
+		#else
+		if(Util::string_starts_with(path, "shaders/block/"))
+		#endif
 		{
 			i->second->uniform("light", 1); // the texture unit
 			i->second->uniform("light_smoothing", static_cast<int>(Settings::get<int64_t>("light_smoothing")));

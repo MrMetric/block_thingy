@@ -31,7 +31,11 @@ void RenderWorld::draw_world
 	const glm::mat4 vp_matrix(vp_matrix_);
 	resource_manager.foreach_ShaderProgram([&vp_matrix](Resource<Graphics::OpenGL::ShaderProgram> r)
 	{
+		#ifdef _WIN32
+		if(Util::string_starts_with(r.get_id(), "shaders\\block\\"))
+		#else
 		if(Util::string_starts_with(r.get_id(), "shaders/block/"))
+		#endif
 		{
 			r->uniform("mvp_matrix", vp_matrix);
 		}
