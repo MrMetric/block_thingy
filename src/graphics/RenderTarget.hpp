@@ -9,6 +9,8 @@ namespace Graphics {
 
 class RenderTarget
 {
+	GLsizei samples; // needs to be initialized before frame_texture
+
 public:
 	RenderTarget(const window_size_t&, GLsizei samples = 0);
 
@@ -17,9 +19,6 @@ public:
 	OpenGL::Texture frame_texture;
 
 	void resize(const window_size_t&);
-
-private:
-	GLsizei samples;
 };
 
 }

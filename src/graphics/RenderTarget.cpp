@@ -1,6 +1,7 @@
 #include "RenderTarget.hpp"
 
 #include <algorithm>
+#include <cassert>
 #include <stdexcept>
 #include <string>
 
@@ -8,36 +9,45 @@
 
 namespace Graphics {
 
+static GLsizei get_samples(const GLsizei samples)
+{
+	if(samples < 0)
+	{
+		LOG(WARN) << "negative samples requested (" << samples << ")\n";
+		return 0;
+	}
+
+	static GLint max_samples = -1;
+	if(max_samples == -1)
+	{
+		GLint max_color_samples;
+		glGetIntegerv(GL_MAX_COLOR_TEXTURE_SAMPLES, &max_color_samples);
+		LOG(DEBUG) << "max color texture samples: " << max_color_samples << '\n';
+
+		GLint max_depth_samples;
+		glGetIntegerv(GL_MAX_DEPTH_TEXTURE_SAMPLES, &max_depth_samples);
+		LOG(DEBUG) << "max depth texture samples: " << max_color_samples << '\n';
+
+		max_samples = std::min(max_color_samples, max_depth_samples);
+		assert(max_samples >= 0);
+	}
+	if(samples > max_samples)
+	{
+		LOG(WARN) << samples << " samples requested, but max is " << max_samples << '\n';
+		return max_samples;
+	}
+	return samples;
+}
+
 RenderTarget::RenderTarget(const window_size_t& window_size, GLsizei samples)
 :
-	frame_texture(samples > 0 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D),
-	samples(samples)
+	samples(get_samples(samples)),
+	frame_texture(this->samples > 0 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D)
 {
-	if(samples <= 0)
+	if(samples == 0)
 	{
 		frame_texture.parameter(OpenGL::Texture::Parameter::min_filter, GL_LINEAR);
 		frame_texture.parameter(OpenGL::Texture::Parameter::mag_filter, GL_LINEAR);
-	}
-	else
-	{
-		static GLint max_samples = 0;
-		if(max_samples == 0)
-		{
-			GLint max_color_samples;
-			glGetIntegerv(GL_MAX_COLOR_TEXTURE_SAMPLES, &max_color_samples);
-			LOG(DEBUG) << "max color texture samples: " << max_color_samples << '\n';
-
-			GLint max_depth_samples;
-			glGetIntegerv(GL_MAX_DEPTH_TEXTURE_SAMPLES, &max_depth_samples);
-			LOG(DEBUG) << "max depth texture samples: " << max_color_samples << '\n';
-
-			max_samples = std::min(max_color_samples, max_depth_samples);
-		}
-		if(samples > max_samples)
-		{
-			LOG(WARN) << samples << " samples requested, but max is " << max_samples << '\n';
-			this->samples = samples = max_samples;
-		}
 	}
 
 	resize(window_size);
