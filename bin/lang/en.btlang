@@ -1,0 +1,13 @@
+block.air			= Air
+block.light			= Light
+block.none			= None
+block.side_test		= Side Test
+block.side_test_2	= Side Test 2
+block.teleporter	= Teleporter
+block.test			= Test
+block.test_black	= Black
+block.test_dots		= Dots
+block.test_glass	= Glass
+block.test_marble	= Marble
+block.test_white	= White
+block.unknown		= Unknown

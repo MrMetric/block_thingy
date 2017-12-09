@@ -127,6 +127,7 @@ void Settings::load()
 		{"font_size"			, 24},
 		{"fov"					, 75.0},
 		{"fullscreen"			, false},
+		{"language"				, "en"},
 		{"light_smoothing"		, 2},
 		{"mesher"				, "Simple"},
 		{"min_light"			, 0.005},

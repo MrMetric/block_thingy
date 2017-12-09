@@ -88,8 +88,7 @@ string do_include(const fs::path& file_path)
 		{
 			continue;
 		}
-		included.erase(0, included.find_first_not_of(" \t"));
-		included.erase(included.find_last_not_of(" \t") + 1);
+		included = Util::strip_whitespace(included);
 		const fs::path path = folder / included;
 		if(!fs::exists(path))
 		{

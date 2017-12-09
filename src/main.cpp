@@ -13,6 +13,7 @@
 
 #include "Game.hpp"
 #include "Gfx.hpp"
+#include "language.hpp"
 #include "Settings.hpp"
 #include "Util.hpp"
 #include "console/Console.hpp"
@@ -110,6 +111,16 @@ int main(int argc, char** argv)
 		}
 	}
 	#endif
+
+	for(const fs::directory_entry& entry : fs::directory_iterator("lang"))
+	{
+		const fs::path path = entry.path();
+		if(path.extension() != ".btlang")
+		{
+			continue;
+		}
+		language::load(path.stem().string(), path);
+	}
 
 	glfwSetErrorCallback(error_callback);
 

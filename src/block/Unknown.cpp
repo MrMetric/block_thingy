@@ -40,12 +40,12 @@ string Unknown::name() const
 {
 	if(strid.empty())
 	{
-		return "Unknown";
+		return Base::name();
 	}
 	// TODO: return just strid in red
 	const std::size_t entry_count = data.size() - 1;
 	const string ending = (entry_count == 1) ? "y" : "ies";
-	return "Unknown: " + strid + " (" + std::to_string(entry_count) + " entr" + ending + ')';
+	return Base::name() + " (" + strid + ", " + std::to_string(entry_count) + " entr" + ending + ')';
 }
 
 void Unknown::save(Storage::OutputInterface& i) const

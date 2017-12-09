@@ -396,6 +396,9 @@
     <ClCompile Include="..\..\lib\rhea\link_variable.cpp">
       <Filter>Source Files\lib\rhea</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\language.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Camera.hpp">
@@ -859,6 +862,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\fwd\storage\Interface.hpp">
       <Filter>Source Files\fwd\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\language.hpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

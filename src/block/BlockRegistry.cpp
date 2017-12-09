@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
+#include "language.hpp"
 #include "block/Air.hpp"
 #include "block/Base.hpp"
 #include "block/Light.hpp"
@@ -165,8 +166,7 @@ string BlockRegistry::get_strid(const Enum::TypeExternal te) const
 
 string BlockRegistry::get_name(const Enum::Type t) const
 {
-	// TODO
-	return get_strid(t);
+	return language::get("block." + get_strid(t));
 }
 
 string BlockRegistry::get_name(const string& strid) const

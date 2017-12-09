@@ -35,7 +35,7 @@ Light::Light(const Enum::Type t, const Color& light)
 string Light::name() const
 {
 	std::ostringstream ss;
-	ss << "Light " << light();
+	ss << Base::name() << ' ' << light();
 	return ss.str();
 }
 

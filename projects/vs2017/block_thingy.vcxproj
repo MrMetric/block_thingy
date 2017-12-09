@@ -80,6 +80,7 @@
     <ClCompile Include="..\..\src\graphics\RenderTarget.cpp" />
     <ClCompile Include="..\..\src\graphics\RenderWorld.cpp" />
     <ClCompile Include="..\..\src\graphics\Text.cpp" />
+    <ClCompile Include="..\..\src\language.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\physics\AABB.cpp" />
     <ClCompile Include="..\..\src\physics\PhysicsUtil.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="..\..\src\graphics\RenderTarget.hpp" />
     <ClInclude Include="..\..\src\graphics\RenderWorld.hpp" />
     <ClInclude Include="..\..\src\graphics\Text.hpp" />
+    <ClInclude Include="..\..\src\language.hpp" />
     <ClInclude Include="..\..\src\physics\AABB.hpp" />
     <ClInclude Include="..\..\src\physics\PhysicsUtil.hpp" />
     <ClInclude Include="..\..\src\physics\RaycastHit.hpp" />
