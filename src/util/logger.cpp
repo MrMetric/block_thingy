@@ -1,12 +1,18 @@
 #include "logger.hpp"
 
+#include <cassert>
+
+#ifdef HAVE_POSIX
+	#include <unistd.h>
+#endif
+
 #include "Util.hpp"
 
 using std::cerr;
 using std::cout;
 using std::string;
 
-namespace block_thingy {
+namespace block_thingy::logger {
 
 class nullbuf : public std::streambuf
 {
@@ -31,7 +37,30 @@ std::ostream& log(const string& category)
 
 	std::ostream& o = (category == "ERROR") ? cerr : cout;
 
-	o << Util::datetime() << ' ' << category;
+	o << format::reset << Util::datetime() << ' ';
+	if(category == "INFO")
+	{
+		// no formatting
+	}
+	#ifdef DEBUG_BUILD
+	else if(category == "DEBUG")
+	{
+		o << format::blue;
+	}
+	#endif
+	else if(category == "WARN")
+	{
+		o << format::yellow;
+	}
+	else if(category == "ERROR")
+	{
+		o << format::bold_intensity << format::red;
+	}
+	else if(category == "BUG")
+	{
+		o << format::bold_intensity << format::red_bg;
+	}
+	o << category << format::reset;
 	if(category.size() < 5)
 	{
 		o << string(5 - category.size(), ' ');
@@ -39,6 +68,24 @@ std::ostream& log(const string& category)
 	o << ' ';
 
 	return o;
+}
+
+std::ostream& operator<<(std::ostream& o, [[maybe_unused]] const format fmt)
+{
+#ifdef _WIN32
+	// not supported on Windows, except for recent versions of Windows 10
+	return o;
+#else
+	#ifdef HAVE_POSIX
+	if(&o == &cout && !isatty(STDOUT_FILENO)
+	|| &o == &cerr && !isatty(STDERR_FILENO))
+	{
+		return o;
+	}
+	#endif
+
+	return o << "\033[" << static_cast<int>(fmt) << 'm';
+#endif
 }
 
 }
