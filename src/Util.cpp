@@ -43,11 +43,19 @@ string Util::read_file(const fs::path& path)
 
 string Util::read_file(const fs::path& path, const bool is_text)
 {
+	if(fs::is_directory(path))
+	{
+		throw std::runtime_error("failed to read " + path.u8string() + " because it is a directory");
+	}
 	try
 	{
 		std::ifstream inpoot(path, std::ifstream::ate | std::ifstream::binary);
 		inpoot.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 		const std::size_t fsize = static_cast<std::size_t>(inpoot.tellg());
+		if(fsize == 0)
+		{
+			return "";
+		}
 		inpoot.seekg(0, std::ifstream::beg);
 		unique_ptr<char[]> buf = std::make_unique<char[]>(fsize);
 		inpoot.read(buf.get(), static_cast<std::streamsize>(fsize));
