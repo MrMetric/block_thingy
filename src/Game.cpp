@@ -118,7 +118,7 @@ Game::Game()
 :
 	set_instance(this),
 	hovered_block(nullptr),
-	camera(gfx, event_manager),
+	camera(gfx),
 	world("worlds/test", block_registry, make_mesher(Settings::get<string>("mesher"))),
 	player_ptr(world.add_player("test_player")),
 	player(*player_ptr),

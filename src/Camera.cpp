@@ -7,16 +7,12 @@
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 
-Camera::Camera(Gfx& gfx, EventManager& event_manager)
+Camera::Camera(Gfx& gfx)
 :
 	sensitivity(0.1),
 	joy_sensitivity(1.2),
 	gfx(gfx)
 {
-	event_manager.add_handler(EventType::window_size_change, [&gfx](const Event&)
-	{
-		gfx.center_cursor();
-	});
 }
 
 void Camera::mousemove(const double mouseX, const double mouseY, bool joystick)

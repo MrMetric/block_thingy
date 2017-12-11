@@ -4,12 +4,11 @@
 #include <glm/vec3.hpp>
 
 #include "fwd/Gfx.hpp"
-#include "fwd/event/EventManager.hpp"
 
 class Camera
 {
 public:
-	Camera(Gfx&, EventManager&);
+	Camera(Gfx&);
 
 	Camera(Camera&&) = delete;
 	Camera(const Camera&) = delete;
