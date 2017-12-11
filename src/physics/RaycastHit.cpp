@@ -1,7 +1,5 @@
 #include "RaycastHit.hpp"
 
-#include <cassert>
-
 #include "block/Enum/Face.hpp"
 #include "position/BlockInWorld.hpp"
 

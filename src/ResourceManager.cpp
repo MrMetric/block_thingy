@@ -25,6 +25,7 @@
 #include "util/logger.hpp"
 
 using std::string;
+using std::unique_ptr;
 using Graphics::OpenGL::ShaderObject;
 using Graphics::OpenGL::ShaderProgram;
 
@@ -64,7 +65,7 @@ struct block_texture
 	const uint8_t unit;
 	Graphics::OpenGL::Texture tex;
 	uint16_t count;
-	std::unordered_map<std::string, uint16_t> index;
+	std::unordered_map<string, uint16_t> index;
 };
 
 struct ResourceManager::impl
@@ -112,13 +113,13 @@ struct ResourceManager::impl
 	mutable std::mutex block_textures_mutex;
 
 	// note: fs::path can not be a key because it can not be hashed
-	std::unordered_map<std::string, std::unique_ptr<Graphics::Image>> cache_Image;
+	std::unordered_map<string, unique_ptr<Graphics::Image>> cache_Image;
 	mutable std::mutex cache_Image_mutex;
 
-	std::unordered_map<std::string, std::unique_ptr<Graphics::OpenGL::ShaderObject>> cache_ShaderObject;
+	std::unordered_map<string, unique_ptr<Graphics::OpenGL::ShaderObject>> cache_ShaderObject;
 	mutable std::mutex cache_ShaderObject_mutex;
 
-	std::unordered_map<std::string, std::unique_ptr<Graphics::OpenGL::ShaderProgram>> cache_ShaderProgram;
+	std::unordered_map<string, unique_ptr<Graphics::OpenGL::ShaderProgram>> cache_ShaderProgram;
 	mutable std::mutex cache_ShaderProgram_mutex;
 };
 
@@ -160,7 +161,7 @@ static std::unordered_map<string, string> parse_block(const string& s)
 	std::unordered_map<string, string> things;
 
 	std::istringstream ss(s);
-	for(std::string line; std::getline(ss, line);)
+	for(string line; std::getline(ss, line);)
 	{
 		std::vector<string> parts = ArgumentParser().parse_args(line);
 		if(parts.size() == 0) continue; // comment or empty
@@ -427,7 +428,7 @@ ResourceManager::block_texture_info ResourceManager::get_block_texture(fs::path 
 		glActiveTexture(GL_TEXTURE0 + t.unit);
 		t.tex.image3D_sub(0, 0, 0, depth, res, res, 1, GL_RGBA, GL_UNSIGNED_BYTE, image->get_data());
 		glActiveTexture(GL_TEXTURE0);
-		LOG(INFO) << "loaded " << path.u8string() << " as layer " << depth << " of unit " << std::to_string(t.unit) << '\n';
+		LOG(DEBUG) << "loaded " << path.u8string() << " as layer " << depth << " of unit " << std::to_string(t.unit) << '\n';
 	});
 	t.index.emplace(path.string(), depth);
 	return
@@ -459,7 +460,7 @@ Resource<Graphics::Image> ResourceManager::get_Image(const fs::path& path, const
 	}
 	else if(reload)
 	{
-		std::unique_ptr<Graphics::Image> p;
+		unique_ptr<Graphics::Image> p;
 		try
 		{
 			p = std::make_unique<Graphics::Image>(path);
@@ -517,7 +518,7 @@ Resource<ShaderObject> ResourceManager::get_ShaderObject(fs::path path, const bo
 	}
 	else if(reload)
 	{
-		std::unique_ptr<ShaderObject> p;
+		unique_ptr<ShaderObject> p;
 		try
 		{
 			p = std::make_unique<ShaderObject>(path, type);
@@ -550,11 +551,11 @@ Resource<ShaderProgram> ResourceManager::get_ShaderProgram(const fs::path& path,
 		i = pImpl->cache_ShaderProgram.emplace(path.string(), std::make_unique<ShaderProgram>(path)).first;
 
 		// TODO: find a better place for this
-		#ifdef _WIN32
+	#ifdef _WIN32
 		if(Util::string_starts_with(path.string(), "shaders\\block\\"))
-		#else
+	#else
 		if(Util::string_starts_with(path, "shaders/block/"))
-		#endif
+	#endif
 		{
 			i->second->uniform("light", 1); // the texture unit
 			i->second->uniform("light_smoothing", static_cast<int>(Settings::get<int64_t>("light_smoothing")));
@@ -563,7 +564,7 @@ Resource<ShaderProgram> ResourceManager::get_ShaderProgram(const fs::path& path,
 	}
 	else if(reload)
 	{
-		std::unique_ptr<ShaderProgram> p;
+		unique_ptr<ShaderProgram> p;
 		try
 		{
 			p = std::make_unique<ShaderProgram>(path);

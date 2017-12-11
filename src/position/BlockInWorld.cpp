@@ -1,7 +1,7 @@
 #include "BlockInWorld.hpp"
 
 #include <cmath>
-#include <iostream>
+#include <ostream>
 
 #include "BlockInChunk.hpp"
 #include "ChunkInWorld.hpp"
@@ -77,9 +77,9 @@ BlockInWorld operator+(const BlockInWorld& pos, const glm::ivec3& vec)
 	return Position::BlockInWorld(pos.x + vec.x, pos.y + vec.y, pos.z + vec.z);
 }
 
-std::ostream& operator<<(std::ostream& os, const BlockInWorld& pos)
+std::ostream& operator<<(std::ostream& o, const BlockInWorld& pos)
 {
-	return os << '(' << pos.x << ',' << pos.y << ',' << pos.z << ')';
+	return o << '(' << pos.x << ',' << pos.y << ',' << pos.z << ')';
 }
 
 }

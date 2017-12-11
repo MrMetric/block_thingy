@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "Console.hpp"
+#include "console/Console.hpp"
 
 class Command
 {
@@ -17,10 +17,10 @@ public:
 
 	Command(Command&&);
 	Command(const Command&) = delete;
-	void operator=(const Command&) = delete;
+	Command& operator=(Command&&) = delete;
+	Command& operator=(const Command&) = delete;
 
 private:
 	Console& console;
-	const std::string name;
-	bool unadd = true;
+	std::string name;
 };

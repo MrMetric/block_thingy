@@ -17,7 +17,8 @@ public:
 
 	VertexBuffer(VertexBuffer&&);
 	VertexBuffer(const VertexBuffer&) = delete;
-	void operator=(const VertexBuffer&) = delete;
+	VertexBuffer& operator=(VertexBuffer&&) = delete;
+	VertexBuffer& operator=(const VertexBuffer&) = delete;
 
 	GLuint get_name();
 

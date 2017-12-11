@@ -65,20 +65,22 @@ void load_text(const string& language, const string& text)
 	std::istringstream ss(text);
 	for(string line; std::getline(ss, line);)
 	{
+		line = Util::strip_whitespace(line);
+		if(line.empty() || line[0] == '#')
+		{
+			continue;
+		}
+
 		const auto pos = line.find('=');
 		if(pos == string::npos)
 		{
-			LOG(WARN) << "invalid line in language text: " << line << '\n';
+			LOG(WARN) << "invalid line in " << language << " language text: " << line << '\n';
 			continue;
 		}
 		const string key = Util::strip_whitespace(line.substr(0, pos));
 		if(key.empty())
 		{
-			LOG(WARN) << "invalid line in language text: " << line << '\n';
-			continue;
-		}
-		if(key[0] == '#') // comment
-		{
+			LOG(WARN) << "invalid line in " << language << " language text: " << line << '\n';
 			continue;
 		}
 		const string value = Util::strip_whitespace(line.substr(pos + 1));

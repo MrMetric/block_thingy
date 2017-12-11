@@ -32,6 +32,7 @@
     <ClCompile Include="..\..\src\block\BlockRegistry.cpp" />
     <ClCompile Include="..\..\src\block\Enum\Face.cpp" />
     <ClCompile Include="..\..\src\block\Enum\Type.cpp" />
+    <ClCompile Include="..\..\src\block\Enum\VisibilityType.cpp" />
     <ClCompile Include="..\..\src\block\Light.cpp" />
     <ClCompile Include="..\..\src\block\None.cpp" />
     <ClCompile Include="..\..\src\block\RotationUtil.cpp" />

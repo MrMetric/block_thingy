@@ -6,7 +6,7 @@
 #include <type_traits>
 
 #ifdef _WIN32
-#include <windows.h>
+	#include <windows.h>
 #endif
 
 #include <GLFW/glfw3.h>
@@ -15,7 +15,6 @@
 #include "Gfx.hpp"
 #include "language.hpp"
 #include "Settings.hpp"
-#include "Util.hpp"
 #include "console/Console.hpp"
 #include "plugin/PluginManager.hpp"
 #include "util/compiler_info.hpp"
@@ -56,7 +55,7 @@ static void error_callback(const int error, const char* description)
 	LOG(ERROR) << "GLFW error " << error << ": " << description << '\n';
 }
 
-int main(int argc, char** argv)
+int main(const int argc, char** argv)
 {
 	std::cout << std::boolalpha;
 	std::cerr << std::boolalpha;
@@ -80,13 +79,13 @@ int main(int argc, char** argv)
 	static_assert(std::is_same<GLfloat ,    float>::value, "GLfloat is not float");
 	static_assert(std::is_same<GLdouble,   double>::value, "GLdouble is not double");
 
-	#ifdef _WIN32
+#ifdef _WIN32
 	CodePageHandler cp(CP_UTF8);
-	#endif
+#endif
 
-	#ifdef DEBUG_BUILD
+#ifdef DEBUG_BUILD
 	LOG(INFO) << "This is a debug build\n";
-	#endif
+#endif
 
 	const string compiler_info = Util::compiler_info();
 	if(compiler_info != "")
@@ -96,9 +95,9 @@ int main(int argc, char** argv)
 
 	if(argc > 1)
 	{
-		Util::change_directory(argv[1]);
+		fs::current_path(argv[1]);
 	}
-	#ifdef _WIN32
+#ifdef _WIN32
 	else
 	{
 		const string pwd = fs::current_path().string();
@@ -107,10 +106,10 @@ int main(int argc, char** argv)
 		{
 			const fs::path bin = fs::path(pwd.substr(0, i)) / "bin";
 			LOG(INFO) << "Using detected bin path: " << bin << '\n';
-			Util::change_directory(bin);
+			fs::current_path(bin);
 		}
 	}
-	#endif
+#endif
 
 	for(const fs::directory_entry& entry : fs::directory_iterator("lang"))
 	{
@@ -124,7 +123,7 @@ int main(int argc, char** argv)
 
 	glfwSetErrorCallback(error_callback);
 
-	LOG(DEBUG) << "Compiled with GLFW " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << '\n';
+	LOG(DEBUG) << "Compiled with GLFW " << GLFW_VERSION_MAJOR << '.' << GLFW_VERSION_MINOR << '.' << GLFW_VERSION_REVISION << '\n';
 	LOG(DEBUG) << "Running with GLFW " << glfwGetVersionString() << '\n';
 
 	unique_ptr<Console> console = std::make_unique<Console>();

@@ -2,7 +2,6 @@
 
 #include "Game.hpp"
 #include "block/Base.hpp"
-#include "block/Enum/Face.hpp"
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 

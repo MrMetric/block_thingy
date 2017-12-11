@@ -1,8 +1,6 @@
 #pragma once
 #include "Base.hpp"
 
-#include "graphics/Color.hpp"
-
 namespace Block {
 
 class Light : public Base

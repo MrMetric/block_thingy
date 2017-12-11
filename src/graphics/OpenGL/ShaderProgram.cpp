@@ -322,26 +322,26 @@ static GLuint make_program(const std::vector<GLuint>& objects, const string& deb
 		glAttachShader(program, object);
 	}
 
-	GLint izgud;
+	GLint is_good;
 
 	glLinkProgram(program);
-	glGetProgramiv(program, GL_LINK_STATUS, &izgud);
-	if(izgud == GL_FALSE)
+	glGetProgramiv(program, GL_LINK_STATUS, &is_good);
+	if(!is_good)
 	{
 		string log = Util::gl_object_log(program);
 		glDeleteProgram(program);
 		throw std::runtime_error("error linking program " + debug_name + ":\n" + log);
 	}
 
-	#ifdef DEBUG_BUILD
+#ifdef DEBUG_BUILD
 	glValidateProgram(program);
-	glGetProgramiv(program, GL_VALIDATE_STATUS, &izgud);
-	if(izgud == GL_FALSE)
+	glGetProgramiv(program, GL_VALIDATE_STATUS, &is_good);
+	if(!is_good)
 	{
 		string log = Util::gl_object_log(program);
 		LOG(WARN) << "program validation failed in " << debug_name << ":\n" << log << '\n';
 	}
-	#endif
+#endif
 
 	// shader objects are not needed after linking, so memory can be freed by deleting them
 	// but a shader object will not be deleted until it is detached

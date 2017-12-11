@@ -4,7 +4,7 @@
 #include <mutex>
 #include <stdint.h>
 #include <unordered_map>
-#include <utility>			// std::pair
+#include <utility>
 
 #include "fwd/event/Event.hpp"
 #include "fwd/event/EventType.hpp"
@@ -20,7 +20,8 @@ public:
 
 	EventManager(EventManager&&) = delete;
 	EventManager(const EventManager&) = delete;
-	void operator=(const EventManager&) = delete;
+	EventManager& operator=(EventManager&&) = delete;
+	EventManager& operator=(const EventManager&) = delete;
 
 	event_handler_id_t add_handler(const event_handler_t&);
 	event_handler_id_t add_handler(EventType, const event_handler_t&);

@@ -1,5 +1,7 @@
 #include "RotationUtil.hpp"
 
+#include <cassert>
+#include <stdexcept>
 #include <string>
 
 #include <glm/vec4.hpp>
@@ -93,7 +95,7 @@ std::unordered_map<uvec3, std::unordered_map<Face, uint8_t>, Position::hasher_st
 	// {3, 3, 3} = {0, 3, 0}
 });
 
-static int8_t tcos(uint8_t turns)
+static int8_t tcos(const uint8_t turns)
 {
 	switch(turns)
 	{
@@ -106,7 +108,7 @@ static int8_t tcos(uint8_t turns)
 	return 1;
 }
 
-static int8_t tsin(uint8_t turns)
+static int8_t tsin(const uint8_t turns)
 {
 	switch(turns)
 	{
@@ -140,7 +142,7 @@ static uint8_t mod4(const int8_t x)
 }
 
 // derived from glm::rotate
-static imat4 rotate_(uint8_t turns, const ivec3& axis)
+static imat4 rotate_(const uint8_t turns, const ivec3& axis)
 {
 	if(turns == 0)
 	{
@@ -188,10 +190,9 @@ Enum::Face rotate_face(const Enum::Face face, const uvec3& rot)
 		return face;
 	}
 
-	imat4 r
-	 = rotate(rot.x, {1, 0, 0})
-	 * rotate(rot.y, {0, 1, 0})
-	 * rotate(rot.z, {0, 0, 1});
+	imat4 r = rotate(rot.x, {1, 0, 0})
+		    * rotate(rot.y, {0, 1, 0})
+		    * rotate(rot.z, {0, 0, 1});
 	return Block::Enum::vec_to_face(glm::ivec3(r * ivec4(Block::Enum::face_to_vec(face), 1)));
 }
 
@@ -203,13 +204,12 @@ uvec3 mat_to_rot(const imat4& m)
 	const int8_t S1 = tsin(T1);
 	const int8_t C1 = tcos(T1);
 	const uint8_t T3 = tatan2(S1 * m[0][2] - C1 * m[0][1], C1 * m[1][1] - S1 * m[1][2]);
-	const uvec3 rot
+	return uvec3
 	{
 		mod4(-static_cast<int8_t>(T1)),
 		mod4(-static_cast<int8_t>(T2)),
 		mod4(-static_cast<int8_t>(T3)),
 	};
-	return rot;
 }
 
 }

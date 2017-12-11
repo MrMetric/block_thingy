@@ -49,6 +49,14 @@ VertexBuffer::VertexBuffer(std::vector<Format> formats)
 	inited = true;
 }
 
+VertexBuffer::~VertexBuffer()
+{
+	if(inited)
+	{
+		glDeleteBuffers(1, &name);
+	}
+}
+
 VertexBuffer::VertexBuffer(VertexBuffer&& that)
 {
 	name = that.name;
@@ -58,14 +66,6 @@ VertexBuffer::VertexBuffer(VertexBuffer&& that)
 		that.name = 0;
 		that.inited = false;
 		formats = std::move(that.formats);
-	}
-}
-
-VertexBuffer::~VertexBuffer()
-{
-	if(inited)
-	{
-		glDeleteBuffers(1, &name);
 	}
 }
 

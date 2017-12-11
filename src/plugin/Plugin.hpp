@@ -17,7 +17,8 @@ public:
 
 	Plugin(Plugin&&);
 	Plugin(const Plugin&) = delete;
-	void operator=(const Plugin&) = delete;
+	Plugin& operator=(Plugin&&) = delete;
+	Plugin& operator=(const Plugin&) = delete;
 
 private:
 	friend class PluginManager;

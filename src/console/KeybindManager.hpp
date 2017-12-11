@@ -16,7 +16,8 @@ public:
 
 	KeybindManager(KeybindManager&&) = delete;
 	KeybindManager(const KeybindManager&) = delete;
-	void operator=(const KeybindManager&) = delete;
+	KeybindManager& operator=(KeybindManager&&) = delete;
+	KeybindManager& operator=(const KeybindManager&) = delete;
 
 	void bind_key(int key, const std::string& command);
 	void bind_key(const std::string& key, const std::string& command);
@@ -26,7 +27,6 @@ public:
 	void mousepress(const Util::mouse_press&);
 	void joypress(int joystick, int button, bool pressed);
 
-	// intentionally not const ref
 	static int translate_key(std::string key);
 
 private:

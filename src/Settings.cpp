@@ -19,7 +19,7 @@ static std::map<string, Settings::value_t> settings;
 
 static string get_type_name(const Settings::value_t& s)
 {
-	static_assert(std::is_same<Settings::value_t, strict_variant::variant<bool, double, int64_t, std::string>>::value);
+	static_assert(std::is_same<Settings::value_t, strict_variant::variant<bool, double, int64_t, string>>::value);
 	switch(s.which())
 	{
 		case 0: return "bool";

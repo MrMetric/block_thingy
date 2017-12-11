@@ -1,17 +1,12 @@
 #include "Greedy.hpp"
 
-#include <algorithm>
 #include <array>
-#include <cassert>
 #include <stdint.h>
 #include <tuple>
-
-#include <glm/vec3.hpp>
 
 #include "Game.hpp"
 #include "block/Base.hpp"
 #include "block/Enum/Face.hpp"
-#include "block/Enum/Type.hpp"
 #include "position/BlockInChunk.hpp"
 
 using Block::Enum::Face;

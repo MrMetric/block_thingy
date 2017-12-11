@@ -5,10 +5,13 @@
 
 #include "Game.hpp"
 #include "Player.hpp"
+#include "block/BlockRegistry.hpp"
 #include "block/RotationUtil.hpp"
+#include "block/Enum/Face.hpp"
 #include "block/Enum/Type.hpp"
 #include "block/Enum/VisibilityType.hpp"
 #include "graphics/Color.hpp"
+#include "position/BlockInWorld.hpp"
 #include "storage/Interface.hpp"
 #include "storage/msgpack/BlockType.hpp"
 #include "storage/msgpack/glm_vec3.hpp"
@@ -79,8 +82,8 @@ Base& Base::operator=(const Base& that)
 	light_ = that.light_;
 	shader_ = that.shader_;
 	texture_ = that.texture_;
-
 	rotation_ = that.rotation_;
+
 	return *this;
 }
 
@@ -161,15 +164,15 @@ bool Base::is_selectable() const
 	return true;
 }
 
-bool Base::is_replaceable_by(const Base&) const
+bool Base::is_replaceable_by(const Base& /*block*/) const
 {
 	return false;
 }
 
 void Base::use_start
 (
-	Game&,
-	World&,
+	Game& /*game*/,
+	World& /*world*/,
 	Player& player,
 	const Position::BlockInWorld& pos,
 	const Enum::Face face

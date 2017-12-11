@@ -26,7 +26,7 @@ Button::Button
 	style["size.y"] = 64.0;
 }
 
-std::string Button::type() const
+string Button::type() const
 {
 	return "Button";
 }

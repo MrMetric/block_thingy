@@ -23,7 +23,8 @@ public:
 
 	Player(Player&&) = delete;
 	Player(const Player&) = delete;
-	void operator=(const Player&) = delete;
+	Player& operator=(Player&&) = delete;
+	Player& operator=(const Player&) = delete;
 
 	const std::string name;
 	double reach_distance;

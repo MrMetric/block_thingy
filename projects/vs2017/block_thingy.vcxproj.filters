@@ -195,6 +195,9 @@
     <ClCompile Include="..\..\src\block\Enum\Type.cpp">
       <Filter>Source Files\block\Enum</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\block\Enum\VisibilityType.cpp">
+      <Filter>Source Files\block\Enum</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\chunk\Chunk.cpp">
       <Filter>Source Files\chunk</Filter>
     </ClCompile>

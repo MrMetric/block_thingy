@@ -1,7 +1,13 @@
 #pragma once
 
+#include <cstddef>
 #include <iosfwd>
 #include <stdint.h>
+
+#ifdef DEBUG_BUILD
+	#include <stdexcept>
+	#include <string>
+#endif
 
 #include <glm/vec3.hpp>
 
@@ -17,8 +23,27 @@ struct Color
 	Color(value_type r, value_type g, value_type b);
 	Color(const glm::dvec3&);
 
-	value_type operator[](uint_fast8_t) const;
-	value_type& operator[](uint_fast8_t);
+	value_type operator[](const std::ptrdiff_t i) const
+	{
+	#ifdef DEBUG_BUILD
+		if(i > 2)
+		{
+			throw std::out_of_range("Graphics::Color::operator[]: " + std::to_string(i) + " > 2");
+		}
+	#endif
+		return (&r)[i];
+	}
+
+	value_type& operator[](const std::ptrdiff_t i)
+	{
+	#ifdef DEBUG_BUILD
+		if(i > 2)
+		{
+			throw std::out_of_range("Graphics::Color::operator[]: " + std::to_string(i) + " > 2");
+		}
+	#endif
+		return (&r)[i];
+	}
 
 	bool operator==(const Color& that) const
 	{

@@ -5,15 +5,11 @@
 #include <tuple>
 #include <vector>
 
-#include <glad/glad.h>
 #include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
 
 #include "fwd/block/Base.hpp"
 #include "fwd/block/Enum/Face.hpp"
-#include "fwd/block/Enum/Type.hpp"
 #include "fwd/chunk/Chunk.hpp"
-#include "graphics/Color.hpp"
 #include "graphics/primitive.hpp"
 #include "util/filesystem.hpp"
 
@@ -87,8 +83,8 @@ public:
 
 	Base(Base&&) = delete;
 	Base(const Base&) = delete;
-	void operator=(Base&&) = delete;
-	void operator=(const Base&) = delete;
+	Base& operator=(Base&&) = delete;
+	Base& operator=(const Base&) = delete;
 
 	virtual meshmap_t make_mesh(const Chunk&) = 0;
 

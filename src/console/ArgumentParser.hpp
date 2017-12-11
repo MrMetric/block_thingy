@@ -11,7 +11,8 @@ public:
 
 	ArgumentParser(ArgumentParser&&) = delete;
 	ArgumentParser(const ArgumentParser&) = delete;
-	void operator=(const ArgumentParser&) = delete;
+	ArgumentParser& operator=(ArgumentParser&&) = delete;
+	ArgumentParser& operator=(const ArgumentParser&) = delete;
 
 	std::vector<std::string> parse_args(const std::string& argline);
 

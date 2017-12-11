@@ -15,7 +15,8 @@ public:
 
 	Texture(Texture&&);
 	Texture(const Texture&) = delete;
-	void operator=(const Texture&) = delete;
+	Texture& operator=(Texture&&) = delete;
+	Texture& operator=(const Texture&) = delete;
 
 	// https://www.opengl.org/sdk/docs/man/html/glTexImage2D.xhtml
 	void image2D

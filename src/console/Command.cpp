@@ -1,6 +1,8 @@
 #include "Command.hpp"
 
-#include "Console.hpp"
+#include <cassert>
+#include <stdexcept>
+#include <utility>
 
 using std::string;
 
@@ -14,12 +16,16 @@ Command::Command
 	console(console),
 	name(name)
 {
+	if(name.empty())
+	{
+		throw std::invalid_argument("command name can not be empty");
+	}
 	console.add_command(name, handler);
 }
 
 Command::~Command()
 {
-	if(unadd)
+	if(!name.empty())
 	{
 		console.unadd_command(name);
 	}
@@ -28,7 +34,8 @@ Command::~Command()
 Command::Command(Command&& that)
 :
 	console(that.console),
-	name(that.name)
+	name(std::move(that.name))
 {
-	that.unadd = false;
+	assert(!name.empty());
+	assert(that.name.empty());
 }

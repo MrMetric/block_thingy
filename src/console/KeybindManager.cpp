@@ -1,10 +1,8 @@
 #include "KeybindManager.hpp"
 
 #include <algorithm>
-#include <iostream>
 #include <stdint.h>
 #include <string>
-#include <utility>
 #include <vector>
 
 #include <GLFW/glfw3.h>
@@ -210,7 +208,7 @@ int KeybindManager::translate_key(string key)
 		{
 			return GLFW_KEY_UNKNOWN;
 		}
-		int8_t btn = key[5] - '1';
+		const int8_t btn = key[5] - '1';
 		if(btn < 0 || btn > 7)
 		{
 			return GLFW_KEY_UNKNOWN;

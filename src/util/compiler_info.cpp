@@ -1,8 +1,8 @@
 #include "compiler_info.hpp"
 
 #ifdef _MSC_VER
-#include <iomanip>
-#include <sstream>
+	#include <iomanip>
+	#include <sstream>
 #endif
 
 using std::string;

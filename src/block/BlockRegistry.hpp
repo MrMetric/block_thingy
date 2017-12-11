@@ -7,9 +7,7 @@
 #include <utility>
 
 #include "fwd/block/Base.hpp"
-#include "fwd/block/Enum/Face.hpp"
 #include "fwd/block/Enum/Type.hpp"
-#include "util/filesystem.hpp"
 
 namespace Block {
 
@@ -36,6 +34,11 @@ class BlockRegistry
 {
 public:
 	BlockRegistry();
+
+	BlockRegistry(BlockRegistry&&) = delete;
+	BlockRegistry(const BlockRegistry&) = delete;
+	BlockRegistry& operator=(BlockRegistry&&) = delete;
+	BlockRegistry& operator=(const BlockRegistry&) = delete;
 
 	template<typename T, typename... Args>
 	Enum::Type add(const std::string& strid, Args&&... args)

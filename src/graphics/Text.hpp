@@ -38,8 +38,8 @@ public:
 
 	Text(Text&&) = delete;
 	Text(const Text&) = delete;
-	void operator=(Text&&) = delete;
-	void operator=(const Text&) = delete;
+	Text& operator=(Text&&) = delete;
+	Text& operator=(const Text&) = delete;
 
 	void set_font(const fs::path& path, FT_UInt height);
 	void set_font(const fs::path& path);

@@ -8,6 +8,7 @@
 
 #include "Game.hpp"
 #include "block/Base.hpp"
+#include "block/BlockRegistry.hpp"
 #include "block/Enum/Type.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"

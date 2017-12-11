@@ -32,7 +32,8 @@ public:
 
 	World(World&&) = delete;
 	World(const World&) = delete;
-	void operator=(const World&) = delete;
+	World& operator=(World&&) = delete;
+	World& operator=(const World&) = delete;
 
 	const std::shared_ptr<Block::Base> get_block(const Position::BlockInWorld&) const;
 	std::shared_ptr<Block::Base> get_block(const Position::BlockInWorld&);

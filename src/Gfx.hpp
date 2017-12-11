@@ -2,7 +2,6 @@
 
 #include <cassert>
 #include <map>
-#include <stdint.h>
 #include <string>
 
 #include <GLFW/glfw3.h>
@@ -11,7 +10,6 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
-#include "fwd/block/Enum/Type.hpp"
 #include "fwd/event/EventManager.hpp"
 #include "graphics/RenderTarget.hpp"
 #include "graphics/Text.hpp"
@@ -29,7 +27,8 @@ public:
 
 	Gfx(Gfx&&) = delete;
 	Gfx(const Gfx&) = delete;
-	void operator=(const Gfx&) = delete;
+	Gfx& operator=(Gfx&&) = delete;
+	Gfx& operator=(const Gfx&) = delete;
 
 	static Gfx* instance;
 private:

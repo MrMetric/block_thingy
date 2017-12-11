@@ -28,7 +28,8 @@ public:
 
 	Base(Base&&) = delete;
 	Base(const Base&) = delete;
-	void operator=(const Base&) = delete;
+	Base& operator=(Base&&) = delete;
+	Base& operator=(const Base&) = delete;
 
 	virtual std::string type() const = 0;
 

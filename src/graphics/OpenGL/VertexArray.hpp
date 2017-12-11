@@ -17,7 +17,8 @@ public:
 
 	VertexArray(VertexArray&&);
 	VertexArray(const VertexArray&) = delete;
-	void operator=(const VertexArray&) = delete;
+	VertexArray& operator=(VertexArray&&) = delete;
+	VertexArray& operator=(const VertexArray&) = delete;
 
 	GLuint get_name();
 

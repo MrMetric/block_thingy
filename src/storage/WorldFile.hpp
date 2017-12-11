@@ -18,7 +18,8 @@ public:
 
 	WorldFile(WorldFile&&) = delete;
 	WorldFile(const WorldFile&) = delete;
-	void operator=(const WorldFile&) = delete;
+	WorldFile& operator=(WorldFile&&) = delete;
+	WorldFile& operator=(const WorldFile&) = delete;
 
 	void save_world();
 

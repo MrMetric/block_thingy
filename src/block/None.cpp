@@ -1,6 +1,5 @@
 #include "None.hpp"
 
-#include "block/Enum/Type.hpp"
 #include "block/Enum/VisibilityType.hpp"
 
 namespace Block {

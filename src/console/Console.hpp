@@ -1,7 +1,6 @@
 #pragma once
 
 #include <functional>
-#include <iosfwd>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -15,7 +14,8 @@ public:
 
 	Console(Console&&) = delete;
 	Console(const Console&) = delete;
-	void operator=(const Console&) = delete;
+	Console& operator=(Console&&) = delete;
+	Console& operator=(const Console&) = delete;
 
 	void add_command(const std::string& name, const console_handler_t& handler);
 	void unadd_command(const std::string& name);

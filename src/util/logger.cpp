@@ -1,6 +1,6 @@
 #include "logger.hpp"
 
-#include <cassert>
+#include <iostream>
 
 #ifdef HAVE_POSIX
 	#include <unistd.h>
@@ -42,12 +42,12 @@ std::ostream& log(const string& category)
 	{
 		// no formatting
 	}
-	#ifdef DEBUG_BUILD
+#ifdef DEBUG_BUILD
 	else if(category == "DEBUG")
 	{
 		o << format::blue;
 	}
-	#endif
+#endif
 	else if(category == "WARN")
 	{
 		o << format::yellow;

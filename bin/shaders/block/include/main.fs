@@ -11,10 +11,10 @@ void main()
 {
 	vec2 coords = get_face_coords(position);
 	vec2 uv = fract(coords);
-	#ifdef USE_COORDS
+#ifdef USE_COORDS
 	coords = floor(coords) + rotate_uv(uv);
 	vec4 c = color(coords);
-	#else
+#else
 	vec2 uv2 = uv;
 	if(face == FACE_RIGHT
 	|| face == FACE_TOP
@@ -24,7 +24,7 @@ void main()
 	}
 	uv2 = rotate_uv(uv2);
 	vec4 c = color(uv2);
-	#endif
+#endif
 
 	if(min_light > 0.999 && min_light < 1.001)
 	{

@@ -1,10 +1,10 @@
 #include "Chunk.hpp"
 
-#include <algorithm>
 #include <cstddef>
 #include <memory>
 #include <mutex>
-#include <string>
+#include <stdexcept>
+#include <stdint.h>
 #include <utility>
 #include <vector>
 
@@ -13,12 +13,9 @@
 
 #include "Camera.hpp"
 #include "Game.hpp"
-#include "Gfx.hpp"
 #include "Settings.hpp"
 #include "World.hpp"
-#include "block/Base.hpp"
-#include "block/BlockRegistry.hpp"
-#include "block/Enum/Type.hpp"
+#include "fwd/block/Base.hpp"
 #include "chunk/Mesher/Base.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
@@ -33,8 +30,6 @@
 #include "position/ChunkInWorld.hpp"
 #include "util/logger.hpp"
 
-using std::string;
-using std::to_string;
 using std::shared_ptr;
 using std::unique_ptr;
 
@@ -114,7 +109,7 @@ struct Chunk::impl
 	World& owner;
 	Position::ChunkInWorld position;
 
-	std::unique_ptr<Graphics::OpenGL::Texture> light_tex;
+	unique_ptr<Graphics::OpenGL::Texture> light_tex;
 	bool light_changed;
 	event_handler_id_t light_smoothing_eid;
 

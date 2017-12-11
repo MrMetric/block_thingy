@@ -40,11 +40,11 @@
 #include "util/mouse_press.hpp"
 
 #ifdef near
-#undef near
+	#undef near
 #endif
 
 #ifdef far
-#undef far
+	#undef far
 #endif
 
 using std::string;
@@ -652,9 +652,9 @@ static void shim_GL_ARB_separate_shader_objects()
 	UNIFORM(i, GLint);
 	UNIFORM(ui, GLuint);
 	UNIFORM(f, GLfloat);
-	#ifdef GL_ARB_gpu_shader_fp64
+#ifdef GL_ARB_gpu_shader_fp64
 	UNIFORM(d, GLdouble);
-	#endif
+#endif
 
 	#define UVEC(name, type) glProgramUniform##name##v = [](GLuint program, GLint location, GLsizei count, const type* value) -> void \
 	{ \
@@ -688,7 +688,7 @@ static void shim_GL_ARB_separate_shader_objects()
 	UMATRIX(4x2f, GLfloat);
 	UMATRIX(3x4f, GLfloat);
 	UMATRIX(4x3f, GLfloat);
-	#ifdef GL_ARB_gpu_shader_fp64
+#ifdef GL_ARB_gpu_shader_fp64
 	UMATRIX(2d, GLdouble);
 	UMATRIX(3d, GLdouble);
 	UMATRIX(4d, GLdouble);
@@ -698,5 +698,5 @@ static void shim_GL_ARB_separate_shader_objects()
 	UMATRIX(4x2d, GLdouble);
 	UMATRIX(3x4d, GLdouble);
 	UMATRIX(4x3d, GLdouble);
-	#endif
+#endif
 }

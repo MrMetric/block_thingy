@@ -4,9 +4,14 @@
 
 namespace Block::Enum {
 
-std::ostream& operator<<(std::ostream& os, const Type type)
+std::ostream& operator<<(std::ostream& o, const Type type)
 {
-	return os << static_cast<Type_t>(type);
+	return o << static_cast<Type_t>(type);
+}
+
+std::ostream& operator<<(std::ostream& o, const TypeExternal type)
+{
+	return o << static_cast<Type_t>(type);
 }
 
 }

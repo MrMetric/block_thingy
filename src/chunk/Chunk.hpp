@@ -20,7 +20,8 @@ public:
 
 	Chunk(Chunk&&) = delete;
 	Chunk(const Chunk&) = delete;
-	void operator=(const Chunk&) = delete;
+	Chunk& operator=(Chunk&&) = delete;
+	Chunk& operator=(const Chunk&) = delete;
 
 	World& get_owner() const; // eeh
 	Position::ChunkInWorld get_position() const;
@@ -40,7 +41,6 @@ public:
 	// for loading
 	void set_blocks(chunk_blocks_t);
 	void set_blocks(std::shared_ptr<Block::Base>);
-
 
 	// for msgpack
 	template<typename T> void save(T&) const;

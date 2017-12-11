@@ -4,12 +4,8 @@
 #include <cmath>
 #include <iostream>
 #include <limits>
-#include <stdexcept>
-#include <string>
 
 #include <glm/common.hpp>
-
-using std::to_string;
 
 namespace Graphics {
 
@@ -43,22 +39,6 @@ Color::Color(const glm::dvec3& v)
 {
 }
 
-Color::value_type Color::operator[](const uint_fast8_t i) const
-{
-	if(i == 0) return r;
-	if(i == 1) return g;
-	if(i == 2) return b;
-	throw std::out_of_range("Graphics::Color::operator[]: " + to_string(i) + " > 2");
-}
-
-Color::value_type& Color::operator[](const uint_fast8_t i)
-{
-	if(i == 0) return r;
-	if(i == 1) return g;
-	if(i == 2) return b;
-	throw std::out_of_range("Graphics::Color::operator[]: " + to_string(i) + " > 2");
-}
-
 // defined for std::tuple hashing
 bool Color::operator<(const Color& that) const
 {
@@ -69,7 +49,8 @@ bool Color::operator<(const Color& that) const
 
 Color Color::operator+(const Color& that) const
 {
-	return Color(
+	return Color
+	(
 		r + that.r,
 		g + that.g,
 		b + that.b
@@ -78,7 +59,8 @@ Color Color::operator+(const Color& that) const
 
 Color Color::operator-(const Color& that) const
 {
-	return Color(
+	return Color
+	(
 		r - that.r,
 		g - that.g,
 		b - that.b
@@ -88,7 +70,8 @@ Color Color::operator-(const Color& that) const
 Color Color::operator+(const value_type x) const
 {
 	const int m = std::numeric_limits<value_type>::max();
-	return Color(
+	return Color
+	(
 		static_cast<value_type>(std::min(r + x, m)),
 		static_cast<value_type>(std::min(g + x, m)),
 		static_cast<value_type>(std::min(b + x, m))
@@ -97,7 +80,8 @@ Color Color::operator+(const value_type x) const
 
 Color Color::operator-(const value_type x) const
 {
-	return Color(
+	return Color
+	(
 		static_cast<value_type>(std::max(r - x, 0)),
 		static_cast<value_type>(std::max(g - x, 0)),
 		static_cast<value_type>(std::max(b - x, 0))
@@ -132,10 +116,7 @@ Color::operator glm::tvec3<uint8_t>() const
 
 std::ostream& operator<<(std::ostream& o, const Color& c)
 {
-	return o << '('
-			<< std::to_string(c.r) << ','
-			<< std::to_string(c.g) << ','
-			<< std::to_string(c.b) << ')';
+	return o << '(' << +c.r << ',' << +c.g << ',' << +c.b << ')';
 }
 
 }

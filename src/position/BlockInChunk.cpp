@@ -2,7 +2,6 @@
 
 #include <ostream>
 #include <sstream>
-#include <string>
 
 #ifdef DEBUG_BUILD
 	#include <stdexcept>
@@ -12,8 +11,6 @@
 
 #include "BlockInWorld.hpp"
 #include "fwd/chunk/Chunk.hpp"
-
-using std::to_string;
 
 namespace Position {
 
@@ -31,9 +28,9 @@ BlockInChunk::BlockInChunk(const value_type x, const value_type y, const value_t
 	y(y),
 	z(z)
 {
-	#ifdef DEBUG_BUILD
+#ifdef DEBUG_BUILD
 	check_bounds();
-	#endif
+#endif
 }
 
 /*
@@ -60,9 +57,9 @@ BlockInChunk& BlockInChunk::operator+=(const BlockInChunk& that)
 	x += that.x;
 	y += that.y;
 	z += that.z;
-	#ifdef DEBUG_BUILD
+#ifdef DEBUG_BUILD
 	check_bounds();
-	#endif
+#endif
 	return *this;
 }
 
@@ -89,15 +86,15 @@ void BlockInChunk::check_bounds()
 	|| z >= CHUNK_SIZE)
 	{
 		std::ostringstream ss;
-		ss << "Position::BlockInChunk has invalid coordinates: (" << int(x) << ',' << int(y) << ',' << int(z) << ')';
+		ss << "Position::BlockInChunk has invalid coordinates: (" << +x << ',' << +y << ',' << +z << ')';
 		throw std::logic_error(ss.str());
 	}
 }
 #endif
 
-std::ostream& operator<<(std::ostream& os, const BlockInChunk& pos)
+std::ostream& operator<<(std::ostream& o, const BlockInChunk& pos)
 {
-	return os << '(' << to_string(pos.x) << ',' << to_string(pos.y) << ',' << to_string(pos.z) << ')';
+	return o << '(' << +pos.x << ',' << +pos.y << ',' << +pos.z << ')';
 }
 
 }

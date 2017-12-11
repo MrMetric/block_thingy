@@ -57,8 +57,6 @@ std::string read_file(const fs::path&, bool is_text);
 
 std::string gl_object_log(GLuint object);
 
-void change_directory(const fs::path&);
-
 int stoi(const std::string&);
 
 std::string datetime();

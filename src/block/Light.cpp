@@ -3,12 +3,9 @@
 #include <memory>
 #include <sstream>
 
-#include <glm/vec3.hpp>
-
-#include "Game.hpp"
+#include "fwd/Game.hpp"
 #include "Player.hpp"
-#include "World.hpp"
-#include "block/Enum/Type.hpp"
+#include "fwd/World.hpp"
 #include "block/Enum/VisibilityType.hpp"
 #include "graphics/GUI/Light.hpp"
 #include "storage/Interface.hpp"
@@ -21,7 +18,7 @@ namespace Block {
 
 Light::Light(const Enum::Type t)
 :
-	Light(t, Color(glm::dvec3(1, 1, 1)))
+	Light(t, Color(Color::max))
 {
 }
 
@@ -45,7 +42,7 @@ void Light::use_start
 	World& world,
 	Player& player,
 	const Position::BlockInWorld& pos,
-	const Enum::Face
+	const Enum::Face /*face*/
 )
 {
 	player.open_gui(std::make_unique<Graphics::GUI::Light>(game, world, *this, pos));

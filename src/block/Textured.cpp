@@ -1,7 +1,5 @@
 #include "Textured.hpp"
 
-#include <array>
-
 #include "Game.hpp"
 #include "block/Enum/Face.hpp"
 #include "block/Enum/VisibilityType.hpp"

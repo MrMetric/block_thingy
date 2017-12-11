@@ -86,7 +86,7 @@ struct Game::impl
 	std::vector<Command> commands;
 	void add_commands();
 
-	std::unique_ptr<Graphics::GUI::Base> temp_gui;
+	unique_ptr<Graphics::GUI::Base> temp_gui;
 
 	bool just_opened_gui;
 	int last_key;
@@ -128,7 +128,7 @@ Game::Game()
 {
 	resource_manager.load_blocks(*this);
 
-	if(block_registry.get_extid_map().size() == 0)
+	if(block_registry.get_extid_map().empty())
 	{
 		// this should be done when starting a new world, but the design does not work that way yet
 		block_registry.reset_extid_map();

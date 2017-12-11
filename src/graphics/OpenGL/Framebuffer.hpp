@@ -15,7 +15,8 @@ public:
 
 	Framebuffer(Framebuffer&&);
 	Framebuffer(const Framebuffer&) = delete;
-	void operator=(const Framebuffer&) = delete;
+	Framebuffer& operator=(Framebuffer&&) = delete;
+	Framebuffer& operator=(const Framebuffer&) = delete;
 
 	/** https://www.opengl.org/sdk/docs/man/html/glFramebufferRenderbuffer.xhtml\n
 	 * Attach a renderbuffer as a logical buffer of this framebuffer

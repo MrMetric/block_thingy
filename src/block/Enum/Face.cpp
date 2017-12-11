@@ -32,19 +32,19 @@ Face vec_to_face(const glm::ivec3& vec)
 	return Face::front; // to satisfy -Werror
 }
 
-std::ostream& operator<<(std::ostream& os, const Face face)
+std::ostream& operator<<(std::ostream& o, const Face face)
 {
 	switch(face)
 	{
-		case Face::front : return os << "front";
-		case Face::back  : return os << "back";
-		case Face::top   : return os << "top";
-		case Face::bottom: return os << "bottom";
-		case Face::right : return os << "right";
-		case Face::left  : return os << "left";
+		case Face::front : return o << "front";
+		case Face::back  : return o << "back";
+		case Face::top   : return o << "top";
+		case Face::bottom: return o << "bottom";
+		case Face::right : return o << "right";
+		case Face::left  : return o << "left";
 	}
 	assert(false);
-	return os << "ERROR"; // to satisfy -Werror
+	return o << "ERROR"; // to satisfy -Werror
 }
 
 }

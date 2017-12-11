@@ -1,9 +1,11 @@
 #include "BlockRegistry.hpp"
 
+#include <algorithm>
 #include <cassert>
 #include <limits>
 #include <mutex>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 #include "language.hpp"
@@ -13,7 +15,6 @@
 #include "block/None.hpp"
 #include "block/Teleporter.hpp"
 #include "block/Test.hpp"
-#include "block/Textured.hpp"
 #include "block/Unknown.hpp"
 #include "block/Enum/Face.hpp"
 #include "block/Enum/Type.hpp"
@@ -39,7 +40,7 @@ BlockMaker::~BlockMaker()
 {
 }
 
-shared_ptr<Base> BlockMaker::make(Enum::Type) const
+shared_ptr<Base> BlockMaker::make(const Enum::Type) const
 {
 	return nullptr;
 }
@@ -80,7 +81,7 @@ shared_ptr<Base> BlockRegistry::get_default(const Enum::TypeExternal te) const
 	return get_default(get_id(strid));
 }
 
-shared_ptr<Base> BlockRegistry::get_default(const std::string& strid) const
+shared_ptr<Base> BlockRegistry::get_default(const string& strid) const
 {
 	return get_default(get_id(strid));
 }
@@ -177,11 +178,12 @@ string BlockRegistry::get_name(const string& strid) const
 
 Enum::TypeExternal BlockRegistry::get_extid(const Enum::Type t) const
 {
-	const std::string strid = get_strid(t);
+	const string strid = get_strid(t);
 	const auto i = strid_to_extid.find(strid);
 	if(i == strid_to_extid.cend())
 	{
-		throw std::runtime_error("BUG: block type " + strid + " not found in strid_to_extid");
+		LOG(BUG) << "block type " << strid << " not found in strid_to_extid\n";
+		throw std::runtime_error("block type " + strid + " not found in strid_to_extid");
 	}
 	return i->second;
 }
@@ -254,7 +256,7 @@ void BlockRegistry::make_strid_to_extid_map()
 Enum::Type BlockRegistry::add_
 (
 	const string& strid,
-	std::unique_ptr<BlockMaker> maker
+	unique_ptr<BlockMaker> maker
 )
 {
 	const Enum::Type t = static_cast<Enum::Type>(get_max_id());

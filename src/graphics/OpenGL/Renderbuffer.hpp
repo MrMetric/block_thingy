@@ -14,7 +14,8 @@ public:
 
 	Renderbuffer(Renderbuffer&&);
 	Renderbuffer(const Renderbuffer&) = delete;
-	void operator=(const Renderbuffer&) = delete;
+	Renderbuffer& operator=(Renderbuffer&&) = delete;
+	Renderbuffer& operator=(const Renderbuffer&) = delete;
 
 	/** https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorage.xhtml
 	 ** https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorageMultisample.xhtml

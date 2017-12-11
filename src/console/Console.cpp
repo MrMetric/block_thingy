@@ -1,9 +1,7 @@
 #include "Console.hpp"
 
 #include <fstream>
-#include <stdexcept>
 #include <utility>
-#include <vector>
 
 #include "console/ArgumentParser.hpp"
 #include "util/logger.hpp"
@@ -33,7 +31,7 @@ Console::Console()
 			LOG(ERROR) << "script not found: " << name << '\n';
 			return;
 		}
-		for(string line; std::getline(file, line); )
+		for(string line; std::getline(file, line);)
 		{
 			run_line(line);
 		}
@@ -42,15 +40,26 @@ Console::Console()
 
 void Console::add_command(const string& name, const console_handler_t& handler)
 {
+	if(name.empty())
+	{
+		LOG(WARN) << "tried to add a command with an empty name\n";
+		return;
+	}
 	if(!handlers.insert({name, handler}).second)
 	{
-		throw std::runtime_error("tried to add duplicate command: " + name);
+		LOG(WARN) << "tried to add duplicate command \"" << name << "\"\n";
 	}
 }
 
 void Console::unadd_command(const string& name)
 {
-	handlers.erase(name);
+	const auto i = handlers.find(name);
+	if(i == handlers.cend())
+	{
+		LOG(WARN) << "tried to unadd nonexistent command \"" << name << "\"\n";
+		return;
+	}
+	handlers.erase(i);
 }
 
 void Console::run_line(const string& line)
@@ -60,7 +69,7 @@ void Console::run_line(const string& line)
 		return;
 	}
 	std::vector<string> args = ArgumentParser().parse_args(line);
-	if(args.size() < 1)
+	if(args.empty())
 	{
 		return;
 	}
@@ -71,6 +80,11 @@ void Console::run_line(const string& line)
 
 void Console::run_command(const string& name, const string& argline) const
 {
+	if(name.empty())
+	{
+		LOG(WARN) << "tried to run a command with an empty name; argline: " << argline << '\n';
+		return;
+	}
 	if(name[0] == '#') // ignore comments
 	{
 		return;
@@ -82,6 +96,11 @@ void Console::run_command(const string& name, const string& argline) const
 
 void Console::run_command(const string& name, const std::vector<string>& args) const
 {
+	if(name.empty())
+	{
+		LOG(WARN) << "tried to run a command with an empty name\n";
+		return;
+	}
 	if(name[0] == '#') // ignore comments
 	{
 		return;

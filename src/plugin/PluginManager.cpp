@@ -1,7 +1,7 @@
 #include "PluginManager.hpp"
 
 #ifdef __linux__
-#include <dlfcn.h>
+	#include <dlfcn.h>
 #endif
 
 #include <vector>

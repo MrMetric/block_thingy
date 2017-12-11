@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream>
+#include <ostream>
 #include <string>
 
 #define LOG(X) ::block_thingy::logger::log(#X)

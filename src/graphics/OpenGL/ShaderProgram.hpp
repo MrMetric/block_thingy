@@ -33,7 +33,8 @@ public:
 
 	ShaderProgram(ShaderProgram&&);
 	ShaderProgram(const ShaderProgram&) = delete;
-	void operator=(const ShaderProgram&) = delete;
+	ShaderProgram& operator=(ShaderProgram&&) = delete;
+	ShaderProgram& operator=(const ShaderProgram&) = delete;
 
 	GLuint get_name();
 	GLint get_uniform_location(const std::string&) const;

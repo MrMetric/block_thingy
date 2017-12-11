@@ -76,7 +76,7 @@ string do_include(const fs::path& file_path)
 
 	std::istringstream input(source);
 	std::ostringstream output;
-	for(string line; std::getline(input, line); )
+	for(string line; std::getline(input, line);)
 	{
 		if(!Util::string_starts_with(line, include_str))
 		{

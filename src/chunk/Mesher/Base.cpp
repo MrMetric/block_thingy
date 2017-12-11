@@ -1,14 +1,12 @@
 #include "Base.hpp"
 
 #include <cassert>
-#include <stdint.h>
 
 #include "World.hpp"
 #include "block/Base.hpp"
 #include "block/Enum/Face.hpp"
 #include "block/Enum/Type.hpp"
 #include "chunk/Chunk.hpp"
-#include "graphics/Color.hpp"
 #include "position/BlockInChunk.hpp"
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"

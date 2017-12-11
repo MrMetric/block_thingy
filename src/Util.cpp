@@ -11,12 +11,6 @@
 #include <memory>
 #include <sstream>
 #include <stdexcept>
-#ifdef _WIN32
-#include <windows.h> // SetCurrentDirectoryW
-#else
-#include <sys/stat.h>
-#include <unistd.h>
-#endif
 
 #include <glad/glad.h>
 
@@ -101,21 +95,6 @@ string Util::gl_object_log(const GLuint object)
 	}
 
 	return string(log.get());
-}
-
-void Util::change_directory(const fs::path& path)
-{
-	#ifdef _WIN32
-	if(!SetCurrentDirectoryW(path.wstring().c_str()))
-	{
-		throw std::runtime_error("error changing directory to " + path.u8string() + ": " + to_string(GetLastError()));
-	}
-	#else
-	if(chdir(path.c_str()) == -1)
-	{
-		throw std::runtime_error("error changing directory to " + path.u8string() + ": " + std::strerror(errno));
-	}
-	#endif
 }
 
 int Util::stoi(const string& s)

@@ -20,7 +20,7 @@ Text::Text
 	style["size.y"] = size.y;
 }
 
-std::string Text::type() const
+string Text::type() const
 {
 	return "Text";
 }

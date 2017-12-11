@@ -13,7 +13,8 @@ public:
 
 	Camera(Camera&&) = delete;
 	Camera(const Camera&) = delete;
-	void operator=(const Camera&) = delete;
+	Camera& operator=(Camera&&) = delete;
+	Camera& operator=(const Camera&) = delete;
 
 	void mousemove(double mouseX, double mouseY, bool joystick = false);
 

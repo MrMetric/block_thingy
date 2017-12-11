@@ -14,7 +14,8 @@ public:
 
 	PluginManager(PluginManager&&) = delete;
 	PluginManager(const PluginManager&) = delete;
-	void operator=(const PluginManager&) = delete;
+	PluginManager& operator=(PluginManager&&) = delete;
+	PluginManager& operator=(const PluginManager&) = delete;
 
 	void init_plugins(Game&);
 

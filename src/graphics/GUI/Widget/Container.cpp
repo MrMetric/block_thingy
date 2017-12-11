@@ -19,7 +19,7 @@ Container::Container()
 {
 }
 
-std::string Container::type() const
+string Container::type() const
 {
 	return "Container";
 }

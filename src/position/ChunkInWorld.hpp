@@ -26,22 +26,22 @@ struct ChunkInWorld
 
 	value_type operator[](const std::ptrdiff_t i) const
 	{
-		#ifdef DEBUG_BUILD
+	#ifdef DEBUG_BUILD
 		if(i > 2)
 		{
 			throw std::out_of_range("Position::ChunkInWorld::operator[]: " + std::to_string(i) + " > 2");
 		}
-		#endif
+	#endif
 		return (&x)[i];
 	}
 	value_type& operator[](const std::ptrdiff_t i)
 	{
-		#ifdef DEBUG_BUILD
+	#ifdef DEBUG_BUILD
 		if(i > 2)
 		{
 			throw std::out_of_range("Position::ChunkInWorld::operator[]: " + std::to_string(i) + " > 2");
 		}
-		#endif
+	#endif
 		return (&x)[i];
 	}
 	ChunkInWorld& operator+=(const ChunkInWorld&);

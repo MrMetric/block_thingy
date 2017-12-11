@@ -19,7 +19,8 @@ public:
 
 	Property(Property&&) = delete;
 	Property(const Property&) = delete;
-	void operator=(const Property&) = delete;
+	Property& operator=(Property&&) = delete;
+	Property& operator=(const Property&) = delete;
 
 	T operator()() const
 	{

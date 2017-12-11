@@ -111,8 +111,9 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		-Wextra
 		-Wnull-dereference
 		-Werror=missing-field-initializers
-		#-Werror=old-style-cast
+		-Werror=old-style-cast
 		-Werror=return-type
+		-Wno-parentheses
 	)
 else()
 	include_directories(

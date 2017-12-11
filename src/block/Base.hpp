@@ -113,10 +113,10 @@ protected:
 	Graphics::Color light_;
 	std::array<fs::path, 6> shader_;
 	std::array<fs::path, 6> texture_;
+	glm::tvec3<uint8_t> rotation_;
 
 private:
 	Enum::Type type_;
-	glm::tvec3<uint8_t> rotation_;
 };
 
 }

@@ -2,6 +2,7 @@
 #include "Base.hpp"
 
 #include <map>
+#include <string>
 
 #include <msgpack.hpp>
 

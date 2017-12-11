@@ -13,11 +13,11 @@ enum class Type : Type_t
 	air,
 	unknown,
 };
-
 std::ostream& operator<<(std::ostream&, Type);
 
 enum class TypeExternal : Type_t
 {
 };
+std::ostream& operator<<(std::ostream&, TypeExternal);
 
 }

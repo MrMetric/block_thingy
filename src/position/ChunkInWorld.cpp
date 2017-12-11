@@ -1,7 +1,7 @@
 #include "ChunkInWorld.hpp"
 
 #include <cmath>
-#include <iostream>
+#include <ostream>
 
 #include "BlockInWorld.hpp"
 #include "fwd/chunk/Chunk.hpp"
@@ -106,9 +106,9 @@ ChunkInWorld operator+(const ChunkInWorld& pos1, const ChunkInWorld& pos2)
 	};
 }
 
-std::ostream& operator<<(std::ostream& os, const ChunkInWorld& pos)
+std::ostream& operator<<(std::ostream& o, const ChunkInWorld& pos)
 {
-	return os << '(' << pos.x << ',' << pos.y << ',' << pos.z << ')';
+	return o << '(' << pos.x << ',' << pos.y << ',' << pos.z << ')';
 }
 
 }

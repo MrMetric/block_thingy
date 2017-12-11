@@ -1,8 +1,5 @@
 #include "ArgumentParser.hpp"
 
-#include <string>
-#include <vector>
-
 using std::string;
 
 ArgumentParser::ArgumentParser()
