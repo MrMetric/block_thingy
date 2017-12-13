@@ -3,6 +3,7 @@
 #include <cassert>
 #include <memory>
 #include <string>
+#include <tuple>
 
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
@@ -72,6 +73,11 @@ public:
 	void screenshot(fs::path) const;
 	double get_fps() const;
 	Position::ChunkInWorld::value_type get_render_distance() const;
+
+	/**
+	 * @return The amount of chunks considered for drawing and the amount of chunks drawn in the last frame
+	 */
+	std::tuple<uint64_t, uint64_t> get_draw_stats() const;
 
 	void update_framebuffer_size(const window_size_t&);
 	void keypress(const Util::key_press&);

@@ -1,5 +1,6 @@
 #include "Play.hpp"
 
+#include <cmath>
 #include <sstream>
 #include <string>
 
@@ -113,13 +114,30 @@ void Play::draw_debug_text()
 {
 	std::ostringstream ss;
 	ss << std::boolalpha;
-
-	ss << "framerate: " << game.get_fps() << '\n';
-	ss << "render distance: " << game.get_render_distance() << '\n';
-
-	const glm::dvec3 pos = game.player.position();
 	ss << glm::io::precision(4); // default is 3
 	ss << glm::io::width(10); // default is 9 (1 + 4 + 1 + default precision)
+
+	ss << "framerate: " << game.get_fps() << '\n';
+	ss << "camera position: " << game.gfx.graphical_position << '\n';
+
+	{
+		const auto render_distance = game.get_render_distance();
+		ss << "render distance: " << render_distance << '\n';
+		const auto [total, drawn] = game.get_draw_stats();
+		ss << "\tchunks in range: " << total << '\n';
+		ss << "\tchunks drawn   : " << drawn;
+		if(total != 0)
+		{
+			const double percent = std::round(static_cast<double>(drawn * 100 * 100) / total) / 100;
+			ss << " (" << percent << "%)";
+		}
+		ss << '\n';
+	}
+
+	ss << "field of view: " << Settings::get<double>("fov") << '\n';
+	ss << "projection type: " << Settings::get<string>("projection_type") << '\n';
+
+	const glm::dvec3 pos = game.player.position();
 	ss << "position: " << pos << '\n';
 
 	std::ostringstream ss2;

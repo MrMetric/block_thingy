@@ -126,6 +126,7 @@ void Settings::load()
 		{"font"					, "fonts/Anonymous Pro/Anonymous Pro.ttf"},
 		{"font_size"			, 24},
 		{"fov"					, 75.0},
+		{"frustum_culling"		, true},
 		{"fullscreen"			, false},
 		{"language"				, "en"},
 		{"light_smoothing"		, 2},

@@ -243,7 +243,16 @@
     <ClCompile Include="..\..\src\graphics\Color.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\graphics\default_view_frustum.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\frustum.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\graphics\Image.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\plane.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\RenderTarget.cpp">
@@ -521,7 +530,19 @@
     <ClInclude Include="..\..\src\graphics\Color.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\graphics\default_view_frustum.hpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\graphics\frustum.hpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\graphics\Image.hpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\graphics\null_frustum.hpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\graphics\plane.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\graphics\primitive.hpp">

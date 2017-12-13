@@ -58,6 +58,8 @@
     <ClCompile Include="..\..\src\Game.cpp" />
     <ClCompile Include="..\..\src\Gfx.cpp" />
     <ClCompile Include="..\..\src\graphics\Color.cpp" />
+    <ClCompile Include="..\..\src\graphics\default_view_frustum.cpp" />
+    <ClCompile Include="..\..\src\graphics\frustum.cpp" />
     <ClCompile Include="..\..\src\graphics\GUI\Base.cpp" />
     <ClCompile Include="..\..\src\graphics\GUI\Console.cpp" />
     <ClCompile Include="..\..\src\graphics\GUI\Light.cpp" />
@@ -78,6 +80,7 @@
     <ClCompile Include="..\..\src\graphics\OpenGL\Texture.cpp" />
     <ClCompile Include="..\..\src\graphics\OpenGL\VertexArray.cpp" />
     <ClCompile Include="..\..\src\graphics\OpenGL\VertexBuffer.cpp" />
+    <ClCompile Include="..\..\src\graphics\plane.cpp" />
     <ClCompile Include="..\..\src\graphics\RenderTarget.cpp" />
     <ClCompile Include="..\..\src\graphics\RenderWorld.cpp" />
     <ClCompile Include="..\..\src\graphics\Text.cpp" />
@@ -196,6 +199,8 @@
     <ClInclude Include="..\..\src\Game.hpp" />
     <ClInclude Include="..\..\src\Gfx.hpp" />
     <ClInclude Include="..\..\src\graphics\Color.hpp" />
+    <ClInclude Include="..\..\src\graphics\default_view_frustum.hpp" />
+    <ClInclude Include="..\..\src\graphics\frustum.hpp" />
     <ClInclude Include="..\..\src\graphics\GUI\Base.hpp" />
     <ClInclude Include="..\..\src\graphics\GUI\Console.hpp" />
     <ClInclude Include="..\..\src\graphics\GUI\Light.hpp" />
@@ -209,6 +214,7 @@
     <ClInclude Include="..\..\src\graphics\GUI\Widget\Text.hpp" />
     <ClInclude Include="..\..\src\graphics\GUI\Widget\TextInput.hpp" />
     <ClInclude Include="..\..\src\graphics\Image.hpp" />
+    <ClInclude Include="..\..\src\graphics\null_frustum.hpp" />
     <ClInclude Include="..\..\src\graphics\OpenGL\Framebuffer.hpp" />
     <ClInclude Include="..\..\src\graphics\OpenGL\PushState.hpp" />
     <ClInclude Include="..\..\src\graphics\OpenGL\Renderbuffer.hpp" />
@@ -217,6 +223,7 @@
     <ClInclude Include="..\..\src\graphics\OpenGL\Texture.hpp" />
     <ClInclude Include="..\..\src\graphics\OpenGL\VertexArray.hpp" />
     <ClInclude Include="..\..\src\graphics\OpenGL\VertexBuffer.hpp" />
+    <ClInclude Include="..\..\src\graphics\plane.hpp" />
     <ClInclude Include="..\..\src\graphics\primitive.hpp" />
     <ClInclude Include="..\..\src\graphics\RenderTarget.hpp" />
     <ClInclude Include="..\..\src\graphics\RenderWorld.hpp" />

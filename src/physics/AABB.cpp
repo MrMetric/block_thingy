@@ -1,6 +1,8 @@
 #include "AABB.hpp"
 
+#include "fwd/chunk/Chunk.hpp"
 #include "position/BlockInWorld.hpp"
+#include "position/ChunkInWorld.hpp"
 
 namespace Physics {
 
@@ -19,6 +21,13 @@ AABB::AABB(const Position::BlockInWorld& block_pos)
 :
 	min(block_pos.x, block_pos.y, block_pos.z),
 	max(min + 1.0)
+{
+}
+
+AABB::AABB(const Position::ChunkInWorld& chunk_pos)
+:
+	min(chunk_pos.x * CHUNK_SIZE, chunk_pos.y * CHUNK_SIZE, chunk_pos.z * CHUNK_SIZE),
+	max(min + static_cast<double>(CHUNK_SIZE))
 {
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <tuple>
 
 #include <glm/mat4x4.hpp>
 
@@ -13,7 +14,10 @@
 
 namespace RenderWorld
 {
-	void draw_world
+	/**
+	 * @return The amount of chunks considered for drawing and the amount of chunks drawn
+	 */
+	std::tuple<uint64_t, uint64_t> draw_world
 	(
 		World&,
 		ResourceManager&,

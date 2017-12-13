@@ -80,6 +80,7 @@ struct Game::impl
 
 	double delta_time;
 	FPSManager fps;
+	std::tuple<uint64_t, uint64_t> draw_stats;
 
 	void find_hovered_block();
 
@@ -201,6 +202,8 @@ void Game::draw()
 		r->uniform("global_time", global_time);
 	});
 
+	pImpl->draw_stats = {0, 0};
+
 	if(pImpl->temp_gui != nullptr)
 	{
 		pImpl->temp_gui = nullptr;
@@ -316,7 +319,7 @@ void Game::draw_world
 
 	gfx.set_camera_view(cam_position, cam_rotation, projection_matrix);
 	Position::BlockInWorld render_origin(cam_position);
-	RenderWorld::draw_world
+	const std::tuple<uint64_t, uint64_t> draw_stats = RenderWorld::draw_world
 	(
 		world,
 		resource_manager,
@@ -324,6 +327,11 @@ void Game::draw_world
 		render_origin,
 		render_distance
 	);
+	pImpl->draw_stats =
+	{
+		std::get<0>(pImpl->draw_stats) + std::get<0>(draw_stats),
+		std::get<1>(pImpl->draw_stats) + std::get<1>(draw_stats),
+	};
 
 	if(hovered_block != nullptr && Settings::get<bool>("show_HUD"))
 	{
@@ -394,6 +402,11 @@ double Game::get_fps() const
 Position::ChunkInWorld::value_type Game::get_render_distance() const
 {
 	return render_distance;
+}
+
+std::tuple<uint64_t, uint64_t> Game::get_draw_stats() const
+{
+	return pImpl->draw_stats;
 }
 
 void Game::update_framebuffer_size(const window_size_t& window_size)

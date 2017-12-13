@@ -122,7 +122,6 @@ GPLv3, with one exception: creating non-free plugins is permitted. Opinions as t
 
 ## TODO
  * add a more useful error message for when game files are not found
- * add frustum culling for chunks
  * make block accesses faster (this will make meshing and light propagation faster)
  * add other meshing methods [[1]](http://0fps.net/2012/07/07/meshing-minecraft-part-2/) [[2]](https://blackflux.wordpress.com/2014/02/23/meshing-in-voxel-engines-part-1/)
  * allow using image formats other than PNG (JPEG, WebP, BMP, …)
