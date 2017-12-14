@@ -1,4 +1,4 @@
-namespace Physics
+namespace block_thingy::physics
 {
 	struct AABB;
 }

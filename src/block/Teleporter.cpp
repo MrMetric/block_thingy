@@ -2,11 +2,11 @@
 
 #include "block/Enum/VisibilityType.hpp"
 
-namespace Block {
+namespace block_thingy::block {
 
-Teleporter::Teleporter(const Enum::Type t)
+Teleporter::Teleporter(const enums::Type t)
 :
-	Base(t, Enum::VisibilityType::translucent, "teleporter")
+	Base(t, enums::VisibilityType::translucent, "teleporter")
 {
 }
 

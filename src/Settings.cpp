@@ -15,11 +15,13 @@
 
 using std::string;
 
-static std::map<string, Settings::value_t> settings;
+namespace block_thingy::settings {
 
-static string get_type_name(const Settings::value_t& s)
+static std::map<string, value_t> settings;
+
+static string get_type_name(const value_t& s)
 {
-	static_assert(std::is_same<Settings::value_t, strict_variant::variant<bool, double, int64_t, string>>::value);
+	static_assert(std::is_same<value_t, strict_variant::variant<bool, double, int64_t, string>>::value);
 	switch(s.which())
 	{
 		case 0: return "bool";
@@ -33,13 +35,13 @@ static string get_type_name(const Settings::value_t& s)
 
 static string get_type_name(const string& name)
 {
-	return get_type_name(Settings::get(name));
+	return get_type_name(get(name));
 }
 
 template<typename T>
 string get_type_name_T()
 {
-	const string name = Util::demangled_name<T>();
+	const string name = util::demangled_name<T>();
 	LOG(BUG) << "setting has unexpected type " << name << '\n';
 	return name;
 }
@@ -49,7 +51,7 @@ template<> string get_type_name_T<int64_t>() { return "int"; }
 template<> string get_type_name_T<string >() { return "string"; }
 
 template<typename T>
-bool Settings::has(const string& name)
+bool has(const string& name)
 {
 	const auto i = settings.find(name);
 	if(i == settings.cend())
@@ -60,7 +62,7 @@ bool Settings::has(const string& name)
 }
 
 template<typename T>
-T Settings::get(const string& name)
+T get(const string& name)
 {
 	const auto i = settings.find(name);
 	if(i == settings.cend())
@@ -76,7 +78,7 @@ T Settings::get(const string& name)
 }
 
 template<typename T>
-void Settings::set(const string& name, T value)
+void set(const string& name, T value)
 {
 	if(has<T>(name))
 	{
@@ -85,7 +87,7 @@ void Settings::set(const string& name, T value)
 			return;
 		}
 
-		const Settings::value_t old_value = get(name);
+		const value_t old_value = get(name);
 		settings[name] = std::move(value);
 		if(Game::instance != nullptr)
 		{
@@ -101,12 +103,12 @@ void Settings::set(const string& name, T value)
 	// TODO: event
 }
 
-bool Settings::has(const string& name)
+bool has(const string& name)
 {
 	return settings.find(name) != settings.cend();
 }
 
-Settings::value_t Settings::get(const string& name)
+value_t get(const string& name)
 {
 	const auto i = settings.find(name);
 	if(i == settings.cend())
@@ -116,7 +118,7 @@ Settings::value_t Settings::get(const string& name)
 	return i->second;
 }
 
-void Settings::load()
+void load()
 {
 	settings =
 	{
@@ -172,7 +174,7 @@ static string format_string(string s)
 	return s2;
 }
 
-void Settings::save()
+void save()
 {
 	std::ofstream f("scripts/settings");
 	f << std::boolalpha;
@@ -204,7 +206,7 @@ void Settings::save()
 	}
 }
 
-void Settings::add_command_handlers()
+void add_command_handlers()
 {
 	Console::instance->add_command("set_bool", {[]
 	(
@@ -227,14 +229,14 @@ void Settings::add_command_handlers()
 		const bool value = (value_str == "true");
 		try
 		{
-			Settings::set(name, value);
+			set(name, value);
 		}
 		catch(const std::runtime_error& e)
 		{
 			LOG(ERROR) << "error setting bool " << name << " = " << value << ": " << e.what() << '\n';
 			return;
 		}
-		if(Game::instance != nullptr) // not called from initial Settings::load()
+		if(Game::instance != nullptr) // not called from initial settings::load()
 		{
 			LOG(INFO) << "set bool: " << name << " = " << value << '\n';
 		}
@@ -254,15 +256,15 @@ void Settings::add_command_handlers()
 		bool value;
 		try
 		{
-			value = !Settings::get<bool>(name);
-			Settings::set(name, value);
+			value = !get<bool>(name);
+			set(name, value);
 		}
 		catch(const std::runtime_error& e)
 		{
 			LOG(ERROR) << "error toggling bool " << name << ": " << e.what() << '\n';
 			return;
 		}
-		if(Game::instance != nullptr) // not called from initial Settings::load()
+		if(Game::instance != nullptr) // not called from initial settings::load()
 		{
 			LOG(INFO) << "set bool: " << name << " = " << value << '\n';
 		}
@@ -280,7 +282,7 @@ void Settings::add_command_handlers()
 
 		const string name = args[0];
 		const string svalue = args[1];
-		double value = Settings::has<double>(name) ? Settings::get<double>(name) : 0;
+		double value = has<double>(name) ? get<double>(name) : 0;
 		if(svalue[0] == '+')
 		{
 			value += std::stod(svalue.substr(1));
@@ -309,14 +311,14 @@ void Settings::add_command_handlers()
 
 		try
 		{
-			Settings::set<double>(name, value);
+			set<double>(name, value);
 		}
 		catch(const std::runtime_error& e)
 		{
 			LOG(ERROR) << "error setting float " << name << " = " << value << ": " << e.what() << '\n';
 			return;
 		}
-		if(Game::instance != nullptr) // not called from initial Settings::load()
+		if(Game::instance != nullptr) // not called from initial settings::load()
 		{
 			LOG(INFO) << "set float: " << name << " = " << value << '\n';
 		}
@@ -334,7 +336,7 @@ void Settings::add_command_handlers()
 
 		const string name = args[0];
 		const string svalue = args[1];
-		int64_t value = Settings::has<int64_t>(name) ? Settings::get<int64_t>(name) : 0;
+		int64_t value = has<int64_t>(name) ? get<int64_t>(name) : 0;
 		if(svalue[0] == '+')
 		{
 			value += std::stoll(svalue.substr(1));
@@ -346,14 +348,14 @@ void Settings::add_command_handlers()
 
 		try
 		{
-			Settings::set<int64_t>(name, value);
+			set<int64_t>(name, value);
 		}
 		catch(const std::runtime_error& e)
 		{
 			LOG(ERROR) << "error setting int " << name << " = " << value << ": " << e.what() << '\n';
 			return;
 		}
-		if(Game::instance != nullptr) // not called from initial Settings::load()
+		if(Game::instance != nullptr) // not called from initial settings::load()
 		{
 			LOG(INFO) << "set int: " << name << " = " << value << '\n';
 		}
@@ -373,16 +375,18 @@ void Settings::add_command_handlers()
 		const string value = args[1];
 		try
 		{
-			Settings::set(name, value);
+			set(name, value);
 		}
 		catch(const std::runtime_error& e)
 		{
 			LOG(ERROR) << "error setting string " << name << " = " << value << ": " << e.what() << '\n';
 			return;
 		}
-		if(Game::instance != nullptr) // not called from initial Settings::load()
+		if(Game::instance != nullptr) // not called from initial settings::load()
 		{
 			LOG(INFO) << "set string: " << name << " = " << value << '\n';
 		}
 	}});
+}
+
 }

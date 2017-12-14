@@ -9,12 +9,12 @@
 #include "fwd/graphics/GUI/Widget/TextInput.hpp"
 #include "position/BlockInWorld.hpp"
 
-namespace Graphics::GUI {
+namespace block_thingy::graphics::gui {
 
 class Light : public Base
 {
 public:
-	Light(Game&, World&, Block::Light&, const Position::BlockInWorld&);
+	Light(Game&, World&, block::Light&, const position::BlockInWorld&);
 
 	std::string type() const override;
 
@@ -23,10 +23,10 @@ public:
 
 private:
 	World& world;
-	Block::Light& block;
-	Position::BlockInWorld block_pos;
+	block::Light& block;
+	position::BlockInWorld block_pos;
 
-	void on_change(uint_fast8_t, Widget::TextInput&, const std::string&);
+	void on_change(uint_fast8_t, widget::TextInput&, const std::string&);
 };
 
 }

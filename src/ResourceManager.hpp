@@ -14,6 +14,8 @@
 #include "shim/propagate_const.hpp"
 #include "util/filesystem.hpp"
 
+namespace block_thingy {
+
 template<typename T>
 class Resource
 {
@@ -86,17 +88,19 @@ public:
 	bool texture_has_transparency(const fs::path&);
 
 	bool has_Image(const fs::path&) const;
-	Resource<Graphics::Image> get_Image(const fs::path&, bool reload = false);
+	Resource<graphics::Image> get_Image(const fs::path&, bool reload = false);
 
 	bool has_ShaderObject(const fs::path&) const;
-	Resource<Graphics::OpenGL::ShaderObject> get_ShaderObject(fs::path, bool reload = false);
+	Resource<graphics::opengl::ShaderObject> get_ShaderObject(fs::path, bool reload = false);
 
 	bool has_ShaderProgram(const fs::path&) const;
 	// TODO: shaders can be constructed with a file list
-	Resource<Graphics::OpenGL::ShaderProgram> get_ShaderProgram(const fs::path&, bool reload = false);
-	void foreach_ShaderProgram(const std::function<void(Resource<Graphics::OpenGL::ShaderProgram>)>&);
+	Resource<graphics::opengl::ShaderProgram> get_ShaderProgram(const fs::path&, bool reload = false);
+	void foreach_ShaderProgram(const std::function<void(Resource<graphics::opengl::ShaderProgram>)>&);
 
 private:
 	struct impl;
 	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };
+
+}

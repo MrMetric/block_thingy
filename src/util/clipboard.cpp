@@ -8,7 +8,7 @@
 
 using std::string;
 
-namespace Util::Clipboard {
+namespace block_thingy::util::clipboard {
 
 string get_text()
 {
@@ -27,7 +27,7 @@ void set_text(const string& s)
 
 void set_text(const std::u32string& s)
 {
-	set_text(Util::utf32_to_utf8(s));
+	set_text(utf32_to_utf8(s));
 }
 
 }

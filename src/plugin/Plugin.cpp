@@ -8,6 +8,8 @@
 
 using std::string;
 
+namespace block_thingy {
+
 struct Plugin::impl
 {
 	impl(const fs::path& path)
@@ -95,4 +97,6 @@ void Plugin::init(Game& game)
 	init(game);
 	LOG(INFO) << "initialized " << pImpl->path.u8string() << '\n';
 #endif
+}
+
 }

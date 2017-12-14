@@ -25,6 +25,8 @@
 using std::string;
 using std::unique_ptr;
 
+namespace block_thingy {
+
 #ifdef _WIN32
 class CodePageHandler
 {
@@ -46,7 +48,7 @@ class CodePageHandler
 
 static void log_exception(const std::exception& error)
 {
-	LOG(ERROR) << "uncaught exception (" << Util::demangled_name(error) << ")\n"
+	LOG(ERROR) << "uncaught exception (" << util::demangled_name(error) << ")\n"
 			   << "  what():  " << error.what() << '\n';
 }
 
@@ -54,6 +56,10 @@ static void error_callback(const int error, const char* description)
 {
 	LOG(ERROR) << "GLFW error " << error << ": " << description << '\n';
 }
+
+}
+
+using namespace block_thingy;
 
 int main(const int argc, char** argv)
 {
@@ -87,7 +93,7 @@ int main(const int argc, char** argv)
 	LOG(INFO) << "This is a debug build\n";
 #endif
 
-	const string compiler_info = Util::compiler_info();
+	const string compiler_info = util::compiler_info();
 	if(compiler_info != "")
 	{
 		LOG(DEBUG) << "Compiled by " << compiler_info << '\n';
@@ -128,8 +134,8 @@ int main(const int argc, char** argv)
 
 	unique_ptr<Console> console = std::make_unique<Console>();
 	// maybe Settings should have a constructor
-	Settings::add_command_handlers();
-	Settings::load();
+	settings::add_command_handlers();
+	settings::load();
 
 	unique_ptr<PluginManager> plugin_manager = std::make_unique<PluginManager>();
 	unique_ptr<Game> game = std::make_unique<Game>();

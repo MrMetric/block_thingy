@@ -11,9 +11,9 @@
 #include "position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 
-using Block::Enum::Face;
+namespace block_thingy::mesher {
 
-namespace Mesher {
+using block::enums::Face;
 
 mesh_vertex_t::mesh_vertex_t()
 {
@@ -22,7 +22,7 @@ mesh_vertex_t::mesh_vertex_t()
 mesh_vertex_t::mesh_vertex_t
 (
 	const vertex_coord_t<uint8_t>& pos,
-	const Block::Enum::Face face,
+	const block::enums::Face face,
 	const uint8_t rotation,
 	const uint16_t tex_index
 )
@@ -126,7 +126,7 @@ Side Base::to_side(const Face face)
 	return (face == Face::top || face == Face::front || face == Face::right) ? Side::top : Side::bottom;
 }
 
-const Block::Base& Base::block_at
+const block::Base& Base::block_at
 (
 	const Chunk& chunk,
 	const int_fast16_t x,
@@ -138,13 +138,13 @@ const Block::Base& Base::block_at
 	|| y < 0 || y >= CHUNK_SIZE
 	|| z < 0 || z >= CHUNK_SIZE)
 	{
-		Position::BlockInWorld block_pos(chunk.get_position(), {0, 0, 0});
+		position::BlockInWorld block_pos(chunk.get_position(), {0, 0, 0});
 		block_pos.x += x;
 		block_pos.y += y;
 		block_pos.z += z;
 		return *chunk.get_owner().get_block(block_pos);
 	}
-	#define s(a) static_cast<Position::BlockInChunk::value_type>(a)
+	#define s(a) static_cast<position::BlockInChunk::value_type>(a)
 	return *chunk.get_block({s(x), s(y), s(z)});
 	#undef s
 }
@@ -152,15 +152,15 @@ const Block::Base& Base::block_at
 bool Base::block_visible_from
 (
 	const Chunk& chunk,
-	const Block::Base& block,
+	const block::Base& block,
 	const int_fast16_t x,
 	const int_fast16_t y,
 	const int_fast16_t z
 )
 {
-	const Block::Base& sibling = block_at(chunk, x, y, z);
+	const block::Base& sibling = block_at(chunk, x, y, z);
 	return
-		   sibling.type() != Block::Enum::Type::none
+		   sibling.type() != block::enums::Type::none
 		&& !block.is_invisible() // this block is visible
 		&& !sibling.is_opaque() // this block can be seen thru the adjacent block
 		&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks (of the same type)

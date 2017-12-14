@@ -7,7 +7,7 @@
 #include "ChunkInWorld.hpp"
 #include "chunk/Chunk.hpp"
 
-namespace Position {
+namespace block_thingy::position {
 
 BlockInWorld::BlockInWorld()
 :
@@ -74,7 +74,7 @@ BlockInWorld operator+(const BlockInWorld& pos1, const BlockInWorld& pos2)
 
 BlockInWorld operator+(const BlockInWorld& pos, const glm::ivec3& vec)
 {
-	return Position::BlockInWorld(pos.x + vec.x, pos.y + vec.y, pos.z + vec.z);
+	return BlockInWorld(pos.x + vec.x, pos.y + vec.y, pos.z + vec.z);
 }
 
 std::ostream& operator<<(std::ostream& o, const BlockInWorld& pos)

@@ -5,7 +5,7 @@
 
 #include "fwd/Game.hpp"
 
-namespace Graphics::GUI {
+namespace block_thingy::graphics::gui {
 
 class Play : public Base
 {
@@ -18,8 +18,8 @@ public:
 	void close() override;
 	void draw() override;
 
-	void keypress(const Util::key_press&) override;
-	void mousepress(const Util::mouse_press&) override;
+	void keypress(const util::key_press&) override;
+	void mousepress(const util::mouse_press&) override;
 	void mousemove(double x, double y) override;
 	void joypress(int joystick, int button, bool pressed) override;
 	void joymove(const glm::dvec2& motion) override;

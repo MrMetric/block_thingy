@@ -5,7 +5,7 @@
 
 #include <glm/geometric.hpp>
 
-namespace Graphics {
+namespace block_thingy::graphics {
 
 default_view_frustum::default_view_frustum
 (
@@ -108,7 +108,7 @@ bool default_view_frustum::inside(const glm::dvec3& point) const
 	return true;
 }
 
-bool default_view_frustum::inside(const Physics::AABB& aabb) const
+bool default_view_frustum::inside(const physics::AABB& aabb) const
 {
 	for(const plane& p : planes)
 	{

@@ -1,1 +1,4 @@
-class Game;
+namespace block_thingy
+{
+	class Game;
+}

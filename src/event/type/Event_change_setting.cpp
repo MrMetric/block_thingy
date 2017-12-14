@@ -2,11 +2,13 @@
 
 #include "event/EventType.hpp"
 
+namespace block_thingy {
+
 Event_change_setting::Event_change_setting
 (
 	const std::string& name,
-	const Settings::value_t old_value,
-	const Settings::value_t new_value
+	const settings::value_t old_value,
+	const settings::value_t new_value
 )
 :
 	Event(EventType::change_setting),
@@ -14,4 +16,6 @@ Event_change_setting::Event_change_setting
 	old_value(old_value),
 	new_value(new_value)
 {
+}
+
 }

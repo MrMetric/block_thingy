@@ -46,6 +46,8 @@
   * That's it! =D
   */
 
+namespace block_thingy {
+
 class FPSManager
 {
 private:
@@ -126,3 +128,5 @@ public:
 		return currentFPS;
 	}
 };
+
+}

@@ -7,6 +7,8 @@
 #include "fwd/World.hpp"
 #include "fwd/block/Base.hpp"
 
+namespace block_thingy {
+
 class Event_enter_block : public Event
 {
 public:
@@ -14,10 +16,12 @@ public:
 	(
 		World&,
 		Player&,
-		std::shared_ptr<Block::Base>
+		std::shared_ptr<block::Base>
 	);
 
 	World& world;
 	Player& player;
-	std::shared_ptr<Block::Base> block;
+	std::shared_ptr<block::Base> block;
 };
+
+}

@@ -5,17 +5,21 @@
 #include "block/Enum/Face.hpp"
 #include "position/BlockInWorld.hpp"
 
+namespace block_thingy::physics {
+
 struct RaycastHit
 {
 	RaycastHit
 	(
-		const Position::BlockInWorld& pos,
+		const position::BlockInWorld& pos,
 		const glm::ivec3& face
 	);
 
-	Position::BlockInWorld pos;
+	position::BlockInWorld pos;
 	glm::ivec3 face_vec;
 
-	Position::BlockInWorld adjacent() const;
-	Block::Enum::Face face() const;
+	position::BlockInWorld adjacent() const;
+	block::enums::Face face() const;
 };
+
+}

@@ -3,7 +3,7 @@
 #include <cassert>
 #include <ostream>
 
-namespace Block::Enum {
+namespace block_thingy::block::enums {
 
 std::ostream& operator<<(std::ostream& o, const VisibilityType t)
 {

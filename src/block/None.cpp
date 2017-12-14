@@ -2,11 +2,11 @@
 
 #include "block/Enum/VisibilityType.hpp"
 
-namespace Block {
+namespace block_thingy::block {
 
-None::None(const Enum::Type t)
+None::None(const enums::Type t)
 :
-	Base(t, Enum::VisibilityType::invisible)
+	Base(t, enums::VisibilityType::invisible)
 {
 }
 

@@ -2,7 +2,7 @@
 
 #include "util/key_mods.hpp"
 
-namespace Util {
+namespace block_thingy::util {
 
 struct mouse_press
 {

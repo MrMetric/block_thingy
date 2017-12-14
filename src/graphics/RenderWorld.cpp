@@ -22,16 +22,18 @@
 using std::shared_ptr;
 using std::string;
 
-using Graphics::OpenGL::ShaderProgram;
-using Position::BlockInWorld;
-using Position::ChunkInWorld;
+namespace block_thingy::graphics {
 
-std::tuple<uint64_t, uint64_t> RenderWorld::draw_world
+using graphics::opengl::ShaderProgram;
+using position::BlockInWorld;
+using position::ChunkInWorld;
+
+std::tuple<uint64_t, uint64_t> draw_world
 (
 	World& world,
 	ResourceManager& resource_manager,
 	const glm::dmat4& vp_matrix_,
-	const Position::BlockInWorld& origin,
+	const position::BlockInWorld& origin,
 	const ChunkInWorld::value_type render_distance
 )
 {
@@ -40,35 +42,35 @@ std::tuple<uint64_t, uint64_t> RenderWorld::draw_world
 	const ChunkInWorld camera_chunk{BlockInWorld(camera_position)};
 
 	const glm::mat4 vp_matrix(vp_matrix_);
-	resource_manager.foreach_ShaderProgram([&vp_matrix](Resource<Graphics::OpenGL::ShaderProgram> r)
+	resource_manager.foreach_ShaderProgram([&vp_matrix](Resource<graphics::opengl::ShaderProgram> r)
 	{
 	#ifdef _WIN32
-		if(Util::string_starts_with(r.get_id(), "shaders\\block\\"))
+		if(util::string_starts_with(r.get_id(), "shaders\\block\\"))
 	#else
-		if(Util::string_starts_with(r.get_id(), "shaders/block/"))
+		if(util::string_starts_with(r.get_id(), "shaders/block/"))
 	#endif
 		{
 			r->uniform("mvp_matrix", vp_matrix);
 		}
 	});
 
-	std::unique_ptr<Graphics::frustum> frustum;
-	if(Settings::get<bool>("frustum_culling"))
+	std::unique_ptr<frustum> frustum_;
+	if(settings::get<bool>("frustum_culling"))
 	{
-		const string projection_type = Settings::get<string>("projection_type");
+		const string projection_type = settings::get<string>("projection_type");
 		const glm::dvec3& pos = Gfx::instance->graphical_position;
 		const glm::dvec3 rot = glm::radians(camera_rotation);
-		const double near = Settings::get<double>("near_plane");
-		const double far = Settings::get<double>("far_plane");
-		const double fov = glm::radians(Settings::get<double>("fov"));
+		const double near = settings::get<double>("near_plane");
+		const double far = settings::get<double>("far_plane");
+		const double fov = glm::radians(settings::get<double>("fov"));
 		const double ratio = static_cast<double>(Gfx::instance->window_size.x) / Gfx::instance->window_size.y;
 		if(projection_type == "default")
 		{
-			frustum = std::make_unique<Graphics::default_view_frustum>(pos, rot, near, far, fov, ratio);
+			frustum_ = std::make_unique<default_view_frustum>(pos, rot, near, far, fov, ratio);
 		}
 		else if(projection_type == "infinite")
 		{
-			frustum = std::make_unique<Graphics::default_view_frustum>(pos, rot, near, fov, ratio);
+			frustum_ = std::make_unique<default_view_frustum>(pos, rot, near, fov, ratio);
 		}
 		else if(projection_type == "ortho")
 		{
@@ -77,16 +79,16 @@ std::tuple<uint64_t, uint64_t> RenderWorld::draw_world
 		// note that no frustum is set if projection_type is an invalid value,
 		// but the default projection type is used for rendering
 	}
-	if(frustum == nullptr)
+	if(frustum_ == nullptr)
 	{
-		frustum = std::make_unique<Graphics::null_frustum<true>>();
+		frustum_ = std::make_unique<null_frustum<true>>();
 	}
 
 	const ChunkInWorld chunk_pos(origin);
 	const ChunkInWorld min = chunk_pos - render_distance;
 	const ChunkInWorld max = chunk_pos + render_distance;
 
-	const bool show_chunk_outlines = Settings::get<bool>("show_chunk_outlines");
+	const bool show_chunk_outlines = settings::get<bool>("show_chunk_outlines");
 
 	std::vector<std::shared_ptr<Chunk>> drawn_chunks;
 
@@ -96,8 +98,8 @@ std::tuple<uint64_t, uint64_t> RenderWorld::draw_world
 	for(pos.z = min.z; pos.z <= max.z; ++pos.z)
 	{
 		const ChunkInWorld gpos(pos - camera_chunk);
-		const Physics::AABB aabb(gpos);
-		if(!frustum->inside(aabb))
+		const physics::AABB aabb(gpos);
+		if(!frustum_->inside(aabb))
 		{
 			continue;
 		}
@@ -146,4 +148,6 @@ std::tuple<uint64_t, uint64_t> RenderWorld::draw_world
 	total = total * total * total;
 	const uint64_t drawn = static_cast<uint64_t>(drawn_chunks.size());
 	return {total, drawn};
+}
+
 }

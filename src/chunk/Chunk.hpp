@@ -10,12 +10,14 @@
 #include "fwd/position/ChunkInWorld.hpp"
 #include "shim/propagate_const.hpp"
 
-using chunk_blocks_t = ChunkData<std::shared_ptr<Block::Base>>;
+namespace block_thingy {
+
+using chunk_blocks_t = ChunkData<std::shared_ptr<block::Base>>;
 
 class Chunk
 {
 public:
-	Chunk(const Position::ChunkInWorld&, World& owner);
+	Chunk(const position::ChunkInWorld&, World& owner);
 	~Chunk();
 
 	Chunk(Chunk&&) = delete;
@@ -24,23 +26,23 @@ public:
 	Chunk& operator=(const Chunk&) = delete;
 
 	World& get_owner() const; // eeh
-	Position::ChunkInWorld get_position() const;
+	position::ChunkInWorld get_position() const;
 
-	const std::shared_ptr<Block::Base> get_block(const Position::BlockInChunk&) const;
-	std::shared_ptr<Block::Base> get_block(const Position::BlockInChunk&);
+	const std::shared_ptr<block::Base> get_block(const position::BlockInChunk&) const;
+	std::shared_ptr<block::Base> get_block(const position::BlockInChunk&);
 
-	void set_block(const Position::BlockInChunk&, const std::shared_ptr<Block::Base>);
+	void set_block(const position::BlockInChunk&, const std::shared_ptr<block::Base>);
 
-	Graphics::Color get_blocklight(const Position::BlockInChunk&) const;
-	void set_blocklight(const Position::BlockInChunk&, const Graphics::Color&);
-	void set_texbuflight(const glm::ivec3& pos, const Graphics::Color&);
+	graphics::Color get_blocklight(const position::BlockInChunk&) const;
+	void set_blocklight(const position::BlockInChunk&, const graphics::Color&);
+	void set_texbuflight(const glm::ivec3& pos, const graphics::Color&);
 
 	void update();
 	void render(bool transluscent_pass);
 
 	// for loading
 	void set_blocks(chunk_blocks_t);
-	void set_blocks(std::shared_ptr<Block::Base>);
+	void set_blocks(std::shared_ptr<block::Base>);
 
 	// for msgpack
 	template<typename T> void save(T&) const;
@@ -54,3 +56,5 @@ private:
 	struct impl;
 	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };
+
+}

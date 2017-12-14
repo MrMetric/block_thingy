@@ -19,6 +19,8 @@
 
 using std::unique_ptr;
 
+namespace block_thingy::physics {
+
 constexpr double infinity = std::numeric_limits<double>::infinity();
 
 // like fmod(a, 1), but always returns a positive number
@@ -78,7 +80,7 @@ static glm::dvec3 delta(const glm::dvec3& direction)
 }
 
 // http://www.opengl-tutorial.org/miscellaneous/clicking-on-objects/picking-with-a-physics-library/
-void PhysicsUtil::ScreenPosToWorldRay
+void ScreenPosToWorldRay
 (
 	const glm::dvec2& mouse,              // Mouse position, in pixels, from bottom-left corner of the window
 	const window_size_t& screen_size,     // Window size, in pixels
@@ -134,7 +136,7 @@ void PhysicsUtil::ScreenPosToWorldRay
 	out_direction = lRayDir_world;
 }
 
-static bool pos_in_bounds(const Position::BlockInWorld& pos, const glm::dvec3& min, const glm::dvec3& max)
+static bool pos_in_bounds(const position::BlockInWorld& pos, const glm::dvec3& min, const glm::dvec3& max)
 {
 	return !(pos.x < min.x || pos.y < min.y || pos.z < min.z || pos.x > max.x || pos.y > max.y || pos.z > max.z);
 }
@@ -151,7 +153,7 @@ static bool pos_in_bounds(const Position::BlockInWorld& pos, const glm::dvec3& m
  *
  * If the callback returns a true value, the traversal will be stopped.
  */
-unique_ptr<RaycastHit> PhysicsUtil::raycast
+unique_ptr<RaycastHit> raycast
 (
 	const World& world,
 	const glm::dvec3& origin,
@@ -183,7 +185,7 @@ unique_ptr<RaycastHit> PhysicsUtil::raycast
 		return nullptr;
 	}
 
-	Position::BlockInWorld cube_pos(origin);
+	position::BlockInWorld cube_pos(origin);
 
 	// Direction to increment x,y,z when stepping.
 	const glm::ivec3 step(glm::sign(direction));
@@ -227,4 +229,6 @@ unique_ptr<RaycastHit> PhysicsUtil::raycast
 
 	// there is no cube in range
 	return nullptr;
+}
+
 }

@@ -4,7 +4,7 @@
 
 #include "physics/AABB.hpp"
 
-namespace Graphics {
+namespace block_thingy::graphics {
 
 plane::plane()
 :
@@ -24,7 +24,7 @@ double plane::distance(const glm::dvec3& x) const
 	return d + glm::dot(normal, x);
 }
 
-double plane::distance_p(const Physics::AABB& aabb) const
+double plane::distance_p(const physics::AABB& aabb) const
 {
 	return distance
 	({
@@ -34,7 +34,7 @@ double plane::distance_p(const Physics::AABB& aabb) const
 	});
 }
 
-double plane::distance_n(const Physics::AABB& aabb) const
+double plane::distance_n(const physics::AABB& aabb) const
 {
 	return distance
 	({

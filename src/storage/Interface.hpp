@@ -19,7 +19,7 @@ packer<zstr::ostream>& packer<zstr::ostream>::pack(const msgpack::sbuffer& v);
 } // namespace v1
 } // namespace msgpack
 
-namespace Storage {
+namespace block_thingy::storage {
 
 msgpack::object_handle copy_object(const msgpack::object&);
 

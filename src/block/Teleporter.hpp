@@ -1,12 +1,12 @@
 #pragma once
 #include "Base.hpp"
 
-namespace Block {
+namespace block_thingy::block {
 
 class Teleporter : public Base
 {
 public:
-	Teleporter(Enum::Type);
+	Teleporter(enums::Type);
 
 	bool is_solid() const override;
 };

@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <unordered_map>
 
-namespace Position {
+namespace block_thingy::position {
 
 template<typename T>
 uint64_t hasher(const T& pos)

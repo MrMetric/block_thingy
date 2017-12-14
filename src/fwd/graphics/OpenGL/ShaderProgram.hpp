@@ -1,4 +1,4 @@
-namespace Graphics::OpenGL
+namespace block_thingy::graphics::opengl
 {
 	class ShaderProgram;
 }

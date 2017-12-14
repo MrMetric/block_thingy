@@ -11,7 +11,7 @@
 
 #include <glm/vec3.hpp>
 
-namespace Graphics {
+namespace block_thingy::graphics {
 
 struct Color
 {
@@ -28,7 +28,7 @@ struct Color
 	#ifdef DEBUG_BUILD
 		if(i > 2)
 		{
-			throw std::out_of_range("Graphics::Color::operator[]: " + std::to_string(i) + " > 2");
+			throw std::out_of_range("graphics::Color::operator[]: " + std::to_string(i) + " > 2");
 		}
 	#endif
 		return (&r)[i];
@@ -39,7 +39,7 @@ struct Color
 	#ifdef DEBUG_BUILD
 		if(i > 2)
 		{
-			throw std::out_of_range("Graphics::Color::operator[]: " + std::to_string(i) + " > 2");
+			throw std::out_of_range("graphics::Color::operator[]: " + std::to_string(i) + " > 2");
 		}
 	#endif
 		return (&r)[i];

@@ -6,20 +6,20 @@
 
 #include <msgpack.hpp>
 
-namespace Block {
+namespace block_thingy::block {
 
 class Unknown : public Base
 {
 public:
-	Unknown(Enum::Type);
-	Unknown(Enum::Type, const std::string& strid);
+	Unknown(enums::Type);
+	Unknown(enums::Type, const std::string& strid);
 
 	Unknown& operator=(const Base&) override;
 
 	std::string name() const override;
 
-	void save(Storage::OutputInterface&) const override;
-	void load(Storage::InputInterface&) override;
+	void save(storage::OutputInterface&) const override;
+	void load(storage::InputInterface&) override;
 
 private:
 	std::string strid;

@@ -9,6 +9,8 @@
 
 using std::to_string;
 
+namespace block_thingy {
+
 EventManager::EventManager()
 :
 	max_id(0)
@@ -51,4 +53,6 @@ void EventManager::do_event(const Event& event) const
 			pair1.second(event);
 		}
 	}
+}
+
 }

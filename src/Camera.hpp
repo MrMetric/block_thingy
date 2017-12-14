@@ -5,6 +5,8 @@
 
 #include "fwd/Gfx.hpp"
 
+namespace block_thingy {
+
 class Camera
 {
 public:
@@ -26,3 +28,5 @@ private:
 
 	Gfx& gfx;
 };
+
+}

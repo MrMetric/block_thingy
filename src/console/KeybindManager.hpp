@@ -8,6 +8,8 @@
 #include "fwd/util/key_press.hpp"
 #include "fwd/util/mouse_press.hpp"
 
+namespace block_thingy {
+
 class KeybindManager
 {
 public:
@@ -23,8 +25,8 @@ public:
 	void bind_key(const std::string& key, const std::string& command);
 	void unbind_key(int key);
 
-	void keypress(const Util::key_press&);
-	void mousepress(const Util::mouse_press&);
+	void keypress(const util::key_press&);
+	void mousepress(const util::mouse_press&);
 	void joypress(int joystick, int button, bool pressed);
 
 	static int translate_key(std::string key);
@@ -35,3 +37,5 @@ private:
 	std::unordered_map<int, std::string> release_auto;
 	std::unordered_map<int, uint_fast32_t> joystate;
 };
+
+}

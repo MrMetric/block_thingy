@@ -27,6 +27,8 @@
 #include "fwd/util/key_press.hpp"
 #include "fwd/util/mouse_press.hpp"
 
+namespace block_thingy {
+
 class Game
 {
 public:
@@ -66,13 +68,13 @@ public:
 		const glm::dmat4& cam_rotation,
 		const glm::dmat4& projection_matrix
 	);
-	void open_gui(std::unique_ptr<Graphics::GUI::Base>);
+	void open_gui(std::unique_ptr<graphics::gui::Base>);
 	void close_gui();
 	void quit();
 
 	void screenshot(fs::path) const;
 	double get_fps() const;
-	Position::ChunkInWorld::value_type get_render_distance() const;
+	position::ChunkInWorld::value_type get_render_distance() const;
 
 	/**
 	 * @return The amount of chunks considered for drawing and the amount of chunks drawn in the last frame
@@ -80,15 +82,15 @@ public:
 	std::tuple<uint64_t, uint64_t> get_draw_stats() const;
 
 	void update_framebuffer_size(const window_size_t&);
-	void keypress(const Util::key_press&);
-	void charpress(const Util::char_press&);
-	void mousepress(const Util::mouse_press&);
+	void keypress(const util::key_press&);
+	void charpress(const util::char_press&);
+	void mousepress(const util::mouse_press&);
 	void mousemove(double x, double y);
 	void joypress(int joystick, int button, bool pressed);
 	void joymove(const glm::dvec2& motion);
 
-	std::shared_ptr<Block::Base> copied_block;
-	std::unique_ptr<RaycastHit> hovered_block;
+	std::shared_ptr<block::Base> copied_block;
+	std::unique_ptr<physics::RaycastHit> hovered_block;
 
 	ResourceManager resource_manager;
 
@@ -97,16 +99,18 @@ public:
 	Gfx gfx;
 
 	Camera camera;
-	Block::BlockRegistry block_registry; // must be initialized before world
+	block::BlockRegistry block_registry; // must be initialized before world
 	World world;
 	std::shared_ptr<Player> player_ptr;
 	Player& player;
 	KeybindManager keybinder;
-	std::unique_ptr<Graphics::GUI::Base> gui;
+	std::unique_ptr<graphics::gui::Base> gui;
 
 private:
-	Position::ChunkInWorld::value_type render_distance;
+	position::ChunkInWorld::value_type render_distance;
 
 	struct impl;
 	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };
+
+}

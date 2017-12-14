@@ -12,7 +12,7 @@
 #include "BlockInWorld.hpp"
 #include "fwd/chunk/Chunk.hpp"
 
-namespace Position {
+namespace block_thingy::position {
 
 BlockInChunk::BlockInChunk()
 :
@@ -86,7 +86,7 @@ void BlockInChunk::check_bounds()
 	|| z >= CHUNK_SIZE)
 	{
 		std::ostringstream ss;
-		ss << "Position::BlockInChunk has invalid coordinates: (" << +x << ',' << +y << ',' << +z << ')';
+		ss << "position::BlockInChunk has invalid coordinates: (" << +x << ',' << +y << ',' << +z << ')';
 		throw std::logic_error(ss.str());
 	}
 }

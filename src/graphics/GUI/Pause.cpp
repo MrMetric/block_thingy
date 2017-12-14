@@ -12,7 +12,7 @@
 
 using std::string;
 
-namespace Graphics::GUI {
+namespace block_thingy::graphics::gui {
 
 Pause::Pause(Game& game)
 :
@@ -35,7 +35,7 @@ void Pause::draw()
 	parent->draw();
 
 	{
-		OpenGL::PushState<GLboolean> depth_test(GL_DEPTH_TEST, false);
+		opengl::PushState<GLboolean> depth_test(GL_DEPTH_TEST, false);
 		Gfx::instance->draw_rectangle({0, 0}, static_cast<glm::dvec2>(Gfx::instance->window_size), {0, 0, 0, 0.3});
 	}
 

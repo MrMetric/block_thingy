@@ -26,7 +26,7 @@
 using std::shared_ptr;
 using std::string;
 
-namespace Graphics::GUI {
+namespace block_thingy::graphics::gui {
 
 Play::Play(Game& game)
 :
@@ -61,12 +61,12 @@ void Play::draw()
 	Base::draw();
 }
 
-void Play::keypress(const Util::key_press& press)
+void Play::keypress(const util::key_press& press)
 {
 	game.keybinder.keypress(press);
 }
 
-void Play::mousepress(const Util::mouse_press& press)
+void Play::mousepress(const util::mouse_press& press)
 {
 	game.keybinder.mousepress(press);
 }
@@ -89,11 +89,11 @@ void Play::joymove(const glm::dvec2& motion)
 
 void Play::draw_gui()
 {
-	if(Settings::get<bool>("show_HUD"))
+	if(settings::get<bool>("show_HUD"))
 	{
 		draw_crosshair();
 	}
-	if(Settings::get<bool>("show_debug_info"))
+	if(settings::get<bool>("show_debug_info"))
 	{
 		draw_debug_text();
 	}
@@ -134,8 +134,8 @@ void Play::draw_debug_text()
 		ss << '\n';
 	}
 
-	ss << "field of view: " << Settings::get<double>("fov") << '\n';
-	ss << "projection type: " << Settings::get<string>("projection_type") << '\n';
+	ss << "field of view: " << settings::get<double>("fov") << '\n';
+	ss << "projection type: " << settings::get<string>("projection_type") << '\n';
 
 	const glm::dvec3 pos = game.player.position();
 	ss << "position: " << pos << '\n';
@@ -143,20 +143,20 @@ void Play::draw_debug_text()
 	std::ostringstream ss2;
 	ss2 << glm::io::precision(0);
 	ss2 << glm::io::width(5);
-	const Position::BlockInWorld player_block_pos(pos);
+	const position::BlockInWorld player_block_pos(pos);
 	ss2 << "\tblock in world: "
-		<< static_cast<Position::BlockInWorld::vec_type>(player_block_pos) << '\n';
+		<< static_cast<position::BlockInWorld::vec_type>(player_block_pos) << '\n';
 	ss2 << "\tchunk in world: "
-		<< static_cast<Position::ChunkInWorld::vec_type>(Position::ChunkInWorld(player_block_pos)) << '\n';
+		<< static_cast<position::ChunkInWorld::vec_type>(position::ChunkInWorld(player_block_pos)) << '\n';
 	ss2 << "\tblock in chunk: "
-		<< static_cast<Position::BlockInChunk::vec_type>(Position::BlockInChunk(player_block_pos)) << '\n';
+		<< static_cast<position::BlockInChunk::vec_type>(position::BlockInChunk(player_block_pos)) << '\n';
 	ss << ss2.str();
 
 	ss << "rotation: " << game.camera.rotation << '\n';
 	ss << "ticks: " << game.world.get_ticks() << '\n';
 	ss << "time: " << game.world.get_time() << '\n';
 	ss << "noclip: " << game.player.get_noclip() << '\n';
-	auto show_block = [](const Block::Base& block) -> string
+	auto show_block = [](const block::Base& block) -> string
 	{
 		std::ostringstream ss;
 		ss << block.name() << " (" << block.type() << ')';
@@ -168,7 +168,7 @@ void Play::draw_debug_text()
 	}
 	if(game.hovered_block != nullptr)
 	{
-		const shared_ptr<Block::Base> hovered = game.world.get_block(game.hovered_block->pos);
+		const shared_ptr<block::Base> hovered = game.world.get_block(game.hovered_block->pos);
 		ss << "hovered: " << show_block(*hovered) << '\n';
 		ss << "\tface: " << game.hovered_block->face() << '\n';
 		ss << "\trotation: " << glm::io::width(2) << hovered->rotation() << '\n';

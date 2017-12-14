@@ -5,9 +5,9 @@
 
 using std::string;
 
-namespace Block {
+namespace block_thingy::block {
 
-Unknown::Unknown(const Enum::Type t)
+Unknown::Unknown(const enums::Type t)
 :
 	Unknown(t, "")
 {
@@ -15,11 +15,11 @@ Unknown::Unknown(const Enum::Type t)
 
 Unknown::Unknown
 (
-	const Enum::Type t,
+	const enums::Type t,
 	const string& strid
 )
 :
-	Base(t, Enum::VisibilityType::opaque),
+	Base(t, enums::VisibilityType::opaque),
 	strid(strid)
 {
 }
@@ -31,7 +31,7 @@ Unknown& Unknown::operator=(const Base& block)
 	strid = that.strid;
 	for(const auto& p : that.data)
 	{
-		data.emplace(p.first, Storage::copy_object(p.second.get()));
+		data.emplace(p.first, storage::copy_object(p.second.get()));
 	}
 	return *this;
 }
@@ -48,7 +48,7 @@ string Unknown::name() const
 	return Base::name() + " (" + strid + ", " + std::to_string(entry_count) + " entr" + ending + ')';
 }
 
-void Unknown::save(Storage::OutputInterface& i) const
+void Unknown::save(storage::OutputInterface& i) const
 {
 	// Base::save(i) not needed here, since the external ID is kept
 	for(const auto& p : data)
@@ -57,7 +57,7 @@ void Unknown::save(Storage::OutputInterface& i) const
 	}
 }
 
-void Unknown::load(Storage::InputInterface& i)
+void Unknown::load(storage::InputInterface& i)
 {
 	Base::load(i); // does nothing yet; dunno if it will be needed later
 	data = i.copy_all();

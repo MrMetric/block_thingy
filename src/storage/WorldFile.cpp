@@ -26,7 +26,7 @@ using std::string;
 using std::to_string;
 using std::unique_ptr;
 
-namespace Storage {
+namespace block_thingy::storage {
 
 WorldFile::WorldFile(const fs::path& world_dir, World& world)
 :
@@ -43,7 +43,7 @@ WorldFile::WorldFile(const fs::path& world_dir, World& world)
 		return;
 	}
 	LOG(INFO) << "loading world: " << world_path.u8string() << '\n';
-	string bytes = Util::read_file(world_path);
+	string bytes = util::read_file(world_path);
 	try
 	{
 		unpack_bytes(bytes, world);
@@ -89,7 +89,7 @@ unique_ptr<Player> WorldFile::load_player
 
 	LOG(INFO) << "loading player: " << file_path.u8string() << '\n';
 
-	string bytes = Util::read_file(file_path);
+	string bytes = util::read_file(file_path);
 	try
 	{
 		unpack_bytes(bytes, *player);
@@ -104,7 +104,7 @@ unique_ptr<Player> WorldFile::load_player
 
 void WorldFile::save_chunk(const Chunk& chunk)
 {
-	Position::ChunkInWorld position = chunk.get_position();
+	position::ChunkInWorld position = chunk.get_position();
 	fs::path file_path = chunk_path(position);
 	LOG(INFO) << "saving " << file_path.u8string() << '\n';
 
@@ -113,7 +113,7 @@ void WorldFile::save_chunk(const Chunk& chunk)
 	msgpack::pack(stream, chunk);
 }
 
-unique_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
+unique_ptr<Chunk> WorldFile::load_chunk(const position::ChunkInWorld& position)
 {
 	fs::path file_path = chunk_path(position);
 	if(!fs::exists(file_path))
@@ -123,7 +123,7 @@ unique_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 
 	std::ifstream stdstream(file_path, std::ifstream::binary);
 	zstr::istream stream(stdstream);
-	string bytes = Util::read_stream(stream);
+	string bytes = util::read_stream(stream);
 	auto chunk = std::make_unique<Chunk>(position, world);
 	try
 	{
@@ -146,13 +146,13 @@ unique_ptr<Chunk> WorldFile::load_chunk(const Position::ChunkInWorld& position)
 	return chunk;
 }
 
-bool WorldFile::has_chunk(const Position::ChunkInWorld& position)
+bool WorldFile::has_chunk(const position::ChunkInWorld& position)
 {
 	fs::path file_path = chunk_path(position);
 	return fs::exists(file_path);
 }
 
-fs::path WorldFile::chunk_path(const Position::ChunkInWorld& position)
+fs::path WorldFile::chunk_path(const position::ChunkInWorld& position)
 {
 	const string x = to_string(position.x);
 	const string y = to_string(position.y);

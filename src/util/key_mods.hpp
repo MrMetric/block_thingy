@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Util {
+namespace block_thingy::util {
 
 struct key_mods
 {

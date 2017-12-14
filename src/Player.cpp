@@ -18,6 +18,8 @@ using std::string;
 using std::shared_ptr;
 using std::unique_ptr;
 
+namespace block_thingy {
+
 Player::Player
 (
 	Game& game,
@@ -81,11 +83,11 @@ void Player::move(const glm::dvec3& acceleration)
 		return;
 	}
 
-	Physics::AABB new_aabb = make_aabb(new_position);
-	const Position::BlockInWorld block_pos_old(position);
+	physics::AABB new_aabb = make_aabb(new_position);
+	const position::BlockInWorld block_pos_old(position);
 	auto loop = [this, &new_position, &new_aabb, &block_pos_old](const bool corners)
 	{
-		Position::BlockInWorld block_pos_offset;
+		position::BlockInWorld block_pos_offset;
 		for(block_pos_offset.y = 0; block_pos_offset.y <= std::floor(height); ++block_pos_offset.y)
 		for(block_pos_offset.x = -1; block_pos_offset.x <= 1; ++block_pos_offset.x)
 		for(block_pos_offset.z = -1; block_pos_offset.z <= 1; ++block_pos_offset.z)
@@ -94,12 +96,12 @@ void Player::move(const glm::dvec3& acceleration)
 			if(corners) skip = !skip;
 			if(skip) continue;
 
-			const Position::BlockInWorld block_pos = block_pos_old + block_pos_offset;
+			const position::BlockInWorld block_pos = block_pos_old + block_pos_offset;
 			if(!game.world.get_block(block_pos)->is_solid())
 			{
 				continue;
 			}
-			Physics::AABB block_aabb(block_pos);
+			physics::AABB block_aabb(block_pos);
 			if(!new_aabb.collide(block_aabb))
 			{
 				continue;
@@ -131,8 +133,8 @@ void Player::move(const glm::dvec3& acceleration)
 	{
 		if(move_vec.y < 0)
 		{
-			const Position::BlockInWorld pos_feet_new(glm::dvec3(position.x, position.y + move_vec.y, position.z));
-			const shared_ptr<Block::Base> block = game.world.get_block(pos_feet_new);
+			const position::BlockInWorld pos_feet_new(glm::dvec3(position.x, position.y + move_vec.y, position.z));
+			const shared_ptr<block::Base> block = game.world.get_block(pos_feet_new);
 			if(block->is_solid())
 			{
 				position.y = pos_feet_new.y + 1;
@@ -153,8 +155,8 @@ void Player::move(const glm::dvec3& acceleration)
 		}
 		else if(move_vec.y > 0)
 		{
-			const Position::BlockInWorld pos_head_new(glm::dvec3(position.x, position.y + move_vec.y + height, position.z));
-			const shared_ptr<Block::Base> block = game.world.get_block(pos_head_new);
+			const position::BlockInWorld pos_head_new(glm::dvec3(position.x, position.y + move_vec.y + height, position.z));
+			const shared_ptr<block::Base> block = game.world.get_block(pos_head_new);
 			if(block->is_solid())
 			{
 				position.y = pos_head_new.y - height;
@@ -222,14 +224,14 @@ void Player::step(const double delta_time)
 
 	if(acceleration != glm::dvec3(0))
 	{
-		const Position::BlockInWorld old_position(position());
+		const position::BlockInWorld old_position(position());
 		move(acceleration * delta_time);
-		const Position::BlockInWorld new_position(position());
+		const position::BlockInWorld new_position(position());
 		if(new_position != old_position)
 		{
-			const shared_ptr<Block::Base> block = game.world.get_block(new_position);
-			if(block->type() != Block::Enum::Type::none
-			&& block->type() != Block::Enum::Type::air
+			const shared_ptr<block::Base> block = game.world.get_block(new_position);
+			if(block->type() != block::enums::Type::none
+			&& block->type() != block::enums::Type::air
 			&& !block->is_solid())
 			{
 				game.event_manager.do_event(Event_enter_block(game.world, *this, block));
@@ -282,13 +284,13 @@ void Player::respawn()
 	set_aabb();
 }
 
-bool Player::can_place_block_at(const Position::BlockInWorld& block_pos)
+bool Player::can_place_block_at(const position::BlockInWorld& block_pos)
 {
 	if(flags.noclip)
 	{
 		return true;
 	}
-	Physics::AABB block_aabb(block_pos);
+	physics::AABB block_aabb(block_pos);
 	return !aabb.collide(block_aabb);
 }
 
@@ -337,13 +339,13 @@ void Player::set_noclip(bool noclip)
 	flags.noclip = noclip;
 }
 
-void Player::open_gui(unique_ptr<Graphics::GUI::Base> gui)
+void Player::open_gui(unique_ptr<graphics::gui::Base> gui)
 {
 	// TODO
 	game.open_gui(std::move(gui));
 }
 
-Physics::AABB Player::make_aabb(const glm::dvec3& position)
+physics::AABB Player::make_aabb(const glm::dvec3& position)
 {
 	const glm::dvec3 size(abs_offset, height, abs_offset);
 	return
@@ -356,4 +358,6 @@ Physics::AABB Player::make_aabb(const glm::dvec3& position)
 void Player::set_aabb()
 {
 	aabb = make_aabb(position());
+}
+
 }

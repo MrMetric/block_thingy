@@ -6,7 +6,7 @@
 using std::string;
 using std::u32string;
 
-namespace Graphics::GUI::Widget::Component {
+namespace block_thingy::graphics::gui::widget::component {
 
 Text::Text(const string& s)
 {
@@ -29,7 +29,7 @@ glm::dvec2 Text::draw_position(const glm::dvec2& w_position, const glm::dvec2& w
 
 string Text::get8() const
 {
-	return Util::utf32_to_utf8(text);
+	return util::utf32_to_utf8(text);
 }
 u32string Text::get32() const
 {
@@ -54,7 +54,7 @@ Text& Text::operator=(const char32_t c)
 }
 Text& Text::operator=(const string& s)
 {
-	return operator=(Util::utf8_to_utf32(s));
+	return operator=(util::utf8_to_utf32(s));
 }
 Text& Text::operator=(const u32string& s)
 {
@@ -71,7 +71,7 @@ Text& Text::operator+=(const char32_t c)
 }
 Text& Text::operator+=(const string& s)
 {
-	return operator+=(Util::utf8_to_utf32(s));
+	return operator+=(util::utf8_to_utf32(s));
 }
 Text& Text::operator+=(const u32string& s)
 {

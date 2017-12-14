@@ -6,6 +6,8 @@
 #include "fwd/Game.hpp"
 #include "shim/propagate_const.hpp"
 
+namespace block_thingy {
+
 class PluginManager
 {
 public:
@@ -35,3 +37,5 @@ private:
 	struct impl;
 	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };
+
+}

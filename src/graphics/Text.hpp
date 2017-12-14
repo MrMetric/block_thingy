@@ -28,7 +28,7 @@
 #include "graphics/OpenGL/VertexBuffer.hpp"
 #include "util/filesystem.hpp"
 
-namespace Graphics {
+namespace block_thingy::graphics {
 
 class Text
 {
@@ -54,7 +54,7 @@ public:
 
 	struct Character
 	{
-		OpenGL::Texture		texture;
+		opengl::Texture		texture;
 		glm::ivec2			size;
 		glm::ivec2			bearing;	// offset from baseline to left/top of glyph
 		double				x_offset;
@@ -69,9 +69,9 @@ private:
 	FT_Face face;
 	FT_UInt height;
 	std::unordered_map<char32_t, Character> chars;
-	OpenGL::VertexBuffer vbo;
-	OpenGL::VertexArray vao;
-	OpenGL::ShaderProgram shader;
+	opengl::VertexBuffer vbo;
+	opengl::VertexArray vao;
+	opengl::ShaderProgram shader;
 
 	std::tuple<glm::dvec2, std::vector<double>> loop
 	(

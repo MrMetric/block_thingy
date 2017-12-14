@@ -2,7 +2,7 @@
 
 #include <glm/vec2.hpp>
 
-namespace Graphics::GUI::Widget::Component {
+namespace block_thingy::graphics::gui::widget::component {
 
 class Base
 {

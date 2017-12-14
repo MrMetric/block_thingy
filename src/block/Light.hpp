@@ -1,20 +1,20 @@
 #pragma once
 #include "Base.hpp"
 
-namespace Block {
+namespace block_thingy::block {
 
 class Light : public Base
 {
 public:
-	Light(Enum::Type);
-	Light(Enum::Type, const Graphics::Color&);
+	Light(enums::Type);
+	Light(enums::Type, const graphics::Color&);
 
 	std::string name() const override;
 
-	void use_start(Game&, World&, Player&, const Position::BlockInWorld&, Enum::Face) override;
+	void use_start(Game&, World&, Player&, const position::BlockInWorld&, enums::Face) override;
 
-	void save(Storage::OutputInterface&) const override;
-	void load(Storage::InputInterface&) override;
+	void save(storage::OutputInterface&) const override;
+	void load(storage::InputInterface&) override;
 };
 
 }

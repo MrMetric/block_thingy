@@ -6,7 +6,7 @@
 #include "BlockInWorld.hpp"
 #include "fwd/chunk/Chunk.hpp"
 
-namespace Position {
+namespace block_thingy::position {
 
 ChunkInWorld::ChunkInWorld()
 :

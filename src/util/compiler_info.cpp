@@ -7,7 +7,7 @@
 
 using std::string;
 
-namespace Util {
+namespace block_thingy::util {
 
 string compiler_info()
 {

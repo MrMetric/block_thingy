@@ -18,7 +18,7 @@ using std::u32string;
 // http://learnopengl.com/#!In-Practice/Text-Rendering
 // http://learnopengl.com/#!In-Practice/2D-Game/Render-text
 
-namespace Graphics {
+namespace block_thingy::graphics {
 
 Text::Character load_char(const FT_Face& face, char32_t);
 
@@ -112,7 +112,7 @@ void Text::set_projection_matrix(const glm::dmat4& projection_matrix)
 void Text::draw(const string& s, const glm::dvec2& pos, const glm::dvec3& color)
 {
 	// TODO: handle exception from invalid input
-	draw(Util::utf8_to_utf32(s), pos, color);
+	draw(util::utf8_to_utf32(s), pos, color);
 }
 
 void Text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec3& color)
@@ -143,7 +143,7 @@ void Text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec3& col
 
 		glBindTexture(GL_TEXTURE_2D, ch.texture.get_name());
 
-		vbo.data(sizeof(vertexes), vertexes, OpenGL::VertexBuffer::UsageHint::dynamic_draw);
+		vbo.data(sizeof(vertexes), vertexes, opengl::VertexBuffer::UsageHint::dynamic_draw);
 		vao.draw(GL_TRIANGLES, 0, sizeof(vertexes) / sizeof(vertexes[0]) / 4);
 	});
 }
@@ -151,7 +151,7 @@ void Text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec3& col
 glm::dvec2 Text::get_size(const string& s_utf8)
 {
 	// TODO: handle exception from invalid input
-	return get_size(Util::utf8_to_utf32(s_utf8));
+	return get_size(util::utf8_to_utf32(s_utf8));
 }
 
 glm::dvec2 Text::get_size(u32string s)
@@ -272,10 +272,10 @@ Text::Character Text::load_char(const char32_t c) const
 		GL_UNSIGNED_BYTE,
 		bitmap.buffer
 	);
-	ch.texture.parameter(OpenGL::Texture::Parameter::wrap_s, GL_CLAMP_TO_EDGE);
-	ch.texture.parameter(OpenGL::Texture::Parameter::wrap_t, GL_CLAMP_TO_EDGE);
-	ch.texture.parameter(OpenGL::Texture::Parameter::min_filter, GL_LINEAR);
-	ch.texture.parameter(OpenGL::Texture::Parameter::mag_filter, GL_LINEAR);
+	ch.texture.parameter(opengl::Texture::Parameter::wrap_s, GL_CLAMP_TO_EDGE);
+	ch.texture.parameter(opengl::Texture::Parameter::wrap_t, GL_CLAMP_TO_EDGE);
+	ch.texture.parameter(opengl::Texture::Parameter::min_filter, GL_LINEAR);
+	ch.texture.parameter(opengl::Texture::Parameter::mag_filter, GL_LINEAR);
 	return ch;
 }
 

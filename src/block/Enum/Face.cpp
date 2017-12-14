@@ -3,7 +3,7 @@
 #include <cassert>
 #include <ostream>
 
-namespace Block::Enum {
+namespace block_thingy::block::enums {
 
 glm::ivec3 face_to_vec(const Face face)
 {

@@ -19,7 +19,7 @@
 
 using std::string;
 
-namespace Graphics::GUI {
+namespace block_thingy::graphics::gui {
 
 Base::Base
 (
@@ -31,7 +31,7 @@ Base::Base
 {
 	if(!layout_path.empty())
 	{
-		root.read_layout(json::parse(Util::read_file(layout_path)));
+		root.read_layout(json::parse(util::read_file(layout_path)));
 	}
 	event_handler = game.event_manager.add_handler(EventType::window_size_change, [this](const Event& event)
 	{
@@ -50,7 +50,7 @@ Base::~Base()
 	catch(const std::runtime_error& e)
 	{
 		// should never happen, but it is best to be safe (destructors are noexcept)
-		LOG(BUG) << "error unadding event handler in Graphics::GUI::Base destructor: " << e.what() << '\n';
+		LOG(BUG) << "error unadding event handler in graphics::gui::Base destructor: " << e.what() << '\n';
 	}
 }
 
@@ -65,14 +65,14 @@ void Base::close()
 
 void Base::draw()
 {
-	OpenGL::PushState<GLboolean> depth_test(GL_DEPTH_TEST, false);
-	OpenGL::PushState<GLboolean> cull_face(GL_CULL_FACE, false);
+	opengl::PushState<GLboolean> depth_test(GL_DEPTH_TEST, false);
+	opengl::PushState<GLboolean> cull_face(GL_CULL_FACE, false);
 
 	root.draw();
 	draw_gui();
 }
 
-void Base::keypress(const Util::key_press& press)
+void Base::keypress(const util::key_press& press)
 {
 	// TODO: proper input handling
 	if(press.action == GLFW_PRESS)
@@ -96,12 +96,12 @@ void Base::keypress(const Util::key_press& press)
 	root.keypress(press);
 }
 
-void Base::charpress(const Util::char_press& press)
+void Base::charpress(const util::char_press& press)
 {
 	root.charpress(press);
 }
 
-void Base::mousepress(const Util::mouse_press& press)
+void Base::mousepress(const util::mouse_press& press)
 {
 	root.mousepress(press);
 }
@@ -134,7 +134,7 @@ void Base::update_framebuffer_size(const window_size_t& window_size)
 {
 	rhea::simplex_solver solver;
 
-	Widget::Base::style_vars_t window_vars;
+	widget::Base::style_vars_t window_vars;
 	solver.add_constraints
 	({
 		window_vars["pos.x"] == 0,

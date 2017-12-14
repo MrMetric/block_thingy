@@ -8,7 +8,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 
-namespace Graphics::GUI::Widget {
+namespace block_thingy::graphics::gui::widget {
 
 class Button : public Base
 {
@@ -22,7 +22,7 @@ public:
 
 	void draw() override;
 
-	void mousepress(const Util::mouse_press&) override;
+	void mousepress(const util::mouse_press&) override;
 
 	void read_layout(const json&) override;
 	void use_layout() override;

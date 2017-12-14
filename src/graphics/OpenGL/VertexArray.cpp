@@ -2,7 +2,7 @@
 
 #include "VertexBuffer.hpp"
 
-namespace Graphics::OpenGL {
+namespace block_thingy::graphics::opengl {
 
 VertexArray::VertexArray(const VertexBuffer& vbo)
 {

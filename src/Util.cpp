@@ -20,22 +20,24 @@ using std::string;
 using std::to_string;
 using std::unique_ptr;
 
-bool Util::file_is_openable(const fs::path& path)
+namespace block_thingy::util {
+
+bool file_is_openable(const fs::path& path)
 {
 	return std::ifstream(path).is_open();
 }
 
-string Util::read_text(const fs::path& path)
+string read_text(const fs::path& path)
 {
 	return read_file(path, true);
 }
 
-string Util::read_file(const fs::path& path)
+string read_file(const fs::path& path)
 {
 	return read_file(path, false);
 }
 
-string Util::read_file(const fs::path& path, const bool is_text)
+string read_file(const fs::path& path, const bool is_text)
 {
 	if(fs::is_directory(path))
 	{
@@ -67,7 +69,7 @@ string Util::read_file(const fs::path& path, const bool is_text)
 	}
 }
 
-string Util::gl_object_log(const GLuint object)
+string gl_object_log(const GLuint object)
 {
 	GLint log_length;
 	if(glIsShader(object))
@@ -97,7 +99,7 @@ string Util::gl_object_log(const GLuint object)
 	return string(log.get());
 }
 
-int Util::stoi(const string& s)
+int stoi(const string& s)
 {
 	if(s.find_first_not_of("0123456789") != string::npos)
 	{
@@ -106,7 +108,7 @@ int Util::stoi(const string& s)
 	return std::stoi(s);
 }
 
-string Util::datetime()
+string datetime()
 {
 	const auto now = std::chrono::system_clock::now();
 	const auto us = std::chrono::time_point_cast<std::chrono::microseconds>(now) - std::chrono::time_point_cast<std::chrono::seconds>(now);
@@ -123,4 +125,6 @@ string Util::datetime()
 	   << std::setfill('0') << std::setw(6) << us.count()
 	   << std::put_time(tm, " %z");
 	return ss.str();
+}
+
 }

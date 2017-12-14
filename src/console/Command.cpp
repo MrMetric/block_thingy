@@ -6,6 +6,8 @@
 
 using std::string;
 
+namespace block_thingy {
+
 Command::Command
 (
 	Console& console,
@@ -38,4 +40,6 @@ Command::Command(Command&& that)
 {
 	assert(!name.empty());
 	assert(that.name.empty());
+}
+
 }

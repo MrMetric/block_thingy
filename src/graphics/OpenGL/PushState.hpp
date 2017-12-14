@@ -4,7 +4,7 @@
 
 #include <glad/glad.h>
 
-namespace Graphics::OpenGL {
+namespace block_thingy::graphics::opengl {
 
 template<typename T>
 void glGet(const GLenum pname, std::enable_if_t<std::is_same<GLboolean, T>::value, T>& t)

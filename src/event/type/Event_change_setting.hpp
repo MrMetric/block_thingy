@@ -5,17 +5,21 @@
 
 #include "Settings.hpp"
 
+namespace block_thingy {
+
 class Event_change_setting : public Event
 {
 public:
 	Event_change_setting
 	(
 		const std::string& name,
-		const Settings::value_t old_value,
-		const Settings::value_t new_value
+		const settings::value_t old_value,
+		const settings::value_t new_value
 	);
 
 	const std::string name;
-	const Settings::value_t old_value;
-	const Settings::value_t new_value;
+	const settings::value_t old_value;
+	const settings::value_t new_value;
 };
+
+}

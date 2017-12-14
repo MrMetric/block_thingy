@@ -2,7 +2,7 @@
 
 #include "util/key_mods.hpp"
 
-namespace Util {
+namespace block_thingy::util {
 
 char_press::char_press(const char32_t codepoint, const int mods)
 :

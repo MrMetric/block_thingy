@@ -1,12 +1,12 @@
 #pragma once
 #include "Base.hpp"
 
-namespace Block {
+namespace block_thingy::block {
 
 class None : public Base
 {
 public:
-	None(Enum::Type);
+	None(enums::Type);
 
 	glm::dvec4 selection_color() const override;
 };

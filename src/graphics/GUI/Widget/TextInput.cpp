@@ -19,7 +19,7 @@
 
 using std::string;
 
-namespace Graphics::GUI::Widget {
+namespace block_thingy::graphics::gui::widget {
 
 TextInput::TextInput
 (
@@ -98,7 +98,7 @@ void TextInput::draw()
 	if(focus)
 	{
 		const double time = glfwGetTime() - blink_start_time;
-		const double blink_rate = Settings::get<double>("cursor_blink_rate");
+		const double blink_rate = settings::get<double>("cursor_blink_rate");
 		double alpha;
 		if(blink_rate == 0.5)
 		{
@@ -118,7 +118,7 @@ void TextInput::draw()
 	}
 }
 
-void TextInput::keypress(const Util::key_press& press)
+void TextInput::keypress(const util::key_press& press)
 {
 	if(!focus) return;
 	if(press.action == GLFW_RELEASE) return; // must be press or repeat
@@ -135,23 +135,23 @@ void TextInput::keypress(const Util::key_press& press)
 			const std::u32string t = content.get32();
 			if(selection_start < cursor_pos)
 			{
-				Util::Clipboard::set_text(t.substr(selection_start, cursor_pos - selection_start));
+				util::clipboard::set_text(t.substr(selection_start, cursor_pos - selection_start));
 			}
 			else if(selection_start > cursor_pos)
 			{
-				Util::Clipboard::set_text(t.substr(cursor_pos, selection_start - cursor_pos));
+				util::clipboard::set_text(t.substr(cursor_pos, selection_start - cursor_pos));
 			}
 			else
 			{
-				Util::Clipboard::set_text(t);
+				util::clipboard::set_text(t);
 			}
 			return;
 		}
 		if(key_name == "v") // paste
 		{
-			std::u32string ct = Util::utf8_to_utf32(Util::Clipboard::get_text());
-			Util::delete_element(ct, '\n');
-			Util::delete_element(ct, '\r');
+			std::u32string ct = util::utf8_to_utf32(util::clipboard::get_text());
+			util::delete_element(ct, '\n');
+			util::delete_element(ct, '\r');
 			if(!ct.empty())
 			{
 				const string old = content.get8();
@@ -324,7 +324,7 @@ void TextInput::keypress(const Util::key_press& press)
 	}
 }
 
-void TextInput::charpress(const Util::char_press& press)
+void TextInput::charpress(const util::char_press& press)
 {
 	if(!focus) return;
 
@@ -343,7 +343,7 @@ void TextInput::charpress(const Util::char_press& press)
 	blink_start_time = glfwGetTime();
 }
 
-void TextInput::mousepress(const Util::mouse_press& press)
+void TextInput::mousepress(const util::mouse_press& press)
 {
 	// TODO: option for left-handed mouse
 	if(press.button == GLFW_MOUSE_BUTTON_LEFT)
@@ -420,7 +420,7 @@ void TextInput::on_keypress(on_keypress_callback_t callback)
 	on_keypress_callbacks.emplace_back(callback);
 }
 
-void TextInput::trigger_on_keypress(const Util::key_press& press)
+void TextInput::trigger_on_keypress(const util::key_press& press)
 {
 	for(on_keypress_callback_t& callback : on_keypress_callbacks)
 	{

@@ -12,6 +12,8 @@
 #include "fwd/position/BlockInWorld.hpp"
 #include "util/Property.hpp"
 
+namespace block_thingy {
+
 class Player
 {
 public:
@@ -35,7 +37,7 @@ public:
 	void set_analog_motion(const glm::dvec2&);
 	void respawn();
 
-	bool can_place_block_at(const Position::BlockInWorld&);
+	bool can_place_block_at(const position::BlockInWorld&);
 
 	void move_forward(bool);
 	void move_backward(bool);
@@ -48,7 +50,7 @@ public:
 	bool get_noclip() const;
 	void set_noclip(bool);
 
-	void open_gui(std::unique_ptr<Graphics::GUI::Base>);
+	void open_gui(std::unique_ptr<graphics::gui::Base>);
 
 	glm::dvec3 spawn_position;
 	Property<glm::dvec3> position;
@@ -59,8 +61,8 @@ private:
 	Game& game;
 
 	const double abs_offset;
-	Physics::AABB aabb;
-	Physics::AABB make_aabb(const glm::dvec3& position);
+	physics::AABB aabb;
+	physics::AABB make_aabb(const glm::dvec3& position);
 	void set_aabb();
 	double eye_height;
 	double height;
@@ -80,3 +82,5 @@ private:
 		bool noclip = false;
 	} flags;
 };
+
+}

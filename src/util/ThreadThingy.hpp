@@ -9,7 +9,7 @@
 
 #include <concurrentqueue/concurrentqueue.hpp>
 
-namespace Util {
+namespace block_thingy::util {
 
 template
 <

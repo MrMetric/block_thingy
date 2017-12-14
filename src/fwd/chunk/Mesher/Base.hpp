@@ -1,4 +1,4 @@
-namespace Mesher
+namespace block_thingy::mesher
 {
 	class Base;
 }

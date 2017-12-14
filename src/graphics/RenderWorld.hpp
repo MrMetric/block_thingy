@@ -12,17 +12,18 @@
 #include "fwd/position/BlockInWorld.hpp"
 #include "position/ChunkInWorld.hpp"
 
-namespace RenderWorld
-{
-	/**
-	 * @return The amount of chunks considered for drawing and the amount of chunks drawn
-	 */
-	std::tuple<uint64_t, uint64_t> draw_world
-	(
-		World&,
-		ResourceManager&,
-		const glm::dmat4& vp_matrix,
-		const Position::BlockInWorld& origin,
-		Position::ChunkInWorld::value_type render_distance
-	);
+namespace block_thingy::graphics {
+
+/**
+ * @return The amount of chunks considered for drawing and the amount of chunks drawn
+ */
+std::tuple<uint64_t, uint64_t> draw_world
+(
+	World&,
+	ResourceManager&,
+	const glm::dmat4& vp_matrix,
+	const position::BlockInWorld& origin,
+	position::ChunkInWorld::value_type render_distance
+);
+
 }

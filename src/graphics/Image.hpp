@@ -7,7 +7,7 @@
 #include "shim/propagate_const.hpp"
 #include "util/filesystem.hpp"
 
-namespace Graphics {
+namespace block_thingy::graphics {
 
 class Image
 {

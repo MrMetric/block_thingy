@@ -20,6 +20,8 @@
 #include "fwd/position/BlockInWorld.hpp"
 #include "types/window_size_t.hpp"
 
+namespace block_thingy {
+
 class Gfx
 {
 public:
@@ -55,12 +57,12 @@ public:
 
 	glm::dmat4 vp_matrix; // view (graphical) and projection
 
-	Graphics::OpenGL::ShaderProgram s_lines;
+	graphics::opengl::ShaderProgram s_lines;
 
-	Graphics::OpenGL::VertexBuffer outline_vbo;
-	Graphics::OpenGL::VertexArray outline_vao;
+	graphics::opengl::VertexBuffer outline_vbo;
+	graphics::opengl::VertexArray outline_vao;
 
-	Graphics::Text gui_text;
+	graphics::Text gui_text;
 	glm::dmat4 gui_projection_matrix;
 
 	void hook_events(EventManager&);
@@ -70,12 +72,12 @@ public:
 
 	void update_framebuffer_size(const window_size_t&);
 
-	Graphics::RenderTarget screen_rt;
-	Graphics::RenderTarget buf_rt;
-	std::map<std::string, Graphics::OpenGL::ShaderProgram> screen_shaders;
-	Graphics::OpenGL::ShaderProgram* screen_shader;
-	Graphics::OpenGL::VertexBuffer quad_vbo;
-	Graphics::OpenGL::VertexArray quad_vao;
+	graphics::RenderTarget screen_rt;
+	graphics::RenderTarget buf_rt;
+	std::map<std::string, graphics::opengl::ShaderProgram> screen_shaders;
+	graphics::opengl::ShaderProgram* screen_shader;
+	graphics::opengl::VertexBuffer quad_vbo;
+	graphics::opengl::VertexArray quad_vao;
 	void set_screen_shader(const std::string&);
 
 	/**
@@ -96,15 +98,17 @@ public:
 		const glm::dmat4& projection_matrix
 	);
 	void draw_box_outline(const glm::dvec3& min, const glm::dvec3& max, const glm::dvec4& color);
-	void draw_box_outline(const Physics::AABB&, const glm::dvec4& color);
-	void draw_block_outline(const Position::BlockInWorld&, const glm::dvec4& color);
+	void draw_box_outline(const physics::AABB&, const glm::dvec4& color);
+	void draw_block_outline(const position::BlockInWorld&, const glm::dvec4& color);
 
 	void center_cursor();
 
 	// for GUIs
-	Graphics::OpenGL::ShaderProgram s_gui_shape;
-	Graphics::OpenGL::VertexBuffer gui_rectangle_vbo;
-	Graphics::OpenGL::VertexArray gui_rectangle_vao;
+	graphics::opengl::ShaderProgram s_gui_shape;
+	graphics::opengl::VertexBuffer gui_rectangle_vbo;
+	graphics::opengl::VertexArray gui_rectangle_vao;
 	void draw_rectangle(glm::dvec2 position, glm::dvec2 size, const glm::dvec4& color);
 	void draw_border(glm::dvec2 position, glm::dvec2 size, glm::dvec4 border_size, const glm::dvec4& color);
 };
+
+}

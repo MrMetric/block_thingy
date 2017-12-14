@@ -48,7 +48,10 @@
 #endif
 
 using std::string;
-using Graphics::OpenGL::ShaderProgram;
+
+namespace block_thingy {
+
+using graphics::opengl::ShaderProgram;
 
 static window_size_t get_window_size(GLFWwindow* window)
 {
@@ -73,7 +76,7 @@ Gfx::Gfx()
 	s_lines("shaders/lines"),
 	outline_vbo({3, GL_FLOAT}),
 	outline_vao(outline_vbo),
-	gui_text(Settings::get<string>("font"), static_cast<FT_UInt>(Settings::get<int64_t>("font_size"))),
+	gui_text(settings::get<string>("font"), static_cast<FT_UInt>(settings::get<int64_t>("font_size"))),
 	screen_rt(window_size, 8),
 	buf_rt(window_size),
 	quad_vbo({3, GL_BYTE}),
@@ -118,7 +121,7 @@ void Gfx::hook_events(EventManager& event_manager)
 			const int light_smoothing = static_cast<int>(*e.new_value.get<int64_t>());
 			Game::instance->resource_manager.foreach_ShaderProgram([light_smoothing](Resource<ShaderProgram> r)
 			{
-				if(Util::string_starts_with(r.get_id(), "shaders/block/"))
+				if(util::string_starts_with(r.get_id(), "shaders/block/"))
 				{
 					r->uniform("light_smoothing", light_smoothing);
 				}
@@ -129,7 +132,7 @@ void Gfx::hook_events(EventManager& event_manager)
 			const float min_light = static_cast<float>(*e.new_value.get<double>());
 			Game::instance->resource_manager.foreach_ShaderProgram([min_light](Resource<ShaderProgram> r)
 			{
-				if(Util::string_starts_with(r.get_id(), "shaders/block/"))
+				if(util::string_starts_with(r.get_id(), "shaders/block/"))
 				{
 					r->uniform("min_light", min_light);
 				}
@@ -147,7 +150,7 @@ void Gfx::hook_events(EventManager& event_manager)
 				LOG(ERROR) << error.what() << '\n';
 				// TODO: cancel current event
 				// triggering an event from an event handler deadlocks
-				//Settings::set<string>("font", *e.old_value.get<string>());
+				//settings::set<string>("font", *e.old_value.get<string>());
 			}
 		}
 		else if(e.name == "font_size")
@@ -165,7 +168,7 @@ GLFWwindow* Gfx::init_glfw()
 		throw std::runtime_error("glfwInit() failed");
 	}
 
-	GLFWwindow* window = make_window(Settings::get<bool>("fullscreen"));
+	GLFWwindow* window = make_window(settings::get<bool>("fullscreen"));
 
 	if(!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
@@ -234,7 +237,7 @@ void Gfx::opengl_setup()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
-	if(Settings::get<bool>("cull_face"))
+	if(settings::get<bool>("cull_face"))
 	{
 		glEnable(GL_CULL_FACE);
 	}
@@ -246,7 +249,7 @@ void Gfx::opengl_setup()
 	// TODO
 	//glEnable(GL_FRAMEBUFFER_SRGB);
 
-	set_screen_shader(Settings::get<string>("screen_shader"));
+	set_screen_shader(settings::get<string>("screen_shader"));
 
 	const GLbyte quad_vertex_buffer_data[] =
 	{
@@ -257,7 +260,7 @@ void Gfx::opengl_setup()
 		 1, -1, 0,
 		 1,  1, 0,
 	};
-	quad_vbo.data(sizeof(quad_vertex_buffer_data), quad_vertex_buffer_data, Graphics::OpenGL::VertexBuffer::UsageHint::static_draw);
+	quad_vbo.data(sizeof(quad_vertex_buffer_data), quad_vertex_buffer_data, graphics::opengl::VertexBuffer::UsageHint::static_draw);
 }
 
 void Gfx::update_framebuffer_size(const window_size_t& window_size)
@@ -328,13 +331,13 @@ void Gfx::update_projection_matrix()
 
 glm::dmat4 Gfx::make_projection_matrix(const double width, const double height)
 {
-	const double fov = glm::radians(Settings::get<double>("fov"));
-	const double near = Settings::get<double>("near_plane");
-	const double far  = Settings::get<double>("far_plane"); // TODO: calculate from chunk render distance
-	const string type = Settings::get<string>("projection_type");
+	const double fov = glm::radians(settings::get<double>("fov"));
+	const double near = settings::get<double>("near_plane");
+	const double far  = settings::get<double>("far_plane"); // TODO: calculate from chunk render distance
+	const string type = settings::get<string>("projection_type");
 	if(type == "ortho")
 	{
-		const double size = Settings::get<double>("ortho_size");
+		const double size = settings::get<double>("ortho_size");
 		return glm::ortho(0.0, size, 0.0, size * height / width, near, far);
 	}
 	if(type == "infinite")
@@ -415,7 +418,7 @@ void Gfx::draw_box_outline(const glm::dvec3& min_, const glm::dvec3& max_, const
 		max.x, min.y, min.z,
 		max.x, min.y, max.z,
 	};
-	outline_vbo.data(sizeof(vertexes), vertexes, Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw);
+	outline_vbo.data(sizeof(vertexes), vertexes, graphics::opengl::VertexBuffer::UsageHint::dynamic_draw);
 
 	s_lines.uniform("mvp_matrix", glm::mat4(vp_matrix));
 	s_lines.uniform("color", glm::vec4(color));
@@ -424,12 +427,12 @@ void Gfx::draw_box_outline(const glm::dvec3& min_, const glm::dvec3& max_, const
 	outline_vao.draw(GL_LINES, 0, sizeof(vertexes) / sizeof(vertexes[0]) / 3);
 }
 
-void Gfx::draw_box_outline(const Physics::AABB& aabb, const glm::dvec4& color)
+void Gfx::draw_box_outline(const physics::AABB& aabb, const glm::dvec4& color)
 {
 	draw_box_outline(aabb.min, aabb.max, color);
 }
 
-void Gfx::draw_block_outline(const Position::BlockInWorld& block_pos, const glm::dvec4& color)
+void Gfx::draw_block_outline(const position::BlockInWorld& block_pos, const glm::dvec4& color)
 {
 	glm::dvec3 min(block_pos.x, block_pos.y, block_pos.z);
 	draw_box_outline(min, min + 1.0, color);
@@ -488,7 +491,7 @@ void Gfx::draw_rectangle(glm::dvec2 position, glm::dvec2 size, const glm::dvec4&
 		x    , y + h,
 		x + w, y + h,
 	};
-	gui_rectangle_vbo.data(sizeof(v), v, Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw);
+	gui_rectangle_vbo.data(sizeof(v), v, graphics::opengl::VertexBuffer::UsageHint::dynamic_draw);
 
 	s_gui_shape.uniform("color", glm::vec4(color));
 
@@ -548,7 +551,7 @@ void Gfx::draw_border(glm::dvec2 position, glm::dvec2 size, glm::dvec4 border_si
 		x + w, y + h + sy2,
 		x    , y + h + sy2,
 	};
-	gui_rectangle_vbo.data(sizeof(v), v, Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw);
+	gui_rectangle_vbo.data(sizeof(v), v, graphics::opengl::VertexBuffer::UsageHint::dynamic_draw);
 
 	s_gui_shape.uniform("color", glm::vec4(color));
 
@@ -699,4 +702,6 @@ static void shim_GL_ARB_separate_shader_objects()
 	UMATRIX(3x4d, GLdouble);
 	UMATRIX(4x3d, GLdouble);
 #endif
+}
+
 }

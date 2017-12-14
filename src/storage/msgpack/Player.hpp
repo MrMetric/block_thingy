@@ -8,6 +8,10 @@ namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
 namespace adaptor {
 
+using block_thingy::Player;
+using block_thingy::storage::find_in_map;
+using block_thingy::storage::find_in_map_or_throw;
+
 template<>
 struct pack<Player>
 {

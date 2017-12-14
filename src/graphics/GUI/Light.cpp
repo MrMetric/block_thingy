@@ -13,14 +13,14 @@
 
 using std::string;
 
-namespace Graphics::GUI {
+namespace block_thingy::graphics::gui {
 
 Light::Light
 (
 	Game& game,
 	World& world,
-	Block::Light& block,
-	const Position::BlockInWorld& block_pos
+	block::Light& block,
+	const position::BlockInWorld& block_pos
 )
 :
 	Base(game, "guis/Light.btgui"),
@@ -28,14 +28,14 @@ Light::Light
 	block(block),
 	block_pos(block_pos)
 {
-	const Graphics::Color c = block.light();
+	const graphics::Color c = block.light();
 	for(uint_fast8_t i = 0; i < 3; ++i)
 	{
-		auto w = root.get_widget_by_id<Widget::TextInput>(std::to_string(i));
+		auto w = root.get_widget_by_id<widget::TextInput>(std::to_string(i));
 		if(w != nullptr)
 		{
 			w->set_text(std::to_string(c[i]));
-			w->on_change([this, i](Widget::TextInput& w, const string& /*old_value*/, const string& new_value)
+			w->on_change([this, i](widget::TextInput& w, const string& /*old_value*/, const string& new_value)
 			{
 				on_change(i, w, new_value);
 			});
@@ -59,22 +59,22 @@ void Light::draw()
 	Base::draw();
 }
 
-void Light::on_change(uint_fast8_t i, Widget::TextInput& w, const string& new_value)
+void Light::on_change(uint_fast8_t i, widget::TextInput& w, const string& new_value)
 {
 	bool invalid = false;
 	int v = 0;
 	try
 	{
-		v = Util::stoi(new_value);
+		v = util::stoi(new_value);
 		if(v < 0)
 		{
 			invalid = true;
 			v = 0;
 		}
-		else if(v > Graphics::Color::max)
+		else if(v > graphics::Color::max)
 		{
 			invalid = true;
-			v = Graphics::Color::max;
+			v = graphics::Color::max;
 		}
 	}
 	catch(const std::invalid_argument&)
@@ -89,7 +89,7 @@ void Light::on_change(uint_fast8_t i, Widget::TextInput& w, const string& new_va
 	auto c = block.light();
 	if(v != c[i])
 	{
-		c[i] = static_cast<Graphics::Color::value_type>(v);
+		c[i] = static_cast<graphics::Color::value_type>(v);
 		block.light(c);
 		world.update_blocklight(block_pos, c, true);
 	}

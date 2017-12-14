@@ -9,6 +9,8 @@
 #include "fwd/event/Event.hpp"
 #include "fwd/event/EventType.hpp"
 
+namespace block_thingy {
+
 using event_handler_t = std::function<void(const Event&)>;
 using event_handler_id_t = uint_fast32_t;
 
@@ -33,3 +35,5 @@ private:
 	std::unordered_map<event_handler_id_t, std::pair<EventType, event_handler_t>> handlers;
 	mutable std::mutex mutex;
 };
+
+}

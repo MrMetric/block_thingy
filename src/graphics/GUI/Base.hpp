@@ -14,7 +14,7 @@
 #include "fwd/util/mouse_press.hpp"
 #include "util/filesystem.hpp"
 
-namespace Graphics::GUI {
+namespace block_thingy::graphics::gui {
 
 class Base
 {
@@ -37,9 +37,9 @@ public:
 	virtual void close();
 	virtual void draw();
 
-	virtual void keypress(const Util::key_press&);
-	virtual void charpress(const Util::char_press&);
-	virtual void mousepress(const Util::mouse_press&);
+	virtual void keypress(const util::key_press&);
+	virtual void charpress(const util::char_press&);
+	virtual void mousepress(const util::mouse_press&);
 	virtual void mousemove(double x, double y);
 	virtual void joypress(int joystick, int button, bool pressed);
 	virtual void joymove(const glm::dvec2& motion);
@@ -51,7 +51,7 @@ public:
 protected:
 	virtual void draw_gui();
 	virtual void update_framebuffer_size(const window_size_t&);
-	Widget::Container root;
+	widget::Container root;
 
 private:
 	event_handler_id_t event_handler;

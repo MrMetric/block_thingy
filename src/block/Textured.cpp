@@ -6,20 +6,20 @@
 
 using std::string;
 
-using Block::Enum::Face;
+namespace block_thingy::block {
 
-namespace Block {
+using enums::Face;
 
-static Enum::VisibilityType get_visibility_type(const fs::path& path)
+static enums::VisibilityType get_visibility_type(const fs::path& path)
 {
 	if(!path.empty() && Game::instance->resource_manager.texture_has_transparency(path))
 	{
-		return Enum::VisibilityType::translucent;
+		return enums::VisibilityType::translucent;
 	}
-	return Enum::VisibilityType::opaque;
+	return enums::VisibilityType::opaque;
 }
 
-static Enum::VisibilityType get_visibility_type(const std::array<fs::path, 6>& texture_paths)
+static enums::VisibilityType get_visibility_type(const std::array<fs::path, 6>& texture_paths)
 {
 	for(const fs::path& path : texture_paths)
 	{
@@ -29,34 +29,34 @@ static Enum::VisibilityType get_visibility_type(const std::array<fs::path, 6>& t
 		}
 		if(Game::instance->resource_manager.texture_has_transparency(path))
 		{
-			return Enum::VisibilityType::translucent;
+			return enums::VisibilityType::translucent;
 		}
 	}
-	return Enum::VisibilityType::opaque;
+	return enums::VisibilityType::opaque;
 }
 
-Textured::Textured(const Enum::Type t, const fs::path& texture_path, const fs::path& shader)
+Textured::Textured(const enums::Type t, const fs::path& texture_path, const fs::path& shader)
 :
 	Base(t, get_visibility_type(texture_path), shader)
 {
 	texture_.fill(texture_path);
 }
 
-Textured::Textured(const Enum::Type t, const fs::path& texture_path, const std::array<fs::path, 6>& shaders)
+Textured::Textured(const enums::Type t, const fs::path& texture_path, const std::array<fs::path, 6>& shaders)
 :
 	Base(t, get_visibility_type(texture_path), shaders)
 {
 	texture_.fill(texture_path);
 }
 
-Textured::Textured(const Enum::Type t, std::array<fs::path, 6> textures, const fs::path& shader)
+Textured::Textured(const enums::Type t, std::array<fs::path, 6> textures, const fs::path& shader)
 :
 	Base(t, get_visibility_type(textures), shader)
 {
 	texture_ = std::move(textures);
 }
 
-Textured::Textured(const Enum::Type t, std::array<fs::path, 6> textures, const std::array<fs::path, 6>& shaders)
+Textured::Textured(const enums::Type t, std::array<fs::path, 6> textures, const std::array<fs::path, 6>& shaders)
 :
 	Base(t, get_visibility_type(textures), shaders)
 {
@@ -67,7 +67,7 @@ Textured::~Textured()
 {
 }
 
-Textured::Textured(const Enum::Type t)
+Textured::Textured(const enums::Type t)
 :
 	Textured(t, fs::path(), "texture")
 {

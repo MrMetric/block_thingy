@@ -8,7 +8,7 @@
 
 #include "graphics/GUI/Widget/Component/Text.hpp"
 
-namespace Graphics::GUI::Widget {
+namespace block_thingy::graphics::gui::widget {
 
 class TextInput : public Base
 {
@@ -23,9 +23,9 @@ public:
 
 	void draw() override;
 
-	void keypress(const Util::key_press&) override;
-	void charpress(const Util::char_press&) override;
-	void mousepress(const Util::mouse_press&) override;
+	void keypress(const util::key_press&) override;
+	void charpress(const util::char_press&) override;
+	void mousepress(const util::mouse_press&) override;
 
 	void read_layout(const json&) override;
 
@@ -39,15 +39,15 @@ public:
 	void on_change(on_change_callback_t);
 	void trigger_on_change(const std::string& old_value);
 
-	using on_keypress_callback_t = std::function<void(TextInput&, const Util::key_press&)>;
+	using on_keypress_callback_t = std::function<void(TextInput&, const util::key_press&)>;
 	void on_keypress(on_keypress_callback_t);
-	void trigger_on_keypress(const Util::key_press&);
+	void trigger_on_keypress(const util::key_press&);
 
 	bool invalid;
 
 private:
-	Component::Text content;
-	Component::Text placeholder;
+	component::Text content;
+	component::Text placeholder;
 	bool focus;
 	double blink_start_time;
 	std::size_t cursor_pos;

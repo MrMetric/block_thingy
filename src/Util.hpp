@@ -7,7 +7,7 @@
 
 #include "util/filesystem.hpp"
 
-namespace Util {
+namespace block_thingy::util {
 
 inline bool string_starts_with(const std::string& value, const std::string& start)
 {

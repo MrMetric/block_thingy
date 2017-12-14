@@ -15,6 +15,8 @@
 
 using std::string;
 
+namespace block_thingy {
+
 KeybindManager::KeybindManager(Console& console)
 :
 	console(console)
@@ -72,7 +74,7 @@ void KeybindManager::unbind_key(const int key)
 	keybinds.erase(key);
 }
 
-void KeybindManager::keypress(const Util::key_press& press)
+void KeybindManager::keypress(const util::key_press& press)
 {
 	if(press.action == GLFW_PRESS || press.action == GLFW_REPEAT)
 	{
@@ -105,7 +107,7 @@ void KeybindManager::keypress(const Util::key_press& press)
 	}
 }
 
-void KeybindManager::mousepress(const Util::mouse_press& press)
+void KeybindManager::mousepress(const util::mouse_press& press)
 {
 	keypress({press.button, 0, press.action, press.mods});
 }
@@ -202,7 +204,7 @@ int KeybindManager::translate_key(string key)
 		}
 	}
 
-	if(Util::string_starts_with(key, "mouse"))
+	if(util::string_starts_with(key, "mouse"))
 	{
 		if(key.length() != 6)
 		{
@@ -319,4 +321,6 @@ int KeybindManager::translate_key(string key)
 	if(key == "joy_ps3_logo") return 1016; // TODO: check name
 
 	return GLFW_KEY_UNKNOWN;
+}
+
 }

@@ -9,16 +9,16 @@
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
-using Block::Enum::Face;
-using Position::BlockInChunk;
+namespace block_thingy::mesher {
 
-namespace Mesher {
+using block::enums::Face;
+using position::BlockInChunk;
 
 meshmap_t Simple2::make_mesh(const Chunk& chunk)
 {
 	meshmap_t meshes;
 
-	std::array<Block::Base*, CHUNK_BLOCK_COUNT> cache;
+	std::array<block::Base*, CHUNK_BLOCK_COUNT> cache;
 
 	std::size_t block_i = 0;
 	BlockInChunk c_pos(0, 0, 0);
@@ -34,7 +34,7 @@ meshmap_t Simple2::make_mesh(const Chunk& chunk)
 	for(BlockInChunk::value_type y = 0; y < CHUNK_SIZE; ++y)
 	for(BlockInChunk::value_type z = 0; z < CHUNK_SIZE; ++z, ++block_i)
 	{
-		const Block::Base& block = *cache[block_i];
+		const block::Base& block = *cache[block_i];
 		if(block.is_invisible())
 		{
 			continue;
@@ -54,9 +54,9 @@ meshmap_t Simple2::make_mesh(const Chunk& chunk)
 			&& pos.z >= 0 && pos.z < CHUNK_SIZE)
 			{
 				const std::size_t sibling_i = static_cast<std::size_t>(CHUNK_SIZE * CHUNK_SIZE * pos.x + CHUNK_SIZE * pos.y + pos.z);
-				const Block::Base& sibling = *cache[sibling_i];
+				const block::Base& sibling = *cache[sibling_i];
 				is_visible =
-					   sibling.type() != Block::Enum::Type::none
+					   sibling.type() != block::enums::Type::none
 					&& !block.is_invisible() // this block is visible
 					&& !sibling.is_opaque() // this block can be seen thru the adjacent block
 					&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks (of the same type)

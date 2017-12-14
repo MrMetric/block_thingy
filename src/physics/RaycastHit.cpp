@@ -3,11 +3,13 @@
 #include "block/Enum/Face.hpp"
 #include "position/BlockInWorld.hpp"
 
-using Block::Enum::Face;
+namespace block_thingy::physics {
+
+using block::enums::Face;
 
 RaycastHit::RaycastHit
 (
-	const Position::BlockInWorld& pos,
+	const position::BlockInWorld& pos,
 	const glm::ivec3& face
 )
 :
@@ -16,7 +18,7 @@ RaycastHit::RaycastHit
 {
 }
 
-Position::BlockInWorld RaycastHit::adjacent() const
+position::BlockInWorld RaycastHit::adjacent() const
 {
 	return pos + face_vec;
 }
@@ -27,5 +29,7 @@ Face RaycastHit::face() const
 	{
 		return Face::front;
 	}
-	return Block::Enum::vec_to_face(face_vec);
+	return block::enums::vec_to_face(face_vec);
+}
+
 }

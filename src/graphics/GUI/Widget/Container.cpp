@@ -13,7 +13,7 @@
 
 using std::string;
 
-namespace Graphics::GUI::Widget {
+namespace block_thingy::graphics::gui::widget {
 
 Container::Container()
 {
@@ -26,7 +26,7 @@ string Container::type() const
 
 void Container::draw()
 {
-	if(Settings::get<bool>("show_container_bounds"))
+	if(settings::get<bool>("show_container_bounds"))
 	{
 		Gfx::instance->draw_rectangle(position, size, {0.2, 0.1, 0, 0.4});
 		Gfx::instance->draw_border(position, size, glm::dvec4(2), {0, 0, 0.1, 0.4});
@@ -37,7 +37,7 @@ void Container::draw()
 	}
 }
 
-void Container::keypress(const Util::key_press& press)
+void Container::keypress(const util::key_press& press)
 {
 	for(auto& widget : widgets)
 	{
@@ -45,7 +45,7 @@ void Container::keypress(const Util::key_press& press)
 	}
 }
 
-void Container::charpress(const Util::char_press& press)
+void Container::charpress(const util::char_press& press)
 {
 	for(auto& widget : widgets)
 	{
@@ -53,7 +53,7 @@ void Container::charpress(const Util::char_press& press)
 	}
 }
 
-void Container::mousepress(const Util::mouse_press& press)
+void Container::mousepress(const util::mouse_press& press)
 {
 	for(auto& widget : widgets)
 	{
@@ -162,7 +162,7 @@ void Container::read_layout(const json& layout)
 
 		for(json::const_iterator i = auto_layout.cbegin(); i != auto_layout.cend(); ++i)
 		{
-			if(Util::string_starts_with(i.key(), "child."))
+			if(util::string_starts_with(i.key(), "child."))
 			{
 				const json& j = i.value();
 				auto& setting = child_style[i.key().substr(6)];

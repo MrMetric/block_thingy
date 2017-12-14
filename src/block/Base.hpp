@@ -18,22 +18,22 @@
 #include "fwd/storage/Interface.hpp"
 #include "util/filesystem.hpp"
 
-namespace Block {
+namespace block_thingy::block {
 
 class Base
 {
 public:
 	Base();
-	Base(Enum::Type);
-	Base(Enum::Type, Enum::VisibilityType);
-	Base(Enum::Type, Enum::VisibilityType, const fs::path& shader);
-	Base(Enum::Type, Enum::VisibilityType, const std::array<fs::path, 6>& shaders);
+	Base(enums::Type);
+	Base(enums::Type, enums::VisibilityType);
+	Base(enums::Type, enums::VisibilityType, const fs::path& shader);
+	Base(enums::Type, enums::VisibilityType, const std::array<fs::path, 6>& shaders);
 	virtual ~Base();
 
 	Base(const Base&);
 	virtual Base& operator=(const Base&);
 
-	Enum::Type type() const
+	enums::Type type() const
 	{
 		return type_;
 	}
@@ -42,18 +42,18 @@ public:
 	/**
 	 * If non-zero, this block emits light of this color
 	 */
-	Graphics::Color light() const
+	graphics::Color light() const
 	{
 		return light_;
 	}
-	virtual void light(const Graphics::Color&);
+	virtual void light(const graphics::Color&);
 
-	fs::path shader(Enum::Face) const;
-	fs::path texture(Enum::Face) const;
+	fs::path shader(enums::Face) const;
+	fs::path texture(enums::Face) const;
 
 	glm::tvec3<uint8_t> rotation() const;
-	virtual uint8_t rotation(Enum::Face) const;
-	virtual void rotate_around(Enum::Face, int8_t direction);
+	virtual uint8_t rotation(enums::Face) const;
+	virtual void rotate_around(enums::Face, int8_t direction);
 
 	virtual double bounciness() const;
 
@@ -62,23 +62,23 @@ public:
 	 */
 	virtual glm::dvec4 selection_color() const;
 
-	virtual Graphics::Color light_filter() const;
+	virtual graphics::Color light_filter() const;
 
-	Enum::VisibilityType visibility_type() const
+	enums::VisibilityType visibility_type() const
 	{
 		return visibility_type_;
 	}
 	bool is_opaque() const
 	{
-		return visibility_type_ == Enum::VisibilityType::opaque;
+		return visibility_type_ == enums::VisibilityType::opaque;
 	}
 	bool is_translucent() const
 	{
-		return visibility_type_ == Enum::VisibilityType::translucent;
+		return visibility_type_ == enums::VisibilityType::translucent;
 	}
 	bool is_invisible() const
 	{
-		return visibility_type_ == Enum::VisibilityType::invisible;
+		return visibility_type_ == enums::VisibilityType::invisible;
 	}
 
 	/**
@@ -101,22 +101,22 @@ public:
 		Game&,
 		World&,
 		Player&,
-		const Position::BlockInWorld&,
-		Enum::Face
+		const position::BlockInWorld&,
+		enums::Face
 	);
 
-	virtual void save(Storage::OutputInterface&) const;
-	virtual void load(Storage::InputInterface&);
+	virtual void save(storage::OutputInterface&) const;
+	virtual void load(storage::InputInterface&);
 
 protected:
-	Enum::VisibilityType visibility_type_;
-	Graphics::Color light_;
+	enums::VisibilityType visibility_type_;
+	graphics::Color light_;
 	std::array<fs::path, 6> shader_;
 	std::array<fs::path, 6> texture_;
 	glm::tvec3<uint8_t> rotation_;
 
 private:
-	Enum::Type type_;
+	enums::Type type_;
 };
 
 }

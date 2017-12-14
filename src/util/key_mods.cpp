@@ -2,7 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
-namespace Util {
+namespace block_thingy::util {
 
 key_mods::key_mods()
 :

@@ -7,6 +7,8 @@
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 
+namespace block_thingy {
+
 Camera::Camera(Gfx& gfx)
 :
 	sensitivity(0.1),
@@ -34,4 +36,6 @@ void Camera::mousemove(const double mouseX, const double mouseY, bool joystick)
 	rotation.y = glm::mod(rotation.y, 360.0);
 
 	gfx.center_cursor();
+}
+
 }

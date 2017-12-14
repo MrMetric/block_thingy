@@ -12,19 +12,20 @@
 #include "storage/msgpack/Color.hpp"
 
 using std::string;
-using Graphics::Color;
 
-namespace Block {
+namespace block_thingy::block {
 
-Light::Light(const Enum::Type t)
+using graphics::Color;
+
+Light::Light(const enums::Type t)
 :
 	Light(t, Color(Color::max))
 {
 }
 
-Light::Light(const Enum::Type t, const Color& light)
+Light::Light(const enums::Type t, const Color& light)
 :
-	Base(t, Enum::VisibilityType::opaque, "light")
+	Base(t, enums::VisibilityType::opaque, "light")
 {
 	light_ = light;
 }
@@ -41,20 +42,20 @@ void Light::use_start
 	Game& game,
 	World& world,
 	Player& player,
-	const Position::BlockInWorld& pos,
-	const Enum::Face /*face*/
+	const position::BlockInWorld& pos,
+	const enums::Face /*face*/
 )
 {
-	player.open_gui(std::make_unique<Graphics::GUI::Light>(game, world, *this, pos));
+	player.open_gui(std::make_unique<graphics::gui::Light>(game, world, *this, pos));
 }
 
-void Light::save(Storage::OutputInterface& i) const
+void Light::save(storage::OutputInterface& i) const
 {
 	Base::save(i);
 	i.set("light", light_);
 }
 
-void Light::load(Storage::InputInterface& i)
+void Light::load(storage::InputInterface& i)
 {
 	Base::load(i);
 	light_ = i.get<Color>("light");

@@ -1,1 +1,4 @@
-enum class EventType;
+namespace block_thingy
+{
+	enum class EventType;
+}

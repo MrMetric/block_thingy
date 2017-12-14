@@ -6,7 +6,7 @@
 
 using std::string;
 
-namespace Graphics::GUI::Widget {
+namespace block_thingy::graphics::gui::widget {
 
 Text::Text
 (

@@ -14,7 +14,7 @@
 #include "fwd/position/BlockInChunk.hpp"
 #include "fwd/position/ChunkInWorld.hpp"
 
-namespace Position {
+namespace block_thingy::position {
 
 struct BlockInWorld
 {
@@ -31,7 +31,7 @@ struct BlockInWorld
 	#ifdef DEBUG_BUILD
 		if(i > 2)
 		{
-			throw std::out_of_range("Position::BlockInWorld::operator[]: " + std::to_string(i) + " > 2");
+			throw std::out_of_range("position::BlockInWorld::operator[]: " + std::to_string(i) + " > 2");
 		}
 	#endif
 		return (&x)[i];
@@ -41,7 +41,7 @@ struct BlockInWorld
 	#ifdef DEBUG_BUILD
 		if(i > 2)
 		{
-			throw std::out_of_range("Position::BlockInWorld::operator[]: " + std::to_string(i) + " > 2");
+			throw std::out_of_range("position::BlockInWorld::operator[]: " + std::to_string(i) + " > 2");
 		}
 	#endif
 		return (&x)[i];

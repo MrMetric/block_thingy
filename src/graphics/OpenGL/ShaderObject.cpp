@@ -10,7 +10,7 @@
 
 using std::string;
 
-namespace Graphics::OpenGL {
+namespace block_thingy::graphics::opengl {
 
 string get_log(const GLuint object);
 string do_include(const fs::path& file_path);
@@ -37,7 +37,7 @@ ShaderObject::ShaderObject(const fs::path& file_path, GLenum type)
 	glGetShaderiv(name, GL_COMPILE_STATUS, &compile_ok);
 	if(compile_ok == GL_FALSE)
 	{
-		string log = Util::gl_object_log(name);
+		string log = util::gl_object_log(name);
 		throw std::runtime_error("error compiling " + file_path.u8string() + ":\n" + log);
 	}
 
@@ -71,14 +71,14 @@ GLuint ShaderObject::get_name()
 static const string include_str = "#include";
 string do_include(const fs::path& file_path)
 {
-	const string source = Util::read_text(file_path);
+	const string source = util::read_text(file_path);
 	const fs::path folder = file_path.parent_path();
 
 	std::istringstream input(source);
 	std::ostringstream output;
 	for(string line; std::getline(input, line);)
 	{
-		if(!Util::string_starts_with(line, include_str))
+		if(!util::string_starts_with(line, include_str))
 		{
 			output << line << '\n';
 			continue;
@@ -88,7 +88,7 @@ string do_include(const fs::path& file_path)
 		{
 			continue;
 		}
-		included = Util::strip_whitespace(included);
+		included = util::strip_whitespace(included);
 		const fs::path path = folder / included;
 		if(!fs::exists(path))
 		{

@@ -1,1 +1,4 @@
-class Console;
+namespace block_thingy
+{
+	class Console;
+}

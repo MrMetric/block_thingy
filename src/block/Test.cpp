@@ -7,11 +7,11 @@
 #include "World.hpp"
 #include "block/Enum/VisibilityType.hpp"
 
-namespace Block {
+namespace block_thingy::block {
 
-Test::Test(const Enum::Type t)
+Test::Test(const enums::Type t)
 :
-	Base(t, Enum::VisibilityType::opaque, "test")
+	Base(t, enums::VisibilityType::opaque, "test")
 {
 }
 

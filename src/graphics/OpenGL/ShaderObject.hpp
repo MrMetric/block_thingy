@@ -6,7 +6,7 @@
 
 #include "util/filesystem.hpp"
 
-namespace Graphics::OpenGL {
+namespace block_thingy::graphics::opengl {
 
 class ShaderObject
 {

@@ -5,7 +5,7 @@
 
 #include "graphics/plane.hpp"
 
-namespace Graphics {
+namespace block_thingy::graphics {
 
 class default_view_frustum : public frustum
 {
@@ -36,7 +36,7 @@ public:
 	default_view_frustum& operator=(const default_view_frustum&);
 
 	bool inside(const glm::dvec3&) const override;
-	bool inside(const Physics::AABB&) const override;
+	bool inside(const physics::AABB&) const override;
 
 private:
 	std::vector<plane> planes;

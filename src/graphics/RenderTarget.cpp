@@ -7,7 +7,7 @@
 
 #include "util/logger.hpp"
 
-namespace Graphics {
+namespace block_thingy::graphics {
 
 static GLsizei get_samples(const GLsizei samples)
 {
@@ -46,8 +46,8 @@ RenderTarget::RenderTarget(const window_size_t& window_size, GLsizei samples)
 {
 	if(samples == 0)
 	{
-		frame_texture.parameter(OpenGL::Texture::Parameter::min_filter, GL_LINEAR);
-		frame_texture.parameter(OpenGL::Texture::Parameter::mag_filter, GL_LINEAR);
+		frame_texture.parameter(opengl::Texture::Parameter::min_filter, GL_LINEAR);
+		frame_texture.parameter(opengl::Texture::Parameter::mag_filter, GL_LINEAR);
 	}
 
 	resize(window_size);

@@ -3,6 +3,8 @@
 
 #include "types/window_size_t.hpp"
 
+namespace block_thingy {
+
 class Event_window_size_change : public Event
 {
 public:
@@ -13,3 +15,5 @@ public:
 
 	const window_size_t window_size;
 };
+
+}

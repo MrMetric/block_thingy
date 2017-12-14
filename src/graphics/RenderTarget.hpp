@@ -5,7 +5,7 @@
 #include "graphics/OpenGL/Texture.hpp"
 #include "types/window_size_t.hpp"
 
-namespace Graphics {
+namespace block_thingy::graphics {
 
 class RenderTarget
 {
@@ -14,9 +14,9 @@ class RenderTarget
 public:
 	RenderTarget(const window_size_t&, GLsizei samples = 0);
 
-	OpenGL::Framebuffer frame_buffer;
-	OpenGL::Renderbuffer depth_buffer;
-	OpenGL::Texture frame_texture;
+	opengl::Framebuffer frame_buffer;
+	opengl::Renderbuffer depth_buffer;
+	opengl::Texture frame_texture;
 
 	void resize(const window_size_t&);
 };

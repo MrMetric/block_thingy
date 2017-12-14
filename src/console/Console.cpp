@@ -8,6 +8,8 @@
 
 using std::string;
 
+namespace block_thingy {
+
 Console* Console::instance = nullptr;
 
 Console::Console()
@@ -113,4 +115,6 @@ void Console::run_command(const string& name, const std::vector<string>& args) c
 		return;
 	}
 	i->second(args);
+}
+
 }

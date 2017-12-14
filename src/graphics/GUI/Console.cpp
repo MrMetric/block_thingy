@@ -9,20 +9,20 @@
 
 using std::string;
 
-namespace Graphics::GUI {
+namespace block_thingy::graphics::gui {
 
 Console::Console(Game& game)
 :
 	Base(game, "guis/Console.btgui")
 {
-	auto input = root.get_widget_by_id<Widget::TextInput>("input");
+	auto input = root.get_widget_by_id<widget::TextInput>("input");
 	if(input != nullptr)
 	{
-		input->on_keypress([](Widget::TextInput& input, const Util::key_press& press)
+		input->on_keypress([](widget::TextInput& input, const util::key_press& press)
 		{
 			if(press.key == GLFW_KEY_ENTER)
 			{
-				::Console::instance->run_line(input.get_text());
+				::block_thingy::Console::instance->run_line(input.get_text());
 				input.clear();
 			}
 		});

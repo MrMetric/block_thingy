@@ -24,7 +24,7 @@
 using std::string;
 using std::unique_ptr;
 
-namespace Graphics {
+namespace block_thingy::graphics {
 
 static void read_png
 (

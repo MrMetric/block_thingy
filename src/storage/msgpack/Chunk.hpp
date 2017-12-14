@@ -7,6 +7,8 @@
 #include "storage/msgpack/Block.hpp"
 #include "storage/msgpack/ChunkData.hpp"
 
+namespace block_thingy {
+
 template<>
 void Chunk::save(msgpack::packer<zstr::ostream>& o) const
 {
@@ -16,12 +18,16 @@ void Chunk::save(msgpack::packer<zstr::ostream>& o) const
 template<>
 void Chunk::load(const msgpack::object& o)
 {
-	this->set_blocks(o.as<ChunkData<std::shared_ptr<Block::Base>>>());
+	this->set_blocks(o.as<ChunkData<std::shared_ptr<block::Base>>>());
+}
+
 }
 
 namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
 namespace adaptor {
+
+using block_thingy::Chunk;
 
 template<>
 struct pack<Chunk>

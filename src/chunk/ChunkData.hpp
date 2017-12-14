@@ -13,6 +13,8 @@
 #include "fwd/chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
+namespace block_thingy {
+
 template<typename T>
 class ChunkData
 {
@@ -22,9 +24,9 @@ public:
 		// explicit template instantiation does not work with both MSVC and GCC/Clang
 		// with MSVC, putting a prototype in this file with the definition in a cpp file causes a linking error
 		// with GCC/Clang, putting the definition in this file breaks the one-definition rule
-		if constexpr(std::is_same<T, std::shared_ptr<Block::Base>>::value)
+		if constexpr(std::is_same<T, std::shared_ptr<block::Base>>::value)
 		{
-			fill(Game::instance->block_registry.get_default(Block::Enum::Type::air));
+			fill(Game::instance->block_registry.get_default(block::enums::Type::air));
 		}
 	}
 
@@ -48,19 +50,19 @@ public:
 	ChunkData(const ChunkData&) = delete;
 	ChunkData& operator=(const ChunkData&) = delete;
 
-	const T& get(const Position::BlockInChunk& pos) const
+	const T& get(const position::BlockInChunk& pos) const
 	{
 		std::lock_guard<std::mutex> g(blocks_mutex);
 		return blocks[block_array_index(pos.x, pos.y, pos.z)];
 	}
 
-	T& get(const Position::BlockInChunk& pos)
+	T& get(const position::BlockInChunk& pos)
 	{
 		std::lock_guard<std::mutex> g(blocks_mutex);
 		return blocks[block_array_index(pos.x, pos.y, pos.z)];
 	}
 
-	void set(const Position::BlockInChunk& pos, T block)
+	void set(const position::BlockInChunk& pos, T block)
 	{
 		const std::size_t i = block_array_index(pos.x, pos.y, pos.z);
 		std::lock_guard<std::mutex> g(blocks_mutex);
@@ -86,11 +88,13 @@ private:
 
 	static std::size_t block_array_index
 	(
-		const Position::BlockInChunk::value_type x,
-		const Position::BlockInChunk::value_type y,
-		const Position::BlockInChunk::value_type z
+		const position::BlockInChunk::value_type x,
+		const position::BlockInChunk::value_type y,
+		const position::BlockInChunk::value_type z
 	)
 	{
 		return CHUNK_SIZE * CHUNK_SIZE * x + CHUNK_SIZE * y + z;
 	}
 };
+
+}

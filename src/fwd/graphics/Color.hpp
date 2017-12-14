@@ -1,4 +1,4 @@
-namespace Graphics
+namespace block_thingy::graphics
 {
 	struct Color;
 }

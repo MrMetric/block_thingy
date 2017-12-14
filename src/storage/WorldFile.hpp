@@ -9,7 +9,7 @@
 #include "fwd/position/ChunkInWorld.hpp"
 #include "util/filesystem.hpp"
 
-namespace Storage {
+namespace block_thingy::storage {
 
 class WorldFile
 {
@@ -58,9 +58,9 @@ public:
 	/**
 	 * Load the chunk that is at specified position. If the chunk does not exist, `nullptr` is returned.
 	 */
-	std::unique_ptr<Chunk> load_chunk(const Position::ChunkInWorld&);
+	std::unique_ptr<Chunk> load_chunk(const position::ChunkInWorld&);
 
-	bool has_chunk(const Position::ChunkInWorld&);
+	bool has_chunk(const position::ChunkInWorld&);
 
 private:
 	fs::path world_path;
@@ -68,7 +68,7 @@ private:
 	fs::path chunk_dir;
 	World& world;
 
-	fs::path chunk_path(const Position::ChunkInWorld&);
+	fs::path chunk_path(const position::ChunkInWorld&);
 };
 
 }

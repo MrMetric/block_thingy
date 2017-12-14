@@ -1,1 +1,4 @@
-class World;
+namespace block_thingy
+{
+	class World;
+}

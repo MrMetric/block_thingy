@@ -10,6 +10,8 @@
 #include "util/logger.hpp"
 #include "util/Property.hpp"
 
+namespace block_thingy::storage {
+
 template<typename T>
 bool find_in_map
 (
@@ -55,7 +57,7 @@ void find_in_map_or_throw
 	if(!find_in_map(map, key, v))
 	{
 		// TODO: put message string in type_error
-		LOG(ERROR) << "did not find '" << key << "' of type " << Util::demangled_name(v) << '\n';
+		LOG(ERROR) << "did not find '" << key << "' of type " << util::demangled_name(v) << '\n';
 		throw msgpack::type_error();
 	}
 }
@@ -67,4 +69,6 @@ void unpack_bytes(const std::string& bytes, T& v)
 	msgpack::unpack(u, bytes.c_str(), bytes.length());
 	msgpack::object o = u.get();
 	o.convert(v);
+}
+
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+namespace block_thingy {
+
 enum class EventType
 {
 	any,
@@ -8,3 +10,5 @@ enum class EventType
 	enter_block,
 	change_setting,
 };
+
+}

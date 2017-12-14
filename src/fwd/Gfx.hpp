@@ -1,1 +1,4 @@
-class Gfx;
+namespace block_thingy
+{
+	class Gfx;
+}

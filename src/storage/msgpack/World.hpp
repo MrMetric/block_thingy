@@ -6,6 +6,8 @@
 #include "World.hpp"
 #include "block/BlockRegistry.hpp"
 
+namespace block_thingy {
+
 //template<typename Stream>
 //void World::save(msgpack::packer<Stream>& o) const
 // that does not work :[
@@ -25,12 +27,16 @@ void World::load(const msgpack::object& o)
 	ticks = v.at(0).as<decltype(ticks)>();
 
 	// poor design?
-	block_registry.set_extid_map(v.at(1).as<Block::BlockRegistry::extid_map_t>());
+	block_registry.set_extid_map(v.at(1).as<block::BlockRegistry::extid_map_t>());
+}
+
 }
 
 namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
 namespace adaptor {
+
+using block_thingy::World;
 
 template<>
 struct pack<World>

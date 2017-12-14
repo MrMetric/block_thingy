@@ -9,7 +9,7 @@
 #include <glm/vec2.hpp>
 #include <json.hpp>
 
-namespace Graphics::GUI::Widget {
+namespace block_thingy::graphics::gui::widget {
 
 class Container : public Base
 {
@@ -20,9 +20,9 @@ public:
 
 	void draw() override;
 
-	void keypress(const Util::key_press&) override;
-	void charpress(const Util::char_press&) override;
-	void mousepress(const Util::mouse_press&) override;
+	void keypress(const util::key_press&) override;
+	void charpress(const util::char_press&) override;
+	void mousepress(const util::mouse_press&) override;
 	void mousemove(double x, double y) override;
 
 	glm::dvec2 get_size() const override;

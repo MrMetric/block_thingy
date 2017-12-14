@@ -6,7 +6,7 @@
 #include "shim/propagate_const.hpp"
 #include "util/filesystem.hpp"
 
-namespace Util {
+namespace block_thingy::util {
 
 class FileWatcher
 {

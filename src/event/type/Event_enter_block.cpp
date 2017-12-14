@@ -4,11 +4,13 @@
 
 using std::shared_ptr;
 
+namespace block_thingy {
+
 Event_enter_block::Event_enter_block
 (
 	World& world,
 	Player& player,
-	const shared_ptr<Block::Base> block
+	const shared_ptr<block::Base> block
 )
 :
 	Event(EventType::enter_block),
@@ -16,4 +18,6 @@ Event_enter_block::Event_enter_block
 	player(player),
 	block(block)
 {
+}
+
 }

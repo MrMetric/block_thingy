@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <vector>
 
+namespace block_thingy {
+
 using console_handler_t = std::function<void(const std::vector<std::string>& args)>;
 
 class Console
@@ -30,3 +32,5 @@ private:
 
 	std::unordered_map<std::string, console_handler_t> handlers;
 };
+
+}

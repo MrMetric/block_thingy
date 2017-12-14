@@ -2,6 +2,8 @@
 
 #include "fwd/event/EventType.hpp"
 
+namespace block_thingy {
+
 class Event
 {
 public:
@@ -17,3 +19,5 @@ public:
 private:
 	EventType type_;
 };
+
+}

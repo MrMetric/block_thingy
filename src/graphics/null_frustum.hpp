@@ -1,7 +1,7 @@
 #pragma once
 #include "frustum.hpp"
 
-namespace Graphics {
+namespace block_thingy::graphics {
 
 template<bool B>
 class null_frustum : public frustum
@@ -12,7 +12,7 @@ public:
 		return B;
 	}
 
-	bool inside(const Physics::AABB&) const override
+	bool inside(const physics::AABB&) const override
 	{
 		return B;
 	}

@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Util {
+namespace block_thingy::util {
 
 /**
  * name and version

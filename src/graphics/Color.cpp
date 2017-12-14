@@ -7,7 +7,7 @@
 
 #include <glm/common.hpp>
 
-namespace Graphics {
+namespace block_thingy::graphics {
 
 Color::value_type Color::max = 16;
 

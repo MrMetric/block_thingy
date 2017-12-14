@@ -5,7 +5,7 @@
 #include "fwd/graphics/OpenGL/Renderbuffer.hpp"
 #include "fwd/graphics/OpenGL/Texture.hpp"
 
-namespace Graphics::OpenGL {
+namespace block_thingy::graphics::opengl {
 
 class Framebuffer
 {

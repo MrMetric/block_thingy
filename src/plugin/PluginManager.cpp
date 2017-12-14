@@ -12,6 +12,8 @@
 
 using std::string;
 
+namespace block_thingy {
+
 struct PluginManager::impl
 {
 	std::vector<Plugin> plugins;
@@ -46,4 +48,6 @@ void PluginManager::init_plugins(Game& game)
 	{
 		plugin.init(game);
 	}
+}
+
 }

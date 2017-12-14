@@ -11,7 +11,9 @@ using std::string;
 
 using std::unique_ptr;
 
-string Util::demangle(const string& s)
+namespace block_thingy::util {
+
+string demangle(const string& s)
 {
 	int status;
 	unique_ptr<char, void(*)(void*)> res
@@ -22,8 +24,10 @@ string Util::demangle(const string& s)
 	return (status == 0) ? res.get() : s;
 }
 #else
-string Util::demangle(const string& s)
+string demangle(const string& s)
 {
 	return s;
 }
 #endif
+
+}

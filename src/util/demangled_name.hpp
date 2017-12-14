@@ -3,7 +3,7 @@
 #include <string>
 #include <typeinfo>
 
-namespace Util {
+namespace block_thingy::util {
 
 std::string demangle(const std::string&);
 

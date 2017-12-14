@@ -1,6 +1,6 @@
 #include "frustum.hpp"
 
-namespace Graphics {
+namespace block_thingy::graphics {
 
 frustum::~frustum()
 {

@@ -5,27 +5,27 @@
 
 #include <strict_variant/variant.hpp>
 
-struct Settings
-{
-	using value_t = strict_variant::variant<bool, double, int64_t, std::string>;
+namespace block_thingy::settings {
 
-	template<typename T>
-	static bool has(const std::string& name);
+using value_t = strict_variant::variant<bool, double, int64_t, std::string>;
 
-	template<typename T>
-	static T get(const std::string& name);
+template<typename T>
+bool has(const std::string& name);
 
-	template<typename T>
-	static void set(const std::string& name, T);
+template<typename T>
+T get(const std::string& name);
 
-	static bool has(const std::string& name);
-	static value_t get(const std::string& name);
-	static void set(const std::string& name, value_t);
+template<typename T>
+void set(const std::string& name, T);
 
-	static void load();
-	static void save();
+bool has(const std::string& name);
+value_t get(const std::string& name);
+void set(const std::string& name, value_t);
 
-private:
-	friend int main(int, char**);
-	static void add_command_handlers();
-};
+void load();
+void save();
+
+// for private use; do not call
+void add_command_handlers();
+
+}

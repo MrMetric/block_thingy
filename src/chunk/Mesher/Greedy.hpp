@@ -1,7 +1,7 @@
 #pragma once
 #include "Base.hpp"
 
-namespace Mesher {
+namespace block_thingy::mesher {
 
 class Greedy : public Base
 {

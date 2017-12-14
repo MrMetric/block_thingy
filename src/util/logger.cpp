@@ -37,7 +37,7 @@ std::ostream& log(const string& category)
 
 	std::ostream& o = (category == "ERROR") ? cerr : cout;
 
-	o << format::reset << Util::datetime() << ' ';
+	o << format::reset << util::datetime() << ' ';
 	if(category == "INFO")
 	{
 		// no formatting

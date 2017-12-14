@@ -4,7 +4,7 @@
 
 #include "fwd/physics/AABB.hpp"
 
-namespace Graphics {
+namespace block_thingy::graphics {
 
 struct plane
 {
@@ -12,8 +12,8 @@ struct plane
 	plane(const glm::dvec3&, const glm::dvec3&, const glm::dvec3&);
 
 	double distance(const glm::dvec3&) const;
-	double distance_p(const Physics::AABB&) const;
-	double distance_n(const Physics::AABB&) const;
+	double distance_p(const physics::AABB&) const;
+	double distance_n(const physics::AABB&) const;
 
 	glm::dvec3 normal;
 	double d;

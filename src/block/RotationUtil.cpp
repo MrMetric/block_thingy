@@ -6,13 +6,13 @@
 
 #include <glm/vec4.hpp>
 
-using Block::Enum::Face;
+namespace block_thingy::block::rotation_util {
 
-namespace Block::RotationUtil {
+using enums::Face;
 
 using ivec4 = glm::tvec4<int8_t>;
 
-std::unordered_map<uvec3, std::unordered_map<Face, uint8_t>, Position::hasher_struct<uvec3>> face_rotation_LUT
+std::unordered_map<uvec3, std::unordered_map<Face, uint8_t>, position::hasher_struct<uvec3>> face_rotation_LUT
 ({
 	{{0, 0, 0}, {{Face::right, 0}, {Face::left, 0}, {Face::top, 0}, {Face::bottom, 0}, {Face::front, 0}, {Face::back, 0}}},
 	{{0, 0, 1}, {{Face::right, 1}, {Face::left, 3}, {Face::top, 1}, {Face::bottom, 3}, {Face::front, 3}, {Face::back, 1}}},
@@ -183,7 +183,7 @@ imat4 rotate(const uint8_t turns, const ivec3& axis)
 	return rotate_(turns % 4, axis);
 }
 
-Enum::Face rotate_face(const Enum::Face face, const uvec3& rot)
+enums::Face rotate_face(const enums::Face face, const uvec3& rot)
 {
 	if(rot.x == 0 && rot.y == 0 && rot.z == 0)
 	{
@@ -193,7 +193,7 @@ Enum::Face rotate_face(const Enum::Face face, const uvec3& rot)
 	imat4 r = rotate(rot.x, {1, 0, 0})
 		    * rotate(rot.y, {0, 1, 0})
 		    * rotate(rot.z, {0, 0, 1});
-	return Block::Enum::vec_to_face(glm::ivec3(r * ivec4(Block::Enum::face_to_vec(face), 1)));
+	return enums::vec_to_face(glm::ivec3(r * ivec4(enums::face_to_vec(face), 1)));
 }
 
 // derived from glm::extractEulerAngleXYZ

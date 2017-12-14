@@ -6,7 +6,9 @@
 
 #include "chunk/ChunkData.hpp"
 
-using T = std::shared_ptr<Block::Base>;
+namespace block_thingy {
+
+using T = std::shared_ptr<block::Base>;
 
 template<>
 template<>
@@ -14,8 +16,8 @@ void ChunkData<T>::save(msgpack::packer<zstr::ostream>& o) const
 {
 	o.pack_array(2);
 
-	std::vector<std::shared_ptr<Block::Base>> block_vec;
-	std::unordered_map<Block::Base*, uint32_t> block_map;
+	std::vector<T> block_vec;
+	std::unordered_map<T::element_type*, uint32_t> block_map;
 	uint32_t block_i = 0;
 	for(auto& block : this->blocks)
 	{
@@ -51,7 +53,7 @@ void ChunkData<T>::load(const msgpack::object& o)
 	}
 	const auto v = o.as<std::array<msgpack::object, 2>>();
 
-	const auto block_vec = v[0].as<std::vector<std::shared_ptr<Block::Base>>>();
+	const auto block_vec = v[0].as<std::vector<T>>();
 
 	if(v[1].type != msgpack::type::ARRAY)
 	{
@@ -69,9 +71,13 @@ void ChunkData<T>::load(const msgpack::object& o)
 	}
 }
 
+}
+
 namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
 namespace adaptor {
+
+using block_thingy::ChunkData;
 
 template<typename T>
 struct pack<ChunkData<T>>

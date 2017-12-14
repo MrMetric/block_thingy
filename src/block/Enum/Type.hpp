@@ -3,7 +3,7 @@
 #include <iosfwd>
 #include <stdint.h>
 
-namespace Block::Enum {
+namespace block_thingy::block::enums {
 
 using Type_t = uint16_t;
 

@@ -4,6 +4,8 @@
 
 #include "console/Console.hpp"
 
+namespace block_thingy {
+
 class Command
 {
 public:
@@ -24,3 +26,5 @@ private:
 	Console& console;
 	std::string name;
 };
+
+}

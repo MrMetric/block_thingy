@@ -5,7 +5,7 @@
 
 #include <glm/vec3.hpp>
 
-namespace Block::Enum {
+namespace block_thingy::block::enums {
 
 enum class Face : uint8_t
 {

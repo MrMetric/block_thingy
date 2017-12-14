@@ -1,7 +1,6 @@
 #include "Interface.hpp"
 
-namespace msgpack {
-namespace v1 {
+namespace msgpack::v1 {
 
 template<>
 template<>
@@ -11,10 +10,9 @@ packer<zstr::ostream>& packer<zstr::ostream>::pack(const msgpack::sbuffer& v)
 	return *this;
 }
 
-} // namespace v1
-} // namespace msgpack
+}
 
-namespace Storage {
+namespace block_thingy::storage {
 
 msgpack::object_handle copy_object(const msgpack::object& o)
 {

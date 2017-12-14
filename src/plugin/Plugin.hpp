@@ -6,6 +6,8 @@
 #include "shim/propagate_const.hpp"
 #include "util/filesystem.hpp"
 
+namespace block_thingy {
+
 class Plugin
 {
 public:
@@ -28,3 +30,5 @@ private:
 	struct impl;
 	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };
+
+}

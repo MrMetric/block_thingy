@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+namespace block_thingy {
+
 class ArgumentParser
 {
 public:
@@ -31,3 +33,5 @@ public:
 	truncated_argument(const truncated_argument&) = default;
 	virtual ~truncated_argument();
 };
+
+}

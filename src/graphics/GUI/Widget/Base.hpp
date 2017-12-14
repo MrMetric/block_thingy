@@ -17,7 +17,7 @@
 #include "fwd/util/key_press.hpp"
 #include "fwd/util/mouse_press.hpp"
 
-namespace Graphics::GUI::Widget {
+namespace block_thingy::graphics::gui::widget {
 
 class Base
 {
@@ -29,15 +29,15 @@ public:
 
 	virtual void draw();
 
-	virtual void keypress(const Util::key_press&);
-	virtual void charpress(const Util::char_press&);
-	virtual void mousepress(const Util::mouse_press&);
+	virtual void keypress(const util::key_press&);
+	virtual void charpress(const util::char_press&);
+	virtual void mousepress(const util::mouse_press&);
 	virtual void mousemove(double x, double y);
 
 	virtual glm::dvec2 get_size() const;
 	glm::dvec2 get_position() const;
 
-	void add_modifier(std::shared_ptr<Component::Base>);
+	void add_modifier(std::shared_ptr<component::Base>);
 
 	void set_border_size(glm::dvec4);
 	void set_border_color(glm::dvec4);
@@ -78,7 +78,7 @@ protected:
 	);
 
 private:
-	std::vector<std::shared_ptr<Component::Base>> modifiers;
+	std::vector<std::shared_ptr<component::Base>> modifiers;
 };
 
 template<> char Base::get_layout_var(const json&, const std::string&, const char*) = delete;

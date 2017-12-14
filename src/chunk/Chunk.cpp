@@ -33,9 +33,11 @@
 using std::shared_ptr;
 using std::unique_ptr;
 
-using Position::BlockInChunk;
-using Position::BlockInWorld;
-using Position::ChunkInWorld;
+namespace block_thingy {
+
+using position::BlockInChunk;
+using position::BlockInWorld;
+using position::ChunkInWorld;
 
 constexpr uint32_t CHUNK_SIZE_2 = CHUNK_SIZE + 2;
 
@@ -67,7 +69,7 @@ struct Chunk::impl
 			{
 				const int64_t light_smoothing = *e.new_value.get<int64_t>();
 				const GLint mag_filter = static_cast<GLint>((light_smoothing == 0) ? GL_NEAREST : GL_LINEAR);
-				light_tex->parameter(Graphics::OpenGL::Texture::Parameter::mag_filter, mag_filter);
+				light_tex->parameter(graphics::opengl::Texture::Parameter::mag_filter, mag_filter);
 			}
 		});
 	}
@@ -87,13 +89,13 @@ struct Chunk::impl
 
 	void init_light_tex()
 	{
-		light_tex = std::make_unique<Graphics::OpenGL::Texture>(GL_TEXTURE_3D);
+		light_tex = std::make_unique<graphics::opengl::Texture>(GL_TEXTURE_3D);
 		set_light_tex_data();
-		light_tex->parameter(Graphics::OpenGL::Texture::Parameter::wrap_s, GL_CLAMP_TO_EDGE);
-		light_tex->parameter(Graphics::OpenGL::Texture::Parameter::wrap_t, GL_CLAMP_TO_EDGE);
-		light_tex->parameter(Graphics::OpenGL::Texture::Parameter::min_filter, GL_NEAREST);
-		const GLint mag_filter = static_cast<GLint>((Settings::get<int64_t>("light_smoothing") == 0) ? GL_NEAREST : GL_LINEAR);
-		light_tex->parameter(Graphics::OpenGL::Texture::Parameter::mag_filter, mag_filter);
+		light_tex->parameter(graphics::opengl::Texture::Parameter::wrap_s, GL_CLAMP_TO_EDGE);
+		light_tex->parameter(graphics::opengl::Texture::Parameter::wrap_t, GL_CLAMP_TO_EDGE);
+		light_tex->parameter(graphics::opengl::Texture::Parameter::min_filter, GL_NEAREST);
+		const GLint mag_filter = static_cast<GLint>((settings::get<int64_t>("light_smoothing") == 0) ? GL_NEAREST : GL_LINEAR);
+		light_tex->parameter(graphics::opengl::Texture::Parameter::mag_filter, mag_filter);
 		light_changed = false;
 	}
 
@@ -102,27 +104,27 @@ struct Chunk::impl
 		light_tex->image3D(0, GL_RGB, CHUNK_SIZE_2, CHUNK_SIZE_2, CHUNK_SIZE_2, GL_RGB, GL_UNSIGNED_BYTE, light_tex_buf.data());
 	}
 
-	Graphics::Color get_blocklight(const BlockInChunk&) const;
-	void set_blocklight(const BlockInChunk&, const Graphics::Color& color);
-	void set_texbuflight(const glm::ivec3& pos, const Graphics::Color& color);
+	graphics::Color get_blocklight(const BlockInChunk&) const;
+	void set_blocklight(const BlockInChunk&, const graphics::Color& color);
+	void set_texbuflight(const glm::ivec3& pos, const graphics::Color& color);
 
 	World& owner;
-	Position::ChunkInWorld position;
+	position::ChunkInWorld position;
 
-	unique_ptr<Graphics::OpenGL::Texture> light_tex;
+	unique_ptr<graphics::opengl::Texture> light_tex;
 	bool light_changed;
 	event_handler_id_t light_smoothing_eid;
 
 	bool changed;
-	Mesher::meshmap_t meshes;
-	std::vector<Graphics::OpenGL::VertexArray> mesh_vaos;
-	std::vector<Graphics::OpenGL::VertexBuffer> mesh_vbos;
+	mesher::meshmap_t meshes;
+	std::vector<graphics::opengl::VertexArray> mesh_vaos;
+	std::vector<graphics::opengl::VertexBuffer> mesh_vbos;
 	mutable std::mutex mesh_mutex;
 
 	void update_vaos();
 
 private:
-	ChunkData<Graphics::Color> blocklight;
+	ChunkData<graphics::Color> blocklight;
 	std::array<uint8_t, CHUNK_SIZE_2 * CHUNK_SIZE_2 * CHUNK_SIZE_2 * 3> light_tex_buf;
 };
 
@@ -146,17 +148,17 @@ ChunkInWorld Chunk::get_position() const
 	return pImpl->position;
 }
 
-const shared_ptr<Block::Base> Chunk::get_block(const BlockInChunk& pos) const
+const shared_ptr<block::Base> Chunk::get_block(const BlockInChunk& pos) const
 {
 	return blocks.get(pos);
 }
 
-shared_ptr<Block::Base> Chunk::get_block(const BlockInChunk& pos)
+shared_ptr<block::Base> Chunk::get_block(const BlockInChunk& pos)
 {
 	return blocks.get(pos);
 }
 
-void Chunk::set_block(const BlockInChunk& pos, shared_ptr<Block::Base> block)
+void Chunk::set_block(const BlockInChunk& pos, shared_ptr<block::Base> block)
 {
 	if(block == nullptr)
 	{
@@ -165,11 +167,11 @@ void Chunk::set_block(const BlockInChunk& pos, shared_ptr<Block::Base> block)
 	blocks.set(pos, block);
 }
 
-Graphics::Color Chunk::get_blocklight(const BlockInChunk& pos) const
+graphics::Color Chunk::get_blocklight(const BlockInChunk& pos) const
 {
 	return pImpl->get_blocklight(pos);
 }
-Graphics::Color Chunk::impl::get_blocklight(const BlockInChunk& pos) const
+graphics::Color Chunk::impl::get_blocklight(const BlockInChunk& pos) const
 {
 	return blocklight.get(pos);
 }
@@ -177,7 +179,7 @@ Graphics::Color Chunk::impl::get_blocklight(const BlockInChunk& pos) const
 void Chunk::set_blocklight
 (
 	const BlockInChunk& pos,
-	const Graphics::Color& color
+	const graphics::Color& color
 )
 {
 	pImpl->set_blocklight(pos, color);
@@ -185,18 +187,18 @@ void Chunk::set_blocklight
 void Chunk::impl::set_blocklight
 (
 	const BlockInChunk& pos,
-	const Graphics::Color& color
+	const graphics::Color& color
 )
 {
 	blocklight.set(pos, color);
 	set_texbuflight({pos.x, pos.y, pos.z}, color);
 }
 
-void Chunk::set_texbuflight(const glm::ivec3& pos, const Graphics::Color& color)
+void Chunk::set_texbuflight(const glm::ivec3& pos, const graphics::Color& color)
 {
 	pImpl->set_texbuflight(pos, color);
 }
-void Chunk::impl::set_texbuflight(const glm::ivec3& pos, const Graphics::Color& color)
+void Chunk::impl::set_texbuflight(const glm::ivec3& pos, const graphics::Color& color)
 {
 	const std::size_t i = 3 * (
 			  static_cast<std::size_t>(pos.z + 1) * CHUNK_SIZE_2 * CHUNK_SIZE_2
@@ -211,7 +213,7 @@ void Chunk::impl::set_texbuflight(const glm::ivec3& pos, const Graphics::Color& 
 
 void Chunk::update()
 {
-	Mesher::meshmap_t meshes = pImpl->owner.mesher->make_mesh(*this);
+	mesher::meshmap_t meshes = pImpl->owner.mesher->make_mesh(*this);
 
 	std::lock_guard<std::mutex> g(pImpl->mesh_mutex);
 	pImpl->meshes = std::move(meshes);
@@ -259,7 +261,7 @@ void Chunk::render(const bool translucent_pass)
 			continue;
 		}
 
-		Resource<Graphics::OpenGL::ShaderProgram> shader = Game::instance->resource_manager.get_ShaderProgram(p.first.shader_path);
+		Resource<graphics::opengl::ShaderProgram> shader = Game::instance->resource_manager.get_ShaderProgram(p.first.shader_path);
 		shader->uniform("position_offset", position_offset);
 		shader->uniform("tex", p.first.tex_unit);
 
@@ -274,7 +276,7 @@ void Chunk::set_blocks(chunk_blocks_t new_blocks)
 {
 	blocks = std::move(new_blocks);
 }
-void Chunk::set_blocks(shared_ptr<Block::Base> block)
+void Chunk::set_blocks(shared_ptr<block::Base> block)
 {
 	if(block == nullptr)
 	{
@@ -290,13 +292,13 @@ void Chunk::impl::update_vaos()
 		const std::size_t to_add = meshes.size() - mesh_vaos.size();
 		for(std::size_t i = 0; i < to_add; ++i)
 		{
-			Graphics::OpenGL::VertexBuffer vbo
+			graphics::opengl::VertexBuffer vbo
 			({
 				{3, GL_UNSIGNED_BYTE}, // relative position
 				{1, GL_UNSIGNED_BYTE}, // face (3 bits) and rotation (2 bits)
 				{1, GL_SHORT        }, // texture index
 			});
-			Graphics::OpenGL::VertexArray vao(vbo);
+			graphics::opengl::VertexArray vao(vbo);
 
 			mesh_vbos.emplace_back(std::move(vbo));
 			mesh_vaos.emplace_back(std::move(vao));
@@ -307,9 +309,11 @@ void Chunk::impl::update_vaos()
 	std::size_t i = 0;
 	for(const auto& p : meshes)
 	{
-		const auto usage_hint = Graphics::OpenGL::VertexBuffer::UsageHint::dynamic_draw;
-		const Mesher::mesh_t& mesh = p.second;
-		mesh_vbos[i].data(mesh.size() * sizeof(Mesher::mesh_t::value_type), mesh.data(), usage_hint);
+		const auto usage_hint = graphics::opengl::VertexBuffer::UsageHint::dynamic_draw;
+		const mesher::mesh_t& mesh = p.second;
+		mesh_vbos[i].data(mesh.size() * sizeof(mesher::mesh_t::value_type), mesh.data(), usage_hint);
 		++i;
 	}
+}
+
 }

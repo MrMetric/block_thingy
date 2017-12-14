@@ -6,7 +6,7 @@
 
 using std::string;
 
-namespace Graphics::GUI::Widget {
+namespace block_thingy::graphics::gui::widget {
 
 Base::Base()
 :
@@ -28,15 +28,15 @@ void Base::draw()
 	}
 }
 
-void Base::keypress(const Util::key_press&)
+void Base::keypress(const util::key_press&)
 {
 }
 
-void Base::charpress(const Util::char_press&)
+void Base::charpress(const util::char_press&)
 {
 }
 
-void Base::mousepress(const Util::mouse_press&)
+void Base::mousepress(const util::mouse_press&)
 {
 }
 
@@ -66,7 +66,7 @@ glm::dvec2 Base::get_position() const
 	return position;
 }
 
-void Base::add_modifier(std::shared_ptr<Component::Base> m)
+void Base::add_modifier(std::shared_ptr<component::Base> m)
 {
 	modifiers.emplace_back(m);
 }
@@ -174,7 +174,7 @@ void Base::apply_layout
 		const string* s;
 		if((s = p.second.get<string>()) != nullptr && !s->empty())
 		{
-			if(Util::string_starts_with(*s, "parent."))
+			if(util::string_starts_with(*s, "parent."))
 			{
 				solver.add_constraint(style_vars[p.first] == parent_vars[s->substr(7)]);
 			}

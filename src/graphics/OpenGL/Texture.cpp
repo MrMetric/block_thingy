@@ -3,7 +3,7 @@
 #include <limits>
 #include <stdexcept>
 
-namespace Graphics::OpenGL {
+namespace block_thingy::graphics::opengl {
 
 Texture::Texture()
 :

@@ -9,10 +9,10 @@
 #include "block/Enum/Face.hpp"
 #include "position/BlockInChunk.hpp"
 
-using Block::Enum::Face;
-using Position::BlockInChunk;
+namespace block_thingy::mesher {
 
-namespace Mesher {
+using block::enums::Face;
+using position::BlockInChunk;
 
 using surface_t = std::array<std::array<std::tuple<meshmap_key_t, uint16_t, uint8_t>, CHUNK_SIZE>, CHUNK_SIZE>;
 
@@ -98,7 +98,7 @@ void generate_surface
 			int8_t o[] = {0, 0, 0};
 			o[i.y] = offset;
 
-			const Block::Base& block = Base::block_at(chunk, x, y, z);
+			const block::Base& block = Base::block_at(chunk, x, y, z);
 			if(Base::block_visible_from(chunk, block, x + o[0], y + o[1], z + o[2]))
 			{
 				const auto tex = Game::instance->resource_manager.get_block_texture(block.texture(face));

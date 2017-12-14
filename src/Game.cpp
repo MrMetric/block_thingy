@@ -59,6 +59,8 @@ using std::shared_ptr;
 using std::string;
 using std::unique_ptr;
 
+namespace block_thingy {
+
 Game* Game::instance = nullptr;
 
 struct Game::impl
@@ -87,7 +89,7 @@ struct Game::impl
 	std::vector<Command> commands;
 	void add_commands();
 
-	unique_ptr<Graphics::GUI::Base> temp_gui;
+	unique_ptr<graphics::gui::Base> temp_gui;
 
 	bool just_opened_gui;
 	int last_key;
@@ -96,20 +98,20 @@ struct Game::impl
 	int consume_key_release_scancode;
 };
 
-static unique_ptr<Mesher::Base> make_mesher(const string& name)
+static unique_ptr<mesher::Base> make_mesher(const string& name)
 {
-	unique_ptr<Mesher::Base> mesher;
+	unique_ptr<mesher::Base> mesher;
 	if(name == "Greedy")
 	{
-		return std::make_unique<Mesher::Greedy>();
+		return std::make_unique<mesher::Greedy>();
 	}
 	else if(name == "Simple")
 	{
-		return std::make_unique<Mesher::Simple>();
+		return std::make_unique<mesher::Simple>();
 	}
 	else if(name == "Simple2")
 	{
-		return std::make_unique<Mesher::Simple2>();
+		return std::make_unique<mesher::Simple2>();
 	}
 	LOG(ERROR) << "No such mesher: " << name << '\n';
 	return make_mesher("Simple2");
@@ -120,7 +122,7 @@ Game::Game()
 	set_instance(this),
 	hovered_block(nullptr),
 	camera(gfx),
-	world("worlds/test", block_registry, make_mesher(Settings::get<string>("mesher"))),
+	world("worlds/test", block_registry, make_mesher(settings::get<string>("mesher"))),
 	player_ptr(world.add_player("test_player")),
 	player(*player_ptr),
 	keybinder(*Console::instance),
@@ -135,7 +137,7 @@ Game::Game()
 		block_registry.reset_extid_map();
 	}
 
-	gui = std::make_unique<Graphics::GUI::Play>(*this);
+	gui = std::make_unique<graphics::gui::Play>(*this);
 	gui->init();
 
 	gfx.hook_events(event_manager);
@@ -190,14 +192,14 @@ Game::Game()
 
 Game::~Game()
 {
-	Settings::save();
+	settings::save();
 }
 
 void Game::draw()
 {
 	// TODO: use double when available
 	const float global_time = static_cast<float>(world.get_time());
-	resource_manager.foreach_ShaderProgram([global_time](Resource<Graphics::OpenGL::ShaderProgram> r)
+	resource_manager.foreach_ShaderProgram([global_time](Resource<graphics::opengl::ShaderProgram> r)
 	{
 		r->uniform("global_time", global_time);
 	});
@@ -237,7 +239,7 @@ void Game::draw()
 	gfx.quad_vao.draw(GL_TRIANGLES, 0, 6);
 
 	// TODO: it might be faster to listen for the change event and set a private bool instead of getting the value every frame
-	if(Settings::get<string>("screen_shader") != "default")
+	if(settings::get<string>("screen_shader") != "default")
 	{
 		glViewport(3 * gfx.window_size.x / 4, 0, gfx.window_size.x / 4, gfx.window_size.y / 4);
 		glScissor(3 * gfx.window_size.x / 4, 0, gfx.window_size.x / 4, gfx.window_size.y / 4);
@@ -311,15 +313,15 @@ void Game::draw_world
 	const glm::dmat4& projection_matrix
 )
 {
-	const bool wireframe = Settings::get<bool>("wireframe");
+	const bool wireframe = settings::get<bool>("wireframe");
 	if(wireframe)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 
 	gfx.set_camera_view(cam_position, cam_rotation, projection_matrix);
-	Position::BlockInWorld render_origin(cam_position);
-	const std::tuple<uint64_t, uint64_t> draw_stats = RenderWorld::draw_world
+	position::BlockInWorld render_origin(cam_position);
+	const std::tuple<uint64_t, uint64_t> draw_stats = graphics::draw_world
 	(
 		world,
 		resource_manager,
@@ -333,7 +335,7 @@ void Game::draw_world
 		std::get<1>(pImpl->draw_stats) + std::get<1>(draw_stats),
 	};
 
-	if(hovered_block != nullptr && Settings::get<bool>("show_HUD"))
+	if(hovered_block != nullptr && settings::get<bool>("show_HUD"))
 	{
 		const glm::dvec4 color = world.get_block(hovered_block->pos)->selection_color();
 		gfx.draw_block_outline(hovered_block->pos, color);
@@ -345,7 +347,7 @@ void Game::draw_world
 	}
 }
 
-void Game::open_gui(unique_ptr<Graphics::GUI::Base> gui)
+void Game::open_gui(unique_ptr<graphics::gui::Base> gui)
 {
 	if(gui == nullptr)
 	{
@@ -366,7 +368,7 @@ void Game::open_gui(unique_ptr<Graphics::GUI::Base> gui)
 void Game::close_gui()
 {
 	// code may be running in the GUI, such as from clicking the Resume button in the pause menu
-	// after immediate destructing, Graphics::GUI::Widget::Container will continue its mousepress loop
+	// after immediate destructing, graphics::gui::widget::Container will continue its mousepress loop
 	// this could crash the engine, so temp_gui keeps it for the rest of the frame
 	pImpl->temp_gui = std::move(gui);
 	gui = std::move(pImpl->temp_gui->parent);
@@ -391,7 +393,7 @@ void Game::screenshot(fs::path path) const
 	std::vector<uint8_t> pixels(4 * width * height);
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
-	Graphics::Image(width, height, std::move(pixels)).write(path);
+	graphics::Image(width, height, std::move(pixels)).write(path);
 }
 
 double Game::get_fps() const
@@ -399,7 +401,7 @@ double Game::get_fps() const
 	return pImpl->fps.getFPS();
 }
 
-Position::ChunkInWorld::value_type Game::get_render_distance() const
+position::ChunkInWorld::value_type Game::get_render_distance() const
 {
 	return render_distance;
 }
@@ -415,7 +417,7 @@ void Game::update_framebuffer_size(const window_size_t& window_size)
 	event_manager.do_event(Event_window_size_change(window_size));
 }
 
-void Game::keypress(const Util::key_press& press)
+void Game::keypress(const util::key_press& press)
 {
 	if(pImpl->consume_key_release == press.key && pImpl->consume_key_release_scancode == press.scancode)
 	{
@@ -431,7 +433,7 @@ void Game::keypress(const Util::key_press& press)
 	gui->keypress(press);
 }
 
-void Game::charpress(const Util::char_press& press)
+void Game::charpress(const util::char_press& press)
 {
 	if(pImpl->just_opened_gui)
 	{
@@ -443,7 +445,7 @@ void Game::charpress(const Util::char_press& press)
 	gui->charpress(press);
 }
 
-void Game::mousepress(const Util::mouse_press& press)
+void Game::mousepress(const util::mouse_press& press)
 {
 	gui->mousepress(press);
 }
@@ -467,7 +469,7 @@ void Game::impl::find_hovered_block()
 {
 	glm::dvec3 out_origin;
 	glm::dvec3 out_direction;
-	PhysicsUtil::ScreenPosToWorldRay
+	physics::ScreenPosToWorldRay
 	(
 		game.gfx.window_mid,
 		game.gfx.window_size,
@@ -478,7 +480,7 @@ void Game::impl::find_hovered_block()
 	);
 
 	glm::dvec3 offset = game.gfx.physical_position - game.gfx.graphical_position;
-	game.hovered_block = PhysicsUtil::raycast
+	game.hovered_block = physics::raycast
 	(
 		game.world,
 		out_origin + offset,
@@ -516,11 +518,11 @@ void Game::impl::add_commands()
 			return;
 		}
 
-		const Position::BlockInWorld pos = game.hovered_block->pos;
-		shared_ptr<Block::Base> block = game.world.get_block(pos);
-		if(block->type() != Block::Enum::Type::none) // TODO: breakability check
+		const position::BlockInWorld pos = game.hovered_block->pos;
+		shared_ptr<block::Base> block = game.world.get_block(pos);
+		if(block->type() != block::enums::Type::none) // TODO: breakability check
 		{
-			game.world.set_block(pos, game.block_registry.get_default(Block::Enum::Type::air), false);
+			game.world.set_block(pos, game.block_registry.get_default(block::enums::Type::air), false);
 		}
 	});
 	COMMAND("place_block")
@@ -530,8 +532,8 @@ void Game::impl::add_commands()
 			return;
 		}
 
-		shared_ptr<Block::Base> block = game.copied_block;
-		const Position::BlockInWorld pos = game.hovered_block->adjacent();
+		shared_ptr<block::Base> block = game.copied_block;
+		const position::BlockInWorld pos = game.hovered_block->adjacent();
 		if(game.world.get_block(pos)->is_replaceable_by(*block)
 		&& (player.can_place_block_at(pos) || !block->is_solid()))
 		{
@@ -715,7 +717,7 @@ void Game::impl::add_commands()
 		string filename;
 		if(args.size() == 0)
 		{
-			filename = Util::datetime() + ".png";
+			filename = util::datetime() + ".png";
 		}
 		else if(args.size() == 1)
 		{
@@ -771,11 +773,11 @@ void Game::impl::add_commands()
 			return;
 		}
 
-		const Position::BlockInWorld start_pos = game.hovered_block->adjacent();
-		const Position::BlockInWorld::value_type ysize = 9;
-		const Position::BlockInWorld::value_type xsize = 9;
-		const Block::Enum::Type_t i = static_cast<Block::Enum::Type_t>(game.copied_block->type()); // TODO: use copied_block instance
-		Block::Enum::Type_t nazi[ysize][xsize]
+		const position::BlockInWorld start_pos = game.hovered_block->adjacent();
+		const position::BlockInWorld::value_type ysize = 9;
+		const position::BlockInWorld::value_type xsize = 9;
+		const block::enums::Type_t i = static_cast<block::enums::Type_t>(game.copied_block->type()); // TODO: use copied_block instance
+		block::enums::Type_t nazi[ysize][xsize]
 		{
 			{ i, 1, 1, 1, i, i, i, i, i, },
 			{ i, 1, 1, 1, i, 1, 1, 1, 1, },
@@ -787,14 +789,14 @@ void Game::impl::add_commands()
 			{ 1, 1, 1, 1, i, 1, 1, 1, i, },
 			{ i, i, i, i, i, 1, 1, 1, i, },
 		};
-		Position::BlockInWorld pos;
+		position::BlockInWorld pos;
 		for(pos.x = 0; pos.x < xsize; ++pos.x)
 		{
 			for(pos.y = ysize - 1; pos.y >= 0; --pos.y)
 			{
 				for(pos.z = 0; pos.z < 1; ++pos.z)
 				{
-					const auto type = static_cast<Block::Enum::Type>(nazi[pos.y][pos.x]);
+					const auto type = static_cast<block::enums::Type>(nazi[pos.y][pos.x]);
 					game.world.set_block(pos + start_pos, game.block_registry.get_default(type));
 				}
 			}
@@ -809,18 +811,18 @@ void Game::impl::add_commands()
 			return;
 		}
 		const string name = args[0];
-		unique_ptr<Graphics::GUI::Base> gui;
+		unique_ptr<graphics::gui::Base> gui;
 		if(game.gui->type() == name)
 		{
 			return;
 		}
 		if(name == "Pause")
 		{
-			gui = std::make_unique<Graphics::GUI::Pause>(game);
+			gui = std::make_unique<graphics::gui::Pause>(game);
 		}
 		else if(name == "Console")
 		{
-			gui = std::make_unique<Graphics::GUI::Console>(game);
+			gui = std::make_unique<graphics::gui::Console>(game);
 		}
 		else
 		{
@@ -835,4 +837,6 @@ void Game::impl::add_commands()
 	});
 
 	#undef COMMAND
+}
+
 }

@@ -5,10 +5,10 @@
 #include "chunk/Chunk.hpp"
 #include "position/BlockInChunk.hpp"
 
-using Block::Enum::Face;
-using Position::BlockInChunk;
+namespace block_thingy::mesher {
 
-namespace Mesher {
+using block::enums::Face;
+using position::BlockInChunk;
 
 meshmap_t Simple::make_mesh(const Chunk& chunk)
 {
@@ -17,7 +17,7 @@ meshmap_t Simple::make_mesh(const Chunk& chunk)
 	for(BlockInChunk::value_type y = 0; y < CHUNK_SIZE; ++y)
 	for(BlockInChunk::value_type z = 0; z < CHUNK_SIZE; ++z)
 	{
-		const Block::Base& block = *chunk.get_block({x, y, z});
+		const block::Base& block = *chunk.get_block({x, y, z});
 		if(block.is_invisible())
 		{
 			continue;

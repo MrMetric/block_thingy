@@ -1,6 +1,6 @@
 #include "mouse_press.hpp"
 
-namespace Util {
+namespace block_thingy::util {
 
 mouse_press::mouse_press(const int button, const int action, const int mods)
 :

@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace Graphics::GUI::Widget {
+namespace block_thingy::graphics::gui::widget {
 
 class Text : public Base
 {

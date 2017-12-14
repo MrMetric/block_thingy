@@ -5,7 +5,7 @@
 
 #include <glad/glad.h>
 
-namespace Graphics::OpenGL {
+namespace block_thingy::graphics::opengl {
 
 class VertexBuffer
 {

@@ -13,7 +13,7 @@
 #include "graphics/primitive.hpp"
 #include "util/filesystem.hpp"
 
-namespace Mesher {
+namespace block_thingy::mesher {
 
 using u8vec3 = glm::tvec3<uint8_t>;
 
@@ -25,7 +25,7 @@ struct mesh_vertex_t
 	mesh_vertex_t
 	(
 		const vertex_coord_t<uint8_t>& pos,
-		Block::Enum::Face,
+		block::enums::Face,
 		uint8_t rotation,
 		uint16_t tex_index
 	);
@@ -92,18 +92,18 @@ public:
 	(
 		mesh_t& mesh,
 		u8vec3 xyz,
-		Block::Enum::Face face,
+		block::enums::Face face,
 		uint8_t offset_x,
 		uint8_t offset_z,
 		uint16_t tex_index,
 		uint8_t rotation
 	);
-	static u8vec3 get_i(Block::Enum::Face);
+	static u8vec3 get_i(block::enums::Face);
 
-	static Side to_side(Block::Enum::Face);
+	static Side to_side(block::enums::Face);
 
-	static const Block::Base& block_at(const Chunk&, int_fast16_t x, int_fast16_t y, int_fast16_t z);
-	static bool block_visible_from(const Chunk&, const Block::Base&, int_fast16_t, int_fast16_t, int_fast16_t);
+	static const block::Base& block_at(const Chunk&, int_fast16_t x, int_fast16_t y, int_fast16_t z);
+	static bool block_visible_from(const Chunk&, const block::Base&, int_fast16_t, int_fast16_t, int_fast16_t);
 };
 
 }

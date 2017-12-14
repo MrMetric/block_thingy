@@ -3,7 +3,7 @@
 #include "graphics/OpenGL/Renderbuffer.hpp"
 #include "graphics/OpenGL/Texture.hpp"
 
-namespace Graphics::OpenGL {
+namespace block_thingy::graphics::opengl {
 
 Framebuffer::Framebuffer()
 {

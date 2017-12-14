@@ -1,7 +1,7 @@
 #pragma once
 #include "Base.hpp"
 
-namespace Graphics::GUI {
+namespace block_thingy::graphics::gui {
 
 class Console : public Base
 {

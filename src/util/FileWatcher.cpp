@@ -8,7 +8,7 @@
 
 using std::string;
 
-namespace Util {
+namespace block_thingy::util {
 
 struct FileWatcher::impl
 {

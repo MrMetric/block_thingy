@@ -6,7 +6,7 @@
 using std::string;
 using std::u32string;
 
-namespace Util {
+namespace block_thingy::util {
 
 #if defined(_MSC_VER) && _MSC_VER >= 1900 // a bug prevents linking
 	#define bugfix

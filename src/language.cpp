@@ -10,7 +10,7 @@
 
 using std::string;
 
-namespace language {
+namespace block_thingy::language {
 
 static std::unordered_map<string, std::unordered_map<string, string>> langs
 {
@@ -19,7 +19,7 @@ static std::unordered_map<string, std::unordered_map<string, string>> langs
 
 string get(const string& key)
 {
-	return get(Settings::get<string>("language"), key);
+	return get(settings::get<string>("language"), key);
 }
 
 string get(const string& language, const string& key)
@@ -51,7 +51,7 @@ void set(const string& language, const string& key, string value)
 
 void load(const string& language, const fs::path& path)
 {
-	load_text(language, Util::read_text(path));
+	load_text(language, util::read_text(path));
 }
 
 void load_text(const string& language, const string& text)
@@ -65,7 +65,7 @@ void load_text(const string& language, const string& text)
 	std::istringstream ss(text);
 	for(string line; std::getline(ss, line);)
 	{
-		line = Util::strip_whitespace(line);
+		line = util::strip_whitespace(line);
 		if(line.empty() || line[0] == '#')
 		{
 			continue;
@@ -77,13 +77,13 @@ void load_text(const string& language, const string& text)
 			LOG(WARN) << "invalid line in " << language << " language text: " << line << '\n';
 			continue;
 		}
-		const string key = Util::strip_whitespace(line.substr(0, pos));
+		const string key = util::strip_whitespace(line.substr(0, pos));
 		if(key.empty())
 		{
 			LOG(WARN) << "invalid line in " << language << " language text: " << line << '\n';
 			continue;
 		}
-		const string value = Util::strip_whitespace(line.substr(pos + 1));
+		const string value = util::strip_whitespace(line.substr(pos + 1));
 		lang.insert_or_assign(key, value);
 	}
 }

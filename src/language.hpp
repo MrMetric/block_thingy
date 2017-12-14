@@ -4,7 +4,7 @@
 
 #include "util/filesystem.hpp"
 
-namespace language {
+namespace block_thingy::language {
 
 std::string get(const std::string& key);
 std::string get(const std::string& language, const std::string& key);
