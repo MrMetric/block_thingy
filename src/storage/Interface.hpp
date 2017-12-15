@@ -7,7 +7,7 @@
 #include <msgpack.hpp>
 #include <zstr/zstr.hpp>
 
-#include "msgpack_util.hpp"
+#include "storage/msgpack_util.hpp"
 
 namespace msgpack {
 namespace v1 { // MSGPACK_API_VERSION_NAMESPACE(v1) does not work here?

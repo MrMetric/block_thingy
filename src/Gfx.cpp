@@ -121,7 +121,11 @@ void Gfx::hook_events(EventManager& event_manager)
 			const int light_smoothing = static_cast<int>(*e.new_value.get<int64_t>());
 			Game::instance->resource_manager.foreach_ShaderProgram([light_smoothing](Resource<ShaderProgram> r)
 			{
+				#ifdef _WIN32
+				if(util::string_starts_with(r.get_id(), "shaders\\block\\"))
+				#else
 				if(util::string_starts_with(r.get_id(), "shaders/block/"))
+				#endif
 				{
 					r->uniform("light_smoothing", light_smoothing);
 				}
@@ -132,7 +136,11 @@ void Gfx::hook_events(EventManager& event_manager)
 			const float min_light = static_cast<float>(*e.new_value.get<double>());
 			Game::instance->resource_manager.foreach_ShaderProgram([min_light](Resource<ShaderProgram> r)
 			{
+				#ifdef _WIN32
+				if(util::string_starts_with(r.get_id(), "shaders\\block\\"))
+				#else
 				if(util::string_starts_with(r.get_id(), "shaders/block/"))
+				#endif
 				{
 					r->uniform("min_light", min_light);
 				}

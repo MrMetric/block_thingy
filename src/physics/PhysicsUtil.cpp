@@ -15,9 +15,10 @@
 #include "RaycastHit.hpp"
 #include "World.hpp"
 #include "block/Base.hpp"
+#include "physics/ray.hpp"
 #include "position/BlockInWorld.hpp"
 
-using std::unique_ptr;
+using std::nullopt;
 
 namespace block_thingy::physics {
 
@@ -80,14 +81,12 @@ static glm::dvec3 delta(const glm::dvec3& direction)
 }
 
 // http://www.opengl-tutorial.org/miscellaneous/clicking-on-objects/picking-with-a-physics-library/
-void ScreenPosToWorldRay
+ray screen_pos_to_world_ray
 (
 	const glm::dvec2& mouse,              // Mouse position, in pixels, from bottom-left corner of the window
 	const window_size_t& screen_size,     // Window size, in pixels
 	const glm::dmat4& view_matrix,        // Camera position and orientation
-	const glm::dmat4& projection_matrix,  // Camera parameters (ratio, field of view, near and far planes)
-	glm::dvec3& out_origin,               // Ouput : Origin of the ray. /!\ Starts at the near plane, so if you want the ray to start at the camera's position instead, ignore this.
-	glm::dvec3& out_direction             // Ouput : Direction, in world space, of the ray that goes "through" the mouse.
+	const glm::dmat4& projection_matrix   // Camera parameters (ratio, field of view, near and far planes)
 )
 {
 	// The ray Start and End positions, in Normalized Device Coordinates (Have you read Tutorial 4 ?)
@@ -128,12 +127,12 @@ void ScreenPosToWorldRay
 	glm::dvec4 lRayEnd_world   = M * lRayEnd_NDC;   lRayEnd_world   /= lRayEnd_world.w;
 
 
-	glm::dvec3 lRayDir_world(lRayEnd_world - lRayStart_world);
-	lRayDir_world = glm::normalize(lRayDir_world);
-
-
-	out_origin = glm::dvec3(lRayStart_world);
-	out_direction = lRayDir_world;
+	const glm::dvec3 lRayDir_world = glm::normalize(glm::dvec3(lRayEnd_world - lRayStart_world));
+	return
+	{
+		glm::dvec3(lRayStart_world),
+		lRayDir_world,
+	};
 }
 
 static bool pos_in_bounds(const position::BlockInWorld& pos, const glm::dvec3& min, const glm::dvec3& max)
@@ -153,11 +152,10 @@ static bool pos_in_bounds(const position::BlockInWorld& pos, const glm::dvec3& m
  *
  * If the callback returns a true value, the traversal will be stopped.
  */
-unique_ptr<RaycastHit> raycast
+std::optional<RaycastHit> raycast
 (
 	const World& world,
-	const glm::dvec3& origin,
-	const glm::dvec3& direction,
+	const ray& r,
 	const double radius
 )
 {
@@ -180,26 +178,26 @@ unique_ptr<RaycastHit> raycast
 	// tMaxX, tMaxY, and tMaxZ.
 
 	// avoid an infinite loop (this is not possible, but being careful is important)
-	if(direction == glm::dvec3(0))
+	if(r.direction == glm::dvec3(0))
 	{
-		return nullptr;
+		return nullopt;
 	}
 
-	position::BlockInWorld cube_pos(origin);
+	position::BlockInWorld cube_pos(r.origin);
 
 	// Direction to increment x,y,z when stepping.
-	const glm::ivec3 step(glm::sign(direction));
+	const glm::ivec3 step(glm::sign(r.direction));
 
 	// See description above. The initial values depend on the fractional part of the origin.
-	glm::dvec3 tMax = intbound(origin, direction);
+	glm::dvec3 tMax = intbound(r.origin, r.direction);
 
 	// The change in t when taking a step (always positive).
-	const glm::dvec3 tDelta = delta(direction);
+	const glm::dvec3 tDelta = delta(r.direction);
 
 	glm::ivec3 face;
 
-	const glm::dvec3 min = origin - radius;
-	const glm::dvec3 max = origin + radius;
+	const glm::dvec3 min = r.origin - radius;
+	const glm::dvec3 max = r.origin + radius;
 
 	while(// ray has not gone past bounds of world
 			(step.x > 0 ? cube_pos.x < max.x : cube_pos.x > min.x) &&
@@ -208,7 +206,7 @@ unique_ptr<RaycastHit> raycast
 	{
 		if(pos_in_bounds(cube_pos, min, max) && world.get_block(cube_pos)->is_selectable())
 		{
-			return std::make_unique<RaycastHit>(cube_pos, face);
+			return RaycastHit(cube_pos, face);
 		}
 
 		// tMax.x stores the t-value at which we cross a cube boundary along the
@@ -228,7 +226,7 @@ unique_ptr<RaycastHit> raycast
 	}
 
 	// there is no cube in range
-	return nullptr;
+	return nullopt;
 }
 
 }

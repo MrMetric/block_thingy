@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <memory>
+#include <optional>
 #include <string>
 #include <tuple>
 
@@ -90,7 +91,7 @@ public:
 	void joymove(const glm::dvec2& motion);
 
 	std::shared_ptr<block::Base> copied_block;
-	std::unique_ptr<physics::RaycastHit> hovered_block;
+	std::optional<physics::RaycastHit> hovered_block;
 
 	ResourceManager resource_manager;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h> // kinda lame including this here, but whatever
+#include <stdint.h>
 
 namespace block_thingy
 {

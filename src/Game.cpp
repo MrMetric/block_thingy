@@ -46,6 +46,7 @@
 #include "graphics/GUI/Pause.hpp"
 #include "graphics/GUI/Play.hpp"
 #include "physics/PhysicsUtil.hpp"
+#include "physics/ray.hpp"
 #include "physics/RaycastHit.hpp"
 #include "plugin/PluginManager.hpp"
 #include "position/BlockInChunk.hpp"
@@ -55,6 +56,7 @@
 #include "util/key_press.hpp"
 #include "util/logger.hpp"
 
+using std::nullopt;
 using std::shared_ptr;
 using std::string;
 using std::unique_ptr;
@@ -120,7 +122,6 @@ static unique_ptr<mesher::Base> make_mesher(const string& name)
 Game::Game()
 :
 	set_instance(this),
-	hovered_block(nullptr),
 	camera(gfx),
 	world("worlds/test", block_registry, make_mesher(settings::get<string>("mesher"))),
 	player_ptr(world.add_player("test_player")),
@@ -335,7 +336,7 @@ void Game::draw_world
 		std::get<1>(pImpl->draw_stats) + std::get<1>(draw_stats),
 	};
 
-	if(hovered_block != nullptr && settings::get<bool>("show_HUD"))
+	if(hovered_block != nullopt && settings::get<bool>("show_HUD"))
 	{
 		const glm::dvec4 color = world.get_block(hovered_block->pos)->selection_color();
 		gfx.draw_block_outline(hovered_block->pos, color);
@@ -467,24 +468,20 @@ void Game::joymove(const glm::dvec2& motion)
 
 void Game::impl::find_hovered_block()
 {
-	glm::dvec3 out_origin;
-	glm::dvec3 out_direction;
-	physics::ScreenPosToWorldRay
+	physics::ray ray = physics::screen_pos_to_world_ray
 	(
 		game.gfx.window_mid,
 		game.gfx.window_size,
 		game.gfx.view_matrix_graphical,
-		game.gfx.projection_matrix,
-		out_origin,
-		out_direction
+		game.gfx.projection_matrix
 	);
 
 	glm::dvec3 offset = game.gfx.physical_position - game.gfx.graphical_position;
+	ray.origin += offset;
 	game.hovered_block = physics::raycast
 	(
 		game.world,
-		out_origin + offset,
-		out_direction,
+		ray,
 		game.player.reach_distance
 	);
 }
@@ -513,7 +510,7 @@ void Game::impl::add_commands()
 
 	COMMAND("break_block")
 	{
-		if(game.hovered_block == nullptr)
+		if(game.hovered_block == nullopt)
 		{
 			return;
 		}
@@ -527,7 +524,7 @@ void Game::impl::add_commands()
 	});
 	COMMAND("place_block")
 	{
-		if(game.hovered_block == nullptr || game.copied_block == nullptr)
+		if(game.hovered_block == nullopt || game.copied_block == nullptr)
 		{
 			return;
 		}
@@ -542,7 +539,7 @@ void Game::impl::add_commands()
 	});
 	COMMAND("copy_block")
 	{
-		if(game.hovered_block != nullptr)
+		if(game.hovered_block != nullopt)
 		{
 			game.copied_block = game.world.get_block(game.hovered_block->pos);
 		}
@@ -603,7 +600,7 @@ void Game::impl::add_commands()
 	});
 	COMMAND("+use")
 	{
-		if(game.hovered_block != nullptr)
+		if(game.hovered_block != nullopt)
 		{
 			game.world.get_block(game.hovered_block->pos)->use_start
 			(
@@ -768,7 +765,7 @@ void Game::impl::add_commands()
 
 	COMMAND("nazi")
 	{
-		if(game.hovered_block == nullptr || game.copied_block == nullptr)
+		if(game.hovered_block == nullopt || game.copied_block == nullptr)
 		{
 			return;
 		}

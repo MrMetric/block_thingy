@@ -17,7 +17,6 @@
 #include "util/logger.hpp"
 
 using std::string;
-using std::to_string;
 using std::unique_ptr;
 
 namespace block_thingy::util {

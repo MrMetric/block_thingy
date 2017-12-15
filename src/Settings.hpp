@@ -3,11 +3,24 @@
 #include <stdint.h>
 #include <string>
 
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+
 #include <strict_variant/variant.hpp>
 
 namespace block_thingy::settings {
 
-using value_t = strict_variant::variant<bool, double, int64_t, std::string>;
+using value_t = strict_variant::variant
+<
+	bool,
+	double,
+	int64_t,
+	std::string,
+	glm::dvec2,
+	glm::dvec3,
+	glm::dvec4
+>;
 
 template<typename T>
 bool has(const std::string& name);

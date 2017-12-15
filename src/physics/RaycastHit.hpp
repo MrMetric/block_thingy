@@ -2,7 +2,7 @@
 
 #include <glm/vec3.hpp>
 
-#include "block/Enum/Face.hpp"
+#include "fwd/block/Enum/Face.hpp"
 #include "position/BlockInWorld.hpp"
 
 namespace block_thingy::physics {

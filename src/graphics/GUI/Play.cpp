@@ -14,6 +14,7 @@
 #include "Player.hpp"
 #include "Settings.hpp"
 #include "block/Base.hpp"
+#include "block/Enum/Face.hpp"
 #include "block/Enum/Type.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
@@ -23,6 +24,7 @@
 #include "position/ChunkInWorld.hpp"
 #include "util/key_mods.hpp"
 
+using std::nullopt;
 using std::shared_ptr;
 using std::string;
 
@@ -101,13 +103,18 @@ void Play::draw_gui()
 
 void Play::draw_crosshair()
 {
-	const glm::dvec4 crosshair_color(1.0);
+	const glm::dvec4 color = settings::get<glm::dvec4>("crosshair_color");
+	const double size = settings::get<double>("crosshair_size");
+	const double thickness = settings::get<double>("crosshair_thickness");
 
 	// TODO: rectangle widget
 	const double x = game.gfx.window_mid.x;
 	const double y = game.gfx.window_mid.y;
-	game.gfx.draw_rectangle({x - 1, y - 16}, {2, 32}, crosshair_color);
-	game.gfx.draw_rectangle({x - 16, y - 1}, {32, 2}, crosshair_color);
+	const double t2 = thickness / 2;
+	const double s2 = size / 2;
+	game.gfx.draw_rectangle({x - t2, y - s2}, {thickness, size}, color);
+	game.gfx.draw_rectangle({x - s2, y - t2}, {s2 - t2, thickness}, color);
+	game.gfx.draw_rectangle({x + t2, y - t2}, {s2 - t2, thickness}, color);
 }
 
 void Play::draw_debug_text()
@@ -166,7 +173,7 @@ void Play::draw_debug_text()
 	{
 		ss << "copied block: " << show_block(*game.copied_block) << '\n';
 	}
-	if(game.hovered_block != nullptr)
+	if(game.hovered_block != nullopt)
 	{
 		const shared_ptr<block::Base> hovered = game.world.get_block(game.hovered_block->pos);
 		ss << "hovered: " << show_block(*hovered) << '\n';

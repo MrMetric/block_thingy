@@ -21,13 +21,15 @@ static std::map<string, value_t> settings;
 
 static string get_type_name(const value_t& s)
 {
-	static_assert(std::is_same<value_t, strict_variant::variant<bool, double, int64_t, string>>::value);
 	switch(s.which())
 	{
 		case 0: return "bool";
 		case 1: return "float";
 		case 2: return "int";
 		case 3: return "string";
+		case 4: return "vec2";
+		case 5: return "vec3";
+		case 6: return "vec4";
 	}
 	LOG(BUG) << "setting has an unknown type\n";
 	return "ERROR";
@@ -45,10 +47,13 @@ string get_type_name_T()
 	LOG(BUG) << "setting has unexpected type " << name << '\n';
 	return name;
 }
-template<> string get_type_name_T<bool   >() { return "bool"; }
-template<> string get_type_name_T<double >() { return "float"; }
-template<> string get_type_name_T<int64_t>() { return "int"; }
-template<> string get_type_name_T<string >() { return "string"; }
+template<> string get_type_name_T<bool      >() { return "bool"  ; }
+template<> string get_type_name_T<double    >() { return "float" ; }
+template<> string get_type_name_T<int64_t   >() { return "int"   ; }
+template<> string get_type_name_T<string    >() { return "string"; }
+template<> string get_type_name_T<glm::dvec2>() { return "vec2"  ; }
+template<> string get_type_name_T<glm::dvec3>() { return "vec3"  ; }
+template<> string get_type_name_T<glm::dvec4>() { return "vec4"  ; }
 
 template<typename T>
 bool has(const string& name)
@@ -122,6 +127,9 @@ void load()
 {
 	settings =
 	{
+		{"crosshair_color"		, glm::dvec4(1.0)},
+		{"crosshair_size"		, 32.0},
+		{"crosshair_thickness"	, 2.0},
 		{"cull_face"			, true},
 		{"cursor_blink_rate"	, 0.5}, // TODO: ensure > 0
 		{"far_plane"			, 1500.0},
@@ -199,9 +207,21 @@ void save()
 		{
 			f << "set_string " << name << ' ' << format_string(*s) << '\n';
 		}
+		else if(const glm::dvec2* v = setting.get<glm::dvec2>())
+		{
+			f << "set_vec2 " << name << ' ' << v->x << ' ' << v->y << '\n';
+		}
+		else if(const glm::dvec3* v = setting.get<glm::dvec3>())
+		{
+			f << "set_vec3 " << name << ' ' << v->x << ' ' << v->y << ' ' << v->z << '\n';
+		}
+		else if(const glm::dvec4* v = setting.get<glm::dvec4>())
+		{
+			f << "set_vec4 " << name << ' ' << v->x << ' ' << v->y << ' ' << v->z << ' ' << v->w << '\n';
+		}
 		else
 		{
-			LOG(BUG) << "unable to save setting " << name << ": not a bool, double, int64_t, or std::string\n";
+			LOG(BUG) << "unable to save setting " << name << ": not a valid type\n";
 		}
 	}
 }
@@ -282,9 +302,10 @@ void add_command_handlers()
 
 		const string name = args[0];
 		const string svalue = args[1];
-		double value = has<double>(name) ? get<double>(name) : 0;
+		double value;
 		if(svalue[0] == '+')
 		{
+			value = has<double>(name) ? get<double>(name) : 0;
 			value += std::stod(svalue.substr(1));
 		}
 		else
@@ -336,9 +357,10 @@ void add_command_handlers()
 
 		const string name = args[0];
 		const string svalue = args[1];
-		int64_t value = has<int64_t>(name) ? get<int64_t>(name) : 0;
+		int64_t value;
 		if(svalue[0] == '+')
 		{
+			value = has<int64_t>(name) ? get<int64_t>(name) : 0;
 			value += std::stoll(svalue.substr(1));
 		}
 		else
@@ -385,6 +407,114 @@ void add_command_handlers()
 		if(Game::instance != nullptr) // not called from initial settings::load()
 		{
 			LOG(INFO) << "set string: " << name << " = " << value << '\n';
+		}
+	}});
+	Console::instance->add_command("set_vec2", {[]
+	(
+		const std::vector<string>& args
+	)
+	{
+		if(args.size() != 3)
+		{
+			LOG(ERROR) << "Usage: set_vec2 <string: name> <float: x> <float: y>\n";
+			return;
+		}
+
+		const string name = args[0];
+		const double x = std::stod(args[1]);
+		const double y = std::stod(args[2]);
+		const glm::dvec2 value(x, y);
+
+		std::ostringstream ss;
+		ss.precision(std::numeric_limits<double>::max_digits10);
+		ss << '[' << x << ',' << y << ']';
+		const string svalue = ss.str();
+
+		try
+		{
+			set<glm::dvec2>(name, value);
+		}
+		catch(const std::runtime_error& e)
+		{
+			LOG(ERROR) << "error setting vec2 " << name << " = " << svalue << ": " << e.what() << '\n';
+			return;
+		}
+		if(Game::instance != nullptr) // not called from initial settings::load()
+		{
+			LOG(INFO) << "set vec2: " << name << " = " << svalue << '\n';
+		}
+	}});
+	Console::instance->add_command("set_vec3", {[]
+	(
+		const std::vector<string>& args
+	)
+	{
+		if(args.size() != 4)
+		{
+			LOG(ERROR) << "Usage: set_vec3 <string: name> <float: x> <float: y> <float: z>\n";
+			return;
+		}
+
+		const string name = args[0];
+		const double x = std::stod(args[1]);
+		const double y = std::stod(args[2]);
+		const double z = std::stod(args[3]);
+		const glm::dvec3 value(x, y, z);
+
+		std::ostringstream ss;
+		ss.precision(std::numeric_limits<double>::max_digits10);
+		ss << '[' << x << ',' << y << ',' << z << ']';
+		const string svalue = ss.str();
+
+		try
+		{
+			set<glm::dvec3>(name, value);
+		}
+		catch(const std::runtime_error& e)
+		{
+			LOG(ERROR) << "error setting vec3 " << name << " = " << svalue << ": " << e.what() << '\n';
+			return;
+		}
+		if(Game::instance != nullptr) // not called from initial settings::load()
+		{
+			LOG(INFO) << "set vec3: " << name << " = " << svalue << '\n';
+		}
+	}});
+	Console::instance->add_command("set_vec4", {[]
+	(
+		const std::vector<string>& args
+	)
+	{
+		if(args.size() != 5)
+		{
+			LOG(ERROR) << "Usage: set_vec4 <string: name> <float: x> <float: y> <float: z> <float: w>\n";
+			return;
+		}
+
+		const string name = args[0];
+		const double x = std::stod(args[1]);
+		const double y = std::stod(args[2]);
+		const double z = std::stod(args[3]);
+		const double w = std::stod(args[4]);
+		const glm::dvec4 value(x, y, z, w);
+
+		std::ostringstream ss;
+		ss.precision(std::numeric_limits<double>::max_digits10);
+		ss << '[' << x << ',' << y << ',' << z << ',' << w << ']';
+		const string svalue = ss.str();
+
+		try
+		{
+			set<glm::dvec4>(name, value);
+		}
+		catch(const std::runtime_error& e)
+		{
+			LOG(ERROR) << "error setting vec4 " << name << " = " << svalue << ": " << e.what() << '\n';
+			return;
+		}
+		if(Game::instance != nullptr) // not called from initial settings::load()
+		{
+			LOG(INFO) << "set vec4: " << name << " = " << svalue << '\n';
 		}
 	}});
 }

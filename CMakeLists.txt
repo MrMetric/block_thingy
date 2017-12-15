@@ -88,6 +88,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=uninitialized
 		-Werror=unknown-pragmas
 		-Werror=unknown-warning-option
+		-Werror=unused-result
 		-Werror=weak-vtables
 		-Werror=zero-as-null-pointer-constant
 		-Wno-c++98-compat-pedantic

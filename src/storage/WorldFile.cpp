@@ -23,7 +23,6 @@
 #include "util/logger.hpp"
 
 using std::string;
-using std::to_string;
 using std::unique_ptr;
 
 namespace block_thingy::storage {
@@ -154,9 +153,9 @@ bool WorldFile::has_chunk(const position::ChunkInWorld& position)
 
 fs::path WorldFile::chunk_path(const position::ChunkInWorld& position)
 {
-	const string x = to_string(position.x);
-	const string y = to_string(position.y);
-	const string z = to_string(position.z);
+	const string x = std::to_string(position.x);
+	const string y = std::to_string(position.y);
+	const string z = std::to_string(position.z);
 	return chunk_dir / (x + '_' + y + '_' + z + ".gz");
 }
 

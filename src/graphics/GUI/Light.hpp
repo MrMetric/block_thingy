@@ -1,6 +1,7 @@
 #pragma once
 #include "Base.hpp"
 
+#include <cstddef>
 #include <string>
 
 #include "fwd/Game.hpp"
@@ -26,7 +27,7 @@ private:
 	block::Light& block;
 	position::BlockInWorld block_pos;
 
-	void on_change(uint_fast8_t, widget::TextInput&, const std::string&);
+	void on_change(std::ptrdiff_t, widget::TextInput&, const std::string&);
 };
 
 }

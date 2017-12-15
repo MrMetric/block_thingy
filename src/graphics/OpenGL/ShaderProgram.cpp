@@ -328,7 +328,7 @@ static GLuint make_program(const std::vector<GLuint>& objects, const string& deb
 	glGetProgramiv(program, GL_LINK_STATUS, &is_good);
 	if(!is_good)
 	{
-		string log = util::gl_object_log(program);
+		const string log = util::gl_object_log(program);
 		glDeleteProgram(program);
 		throw std::runtime_error("error linking program " + debug_name + ":\n" + log);
 	}
@@ -338,7 +338,7 @@ static GLuint make_program(const std::vector<GLuint>& objects, const string& deb
 	glGetProgramiv(program, GL_VALIDATE_STATUS, &is_good);
 	if(!is_good)
 	{
-		string log = util::gl_object_log(program);
+		const string log = util::gl_object_log(program);
 		LOG(WARN) << "program validation failed in " << debug_name << ":\n" << log << '\n';
 	}
 #endif

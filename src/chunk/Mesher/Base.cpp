@@ -138,7 +138,7 @@ const block::Base& Base::block_at
 	|| y < 0 || y >= CHUNK_SIZE
 	|| z < 0 || z >= CHUNK_SIZE)
 	{
-		position::BlockInWorld block_pos(chunk.get_position(), {0, 0, 0});
+		position::BlockInWorld block_pos(chunk.get_position(), {});
 		block_pos.x += x;
 		block_pos.y += y;
 		block_pos.z += z;

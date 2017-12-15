@@ -29,7 +29,7 @@ Light::Light
 	block_pos(block_pos)
 {
 	const graphics::Color c = block.light();
-	for(uint_fast8_t i = 0; i < 3; ++i)
+	for(std::ptrdiff_t i = 0; i < 3; ++i)
 	{
 		auto w = root.get_widget_by_id<widget::TextInput>(std::to_string(i));
 		if(w != nullptr)
@@ -59,7 +59,7 @@ void Light::draw()
 	Base::draw();
 }
 
-void Light::on_change(uint_fast8_t i, widget::TextInput& w, const string& new_value)
+void Light::on_change(std::ptrdiff_t i, widget::TextInput& w, const string& new_value)
 {
 	bool invalid = false;
 	int v = 0;

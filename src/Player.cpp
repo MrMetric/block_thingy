@@ -83,15 +83,15 @@ void Player::move(const glm::dvec3& acceleration)
 		return;
 	}
 
-	physics::AABB new_aabb = make_aabb(new_position);
 	const position::BlockInWorld block_pos_old(position);
-	auto loop = [this, &new_position, &new_aabb, &block_pos_old](const bool corners)
+	auto loop = [this, &new_position, &block_pos_old](const bool corners)
 	{
 		position::BlockInWorld block_pos_offset;
 		for(block_pos_offset.y = 0; block_pos_offset.y <= std::floor(height); ++block_pos_offset.y)
 		for(block_pos_offset.x = -1; block_pos_offset.x <= 1; ++block_pos_offset.x)
 		for(block_pos_offset.z = -1; block_pos_offset.z <= 1; ++block_pos_offset.z)
 		{
+			const physics::AABB new_aabb = make_aabb(new_position);
 			bool skip = block_pos_offset.x != 0 && block_pos_offset.z != 0;
 			if(corners) skip = !skip;
 			if(skip) continue;
@@ -101,7 +101,7 @@ void Player::move(const glm::dvec3& acceleration)
 			{
 				continue;
 			}
-			physics::AABB block_aabb(block_pos);
+			const physics::AABB block_aabb(block_pos);
 			if(!new_aabb.collide(block_aabb))
 			{
 				continue;
@@ -122,7 +122,6 @@ void Player::move(const glm::dvec3& acceleration)
 				}
 			}
 			new_position += offset;
-			new_aabb = make_aabb(new_position);
 		}
 	};
 	loop(false); // skip corners
@@ -290,7 +289,7 @@ bool Player::can_place_block_at(const position::BlockInWorld& block_pos)
 	{
 		return true;
 	}
-	physics::AABB block_aabb(block_pos);
+	const physics::AABB block_aabb(block_pos);
 	return !aabb.collide(block_aabb);
 }
 

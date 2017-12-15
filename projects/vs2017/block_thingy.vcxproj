@@ -88,6 +88,7 @@
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\physics\AABB.cpp" />
     <ClCompile Include="..\..\src\physics\PhysicsUtil.cpp" />
+    <ClCompile Include="..\..\src\physics\ray.cpp" />
     <ClCompile Include="..\..\src\physics\RaycastHit.cpp" />
     <ClCompile Include="..\..\src\Player.cpp" />
     <ClCompile Include="..\..\src\plugin\Plugin.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="..\..\src\fwd\graphics\GUI\Widget\TextInput.hpp" />
     <ClInclude Include="..\..\src\fwd\graphics\Image.hpp" />
     <ClInclude Include="..\..\src\fwd\physics\AABB.hpp" />
+    <ClInclude Include="..\..\src\fwd\physics\ray.hpp" />
     <ClInclude Include="..\..\src\fwd\physics\RaycastHit.hpp" />
     <ClInclude Include="..\..\src\fwd\Player.hpp" />
     <ClInclude Include="..\..\src\fwd\position\BlockInChunk.hpp" />
@@ -231,6 +233,7 @@
     <ClInclude Include="..\..\src\language.hpp" />
     <ClInclude Include="..\..\src\physics\AABB.hpp" />
     <ClInclude Include="..\..\src\physics\PhysicsUtil.hpp" />
+    <ClInclude Include="..\..\src\physics\ray.hpp" />
     <ClInclude Include="..\..\src\physics\RaycastHit.hpp" />
     <ClInclude Include="..\..\src\Player.hpp" />
     <ClInclude Include="..\..\src\plugin\Plugin.hpp" />

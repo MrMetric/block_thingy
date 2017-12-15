@@ -31,7 +31,7 @@ AABB::AABB(const position::ChunkInWorld& chunk_pos)
 {
 }
 
-bool AABB::collide(const AABB& b2)
+bool AABB::collide(const AABB& b2) const
 {
 	const AABB& b1 = *this;
 	//return b1.max > b2.min && b1.min < b2.max;
@@ -44,7 +44,7 @@ bool AABB::collide(const AABB& b2)
 	b1.min.z < b2.max.z;
 }
 
-glm::dvec3 AABB::offset(const AABB& b2, const glm::vec3& direction_sign)
+glm::dvec3 AABB::offset(const AABB& b2, const glm::vec3& direction_sign) const
 {
 	const AABB& b1 = *this;
 	glm::dvec3 offset;

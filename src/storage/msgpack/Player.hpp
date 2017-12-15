@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Player.hpp" // TODO
+#include "Player.hpp"
 #include "storage/msgpack/glm_vec3.hpp"
 #include "storage/msgpack/Property.hpp"
 
