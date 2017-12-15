@@ -128,8 +128,7 @@ void Play::draw_debug_text()
 	ss << "camera position: " << game.gfx.graphical_position << '\n';
 
 	{
-		const auto render_distance = game.get_render_distance();
-		ss << "render distance: " << render_distance << '\n';
+		ss << "render distance: " << settings::get<int64_t>("render_distance") << '\n';
 		const auto [total, drawn] = game.get_draw_stats();
 		ss << "\tchunks in range: " << total << '\n';
 		ss << "\tchunks drawn   : " << drawn;

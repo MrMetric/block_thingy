@@ -145,6 +145,7 @@ void load()
 		{"near_plane"			, 0.1},
 		{"ortho_size"			, 6.0},
 		{"projection_type"		, "default"},
+		{"render_distance"		, 1},
 		{"screen_shader"		, "default"},
 		{"show_chunk_outlines"	, false},
 		{"show_container_bounds", false},

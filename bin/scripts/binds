@@ -21,8 +21,8 @@ bind f11 'toggle_bool fullscreen'
 bind esc close_gui
 bind ` 'open_gui Console'
 bind , 'toggle_bool wireframe'
-bind = render_distance++
-bind - render_distance--
+bind = 'set_int render_distance +1'
+bind - 'set_int render_distance +-1'
 
 bind joy_xbox360_L1 break_block
 bind joy_xbox360_R1 place_block

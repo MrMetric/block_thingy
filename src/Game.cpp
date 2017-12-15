@@ -127,7 +127,6 @@ Game::Game()
 	player_ptr(world.add_player("test_player")),
 	player(*player_ptr),
 	keybinder(*Console::instance),
-	render_distance(1),
 	pImpl(std::make_unique<impl>(*this))
 {
 	resource_manager.load_blocks(*this);
@@ -328,7 +327,7 @@ void Game::draw_world
 		resource_manager,
 		gfx.vp_matrix,
 		render_origin,
-		render_distance
+		static_cast<uint64_t>(settings::get<int64_t>("render_distance"))
 	);
 	pImpl->draw_stats =
 	{
@@ -400,11 +399,6 @@ void Game::screenshot(fs::path path) const
 double Game::get_fps() const
 {
 	return pImpl->fps.getFPS();
-}
-
-position::ChunkInWorld::value_type Game::get_render_distance() const
-{
-	return render_distance;
 }
 
 std::tuple<uint64_t, uint64_t> Game::get_draw_stats() const
@@ -735,23 +729,6 @@ void Game::impl::add_commands()
 		}
 	});
 
-	COMMAND("render_distance++")
-	{
-		if(std::numeric_limits<decltype(game.render_distance)>::max() > game.render_distance)
-		{
-			game.render_distance += 1;
-		}
-		LOG(INFO) << "render distance: " << game.render_distance << '\n';
-	});
-	COMMAND("render_distance--")
-	{
-		game.render_distance -= 1;
-		if(game.render_distance < 0)
-		{
-			game.render_distance = 0;
-		}
-		LOG(INFO) << "render distance: " << game.render_distance << '\n';
-	});
 	COMMAND("reach_distance++")
 	{
 		player.reach_distance += 1;

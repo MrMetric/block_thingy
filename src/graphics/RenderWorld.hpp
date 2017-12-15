@@ -7,7 +7,6 @@
 #include "fwd/ResourceManager.hpp"
 #include "fwd/World.hpp"
 #include "fwd/position/BlockInWorld.hpp"
-#include "position/ChunkInWorld.hpp"
 
 namespace block_thingy::graphics {
 
@@ -20,7 +19,7 @@ std::tuple<uint64_t, uint64_t> draw_world
 	ResourceManager&,
 	const glm::dmat4& vp_matrix,
 	const position::BlockInWorld& origin,
-	position::ChunkInWorld::value_type render_distance
+	uint64_t render_distance
 );
 
 }

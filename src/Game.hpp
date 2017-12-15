@@ -20,7 +20,6 @@
 #include "event/EventManager.hpp"
 #include "graphics/GUI/Base.hpp"
 #include "physics/RaycastHit.hpp"
-#include "position/ChunkInWorld.hpp"
 #include "shim/propagate_const.hpp"
 #include "types/window_size_t.hpp"
 #include "fwd/util/char_press.hpp"
@@ -75,7 +74,6 @@ public:
 
 	void screenshot(fs::path) const;
 	double get_fps() const;
-	position::ChunkInWorld::value_type get_render_distance() const;
 
 	/**
 	 * @return The amount of chunks considered for drawing and the amount of chunks drawn in the last frame
@@ -108,8 +106,6 @@ public:
 	std::unique_ptr<graphics::gui::Base> gui;
 
 private:
-	position::ChunkInWorld::value_type render_distance;
-
 	struct impl;
 	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };

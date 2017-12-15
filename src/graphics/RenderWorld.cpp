@@ -34,7 +34,7 @@ std::tuple<uint64_t, uint64_t> draw_world
 	ResourceManager& resource_manager,
 	const glm::dmat4& vp_matrix_,
 	const position::BlockInWorld& origin,
-	const ChunkInWorld::value_type render_distance
+	const uint64_t render_distance
 )
 {
 	const glm::dvec3 camera_position = Game::instance->camera.position;
@@ -85,8 +85,9 @@ std::tuple<uint64_t, uint64_t> draw_world
 	}
 
 	const ChunkInWorld chunk_pos(origin);
-	const ChunkInWorld min = chunk_pos - render_distance;
-	const ChunkInWorld max = chunk_pos + render_distance;
+	const ChunkInWorld::value_type render_distance_ = static_cast<ChunkInWorld::value_type>(render_distance);
+	const ChunkInWorld min = chunk_pos - render_distance_;
+	const ChunkInWorld max = chunk_pos + render_distance_;
 
 	const bool show_chunk_outlines = settings::get<bool>("show_chunk_outlines");
 
@@ -143,8 +144,7 @@ std::tuple<uint64_t, uint64_t> draw_world
 		chunk->render(true);
 	}
 
-	// TODO: render_distance should be unsigned
-	uint64_t total = static_cast<uint64_t>(render_distance) * 2 + 1;
+	uint64_t total = render_distance * 2 + 1;
 	total = total * total * total;
 	const uint64_t drawn = static_cast<uint64_t>(drawn_chunks.size());
 	return {total, drawn};
