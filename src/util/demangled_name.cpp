@@ -24,6 +24,8 @@ string demangle(const string& s)
 	return (status == 0) ? res.get() : s;
 }
 #else
+namespace block_thingy::util {
+
 string demangle(const string& s)
 {
 	return s;
