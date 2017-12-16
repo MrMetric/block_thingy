@@ -98,13 +98,53 @@ string gl_object_log(const GLuint object)
 	return string(log.get());
 }
 
+bool is_integer(const string& s)
+{
+	if(s.empty())
+	{
+		return false;
+	}
+
+	string::size_type start_pos;
+	if(s[0] == '+' || s[0] == '-')
+	{
+		if(s.size() == 1)
+		{
+			return false;
+		}
+		start_pos = 1;
+	}
+	else
+	{
+		start_pos = 0;
+	}
+
+	return s.find_first_not_of("0123456789", start_pos) == string::npos;
+}
+
 int stoi(const string& s)
 {
-	if(s.find_first_not_of("0123456789") != string::npos)
+	if(!is_integer(s))
 	{
 		throw std::invalid_argument("stoi");
 	}
 	return std::stoi(s);
+}
+long stol(const string& s)
+{
+	if(!is_integer(s))
+	{
+		throw std::invalid_argument("stol");
+	}
+	return std::stol(s);
+}
+long long stoll(const string& s)
+{
+	if(!is_integer(s))
+	{
+		throw std::invalid_argument("stol");
+	}
+	return std::stoll(s);
 }
 
 string datetime()

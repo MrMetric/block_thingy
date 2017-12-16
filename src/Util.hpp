@@ -57,7 +57,10 @@ std::string read_file(const fs::path&, bool is_text);
 
 std::string gl_object_log(GLuint object);
 
+bool is_integer(const std::string&);
 int stoi(const std::string&);
+long stol(const std::string&);
+long long stoll(const std::string&);
 
 std::string datetime();
 

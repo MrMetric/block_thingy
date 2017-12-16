@@ -9,6 +9,7 @@
 
 #include "console/Console.hpp"
 #include "Game.hpp"
+#include "Util.hpp"
 #include "event/type/Event_change_setting.hpp"
 #include "util/demangled_name.hpp"
 #include "util/logger.hpp"
@@ -241,13 +242,13 @@ void add_command_handlers()
 		}
 
 		const string name = args[0];
-		const string value_str = args[1];
-		if(value_str != "true" && value_str != "false")
+		const string svalue = args[1];
+		if(svalue != "true" && svalue != "false")
 		{
-			LOG(ERROR) << "Invalid bool value for " << name << " (must be \"true\" or \"false\")\n";
+			LOG(ERROR) << "error setting bool " << name << " = " << svalue << ": must be \"true\" or \"false\"\n";
 			return;
 		}
-		const bool value = (value_str == "true");
+		const bool value = (svalue == "true");
 		try
 		{
 			set(name, value);
@@ -295,23 +296,60 @@ void add_command_handlers()
 		const std::vector<string>& args
 	)
 	{
-		if(args.size() != 2)
+		const string usage = "Usage: set_float <string: name> [+ or -] <number: value>\n";
+		if(args.size() != 2 && args.size() != 3)
 		{
-			LOG(ERROR) << "Usage: set_float <string: name> <number: value or + difference>\n";
+			LOG(ERROR) << usage;
 			return;
 		}
 
 		const string name = args[0];
-		const string svalue = args[1];
-		double value;
-		if(svalue[0] == '+')
+		const string& arg1 = args[1];
+		string svalue;
+		double value = 0;
+		double m = 1;
+		string op = "=";
+		if(arg1 == "+" || arg1 == "-")
 		{
-			value = has<double>(name) ? get<double>(name) : 0;
-			value += std::stod(svalue.substr(1));
+			if(args.size() != 3)
+			{
+				LOG(ERROR) << usage;
+				return;
+			}
+			svalue = args[2];
+			if(has<double>(name))
+			{
+				value = get<double>(name);
+			}
+			if(arg1 == "-")
+			{
+				m = -1;
+			}
+			op = arg1 + op;
 		}
 		else
 		{
-			value = std::stod(svalue);
+			if(args.size() != 2)
+			{
+				LOG(ERROR) << usage;
+				return;
+			}
+			svalue = arg1;
+		}
+
+		try
+		{
+			value += m * std::stod(svalue);
+		}
+		catch(const std::invalid_argument&)
+		{
+			LOG(ERROR) << "error setting float " << name << ' ' << op << ' ' << svalue << ": not a number\n";
+			return;
+		}
+		catch(const std::out_of_range&)
+		{
+			LOG(ERROR) << "error setting float " << name << ' ' << op << ' ' << svalue << ": out of range\n";
+			return;
 		}
 
 		// TODO: find a home for this
@@ -350,23 +388,60 @@ void add_command_handlers()
 		const std::vector<string>& args
 	)
 	{
-		if(args.size() != 2)
+		const string usage = "Usage: set_int <string: name> [+ or -] <integer: value>\n";
+		if(args.size() != 2 && args.size() != 3)
 		{
-			LOG(ERROR) << "Usage: set_int <string: name> <integer: value or + difference>\n";
+			LOG(ERROR) << usage;
 			return;
 		}
 
 		const string name = args[0];
-		const string svalue = args[1];
-		int64_t value;
-		if(svalue[0] == '+')
+		const string& arg1 = args[1];
+		string svalue;
+		int64_t value = 0;
+		int64_t m = 1;
+		string op = "=";
+		if(arg1 == "+" || arg1 == "-")
 		{
-			value = has<int64_t>(name) ? get<int64_t>(name) : 0;
-			value += std::stoll(svalue.substr(1));
+			if(args.size() != 3)
+			{
+				LOG(ERROR) << usage;
+				return;
+			}
+			svalue = args[2];
+			if(has<int64_t>(name))
+			{
+				value = get<int64_t>(name);
+			}
+			if(arg1 == "-")
+			{
+				m = -1;
+			}
+			op = arg1 + op;
 		}
 		else
 		{
-			value = std::stoll(svalue);
+			if(args.size() != 2)
+			{
+				LOG(ERROR) << usage;
+				return;
+			}
+			svalue = arg1;
+		}
+
+		try
+		{
+			value += m * util::stoll(svalue);
+		}
+		catch(const std::invalid_argument&)
+		{
+			LOG(ERROR) << "error setting int " << name << ' ' << op << ' ' << svalue << ": not an integer\n";
+			return;
+		}
+		catch(const std::out_of_range&)
+		{
+			LOG(ERROR) << "error setting int " << name << ' ' << op << ' ' << svalue << ": out of range\n";
+			return;
 		}
 
 		try
@@ -410,6 +485,25 @@ void add_command_handlers()
 			LOG(INFO) << "set string: " << name << " = " << value << '\n';
 		}
 	}});
+
+	#define STOD(var, s, type, name) \
+	double _ ## var ## _; \
+	try \
+	{ \
+		_ ## var ## _ = std::stod(s); \
+	} \
+	catch(const std::invalid_argument&) \
+	{ \
+		LOG(ERROR) << "error setting " type " " << name << "[" #var "]" << " = " << s << ": not a number\n"; \
+		return; \
+	} \
+	catch(const std::out_of_range&) \
+	{ \
+		LOG(ERROR) << "error setting " type " " << name << "[" #var "]" << " = " << s << ": out of range\n"; \
+		return; \
+	} \
+	const double var = _ ## var ## _;
+
 	Console::instance->add_command("set_vec2", {[]
 	(
 		const std::vector<string>& args
@@ -422,8 +516,8 @@ void add_command_handlers()
 		}
 
 		const string name = args[0];
-		const double x = std::stod(args[1]);
-		const double y = std::stod(args[2]);
+		STOD(x, args[1], "vec2", name)
+		STOD(y, args[2], "vec2", name)
 		const glm::dvec2 value(x, y);
 
 		std::ostringstream ss;
@@ -457,9 +551,9 @@ void add_command_handlers()
 		}
 
 		const string name = args[0];
-		const double x = std::stod(args[1]);
-		const double y = std::stod(args[2]);
-		const double z = std::stod(args[3]);
+		STOD(x, args[1], "vec3", name)
+		STOD(y, args[2], "vec3", name)
+		STOD(z, args[3], "vec3", name)
 		const glm::dvec3 value(x, y, z);
 
 		std::ostringstream ss;
@@ -493,10 +587,10 @@ void add_command_handlers()
 		}
 
 		const string name = args[0];
-		const double x = std::stod(args[1]);
-		const double y = std::stod(args[2]);
-		const double z = std::stod(args[3]);
-		const double w = std::stod(args[4]);
+		STOD(x, args[1], "vec4", name)
+		STOD(y, args[2], "vec4", name)
+		STOD(z, args[3], "vec4", name)
+		STOD(w, args[4], "vec4", name)
 		const glm::dvec4 value(x, y, z, w);
 
 		std::ostringstream ss;
@@ -518,6 +612,7 @@ void add_command_handlers()
 			LOG(INFO) << "set vec4: " << name << " = " << svalue << '\n';
 		}
 	}});
+	#undef STOD
 }
 
 }
