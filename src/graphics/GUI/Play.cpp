@@ -104,8 +104,8 @@ void Play::draw_gui()
 void Play::draw_crosshair()
 {
 	const glm::dvec4 color = settings::get<glm::dvec4>("crosshair_color");
-	const double size = settings::get<double>("crosshair_size");
-	const double thickness = settings::get<double>("crosshair_thickness");
+	const double size = settings::get<int64_t>("crosshair_size");
+	const double thickness = settings::get<int64_t>("crosshair_thickness");
 
 	// TODO: rectangle widget
 	const double x = game.gfx.window_mid.x;
