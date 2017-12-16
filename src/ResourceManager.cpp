@@ -517,10 +517,13 @@ Resource<ShaderObject> ResourceManager::get_ShaderObject(fs::path path, const bo
 	{
 		// the shader object is not in the cache, so compile and add it
 		i = pImpl->cache_ShaderObject.emplace(path.string(), std::make_unique<ShaderObject>(path, type)).first;
+	#ifdef BT_RELOADABLE_SHADERS
 		pImpl->file_watcher.add_watch(path);
+	#endif
 	}
 	else if(reload)
 	{
+	#ifdef BT_RELOADABLE_SHADERS
 		unique_ptr<ShaderObject> p;
 		try
 		{
@@ -535,6 +538,11 @@ Resource<ShaderObject> ResourceManager::get_ShaderObject(fs::path path, const bo
 		Resource<ShaderObject> r(&i->second, path.string());
 		r.update();
 		return r;
+	#else
+		LOG(WARN) << "Tried to reload a shader object, but this feature is disabled."
+					" To enable, recompile the engine with -DBT_RELOADABLE_SHADERS."
+					" Path: " << path.u8string() << '\n';
+	#endif
 	}
 	return Resource<ShaderObject>(&i->second, path.string());
 }
@@ -567,6 +575,7 @@ Resource<ShaderProgram> ResourceManager::get_ShaderProgram(const fs::path& path,
 	}
 	else if(reload)
 	{
+	#ifdef BT_RELOADABLE_SHADERS
 		unique_ptr<ShaderProgram> p;
 		try
 		{
@@ -581,6 +590,11 @@ Resource<ShaderProgram> ResourceManager::get_ShaderProgram(const fs::path& path,
 		Resource<ShaderProgram> r(&i->second, path.string());
 		r.update();
 		return r;
+	#else
+		LOG(WARN) << "Tried to reload a shader program, but this feature is disabled."
+					" To enable, recompile the engine with -DBT_RELOADABLE_SHADERS."
+					" Path: " << path.u8string() << '\n';
+	#endif
 	}
 	return Resource<ShaderProgram>(&i->second, path.string());
 }

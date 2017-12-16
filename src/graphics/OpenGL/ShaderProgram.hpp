@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -19,6 +20,7 @@
 #include <glm/vec4.hpp>
 
 #include "ResourceManager.hpp"
+#include "shim/propagate_const.hpp"
 #include "util/filesystem.hpp"
 
 namespace block_thingy::graphics::opengl {
@@ -36,7 +38,10 @@ public:
 	ShaderProgram& operator=(ShaderProgram&&) = delete;
 	ShaderProgram& operator=(const ShaderProgram&) = delete;
 
-	GLuint get_name();
+	GLuint get_name()
+	{
+		return name;
+	}
 	GLint get_uniform_location(const std::string&) const;
 	void use() const;
 
@@ -102,10 +107,9 @@ private:
 	bool inited;
 	GLuint name;
 	std::unordered_map<std::string, GLint> uniforms;
-	std::vector<Resource<ShaderObject>> res;
-	std::string debug_name;
 
-	void init();
+	struct impl;
+	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };
 
 }

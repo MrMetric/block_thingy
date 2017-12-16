@@ -31,6 +31,12 @@ elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
 endif()
 add_executable(block_thingy ${block_thingy_SRC})
 
+option(RELOADABLE_SHADERS "Allow reloading shaders without restarting the engine" FALSE)
+
+if(${RELOADABLE_SHADERS})
+	list(APPEND BT_FLAGS -DBT_RELOADABLE_SHADERS)
+endif()
+
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
 	get_filename_component(MAC_BIN_DIR "${CMAKE_CXX_COMPILER}" DIRECTORY)
 	set(CPP_FS_LIB -lc++experimental "-L${MAC_BIN_DIR}/../lib")
@@ -129,6 +135,7 @@ target_compile_options(block_thingy PRIVATE
 	-fno-math-errno
 	-fno-signed-zeros
 	$<${DEBUG_BUILD}:-DDEBUG_BUILD>
+	${BT_FLAGS}
 	-DGLFW_INCLUDE_NONE
 	-DGLM_ENABLE_EXPERIMENTAL
 	-DGLM_FORCE_EXPLICIT_CTOR
