@@ -19,7 +19,7 @@ class Player
 public:
 	Player
 	(
-		Game&,
+		game&,
 		const std::string& name
 	);
 
@@ -37,7 +37,7 @@ public:
 	void set_analog_motion(const glm::dvec2&);
 	void respawn();
 
-	bool can_place_block_at(const position::BlockInWorld&);
+	bool can_place_block_at(const position::block_in_world&);
 
 	void move_forward(bool);
 	void move_backward(bool);
@@ -58,7 +58,7 @@ public:
 	Property<glm::dvec3> velocity;
 
 private:
-	Game& game;
+	game& g;
 
 	const double abs_offset;
 	physics::AABB aabb;

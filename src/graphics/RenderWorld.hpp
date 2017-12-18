@@ -15,10 +15,10 @@ namespace block_thingy::graphics {
  */
 std::tuple<uint64_t, uint64_t> draw_world
 (
-	World&,
-	ResourceManager&,
+	world::world&,
+	resource_manager&,
 	const glm::dmat4& vp_matrix,
-	const position::BlockInWorld& origin,
+	const position::block_in_world& origin,
 	uint64_t render_distance
 );
 

@@ -1,4 +1,4 @@
 namespace block_thingy
 {
-	class ResourceManager;
+	class resource_manager;
 }

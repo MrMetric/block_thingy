@@ -25,18 +25,18 @@
 
 namespace block_thingy::graphics::opengl {
 
-class ShaderProgram
+class shader_program
 {
 public:
-	ShaderProgram();
-	ShaderProgram(const fs::path&);
-	ShaderProgram(const std::vector<fs::path>&, const std::string& debug_name);
-	~ShaderProgram();
+	shader_program();
+	shader_program(const fs::path&);
+	shader_program(const std::vector<fs::path>&, const std::string& debug_name);
+	~shader_program();
 
-	ShaderProgram(ShaderProgram&&);
-	ShaderProgram(const ShaderProgram&) = delete;
-	ShaderProgram& operator=(ShaderProgram&&) = delete;
-	ShaderProgram& operator=(const ShaderProgram&) = delete;
+	shader_program(shader_program&&);
+	shader_program(const shader_program&) = delete;
+	shader_program& operator=(shader_program&&) = delete;
+	shader_program& operator=(const shader_program&) = delete;
 
 	GLuint get_name()
 	{

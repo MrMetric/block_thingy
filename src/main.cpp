@@ -138,16 +138,16 @@ int main(const int argc, char** argv)
 	settings::load();
 
 	unique_ptr<PluginManager> plugin_manager = std::make_unique<PluginManager>();
-	unique_ptr<Game> game = std::make_unique<Game>();
-	window = game->gfx.window;
+	unique_ptr<game> g = std::make_unique<game>();
+	window = g->gfx.window;
 
 	LOG(DEBUG) << "starting main loop" << '\n';
-	while(!glfwWindowShouldClose(game->gfx.window))
+	while(!glfwWindowShouldClose(g->gfx.window))
 	{
-		game->draw();
+		g->draw();
 	}
 
-	game = nullptr;
+	g = nullptr;
 	plugin_manager = nullptr;
 	console = nullptr;
 

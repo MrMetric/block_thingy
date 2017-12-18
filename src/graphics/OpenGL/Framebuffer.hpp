@@ -7,26 +7,26 @@
 
 namespace block_thingy::graphics::opengl {
 
-class Framebuffer
+class framebuffer
 {
 public:
-	Framebuffer();
-	~Framebuffer();
+	framebuffer();
+	~framebuffer();
 
-	Framebuffer(Framebuffer&&);
-	Framebuffer(const Framebuffer&) = delete;
-	Framebuffer& operator=(Framebuffer&&) = delete;
-	Framebuffer& operator=(const Framebuffer&) = delete;
+	framebuffer(framebuffer&&);
+	framebuffer(const framebuffer&) = delete;
+	framebuffer& operator=(framebuffer&&) = delete;
+	framebuffer& operator=(const framebuffer&) = delete;
 
 	/** https://www.opengl.org/sdk/docs/man/html/glFramebufferRenderbuffer.xhtml\n
 	 * Attach a renderbuffer as a logical buffer of this framebuffer
 	 */
-	void attach_renderbuffer(GLenum attachment_point, Renderbuffer& renderbuffer);
+	void attach_renderbuffer(GLenum attachment_point, renderbuffer&);
 
 	/** https://www.opengl.org/sdk/docs/man/html/glFramebufferTexture.xhtml\n
 	 * Attach a level of a texture object as a logical buffer of this framebuffer
 	 */
-	void attach_texture(GLenum attachment_point, Texture& texture, GLint mipmap_level);
+	void attach_texture(GLenum attachment_point, texture&, GLint mipmap_level);
 
 	GLuint get_name();
 

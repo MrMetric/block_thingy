@@ -39,15 +39,15 @@ static GLsizei get_samples(const GLsizei samples)
 	return samples;
 }
 
-RenderTarget::RenderTarget(const window_size_t& window_size, GLsizei samples)
+render_target::render_target(const window_size_t& window_size, GLsizei samples)
 :
 	samples(get_samples(samples)),
 	frame_texture(this->samples > 0 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D)
 {
 	if(samples == 0)
 	{
-		frame_texture.parameter(opengl::Texture::Parameter::min_filter, GL_LINEAR);
-		frame_texture.parameter(opengl::Texture::Parameter::mag_filter, GL_LINEAR);
+		frame_texture.parameter(opengl::texture::Parameter::min_filter, GL_LINEAR);
+		frame_texture.parameter(opengl::texture::Parameter::mag_filter, GL_LINEAR);
 	}
 
 	resize(window_size);
@@ -58,11 +58,11 @@ RenderTarget::RenderTarget(const window_size_t& window_size, GLsizei samples)
 	GLenum status = glCheckNamedFramebufferStatus(frame_buffer.get_name(), GL_FRAMEBUFFER);
 	if(status != GL_FRAMEBUFFER_COMPLETE)
 	{
-		throw std::runtime_error("RenderTarget's framebuffer status is " + std::to_string(status));
+		throw std::runtime_error("render_target's framebuffer status is " + std::to_string(status));
 	}
 }
 
-void RenderTarget::resize(const window_size_t& window_size)
+void render_target::resize(const window_size_t& window_size)
 {
 	const uint32_t width = window_size.x;
 	const uint32_t height = window_size.y;

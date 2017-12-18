@@ -63,13 +63,13 @@ using std::unique_ptr;
 
 namespace block_thingy {
 
-Game* Game::instance = nullptr;
+game* game::instance = nullptr;
 
-struct Game::impl
+struct game::impl
 {
-	impl(Game& game)
+	impl(game& g)
 	:
-		game(game),
+		g(g),
 		delta_time(0),
 		fps(999),
 		just_opened_gui(false),
@@ -80,10 +80,10 @@ struct Game::impl
 	{
 	}
 
-	Game& game;
+	game& g;
 
 	double delta_time;
-	FPSManager fps;
+	fps_manager fps;
 	std::tuple<uint64_t, uint64_t> draw_stats;
 
 	void find_hovered_block();
@@ -119,7 +119,7 @@ static unique_ptr<mesher::Base> make_mesher(const string& name)
 	return make_mesher("Simple2");
 }
 
-Game::Game()
+game::game()
 :
 	set_instance(this),
 	camera(gfx),
@@ -151,7 +151,7 @@ Game::Game()
 	{
 		if(joystick == GLFW_JOYSTICK_1 && event == GLFW_DISCONNECTED)
 		{
-			Game::instance->player.set_analog_motion({ 0, 0 });
+			game::instance->player.set_analog_motion({ 0, 0 });
 		}
 	});
 	glfwSetWindowFocusCallback(gfx.window, []([[maybe_unused]] GLFWwindow* window, int focused)
@@ -159,18 +159,18 @@ Game::Game()
 		assert(window == Gfx::instance->window);
 		if(!focused)
 		{
-			if(Game::instance->gui->type() == "Play")
+			if(game::instance->gui->type() == "Play")
 			{
 				Console::instance->run_line("open_gui Pause");
 			}
 		}
 		// check if pause because a focus event is sent when the game starts
-		else if(Game::instance->gui->type() == "Pause")
+		else if(game::instance->gui->type() == "Pause")
 		{
 			// when the game is paused after losing focus, the cursor stays hidden
 			// GLFW ignores setting the cursor to its current state, so re-hide it first
-			glfwSetInputMode(Game::instance->gfx.window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-			glfwSetInputMode(Game::instance->gfx.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			glfwSetInputMode(game::instance->gfx.window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+			glfwSetInputMode(game::instance->gfx.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		}
 	});
 
@@ -190,16 +190,16 @@ Game::Game()
 	copied_block = block_registry.get_default("light");
 }
 
-Game::~Game()
+game::~game()
 {
 	settings::save();
 }
 
-void Game::draw()
+void game::draw()
 {
 	// TODO: use double when available
 	const float global_time = static_cast<float>(world.get_time());
-	resource_manager.foreach_ShaderProgram([global_time](Resource<graphics::opengl::ShaderProgram> r)
+	resource_manager.foreach_shader_program([global_time](resource<graphics::opengl::shader_program> r)
 	{
 		r->uniform("global_time", global_time);
 	});
@@ -284,19 +284,19 @@ void Game::draw()
 	pImpl->delta_time = pImpl->fps.enforceFPS();
 }
 
-void Game::step_world()
+void game::step_world()
 {
 	player.rotation = camera.rotation;
 	world.step(pImpl->delta_time);
 	pImpl->find_hovered_block();
 }
 
-void Game::draw_world()
+void game::draw_world()
 {
 	draw_world(camera.position, camera.rotation, gfx.projection_matrix);
 }
 
-void Game::draw_world
+void game::draw_world
 (
 	const glm::dvec3& cam_position,
 	const glm::dvec3& cam_rotation,
@@ -306,7 +306,7 @@ void Game::draw_world
 	draw_world(cam_position, Gfx::make_rotation_matrix(cam_rotation), projection_matrix);
 }
 
-void Game::draw_world
+void game::draw_world
 (
 	const glm::dvec3& cam_position,
 	const glm::dmat4& cam_rotation,
@@ -320,7 +320,7 @@ void Game::draw_world
 	}
 
 	gfx.set_camera_view(cam_position, cam_rotation, projection_matrix);
-	position::BlockInWorld render_origin(cam_position);
+	position::block_in_world render_origin(cam_position);
 	const std::tuple<uint64_t, uint64_t> draw_stats = graphics::draw_world
 	(
 		world,
@@ -347,7 +347,7 @@ void Game::draw_world
 	}
 }
 
-void Game::open_gui(unique_ptr<graphics::gui::Base> gui)
+void game::open_gui(unique_ptr<graphics::gui::Base> gui)
 {
 	if(gui == nullptr)
 	{
@@ -365,7 +365,7 @@ void Game::open_gui(unique_ptr<graphics::gui::Base> gui)
 	pImpl->just_opened_gui = true;
 }
 
-void Game::close_gui()
+void game::close_gui()
 {
 	// code may be running in the GUI, such as from clicking the Resume button in the pause menu
 	// after immediate destructing, graphics::gui::widget::Container will continue its mousepress loop
@@ -375,12 +375,12 @@ void Game::close_gui()
 	gui->init();
 }
 
-void Game::quit()
+void game::quit()
 {
 	glfwSetWindowShouldClose(gfx.window, GL_TRUE);
 }
 
-void Game::screenshot(fs::path path) const
+void game::screenshot(fs::path path) const
 {
 	if(fs::is_directory("screenshots") || fs::create_directory("screenshots"))
 	{
@@ -393,26 +393,26 @@ void Game::screenshot(fs::path path) const
 	std::vector<uint8_t> pixels(4 * width * height);
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
-	graphics::Image(width, height, std::move(pixels)).write(path);
+	graphics::image(width, height, std::move(pixels)).write(path);
 }
 
-double Game::get_fps() const
+double game::get_fps() const
 {
 	return pImpl->fps.getFPS();
 }
 
-std::tuple<uint64_t, uint64_t> Game::get_draw_stats() const
+std::tuple<uint64_t, uint64_t> game::get_draw_stats() const
 {
 	return pImpl->draw_stats;
 }
 
-void Game::update_framebuffer_size(const window_size_t& window_size)
+void game::update_framebuffer_size(const window_size_t& window_size)
 {
 	gfx.update_framebuffer_size(window_size);
 	event_manager.do_event(Event_window_size_change(window_size));
 }
 
-void Game::keypress(const util::key_press& press)
+void game::keypress(const util::key_press& press)
 {
 	if(pImpl->consume_key_release == press.key && pImpl->consume_key_release_scancode == press.scancode)
 	{
@@ -428,7 +428,7 @@ void Game::keypress(const util::key_press& press)
 	gui->keypress(press);
 }
 
-void Game::charpress(const util::char_press& press)
+void game::charpress(const util::char_press& press)
 {
 	if(pImpl->just_opened_gui)
 	{
@@ -440,54 +440,54 @@ void Game::charpress(const util::char_press& press)
 	gui->charpress(press);
 }
 
-void Game::mousepress(const util::mouse_press& press)
+void game::mousepress(const util::mouse_press& press)
 {
 	gui->mousepress(press);
 }
 
-void Game::mousemove(const double x, const double y)
+void game::mousemove(const double x, const double y)
 {
 	gui->mousemove(x, y);
 }
 
-void Game::joypress(const int joystick, const int button, const bool pressed)
+void game::joypress(const int joystick, const int button, const bool pressed)
 {
 	gui->joypress(joystick, button, pressed);
 }
 
-void Game::joymove(const glm::dvec2& motion)
+void game::joymove(const glm::dvec2& motion)
 {
 	gui->joymove(motion);
 }
 
-void Game::impl::find_hovered_block()
+void game::impl::find_hovered_block()
 {
 	physics::ray ray = physics::screen_pos_to_world_ray
 	(
-		game.gfx.window_mid,
-		game.gfx.window_size,
-		game.gfx.view_matrix_graphical,
-		game.gfx.projection_matrix
+		g.gfx.window_mid,
+		g.gfx.window_size,
+		g.gfx.view_matrix_graphical,
+		g.gfx.projection_matrix
 	);
 
-	glm::dvec3 offset = game.gfx.physical_position - game.gfx.graphical_position;
+	glm::dvec3 offset = g.gfx.physical_position - g.gfx.graphical_position;
 	ray.origin += offset;
-	game.hovered_block = physics::raycast
+	g.hovered_block = physics::raycast
 	(
-		game.world,
+		g.world,
 		ray,
-		game.player.reach_distance
+		g.player.reach_distance
 	);
 }
 
-void Game::impl::add_commands()
+void game::impl::add_commands()
 {
 	// [[maybe_unused]] does not work with lambda captures
 	// preprocessor directives do not work in #define, so I can not use #pragma clang diagnostic ...
 	#define COMMAND(name) commands.emplace_back(*Console::instance, name, \
 	[ \
-		&game=game, \
-		&player=game.player \
+		&g=g, \
+		&player=g.player \
 	] \
 	( \
 		[[maybe_unused]] const std::vector<string>& args \
@@ -495,47 +495,47 @@ void Game::impl::add_commands()
 
 	COMMAND("save")
 	{
-		game.world.save();
+		g.world.save();
 	});
 	COMMAND("quit")
 	{
-		game.quit();
+		g.quit();
 	});
 
 	COMMAND("break_block")
 	{
-		if(game.hovered_block == nullopt)
+		if(g.hovered_block == nullopt)
 		{
 			return;
 		}
 
-		const position::BlockInWorld pos = game.hovered_block->pos;
-		shared_ptr<block::Base> block = game.world.get_block(pos);
-		if(block->type() != block::enums::Type::none) // TODO: breakability check
+		const position::block_in_world pos = g.hovered_block->pos;
+		shared_ptr<block::base> block = g.world.get_block(pos);
+		if(block->type() != block::enums::type::none) // TODO: breakability check
 		{
-			game.world.set_block(pos, game.block_registry.get_default(block::enums::Type::air), false);
+			g.world.set_block(pos, g.block_registry.get_default(block::enums::type::air), false);
 		}
 	});
 	COMMAND("place_block")
 	{
-		if(game.hovered_block == nullopt || game.copied_block == nullptr)
+		if(g.hovered_block == nullopt || g.copied_block == nullptr)
 		{
 			return;
 		}
 
-		shared_ptr<block::Base> block = game.copied_block;
-		const position::BlockInWorld pos = game.hovered_block->adjacent();
-		if(game.world.get_block(pos)->is_replaceable_by(*block)
+		shared_ptr<block::base> block = g.copied_block;
+		const position::block_in_world pos = g.hovered_block->adjacent();
+		if(g.world.get_block(pos)->is_replaceable_by(*block)
 		&& (player.can_place_block_at(pos) || !block->is_solid()))
 		{
-			game.world.set_block(pos, block, false);
+			g.world.set_block(pos, block, false);
 		}
 	});
 	COMMAND("copy_block")
 	{
-		if(game.hovered_block != nullopt)
+		if(g.hovered_block != nullopt)
 		{
-			game.copied_block = game.world.get_block(game.hovered_block->pos);
+			g.copied_block = g.world.get_block(g.hovered_block->pos);
 		}
 	});
 	COMMAND("set_block")
@@ -547,7 +547,7 @@ void Game::impl::add_commands()
 		}
 		try
 		{
-			game.copied_block = game.block_registry.get_default(args[0]);
+			g.copied_block = g.block_registry.get_default(args[0]);
 		}
 		catch(const std::runtime_error& e)
 		{
@@ -594,15 +594,15 @@ void Game::impl::add_commands()
 	});
 	COMMAND("+use")
 	{
-		if(game.hovered_block != nullopt)
+		if(g.hovered_block != nullopt)
 		{
-			game.world.get_block(game.hovered_block->pos)->use_start
+			g.world.get_block(g.hovered_block->pos)->use_start
 			(
-				game,
-				game.world,
+				g,
+				g.world,
 				player,
-				game.hovered_block->pos,
-				game.hovered_block->face()
+				g.hovered_block->pos,
+				g.hovered_block->face()
 			);
 		}
 	});
@@ -685,22 +685,22 @@ void Game::impl::add_commands()
 		const double value = std::stod(args[1]);
 		if(part == "x")
 		{
-			game.camera.rotation.x += value;
+			g.camera.rotation.x += value;
 		}
 		else if(part == "y")
 		{
-			game.camera.rotation.y += value;
+			g.camera.rotation.y += value;
 		}
 		else if(part == "z")
 		{
-			game.camera.rotation.z += value;
+			g.camera.rotation.z += value;
 		}
 		else
 		{
 			LOG(ERROR) << "component name must be x, y, or z\n";
 			return;
 		}
-		LOG(INFO) << "camera rotation: " << glm::to_string(game.camera.rotation) << '\n';
+		LOG(INFO) << "camera rotation: " << glm::to_string(g.camera.rotation) << '\n';
 	});
 
 	COMMAND("screenshot")
@@ -721,7 +721,7 @@ void Game::impl::add_commands()
 		}
 		try
 		{
-			game.screenshot(filename);
+			g.screenshot(filename);
 		}
 		catch(const std::runtime_error& e)
 		{
@@ -742,16 +742,16 @@ void Game::impl::add_commands()
 
 	COMMAND("nazi")
 	{
-		if(game.hovered_block == nullopt || game.copied_block == nullptr)
+		if(g.hovered_block == nullopt || g.copied_block == nullptr)
 		{
 			return;
 		}
 
-		const position::BlockInWorld start_pos = game.hovered_block->adjacent();
-		const position::BlockInWorld::value_type ysize = 9;
-		const position::BlockInWorld::value_type xsize = 9;
-		const block::enums::Type_t i = static_cast<block::enums::Type_t>(game.copied_block->type()); // TODO: use copied_block instance
-		block::enums::Type_t nazi[ysize][xsize]
+		const position::block_in_world start_pos = g.hovered_block->adjacent();
+		const position::block_in_world::value_type ysize = 9;
+		const position::block_in_world::value_type xsize = 9;
+		const block::enums::type_t i = static_cast<block::enums::type_t>(g.copied_block->type()); // TODO: use copied_block instance
+		block::enums::type_t nazi[ysize][xsize]
 		{
 			{ i, 1, 1, 1, i, i, i, i, i, },
 			{ i, 1, 1, 1, i, 1, 1, 1, 1, },
@@ -763,15 +763,15 @@ void Game::impl::add_commands()
 			{ 1, 1, 1, 1, i, 1, 1, 1, i, },
 			{ i, i, i, i, i, 1, 1, 1, i, },
 		};
-		position::BlockInWorld pos;
+		position::block_in_world pos;
 		for(pos.x = 0; pos.x < xsize; ++pos.x)
 		{
 			for(pos.y = ysize - 1; pos.y >= 0; --pos.y)
 			{
 				for(pos.z = 0; pos.z < 1; ++pos.z)
 				{
-					const auto type = static_cast<block::enums::Type>(nazi[pos.y][pos.x]);
-					game.world.set_block(pos + start_pos, game.block_registry.get_default(type));
+					const auto type = static_cast<block::enums::type>(nazi[pos.y][pos.x]);
+					g.world.set_block(pos + start_pos, g.block_registry.get_default(type));
 				}
 			}
 		}
@@ -786,28 +786,28 @@ void Game::impl::add_commands()
 		}
 		const string name = args[0];
 		unique_ptr<graphics::gui::Base> gui;
-		if(game.gui->type() == name)
+		if(g.gui->type() == name)
 		{
 			return;
 		}
 		if(name == "Pause")
 		{
-			gui = std::make_unique<graphics::gui::Pause>(game);
+			gui = std::make_unique<graphics::gui::Pause>(g);
 		}
 		else if(name == "Console")
 		{
-			gui = std::make_unique<graphics::gui::Console>(game);
+			gui = std::make_unique<graphics::gui::Console>(g);
 		}
 		else
 		{
 			LOG(ERROR) << "No such GUI: " << name << '\n';
 			return;
 		}
-		game.open_gui(std::move(gui));
+		g.open_gui(std::move(gui));
 	});
 	COMMAND("close_gui")
 	{
-		game.gui->close();
+		g.gui->close();
 	});
 
 	#undef COMMAND

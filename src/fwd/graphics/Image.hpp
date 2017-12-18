@@ -1,4 +1,4 @@
 namespace block_thingy::graphics
 {
-	class Image;
+	class image;
 }

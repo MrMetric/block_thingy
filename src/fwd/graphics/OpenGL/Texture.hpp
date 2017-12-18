@@ -1,4 +1,4 @@
 namespace block_thingy::graphics::opengl
 {
-	class Texture;
+	class texture;
 }

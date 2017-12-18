@@ -6,16 +6,16 @@
 
 namespace block_thingy::graphics::opengl {
 
-class Renderbuffer
+class renderbuffer
 {
 public:
-	Renderbuffer();
-	~Renderbuffer();
+	renderbuffer();
+	~renderbuffer();
 
-	Renderbuffer(Renderbuffer&&);
-	Renderbuffer(const Renderbuffer&) = delete;
-	Renderbuffer& operator=(Renderbuffer&&) = delete;
-	Renderbuffer& operator=(const Renderbuffer&) = delete;
+	renderbuffer(renderbuffer&&);
+	renderbuffer(const renderbuffer&) = delete;
+	renderbuffer& operator=(renderbuffer&&) = delete;
+	renderbuffer& operator=(const renderbuffer&) = delete;
 
 	/** https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorage.xhtml
 	 ** https://www.opengl.org/sdk/docs/man/html/glRenderbufferStorageMultisample.xhtml

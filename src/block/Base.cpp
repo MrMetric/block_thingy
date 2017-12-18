@@ -21,25 +21,25 @@ using std::string;
 
 namespace block_thingy::block {
 
-Base::Base()
+base::base()
 :
-	Base(enums::Type::none, enums::VisibilityType::opaque)
+	base(enums::type::none, enums::visibility_type::opaque)
 {
 }
 
-Base::Base(const enums::Type type)
+base::base(const enums::type type)
 :
-	Base(type, enums::VisibilityType::opaque)
+	base(type, enums::visibility_type::opaque)
 {
 }
 
-Base::Base(const enums::Type type, const enums::VisibilityType visibility_type_)
+base::base(const enums::type type, const enums::visibility_type visibility_type_)
 :
-	Base(type, visibility_type_, "default")
+	base(type, visibility_type_, "default")
 {
 }
 
-Base::Base(const enums::Type type, const enums::VisibilityType visibility_type_, const fs::path& shader)
+base::base(const enums::type type, const enums::visibility_type visibility_type_, const fs::path& shader)
 :
 	visibility_type_(visibility_type_),
 	type_(type)
@@ -47,7 +47,7 @@ Base::Base(const enums::Type type, const enums::VisibilityType visibility_type_,
 	shader_.fill("shaders/block" / shader);
 }
 
-Base::Base(const enums::Type type, const enums::VisibilityType visibility_type_, const std::array<fs::path, 6>& shaders)
+base::base(const enums::type type, const enums::visibility_type visibility_type_, const std::array<fs::path, 6>& shaders)
 :
 	visibility_type_(visibility_type_),
 	type_(type)
@@ -58,21 +58,21 @@ Base::Base(const enums::Type type, const enums::VisibilityType visibility_type_,
 	}
 }
 
-Base::~Base()
+base::~base()
 {
 }
 
-Base::Base(const Base& that)
+base::base(const base& that)
 :
 	type_(that.type_)
 {
 	operator=(that);
 }
 
-Base& Base::operator=(const Base& that)
+base& base::operator=(const base& that)
 {
-	const auto type1 = static_cast<enums::Type_t>(type());
-	const auto type2 = static_cast<enums::Type_t>(that.type());
+	const auto type1 = static_cast<enums::type_t>(type());
+	const auto type2 = static_cast<enums::type_t>(that.type());
 	if(type1 != type2)
 	{
 		throw std::runtime_error("can not copy " + std::to_string(type2) + " to " + std::to_string(type1));
@@ -87,37 +87,37 @@ Base& Base::operator=(const Base& that)
 	return *this;
 }
 
-string Base::name() const
+string base::name() const
 {
-	return Game::instance->block_registry.get_name(type());
+	return game::instance->block_registry.get_name(type());
 }
 
-void Base::light(const graphics::Color& light)
+void base::light(const graphics::color& light)
 {
 	light_ = light;
 }
 
-fs::path Base::shader(const enums::Face face) const
+fs::path base::shader(const enums::Face face) const
 {
 	return shader_[static_cast<std::size_t>(rotation_util::rotate_face(face, rotation()))];
 }
 
-fs::path Base::texture(const enums::Face face) const
+fs::path base::texture(const enums::Face face) const
 {
 	return texture_[static_cast<std::size_t>(rotation_util::rotate_face(face, rotation()))];
 }
 
-glm::tvec3<uint8_t> Base::rotation() const
+glm::tvec3<uint8_t> base::rotation() const
 {
 	return rotation_;
 }
 
-uint8_t Base::rotation(const enums::Face face) const
+uint8_t base::rotation(const enums::Face face) const
 {
 	return rotation_util::face_rotation_LUT.at(rotation_)[face];
 }
 
-void Base::rotate_around(const enums::Face face, int8_t direction)
+void base::rotate_around(const enums::Face face, int8_t direction)
 {
 	auto r
 	 = rotation_util::rotate(rotation_.x, {1, 0, 0})
@@ -139,52 +139,52 @@ void Base::rotate_around(const enums::Face face, int8_t direction)
 	rotation_ = rotation_util::mat_to_rot(r);
 }
 
-double Base::bounciness() const
+double base::bounciness() const
 {
 	return 0;
 }
 
-glm::dvec4 Base::selection_color() const
+glm::dvec4 base::selection_color() const
 {
 	return {1, 1, 1, 1};
 }
 
-graphics::Color Base::light_filter() const
+graphics::color base::light_filter() const
 {
-	return {graphics::Color::max};
+	return {graphics::color::max};
 }
 
-bool Base::is_solid() const
-{
-	return true;
-}
-
-bool Base::is_selectable() const
+bool base::is_solid() const
 {
 	return true;
 }
 
-bool Base::is_replaceable_by(const Base& /*block*/) const
+bool base::is_selectable() const
+{
+	return true;
+}
+
+bool base::is_replaceable_by(const base& /*block*/) const
 {
 	return false;
 }
 
-void Base::use_start
+void base::use_start
 (
-	Game& /*game*/,
-	World& /*world*/,
+	game& /*g*/,
+	world::world& /*world*/,
 	Player& player,
-	const position::BlockInWorld& pos,
+	const position::block_in_world& pos,
 	const enums::Face face
 )
 {
 	LOG(DEBUG) << "+use on block " << pos << ':' << face << " by player " << player.name << '\n';
 }
 
-void Base::save(storage::OutputInterface& i) const
+void base::save(storage::OutputInterface& i) const
 {
-	enums::Type t = (type_ == enums::Type::none) ? enums::Type::air : type_;
-	enums::TypeExternal te = Game::instance->block_registry.get_extid(t);
+	enums::type t = (type_ == enums::type::none) ? enums::type::air : type_;
+	enums::type_external te = game::instance->block_registry.get_extid(t);
 	i.set("", te);
 	if(rotation_.x != 0 || rotation_.y != 0 || rotation_.z != 0)
 	{
@@ -192,7 +192,7 @@ void Base::save(storage::OutputInterface& i) const
 	}
 }
 
-void Base::load(storage::InputInterface& i)
+void base::load(storage::InputInterface& i)
 {
 	// type is set before loading
 	i.maybe_get("r", rotation_);

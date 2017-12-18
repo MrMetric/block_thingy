@@ -57,12 +57,12 @@ public:
 
 	glm::dmat4 vp_matrix; // view (graphical) and projection
 
-	graphics::opengl::ShaderProgram s_lines;
+	graphics::opengl::shader_program s_lines;
 
-	graphics::opengl::VertexBuffer outline_vbo;
-	graphics::opengl::VertexArray outline_vao;
+	graphics::opengl::vertex_buffer outline_vbo;
+	graphics::opengl::vertex_array outline_vao;
 
-	graphics::Text gui_text;
+	graphics::text gui_text;
 	glm::dmat4 gui_projection_matrix;
 
 	void hook_events(EventManager&);
@@ -72,12 +72,12 @@ public:
 
 	void update_framebuffer_size(const window_size_t&);
 
-	graphics::RenderTarget screen_rt;
-	graphics::RenderTarget buf_rt;
-	std::map<std::string, graphics::opengl::ShaderProgram> screen_shaders;
-	graphics::opengl::ShaderProgram* screen_shader;
-	graphics::opengl::VertexBuffer quad_vbo;
-	graphics::opengl::VertexArray quad_vao;
+	graphics::render_target screen_rt;
+	graphics::render_target buf_rt;
+	std::map<std::string, graphics::opengl::shader_program> screen_shaders;
+	graphics::opengl::shader_program* screen_shader;
+	graphics::opengl::vertex_buffer quad_vbo;
+	graphics::opengl::vertex_array quad_vao;
 	void set_screen_shader(const std::string&);
 
 	/**
@@ -99,14 +99,14 @@ public:
 	);
 	void draw_box_outline(const glm::dvec3& min, const glm::dvec3& max, const glm::dvec4& color);
 	void draw_box_outline(const physics::AABB&, const glm::dvec4& color);
-	void draw_block_outline(const position::BlockInWorld&, const glm::dvec4& color);
+	void draw_block_outline(const position::block_in_world&, const glm::dvec4& color);
 
 	void center_cursor();
 
 	// for GUIs
-	graphics::opengl::ShaderProgram s_gui_shape;
-	graphics::opengl::VertexBuffer gui_rectangle_vbo;
-	graphics::opengl::VertexArray gui_rectangle_vao;
+	graphics::opengl::shader_program s_gui_shape;
+	graphics::opengl::vertex_buffer gui_rectangle_vbo;
+	graphics::opengl::vertex_array gui_rectangle_vao;
 	void draw_rectangle(glm::dvec2 position, glm::dvec2 size, const glm::dvec4& color);
 	void draw_border(glm::dvec2 position, glm::dvec2 size, glm::dvec4 border_size, const glm::dvec4& color);
 };

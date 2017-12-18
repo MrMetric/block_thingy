@@ -11,8 +11,8 @@ struct AABB // axis-aligned bounding box
 {
 	AABB();
 	AABB(const glm::dvec3& min, const glm::dvec3& max);
-	AABB(const position::BlockInWorld&);
-	AABB(const position::ChunkInWorld&);
+	AABB(const position::block_in_world&);
+	AABB(const position::chunk_in_world&);
 
 	glm::dvec3 min;
 	glm::dvec3 max;

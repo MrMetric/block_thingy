@@ -95,9 +95,9 @@ void set(const string& name, T value)
 
 		const value_t old_value = get(name);
 		settings[name] = std::move(value);
-		if(Game::instance != nullptr)
+		if(game::instance != nullptr)
 		{
-			Game::instance->event_manager.do_event(Event_change_setting(name, old_value, settings[name]));
+			game::instance->event_manager.do_event(Event_change_setting(name, old_value, settings[name]));
 		}
 	}
 	else if(has(name))
@@ -258,7 +258,7 @@ void add_command_handlers()
 			LOG(ERROR) << "error setting bool " << name << " = " << value << ": " << e.what() << '\n';
 			return;
 		}
-		if(Game::instance != nullptr) // not called from initial settings::load()
+		if(game::instance != nullptr) // not called from initial settings::load()
 		{
 			LOG(INFO) << "set bool: " << name << " = " << value << '\n';
 		}
@@ -286,7 +286,7 @@ void add_command_handlers()
 			LOG(ERROR) << "error toggling bool " << name << ": " << e.what() << '\n';
 			return;
 		}
-		if(Game::instance != nullptr) // not called from initial settings::load()
+		if(game::instance != nullptr) // not called from initial settings::load()
 		{
 			LOG(INFO) << "set bool: " << name << " = " << value << '\n';
 		}
@@ -378,7 +378,7 @@ void add_command_handlers()
 			LOG(ERROR) << "error setting float " << name << " = " << value << ": " << e.what() << '\n';
 			return;
 		}
-		if(Game::instance != nullptr) // not called from initial settings::load()
+		if(game::instance != nullptr) // not called from initial settings::load()
 		{
 			LOG(INFO) << "set float: " << name << " = " << value << '\n';
 		}
@@ -453,7 +453,7 @@ void add_command_handlers()
 			LOG(ERROR) << "error setting int " << name << " = " << value << ": " << e.what() << '\n';
 			return;
 		}
-		if(Game::instance != nullptr) // not called from initial settings::load()
+		if(game::instance != nullptr) // not called from initial settings::load()
 		{
 			LOG(INFO) << "set int: " << name << " = " << value << '\n';
 		}
@@ -480,7 +480,7 @@ void add_command_handlers()
 			LOG(ERROR) << "error setting string " << name << " = " << value << ": " << e.what() << '\n';
 			return;
 		}
-		if(Game::instance != nullptr) // not called from initial settings::load()
+		if(game::instance != nullptr) // not called from initial settings::load()
 		{
 			LOG(INFO) << "set string: " << name << " = " << value << '\n';
 		}
@@ -534,7 +534,7 @@ void add_command_handlers()
 			LOG(ERROR) << "error setting vec2 " << name << " = " << svalue << ": " << e.what() << '\n';
 			return;
 		}
-		if(Game::instance != nullptr) // not called from initial settings::load()
+		if(game::instance != nullptr) // not called from initial settings::load()
 		{
 			LOG(INFO) << "set vec2: " << name << " = " << svalue << '\n';
 		}
@@ -570,7 +570,7 @@ void add_command_handlers()
 			LOG(ERROR) << "error setting vec3 " << name << " = " << svalue << ": " << e.what() << '\n';
 			return;
 		}
-		if(Game::instance != nullptr) // not called from initial settings::load()
+		if(game::instance != nullptr) // not called from initial settings::load()
 		{
 			LOG(INFO) << "set vec3: " << name << " = " << svalue << '\n';
 		}
@@ -607,7 +607,7 @@ void add_command_handlers()
 			LOG(ERROR) << "error setting vec4 " << name << " = " << svalue << ": " << e.what() << '\n';
 			return;
 		}
-		if(Game::instance != nullptr) // not called from initial settings::load()
+		if(game::instance != nullptr) // not called from initial settings::load()
 		{
 			LOG(INFO) << "set vec4: " << name << " = " << svalue << '\n';
 		}

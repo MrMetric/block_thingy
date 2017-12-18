@@ -24,25 +24,25 @@ using std::string;
 
 namespace block_thingy::graphics {
 
-using graphics::opengl::ShaderProgram;
-using position::BlockInWorld;
-using position::ChunkInWorld;
+using graphics::opengl::shader_program;
+using position::block_in_world;
+using position::chunk_in_world;
 
 std::tuple<uint64_t, uint64_t> draw_world
 (
-	World& world,
-	ResourceManager& resource_manager,
+	world::world& world,
+	resource_manager& resource_manager,
 	const glm::dmat4& vp_matrix_,
-	const position::BlockInWorld& origin,
+	const block_in_world& origin,
 	const uint64_t render_distance
 )
 {
-	const glm::dvec3 camera_position = Game::instance->camera.position;
-	const glm::dvec3 camera_rotation = Game::instance->camera.rotation;
-	const ChunkInWorld camera_chunk{BlockInWorld(camera_position)};
+	const glm::dvec3 camera_position = game::instance->camera.position;
+	const glm::dvec3 camera_rotation = game::instance->camera.rotation;
+	const chunk_in_world camera_chunk{block_in_world(camera_position)};
 
 	const glm::mat4 vp_matrix(vp_matrix_);
-	resource_manager.foreach_ShaderProgram([&vp_matrix](Resource<graphics::opengl::ShaderProgram> r)
+	resource_manager.foreach_shader_program([&vp_matrix](resource<shader_program> r)
 	{
 	#ifdef _WIN32
 		if(util::string_starts_with(r.get_id(), "shaders\\block\\"))
@@ -84,21 +84,21 @@ std::tuple<uint64_t, uint64_t> draw_world
 		frustum_ = std::make_unique<null_frustum<true>>();
 	}
 
-	const ChunkInWorld chunk_pos(origin);
-	const ChunkInWorld::value_type render_distance_ = static_cast<ChunkInWorld::value_type>(render_distance);
-	const ChunkInWorld min = chunk_pos - render_distance_;
-	const ChunkInWorld max = chunk_pos + render_distance_;
+	const chunk_in_world chunk_pos(origin);
+	const chunk_in_world::value_type render_distance_ = static_cast<chunk_in_world::value_type>(render_distance);
+	const chunk_in_world min = chunk_pos - render_distance_;
+	const chunk_in_world max = chunk_pos + render_distance_;
 
 	const bool show_chunk_outlines = settings::get<bool>("show_chunk_outlines");
 
 	std::vector<std::shared_ptr<Chunk>> drawn_chunks;
 
-	ChunkInWorld pos;
+	chunk_in_world pos;
 	for(pos.x = min.x; pos.x <= max.x; ++pos.x)
 	for(pos.y = min.y; pos.y <= max.y; ++pos.y)
 	for(pos.z = min.z; pos.z <= max.z; ++pos.z)
 	{
-		const ChunkInWorld gpos(pos - camera_chunk);
+		const chunk_in_world gpos(pos - camera_chunk);
 		const physics::AABB aabb(gpos);
 		if(!frustum_->inside(aabb))
 		{
@@ -109,7 +109,7 @@ std::tuple<uint64_t, uint64_t> draw_world
 
 		if(show_chunk_outlines)
 		{
-			const glm::dvec3 min(static_cast<BlockInWorld::vec_type>(BlockInWorld(pos, {})));
+			const glm::dvec3 min(static_cast<block_in_world::vec_type>(block_in_world(pos, {})));
 			const glm::dvec3 max(min + static_cast<double>(CHUNK_SIZE));
 			glm::dvec4 color(glm::uninitialize);
 			if(chunk == nullptr)

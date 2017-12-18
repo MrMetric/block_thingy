@@ -51,7 +51,7 @@ using std::string;
 
 namespace block_thingy {
 
-using graphics::opengl::ShaderProgram;
+using graphics::opengl::shader_program;
 
 static window_size_t get_window_size(GLFWwindow* window)
 {
@@ -119,7 +119,7 @@ void Gfx::hook_events(EventManager& event_manager)
 		else if(e.name == "light_smoothing")
 		{
 			const int light_smoothing = static_cast<int>(*e.new_value.get<int64_t>());
-			Game::instance->resource_manager.foreach_ShaderProgram([light_smoothing](Resource<ShaderProgram> r)
+			game::instance->resource_manager.foreach_shader_program([light_smoothing](resource<shader_program> r)
 			{
 				#ifdef _WIN32
 				if(util::string_starts_with(r.get_id(), "shaders\\block\\"))
@@ -134,7 +134,7 @@ void Gfx::hook_events(EventManager& event_manager)
 		else if(e.name == "min_light")
 		{
 			const float min_light = static_cast<float>(*e.new_value.get<double>());
-			Game::instance->resource_manager.foreach_ShaderProgram([min_light](Resource<ShaderProgram> r)
+			game::instance->resource_manager.foreach_shader_program([min_light](resource<shader_program> r)
 			{
 				#ifdef _WIN32
 				if(util::string_starts_with(r.get_id(), "shaders\\block\\"))
@@ -203,7 +203,7 @@ GLFWwindow* Gfx::init_glfw()
 			// happens when minimizing on Windows
 			return;
 		}
-		Game::instance->update_framebuffer_size(window_size_t(width, height));
+		game::instance->update_framebuffer_size(window_size_t(width, height));
 	});
 	glfwSetKeyCallback(window, [](GLFWwindow*, int key, int scancode, int action, int mods)
 	{
@@ -211,19 +211,19 @@ GLFWwindow* Gfx::init_glfw()
 		{
 			return;
 		}
-		Game::instance->keypress({key, scancode, action, mods});
+		game::instance->keypress({key, scancode, action, mods});
 	});
 	glfwSetCharModsCallback(window, [](GLFWwindow*, unsigned int codepoint, int mods)
 	{
-		Game::instance->charpress({static_cast<char32_t>(codepoint), mods});
+		game::instance->charpress({static_cast<char32_t>(codepoint), mods});
 	});
 	glfwSetMouseButtonCallback(window, [](GLFWwindow*, int button, int action, int mods)
 	{
-		Game::instance->mousepress({button, action, mods});
+		game::instance->mousepress({button, action, mods});
 	});
 	glfwSetCursorPosCallback(window, [](GLFWwindow*, double x, double y)
 	{
-		Game::instance->mousemove(x, y);
+		game::instance->mousemove(x, y);
 	});
 
 	// TODO: loading screen
@@ -268,7 +268,7 @@ void Gfx::opengl_setup()
 		 1, -1, 0,
 		 1,  1, 0,
 	};
-	quad_vbo.data(sizeof(quad_vertex_buffer_data), quad_vertex_buffer_data, graphics::opengl::VertexBuffer::UsageHint::static_draw);
+	quad_vbo.data(sizeof(quad_vertex_buffer_data), quad_vertex_buffer_data, graphics::opengl::vertex_buffer::usage_hint::static_draw);
 }
 
 void Gfx::update_framebuffer_size(const window_size_t& window_size)
@@ -426,7 +426,7 @@ void Gfx::draw_box_outline(const glm::dvec3& min_, const glm::dvec3& max_, const
 		max.x, min.y, min.z,
 		max.x, min.y, max.z,
 	};
-	outline_vbo.data(sizeof(vertexes), vertexes, graphics::opengl::VertexBuffer::UsageHint::dynamic_draw);
+	outline_vbo.data(sizeof(vertexes), vertexes, graphics::opengl::vertex_buffer::usage_hint::dynamic_draw);
 
 	s_lines.uniform("mvp_matrix", glm::mat4(vp_matrix));
 	s_lines.uniform("color", glm::vec4(color));
@@ -440,7 +440,7 @@ void Gfx::draw_box_outline(const physics::AABB& aabb, const glm::dvec4& color)
 	draw_box_outline(aabb.min, aabb.max, color);
 }
 
-void Gfx::draw_block_outline(const position::BlockInWorld& block_pos, const glm::dvec4& color)
+void Gfx::draw_block_outline(const position::block_in_world& block_pos, const glm::dvec4& color)
 {
 	glm::dvec3 min(block_pos.x, block_pos.y, block_pos.z);
 	draw_box_outline(min, min + 1.0, color);
@@ -499,7 +499,7 @@ void Gfx::draw_rectangle(glm::dvec2 position, glm::dvec2 size, const glm::dvec4&
 		x    , y + h,
 		x + w, y + h,
 	};
-	gui_rectangle_vbo.data(sizeof(v), v, graphics::opengl::VertexBuffer::UsageHint::dynamic_draw);
+	gui_rectangle_vbo.data(sizeof(v), v, graphics::opengl::vertex_buffer::usage_hint::dynamic_draw);
 
 	s_gui_shape.uniform("color", glm::vec4(color));
 
@@ -559,7 +559,7 @@ void Gfx::draw_border(glm::dvec2 position, glm::dvec2 size, glm::dvec4 border_si
 		x + w, y + h + sy2,
 		x    , y + h + sy2,
 	};
-	gui_rectangle_vbo.data(sizeof(v), v, graphics::opengl::VertexBuffer::UsageHint::dynamic_draw);
+	gui_rectangle_vbo.data(sizeof(v), v, graphics::opengl::vertex_buffer::usage_hint::dynamic_draw);
 
 	s_gui_shape.uniform("color", glm::vec4(color));
 

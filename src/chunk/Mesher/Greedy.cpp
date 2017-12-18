@@ -12,15 +12,15 @@
 namespace block_thingy::mesher {
 
 using block::enums::Face;
-using position::BlockInChunk;
+using position::block_in_chunk;
 
 using surface_t = std::array<std::array<std::tuple<meshmap_key_t, uint16_t, uint8_t>, CHUNK_SIZE>, CHUNK_SIZE>;
 
 struct Rectangle
 {
 	meshmap_key_t key;
-	BlockInChunk::value_type x, z;
-	BlockInChunk::value_type w, h;
+	block_in_chunk::value_type x, z;
+	block_in_chunk::value_type w, h;
 	uint16_t tex_index;
 	uint8_t rotation;
 };
@@ -98,10 +98,10 @@ void generate_surface
 			int8_t o[] = {0, 0, 0};
 			o[i.y] = offset;
 
-			const block::Base& block = Base::block_at(chunk, x, y, z);
+			const block::base& block = Base::block_at(chunk, x, y, z);
 			if(Base::block_visible_from(chunk, block, x + o[0], y + o[1], z + o[2]))
 			{
-				const auto tex = Game::instance->resource_manager.get_block_texture(block.texture(face));
+				const auto tex = game::instance->resource_manager.get_block_texture(block.texture(face));
 				surface[pos[2]][pos[0]] =
 				{
 					{
@@ -132,10 +132,10 @@ void generate_surface
 
 Rectangle yield_rectangle(surface_t& surface)
 {
-	for(BlockInChunk::value_type z = 0; z < CHUNK_SIZE; ++z)
+	for(block_in_chunk::value_type z = 0; z < CHUNK_SIZE; ++z)
 	{
 		surface_t::value_type& row = surface[z];
-		for(BlockInChunk::value_type x = 0; x < CHUNK_SIZE; ++x)
+		for(block_in_chunk::value_type x = 0; x < CHUNK_SIZE; ++x)
 		{
 			const auto key = row[x];
 			const fs::path shader_path = std::get<0>(key).shader_path;
@@ -143,10 +143,10 @@ Rectangle yield_rectangle(surface_t& surface)
 			{
 				continue;
 			}
-			const BlockInChunk::value_type start_z = z;
-			const BlockInChunk::value_type start_x = x;
-			BlockInChunk::value_type w = 1;
-			BlockInChunk::value_type h = 1;
+			const block_in_chunk::value_type start_z = z;
+			const block_in_chunk::value_type start_x = x;
+			block_in_chunk::value_type w = 1;
+			block_in_chunk::value_type h = 1;
 			std::get<0>(row[x]).shader_path.clear();
 			++x;
 			while(x < CHUNK_SIZE && row[x] == key)
@@ -165,7 +165,7 @@ Rectangle yield_rectangle(surface_t& surface)
 				{
 					break;
 				}
-				BlockInChunk::value_type w2 = 0;
+				block_in_chunk::value_type w2 = 0;
 				do
 				{
 					w2 += 1;
@@ -177,7 +177,7 @@ Rectangle yield_rectangle(surface_t& surface)
 				{
 					break;
 				}
-				for(BlockInChunk::value_type i = start_x; i < start_x + w2; ++i)
+				for(block_in_chunk::value_type i = start_x; i < start_x + w2; ++i)
 				{
 					std::get<0>(row2[start_x]).shader_path.clear();
 				}

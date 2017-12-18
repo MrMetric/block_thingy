@@ -5,19 +5,19 @@
 
 namespace block_thingy::block::enums {
 
-using Type_t = uint16_t;
+using type_t = uint16_t;
 
-enum class Type : Type_t
+enum class type : type_t
 {
 	none,
 	air,
 	unknown,
 };
-std::ostream& operator<<(std::ostream&, Type);
+std::ostream& operator<<(std::ostream&, type);
 
-enum class TypeExternal : Type_t
+enum class type_external : type_t
 {
 };
-std::ostream& operator<<(std::ostream&, TypeExternal);
+std::ostream& operator<<(std::ostream&, type_external);
 
 }

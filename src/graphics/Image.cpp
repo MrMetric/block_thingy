@@ -47,7 +47,7 @@ static void write_raw
 	const std::vector<uint8_t>& data
 );
 
-struct Image::impl
+struct image::impl
 {
 	impl()
 	:
@@ -104,49 +104,49 @@ struct Image::impl
 	bool has_transparency;
 };
 
-Image::Image()
+image::image()
 :
 	pImpl(std::make_unique<impl>())
 {
 }
 
-Image::Image(const fs::path& path)
+image::image(const fs::path& path)
 :
 	pImpl(std::make_unique<impl>(path))
 {
 }
 
-Image::Image(const uint32_t width, const uint32_t height, std::vector<uint8_t> data)
+image::image(const uint32_t width, const uint32_t height, std::vector<uint8_t> data)
 :
 	pImpl(std::make_unique<impl>(width, height, data))
 {
 }
 
-Image::~Image()
+image::~image()
 {
 }
 
-uint32_t Image::get_width() const
+uint32_t image::get_width() const
 {
 	return pImpl->width;
 }
 
-uint32_t Image::get_height() const
+uint32_t image::get_height() const
 {
 	return pImpl->height;
 }
 
-const uint8_t* Image::get_data() const
+const uint8_t* image::get_data() const
 {
 	return pImpl->data.data();
 }
 
-bool Image::has_transparency() const
+bool image::has_transparency() const
 {
 	return pImpl->has_transparency;
 }
 
-void Image::write(const fs::path& path) const
+void image::write(const fs::path& path) const
 {
 	if(path.extension() == ".png")
 	{

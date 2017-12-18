@@ -4,23 +4,23 @@
 
 namespace block_thingy::block {
 
-Air::Air(const enums::Type t)
+air::air(const enums::type t)
 :
-	Base(t, enums::VisibilityType::invisible)
+	base(t, enums::visibility_type::invisible)
 {
 }
 
-bool Air::is_solid() const
-{
-	return false;
-}
-
-bool Air::is_selectable() const
+bool air::is_solid() const
 {
 	return false;
 }
 
-bool Air::is_replaceable_by(const Base&) const
+bool air::is_selectable() const
+{
+	return false;
+}
+
+bool air::is_replaceable_by(const base&) const
 {
 	return true;
 }

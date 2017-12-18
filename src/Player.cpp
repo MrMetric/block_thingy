@@ -22,26 +22,26 @@ namespace block_thingy {
 
 Player::Player
 (
-	Game& game,
+	game& g,
 	const string& name
 )
 :
 	name(name),
 	reach_distance(16),
 	spawn_position(0.5, 1.0, 0.5), // TODO: generate this
-	position(spawn_position, [this, &game](glm::dvec3 p)
+	position(spawn_position, [this, &g](glm::dvec3 p)
 	{
 		p.y += eye_height;
-		game.camera.position = p;
+		g.camera.position = p;
 	}),
-	rotation(glm::dvec3(0), [&game](glm::dvec3 r)
+	rotation(glm::dvec3(0), [&g](glm::dvec3 r)
 	{
-		game.camera.rotation = r;
+		g.camera.rotation = r;
 	}),
 	velocity(glm::dvec3(0), [](glm::dvec3 v)
 	{
 	}),
-	game(game),
+	g(g),
 	abs_offset(0.4),
 	eye_height(1.6),
 	height(1.8),
@@ -83,10 +83,10 @@ void Player::move(const glm::dvec3& acceleration)
 		return;
 	}
 
-	const position::BlockInWorld block_pos_old(position);
+	const position::block_in_world block_pos_old(position);
 	auto loop = [this, &new_position, &block_pos_old](const bool corners)
 	{
-		position::BlockInWorld block_pos_offset;
+		position::block_in_world block_pos_offset;
 		for(block_pos_offset.y = 0; block_pos_offset.y <= std::floor(height); ++block_pos_offset.y)
 		for(block_pos_offset.x = -1; block_pos_offset.x <= 1; ++block_pos_offset.x)
 		for(block_pos_offset.z = -1; block_pos_offset.z <= 1; ++block_pos_offset.z)
@@ -96,8 +96,8 @@ void Player::move(const glm::dvec3& acceleration)
 			if(corners) skip = !skip;
 			if(skip) continue;
 
-			const position::BlockInWorld block_pos = block_pos_old + block_pos_offset;
-			if(!game.world.get_block(block_pos)->is_solid())
+			const position::block_in_world block_pos = block_pos_old + block_pos_offset;
+			if(!g.world.get_block(block_pos)->is_solid())
 			{
 				continue;
 			}
@@ -132,8 +132,8 @@ void Player::move(const glm::dvec3& acceleration)
 	{
 		if(move_vec.y < 0)
 		{
-			const position::BlockInWorld pos_feet_new(glm::dvec3(position.x, position.y + move_vec.y, position.z));
-			const shared_ptr<block::Base> block = game.world.get_block(pos_feet_new);
+			const position::block_in_world pos_feet_new(glm::dvec3(position.x, position.y + move_vec.y, position.z));
+			const shared_ptr<block::base> block = g.world.get_block(pos_feet_new);
 			if(block->is_solid())
 			{
 				position.y = pos_feet_new.y + 1;
@@ -154,8 +154,8 @@ void Player::move(const glm::dvec3& acceleration)
 		}
 		else if(move_vec.y > 0)
 		{
-			const position::BlockInWorld pos_head_new(glm::dvec3(position.x, position.y + move_vec.y + height, position.z));
-			const shared_ptr<block::Base> block = game.world.get_block(pos_head_new);
+			const position::block_in_world pos_head_new(glm::dvec3(position.x, position.y + move_vec.y + height, position.z));
+			const shared_ptr<block::base> block = g.world.get_block(pos_head_new);
 			if(block->is_solid())
 			{
 				position.y = pos_head_new.y - height;
@@ -223,17 +223,17 @@ void Player::step(const double delta_time)
 
 	if(acceleration != glm::dvec3(0))
 	{
-		const position::BlockInWorld old_position(position());
+		const position::block_in_world old_position(position());
 		move(acceleration * delta_time);
-		const position::BlockInWorld new_position(position());
+		const position::block_in_world new_position(position());
 		if(new_position != old_position)
 		{
-			const shared_ptr<block::Base> block = game.world.get_block(new_position);
-			if(block->type() != block::enums::Type::none
-			&& block->type() != block::enums::Type::air
+			const shared_ptr<block::base> block = g.world.get_block(new_position);
+			if(block->type() != block::enums::type::none
+			&& block->type() != block::enums::type::air
 			&& !block->is_solid())
 			{
-				game.event_manager.do_event(Event_enter_block(game.world, *this, block));
+				g.event_manager.do_event(Event_enter_block(g.world, *this, block));
 			}
 		}
 
@@ -283,7 +283,7 @@ void Player::respawn()
 	set_aabb();
 }
 
-bool Player::can_place_block_at(const position::BlockInWorld& block_pos)
+bool Player::can_place_block_at(const position::block_in_world& block_pos)
 {
 	if(flags.noclip)
 	{
@@ -341,7 +341,7 @@ void Player::set_noclip(bool noclip)
 void Player::open_gui(unique_ptr<graphics::gui::Base> gui)
 {
 	// TODO
-	game.open_gui(std::move(gui));
+	g.open_gui(std::move(gui));
 }
 
 physics::AABB Player::make_aabb(const glm::dvec3& position)

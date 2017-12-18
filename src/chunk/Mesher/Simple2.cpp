@@ -12,16 +12,16 @@
 namespace block_thingy::mesher {
 
 using block::enums::Face;
-using position::BlockInChunk;
+using position::block_in_chunk;
 
 meshmap_t Simple2::make_mesh(const Chunk& chunk)
 {
 	meshmap_t meshes;
 
-	std::array<block::Base*, CHUNK_BLOCK_COUNT> cache;
+	std::array<block::base*, CHUNK_BLOCK_COUNT> cache;
 
 	std::size_t block_i = 0;
-	BlockInChunk c_pos(0, 0, 0);
+	block_in_chunk c_pos(0, 0, 0);
 	for(c_pos.x = 0; c_pos.x < CHUNK_SIZE; ++c_pos.x)
 	for(c_pos.y = 0; c_pos.y < CHUNK_SIZE; ++c_pos.y)
 	for(c_pos.z = 0; c_pos.z < CHUNK_SIZE; ++c_pos.z, ++block_i)
@@ -30,11 +30,11 @@ meshmap_t Simple2::make_mesh(const Chunk& chunk)
 	}
 
 	block_i = 0;
-	for(BlockInChunk::value_type x = 0; x < CHUNK_SIZE; ++x)
-	for(BlockInChunk::value_type y = 0; y < CHUNK_SIZE; ++y)
-	for(BlockInChunk::value_type z = 0; z < CHUNK_SIZE; ++z, ++block_i)
+	for(block_in_chunk::value_type x = 0; x < CHUNK_SIZE; ++x)
+	for(block_in_chunk::value_type y = 0; y < CHUNK_SIZE; ++y)
+	for(block_in_chunk::value_type z = 0; z < CHUNK_SIZE; ++z, ++block_i)
 	{
-		const block::Base& block = *cache[block_i];
+		const block::base& block = *cache[block_i];
 		if(block.is_invisible())
 		{
 			continue;
@@ -54,9 +54,9 @@ meshmap_t Simple2::make_mesh(const Chunk& chunk)
 			&& pos.z >= 0 && pos.z < CHUNK_SIZE)
 			{
 				const std::size_t sibling_i = static_cast<std::size_t>(CHUNK_SIZE * CHUNK_SIZE * pos.x + CHUNK_SIZE * pos.y + pos.z);
-				const block::Base& sibling = *cache[sibling_i];
+				const block::base& sibling = *cache[sibling_i];
 				is_visible =
-					   sibling.type() != block::enums::Type::none
+					   sibling.type() != block::enums::type::none
 					&& !block.is_invisible() // this block is visible
 					&& !sibling.is_opaque() // this block can be seen thru the adjacent block
 					&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks (of the same type)
@@ -68,7 +68,7 @@ meshmap_t Simple2::make_mesh(const Chunk& chunk)
 			}
 			if(is_visible)
 			{
-				const auto tex = Game::instance->resource_manager.get_block_texture(block.texture(face));
+				const auto tex = game::instance->resource_manager.get_block_texture(block.texture(face));
 				const meshmap_key_t key =
 				{
 					block.shader(face),

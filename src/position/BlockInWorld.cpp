@@ -3,13 +3,13 @@
 #include <cmath>
 #include <ostream>
 
-#include "BlockInChunk.hpp"
-#include "ChunkInWorld.hpp"
 #include "chunk/Chunk.hpp"
+#include "position/BlockInChunk.hpp"
+#include "position/ChunkInWorld.hpp"
 
 namespace block_thingy::position {
 
-BlockInWorld::BlockInWorld()
+block_in_world::block_in_world()
 :
 	x(0),
 	y(0),
@@ -17,7 +17,7 @@ BlockInWorld::BlockInWorld()
 {
 }
 
-BlockInWorld::BlockInWorld(const value_type x, const value_type y, const value_type z)
+block_in_world::block_in_world(const value_type x, const value_type y, const value_type z)
 :
 	x(x),
 	y(y),
@@ -27,7 +27,7 @@ BlockInWorld::BlockInWorld(const value_type x, const value_type y, const value_t
 
 #undef t
 #define t(a, b) static_cast<value_type>(a) * CHUNK_SIZE + b
-BlockInWorld::BlockInWorld(const ChunkInWorld& chunk_pos, const BlockInChunk& block_pos)
+block_in_world::block_in_world(const chunk_in_world& chunk_pos, const block_in_chunk& block_pos)
 {
 	x = t(chunk_pos.x, block_pos.x);
 	y = t(chunk_pos.y, block_pos.y);
@@ -36,7 +36,7 @@ BlockInWorld::BlockInWorld(const ChunkInWorld& chunk_pos, const BlockInChunk& bl
 
 #undef t
 #define t(a) static_cast<value_type>(std::floor(a))
-BlockInWorld::BlockInWorld(const glm::dvec3& vec)
+block_in_world::block_in_world(const glm::dvec3& vec)
 {
 	x = t(vec.x);
 	y = t(vec.y);
@@ -44,7 +44,7 @@ BlockInWorld::BlockInWorld(const glm::dvec3& vec)
 }
 #undef t
 
-BlockInWorld& BlockInWorld::operator+=(const BlockInWorld& that)
+block_in_world& block_in_world::operator+=(const block_in_world& that)
 {
 	x += that.x;
 	y += that.y;
@@ -52,32 +52,32 @@ BlockInWorld& BlockInWorld::operator+=(const BlockInWorld& that)
 	return *this;
 }
 
-bool BlockInWorld::operator==(const BlockInWorld& that) const
+bool block_in_world::operator==(const block_in_world& that) const
 {
 	return (x == that.x) && (y == that.y) && (z == that.z);
 }
 
-bool BlockInWorld::operator!=(const BlockInWorld& that) const
+bool block_in_world::operator!=(const block_in_world& that) const
 {
 	return !(*this == that);
 }
 
-BlockInWorld::operator BlockInWorld::vec_type() const
+block_in_world::operator block_in_world::vec_type() const
 {
 	return {x, y, z};
 }
 
-BlockInWorld operator+(const BlockInWorld& pos1, const BlockInWorld& pos2)
+block_in_world operator+(const block_in_world& pos1, const block_in_world& pos2)
 {
 	return {pos1.x + pos2.x, pos1.y + pos2.y, pos1.z + pos2.z};
 }
 
-BlockInWorld operator+(const BlockInWorld& pos, const glm::ivec3& vec)
+block_in_world operator+(const block_in_world& pos, const glm::ivec3& vec)
 {
-	return BlockInWorld(pos.x + vec.x, pos.y + vec.y, pos.z + vec.z);
+	return block_in_world(pos.x + vec.x, pos.y + vec.y, pos.z + vec.z);
 }
 
-std::ostream& operator<<(std::ostream& o, const BlockInWorld& pos)
+std::ostream& operator<<(std::ostream& o, const block_in_world& pos)
 {
 	return o << '(' << pos.x << ',' << pos.y << ',' << pos.z << ')';
 }

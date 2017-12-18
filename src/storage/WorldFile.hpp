@@ -11,15 +11,15 @@
 
 namespace block_thingy::storage {
 
-class WorldFile
+class world_file
 {
 public:
-	WorldFile(const fs::path& world_dir, World& world);
+	world_file(const fs::path& world_dir, world::world& world);
 
-	WorldFile(WorldFile&&) = delete;
-	WorldFile(const WorldFile&) = delete;
-	WorldFile& operator=(WorldFile&&) = delete;
-	WorldFile& operator=(const WorldFile&) = delete;
+	world_file(world_file&&) = delete;
+	world_file(const world_file&) = delete;
+	world_file& operator=(world_file&&) = delete;
+	world_file& operator=(const world_file&) = delete;
 
 	void save_world();
 
@@ -58,17 +58,17 @@ public:
 	/**
 	 * Load the chunk that is at specified position. If the chunk does not exist, `nullptr` is returned.
 	 */
-	std::unique_ptr<Chunk> load_chunk(const position::ChunkInWorld&);
+	std::unique_ptr<Chunk> load_chunk(const position::chunk_in_world&);
 
-	bool has_chunk(const position::ChunkInWorld&);
+	bool has_chunk(const position::chunk_in_world&);
 
 private:
 	fs::path world_path;
 	fs::path player_dir;
 	fs::path chunk_dir;
-	World& world;
+	world::world& world;
 
-	fs::path chunk_path(const position::ChunkInWorld&);
+	fs::path chunk_path(const position::chunk_in_world&);
 };
 
 }

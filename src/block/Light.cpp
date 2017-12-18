@@ -15,50 +15,50 @@ using std::string;
 
 namespace block_thingy::block {
 
-using graphics::Color;
+using graphics::color;
 
-Light::Light(const enums::Type t)
+test_light::test_light(const enums::type t)
 :
-	Light(t, Color(Color::max))
+	test_light(t, color(color::max))
 {
 }
 
-Light::Light(const enums::Type t, const Color& light)
+test_light::test_light(const enums::type t, const color& light)
 :
-	Base(t, enums::VisibilityType::opaque, "light")
+	base(t, enums::visibility_type::opaque, "light")
 {
 	light_ = light;
 }
 
-string Light::name() const
+string test_light::name() const
 {
 	std::ostringstream ss;
-	ss << Base::name() << ' ' << light();
+	ss << base::name() << ' ' << light();
 	return ss.str();
 }
 
-void Light::use_start
+void test_light::use_start
 (
-	Game& game,
-	World& world,
+	game& g,
+	world::world& world,
 	Player& player,
-	const position::BlockInWorld& pos,
+	const position::block_in_world& pos,
 	const enums::Face /*face*/
 )
 {
-	player.open_gui(std::make_unique<graphics::gui::Light>(game, world, *this, pos));
+	player.open_gui(std::make_unique<graphics::gui::Light>(g, world, *this, pos));
 }
 
-void Light::save(storage::OutputInterface& i) const
+void test_light::save(storage::OutputInterface& i) const
 {
-	Base::save(i);
+	base::save(i);
 	i.set("light", light_);
 }
 
-void Light::load(storage::InputInterface& i)
+void test_light::load(storage::InputInterface& i)
 {
-	Base::load(i);
-	light_ = i.get<Color>("light");
+	base::load(i);
+	light_ = i.get<color>("light");
 }
 
 }

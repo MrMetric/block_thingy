@@ -17,18 +17,18 @@ namespace block_thingy::graphics::gui {
 
 Light::Light
 (
-	Game& game,
-	World& world,
-	block::Light& block,
-	const position::BlockInWorld& block_pos
+	game& g,
+	world::world& world,
+	block::test_light& block,
+	const position::block_in_world& block_pos
 )
 :
-	Base(game, "guis/Light.btgui"),
+	Base(g, "guis/Light.btgui"),
 	world(world),
 	block(block),
 	block_pos(block_pos)
 {
-	const graphics::Color c = block.light();
+	const graphics::color c = block.light();
 	for(std::ptrdiff_t i = 0; i < 3; ++i)
 	{
 		auto w = root.get_widget_by_id<widget::TextInput>(std::to_string(i));
@@ -50,7 +50,7 @@ string Light::type() const
 
 void Light::init()
 {
-	glfwSetInputMode(game.gfx.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	glfwSetInputMode(g.gfx.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 void Light::draw()
@@ -71,10 +71,10 @@ void Light::on_change(std::ptrdiff_t i, widget::TextInput& w, const string& new_
 			invalid = true;
 			v = 0;
 		}
-		else if(v > graphics::Color::max)
+		else if(v > graphics::color::max)
 		{
 			invalid = true;
-			v = graphics::Color::max;
+			v = graphics::color::max;
 		}
 	}
 	catch(const std::invalid_argument&)
@@ -89,7 +89,7 @@ void Light::on_change(std::ptrdiff_t i, widget::TextInput& w, const string& new_
 	auto c = block.light();
 	if(v != c[i])
 	{
-		c[i] = static_cast<graphics::Color::value_type>(v);
+		c[i] = static_cast<graphics::color::value_type>(v);
 		block.light(c);
 		world.update_blocklight(block_pos, c, true);
 	}

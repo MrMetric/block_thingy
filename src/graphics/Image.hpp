@@ -9,13 +9,13 @@
 
 namespace block_thingy::graphics {
 
-class Image
+class image
 {
 public:
-	Image();
-	Image(const fs::path&);
-	Image(uint32_t width, uint32_t height, std::vector<uint8_t> data);
-	~Image();
+	image();
+	image(const fs::path&);
+	image(uint32_t width, uint32_t height, std::vector<uint8_t> data);
+	~image();
 
 	const uint8_t* get_data() const;
 	uint32_t get_width() const;

@@ -6,13 +6,13 @@
 #include "World.hpp"
 #include "block/BlockRegistry.hpp"
 
-namespace block_thingy {
+namespace block_thingy::world {
 
 //template<typename Stream>
-//void World::save(msgpack::packer<Stream>& o) const
+//void world::save(msgpack::packer<Stream>& o) const
 // that does not work :[
 template<>
-void World::save(msgpack::packer<std::ofstream>& o) const
+void world::save(msgpack::packer<std::ofstream>& o) const
 {
 	o.pack_array(2);
 	o.pack(get_ticks());
@@ -21,7 +21,7 @@ void World::save(msgpack::packer<std::ofstream>& o) const
 }
 
 template<>
-void World::load(const msgpack::object& o)
+void world::load(const msgpack::object& o)
 {
 	const auto v = o.as<std::vector<msgpack::object>>();
 	ticks = v.at(0).as<decltype(ticks)>();
@@ -36,13 +36,13 @@ namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
 namespace adaptor {
 
-using block_thingy::World;
+using block_thingy::world::world;
 
 template<>
-struct pack<World>
+struct pack<world>
 {
 	template<typename Stream>
-	packer<Stream>& operator()(packer<Stream>& o, const World& world) const
+	packer<Stream>& operator()(packer<Stream>& o, const world& world) const
 	{
 		world.save(o);
 		return o;
@@ -50,9 +50,9 @@ struct pack<World>
 };
 
 template<>
-struct convert<World>
+struct convert<world>
 {
-	const msgpack::object& operator()(const msgpack::object& o, World& world) const
+	const msgpack::object& operator()(const msgpack::object& o, world& world) const
 	{
 		world.load(o);
 		return o;

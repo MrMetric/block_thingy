@@ -15,14 +15,14 @@ namespace block_thingy::graphics::opengl {
 string get_log(const GLuint object);
 string do_include(const fs::path& file_path);
 
-ShaderObject::ShaderObject()
+shader_object::shader_object()
 :
 	inited(false),
 	name(0)
 {
 }
 
-ShaderObject::ShaderObject(const fs::path& file_path, GLenum type)
+shader_object::shader_object(const fs::path& file_path, GLenum type)
 {
 	LOG(INFO) << "compiling shader: " << file_path.u8string() << '\n';
 
@@ -44,7 +44,7 @@ ShaderObject::ShaderObject(const fs::path& file_path, GLenum type)
 	inited = true;
 }
 
-ShaderObject::ShaderObject(ShaderObject&& that)
+shader_object::shader_object(shader_object&& that)
 {
 	name = that.name;
 	inited = that.inited;
@@ -55,7 +55,7 @@ ShaderObject::ShaderObject(ShaderObject&& that)
 	}
 }
 
-ShaderObject::~ShaderObject()
+shader_object::~shader_object()
 {
 	if(inited)
 	{
@@ -63,7 +63,7 @@ ShaderObject::~ShaderObject()
 	}
 }
 
-GLuint ShaderObject::get_name()
+GLuint shader_object::get_name()
 {
 	return name;
 }

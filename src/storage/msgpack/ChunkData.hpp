@@ -8,7 +8,7 @@
 
 namespace block_thingy {
 
-using T = std::shared_ptr<block::Base>;
+using T = std::shared_ptr<block::base>;
 
 template<>
 template<>

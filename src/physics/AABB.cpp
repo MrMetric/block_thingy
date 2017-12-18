@@ -17,14 +17,14 @@ AABB::AABB(const glm::dvec3& min, const glm::dvec3& max)
 {
 }
 
-AABB::AABB(const position::BlockInWorld& block_pos)
+AABB::AABB(const position::block_in_world& block_pos)
 :
 	min(block_pos.x, block_pos.y, block_pos.z),
 	max(min + 1.0)
 {
 }
 
-AABB::AABB(const position::ChunkInWorld& chunk_pos)
+AABB::AABB(const position::chunk_in_world& chunk_pos)
 :
 	min(chunk_pos.x * CHUNK_SIZE, chunk_pos.y * CHUNK_SIZE, chunk_pos.z * CHUNK_SIZE),
 	max(min + static_cast<double>(CHUNK_SIZE))

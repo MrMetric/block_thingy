@@ -6,19 +6,19 @@
 
 namespace block_thingy::graphics::opengl {
 
-class VertexBuffer;
+class vertex_buffer;
 
-class VertexArray
+class vertex_array
 {
 public:
 	// TODO: allow multiple buffers
-	VertexArray(const VertexBuffer&);
-	~VertexArray();
+	vertex_array(const vertex_buffer&);
+	~vertex_array();
 
-	VertexArray(VertexArray&&);
-	VertexArray(const VertexArray&) = delete;
-	VertexArray& operator=(VertexArray&&) = delete;
-	VertexArray& operator=(const VertexArray&) = delete;
+	vertex_array(vertex_array&&);
+	vertex_array(const vertex_array&) = delete;
+	vertex_array& operator=(vertex_array&&) = delete;
+	vertex_array& operator=(const vertex_array&) = delete;
 
 	GLuint get_name();
 

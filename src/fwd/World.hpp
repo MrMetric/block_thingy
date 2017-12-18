@@ -1,4 +1,4 @@
-namespace block_thingy
+namespace block_thingy::world
 {
-	class World;
+	class world;
 }

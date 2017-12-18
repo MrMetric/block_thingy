@@ -29,26 +29,26 @@
 
 namespace block_thingy {
 
-class Game
+class game
 {
 public:
-	Game();
-	~Game();
+	game();
+	~game();
 
-	Game(Game&&) = delete;
-	Game(const Game&) = delete;
-	Game& operator=(Game&&) = delete;
-	Game& operator=(const Game&) = delete;
+	game(game&&) = delete;
+	game(const game&) = delete;
+	game& operator=(game&&) = delete;
+	game& operator=(const game&) = delete;
 
-	static Game* instance;
+	static game* instance;
 private:
 	class set_instance
 	{
 		public:
-			set_instance(Game* ptr)
+			set_instance(game* ptr)
 			{
-				assert(Game::instance == nullptr);
-				Game::instance = ptr;
+				assert(game::instance == nullptr);
+				game::instance = ptr;
 			}
 	} set_instance;
 
@@ -88,18 +88,18 @@ public:
 	void joypress(int joystick, int button, bool pressed);
 	void joymove(const glm::dvec2& motion);
 
-	std::shared_ptr<block::Base> copied_block;
-	std::optional<physics::RaycastHit> hovered_block;
+	std::shared_ptr<block::base> copied_block;
+	std::optional<physics::raycast_hit> hovered_block;
 
-	ResourceManager resource_manager;
+	resource_manager resource_manager;
 
 	// event_manager must be initialized before others!
 	EventManager event_manager;
 	Gfx gfx;
 
-	Camera camera;
+	camera camera;
 	block::BlockRegistry block_registry; // must be initialized before world
-	World world;
+	world::world world;
 	std::shared_ptr<Player> player_ptr;
 	Player& player;
 	KeybindManager keybinder;

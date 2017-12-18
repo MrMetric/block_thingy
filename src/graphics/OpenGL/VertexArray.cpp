@@ -4,7 +4,7 @@
 
 namespace block_thingy::graphics::opengl {
 
-VertexArray::VertexArray(const VertexBuffer& vbo)
+vertex_array::vertex_array(const vertex_buffer& vbo)
 {
 	glCreateVertexArrays(1, &name);
 	inited = true;
@@ -40,7 +40,7 @@ VertexArray::VertexArray(const VertexBuffer& vbo)
 	}
 }
 
-VertexArray::VertexArray(VertexArray&& that)
+vertex_array::vertex_array(vertex_array&& that)
 {
 	name = that.name;
 	inited = that.inited;
@@ -51,7 +51,7 @@ VertexArray::VertexArray(VertexArray&& that)
 	}
 }
 
-VertexArray::~VertexArray()
+vertex_array::~vertex_array()
 {
 	if(inited)
 	{
@@ -59,12 +59,12 @@ VertexArray::~VertexArray()
 	}
 }
 
-GLuint VertexArray::get_name()
+GLuint vertex_array::get_name()
 {
 	return name;
 }
 
-void VertexArray::attrib(const GLuint index, const bool enabled)
+void vertex_array::attrib(const GLuint index, const bool enabled)
 {
 	if(enabled)
 	{
@@ -76,7 +76,7 @@ void VertexArray::attrib(const GLuint index, const bool enabled)
 	}
 }
 
-void VertexArray::draw(const GLenum mode, const GLint first, const std::size_t count) const
+void vertex_array::draw(const GLenum mode, const GLint first, const std::size_t count) const
 {
 	glBindVertexArray(name);
 	glDrawArrays(mode, first, count);

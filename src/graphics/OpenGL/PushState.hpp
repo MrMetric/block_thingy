@@ -20,13 +20,13 @@ void glSet(const GLenum pname, const std::enable_if_t<std::is_same<GLboolean, T>
 }
 
 template<typename T>
-struct PushState
+struct push_state
 {
 	const GLenum pname;
 	const T new_;
 	T old;
 
-	PushState(const GLenum pname, const T new_)
+	push_state(const GLenum pname, const T new_)
 	:
 		pname(pname),
 		new_(new_)
@@ -36,7 +36,7 @@ struct PushState
 		glSet<T>(pname, new_);
 	}
 
-	~PushState()
+	~push_state()
 	{
 		if(new_ == old) return;
 		glSet<T>(pname, old);

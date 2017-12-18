@@ -19,6 +19,7 @@
 #include "console/ArgumentParser.hpp"
 #include "graphics/Image.hpp"
 #include "graphics/OpenGL/ShaderObject.hpp"
+#include "graphics/OpenGL/ShaderProgram.hpp"
 #include "graphics/OpenGL/Texture.hpp"
 #include "util/filesystem.hpp"
 #include "util/FileWatcher.hpp"
@@ -29,8 +30,8 @@ using std::unique_ptr;
 
 namespace block_thingy {
 
-using graphics::opengl::ShaderObject;
-using graphics::opengl::ShaderProgram;
+using graphics::opengl::shader_object;
+using graphics::opengl::shader_program;
 
 struct block_texture
 {
@@ -44,10 +45,10 @@ struct block_texture
 		tex(GL_TEXTURE_2D_ARRAY),
 		count(0)
 	{
-		tex.parameter(graphics::opengl::Texture::Parameter::wrap_s, GL_REPEAT);
-		tex.parameter(graphics::opengl::Texture::Parameter::wrap_t, GL_REPEAT);
-		tex.parameter(graphics::opengl::Texture::Parameter::min_filter, GL_LINEAR);
-		tex.parameter(graphics::opengl::Texture::Parameter::mag_filter, GL_NEAREST);
+		tex.parameter(graphics::opengl::texture::Parameter::wrap_s, GL_REPEAT);
+		tex.parameter(graphics::opengl::texture::Parameter::wrap_t, GL_REPEAT);
+		tex.parameter(graphics::opengl::texture::Parameter::min_filter, GL_LINEAR);
+		tex.parameter(graphics::opengl::texture::Parameter::mag_filter, GL_NEAREST);
 		glActiveTexture(GL_TEXTURE0 + unit);
 		tex.image3D(0, GL_RGBA8, size, size, 256, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		glActiveTexture(GL_TEXTURE0);
@@ -66,12 +67,12 @@ struct block_texture
 	block_texture& operator=(const block_texture&) = delete;
 
 	const uint8_t unit;
-	graphics::opengl::Texture tex;
+	graphics::opengl::texture tex;
 	uint16_t count;
 	std::unordered_map<string, uint16_t> index;
 };
 
-struct ResourceManager::impl
+struct resource_manager::impl
 {
 	impl()
 	:
@@ -116,27 +117,27 @@ struct ResourceManager::impl
 	mutable std::mutex block_textures_mutex;
 
 	// note: fs::path can not be a key because it can not be hashed
-	std::unordered_map<string, unique_ptr<graphics::Image>> cache_Image;
-	mutable std::mutex cache_Image_mutex;
+	std::unordered_map<string, unique_ptr<graphics::image>> cache_image;
+	mutable std::mutex cache_image_mutex;
 
-	std::unordered_map<string, unique_ptr<graphics::opengl::ShaderObject>> cache_ShaderObject;
-	mutable std::mutex cache_ShaderObject_mutex;
+	std::unordered_map<string, unique_ptr<graphics::opengl::shader_object>> cache_shader_object;
+	mutable std::mutex cache_shader_object_mutex;
 
-	std::unordered_map<string, unique_ptr<graphics::opengl::ShaderProgram>> cache_ShaderProgram;
-	mutable std::mutex cache_ShaderProgram_mutex;
+	std::unordered_map<string, unique_ptr<graphics::opengl::shader_program>> cache_shader_program;
+	mutable std::mutex cache_shader_program_mutex;
 };
 
-ResourceManager::ResourceManager()
+resource_manager::resource_manager()
 :
 	pImpl(std::make_unique<impl>())
 {
 }
 
-ResourceManager::~ResourceManager()
+resource_manager::~resource_manager()
 {
 }
 
-void ResourceManager::check_updates()
+void resource_manager::check_updates()
 {
 	std::vector<fs::path> paths = pImpl->file_watcher.get_updates();
 	for(const fs::path& path : paths)
@@ -144,11 +145,11 @@ void ResourceManager::check_updates()
 		if(path.extension() == ".fs"
 		|| path.extension() == ".vs")
 		{
-			get_ShaderObject(path, true);
+			get_shader_object(path, true);
 		}
 		else if(path.extension() == ".png")
 		{
-			get_Image(path, true);
+			get_image(path, true);
 		}
 	}
 
@@ -261,7 +262,7 @@ static block_type get_block_type(const std::unordered_map<string, string>& block
 	return block_type::base;
 }
 
-void ResourceManager::load_blocks(Game& game)
+void resource_manager::load_blocks(game& game)
 {
 	for(const fs::directory_entry& entry : fs::recursive_directory_iterator("blocks"))
 	{
@@ -281,19 +282,19 @@ void ResourceManager::load_blocks(Game& game)
 		}
 		LOG(DEBUG) << "loading block: " << path.u8string() << '\n';
 
-		block::enums::VisibilityType visibility_type;
+		block::enums::visibility_type visibility_type;
 		if(block.count("visibility_type") == 0)
 		{
-			visibility_type = block::enums::VisibilityType::opaque;
+			visibility_type = block::enums::visibility_type::opaque;
 		}
 		else
 		{
 			// switch on first char works because the block validity has already been confirmed
 			switch(block.at("visibility_type")[0])
 			{
-				case 't': visibility_type = block::enums::VisibilityType::translucent; break;
-				case 'i': visibility_type = block::enums::VisibilityType::invisible; break;
-				default : visibility_type = block::enums::VisibilityType::opaque; break;
+				case 't': visibility_type = block::enums::visibility_type::translucent; break;
+				case 'i': visibility_type = block::enums::visibility_type::invisible; break;
+				default : visibility_type = block::enums::visibility_type::opaque; break;
 			}
 		}
 
@@ -313,7 +314,7 @@ void ResourceManager::load_blocks(Game& game)
 		if(block.count("shader_front" ) != 0) shaders[4] = block.at("shader_front" );
 		if(block.count("shader_back"  ) != 0) shaders[5] = block.at("shader_back"  );
 
-		block::enums::Type id;
+		block::enums::type id;
 		if(t == block_type::textured)
 		{
 			std::array<fs::path, 6> textures;
@@ -327,7 +328,7 @@ void ResourceManager::load_blocks(Game& game)
 			if(block.count("texture_bottom") != 0) textures[3] = block.at("texture_bottom");
 			if(block.count("texture_front" ) != 0) textures[4] = block.at("texture_front" );
 			if(block.count("texture_back"  ) != 0) textures[5] = block.at("texture_back"  );
-			id = game.block_registry.add<block::Textured>
+			id = game.block_registry.add<block::textured>
 			(
 				block.at("id"),
 				textures,
@@ -336,7 +337,7 @@ void ResourceManager::load_blocks(Game& game)
 		}
 		else if(t == block_type::base)
 		{
-			id = game.block_registry.add<block::Base>
+			id = game.block_registry.add<block::base>
 			(
 				block.at("id"),
 				visibility_type,
@@ -361,7 +362,7 @@ void ResourceManager::load_blocks(Game& game)
 	}
 }
 
-ResourceManager::block_texture_info ResourceManager::get_block_texture(fs::path path)
+resource_manager::block_texture_info resource_manager::get_block_texture(fs::path path)
 {
 	if(path.empty())
 	{
@@ -370,7 +371,7 @@ ResourceManager::block_texture_info ResourceManager::get_block_texture(fs::path 
 
 	path = "textures" / path;
 
-	Resource<graphics::Image> image = get_Image(path);
+	resource<graphics::image> image = get_image(path);
 	const auto res = image->get_width();
 	if(res != image->get_height())
 	{
@@ -441,55 +442,55 @@ ResourceManager::block_texture_info ResourceManager::get_block_texture(fs::path 
 	};
 }
 
-bool ResourceManager::texture_has_transparency(const fs::path& path)
+bool resource_manager::texture_has_transparency(const fs::path& path)
 {
-	return get_Image("textures" / path)->has_transparency();
+	return get_image("textures" / path)->has_transparency();
 }
 
-bool ResourceManager::has_Image(const fs::path& path) const
+bool resource_manager::has_image(const fs::path& path) const
 {
-	std::lock_guard<std::mutex> g(pImpl->cache_Image_mutex);
-	return pImpl->cache_Image.find(path.string()) != pImpl->cache_Image.cend();
+	std::lock_guard<std::mutex> g(pImpl->cache_image_mutex);
+	return pImpl->cache_image.find(path.string()) != pImpl->cache_image.cend();
 }
 
-Resource<graphics::Image> ResourceManager::get_Image(const fs::path& path, const bool reload)
+resource<graphics::image> resource_manager::get_image(const fs::path& path, const bool reload)
 {
-	std::lock_guard<std::mutex> g(pImpl->cache_Image_mutex);
-	auto i = pImpl->cache_Image.find(path.string());
-	if(i == pImpl->cache_Image.cend())
+	std::lock_guard<std::mutex> g(pImpl->cache_image_mutex);
+	auto i = pImpl->cache_image.find(path.string());
+	if(i == pImpl->cache_image.cend())
 	{
-		i = pImpl->cache_Image.emplace(path.string(), std::make_unique<graphics::Image>(path)).first;
+		i = pImpl->cache_image.emplace(path.string(), std::make_unique<graphics::image>(path)).first;
 		pImpl->file_watcher.add_watch(path);
 	}
 	else if(reload)
 	{
-		unique_ptr<graphics::Image> p;
+		unique_ptr<graphics::image> p;
 		try
 		{
-			p = std::make_unique<graphics::Image>(path);
+			p = std::make_unique<graphics::image>(path);
 		}
 		catch(const std::runtime_error& e)
 		{
 			LOG(ERROR) << "failed to update image " << path.u8string() << ": " << e.what() << '\n';
-			return Resource<graphics::Image>(&i->second, path.string());
+			return resource<graphics::image>(&i->second, path.string());
 		}
 		std::swap(p, i->second);
-		Resource<graphics::Image> r(&i->second, path.string());
+		resource<graphics::image> r(&i->second, path.string());
 		r.update();
 		return r;
 	}
-	return Resource<graphics::Image>(&i->second, path.string());
+	return resource<graphics::image>(&i->second, path.string());
 }
 
-bool ResourceManager::has_ShaderObject(const fs::path& path) const
+bool resource_manager::has_shader_object(const fs::path& path) const
 {
-	std::lock_guard<std::mutex> g(pImpl->cache_ShaderObject_mutex);
-	return pImpl->cache_ShaderObject.find(path.string()) != pImpl->cache_ShaderObject.cend();
+	std::lock_guard<std::mutex> g(pImpl->cache_shader_object_mutex);
+	return pImpl->cache_shader_object.find(path.string()) != pImpl->cache_shader_object.cend();
 }
 
-Resource<ShaderObject> ResourceManager::get_ShaderObject(fs::path path, const bool reload)
+resource<shader_object> resource_manager::get_shader_object(fs::path path, const bool reload)
 {
-	std::lock_guard<std::mutex> g(pImpl->cache_ShaderObject_mutex);
+	std::lock_guard<std::mutex> g(pImpl->cache_shader_object_mutex);
 	GLenum type;
 	if(path.extension() == ".fs")
 	{
@@ -512,11 +513,11 @@ Resource<ShaderObject> ResourceManager::get_ShaderObject(fs::path path, const bo
 			throw std::runtime_error("shader not found and no default exists: " + orig.u8string());
 		}
 	}
-	auto i = pImpl->cache_ShaderObject.find(path.string());
-	if(i == pImpl->cache_ShaderObject.cend())
+	auto i = pImpl->cache_shader_object.find(path.string());
+	if(i == pImpl->cache_shader_object.cend())
 	{
 		// the shader object is not in the cache, so compile and add it
-		i = pImpl->cache_ShaderObject.emplace(path.string(), std::make_unique<ShaderObject>(path, type)).first;
+		i = pImpl->cache_shader_object.emplace(path.string(), std::make_unique<shader_object>(path, type)).first;
 	#ifdef BT_RELOADABLE_SHADERS
 		pImpl->file_watcher.add_watch(path);
 	#endif
@@ -524,18 +525,18 @@ Resource<ShaderObject> ResourceManager::get_ShaderObject(fs::path path, const bo
 	else if(reload)
 	{
 	#ifdef BT_RELOADABLE_SHADERS
-		unique_ptr<ShaderObject> p;
+		unique_ptr<shader_object> p;
 		try
 		{
-			p = std::make_unique<ShaderObject>(path, type);
+			p = std::make_unique<shader_object>(path, type);
 		}
 		catch(const std::runtime_error& e)
 		{
-			LOG(ERROR) << "error reloading ShaderObject " << path.u8string() << ": " << e.what() << '\n';
-			return Resource<ShaderObject>(&i->second, path.string());
+			LOG(ERROR) << "error reloading shader object " << path.u8string() << ": " << e.what() << '\n';
+			return resource<shader_object>(&i->second, path.string());
 		}
 		std::swap(p, i->second);
-		Resource<ShaderObject> r(&i->second, path.string());
+		resource<shader_object> r(&i->second, path.string());
 		r.update();
 		return r;
 	#else
@@ -544,22 +545,22 @@ Resource<ShaderObject> ResourceManager::get_ShaderObject(fs::path path, const bo
 					" Path: " << path.u8string() << '\n';
 	#endif
 	}
-	return Resource<ShaderObject>(&i->second, path.string());
+	return resource<shader_object>(&i->second, path.string());
 }
 
-bool ResourceManager::has_ShaderProgram(const fs::path& path) const
+bool resource_manager::has_shader_program(const fs::path& path) const
 {
-	std::lock_guard<std::mutex> g(pImpl->cache_ShaderProgram_mutex);
-	return pImpl->cache_ShaderProgram.find(path.string()) != pImpl->cache_ShaderProgram.cend();
+	std::lock_guard<std::mutex> g(pImpl->cache_shader_program_mutex);
+	return pImpl->cache_shader_program.find(path.string()) != pImpl->cache_shader_program.cend();
 }
 
-Resource<ShaderProgram> ResourceManager::get_ShaderProgram(const fs::path& path, bool reload)
+resource<shader_program> resource_manager::get_shader_program(const fs::path& path, bool reload)
 {
-	std::lock_guard<std::mutex> g(pImpl->cache_ShaderProgram_mutex);
-	auto i = pImpl->cache_ShaderProgram.find(path.string());
-	if(i == pImpl->cache_ShaderProgram.cend())
+	std::lock_guard<std::mutex> g(pImpl->cache_shader_program_mutex);
+	auto i = pImpl->cache_shader_program.find(path.string());
+	if(i == pImpl->cache_shader_program.cend())
 	{
-		i = pImpl->cache_ShaderProgram.emplace(path.string(), std::make_unique<ShaderProgram>(path)).first;
+		i = pImpl->cache_shader_program.emplace(path.string(), std::make_unique<shader_program>(path)).first;
 
 		// TODO: find a better place for this
 	#ifdef _WIN32
@@ -576,18 +577,18 @@ Resource<ShaderProgram> ResourceManager::get_ShaderProgram(const fs::path& path,
 	else if(reload)
 	{
 	#ifdef BT_RELOADABLE_SHADERS
-		unique_ptr<ShaderProgram> p;
+		unique_ptr<shader_program> p;
 		try
 		{
-			p = std::make_unique<ShaderProgram>(path);
+			p = std::make_unique<shader_program>(path);
 		}
 		catch(const std::runtime_error& e)
 		{
-			LOG(ERROR) << "error reloading ShaderProgam " << path.u8string() << ": " << e.what() << '\n';
-			return Resource<ShaderProgram>(&i->second, path.string());
+			LOG(ERROR) << "error reloading shader program " << path.u8string() << ": " << e.what() << '\n';
+			return resource<shader_program>(&i->second, path.string());
 		}
 		std::swap(p, i->second);
-		Resource<ShaderProgram> r(&i->second, path.string());
+		resource<shader_program> r(&i->second, path.string());
 		r.update();
 		return r;
 	#else
@@ -596,12 +597,12 @@ Resource<ShaderProgram> ResourceManager::get_ShaderProgram(const fs::path& path,
 					" Path: " << path.u8string() << '\n';
 	#endif
 	}
-	return Resource<ShaderProgram>(&i->second, path.string());
+	return resource<shader_program>(&i->second, path.string());
 }
 
-void ResourceManager::foreach_ShaderProgram(const std::function<void(Resource<graphics::opengl::ShaderProgram>)>& f)
+void resource_manager::foreach_shader_program(const std::function<void(resource<graphics::opengl::shader_program>)>& f)
 {
-	for(auto& p : pImpl->cache_ShaderProgram)
+	for(auto& p : pImpl->cache_shader_program)
 	{
 		f({&p.second, p.first});
 	}

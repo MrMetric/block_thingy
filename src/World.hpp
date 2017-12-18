@@ -19,42 +19,42 @@
 #include "shim/propagate_const.hpp"
 #include "util/filesystem.hpp"
 
-namespace block_thingy {
+namespace block_thingy::world {
 
-class World
+class world
 {
 public:
-	World
+	world
 	(
 		const fs::path& file_path,
 		block::BlockRegistry&,
 		std::unique_ptr<mesher::Base>
 	);
-	~World();
+	~world();
 
-	World(World&&) = delete;
-	World(const World&) = delete;
-	World& operator=(World&&) = delete;
-	World& operator=(const World&) = delete;
+	world(world&&) = delete;
+	world(const world&) = delete;
+	world& operator=(world&&) = delete;
+	world& operator=(const world&) = delete;
 
-	const std::shared_ptr<block::Base> get_block(const position::BlockInWorld&) const;
-	std::shared_ptr<block::Base> get_block(const position::BlockInWorld&);
+	const std::shared_ptr<block::base> get_block(const position::block_in_world&) const;
+	std::shared_ptr<block::base> get_block(const position::block_in_world&);
 
 	void set_block
 	(
-		const position::BlockInWorld&,
-		std::shared_ptr<block::Base>,
+		const position::block_in_world&,
+		std::shared_ptr<block::base>,
 		bool thread = true
 	);
 
-	graphics::Color get_blocklight(const position::BlockInWorld&) const;
-	void set_blocklight(const position::BlockInWorld&, const graphics::Color&, bool save);
-	void update_blocklight(const position::BlockInWorld&, bool save);
-	void update_blocklight(const position::BlockInWorld&, const graphics::Color&, bool save);
+	graphics::color get_blocklight(const position::block_in_world&) const;
+	void set_blocklight(const position::block_in_world&, const graphics::color&, bool save);
+	void update_blocklight(const position::block_in_world&, bool save);
+	void update_blocklight(const position::block_in_world&, const graphics::color&, bool save);
 
-	std::shared_ptr<Chunk> get_chunk(const position::ChunkInWorld&) const;
-	std::shared_ptr<Chunk> get_or_make_chunk(const position::ChunkInWorld&);
-	void set_chunk(const position::ChunkInWorld&, std::shared_ptr<Chunk> chunk);
+	std::shared_ptr<Chunk> get_chunk(const position::chunk_in_world&) const;
+	std::shared_ptr<Chunk> get_or_make_chunk(const position::chunk_in_world&);
+	void set_chunk(const position::chunk_in_world&, std::shared_ptr<Chunk> chunk);
 
 	void step(double delta_time);
 
@@ -72,7 +72,7 @@ public:
 	void set_mesher(std::unique_ptr<mesher::Base>);
 	std::unique_ptr<mesher::Base> mesher;
 	bool is_meshing_queued(const std::shared_ptr<Chunk>&) const;
-	bool is_meshing_queued(const position::ChunkInWorld&) const;
+	bool is_meshing_queued(const position::chunk_in_world&) const;
 
 	// for msgpack
 	template<typename T> void save(T&) const;

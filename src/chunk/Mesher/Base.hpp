@@ -102,8 +102,8 @@ public:
 
 	static Side to_side(block::enums::Face);
 
-	static const block::Base& block_at(const Chunk&, int_fast16_t x, int_fast16_t y, int_fast16_t z);
-	static bool block_visible_from(const Chunk&, const block::Base&, int_fast16_t, int_fast16_t, int_fast16_t);
+	static const block::base& block_at(const Chunk&, int_fast16_t x, int_fast16_t y, int_fast16_t z);
+	static bool block_visible_from(const Chunk&, const block::base&, int_fast16_t, int_fast16_t, int_fast16_t);
 };
 
 }

@@ -19,7 +19,7 @@ public:
 	PluginManager& operator=(PluginManager&&) = delete;
 	PluginManager& operator=(const PluginManager&) = delete;
 
-	void init_plugins(Game&);
+	void init_plugins(game&);
 
 	static PluginManager* instance;
 

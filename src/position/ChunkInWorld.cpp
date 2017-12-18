@@ -8,7 +8,7 @@
 
 namespace block_thingy::position {
 
-ChunkInWorld::ChunkInWorld()
+chunk_in_world::chunk_in_world()
 :
 	x(0),
 	y(0),
@@ -16,7 +16,7 @@ ChunkInWorld::ChunkInWorld()
 {
 }
 
-ChunkInWorld::ChunkInWorld(const value_type x, const value_type y, const value_type z)
+chunk_in_world::chunk_in_world(const value_type x, const value_type y, const value_type z)
 :
 	x(x),
 	y(y),
@@ -25,7 +25,7 @@ ChunkInWorld::ChunkInWorld(const value_type x, const value_type y, const value_t
 }
 
 #define t(a) static_cast<value_type>(std::floor(a / static_cast<double>(CHUNK_SIZE)))
-ChunkInWorld::ChunkInWorld(const BlockInWorld& pos)
+chunk_in_world::chunk_in_world(const block_in_world& pos)
 {
 	x = t(pos.x);
 	y = t(pos.y);
@@ -33,7 +33,7 @@ ChunkInWorld::ChunkInWorld(const BlockInWorld& pos)
 }
 #undef t
 
-ChunkInWorld& ChunkInWorld::operator+=(const ChunkInWorld& that)
+chunk_in_world& chunk_in_world::operator+=(const chunk_in_world& that)
 {
 	x += that.x;
 	y += that.y;
@@ -41,22 +41,22 @@ ChunkInWorld& ChunkInWorld::operator+=(const ChunkInWorld& that)
 	return *this;
 }
 
-bool ChunkInWorld::operator==(const ChunkInWorld& that) const
+bool chunk_in_world::operator==(const chunk_in_world& that) const
 {
 	return (x == that.x) && (y == that.y) && (z == that.z);
 }
 
-bool ChunkInWorld::operator!=(const ChunkInWorld& that) const
+bool chunk_in_world::operator!=(const chunk_in_world& that) const
 {
 	return !(*this == that);
 }
 
-ChunkInWorld::operator ChunkInWorld::vec_type() const
+chunk_in_world::operator chunk_in_world::vec_type() const
 {
 	return {x, y, z};
 }
 
-ChunkInWorld operator-(const ChunkInWorld& pos, const ChunkInWorld::value_type a)
+chunk_in_world operator-(const chunk_in_world& pos, const chunk_in_world::value_type a)
 {
 	return
 	{
@@ -66,7 +66,7 @@ ChunkInWorld operator-(const ChunkInWorld& pos, const ChunkInWorld::value_type a
 	};
 }
 
-ChunkInWorld operator+(const ChunkInWorld& pos, const ChunkInWorld::value_type a)
+chunk_in_world operator+(const chunk_in_world& pos, const chunk_in_world::value_type a)
 {
 	return
 	{
@@ -76,7 +76,7 @@ ChunkInWorld operator+(const ChunkInWorld& pos, const ChunkInWorld::value_type a
 	};
 }
 
-ChunkInWorld operator*(const ChunkInWorld& pos, const ChunkInWorld::value_type a)
+chunk_in_world operator*(const chunk_in_world& pos, const chunk_in_world::value_type a)
 {
 	return
 	{
@@ -86,7 +86,7 @@ ChunkInWorld operator*(const ChunkInWorld& pos, const ChunkInWorld::value_type a
 	};
 }
 
-ChunkInWorld operator-(const ChunkInWorld& pos1, const ChunkInWorld& pos2)
+chunk_in_world operator-(const chunk_in_world& pos1, const chunk_in_world& pos2)
 {
 	return
 	{
@@ -96,7 +96,7 @@ ChunkInWorld operator-(const ChunkInWorld& pos1, const ChunkInWorld& pos2)
 	};
 }
 
-ChunkInWorld operator+(const ChunkInWorld& pos1, const ChunkInWorld& pos2)
+chunk_in_world operator+(const chunk_in_world& pos1, const chunk_in_world& pos2)
 {
 	return
 	{
@@ -106,7 +106,7 @@ ChunkInWorld operator+(const ChunkInWorld& pos1, const ChunkInWorld& pos2)
 	};
 }
 
-std::ostream& operator<<(std::ostream& o, const ChunkInWorld& pos)
+std::ostream& operator<<(std::ostream& o, const chunk_in_world& pos)
 {
 	return o << '(' << pos.x << ',' << pos.y << ',' << pos.z << ')';
 }

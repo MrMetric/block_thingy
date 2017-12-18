@@ -10,7 +10,7 @@ namespace block_thingy::graphics::gui {
 class Play : public Base
 {
 public:
-	Play(Game&);
+	Play(game&);
 
 	std::string type() const override;
 

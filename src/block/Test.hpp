@@ -3,10 +3,10 @@
 
 namespace block_thingy::block {
 
-class Test : public Base
+class test : public base
 {
 public:
-	Test(enums::Type);
+	test(enums::type);
 
 	double bounciness() const override;
 	glm::dvec4 selection_color() const override;

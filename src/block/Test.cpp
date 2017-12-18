@@ -9,20 +9,20 @@
 
 namespace block_thingy::block {
 
-Test::Test(const enums::Type t)
+test::test(const enums::type t)
 :
-	Base(t, enums::VisibilityType::opaque, "test")
+	base(t, enums::visibility_type::opaque, "test")
 {
 }
 
-double Test::bounciness() const
+double test::bounciness() const
 {
 	return 1;
 }
 
-glm::dvec4 Test::selection_color() const
+glm::dvec4 test::selection_color() const
 {
-	const auto t = Game::instance->world.get_ticks();
+	const auto t = game::instance->world.get_ticks();
 	return {glm::rgbColor(glm::dvec3(t % 360, 1, 1)), 1};
 }
 

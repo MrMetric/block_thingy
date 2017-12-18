@@ -6,17 +6,17 @@
 
 namespace block_thingy::graphics::opengl {
 
-class Texture
+class texture
 {
 public:
-	Texture();
-	Texture(GLenum type);
-	~Texture();
+	texture();
+	texture(GLenum type);
+	~texture();
 
-	Texture(Texture&&);
-	Texture(const Texture&) = delete;
-	Texture& operator=(Texture&&) = delete;
-	Texture& operator=(const Texture&) = delete;
+	texture(texture&&);
+	texture(const texture&) = delete;
+	texture& operator=(texture&&) = delete;
+	texture& operator=(const texture&) = delete;
 
 	// https://www.opengl.org/sdk/docs/man/html/glTexImage2D.xhtml
 	void image2D

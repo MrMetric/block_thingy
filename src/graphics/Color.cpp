@@ -9,21 +9,21 @@
 
 namespace block_thingy::graphics {
 
-Color::value_type Color::max = 16;
+color::value_type color::max = 16;
 
-Color::Color()
+color::color()
 :
-	Color(0, 0, 0)
+	color(0, 0, 0)
 {
 }
 
-Color::Color(value_type a)
+color::color(value_type a)
 :
-	Color(a, a, a)
+	color(a, a, a)
 {
 }
 
-Color::Color(value_type r, value_type g, value_type b)
+color::color(value_type r, value_type g, value_type b)
 :
 	r(r),
 	g(g),
@@ -31,7 +31,7 @@ Color::Color(value_type r, value_type g, value_type b)
 {
 }
 
-Color::Color(const glm::dvec3& v)
+color::color(const glm::dvec3& v)
 :
 	r(static_cast<value_type>(std::round(v.r * max))),
 	g(static_cast<value_type>(std::round(v.g * max))),
@@ -40,16 +40,16 @@ Color::Color(const glm::dvec3& v)
 }
 
 // defined for std::tuple hashing
-bool Color::operator<(const Color& that) const
+bool color::operator<(const color& that) const
 {
 	int_fast32_t rgb1 = (r << 16) | (g << 8) | b;
 	int_fast32_t rgb2 = (that.r << 16) | (that.g << 8) | that.b;
 	return rgb1 < rgb2;
 }
 
-Color Color::operator+(const Color& that) const
+color color::operator+(const color& that) const
 {
-	return Color
+	return color
 	(
 		r + that.r,
 		g + that.g,
@@ -57,9 +57,9 @@ Color Color::operator+(const Color& that) const
 	);
 }
 
-Color Color::operator-(const Color& that) const
+color color::operator-(const color& that) const
 {
-	return Color
+	return color
 	(
 		r - that.r,
 		g - that.g,
@@ -67,10 +67,10 @@ Color Color::operator-(const Color& that) const
 	);
 }
 
-Color Color::operator+(const value_type x) const
+color color::operator+(const value_type x) const
 {
 	const int m = std::numeric_limits<value_type>::max();
-	return Color
+	return color
 	(
 		static_cast<value_type>(std::min(r + x, m)),
 		static_cast<value_type>(std::min(g + x, m)),
@@ -78,9 +78,9 @@ Color Color::operator+(const value_type x) const
 	);
 }
 
-Color Color::operator-(const value_type x) const
+color color::operator-(const value_type x) const
 {
-	return Color
+	return color
 	(
 		static_cast<value_type>(std::max(r - x, 0)),
 		static_cast<value_type>(std::max(g - x, 0)),
@@ -88,7 +88,7 @@ Color Color::operator-(const value_type x) const
 	);
 }
 
-Color& Color::operator-=(const value_type x)
+color& color::operator-=(const value_type x)
 {
 	r = static_cast<value_type>(std::max(r - x, 0));
 	g = static_cast<value_type>(std::max(g - x, 0));
@@ -96,7 +96,7 @@ Color& Color::operator-=(const value_type x)
 	return *this;
 }
 
-Color::operator glm::vec3() const
+color::operator glm::vec3() const
 {
 	const float m = max;
 	glm::vec3 v
@@ -109,12 +109,12 @@ Color::operator glm::vec3() const
 }
 
 
-Color::operator glm::tvec3<uint8_t>() const
+color::operator glm::tvec3<uint8_t>() const
 {
 	return glm::tvec3<uint8_t>(glm::round(static_cast<glm::vec3>(*this) * 255.0f));
 }
 
-std::ostream& operator<<(std::ostream& o, const Color& c)
+std::ostream& operator<<(std::ostream& o, const color& c)
 {
 	return o << '(' << +c.r << ',' << +c.g << ',' << +c.b << ')';
 }

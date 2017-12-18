@@ -21,7 +21,7 @@ class Base
 public:
 	Base
 	(
-		Game&,
+		game&,
 		const fs::path& layout_path
 	);
 	virtual ~Base();
@@ -46,7 +46,7 @@ public:
 
 	std::unique_ptr<Base> parent;
 
-	Game& game;
+	game& g;
 
 protected:
 	virtual void draw_gui();

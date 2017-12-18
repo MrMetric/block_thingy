@@ -8,9 +8,9 @@ namespace block_thingy {
 
 Event_enter_block::Event_enter_block
 (
-	World& world,
+	world::world& world,
 	Player& player,
-	const shared_ptr<block::Base> block
+	const shared_ptr<block::base> block
 )
 :
 	Event(EventType::enter_block),

@@ -9,7 +9,7 @@
 
 namespace block_thingy {
 
-Camera::Camera(Gfx& gfx)
+camera::camera(Gfx& gfx)
 :
 	sensitivity(0.1),
 	joy_sensitivity(1.2),
@@ -17,7 +17,7 @@ Camera::Camera(Gfx& gfx)
 {
 }
 
-void Camera::mousemove(const double mouseX, const double mouseY, bool joystick)
+void camera::mousemove(const double mouseX, const double mouseY, bool joystick)
 {
 	double x = (mouseY - gfx.window_mid.y) * sensitivity;
 	double y = (mouseX - gfx.window_mid.x) * sensitivity;

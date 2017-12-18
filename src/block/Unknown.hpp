@@ -8,13 +8,13 @@
 
 namespace block_thingy::block {
 
-class Unknown : public Base
+class unknown : public base
 {
 public:
-	Unknown(enums::Type);
-	Unknown(enums::Type, const std::string& strid);
+	unknown(enums::type);
+	unknown(enums::type, const std::string& strid);
 
-	Unknown& operator=(const Base&) override;
+	unknown& operator=(const base&) override;
 
 	std::string name() const override;
 

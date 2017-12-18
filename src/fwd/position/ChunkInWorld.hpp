@@ -1,4 +1,4 @@
 namespace block_thingy::position
 {
-	struct ChunkInWorld;
+	struct chunk_in_world;
 }

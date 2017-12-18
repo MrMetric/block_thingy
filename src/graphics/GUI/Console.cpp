@@ -11,9 +11,9 @@ using std::string;
 
 namespace block_thingy::graphics::gui {
 
-Console::Console(Game& game)
+Console::Console(game& g)
 :
-	Base(game, "guis/Console.btgui")
+	Base(g, "guis/Console.btgui")
 {
 	auto input = root.get_widget_by_id<widget::TextInput>("input");
 	if(input != nullptr)

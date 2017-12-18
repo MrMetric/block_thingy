@@ -23,29 +23,29 @@ namespace block_thingy::graphics::gui {
 
 Base::Base
 (
-	Game& game,
+	game& g,
 	const fs::path& layout_path
 )
 :
-	game(game)
+	g(g)
 {
 	if(!layout_path.empty())
 	{
 		root.read_layout(json::parse(util::read_file(layout_path)));
 	}
-	event_handler = game.event_manager.add_handler(EventType::window_size_change, [this](const Event& event)
+	event_handler = g.event_manager.add_handler(EventType::window_size_change, [this](const Event& event)
 	{
 		const auto& e = static_cast<const Event_window_size_change&>(event);
 		update_framebuffer_size(e.window_size);
 	});
-	update_framebuffer_size(game.gfx.window_size);
+	update_framebuffer_size(g.gfx.window_size);
 }
 
 Base::~Base()
 {
 	try
 	{
-		game.event_manager.unadd_handler(event_handler);
+		g.event_manager.unadd_handler(event_handler);
 	}
 	catch(const std::runtime_error& e)
 	{
@@ -60,13 +60,13 @@ void Base::init()
 
 void Base::close()
 {
-	game.close_gui();
+	g.close_gui();
 }
 
 void Base::draw()
 {
-	opengl::PushState<GLboolean> depth_test(GL_DEPTH_TEST, false);
-	opengl::PushState<GLboolean> cull_face(GL_CULL_FACE, false);
+	opengl::push_state<GLboolean> depth_test(GL_DEPTH_TEST, false);
+	opengl::push_state<GLboolean> cull_face(GL_CULL_FACE, false);
 
 	root.draw();
 	draw_gui();
@@ -114,10 +114,10 @@ void Base::mousemove(const double x, const double y)
 void Base::joymove(const glm::dvec2& motion)
 {
 	double x, y;
-	glfwGetCursorPos(game.gfx.window, &x, &y);
+	glfwGetCursorPos(g.gfx.window, &x, &y);
 	x += motion.x * 12.0;
 	y += motion.y * 12.0;
-	glfwSetCursorPos(game.gfx.window, x, y);
+	glfwSetCursorPos(g.gfx.window, x, y);
 	mousemove(x, y);
 }
 

@@ -48,7 +48,7 @@
 
 namespace block_thingy {
 
-class FPSManager
+class fps_manager
 {
 private:
 	double frameStartTime;         // Frame start time
@@ -61,11 +61,11 @@ private:
 	double lastReportTime;         // The timestamp of when we last reported
 	double reportInterval;         // How often to update the FPS value
 
-	// FPSManager is padded with 4 bytes if this is a 32-bit int, so why not use all 64?
+	// fps_manager is padded with 4 bytes if this is a 32-bit int, so why not use all 64?
 	uint64_t frameCount;        // How many frames have been drawn so far in the report interval
 
 public:
-	FPSManager(const double theTargetFps)
+	fps_manager(const double theTargetFps)
 	:
 		frameStartTime(glfwGetTime()),
 		frameEndTime(frameStartTime + 1),

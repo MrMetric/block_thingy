@@ -20,20 +20,20 @@
 
 namespace block_thingy::block {
 
-class Base
+class base
 {
 public:
-	Base();
-	Base(enums::Type);
-	Base(enums::Type, enums::VisibilityType);
-	Base(enums::Type, enums::VisibilityType, const fs::path& shader);
-	Base(enums::Type, enums::VisibilityType, const std::array<fs::path, 6>& shaders);
-	virtual ~Base();
+	base();
+	base(enums::type);
+	base(enums::type, enums::visibility_type);
+	base(enums::type, enums::visibility_type, const fs::path& shader);
+	base(enums::type, enums::visibility_type, const std::array<fs::path, 6>& shaders);
+	virtual ~base();
 
-	Base(const Base&);
-	virtual Base& operator=(const Base&);
+	base(const base&);
+	virtual base& operator=(const base&);
 
-	enums::Type type() const
+	enums::type type() const
 	{
 		return type_;
 	}
@@ -42,11 +42,11 @@ public:
 	/**
 	 * If non-zero, this block emits light of this color
 	 */
-	graphics::Color light() const
+	graphics::color light() const
 	{
 		return light_;
 	}
-	virtual void light(const graphics::Color&);
+	virtual void light(const graphics::color&);
 
 	fs::path shader(enums::Face) const;
 	fs::path texture(enums::Face) const;
@@ -62,23 +62,23 @@ public:
 	 */
 	virtual glm::dvec4 selection_color() const;
 
-	virtual graphics::Color light_filter() const;
+	virtual graphics::color light_filter() const;
 
-	enums::VisibilityType visibility_type() const
+	enums::visibility_type visibility_type() const
 	{
 		return visibility_type_;
 	}
 	bool is_opaque() const
 	{
-		return visibility_type_ == enums::VisibilityType::opaque;
+		return visibility_type_ == enums::visibility_type::opaque;
 	}
 	bool is_translucent() const
 	{
-		return visibility_type_ == enums::VisibilityType::translucent;
+		return visibility_type_ == enums::visibility_type::translucent;
 	}
 	bool is_invisible() const
 	{
-		return visibility_type_ == enums::VisibilityType::invisible;
+		return visibility_type_ == enums::visibility_type::invisible;
 	}
 
 	/**
@@ -94,14 +94,14 @@ public:
 	/**
 	 * Is this block overwritable when attempting to place the given block at its position?
 	 */
-	virtual bool is_replaceable_by(const Base&) const;
+	virtual bool is_replaceable_by(const base&) const;
 
 	virtual void use_start
 	(
-		Game&,
-		World&,
+		game&,
+		world::world&,
 		Player&,
-		const position::BlockInWorld&,
+		const position::block_in_world&,
 		enums::Face
 	);
 
@@ -109,14 +109,14 @@ public:
 	virtual void load(storage::InputInterface&);
 
 protected:
-	enums::VisibilityType visibility_type_;
-	graphics::Color light_;
+	enums::visibility_type visibility_type_;
+	graphics::color light_;
 	std::array<fs::path, 6> shader_;
 	std::array<fs::path, 6> texture_;
 	glm::tvec3<uint8_t> rotation_;
 
 private:
-	enums::Type type_;
+	enums::type type_;
 };
 
 }

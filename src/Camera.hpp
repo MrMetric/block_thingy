@@ -7,15 +7,15 @@
 
 namespace block_thingy {
 
-class Camera
+class camera
 {
 public:
-	Camera(Gfx&);
+	camera(Gfx&);
 
-	Camera(Camera&&) = delete;
-	Camera(const Camera&) = delete;
-	Camera& operator=(Camera&&) = delete;
-	Camera& operator=(const Camera&) = delete;
+	camera(camera&&) = delete;
+	camera(const camera&) = delete;
+	camera& operator=(camera&&) = delete;
+	camera& operator=(const camera&) = delete;
 
 	void mousemove(double mouseX, double mouseY, bool joystick = false);
 

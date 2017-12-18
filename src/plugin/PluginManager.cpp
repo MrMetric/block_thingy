@@ -42,7 +42,7 @@ PluginManager::~PluginManager()
 {
 }
 
-void PluginManager::init_plugins(Game& game)
+void PluginManager::init_plugins(game& game)
 {
 	for(Plugin& plugin : pImpl->plugins)
 	{

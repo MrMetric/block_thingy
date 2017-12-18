@@ -1,4 +1,4 @@
 namespace block_thingy::position
 {
-	struct BlockInChunk;
+	struct block_in_chunk;
 }

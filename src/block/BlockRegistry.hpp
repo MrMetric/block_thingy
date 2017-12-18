@@ -17,14 +17,14 @@ public:
 	BlockMaker();
 	BlockMaker(const BlockMaker&);
 	virtual ~BlockMaker();
-	virtual std::shared_ptr<Base> make(enums::Type) const;
+	virtual std::shared_ptr<base> make(enums::type) const;
 };
 
 template<typename T>
 class BlockMakerInstance : public BlockMaker
 {
 public:
-	std::shared_ptr<Base> make(const enums::Type t) const override
+	std::shared_ptr<base> make(const enums::type t) const override
 	{
 		return std::make_shared<T>(t);
 	}
@@ -41,53 +41,53 @@ public:
 	BlockRegistry& operator=(const BlockRegistry&) = delete;
 
 	template<typename T, typename... Args>
-	enums::Type add(const std::string& strid, Args&&... args)
+	enums::type add(const std::string& strid, Args&&... args)
 	{
-		enums::Type t = add_(strid, std::make_unique<BlockMakerInstance<T>>());
+		enums::type t = add_(strid, std::make_unique<BlockMakerInstance<T>>());
 		default_blocks[t] = std::make_shared<T>(t, std::forward<Args>(args)...);
 		return t;
 	}
 
-	std::shared_ptr<Base> get_default(enums::Type) const;
-	std::shared_ptr<Base> get_default(enums::TypeExternal) const;
-	std::shared_ptr<Base> get_default(const std::string& strid) const;
+	std::shared_ptr<base> get_default(enums::type) const;
+	std::shared_ptr<base> get_default(enums::type_external) const;
+	std::shared_ptr<base> get_default(const std::string& strid) const;
 
-	std::shared_ptr<Base> make(enums::Type) const;
-	std::shared_ptr<Base> make(enums::TypeExternal) const;
-	std::shared_ptr<Base> make(const std::string& strid) const;
-	std::shared_ptr<Base> make(const std::shared_ptr<Base>) const;
+	std::shared_ptr<base> make(enums::type) const;
+	std::shared_ptr<base> make(enums::type_external) const;
+	std::shared_ptr<base> make(const std::string& strid) const;
+	std::shared_ptr<base> make(const std::shared_ptr<base>) const;
 
-	enums::Type get_id(const std::string& strid) const;
-	//enums::Type get_id(enums::TypeExternal) const;
+	enums::type get_id(const std::string& strid) const;
+	//enums::type get_id(enums::type_external) const;
 
-	std::string get_strid(enums::Type) const;
-	std::string get_strid(enums::TypeExternal) const;
+	std::string get_strid(enums::type) const;
+	std::string get_strid(enums::type_external) const;
 
-	std::string get_name(enums::Type) const;
+	std::string get_name(enums::type) const;
 	std::string get_name(const std::string& strid) const;
 
-	enums::TypeExternal get_extid(enums::Type) const;
+	enums::type_external get_extid(enums::type) const;
 
-	using extid_map_t = std::map<enums::TypeExternal, std::string>;
+	using extid_map_t = std::map<enums::type_external, std::string>;
 	void reset_extid_map();
 	void set_extid_map(extid_map_t);
 	const extid_map_t& get_extid_map() const;
 
-	enums::Type_t get_max_id() const;
+	enums::type_t get_max_id() const;
 
 private:
 	void make_strid_to_extid_map();
-	enums::Type add_(const std::string& strid, std::unique_ptr<BlockMaker>);
+	enums::type add_(const std::string& strid, std::unique_ptr<BlockMaker>);
 
-	mutable std::map<enums::Type, std::shared_ptr<Base>> default_blocks;
+	mutable std::map<enums::type, std::shared_ptr<base>> default_blocks;
 	mutable std::mutex default_blocks_mutex;
-	std::map<enums::Type, std::unique_ptr<BlockMaker>> block_makers;
+	std::map<enums::type, std::unique_ptr<BlockMaker>> block_makers;
 
-	std::map<std::string, enums::Type> strid_to_id;
-	std::map<enums::Type, std::string> id_to_strid;
+	std::map<std::string, enums::type> strid_to_id;
+	std::map<enums::type, std::string> id_to_strid;
 	extid_map_t extid_to_strid;
-	std::map<std::string, enums::TypeExternal> strid_to_extid;
-	enums::TypeExternal max_extid;
+	std::map<std::string, enums::type_external> strid_to_extid;
+	enums::type_external max_extid;
 };
 
 }

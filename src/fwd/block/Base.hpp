@@ -1,4 +1,4 @@
 namespace block_thingy::block
 {
-	class Base;
+	class base;
 }

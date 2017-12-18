@@ -17,12 +17,12 @@
 namespace block_thingy {
 
 template<typename T>
-class Resource
+class resource
 {
 public:
 	using update_func_t = std::function<void()>;
 
-	Resource(std::unique_ptr<T>* p, const std::string& id)
+	resource(std::unique_ptr<T>* p, const std::string& id)
 	:
 		id(id),
 		p(p)
@@ -67,17 +67,17 @@ private:
 	std::unique_ptr<T>* p;
 };
 template<typename T>
-std::unordered_map<std::string, std::vector<typename Resource<T>::update_func_t>> Resource<T>::update_funcs;
+std::unordered_map<std::string, std::vector<typename resource<T>::update_func_t>> resource<T>::update_funcs;
 
-class ResourceManager
+class resource_manager
 {
 public:
-	ResourceManager();
-	~ResourceManager();
+	resource_manager();
+	~resource_manager();
 
 	void check_updates();
 
-	void load_blocks(Game&);
+	void load_blocks(game&);
 
 	struct block_texture_info
 	{
@@ -87,16 +87,16 @@ public:
 	block_texture_info get_block_texture(fs::path);
 	bool texture_has_transparency(const fs::path&);
 
-	bool has_Image(const fs::path&) const;
-	Resource<graphics::Image> get_Image(const fs::path&, bool reload = false);
+	bool has_image(const fs::path&) const;
+	resource<graphics::image> get_image(const fs::path&, bool reload = false);
 
-	bool has_ShaderObject(const fs::path&) const;
-	Resource<graphics::opengl::ShaderObject> get_ShaderObject(fs::path, bool reload = false);
+	bool has_shader_object(const fs::path&) const;
+	resource<graphics::opengl::shader_object> get_shader_object(fs::path, bool reload = false);
 
-	bool has_ShaderProgram(const fs::path&) const;
+	bool has_shader_program(const fs::path&) const;
 	// TODO: shaders can be constructed with a file list
-	Resource<graphics::opengl::ShaderProgram> get_ShaderProgram(const fs::path&, bool reload = false);
-	void foreach_ShaderProgram(const std::function<void(Resource<graphics::opengl::ShaderProgram>)>&);
+	resource<graphics::opengl::shader_program> get_shader_program(const fs::path&, bool reload = false);
+	void foreach_shader_program(const std::function<void(resource<graphics::opengl::shader_program>)>&);
 
 private:
 	struct impl;

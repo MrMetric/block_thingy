@@ -84,7 +84,7 @@ Plugin::Plugin(Plugin&& that)
 	pImpl = std::move(that.pImpl);
 }
 
-void Plugin::init(Game& game)
+void Plugin::init(game& g)
 {
 	if(pImpl == nullptr)
 	{
@@ -92,9 +92,9 @@ void Plugin::init(Game& game)
 	}
 
 #ifdef HAVE_POSIX
-	using init_t = void(*)(Game&);
+	using init_t = void(*)(game&);
 	const auto init = *reinterpret_cast<init_t>(pImpl->get_symbol("init"));
-	init(game);
+	init(g);
 	LOG(INFO) << "initialized " << pImpl->path.u8string() << '\n';
 #endif
 }

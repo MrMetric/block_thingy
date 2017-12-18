@@ -5,13 +5,13 @@
 
 namespace block_thingy::block::enums {
 
-std::ostream& operator<<(std::ostream& o, const VisibilityType t)
+std::ostream& operator<<(std::ostream& o, const visibility_type t)
 {
 	switch(t)
 	{
-		case VisibilityType::opaque		: return o << "opaque";
-		case VisibilityType::translucent: return o << "translucent";
-		case VisibilityType::invisible	: return o << "invisible";
+		case visibility_type::opaque		: return o << "opaque";
+		case visibility_type::translucent: return o << "translucent";
+		case visibility_type::invisible	: return o << "invisible";
 	}
 	assert(false);
 	return o << "ERROR";

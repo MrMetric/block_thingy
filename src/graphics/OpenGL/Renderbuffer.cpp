@@ -5,17 +5,17 @@
 
 namespace block_thingy::graphics::opengl {
 
-Renderbuffer::Renderbuffer()
+renderbuffer::renderbuffer()
 {
 	glCreateRenderbuffers(1, &name);
 }
 
-Renderbuffer::~Renderbuffer()
+renderbuffer::~renderbuffer()
 {
 	glDeleteRenderbuffers(1, &name);
 }
 
-void Renderbuffer::storage
+void renderbuffer::storage
 (
 	const GLenum internal_format,
 	const uint32_t width_,
@@ -38,7 +38,7 @@ void Renderbuffer::storage
 	}
 }
 
-GLuint Renderbuffer::get_name()
+GLuint renderbuffer::get_name()
 {
 	return name;
 }

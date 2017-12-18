@@ -6,9 +6,9 @@ namespace block_thingy::physics {
 
 using block::enums::Face;
 
-RaycastHit::RaycastHit
+raycast_hit::raycast_hit
 (
-	const position::BlockInWorld& pos,
+	const position::block_in_world& pos,
 	const glm::ivec3& face
 )
 :
@@ -17,12 +17,12 @@ RaycastHit::RaycastHit
 {
 }
 
-position::BlockInWorld RaycastHit::adjacent() const
+position::block_in_world raycast_hit::adjacent() const
 {
 	return pos + face_vec;
 }
 
-Face RaycastHit::face() const
+Face raycast_hit::face() const
 {
 	if(face_vec.x == 0 && face_vec.y == 0 && face_vec.z == 0) // happens when the camera is in a block
 	{

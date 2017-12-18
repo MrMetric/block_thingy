@@ -23,9 +23,9 @@ ray screen_pos_to_world_ray
 );
 
 [[nodiscard]]
-std::optional<RaycastHit> raycast
+std::optional<raycast_hit> raycast
 (
-	const World&,
+	const world::world&,
 	const ray&,
 	double radius
 );

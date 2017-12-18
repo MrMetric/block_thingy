@@ -6,26 +6,26 @@ namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
 namespace adaptor {
 
-using block_thingy::block::enums::Type_t;
-using block_thingy::block::enums::TypeExternal;
+using block_thingy::block::enums::type_t;
+using block_thingy::block::enums::type_external;
 
 template<>
-struct pack<TypeExternal>
+struct pack<type_external>
 {
 	template<typename Stream>
-	packer<Stream>& operator()(packer<Stream>& o, const TypeExternal t) const
+	packer<Stream>& operator()(packer<Stream>& o, const type_external t) const
 	{
-		o.pack(static_cast<Type_t>(t));
+		o.pack(static_cast<type_t>(t));
 		return o;
 	}
 };
 
 template<>
-struct convert<TypeExternal>
+struct convert<type_external>
 {
-	const msgpack::object& operator()(const msgpack::object& o, TypeExternal& t) const
+	const msgpack::object& operator()(const msgpack::object& o, type_external& t) const
 	{
-		t = static_cast<TypeExternal>(o.as<Type_t>());
+		t = static_cast<type_external>(o.as<type_t>());
 		return o;
 	}
 };

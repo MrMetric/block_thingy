@@ -14,14 +14,14 @@ class Event_enter_block : public Event
 public:
 	Event_enter_block
 	(
-		World&,
+		world::world&,
 		Player&,
-		std::shared_ptr<block::Base>
+		std::shared_ptr<block::base>
 	);
 
-	World& world;
+	world::world& world;
 	Player& player;
-	std::shared_ptr<block::Base> block;
+	std::shared_ptr<block::base> block;
 };
 
 }

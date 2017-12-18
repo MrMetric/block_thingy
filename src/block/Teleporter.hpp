@@ -3,10 +3,10 @@
 
 namespace block_thingy::block {
 
-class Teleporter : public Base
+class test_teleporter : public base
 {
 public:
-	Teleporter(enums::Type);
+	test_teleporter(enums::type);
 
 	bool is_solid() const override;
 };

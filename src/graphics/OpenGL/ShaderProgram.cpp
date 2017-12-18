@@ -28,9 +28,9 @@ namespace block_thingy::graphics::opengl {
 static GLuint make_program(const std::vector<GLuint>& objects, const string& debug_name);
 static std::vector<string> get_uniform_names(const GLuint name);
 
-struct ShaderProgram::impl
+struct shader_program::impl
 {
-	std::vector<Resource<ShaderObject>> res;
+	std::vector<resource<shader_object>> res;
 
 #ifdef BT_RELOADABLE_SHADERS
 	std::unordered_map<string, strict_variant::variant
@@ -43,23 +43,23 @@ struct ShaderProgram::impl
 	>> uniform_values;
 #endif
 
-	void init(ShaderProgram&, const string& debug_name);
+	void init(shader_program&, const string& debug_name);
 };
 
-ShaderProgram::ShaderProgram()
+shader_program::shader_program()
 :
 	inited(false),
 	name(0)
 {
 }
 
-ShaderProgram::ShaderProgram(const fs::path& path)
+shader_program::shader_program(const fs::path& path)
 :
-	ShaderProgram({ { path.string() + ".vs" }, { path.string() + ".fs" } }, path.string())
+	shader_program({ { path.string() + ".vs" }, { path.string() + ".fs" } }, path.string())
 {
 }
 
-ShaderProgram::ShaderProgram
+shader_program::shader_program
 (
 	const std::vector<fs::path>& file_paths,
 	const string& debug_name
@@ -117,7 +117,7 @@ ShaderProgram::ShaderProgram
 #endif
 	for(const auto& path : file_paths)
 	{
-		pImpl->res.push_back(Game::instance->resource_manager.get_ShaderObject(path));
+		pImpl->res.push_back(game::instance->resource_manager.get_shader_object(path));
 	#ifdef BT_RELOADABLE_SHADERS
 		pImpl->res.back().on_update(reload);
 	#endif
@@ -127,7 +127,7 @@ ShaderProgram::ShaderProgram
 	inited = true;
 }
 
-ShaderProgram::~ShaderProgram()
+shader_program::~shader_program()
 {
 	if(inited)
 	{
@@ -135,7 +135,7 @@ ShaderProgram::~ShaderProgram()
 	}
 }
 
-ShaderProgram::ShaderProgram(ShaderProgram&& that)
+shader_program::shader_program(shader_program&& that)
 {
 	name = that.name;
 	inited = that.inited;
@@ -147,7 +147,7 @@ ShaderProgram::ShaderProgram(ShaderProgram&& that)
 	}
 }
 
-GLint ShaderProgram::get_uniform_location(const string& name) const
+GLint shader_program::get_uniform_location(const string& name) const
 {
 	const auto i = uniforms.find(name);
 	if(i == uniforms.cend())
@@ -157,33 +157,33 @@ GLint ShaderProgram::get_uniform_location(const string& name) const
 	return i->second;
 }
 
-void ShaderProgram::use() const
+void shader_program::use() const
 {
 	glUseProgram(name);
 }
 
-void ShaderProgram::uniform(const string& u, const GLint x)
+void shader_program::uniform(const string& u, const GLint x)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, x);
 #endif
 	glProgramUniform1i(name, get_uniform_location(u), x);
 }
-void ShaderProgram::uniform(const string& u, const GLint x, const GLint y)
+void shader_program::uniform(const string& u, const GLint x, const GLint y)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, glm::ivec2(x, y));
 #endif
 	glProgramUniform2i(name, get_uniform_location(u), x, y);
 }
-void ShaderProgram::uniform(const string& u, const GLint x, const GLint y, const GLint z)
+void shader_program::uniform(const string& u, const GLint x, const GLint y, const GLint z)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, glm::ivec3(x, y, z));
 #endif
 	glProgramUniform3i(name, get_uniform_location(u), x, y, z);
 }
-void ShaderProgram::uniform(const string& u, const GLint x, const GLint y, const GLint z, const GLint w)
+void shader_program::uniform(const string& u, const GLint x, const GLint y, const GLint z, const GLint w)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, glm::ivec4(x, y, z, w));
@@ -191,28 +191,28 @@ void ShaderProgram::uniform(const string& u, const GLint x, const GLint y, const
 	glProgramUniform4i(name, get_uniform_location(u), x, y, z, w);
 }
 
-void ShaderProgram::uniform(const string& u, const GLuint x)
+void shader_program::uniform(const string& u, const GLuint x)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, x);
 #endif
 	glProgramUniform1ui(name, get_uniform_location(u), x);
 }
-void ShaderProgram::uniform(const string& u, const GLuint x, const GLuint y)
+void shader_program::uniform(const string& u, const GLuint x, const GLuint y)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, glm::uvec2(x, y));
 #endif
 	glProgramUniform2ui(name, get_uniform_location(u), x, y);
 }
-void ShaderProgram::uniform(const string& u, const GLuint x, const GLuint y, const GLuint z)
+void shader_program::uniform(const string& u, const GLuint x, const GLuint y, const GLuint z)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, glm::uvec3(x, y, z));
 #endif
 	glProgramUniform3ui(name, get_uniform_location(u), x, y, z);
 }
-void ShaderProgram::uniform(const string& u, const GLuint x, const GLuint y, const GLuint z, const GLuint w)
+void shader_program::uniform(const string& u, const GLuint x, const GLuint y, const GLuint z, const GLuint w)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, glm::uvec4(x, y, z, w));
@@ -220,28 +220,28 @@ void ShaderProgram::uniform(const string& u, const GLuint x, const GLuint y, con
 	glProgramUniform4ui(name, get_uniform_location(u), x, y, z, w);
 }
 
-void ShaderProgram::uniform(const string& u, const float x)
+void shader_program::uniform(const string& u, const float x)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, x);
 #endif
 	glProgramUniform1f(name, get_uniform_location(u), x);
 }
-void ShaderProgram::uniform(const string& u, const float x, const float y)
+void shader_program::uniform(const string& u, const float x, const float y)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, glm::vec2(x, y));
 #endif
 	glProgramUniform2f(name, get_uniform_location(u), x, y);
 }
-void ShaderProgram::uniform(const string& u, const float x, const float y, const float z)
+void shader_program::uniform(const string& u, const float x, const float y, const float z)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, glm::vec3(x, y, z));
 #endif
 	glProgramUniform3f(name, get_uniform_location(u), x, y, z);
 }
-void ShaderProgram::uniform(const string& u, const float x, const float y, const float z, const float w)
+void shader_program::uniform(const string& u, const float x, const float y, const float z, const float w)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, glm::vec4(x, y, z, w));
@@ -249,28 +249,28 @@ void ShaderProgram::uniform(const string& u, const float x, const float y, const
 	glProgramUniform4f(name, get_uniform_location(u), x, y, z, w);
 }
 
-void ShaderProgram::uniform(const string& u, const double x)
+void shader_program::uniform(const string& u, const double x)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, x);
 #endif
 	glProgramUniform1d(name, get_uniform_location(u), x);
 }
-void ShaderProgram::uniform(const string& u, const double x, const double y)
+void shader_program::uniform(const string& u, const double x, const double y)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, glm::dvec2(x, y));
 #endif
 	glProgramUniform2d(name, get_uniform_location(u), x, y);
 }
-void ShaderProgram::uniform(const string& u, const double x, const double y, const double z)
+void shader_program::uniform(const string& u, const double x, const double y, const double z)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, glm::dvec3(x, y, z));
 #endif
 	glProgramUniform3d(name, get_uniform_location(u), x, y, z);
 }
-void ShaderProgram::uniform(const string& u, const double x, const double y, const double z, const double w)
+void shader_program::uniform(const string& u, const double x, const double y, const double z, const double w)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, glm::dvec4(x, y, z, w));
@@ -278,21 +278,21 @@ void ShaderProgram::uniform(const string& u, const double x, const double y, con
 	glProgramUniform4d(name, get_uniform_location(u), x, y, z, w);
 }
 
-void ShaderProgram::uniform(const string& u, const glm::ivec2& vec)
+void shader_program::uniform(const string& u, const glm::ivec2& vec)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, vec);
 #endif
 	glProgramUniform2iv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
 }
-void ShaderProgram::uniform(const string& u, const glm::ivec3& vec)
+void shader_program::uniform(const string& u, const glm::ivec3& vec)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, vec);
 #endif
 	glProgramUniform3iv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
 }
-void ShaderProgram::uniform(const string& u, const glm::ivec4& vec)
+void shader_program::uniform(const string& u, const glm::ivec4& vec)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, vec);
@@ -300,21 +300,21 @@ void ShaderProgram::uniform(const string& u, const glm::ivec4& vec)
 	glProgramUniform4iv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
 }
 
-void ShaderProgram::uniform(const string& u, const glm::uvec2& vec)
+void shader_program::uniform(const string& u, const glm::uvec2& vec)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, vec);
 #endif
 	glProgramUniform2uiv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
 }
-void ShaderProgram::uniform(const string& u, const glm::uvec3& vec)
+void shader_program::uniform(const string& u, const glm::uvec3& vec)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, vec);
 #endif
 	glProgramUniform3uiv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
 }
-void ShaderProgram::uniform(const string& u, const glm::uvec4& vec)
+void shader_program::uniform(const string& u, const glm::uvec4& vec)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, vec);
@@ -322,21 +322,21 @@ void ShaderProgram::uniform(const string& u, const glm::uvec4& vec)
 	glProgramUniform4uiv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
 }
 
-void ShaderProgram::uniform(const string& u, const glm::vec2& vec)
+void shader_program::uniform(const string& u, const glm::vec2& vec)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, vec);
 #endif
 	glProgramUniform2fv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
 }
-void ShaderProgram::uniform(const string& u, const glm::vec3& vec)
+void shader_program::uniform(const string& u, const glm::vec3& vec)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, vec);
 #endif
 	glProgramUniform3fv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
 }
-void ShaderProgram::uniform(const string& u, const glm::vec4& vec)
+void shader_program::uniform(const string& u, const glm::vec4& vec)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, vec);
@@ -344,21 +344,21 @@ void ShaderProgram::uniform(const string& u, const glm::vec4& vec)
 	glProgramUniform4fv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
 }
 
-void ShaderProgram::uniform(const string& u, const glm::dvec2& vec)
+void shader_program::uniform(const string& u, const glm::dvec2& vec)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, vec);
 #endif
 	glProgramUniform2dv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
 }
-void ShaderProgram::uniform(const string& u, const glm::dvec3& vec)
+void shader_program::uniform(const string& u, const glm::dvec3& vec)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, vec);
 #endif
 	glProgramUniform3dv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
 }
-void ShaderProgram::uniform(const string& u, const glm::dvec4& vec)
+void shader_program::uniform(const string& u, const glm::dvec4& vec)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, vec);
@@ -366,63 +366,63 @@ void ShaderProgram::uniform(const string& u, const glm::dvec4& vec)
 	glProgramUniform4dv(name, get_uniform_location(u), 1, glm::value_ptr(vec));
 }
 
-void ShaderProgram::uniform(const string& u, const glm::mat2& mat)
+void shader_program::uniform(const string& u, const glm::mat2& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix2fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::mat3& mat)
+void shader_program::uniform(const string& u, const glm::mat3& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix3fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::mat4& mat)
+void shader_program::uniform(const string& u, const glm::mat4& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix4fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::mat2x3& mat)
+void shader_program::uniform(const string& u, const glm::mat2x3& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix2x3fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::mat3x2& mat)
+void shader_program::uniform(const string& u, const glm::mat3x2& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix3x2fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::mat2x4& mat)
+void shader_program::uniform(const string& u, const glm::mat2x4& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix2x4fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::mat4x2& mat)
+void shader_program::uniform(const string& u, const glm::mat4x2& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix4x2fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::mat3x4& mat)
+void shader_program::uniform(const string& u, const glm::mat3x4& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix3x4fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::mat4x3& mat)
+void shader_program::uniform(const string& u, const glm::mat4x3& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
@@ -430,63 +430,63 @@ void ShaderProgram::uniform(const string& u, const glm::mat4x3& mat)
 	glProgramUniformMatrix4x3fv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
 
-void ShaderProgram::uniform(const string& u, const glm::dmat2& mat)
+void shader_program::uniform(const string& u, const glm::dmat2& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix2dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::dmat3& mat)
+void shader_program::uniform(const string& u, const glm::dmat3& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix3dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::dmat4& mat)
+void shader_program::uniform(const string& u, const glm::dmat4& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix4dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::dmat2x3& mat)
+void shader_program::uniform(const string& u, const glm::dmat2x3& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix2x3dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::dmat3x2& mat)
+void shader_program::uniform(const string& u, const glm::dmat3x2& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix3x2dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::dmat2x4& mat)
+void shader_program::uniform(const string& u, const glm::dmat2x4& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix2x4dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::dmat4x2& mat)
+void shader_program::uniform(const string& u, const glm::dmat4x2& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix4x2dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::dmat3x4& mat)
+void shader_program::uniform(const string& u, const glm::dmat3x4& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
 #endif
 	glProgramUniformMatrix3x4dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
-void ShaderProgram::uniform(const string& u, const glm::dmat4x3& mat)
+void shader_program::uniform(const string& u, const glm::dmat4x3& mat)
 {
 #ifdef BT_RELOADABLE_SHADERS
 	pImpl->uniform_values.insert_or_assign(u, mat);
@@ -494,7 +494,7 @@ void ShaderProgram::uniform(const string& u, const glm::dmat4x3& mat)
 	glProgramUniformMatrix4x3dv(name, get_uniform_location(u), 1, GL_FALSE, glm::value_ptr(mat));
 }
 
-void ShaderProgram::impl::init(ShaderProgram& p, const string& debug_name)
+void shader_program::impl::init(shader_program& p, const string& debug_name)
 {
 	std::vector<GLuint> objects;
 	for(auto& r : res)

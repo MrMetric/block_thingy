@@ -7,27 +7,27 @@ using std::string;
 
 namespace block_thingy::block {
 
-Unknown::Unknown(const enums::Type t)
+unknown::unknown(const enums::type t)
 :
-	Unknown(t, "")
+	unknown(t, "")
 {
 }
 
-Unknown::Unknown
+unknown::unknown
 (
-	const enums::Type t,
+	const enums::type t,
 	const string& strid
 )
 :
-	Base(t, enums::VisibilityType::opaque),
+	base(t, enums::visibility_type::opaque),
 	strid(strid)
 {
 }
 
-Unknown& Unknown::operator=(const Base& block)
+unknown& unknown::operator=(const base& block)
 {
-	Base::operator=(block);
-	const Unknown& that = *static_cast<const Unknown*>(&block);
+	base::operator=(block);
+	const unknown& that = *static_cast<const unknown*>(&block);
 	strid = that.strid;
 	for(const auto& p : that.data)
 	{
@@ -36,30 +36,30 @@ Unknown& Unknown::operator=(const Base& block)
 	return *this;
 }
 
-string Unknown::name() const
+string unknown::name() const
 {
 	if(strid.empty())
 	{
-		return Base::name();
+		return base::name();
 	}
 	// TODO: return just strid in red
 	const std::size_t entry_count = data.size() - 1;
 	const string ending = (entry_count == 1) ? "y" : "ies";
-	return Base::name() + " (" + strid + ", " + std::to_string(entry_count) + " entr" + ending + ')';
+	return base::name() + " (" + strid + ", " + std::to_string(entry_count) + " entr" + ending + ')';
 }
 
-void Unknown::save(storage::OutputInterface& i) const
+void unknown::save(storage::OutputInterface& i) const
 {
-	// Base::save(i) not needed here, since the external ID is kept
+	// base::save(i) not needed here, since the external ID is kept
 	for(const auto& p : data)
 	{
 		i.set(p.first, p.second.get());
 	}
 }
 
-void Unknown::load(storage::InputInterface& i)
+void unknown::load(storage::InputInterface& i)
 {
-	Base::load(i); // does nothing yet; dunno if it will be needed later
+	base::load(i); // does nothing yet; dunno if it will be needed later
 	data = i.copy_all();
 }
 

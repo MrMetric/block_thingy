@@ -3,10 +3,10 @@
 
 namespace block_thingy::block {
 
-class None : public Base
+class none : public base
 {
 public:
-	None(enums::Type);
+	none(enums::type);
 
 	glm::dvec4 selection_color() const override;
 };

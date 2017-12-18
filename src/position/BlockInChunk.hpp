@@ -16,21 +16,21 @@
 
 namespace block_thingy::position {
 
-struct BlockInChunk
+struct block_in_chunk
 {
 	using value_type = uint8_t;
 	using vec_type = glm::tvec3<value_type>;
 
-	BlockInChunk();
-	BlockInChunk(value_type x, value_type y, value_type z);
-	explicit BlockInChunk(const BlockInWorld&);
+	block_in_chunk();
+	block_in_chunk(value_type x, value_type y, value_type z);
+	explicit block_in_chunk(const block_in_world&);
 
 	value_type operator[](const std::ptrdiff_t i) const
 	{
 	#ifdef DEBUG_BUILD
 		if(i > 2)
 		{
-			throw std::out_of_range("position::BlockInChunk::operator[]: " + std::to_string(i) + " > 2");
+			throw std::out_of_range("position::block_in_chunk::operator[]: " + std::to_string(i) + " > 2");
 		}
 	#endif
 		return (&x)[i];
@@ -40,14 +40,14 @@ struct BlockInChunk
 	#ifdef DEBUG_BUILD
 		if(i > 2)
 		{
-			throw std::out_of_range("position::BlockInChunk::operator[]: " + std::to_string(i) + " > 2");
+			throw std::out_of_range("position::block_in_chunk::operator[]: " + std::to_string(i) + " > 2");
 		}
 	#endif
 		return (&x)[i];
 	}
-	BlockInChunk& operator+=(const BlockInChunk&);
-	bool operator==(const BlockInChunk&) const;
-	bool operator!=(const BlockInChunk&) const;
+	block_in_chunk& operator+=(const block_in_chunk&);
+	bool operator==(const block_in_chunk&) const;
+	bool operator!=(const block_in_chunk&) const;
 
 	operator vec_type() const;
 
@@ -59,7 +59,7 @@ private:
 #endif
 };
 
-std::ostream& operator<<(std::ostream&, const BlockInChunk&);
+std::ostream& operator<<(std::ostream&, const block_in_chunk&);
 
 }
 

@@ -20,9 +20,7 @@ using std::u32string;
 
 namespace block_thingy::graphics {
 
-Text::Character load_char(const FT_Face& face, char32_t);
-
-Text::Text(const fs::path& font_path, const FT_UInt height)
+text::text(const fs::path& font_path, const FT_UInt height)
 :
 	font_path(font_path),
 	height(height),
@@ -45,13 +43,13 @@ Text::Text(const fs::path& font_path, const FT_UInt height)
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 }
 
-Text::~Text()
+text::~text()
 {
 	FT_Done_Face(face);
 	FT_Done_FreeType(ft);
 }
 
-void Text::set_font(const fs::path& path, const FT_UInt height)
+void text::set_font(const fs::path& path, const FT_UInt height)
 {
 	if(path == font_path && height == this->height)
 	{
@@ -74,7 +72,7 @@ void Text::set_font(const fs::path& path, const FT_UInt height)
 	chars.clear();
 }
 
-void Text::set_font(const fs::path& path)
+void text::set_font(const fs::path& path)
 {
 	if(path == font_path)
 	{
@@ -93,7 +91,7 @@ void Text::set_font(const fs::path& path)
 	chars.clear();
 }
 
-void Text::set_font_size(const FT_UInt height)
+void text::set_font_size(const FT_UInt height)
 {
 	if(height == this->height)
 	{
@@ -104,24 +102,24 @@ void Text::set_font_size(const FT_UInt height)
 	chars.clear();
 }
 
-void Text::set_projection_matrix(const glm::dmat4& projection_matrix)
+void text::set_projection_matrix(const glm::dmat4& projection_matrix)
 {
 	shader.uniform("projection", glm::mat4(projection_matrix));
 }
 
-void Text::draw(const string& s, const glm::dvec2& pos, const glm::dvec3& color)
+void text::draw(const string& s, const glm::dvec2& pos, const glm::dvec3& color)
 {
 	// TODO: handle exception from invalid input
 	draw(util::utf8_to_utf32(s), pos, color);
 }
 
-void Text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec3& color)
+void text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec3& color)
 {
 	shader.uniform("color", glm::vec3(color));
 	shader.use();
 	glActiveTexture(GL_TEXTURE0);
 
-	loop(s, glm::round(pos), [this](const glm::dvec2& pos, Character& ch)
+	loop(s, glm::round(pos), [this](const glm::dvec2& pos, character& ch)
 	{
 		float xpos = static_cast<float>(pos.x + ch.bearing.x);
 		float ypos = static_cast<float>(pos.y + (get_char('H').bearing.y - ch.bearing.y));
@@ -143,18 +141,18 @@ void Text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec3& col
 
 		glBindTexture(GL_TEXTURE_2D, ch.texture.get_name());
 
-		vbo.data(sizeof(vertexes), vertexes, opengl::VertexBuffer::UsageHint::dynamic_draw);
+		vbo.data(sizeof(vertexes), vertexes, opengl::vertex_buffer::usage_hint::dynamic_draw);
 		vao.draw(GL_TRIANGLES, 0, sizeof(vertexes) / sizeof(vertexes[0]) / 4);
 	});
 }
 
-glm::dvec2 Text::get_size(const string& s_utf8)
+glm::dvec2 text::get_size(const string& s_utf8)
 {
 	// TODO: handle exception from invalid input
 	return get_size(util::utf8_to_utf32(s_utf8));
 }
 
-glm::dvec2 Text::get_size(u32string s)
+glm::dvec2 text::get_size(u32string s)
 {
 	if(s.empty())
 	{
@@ -171,7 +169,7 @@ glm::dvec2 Text::get_size(u32string s)
 
 	glm::dvec2 size(0, get_char('H').size.y);
 	std::vector<double> widths;
-	std::tie(size, widths) = loop(s, size, [](const glm::dvec2&, const Character&)
+	std::tie(size, widths) = loop(s, size, [](const glm::dvec2&, const character&)
 	{
 	});
 	widths.push_back(size.x);
@@ -183,11 +181,11 @@ glm::dvec2 Text::get_size(u32string s)
 	};
 }
 
-std::tuple<glm::dvec2, std::vector<double>> Text::loop
+std::tuple<glm::dvec2, std::vector<double>> text::loop
 (
 	const u32string& s,
 	glm::dvec2 pos,
-	std::function<void(const glm::dvec2&, Text::Character&)> f
+	std::function<void(const glm::dvec2&, character&)> f
 )
 {
 	std::vector<double> widths;
@@ -213,7 +211,7 @@ std::tuple<glm::dvec2, std::vector<double>> Text::loop
 		}
 		++line_i;
 
-		Character& ch = get_char(c);
+		character& ch = get_char(c);
 
 		f(pos, ch);
 
@@ -223,7 +221,7 @@ std::tuple<glm::dvec2, std::vector<double>> Text::loop
 	return {pos, widths};
 }
 
-Text::Character& Text::get_char(const char32_t c)
+text::character& text::get_char(const char32_t c)
 {
 	auto i = chars.find(c);
 	if(i == chars.cend())
@@ -234,7 +232,7 @@ Text::Character& Text::get_char(const char32_t c)
 	return i->second;
 }
 
-Text::Character Text::load_char(const char32_t c) const
+text::character text::load_char(const char32_t c) const
 {
 	if(FT_Load_Char(face, c, FT_LOAD_RENDER))
 	{
@@ -252,7 +250,7 @@ Text::Character Text::load_char(const char32_t c) const
 
 	const auto& bitmap = face->glyph->bitmap;
 
-	Text::Character ch
+	character ch
 	{
 		{
 			GL_TEXTURE_2D,
@@ -272,10 +270,10 @@ Text::Character Text::load_char(const char32_t c) const
 		GL_UNSIGNED_BYTE,
 		bitmap.buffer
 	);
-	ch.texture.parameter(opengl::Texture::Parameter::wrap_s, GL_CLAMP_TO_EDGE);
-	ch.texture.parameter(opengl::Texture::Parameter::wrap_t, GL_CLAMP_TO_EDGE);
-	ch.texture.parameter(opengl::Texture::Parameter::min_filter, GL_LINEAR);
-	ch.texture.parameter(opengl::Texture::Parameter::mag_filter, GL_LINEAR);
+	ch.texture.parameter(opengl::texture::Parameter::wrap_s, GL_CLAMP_TO_EDGE);
+	ch.texture.parameter(opengl::texture::Parameter::wrap_t, GL_CLAMP_TO_EDGE);
+	ch.texture.parameter(opengl::texture::Parameter::min_filter, GL_LINEAR);
+	ch.texture.parameter(opengl::texture::Parameter::mag_filter, GL_LINEAR);
 	return ch;
 }
 

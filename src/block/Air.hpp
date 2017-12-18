@@ -3,14 +3,14 @@
 
 namespace block_thingy::block {
 
-class Air : public Base
+class air : public base
 {
 public:
-	Air(enums::Type);
+	air(enums::type);
 
 	bool is_solid() const override;
 	bool is_selectable() const override;
-	bool is_replaceable_by(const Base&) const override;
+	bool is_replaceable_by(const base&) const override;
 };
 
 }

@@ -13,22 +13,22 @@
 
 namespace block_thingy::graphics {
 
-struct Color
+struct color
 {
 	using value_type = uint8_t;
 	static value_type max;
 
-	Color();
-	Color(value_type);
-	Color(value_type r, value_type g, value_type b);
-	Color(const glm::dvec3&);
+	color();
+	color(value_type);
+	color(value_type r, value_type g, value_type b);
+	color(const glm::dvec3&);
 
 	value_type operator[](const std::ptrdiff_t i) const
 	{
 	#ifdef DEBUG_BUILD
 		if(i > 2)
 		{
-			throw std::out_of_range("graphics::Color::operator[]: " + std::to_string(i) + " > 2");
+			throw std::out_of_range("graphics::color::operator[]: " + std::to_string(i) + " > 2");
 		}
 	#endif
 		return (&r)[i];
@@ -39,24 +39,24 @@ struct Color
 	#ifdef DEBUG_BUILD
 		if(i > 2)
 		{
-			throw std::out_of_range("graphics::Color::operator[]: " + std::to_string(i) + " > 2");
+			throw std::out_of_range("graphics::color::operator[]: " + std::to_string(i) + " > 2");
 		}
 	#endif
 		return (&r)[i];
 	}
 
-	bool operator==(const Color& that) const
+	bool operator==(const color& that) const
 	{
 		return (r == that.r) && (g == that.g) && (b == that.b);
 	}
-	bool operator!=(const Color& that) const
+	bool operator!=(const color& that) const
 	{
 		return (r != that.r) || (g != that.g) || (b != that.b);
 	}
-	bool operator<(const Color&) const; // defined for std::tuple hashing
+	bool operator<(const color&) const; // defined for std::tuple hashing
 
-	Color operator+(const Color&) const;
-	Color operator-(const Color&) const;
+	color operator+(const color&) const;
+	color operator-(const color&) const;
 
 	bool operator==(const value_type x) const
 	{
@@ -75,9 +75,9 @@ struct Color
 		return (r > x) && (g > x) && (b > x);
 	}
 
-	Color operator+(value_type) const;
-	Color operator-(value_type) const;
-	Color& operator-=(value_type);
+	color operator+(value_type) const;
+	color operator-(value_type) const;
+	color& operator-=(value_type);
 
 	operator glm::vec3() const;
 	operator glm::tvec3<uint8_t>() const;
@@ -87,6 +87,6 @@ struct Color
 	value_type b;
 };
 
-std::ostream& operator<<(std::ostream&, const Color&);
+std::ostream& operator<<(std::ostream&, const color&);
 
 }

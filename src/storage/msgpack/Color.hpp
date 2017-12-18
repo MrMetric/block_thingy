@@ -6,13 +6,13 @@ namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
 namespace adaptor {
 
-using block_thingy::graphics::Color;
+using block_thingy::graphics::color;
 
 template<>
-struct pack<Color>
+struct pack<color>
 {
 	template<typename Stream>
-	packer<Stream>& operator()(packer<Stream>& o, const Color& color) const
+	packer<Stream>& operator()(packer<Stream>& o, const color& color) const
 	{
 		o.pack_array(3);
 		o.pack(color.r);
@@ -23,9 +23,9 @@ struct pack<Color>
 };
 
 template<>
-struct convert<Color>
+struct convert<color>
 {
-	const msgpack::object& operator()(const msgpack::object& o, Color& color) const
+	const msgpack::object& operator()(const msgpack::object& o, color& color) const
 	{
 		if(o.type != msgpack::type::ARRAY) throw msgpack::type_error();
 		if(o.via.array.size != 3) throw msgpack::type_error();

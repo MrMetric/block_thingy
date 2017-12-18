@@ -5,7 +5,7 @@
 
 namespace block_thingy::graphics::opengl {
 
-Texture::Texture()
+texture::texture()
 :
 	type(0),
 	inited(false),
@@ -13,7 +13,7 @@ Texture::Texture()
 {
 }
 
-Texture::Texture(const GLenum type)
+texture::texture(const GLenum type)
 :
 	type(type)
 {
@@ -22,7 +22,7 @@ Texture::Texture(const GLenum type)
 	inited = true;
 }
 
-Texture::Texture(Texture&& that)
+texture::texture(texture&& that)
 :
 	type(that.type)
 {
@@ -36,7 +36,7 @@ Texture::Texture(Texture&& that)
 	}
 }
 
-Texture::~Texture()
+texture::~texture()
 {
 	if(inited)
 	{
@@ -44,7 +44,7 @@ Texture::~Texture()
 	}
 }
 
-void Texture::image2D
+void texture::image2D
 (
 	const GLint level,
 	const GLint internal_format,
@@ -64,7 +64,7 @@ void Texture::image2D
 	glTexImage2D(type, level, internal_format, width, height, 0, format, data_type, data);
 }
 
-void Texture::image2D_multisample
+void texture::image2D_multisample
 (
 	const GLsizei samples,
 	const GLenum internal_format,
@@ -82,7 +82,7 @@ void Texture::image2D_multisample
 	glTexImage2DMultisample(type, samples, internal_format, width, height, fixed_sample_locations);
 }
 
-void Texture::image3D
+void texture::image3D
 (
 	const GLint level,
 	const GLint internal_format,
@@ -105,7 +105,7 @@ void Texture::image3D
 	glTexImage3D(type, level, internal_format, width, height, depth, 0, format, data_type, data);
 }
 
-void Texture::image3D_sub
+void texture::image3D_sub
 (
 	const GLint level,
 	const GLint xoffset,
@@ -130,7 +130,7 @@ void Texture::image3D_sub
 	glTexSubImage3D(type, level, xoffset, yoffset, zoffset, width, height, depth, format, data_type, data);
 }
 
-void Texture::parameter(Texture::Parameter p, GLint value)
+void texture::parameter(texture::Parameter p, GLint value)
 {
 	if(glTextureParameteri != nullptr)
 	{
@@ -143,7 +143,7 @@ void Texture::parameter(Texture::Parameter p, GLint value)
 	}
 }
 
-GLuint Texture::get_name()
+GLuint texture::get_name()
 {
 	return name;
 }

@@ -7,16 +7,16 @@
 
 namespace block_thingy::graphics {
 
-class RenderTarget
+class render_target
 {
 	GLsizei samples; // needs to be initialized before frame_texture
 
 public:
-	RenderTarget(const window_size_t&, GLsizei samples = 0);
+	render_target(const window_size_t&, GLsizei samples = 0);
 
-	opengl::Framebuffer frame_buffer;
-	opengl::Renderbuffer depth_buffer;
-	opengl::Texture frame_texture;
+	opengl::framebuffer frame_buffer;
+	opengl::renderbuffer depth_buffer;
+	opengl::texture frame_texture;
 
 	void resize(const window_size_t&);
 };

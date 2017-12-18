@@ -25,7 +25,7 @@ public:
 private:
 	friend class PluginManager;
 
-	void init(Game&);
+	void init(game&);
 
 	struct impl;
 	std::propagate_const<std::unique_ptr<impl>> pImpl;

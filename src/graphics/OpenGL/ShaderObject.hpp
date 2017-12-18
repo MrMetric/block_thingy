@@ -8,17 +8,17 @@
 
 namespace block_thingy::graphics::opengl {
 
-class ShaderObject
+class shader_object
 {
 public:
-	ShaderObject();
-	ShaderObject(const fs::path&, GLenum type);
-	~ShaderObject();
+	shader_object();
+	shader_object(const fs::path&, GLenum type);
+	~shader_object();
 
-	ShaderObject(ShaderObject&&);
-	ShaderObject(const ShaderObject&) = delete;
-	ShaderObject& operator=(ShaderObject&&) = delete;
-	ShaderObject& operator=(const ShaderObject&) = delete;
+	shader_object(shader_object&&);
+	shader_object(const shader_object&) = delete;
+	shader_object& operator=(shader_object&&) = delete;
+	shader_object& operator=(const shader_object&) = delete;
 
 	GLuint get_name();
 

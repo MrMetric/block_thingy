@@ -7,16 +7,16 @@
 
 namespace block_thingy::block {
 
-class Textured : public Base
+class textured : public base
 {
 public:
-	Textured(enums::Type, const fs::path& texture         , const fs::path& shader);
-	Textured(enums::Type, const fs::path& texture         , const std::array<fs::path, 6>& shaders);
-	Textured(enums::Type, std::array<fs::path, 6> textures, const fs::path& shader);
-	Textured(enums::Type, std::array<fs::path, 6> textures, const std::array<fs::path, 6>& shaders);
-	virtual ~Textured();
+	textured(enums::type, const fs::path& texture         , const fs::path& shader);
+	textured(enums::type, const fs::path& texture         , const std::array<fs::path, 6>& shaders);
+	textured(enums::type, std::array<fs::path, 6> textures, const fs::path& shader);
+	textured(enums::type, std::array<fs::path, 6> textures, const std::array<fs::path, 6>& shaders);
+	virtual ~textured();
 
-	Textured(enums::Type); // temporary; needed due to a design flaw
+	textured(enums::type); // temporary; needed due to a design flaw
 };
 
 }

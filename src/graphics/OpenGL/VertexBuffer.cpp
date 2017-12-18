@@ -8,13 +8,13 @@
 
 namespace block_thingy::graphics::opengl {
 
-VertexBuffer::VertexBuffer(Format format)
+vertex_buffer::vertex_buffer(Format format)
 :
-	VertexBuffer(std::vector<Format>{std::move(format)})
+	vertex_buffer(std::vector<Format>{std::move(format)})
 {
 }
 
-VertexBuffer::VertexBuffer(std::vector<Format> formats)
+vertex_buffer::vertex_buffer(std::vector<Format> formats)
 :
 	formats(std::move(formats))
 {
@@ -49,7 +49,7 @@ VertexBuffer::VertexBuffer(std::vector<Format> formats)
 	inited = true;
 }
 
-VertexBuffer::~VertexBuffer()
+vertex_buffer::~vertex_buffer()
 {
 	if(inited)
 	{
@@ -57,7 +57,7 @@ VertexBuffer::~VertexBuffer()
 	}
 }
 
-VertexBuffer::VertexBuffer(VertexBuffer&& that)
+vertex_buffer::vertex_buffer(vertex_buffer&& that)
 {
 	name = that.name;
 	inited = that.inited;
@@ -69,12 +69,12 @@ VertexBuffer::VertexBuffer(VertexBuffer&& that)
 	}
 }
 
-GLuint VertexBuffer::get_name()
+GLuint vertex_buffer::get_name()
 {
 	return name;
 }
 
-void VertexBuffer::data(const std::size_t size, const void* data, const UsageHint usage)
+void vertex_buffer::data(const std::size_t size, const void* data, const usage_hint usage)
 {
 	glNamedBufferData(name, size, data, static_cast<GLenum>(usage));
 }

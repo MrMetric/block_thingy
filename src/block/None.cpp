@@ -4,13 +4,13 @@
 
 namespace block_thingy::block {
 
-None::None(const enums::Type t)
+none::none(const enums::type t)
 :
-	Base(t, enums::VisibilityType::invisible)
+	base(t, enums::visibility_type::invisible)
 {
 }
 
-glm::dvec4 None::selection_color() const
+glm::dvec4 none::selection_color() const
 {
 	return {1, 0, 0, 1};
 }

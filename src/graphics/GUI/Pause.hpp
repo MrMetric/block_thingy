@@ -8,7 +8,7 @@ namespace block_thingy::graphics::gui {
 class Pause : public Base
 {
 public:
-	Pause(Game&);
+	Pause(game&);
 
 	std::string type() const override;
 

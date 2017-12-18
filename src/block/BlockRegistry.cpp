@@ -40,63 +40,63 @@ BlockMaker::~BlockMaker()
 {
 }
 
-shared_ptr<Base> BlockMaker::make(const enums::Type) const
+shared_ptr<base> BlockMaker::make(const enums::type) const
 {
 	return nullptr;
 }
 
 BlockRegistry::BlockRegistry()
 :
-	max_extid(static_cast<enums::TypeExternal>(0))
+	max_extid(static_cast<enums::type_external>(0))
 {
 	// these must be added first (in this order!) to get the correct IDs
-	add<None>("none");
-	add<Air>("air");
-	add<Unknown>("unknown");
+	add<none>("none");
+	add<air>("air");
+	add<unknown>("unknown");
 
-	add<Test>("test");
-	add<Teleporter>("teleporter");
-	add<Light>("light");
+	add<test>("test");
+	add<test_light>("light");
+	add<test_teleporter>("teleporter");
 }
 
-shared_ptr<Base> BlockRegistry::get_default(const enums::Type t) const
+shared_ptr<base> BlockRegistry::get_default(const enums::type t) const
 {
 	std::lock_guard<std::mutex> g(default_blocks_mutex);
 	const auto i = default_blocks.find(t);
 	if(i == default_blocks.cend())
 	{
-		throw std::runtime_error("no default block for ID: " + std::to_string(static_cast<enums::Type_t>(t)));
+		throw std::runtime_error("no default block for ID: " + std::to_string(static_cast<enums::type_t>(t)));
 	}
 	return i->second;
 }
 
-shared_ptr<Base> BlockRegistry::get_default(const enums::TypeExternal te) const
+shared_ptr<base> BlockRegistry::get_default(const enums::type_external te) const
 {
 	const string strid = get_strid(te);
 	if(strid_to_id.count(strid) == 0)
 	{
 		// TODO: should I put this in a map (like default_blocks)?
-		return std::make_unique<Unknown>(enums::Type::unknown, strid);
+		return std::make_unique<unknown>(enums::type::unknown, strid);
 	}
 	return get_default(get_id(strid));
 }
 
-shared_ptr<Base> BlockRegistry::get_default(const string& strid) const
+shared_ptr<base> BlockRegistry::get_default(const string& strid) const
 {
 	return get_default(get_id(strid));
 }
 
-shared_ptr<Base> BlockRegistry::make(const enums::Type t) const
+shared_ptr<base> BlockRegistry::make(const enums::type t) const
 {
 	const auto i = block_makers.find(t);
 	if(i == block_makers.cend())
 	{
-		throw std::runtime_error("unknown block ID: " + std::to_string(static_cast<enums::Type_t>(t)));
+		throw std::runtime_error("unknown block ID: " + std::to_string(static_cast<enums::type_t>(t)));
 	}
 	return i->second->make(t);
 }
 
-shared_ptr<Base> BlockRegistry::make(const enums::TypeExternal te) const
+shared_ptr<base> BlockRegistry::make(const enums::type_external te) const
 {
 	const string strid = get_strid(te);
 	const auto i2 = strid_to_id.find(strid);
@@ -115,27 +115,27 @@ shared_ptr<Base> BlockRegistry::make(const enums::TypeExternal te) const
 		}
 
 		// templating and virtual functions are not combinable, so I can not do this:
-		//return make(enums::Type::unknown, strid);
+		//return make(enums::type::unknown, strid);
 
-		return std::make_unique<Unknown>(enums::Type::unknown, strid);
+		return std::make_unique<unknown>(enums::type::unknown, strid);
 	}
-	const enums::Type t = i2->second;
+	const enums::type t = i2->second;
 	return make(t);
 }
 
-shared_ptr<Base> BlockRegistry::make(const string& strid) const
+shared_ptr<base> BlockRegistry::make(const string& strid) const
 {
 	return make(get_id(strid));
 }
 
-shared_ptr<Base> BlockRegistry::make(const shared_ptr<Base> block) const
+shared_ptr<base> BlockRegistry::make(const shared_ptr<base> block) const
 {
-	shared_ptr<Base> new_block = make(block->type());
+	shared_ptr<base> new_block = make(block->type());
 	*new_block = *block;
 	return new_block;
 }
 
-enums::Type BlockRegistry::get_id(const string& strid) const
+enums::type BlockRegistry::get_id(const string& strid) const
 {
 	const auto i = strid_to_id.find(strid);
 	if(i == strid_to_id.cend())
@@ -145,27 +145,27 @@ enums::Type BlockRegistry::get_id(const string& strid) const
 	return i->second;
 }
 
-string BlockRegistry::get_strid(const enums::Type t) const
+string BlockRegistry::get_strid(const enums::type t) const
 {
 	const auto i = id_to_strid.find(t);
 	if(i == id_to_strid.cend())
 	{
-		throw std::runtime_error("unknown block ID: " + std::to_string(static_cast<enums::Type_t>(t)));
+		throw std::runtime_error("unknown block ID: " + std::to_string(static_cast<enums::type_t>(t)));
 	}
 	return i->second;
 }
 
-string BlockRegistry::get_strid(const enums::TypeExternal te) const
+string BlockRegistry::get_strid(const enums::type_external te) const
 {
 	const auto i = extid_to_strid.find(te);
 	if(i == extid_to_strid.cend())
 	{
-		throw std::runtime_error("invalid external block ID: " + std::to_string(static_cast<enums::Type_t>(te)));
+		throw std::runtime_error("invalid external block ID: " + std::to_string(static_cast<enums::type_t>(te)));
 	}
 	return i->second;
 }
 
-string BlockRegistry::get_name(const enums::Type t) const
+string BlockRegistry::get_name(const enums::type t) const
 {
 	return language::get("block." + get_strid(t));
 }
@@ -176,7 +176,7 @@ string BlockRegistry::get_name(const string& strid) const
 	return strid;
 }
 
-enums::TypeExternal BlockRegistry::get_extid(const enums::Type t) const
+enums::type_external BlockRegistry::get_extid(const enums::type t) const
 {
 	const string strid = get_strid(t);
 	const auto i = strid_to_extid.find(strid);
@@ -193,17 +193,17 @@ void BlockRegistry::reset_extid_map()
 	extid_to_strid.clear();
 	for(const auto& p : id_to_strid)
 	{
-		extid_to_strid.emplace(static_cast<enums::TypeExternal>(p.first), p.second);
+		extid_to_strid.emplace(static_cast<enums::type_external>(p.first), p.second);
 	}
 	make_strid_to_extid_map();
 }
 
-static enums::TypeExternal get_max_extid
+static enums::type_external get_max_extid
 (
 	const BlockRegistry::extid_map_t& extid_to_strid
 )
 {
-	enums::TypeExternal max_extid = static_cast<enums::TypeExternal>(0);
+	enums::type_external max_extid = static_cast<enums::type_external>(0);
 	for(const auto& p : extid_to_strid)
 	{
 		if(p.first > max_extid)
@@ -211,7 +211,7 @@ static enums::TypeExternal get_max_extid
 			max_extid = p.first;
 		}
 	}
-	return static_cast<enums::TypeExternal>(static_cast<enums::Type_t>(max_extid) + 1);
+	return static_cast<enums::type_external>(static_cast<enums::type_t>(max_extid) + 1);
 }
 
 void BlockRegistry::set_extid_map(extid_map_t map)
@@ -228,7 +228,7 @@ void BlockRegistry::set_extid_map(extid_map_t map)
 		{
 			extid_to_strid.emplace(max_extid, strid);
 			strid_to_extid.emplace(strid, max_extid);
-			max_extid = static_cast<enums::TypeExternal>(static_cast<enums::Type_t>(max_extid) + 1);
+			max_extid = static_cast<enums::type_external>(static_cast<enums::type_t>(max_extid) + 1);
 		}
 	}
 }
@@ -238,10 +238,10 @@ const BlockRegistry::extid_map_t& BlockRegistry::get_extid_map() const
 	return extid_to_strid;
 }
 
-enums::Type_t BlockRegistry::get_max_id() const
+enums::type_t BlockRegistry::get_max_id() const
 {
-	assert(block_makers.size() <= std::numeric_limits<enums::Type_t>::max());
-	return static_cast<enums::Type_t>(block_makers.size());
+	assert(block_makers.size() <= std::numeric_limits<enums::type_t>::max());
+	return static_cast<enums::type_t>(block_makers.size());
 }
 
 void BlockRegistry::make_strid_to_extid_map()
@@ -253,13 +253,13 @@ void BlockRegistry::make_strid_to_extid_map()
 	}
 }
 
-enums::Type BlockRegistry::add_
+enums::type BlockRegistry::add_
 (
 	const string& strid,
 	unique_ptr<BlockMaker> maker
 )
 {
-	const enums::Type t = static_cast<enums::Type>(get_max_id());
+	const enums::type t = static_cast<enums::type>(get_max_id());
 	block_makers.emplace(t, std::move(maker));
 
 	const auto i = strid_to_id.find(strid);
@@ -275,7 +275,7 @@ enums::Type BlockRegistry::add_
 	{
 		extid_to_strid.emplace(max_extid, strid);
 		strid_to_extid.emplace(strid, max_extid);
-		max_extid = static_cast<enums::TypeExternal>(static_cast<enums::Type_t>(max_extid) + 1);
+		max_extid = static_cast<enums::type_external>(static_cast<enums::type_t>(max_extid) + 1);
 	}
 
 	return t;

@@ -14,9 +14,9 @@ using std::string;
 
 namespace block_thingy::graphics::gui {
 
-Pause::Pause(Game& game)
+Pause::Pause(game& g)
 :
-	Base(game, "guis/Pause.btgui")
+	Base(g, "guis/Pause.btgui")
 {
 }
 
@@ -27,7 +27,7 @@ string Pause::type() const
 
 void Pause::init()
 {
-	glfwSetInputMode(game.gfx.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	glfwSetInputMode(g.gfx.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 void Pause::draw()
@@ -35,7 +35,7 @@ void Pause::draw()
 	parent->draw();
 
 	{
-		opengl::PushState<GLboolean> depth_test(GL_DEPTH_TEST, false);
+		opengl::push_state<GLboolean> depth_test(GL_DEPTH_TEST, false);
 		Gfx::instance->draw_rectangle({0, 0}, static_cast<glm::dvec2>(Gfx::instance->window_size), {0, 0, 0, 0.3});
 	}
 

@@ -6,7 +6,7 @@ namespace block_thingy::graphics::gui {
 class Console : public Base
 {
 public:
-	Console(Game&);
+	Console(game&);
 
 	std::string type() const override;
 

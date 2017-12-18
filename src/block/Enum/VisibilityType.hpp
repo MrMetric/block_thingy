@@ -5,12 +5,12 @@
 
 namespace block_thingy::block::enums {
 
-enum class VisibilityType : uint8_t
+enum class visibility_type : uint8_t
 {
 	opaque,
 	translucent,
 	invisible,
 };
-std::ostream& operator<<(std::ostream&, VisibilityType);
+std::ostream& operator<<(std::ostream&, visibility_type);
 
 }

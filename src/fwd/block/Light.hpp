@@ -1,4 +1,4 @@
 namespace block_thingy::block
 {
-	class Light;
+	class test_light;
 }

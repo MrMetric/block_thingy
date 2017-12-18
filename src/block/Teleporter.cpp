@@ -4,13 +4,13 @@
 
 namespace block_thingy::block {
 
-Teleporter::Teleporter(const enums::Type t)
+test_teleporter::test_teleporter(const enums::type t)
 :
-	Base(t, enums::VisibilityType::translucent, "teleporter")
+	base(t, enums::visibility_type::translucent, "teleporter")
 {
 }
 
-bool Teleporter::is_solid() const
+bool test_teleporter::is_solid() const
 {
 	return false;
 }

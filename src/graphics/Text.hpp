@@ -30,16 +30,16 @@
 
 namespace block_thingy::graphics {
 
-class Text
+class text
 {
 public:
-	Text(const fs::path& font_path, FT_UInt height);
-	~Text();
+	text(const fs::path& font_path, FT_UInt height);
+	~text();
 
-	Text(Text&&) = delete;
-	Text(const Text&) = delete;
-	Text& operator=(Text&&) = delete;
-	Text& operator=(const Text&) = delete;
+	text(text&&) = delete;
+	text(const text&) = delete;
+	text& operator=(text&&) = delete;
+	text& operator=(const text&) = delete;
 
 	void set_font(const fs::path& path, FT_UInt height);
 	void set_font(const fs::path& path);
@@ -52,9 +52,9 @@ public:
 	glm::dvec2 get_size(const std::string&);
 	glm::dvec2 get_size(std::u32string);
 
-	struct Character
+	struct character
 	{
-		opengl::Texture		texture;
+		opengl::texture		texture;
 		glm::ivec2			size;
 		glm::ivec2			bearing;	// offset from baseline to left/top of glyph
 		double				x_offset;
@@ -68,19 +68,19 @@ private:
 	fs::path font_path;
 	FT_Face face;
 	FT_UInt height;
-	std::unordered_map<char32_t, Character> chars;
-	opengl::VertexBuffer vbo;
-	opengl::VertexArray vao;
-	opengl::ShaderProgram shader;
+	std::unordered_map<char32_t, character> chars;
+	opengl::vertex_buffer vbo;
+	opengl::vertex_array vao;
+	opengl::shader_program shader;
 
 	std::tuple<glm::dvec2, std::vector<double>> loop
 	(
 		const std::u32string&,
 		glm::dvec2,
-		std::function<void(const glm::dvec2&, Character&)>
+		std::function<void(const glm::dvec2&, character&)>
 	);
-	Character& get_char(char32_t);
-	Character load_char(char32_t) const;
+	character& get_char(char32_t);
+	character load_char(char32_t) const;
 };
 
 }

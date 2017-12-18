@@ -7,18 +7,18 @@
 
 namespace block_thingy::physics {
 
-struct RaycastHit
+struct raycast_hit
 {
-	RaycastHit
+	raycast_hit
 	(
-		const position::BlockInWorld& pos,
+		const position::block_in_world& pos,
 		const glm::ivec3& face
 	);
 
-	position::BlockInWorld pos;
+	position::block_in_world pos;
 	glm::ivec3 face_vec;
 
-	position::BlockInWorld adjacent() const;
+	position::block_in_world adjacent() const;
 	block::enums::Face face() const;
 };
 

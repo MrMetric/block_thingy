@@ -135,7 +135,7 @@ ray screen_pos_to_world_ray
 	};
 }
 
-static bool pos_in_bounds(const position::BlockInWorld& pos, const glm::dvec3& min, const glm::dvec3& max)
+static bool pos_in_bounds(const position::block_in_world& pos, const glm::dvec3& min, const glm::dvec3& max)
 {
 	return !(pos.x < min.x || pos.y < min.y || pos.z < min.z || pos.x > max.x || pos.y > max.y || pos.z > max.z);
 }
@@ -152,9 +152,9 @@ static bool pos_in_bounds(const position::BlockInWorld& pos, const glm::dvec3& m
  *
  * If the callback returns a true value, the traversal will be stopped.
  */
-std::optional<RaycastHit> raycast
+std::optional<raycast_hit> raycast
 (
-	const World& world,
+	const world::world& world,
 	const ray& r,
 	const double radius
 )
@@ -183,7 +183,7 @@ std::optional<RaycastHit> raycast
 		return nullopt;
 	}
 
-	position::BlockInWorld cube_pos(r.origin);
+	position::block_in_world cube_pos(r.origin);
 
 	// Direction to increment x,y,z when stepping.
 	const glm::ivec3 step(glm::sign(r.direction));
@@ -206,7 +206,7 @@ std::optional<RaycastHit> raycast
 	{
 		if(pos_in_bounds(cube_pos, min, max) && world.get_block(cube_pos)->is_selectable())
 		{
-			return RaycastHit(cube_pos, face);
+			return raycast_hit(cube_pos, face);
 		}
 
 		// tMax.x stores the t-value at which we cross a cube boundary along the
