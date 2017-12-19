@@ -264,17 +264,29 @@ void game::draw()
 
 		auto fix_axis = [](const float axis) -> float
 		{
-			if(std::abs(axis) < 0.1f)
-			{
-				return 0;
-			}
-			return axis;
+			return (std::abs(axis) < 0.1f) ? 0 : axis;
 		};
 
-		const float* axises = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
-		player.set_analog_motion({ fix_axis(axises[0]), fix_axis(axises[1]) });
-		glm::dvec2 motion(fix_axis(axises[3]), fix_axis(axises[4]));
-		joymove(motion);
+		const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
+		assert(count % 2 == 0);
+
+		assert(count == 8); // assume XInput
+		/* layout:
+		stick L x
+		stick L y
+		LT (PlayStation's L2)
+		stick R x
+		stick R y
+		RT (PlayStation's R2)
+		d-pad x
+		d-pad y
+		*/
+
+		glm::dvec2 stickL(fix_axis(axes[0]), fix_axis(axes[1]));
+		glm::dvec2 stickR(fix_axis(axes[3]), fix_axis(axes[4]));
+
+		player.set_analog_motion(stickL);
+		joymove(stickR);
 	}
 
 	pImpl->delta_time = pImpl->fps.enforceFPS();
@@ -356,7 +368,7 @@ void game::open_gui(unique_ptr<graphics::gui::Base> gui)
 
 	double x, y;
 	glfwGetCursorPos(gfx.window, &x, &y);
-	this->gui->mousemove(x, y);
+	this->gui->mousemove(glm::dvec2(x, y));
 
 	pImpl->just_opened_gui = true;
 }
@@ -441,9 +453,9 @@ void game::mousepress(const util::mouse_press& press)
 	gui->mousepress(press);
 }
 
-void game::mousemove(const double x, const double y)
+void game::mousemove(const glm::dvec2& position)
 {
-	gui->mousemove(x, y);
+	gui->mousemove(position);
 }
 
 void game::joypress(const int joystick, const int button, const bool pressed)
@@ -451,9 +463,9 @@ void game::joypress(const int joystick, const int button, const bool pressed)
 	gui->joypress(joystick, button, pressed);
 }
 
-void game::joymove(const glm::dvec2& motion)
+void game::joymove(const glm::dvec2& offset)
 {
-	gui->joymove(motion);
+	gui->joymove(offset);
 }
 
 void game::impl::find_hovered_block()

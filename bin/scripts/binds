@@ -27,6 +27,7 @@ bind - 'set_int render_distance - 1'
 bind joy_xbox360_L1 break_block
 bind joy_xbox360_R1 place_block
 bind joy_xbox360_A jump
+bind joy_xbox360_B copy_block
 bind joy_xbox360_X +sprint
-bind joy_xbox360_Y noclip
+bind joy_xbox360_Y +use
 bind joy_xbox360_start close_gui

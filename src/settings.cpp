@@ -139,6 +139,7 @@ void load()
 		{"fov"					, 75.0},
 		{"frustum_culling"		, true},
 		{"fullscreen"			, false},
+		{"joystick_mouse_speed"	, 16.0},
 		{"joystick_sensitivity"	, 4.0},
 		{"language"				, "en"},
 		{"light_smoothing"		, 2},

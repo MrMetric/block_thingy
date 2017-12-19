@@ -40,9 +40,9 @@ public:
 	virtual void keypress(const util::key_press&);
 	virtual void charpress(const util::char_press&);
 	virtual void mousepress(const util::mouse_press&);
-	virtual void mousemove(double x, double y);
+	virtual void mousemove(const glm::dvec2& position);
 	virtual void joypress(int joystick, int button, bool pressed);
-	virtual void joymove(const glm::dvec2& motion);
+	virtual void joymove(const glm::dvec2& offset);
 
 	std::unique_ptr<Base> parent;
 

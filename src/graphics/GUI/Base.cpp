@@ -8,6 +8,7 @@
 
 #include "game.hpp"
 #include "Gfx.hpp"
+#include "settings.hpp"
 #include "console/Console.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
@@ -106,19 +107,20 @@ void Base::mousepress(const util::mouse_press& press)
 	root.mousepress(press);
 }
 
-void Base::mousemove(const double x, const double y)
+void Base::mousemove(const glm::dvec2& position)
 {
-	root.mousemove(x, y);
+	root.mousemove(position);
 }
 
-void Base::joymove(const glm::dvec2& motion)
+void Base::joymove(const glm::dvec2& offset)
 {
 	double x, y;
 	glfwGetCursorPos(g.gfx.window, &x, &y);
-	x += motion.x * 12.0;
-	y += motion.y * 12.0;
+	const double mouse_speed = settings::get<double>("joystick_mouse_speed");
+	x += offset.x * mouse_speed;
+	y += offset.y * mouse_speed;
 	glfwSetCursorPos(g.gfx.window, x, y);
-	mousemove(x, y);
+	mousemove(glm::dvec2(x, y));
 }
 
 void Base::joypress(const int joystick, const int button, const bool pressed)

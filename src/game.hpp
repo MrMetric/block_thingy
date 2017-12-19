@@ -84,9 +84,9 @@ public:
 	void keypress(const util::key_press&);
 	void charpress(const util::char_press&);
 	void mousepress(const util::mouse_press&);
-	void mousemove(double x, double y);
+	void mousemove(const glm::dvec2& position);
 	void joypress(int joystick, int button, bool pressed);
-	void joymove(const glm::dvec2& motion);
+	void joymove(const glm::dvec2& offset);
 
 	std::shared_ptr<block::base> copied_block;
 	std::optional<physics::raycast_hit> hovered_block;

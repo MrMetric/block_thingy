@@ -223,7 +223,7 @@ GLFWwindow* Gfx::init_glfw()
 	});
 	glfwSetCursorPosCallback(window, [](GLFWwindow*, double x, double y)
 	{
-		game::instance->mousemove(x, y);
+		game::instance->mousemove(glm::dvec2(x, y));
 	});
 
 	// TODO: loading screen

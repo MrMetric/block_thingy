@@ -32,7 +32,7 @@ public:
 	virtual void keypress(const util::key_press&);
 	virtual void charpress(const util::char_press&);
 	virtual void mousepress(const util::mouse_press&);
-	virtual void mousemove(double x, double y);
+	virtual void mousemove(const glm::dvec2& position);
 
 	virtual glm::dvec2 get_size() const;
 	glm::dvec2 get_position() const;

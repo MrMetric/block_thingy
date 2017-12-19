@@ -61,11 +61,11 @@ void Container::mousepress(const util::mouse_press& press)
 	}
 }
 
-void Container::mousemove(const double x, const double y)
+void Container::mousemove(const glm::dvec2& mouse_pos)
 {
 	for(auto& widget : widgets)
 	{
-		widget->mousemove(x, y);
+		widget->mousemove(mouse_pos);
 	}
 }
 

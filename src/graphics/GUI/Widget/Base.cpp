@@ -40,10 +40,10 @@ void Base::mousepress(const util::mouse_press&)
 {
 }
 
-void Base::mousemove(const double x, const double y)
+void Base::mousemove(const glm::dvec2& mouse_pos)
 {
-	hover = x >= position.x && x < position.x + size.x
-		 && y >= position.y && y < position.y + size.y;
+	hover = mouse_pos.x >= position.x && mouse_pos.x < position.x + size.x
+		 && mouse_pos.y >= position.y && mouse_pos.y < position.y + size.y;
 }
 
 glm::dvec2 Base::get_size() const

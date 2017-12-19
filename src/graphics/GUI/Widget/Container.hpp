@@ -23,7 +23,7 @@ public:
 	void keypress(const util::key_press&) override;
 	void charpress(const util::char_press&) override;
 	void mousepress(const util::mouse_press&) override;
-	void mousemove(double x, double y) override;
+	void mousemove(const glm::dvec2& position) override;
 
 	glm::dvec2 get_size() const override;
 
