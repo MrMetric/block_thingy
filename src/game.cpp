@@ -119,7 +119,6 @@ static unique_ptr<mesher::Base> make_mesher(const string& name)
 game::game()
 :
 	set_instance(this),
-	camera(gfx),
 	world("worlds/test", block_registry, make_mesher(settings::get<string>("mesher"))),
 	player_ptr(world.add_player("test_player")),
 	player(*player_ptr),

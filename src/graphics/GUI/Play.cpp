@@ -75,7 +75,8 @@ void Play::mousepress(const util::mouse_press& press)
 
 void Play::mousemove(const double x, const double y)
 {
-	g.camera.mousemove(x, y);
+	g.camera.mousemove(glm::dvec2(x, y) - g.gfx.window_mid);
+	g.gfx.center_cursor();
 }
 
 void Play::joypress(const int joystick, const int button, const bool pressed)
@@ -85,8 +86,7 @@ void Play::joypress(const int joystick, const int button, const bool pressed)
 
 void Play::joymove(const glm::dvec2& motion)
 {
-	const glm::dvec2 pos = motion * 32.0 + g.gfx.window_mid;
-	g.camera.mousemove(pos.x, pos.y, true);
+	g.camera.joymove(motion);
 }
 
 void Play::draw_gui()
