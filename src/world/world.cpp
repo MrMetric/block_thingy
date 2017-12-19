@@ -398,7 +398,7 @@ void world::impl::process_blocklight_add()
 		)
 		{
 			const block_in_world pos2{pos.x + x, pos.y + y, pos.z + z};
-			const shared_ptr<Chunk> chunk = world.get_chunk(chunk_in_world(pos2));
+			const shared_ptr<Chunk> chunk = this->world.get_chunk(chunk_in_world(pos2)); // this-> to work around MSVC lambda scope bug
 			if(chunk == nullptr)
 			{
 				return;
@@ -423,7 +423,7 @@ void world::impl::process_blocklight_add()
 			if(color2.b < color.b) { color2.b = color.b; set = true; }
 			if(set)
 			{
-				world.set_blocklight(pos2, color2, false);
+				this->world.set_blocklight(pos2, color2, false); // this-> to work around MSVC lambda scope bug
 				blocklight_add.emplace(pos2);
 			}
 		};
@@ -468,7 +468,7 @@ void world::impl::sub_blocklight(const block_in_world& block_pos)
 		)
 		{
 			const block_in_world pos2{pos.x + x, pos.y + y, pos.z + z};
-			graphics::color color2 = world.get_blocklight(pos2);
+			graphics::color color2 = this->world.get_blocklight(pos2); // this-> to work around MSVC lambda scope bug
 			graphics::color color_set = color2;
 			graphics::color color_put(0, 0, 0);
 
@@ -488,7 +488,7 @@ void world::impl::sub_blocklight(const block_in_world& block_pos)
 			}
 			if(set)
 			{
-				world.set_blocklight(pos2, color_set, false);
+				this->world.set_blocklight(pos2, color_set, false); // this-> to work around MSVC lambda scope bug
 				q.emplace(pos2, color_put);
 			}
 		};
