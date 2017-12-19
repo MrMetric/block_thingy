@@ -6,10 +6,10 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-#include "fwd/Game.hpp"
+#include "fwd/game.hpp"
 #include "fwd/graphics/GUI/Base.hpp"
 #include "physics/AABB.hpp"
-#include "fwd/position/BlockInWorld.hpp"
+#include "fwd/position/block_in_world.hpp"
 #include "util/Property.hpp"
 
 namespace block_thingy {

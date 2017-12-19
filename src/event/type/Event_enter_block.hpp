@@ -4,8 +4,8 @@
 #include <memory>
 
 #include "fwd/Player.hpp"
-#include "fwd/World.hpp"
-#include "fwd/block/Base.hpp"
+#include "fwd/block/base.hpp"
+#include "fwd/world/world.hpp"
 
 namespace block_thingy {
 

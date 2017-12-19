@@ -5,11 +5,11 @@
 
 #include <GLFW/glfw3.h>
 
-#include "Game.hpp"
+#include "game.hpp"
 #include "Gfx.hpp"
-#include "Util.hpp"
-#include "block/Light.hpp"
+#include "block/test_light.hpp"
 #include "graphics/GUI/Widget/TextInput.hpp"
+#include "util/misc.hpp"
 
 using std::string;
 

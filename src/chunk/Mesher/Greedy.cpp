@@ -4,10 +4,10 @@
 #include <stdint.h>
 #include <tuple>
 
-#include "Game.hpp"
-#include "block/Base.hpp"
-#include "block/Enum/Face.hpp"
-#include "position/BlockInChunk.hpp"
+#include "game.hpp"
+#include "block/base.hpp"
+#include "block/enums/Face.hpp"
+#include "position/block_in_chunk.hpp"
 
 namespace block_thingy::mesher {
 

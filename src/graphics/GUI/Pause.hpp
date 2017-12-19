@@ -1,7 +1,7 @@
 #pragma once
 #include "Base.hpp"
 
-#include "fwd/Game.hpp"
+#include "fwd/game.hpp"
 
 namespace block_thingy::graphics::gui {
 

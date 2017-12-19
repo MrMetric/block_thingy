@@ -1,8 +1,8 @@
 #include "Base.hpp"
 
 #include "Gfx.hpp"
-#include "Util.hpp"
 #include "graphics/GUI/Widget/Component/Base.hpp"
+#include "util/misc.hpp"
 
 using std::string;
 

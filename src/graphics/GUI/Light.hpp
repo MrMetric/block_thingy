@@ -4,11 +4,11 @@
 #include <cstddef>
 #include <string>
 
-#include "fwd/Game.hpp"
-#include "fwd/World.hpp"
-#include "fwd/block/Light.hpp"
+#include "fwd/game.hpp"
+#include "fwd/block/test_light.hpp"
 #include "fwd/graphics/GUI/Widget/TextInput.hpp"
-#include "position/BlockInWorld.hpp"
+#include "position/block_in_world.hpp"
+#include "fwd/world/world.hpp"
 
 namespace block_thingy::graphics::gui {
 

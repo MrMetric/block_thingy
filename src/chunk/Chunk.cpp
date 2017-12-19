@@ -11,24 +11,24 @@
 #include <glad/glad.h>
 #include <glm/vec3.hpp>
 
-#include "Camera.hpp"
-#include "Game.hpp"
-#include "Settings.hpp"
-#include "World.hpp"
-#include "fwd/block/Base.hpp"
+#include "camera.hpp"
+#include "game.hpp"
+#include "settings.hpp"
+#include "fwd/block/base.hpp"
 #include "chunk/Mesher/Base.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_change_setting.hpp"
-#include "graphics/Color.hpp"
-#include "graphics/OpenGL/ShaderProgram.hpp"
-#include "graphics/OpenGL/Texture.hpp"
-#include "graphics/OpenGL/VertexArray.hpp"
-#include "graphics/OpenGL/VertexBuffer.hpp"
-#include "position/BlockInChunk.hpp"
-#include "position/BlockInWorld.hpp"
-#include "position/ChunkInWorld.hpp"
+#include "graphics/color.hpp"
+#include "graphics/opengl/shader_program.hpp"
+#include "graphics/opengl/texture.hpp"
+#include "graphics/opengl/vertex_array.hpp"
+#include "graphics/opengl/vertex_buffer.hpp"
+#include "position/block_in_chunk.hpp"
+#include "position/block_in_world.hpp"
+#include "position/chunk_in_world.hpp"
 #include "util/logger.hpp"
+#include "world/world.hpp"
 
 using std::shared_ptr;
 using std::unique_ptr;

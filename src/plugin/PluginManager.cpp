@@ -6,9 +6,9 @@
 
 #include <vector>
 
-#include "Plugin.hpp"
-#include "Util.hpp"
+#include "plugin/Plugin.hpp"
 #include "util/filesystem.hpp"
+#include "util/misc.hpp"
 
 using std::string;
 

@@ -1,9 +1,9 @@
 #include "Simple.hpp"
 
-#include "Game.hpp"
-#include "block/Base.hpp"
+#include "game.hpp"
+#include "block/base.hpp"
 #include "chunk/Chunk.hpp"
-#include "position/BlockInChunk.hpp"
+#include "position/block_in_chunk.hpp"
 
 namespace block_thingy::mesher {
 

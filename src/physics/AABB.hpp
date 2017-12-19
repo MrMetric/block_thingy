@@ -2,8 +2,8 @@
 
 #include <glm/vec3.hpp>
 
-#include "fwd/position/BlockInWorld.hpp"
-#include "fwd/position/ChunkInWorld.hpp"
+#include "fwd/position/block_in_world.hpp"
+#include "fwd/position/chunk_in_world.hpp"
 
 namespace block_thingy::physics {
 

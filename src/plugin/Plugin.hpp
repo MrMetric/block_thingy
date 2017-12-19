@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "fwd/Game.hpp"
+#include "fwd/game.hpp"
 #include "shim/propagate_const.hpp"
 #include "util/filesystem.hpp"
 

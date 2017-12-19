@@ -4,8 +4,8 @@
 #include <string>
 #include <utility>
 
-#include "Event.hpp"
-#include "EventType.hpp"
+#include "event/Event.hpp"
+#include "event/EventType.hpp"
 
 namespace block_thingy {
 

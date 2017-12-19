@@ -11,10 +11,10 @@
 
 #include <GLFW/glfw3.h>
 
-#include "Game.hpp"
+#include "game.hpp"
 #include "Gfx.hpp"
 #include "language.hpp"
-#include "Settings.hpp"
+#include "settings.hpp"
 #include "console/Console.hpp"
 #include "plugin/PluginManager.hpp"
 #include "util/compiler_info.hpp"

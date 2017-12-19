@@ -4,7 +4,7 @@
 
 #include "chunk/Chunk.hpp"
 #include "chunk/ChunkData.hpp"
-#include "storage/msgpack/Block.hpp"
+#include "storage/msgpack/block.hpp"
 #include "storage/msgpack/ChunkData.hpp"
 
 namespace block_thingy {

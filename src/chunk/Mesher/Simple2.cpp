@@ -3,11 +3,11 @@
 #include <array>
 #include <cstddef>
 
-#include "Game.hpp"
-#include "block/Base.hpp"
-#include "block/Enum/Type.hpp"
+#include "game.hpp"
+#include "block/base.hpp"
+#include "block/enums/type.hpp"
 #include "chunk/Chunk.hpp"
-#include "position/BlockInChunk.hpp"
+#include "position/block_in_chunk.hpp"
 
 namespace block_thingy::mesher {
 

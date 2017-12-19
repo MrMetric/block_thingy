@@ -1,8 +1,8 @@
 #include "AABB.hpp"
 
 #include "fwd/chunk/Chunk.hpp"
-#include "position/BlockInWorld.hpp"
-#include "position/ChunkInWorld.hpp"
+#include "position/block_in_world.hpp"
+#include "position/chunk_in_world.hpp"
 
 namespace block_thingy::physics {
 

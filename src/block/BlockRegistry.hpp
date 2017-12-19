@@ -6,8 +6,8 @@
 #include <string>
 #include <utility>
 
-#include "fwd/block/Base.hpp"
-#include "fwd/block/Enum/Type.hpp"
+#include "fwd/block/base.hpp"
+#include "fwd/block/enums/type.hpp"
 
 namespace block_thingy::block {
 

@@ -4,9 +4,9 @@
 #include <sstream>
 #include <unordered_map>
 
-#include "Settings.hpp"
-#include "Util.hpp"
+#include "settings.hpp"
 #include "util/logger.hpp"
+#include "util/misc.hpp"
 
 using std::string;
 

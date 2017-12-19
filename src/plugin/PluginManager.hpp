@@ -3,7 +3,7 @@
 #include <cassert>
 #include <memory>
 
-#include "fwd/Game.hpp"
+#include "fwd/game.hpp"
 #include "shim/propagate_const.hpp"
 
 namespace block_thingy {

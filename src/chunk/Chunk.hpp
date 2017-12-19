@@ -2,13 +2,13 @@
 
 #include <memory>
 
-#include "fwd/World.hpp"
-#include "fwd/block/Base.hpp"
+#include "fwd/block/base.hpp"
 #include "chunk/ChunkData.hpp"
-#include "fwd/graphics/Color.hpp"
-#include "fwd/position/BlockInChunk.hpp"
-#include "fwd/position/ChunkInWorld.hpp"
+#include "fwd/graphics/color.hpp"
+#include "fwd/position/block_in_chunk.hpp"
+#include "fwd/position/chunk_in_world.hpp"
 #include "shim/propagate_const.hpp"
+#include "fwd/world/world.hpp"
 
 namespace block_thingy {
 

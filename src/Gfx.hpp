@@ -11,13 +11,13 @@
 #include <glm/vec4.hpp>
 
 #include "fwd/event/EventManager.hpp"
-#include "graphics/RenderTarget.hpp"
-#include "graphics/Text.hpp"
-#include "graphics/OpenGL/ShaderProgram.hpp"
-#include "graphics/OpenGL/VertexArray.hpp"
-#include "graphics/OpenGL/VertexBuffer.hpp"
+#include "graphics/render_target.hpp"
+#include "graphics/text.hpp"
+#include "graphics/opengl/shader_program.hpp"
+#include "graphics/opengl/vertex_array.hpp"
+#include "graphics/opengl/vertex_buffer.hpp"
 #include "fwd/physics/AABB.hpp"
-#include "fwd/position/BlockInWorld.hpp"
+#include "fwd/position/block_in_world.hpp"
 #include "types/window_size_t.hpp"
 
 namespace block_thingy {

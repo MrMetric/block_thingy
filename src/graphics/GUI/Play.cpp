@@ -8,20 +8,20 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtx/io.hpp>
 
-#include "Camera.hpp"
-#include "Game.hpp"
+#include "camera.hpp"
+#include "game.hpp"
 #include "Gfx.hpp"
 #include "Player.hpp"
-#include "Settings.hpp"
-#include "block/Base.hpp"
-#include "block/Enum/Face.hpp"
-#include "block/Enum/Type.hpp"
+#include "settings.hpp"
+#include "block/base.hpp"
+#include "block/enums/Face.hpp"
+#include "block/enums/type.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
-#include "graphics/Color.hpp"
-#include "position/BlockInChunk.hpp"
-#include "position/BlockInWorld.hpp"
-#include "position/ChunkInWorld.hpp"
+#include "graphics/color.hpp"
+#include "position/block_in_chunk.hpp"
+#include "position/block_in_world.hpp"
+#include "position/chunk_in_world.hpp"
 #include "util/key_mods.hpp"
 
 using std::nullopt;

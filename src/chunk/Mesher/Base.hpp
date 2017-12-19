@@ -7,8 +7,8 @@
 
 #include <glm/vec3.hpp>
 
-#include "fwd/block/Base.hpp"
-#include "fwd/block/Enum/Face.hpp"
+#include "fwd/block/base.hpp"
+#include "fwd/block/enums/Face.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "graphics/primitive.hpp"
 #include "util/filesystem.hpp"

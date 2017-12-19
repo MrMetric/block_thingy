@@ -7,10 +7,10 @@
 
 #include <GLFW/glfw3.h>
 
-#include "Console.hpp"
-#include "Util.hpp"
+#include "console/Console.hpp"
 #include "util/key_press.hpp"
 #include "util/logger.hpp"
+#include "util/misc.hpp"
 #include "util/mouse_press.hpp"
 
 using std::string;

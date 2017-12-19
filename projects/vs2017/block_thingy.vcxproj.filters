@@ -1,31 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Library Files">
+      <UniqueIdentifier>{b5a73e00-2ebb-4486-bb84-d0c67b41c0a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library Files\glad">
+      <UniqueIdentifier>{60a3b763-f324-45e0-a8ec-93f0d0875b3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library Files\rhea">
+      <UniqueIdentifier>{c195a77c-4bfa-407d-aac4-caca921c1d87}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\lib">
-      <UniqueIdentifier>{b5a73e00-2ebb-4486-bb84-d0c67b41c0a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\lib\glad">
-      <UniqueIdentifier>{60a3b763-f324-45e0-a8ec-93f0d0875b3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\lib\rhea">
-      <UniqueIdentifier>{c195a77c-4bfa-407d-aac4-caca921c1d87}</UniqueIdentifier>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Source Files\block">
       <UniqueIdentifier>{a012aa91-b982-4a7e-bdc7-071ef60fdcea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\block\Enum">
+    <Filter Include="Source Files\block\enums">
       <UniqueIdentifier>{3a324eb9-e0c3-4045-a21c-7f1fa49b24de}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\chunk">
@@ -49,7 +49,7 @@
     <Filter Include="Source Files\fwd\block">
       <UniqueIdentifier>{2e991b79-10b4-4971-ac81-972bc291b189}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\fwd\block\Enum">
+    <Filter Include="Source Files\fwd\block\enums">
       <UniqueIdentifier>{c5cd91e1-7e07-4a92-bb49-055cf33bba62}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\fwd\chunk">
@@ -76,7 +76,7 @@
     <Filter Include="Source Files\fwd\graphics\GUI\Widget\Component">
       <UniqueIdentifier>{6ac42d72-381f-452a-a1af-db3b17f7c526}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\fwd\graphics\OpenGL">
+    <Filter Include="Source Files\fwd\graphics\opengl">
       <UniqueIdentifier>{793bb1fc-c527-4d00-b6aa-ce07a71db182}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\fwd\physics">
@@ -97,7 +97,7 @@
     <Filter Include="Source Files\graphics\GUI">
       <UniqueIdentifier>{a0d669de-a20c-4261-8d47-cf511c17f3b8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\graphics\OpenGL">
+    <Filter Include="Source Files\graphics\opengl">
       <UniqueIdentifier>{bfbbae94-db9b-42d0-a924-53fcf1f66aba}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\graphics\GUI\Widget">
@@ -130,12 +130,39 @@
     <Filter Include="Source Files\util">
       <UniqueIdentifier>{96c98183-725e-4f44-96b2-0b52d1d9f53e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\world">
+      <UniqueIdentifier>{bf952ba5-1665-4b08-a140-3f9fc9feba39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Camera.cpp">
+    <ClCompile Include="..\..\lib\glad\glad.c">
+      <Filter>Library Files\glad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\rhea\abstract_variable.cpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\rhea\action_variable.cpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\rhea\errors.cpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\rhea\float_variable.cpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\rhea\link_variable.cpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\rhea\simplex_solver.cpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\rhea\symbol.cpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Game.cpp">
+    <ClCompile Include="..\..\src\game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Gfx.cpp">
@@ -150,80 +177,50 @@
     <ClCompile Include="..\..\src\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\ResourceManager.cpp">
+    <ClCompile Include="..\..\src\resource_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Settings.cpp">
+    <ClCompile Include="..\..\src\settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Util.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\World.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\glad\glad.c">
-      <Filter>Source Files\lib\glad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\rhea\abstract_variable.cpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\rhea\action_variable.cpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\rhea\errors.cpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\rhea\float_variable.cpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\rhea\link_variable.cpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\rhea\simplex_solver.cpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\rhea\symbol.cpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\block\Air.cpp">
+    <ClCompile Include="..\..\src\block\air.cpp">
       <Filter>Source Files\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\block\Base.cpp">
+    <ClCompile Include="..\..\src\block\base.cpp">
       <Filter>Source Files\block</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\block\BlockRegistry.cpp">
       <Filter>Source Files\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\block\Light.cpp">
+    <ClCompile Include="..\..\src\block\none.cpp">
       <Filter>Source Files\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\block\None.cpp">
+    <ClCompile Include="..\..\src\block\rotation_util.cpp">
       <Filter>Source Files\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\block\RotationUtil.cpp">
+    <ClCompile Include="..\..\src\block\teleporter.cpp">
       <Filter>Source Files\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\block\Teleporter.cpp">
+    <ClCompile Include="..\..\src\block\test.cpp">
       <Filter>Source Files\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\block\Test.cpp">
+    <ClCompile Include="..\..\src\block\test_light.cpp">
       <Filter>Source Files\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\block\Textured.cpp">
+    <ClCompile Include="..\..\src\block\textured.cpp">
       <Filter>Source Files\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\block\Unknown.cpp">
+    <ClCompile Include="..\..\src\block\unknown.cpp">
       <Filter>Source Files\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\block\Enum\Face.cpp">
-      <Filter>Source Files\block\Enum</Filter>
+    <ClCompile Include="..\..\src\block\enums\Face.cpp">
+      <Filter>Source Files\block\enums</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\block\Enum\Type.cpp">
-      <Filter>Source Files\block\Enum</Filter>
+    <ClCompile Include="..\..\src\block\enums\type.cpp">
+      <Filter>Source Files\block\enums</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\block\Enum\VisibilityType.cpp">
-      <Filter>Source Files\block\Enum</Filter>
+    <ClCompile Include="..\..\src\block\enums\visibility_type.cpp">
+      <Filter>Source Files\block\enums</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\chunk\Chunk.cpp">
       <Filter>Source Files\chunk</Filter>
@@ -267,7 +264,7 @@
     <ClCompile Include="..\..\src\event\type\Event_window_size_change.cpp">
       <Filter>Source Files\event\type</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\Color.cpp">
+    <ClCompile Include="..\..\src\graphics\color.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\default_view_frustum.cpp">
@@ -276,19 +273,19 @@
     <ClCompile Include="..\..\src\graphics\frustum.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\Image.cpp">
+    <ClCompile Include="..\..\src\graphics\image.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\plane.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\RenderTarget.cpp">
+    <ClCompile Include="..\..\src\graphics\render_target.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\RenderWorld.cpp">
+    <ClCompile Include="..\..\src\graphics\render_world.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\Text.cpp">
+    <ClCompile Include="..\..\src\graphics\text.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\GUI\Base.cpp">
@@ -327,37 +324,37 @@
     <ClCompile Include="..\..\src\graphics\GUI\Widget\Component\Text.cpp">
       <Filter>Source Files\graphics\GUI\Widget\Component</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\OpenGL\Framebuffer.cpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClCompile Include="..\..\src\graphics\opengl\framebuffer.cpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\OpenGL\Renderbuffer.cpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClCompile Include="..\..\src\graphics\opengl\renderbuffer.cpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\OpenGL\ShaderObject.cpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClCompile Include="..\..\src\graphics\opengl\shader_object.cpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\OpenGL\ShaderProgram.cpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClCompile Include="..\..\src\graphics\opengl\shader_program.cpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\OpenGL\Texture.cpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClCompile Include="..\..\src\graphics\opengl\texture.cpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\OpenGL\VertexArray.cpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClCompile Include="..\..\src\graphics\opengl\vertex_array.cpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\OpenGL\VertexBuffer.cpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClCompile Include="..\..\src\graphics\opengl\vertex_buffer.cpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\physics\AABB.cpp">
-      <Filter>Source Files\physics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\physics\PhysicsUtil.cpp">
       <Filter>Source Files\physics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\physics\ray.cpp">
       <Filter>Source Files\physics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\physics\RaycastHit.cpp">
+    <ClCompile Include="..\..\src\physics\raycast_hit.cpp">
+      <Filter>Source Files\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\physics\raycast_util.cpp">
       <Filter>Source Files\physics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\plugin\Plugin.cpp">
@@ -366,19 +363,19 @@
     <ClCompile Include="..\..\src\plugin\PluginManager.cpp">
       <Filter>Source Files\plugin</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\position\BlockInChunk.cpp">
+    <ClCompile Include="..\..\src\position\block_in_chunk.cpp">
       <Filter>Source Files\position</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\position\BlockInWorld.cpp">
+    <ClCompile Include="..\..\src\position\block_in_world.cpp">
       <Filter>Source Files\position</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\position\ChunkInWorld.cpp">
+    <ClCompile Include="..\..\src\position\chunk_in_world.cpp">
       <Filter>Source Files\position</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\storage\Interface.cpp">
       <Filter>Source Files\storage</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\storage\WorldFile.cpp">
+    <ClCompile Include="..\..\src\storage\world_file.cpp">
       <Filter>Source Files\storage</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\util\char_press.cpp">
@@ -408,21 +405,78 @@
     <ClCompile Include="..\..\src\util\logger.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\util\misc.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\util\mouse_press.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\util\unicode.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\world\world.cpp">
+      <Filter>Source Files\world</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\Camera.hpp">
+    <ClInclude Include="..\..\lib\glad\glad.h">
+      <Filter>Library Files\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\abstract_variable.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\action_variable.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\approx.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\constraint.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\errors.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\expression.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\float_variable.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\iostream.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\linear_expression.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\link_variable.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\relation.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\simplex_solver.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\stays.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\strength.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\symbol.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\rhea\variable.hpp">
+      <Filter>Library Files\rhea</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\camera.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\FPSManager.hpp">
+    <ClInclude Include="..\..\src\fps_manager.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Game.hpp">
+    <ClInclude Include="..\..\src\game.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Gfx.hpp">
@@ -434,107 +488,50 @@
     <ClInclude Include="..\..\src\Player.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\ResourceManager.hpp">
+    <ClInclude Include="..\..\src\resource_manager.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Settings.hpp">
+    <ClInclude Include="..\..\src\settings.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Util.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\World.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\glad\glad.h">
-      <Filter>Source Files\lib\glad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\abstract_variable.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\action_variable.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\approx.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\constraint.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\errors.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\expression.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\float_variable.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\iostream.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\linear_expression.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\link_variable.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\relation.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\simplex_solver.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\stays.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\strength.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\symbol.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\rhea\variable.hpp">
-      <Filter>Source Files\lib\rhea</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\block\Air.hpp">
+    <ClInclude Include="..\..\src\block\air.hpp">
       <Filter>Source Files\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\Base.hpp">
+    <ClInclude Include="..\..\src\block\base.hpp">
       <Filter>Source Files\block</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\block\BlockRegistry.hpp">
       <Filter>Source Files\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\Light.hpp">
+    <ClInclude Include="..\..\src\block\none.hpp">
       <Filter>Source Files\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\None.hpp">
+    <ClInclude Include="..\..\src\block\rotation_util.hpp">
       <Filter>Source Files\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\RotationUtil.hpp">
+    <ClInclude Include="..\..\src\block\teleporter.hpp">
       <Filter>Source Files\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\Teleporter.hpp">
+    <ClInclude Include="..\..\src\block\test.hpp">
       <Filter>Source Files\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\Test.hpp">
+    <ClInclude Include="..\..\src\block\test_light.hpp">
       <Filter>Source Files\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\Textured.hpp">
+    <ClInclude Include="..\..\src\block\textured.hpp">
       <Filter>Source Files\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\Unknown.hpp">
+    <ClInclude Include="..\..\src\block\unknown.hpp">
       <Filter>Source Files\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\Enum\Face.hpp">
-      <Filter>Source Files\block\Enum</Filter>
+    <ClInclude Include="..\..\src\block\enums\Face.hpp">
+      <Filter>Source Files\block\enums</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\Enum\Type.hpp">
-      <Filter>Source Files\block\Enum</Filter>
+    <ClInclude Include="..\..\src\block\enums\type.hpp">
+      <Filter>Source Files\block\enums</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\Enum\VisibilityType.hpp">
-      <Filter>Source Files\block\Enum</Filter>
+    <ClInclude Include="..\..\src\block\enums\visibility_type.hpp">
+      <Filter>Source Files\block\enums</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\chunk\Chunk.hpp">
       <Filter>Source Files\chunk</Filter>
@@ -584,7 +581,7 @@
     <ClInclude Include="..\..\src\event\type\Event_window_size_change.hpp">
       <Filter>Source Files\event\type</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\Game.hpp">
+    <ClInclude Include="..\..\src\fwd\game.hpp">
       <Filter>Source Files\fwd</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\fwd\Gfx.hpp">
@@ -593,29 +590,26 @@
     <ClInclude Include="..\..\src\fwd\Player.hpp">
       <Filter>Source Files\fwd</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\ResourceManager.hpp">
+    <ClInclude Include="..\..\src\fwd\resource_manager.hpp">
       <Filter>Source Files\fwd</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\World.hpp">
-      <Filter>Source Files\fwd</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\fwd\block\Base.hpp">
+    <ClInclude Include="..\..\src\fwd\block\base.hpp">
       <Filter>Source Files\fwd\block</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\fwd\block\BlockRegistry.hpp">
       <Filter>Source Files\fwd\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\block\Light.hpp">
+    <ClInclude Include="..\..\src\fwd\block\test_light.hpp">
       <Filter>Source Files\fwd\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\block\Enum\Face.hpp">
-      <Filter>Source Files\fwd\block\Enum</Filter>
+    <ClInclude Include="..\..\src\fwd\block\enums\Face.hpp">
+      <Filter>Source Files\fwd\block\enums</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\block\Enum\Type.hpp">
-      <Filter>Source Files\fwd\block\Enum</Filter>
+    <ClInclude Include="..\..\src\fwd\block\enums\type.hpp">
+      <Filter>Source Files\fwd\block\enums</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\block\Enum\VisibilityType.hpp">
-      <Filter>Source Files\fwd\block\Enum</Filter>
+    <ClInclude Include="..\..\src\fwd\block\enums\visibility_type.hpp">
+      <Filter>Source Files\fwd\block\enums</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\fwd\chunk\Chunk.hpp">
       <Filter>Source Files\fwd\chunk</Filter>
@@ -635,10 +629,10 @@
     <ClInclude Include="..\..\src\fwd\event\EventType.hpp">
       <Filter>Source Files\fwd\event</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\graphics\Color.hpp">
+    <ClInclude Include="..\..\src\fwd\graphics\color.hpp">
       <Filter>Source Files\fwd\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\graphics\Image.hpp">
+    <ClInclude Include="..\..\src\fwd\graphics\image.hpp">
       <Filter>Source Files\fwd\graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\fwd\graphics\GUI\Base.hpp">
@@ -662,16 +656,16 @@
     <ClInclude Include="..\..\src\fwd\physics\ray.hpp">
       <Filter>Source Files\fwd\physics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\physics\RaycastHit.hpp">
+    <ClInclude Include="..\..\src\fwd\physics\raycast_hit.hpp">
       <Filter>Source Files\fwd\physics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\position\BlockInChunk.hpp">
+    <ClInclude Include="..\..\src\fwd\position\block_in_chunk.hpp">
       <Filter>Source Files\fwd\position</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\position\BlockInWorld.hpp">
+    <ClInclude Include="..\..\src\fwd\position\block_in_world.hpp">
       <Filter>Source Files\fwd\position</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\position\ChunkInWorld.hpp">
+    <ClInclude Include="..\..\src\fwd\position\chunk_in_world.hpp">
       <Filter>Source Files\fwd\position</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\fwd\storage\Interface.hpp">
@@ -689,7 +683,10 @@
     <ClInclude Include="..\..\src\fwd\util\mouse_press.hpp">
       <Filter>Source Files\fwd\util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\Color.hpp">
+    <ClInclude Include="..\..\src\fwd\world\world.hpp">
+      <Filter>Source Files\fwd\world</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\graphics\color.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\graphics\default_view_frustum.hpp">
@@ -698,7 +695,7 @@
     <ClInclude Include="..\..\src\graphics\frustum.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\Image.hpp">
+    <ClInclude Include="..\..\src\graphics\image.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\graphics\null_frustum.hpp">
@@ -710,13 +707,13 @@
     <ClInclude Include="..\..\src\graphics\primitive.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\RenderTarget.hpp">
+    <ClInclude Include="..\..\src\graphics\render_target.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\RenderWorld.hpp">
+    <ClInclude Include="..\..\src\graphics\render_world.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\Text.hpp">
+    <ClInclude Include="..\..\src\graphics\text.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\graphics\GUI\Base.hpp">
@@ -755,40 +752,40 @@
     <ClInclude Include="..\..\src\graphics\GUI\Widget\Component\Text.hpp">
       <Filter>Source Files\graphics\GUI\Widget\Component</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\OpenGL\Framebuffer.hpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClInclude Include="..\..\src\graphics\opengl\framebuffer.hpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\OpenGL\PushState.hpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClInclude Include="..\..\src\graphics\opengl\push_state.hpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\OpenGL\Renderbuffer.hpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClInclude Include="..\..\src\graphics\opengl\renderbuffer.hpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\OpenGL\ShaderObject.hpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClInclude Include="..\..\src\graphics\opengl\shader_object.hpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\OpenGL\ShaderProgram.hpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClInclude Include="..\..\src\graphics\opengl\shader_program.hpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\OpenGL\Texture.hpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClInclude Include="..\..\src\graphics\opengl\texture.hpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\OpenGL\VertexArray.hpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClInclude Include="..\..\src\graphics\opengl\vertex_array.hpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\OpenGL\VertexBuffer.hpp">
-      <Filter>Source Files\graphics\OpenGL</Filter>
+    <ClInclude Include="..\..\src\graphics\opengl\vertex_buffer.hpp">
+      <Filter>Source Files\graphics\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\physics\AABB.hpp">
-      <Filter>Source Files\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\physics\PhysicsUtil.hpp">
       <Filter>Source Files\physics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\physics\ray.hpp">
       <Filter>Source Files\physics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\physics\RaycastHit.hpp">
+    <ClInclude Include="..\..\src\physics\raycast_hit.hpp">
+      <Filter>Source Files\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\physics\raycast_util.hpp">
       <Filter>Source Files\physics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\plugin\Plugin.hpp">
@@ -797,13 +794,13 @@
     <ClInclude Include="..\..\src\plugin\PluginManager.hpp">
       <Filter>Source Files\plugin</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\position\BlockInChunk.hpp">
+    <ClInclude Include="..\..\src\position\block_in_chunk.hpp">
       <Filter>Source Files\position</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\position\BlockInWorld.hpp">
+    <ClInclude Include="..\..\src\position\block_in_world.hpp">
       <Filter>Source Files\position</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\position\ChunkInWorld.hpp">
+    <ClInclude Include="..\..\src\position\chunk_in_world.hpp">
       <Filter>Source Files\position</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\position\hash.hpp">
@@ -818,13 +815,13 @@
     <ClInclude Include="..\..\src\storage\msgpack_util.hpp">
       <Filter>Source Files\storage</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\storage\WorldFile.hpp">
+    <ClInclude Include="..\..\src\storage\world_file.hpp">
       <Filter>Source Files\storage</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\storage\msgpack\Block.hpp">
+    <ClInclude Include="..\..\src\storage\msgpack\block.hpp">
       <Filter>Source Files\storage\msgpack</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\storage\msgpack\BlockType.hpp">
+    <ClInclude Include="..\..\src\storage\msgpack\block_type.hpp">
       <Filter>Source Files\storage\msgpack</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\storage\msgpack\Chunk.hpp">
@@ -833,7 +830,7 @@
     <ClInclude Include="..\..\src\storage\msgpack\ChunkData.hpp">
       <Filter>Source Files\storage\msgpack</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\storage\msgpack\Color.hpp">
+    <ClInclude Include="..\..\src\storage\msgpack\color.hpp">
       <Filter>Source Files\storage\msgpack</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\storage\msgpack\glm_vec3.hpp">
@@ -848,7 +845,7 @@
     <ClInclude Include="..\..\src\storage\msgpack\Property.hpp">
       <Filter>Source Files\storage\msgpack</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\storage\msgpack\World.hpp">
+    <ClInclude Include="..\..\src\storage\msgpack\world.hpp">
       <Filter>Source Files\storage\msgpack</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\types\window_size_t.hpp">
@@ -884,6 +881,9 @@
     <ClInclude Include="..\..\src\util\logger.hpp">
       <Filter>Source Files\util</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\util\misc.hpp">
+      <Filter>Source Files\util</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\util\mouse_press.hpp">
       <Filter>Source Files\util</Filter>
     </ClInclude>
@@ -895,6 +895,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\util\unicode.hpp">
       <Filter>Source Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\world\world.hpp">
+      <Filter>Source Files\world</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -9,15 +9,15 @@
 #include <vector>
 
 #include "language.hpp"
-#include "block/Air.hpp"
-#include "block/Base.hpp"
-#include "block/Light.hpp"
-#include "block/None.hpp"
-#include "block/Teleporter.hpp"
-#include "block/Test.hpp"
-#include "block/Unknown.hpp"
-#include "block/Enum/Face.hpp"
-#include "block/Enum/Type.hpp"
+#include "block/air.hpp"
+#include "block/base.hpp"
+#include "block/none.hpp"
+#include "block/teleporter.hpp"
+#include "block/test.hpp"
+#include "block/test_light.hpp"
+#include "block/unknown.hpp"
+#include "block/enums/Face.hpp"
+#include "block/enums/type.hpp"
 #include "util/logger.hpp"
 
 using std::shared_ptr;

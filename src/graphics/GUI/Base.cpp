@@ -6,16 +6,16 @@
 #include <GLFW/glfw3.h>
 #include <json.hpp>
 
-#include "Game.hpp"
+#include "game.hpp"
 #include "Gfx.hpp"
-#include "Util.hpp"
 #include "console/Console.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"
-#include "graphics/OpenGL/PushState.hpp"
+#include "graphics/opengl/push_state.hpp"
 #include "util/key_press.hpp"
 #include "util/logger.hpp"
+#include "util/misc.hpp"
 
 using std::string;
 

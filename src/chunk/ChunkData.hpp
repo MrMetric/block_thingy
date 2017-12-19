@@ -6,12 +6,12 @@
 #include <mutex>
 #include <type_traits>
 
-#include "Game.hpp"
-#include "block/Base.hpp"
+#include "game.hpp"
+#include "block/base.hpp"
 #include "block/BlockRegistry.hpp"
-#include "block/Enum/Type.hpp"
+#include "block/enums/type.hpp"
 #include "fwd/chunk/Chunk.hpp"
-#include "position/BlockInChunk.hpp"
+#include "position/block_in_chunk.hpp"
 
 namespace block_thingy {
 

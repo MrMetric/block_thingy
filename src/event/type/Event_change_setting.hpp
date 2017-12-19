@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "Settings.hpp"
+#include "settings.hpp"
 
 namespace block_thingy {
 

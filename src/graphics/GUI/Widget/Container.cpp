@@ -4,12 +4,12 @@
 #include <string>
 
 #include "Gfx.hpp"
-#include "Settings.hpp"
-#include "Util.hpp"
+#include "settings.hpp"
 #include "console/Console.hpp"
 #include "graphics/GUI/Widget/Button.hpp"
 #include "graphics/GUI/Widget/Text.hpp"
 #include "graphics/GUI/Widget/TextInput.hpp"
+#include "util/misc.hpp"
 
 using std::string;
 

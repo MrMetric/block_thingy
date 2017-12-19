@@ -7,11 +7,11 @@
 #include <GLFW/glfw3.h>
 
 #include "Gfx.hpp"
-#include "Settings.hpp"
-#include "Util.hpp"
-#include "util/clipboard.hpp"
+#include "settings.hpp"
 #include "util/char_press.hpp"
+#include "util/clipboard.hpp"
 #include "util/key_press.hpp"
+#include "util/misc.hpp"
 #include "util/mouse_press.hpp"
 #include "util/unicode.hpp"
 

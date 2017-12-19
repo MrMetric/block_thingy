@@ -6,13 +6,13 @@
 #include <glm/trigonometric.hpp>	// glm::radians
 #include <glm/vec3.hpp>
 
-#include "Game.hpp"
-#include "World.hpp"
-#include "block/Base.hpp"
-#include "block/Enum/Type.hpp"
+#include "game.hpp"
+#include "block/base.hpp"
+#include "block/enums/type.hpp"
 #include "event/EventManager.hpp"
 #include "event/type/Event_enter_block.hpp"
-#include "position/BlockInWorld.hpp"
+#include "position/block_in_world.hpp"
+#include "world/world.hpp"
 
 using std::string;
 using std::shared_ptr;

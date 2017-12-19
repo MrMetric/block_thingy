@@ -2,13 +2,13 @@
 
 #include <GLFW/glfw3.h>
 
-#include "Game.hpp"
+#include "game.hpp"
 #include "Gfx.hpp"
 #include "console/Console.hpp"
 #include "graphics/GUI/Widget/Button.hpp"
 #include "graphics/GUI/Widget/Text.hpp"
 #include "graphics/GUI/Widget/TextInput.hpp"
-#include "graphics/OpenGL/PushState.hpp"
+#include "graphics/opengl/push_state.hpp"
 
 using std::string;
 
