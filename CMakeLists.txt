@@ -32,17 +32,14 @@ endif()
 add_executable(block_thingy ${block_thingy_SRC})
 
 option(RELOADABLE_SHADERS "Allow reloading shaders without restarting the engine" FALSE)
-
-if(${RELOADABLE_SHADERS})
-	list(APPEND BT_FLAGS -DBT_RELOADABLE_SHADERS)
-endif()
+option(WATCH_IMAGES "Automatically reload images" FALSE)
 
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
 	get_filename_component(MAC_BIN_DIR "${CMAKE_CXX_COMPILER}" DIRECTORY)
 	set(CPP_FS_LIB -lc++experimental "-L${MAC_BIN_DIR}/../lib")
 else()
 	option(USE_LIBCPP "Use libc++ instead of libstdc++ (requires Clang)" FALSE)
-	if(${USE_LIBCPP})
+	if(USE_LIBCPP)
 		if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 			message(FATAL_ERROR "Using libc++ requires building with Clang")
 		endif()
@@ -135,7 +132,8 @@ target_compile_options(block_thingy PRIVATE
 	-fno-math-errno
 	-fno-signed-zeros
 	$<${DEBUG_BUILD}:-DDEBUG_BUILD>
-	${BT_FLAGS}
+	$<$<BOOL:${RELOADABLE_SHADERS}>:-DBT_RELOADABLE_SHADERS>
+	$<$<BOOL:${WATCH_IMAGES}>:-DBT_WATCH_IMAGES>
 	-DGLFW_INCLUDE_NONE
 	-DGLM_ENABLE_EXPERIMENTAL
 	-DGLM_FORCE_EXPLICIT_CTOR

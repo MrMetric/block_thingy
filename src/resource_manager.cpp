@@ -460,7 +460,9 @@ resource<graphics::image> resource_manager::get_image(const fs::path& path, cons
 	if(i == pImpl->cache_image.cend())
 	{
 		i = pImpl->cache_image.emplace(path.string(), std::make_unique<graphics::image>(path)).first;
+	#ifdef BT_WATCH_IMAGES
 		pImpl->file_watcher.add_watch(path);
+	#endif
 	}
 	else if(reload)
 	{
