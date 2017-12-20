@@ -120,10 +120,10 @@ struct resource_manager::impl
 	std::unordered_map<string, unique_ptr<graphics::image>> cache_image;
 	mutable std::mutex cache_image_mutex;
 
-	std::unordered_map<string, unique_ptr<graphics::opengl::shader_object>> cache_shader_object;
+	std::unordered_map<string, unique_ptr<shader_object>> cache_shader_object;
 	mutable std::mutex cache_shader_object_mutex;
 
-	std::unordered_map<string, unique_ptr<graphics::opengl::shader_program>> cache_shader_program;
+	std::unordered_map<string, unique_ptr<shader_program>> cache_shader_program;
 	mutable std::mutex cache_shader_program_mutex;
 };
 
@@ -600,7 +600,7 @@ resource<shader_program> resource_manager::get_shader_program(const fs::path& pa
 	return resource<shader_program>(&i->second, path.string());
 }
 
-void resource_manager::foreach_shader_program(const std::function<void(resource<graphics::opengl::shader_program>)>& f)
+void resource_manager::foreach_shader_program(const std::function<void(resource<shader_program>)>& f)
 {
 	for(auto& p : pImpl->cache_shader_program)
 	{

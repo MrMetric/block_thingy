@@ -91,7 +91,7 @@ std::tuple<uint64_t, uint64_t> draw_world
 
 	const bool show_chunk_outlines = settings::get<bool>("show_chunk_outlines");
 
-	std::vector<std::shared_ptr<Chunk>> drawn_chunks;
+	std::vector<shared_ptr<Chunk>> drawn_chunks;
 
 	chunk_in_world pos;
 	for(pos.x = min.x; pos.x <= max.x; ++pos.x)

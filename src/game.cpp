@@ -289,7 +289,7 @@ void game::draw()
 		joymove(stickR);
 	}
 
-	pImpl->delta_time = pImpl->fps.enforceFPS();
+	pImpl->delta_time = pImpl->fps.enforce_fps();
 }
 
 void game::step_world()
@@ -406,7 +406,7 @@ void game::screenshot(fs::path path) const
 
 double game::get_fps() const
 {
-	return pImpl->fps.getFPS();
+	return pImpl->fps.get_fps();
 }
 
 std::tuple<uint64_t, uint64_t> game::get_draw_stats() const

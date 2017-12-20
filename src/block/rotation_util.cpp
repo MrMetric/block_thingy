@@ -183,7 +183,7 @@ imat4 rotate(const uint8_t turns, const ivec3& axis)
 	return rotate_(turns % 4, axis);
 }
 
-enums::Face rotate_face(const enums::Face face, const uvec3& rot)
+Face rotate_face(const Face face, const uvec3& rot)
 {
 	if(rot.x == 0 && rot.y == 0 && rot.z == 0)
 	{

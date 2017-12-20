@@ -1,131 +1,72 @@
 #pragma once
+// based on https://r3dux.org/2012/12/fpsmanager-a-c-helper-class-for-framerate-independent-movement/
 
+#include <cassert>
 #include <chrono>
 #include <thread>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-/** The FpsManager class is designed to work with GLFW and enforces a specified framerate on an application.
-  * It can also display the current framerate at user-specified intervals, and in addition returns the time
-  * duration since the last frame, which can be used to implement framerate independent movement.
-  *
-  * Author: r3dux
-  * Revision: 0.3
-  * Date: 1st September 2013
-  *
-  * ---- Creation examples (it's most useful to create your fpsManager object globally in your Main.cpp file): ----
-  *
-  *     FpsManager fpsManager(60.0);                    // Lock to 60fps, no reporting of framerate
-  *
-  *     FpsManager fpsManager(85.0, 3.0);               // Lock to 85fps, output FPS to console once every three seconds
-  *
-  *     FpsManager fpsManager(30.0, 0.5, "My App");     // Lock to 30fps, output FPS to console & window title every half second
-  *
-  *
-  * ---- Using the fpsManager in your main loop: ----
-  *
-  * bool running     = true;
-  * double deltaTime = 0.0;
-  *
-  * while (running)
-  * {
-  *     // Calculate our camera movement
-  *     cam->move(deltaTime);
-  *
-  *     // Draw our scene
-  *     drawScene();
-  *
-  *     // Exit if ESC was pressed or window was closed
-  *     running = !glfwGetKey(GLFW_KEY_ESC) && glfwGetWindowParam(GLFW_OPENED);
-  *
-  *     // Call our fpsManager to limit the FPS and get the frame duration to pass to the cam->move method
-  *     deltaTime = fpsManager.enforceFPS();
-  * }
-  *
-  * That's it! =D
-  */
-
 namespace block_thingy {
 
 class fps_manager
 {
 private:
-	double frameStartTime;         // Frame start time
-	double frameEndTime;           // Frame end time
-	double frameDuration;          // How many milliseconds between the last frame and this frame
-
-	double currentFPS;             // The current FPS value
-	double targetFrameDuration;    // How many milliseconds each frame should take to hit a target FPS value (i.e. 60fps = 1.0 / 60 = 0.016ms)
-
-	double lastReportTime;         // The timestamp of when we last reported
-	double reportInterval;         // How often to update the FPS value
+	double frame_start_time;
+	double fps;
+	double min_frame_length;
+	double last_update_time;
+	double update_interval;
 
 	// fps_manager is padded with 4 bytes if this is a 32-bit int, so why not use all 64?
-	uint64_t frameCount;        // How many frames have been drawn so far in the report interval
+	uint64_t frame_count;
 
 public:
-	fps_manager(const double theTargetFps)
+	fps_manager(const double max_fps)
 	:
-		frameStartTime(glfwGetTime()),
-		frameEndTime(frameStartTime + 1),
-		frameDuration(1),
-		currentFPS(0),
-		targetFrameDuration(1 / theTargetFps),
-		lastReportTime(frameStartTime),
-		reportInterval(1),
-		frameCount(0)
+		frame_start_time(glfwGetTime()),
+		fps(0),
+		min_frame_length(1 / max_fps),
+		last_update_time(frame_start_time),
+		update_interval(1),
+		frame_count(0)
 	{
+		assert(update_interval > 0);
 	}
 
-	// Method to force our application to stick to a given frame rate and return how long it took to process a frame
-	double enforceFPS()
+	double enforce_fps()
 	{
-		// Get the current time
-		frameEndTime = glfwGetTime();
+		const double frame_end_time = glfwGetTime();
+		const double frame_length = frame_end_time - frame_start_time;
 
-		// Calculate how long it's been since the frameStartTime was set (at the end of this method)
-		frameDuration = frameEndTime - frameStartTime;
-
-		if(reportInterval > 0)
+		if(frame_end_time < last_update_time + update_interval)
 		{
-			// Calculate and display the FPS every specified time interval
-			if(frameEndTime > lastReportTime + reportInterval)
-			{
-				// Update the last report time to be now
-				lastReportTime = frameEndTime;
-
-				// Calculate the FPS as the number of frames divided by the interval in seconds
-				currentFPS =  frameCount / reportInterval;
-
-				frameCount = 0;
-			}
-			else // FPS calculation time interval hasn't elapsed yet? Simply increment the FPS frame counter
-			{
-				++frameCount;
-			}
+			++frame_count;
+		}
+		else
+		{
+			last_update_time = frame_end_time;
+			fps = frame_count / update_interval;
+			frame_count = 0;
 		}
 
-		// Calculate how long we should sleep for to stick to our target frame rate
-		const double sleepDuration = targetFrameDuration - frameDuration;
-
-		// If we're running faster than our target duration, sleep until we catch up!
-		if(sleepDuration > 0)
+		if(frame_length < min_frame_length)
 		{
-			std::chrono::duration<double> a(sleepDuration);
+			std::chrono::duration<double> a(min_frame_length - frame_length);
 			std::this_thread::sleep_for(a);
 		}
 
-		// Reset the frame start time to be now - this means we only need put a single call into the main loop
-		frameStartTime = glfwGetTime();
+		frame_start_time = glfwGetTime();
 
-		// Pass back our total frame duration (including any sleep and the time it took to run this function) to be used as our deltaTime value
-		return frameDuration + (frameStartTime - frameEndTime);
+		// the total frame length (including sleep and the time it took to run this function)
+		// this is the delta_time value
+		return frame_length + (frame_start_time - frame_end_time);
 	}
 
-	double getFPS() const
+	double get_fps() const
 	{
-		return currentFPS;
+		return fps;
 	}
 };
 

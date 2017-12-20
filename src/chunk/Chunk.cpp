@@ -109,7 +109,7 @@ struct Chunk::impl
 	void set_texbuflight(const glm::ivec3& pos, const graphics::color& color);
 
 	world::world& owner;
-	position::chunk_in_world position;
+	chunk_in_world position;
 
 	unique_ptr<graphics::opengl::texture> light_tex;
 	bool light_changed;

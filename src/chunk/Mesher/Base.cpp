@@ -22,7 +22,7 @@ mesh_vertex_t::mesh_vertex_t()
 mesh_vertex_t::mesh_vertex_t
 (
 	const vertex_coord_t<uint8_t>& pos,
-	const block::enums::Face face,
+	const Face face,
 	const uint8_t rotation,
 	const uint16_t tex_index
 )
