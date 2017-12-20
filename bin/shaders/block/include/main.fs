@@ -56,6 +56,8 @@ void main()
 	{
 		lpos[iz] += 0.5;
 	}
+	const float div = 32 + 2; // chunk size + 2
+#ifndef NO_FANCY_LIGHT_SMOOTHING
 	if(light_smoothing == 2)
 	{
 		vec2 luv = fract(get_face_coords(lpos));
@@ -66,16 +68,19 @@ void main()
 		pos1[iy] = pos2[iy] = floor(lpos[iy]);
 		pos3[iy] = pos4[iy] = ceil(lpos[iy]);
 		pos1[iz] = pos2[iz] = pos3[iz] = pos4[iz] = lpos[iz];
-		vec3 l1 = texture(light, pos1 / 34.0).rgb;
-		vec3 l2 = texture(light, pos2 / 34.0).rgb;
-		vec3 l3 = texture(light, pos3 / 34.0).rgb;
-		vec3 l4 = texture(light, pos4 / 34.0).rgb;
+		vec3 l1 = texture(light, pos1 / div).rgb;
+		vec3 l2 = texture(light, pos2 / div).rgb;
+		vec3 l3 = texture(light, pos3 / div).rgb;
+		vec3 l4 = texture(light, pos4 / div).rgb;
 		l = mix(mix(l1, l2, luv.x), mix(l3, l4, luv.x), luv.y);
 	}
 	else
 	{
-		l = texture(light, (lpos + 1) / 34.0).rgb;
+#endif
+		l = texture(light, (lpos + 1) / div).rgb;
+#ifndef NO_FANCY_LIGHT_SMOOTHING
 	}
+#endif
 
 	l *= 255.0 / 16.0;
 

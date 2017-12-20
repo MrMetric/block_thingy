@@ -30,4 +30,5 @@ vec4 color(vec2 uv)
 	return vec4(c, 1);
 }
 
+#define NO_FANCY_LIGHT_SMOOTHING
 #include include/main.fs
