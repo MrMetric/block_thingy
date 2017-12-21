@@ -91,13 +91,13 @@ public:
 	std::shared_ptr<block::base> copied_block;
 	std::optional<physics::raycast_hit> hovered_block;
 
-	resource_manager resource_manager;
+	block_thingy::resource_manager resource_manager;
 
 	// event_manager must be initialized before others!
 	EventManager event_manager;
 	Gfx gfx;
 
-	camera camera;
+	block_thingy::camera camera;
 	block::BlockRegistry block_registry; // must be initialized before world
 	world::world world;
 	std::shared_ptr<Player> player_ptr;

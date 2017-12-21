@@ -48,7 +48,7 @@ struct world::impl
 		const fs::path& file_path
 	)
 	:
-		world(world),
+		this_world(world),
 		file(file_path, world),
 		gen_thread([this, &world](const chunk_in_world& pos)
 		{
@@ -72,7 +72,7 @@ struct world::impl
 	{
 	}
 
-	world& world;
+	world& this_world;
 
 	position::unordered_map_t<chunk_in_world, shared_ptr<Chunk>> chunks;
 	mutable std::mutex chunks_mutex;
@@ -362,7 +362,7 @@ void world::impl::add_blocklight
 	const bool save
 )
 {
-	world.set_blocklight(block_pos, color, save);
+	this_world.set_blocklight(block_pos, color, save);
 	if(color == 0)
 	{
 		return;
@@ -379,7 +379,7 @@ void world::impl::process_blocklight_add()
 	{
 		const block_in_world pos = blocklight_add.front();
 		blocklight_add.pop();
-		const graphics::color color = world.get_blocklight(pos) - 1;
+		const graphics::color color = this_world.get_blocklight(pos) - 1;
 		if(color == 0)
 		{
 			continue;
@@ -398,7 +398,7 @@ void world::impl::process_blocklight_add()
 		)
 		{
 			const block_in_world pos2{pos.x + x, pos.y + y, pos.z + z};
-			const shared_ptr<Chunk> chunk = this->world.get_chunk(chunk_in_world(pos2)); // this-> to work around MSVC lambda scope bug
+			const shared_ptr<Chunk> chunk = this_world.get_chunk(chunk_in_world(pos2));
 			if(chunk == nullptr)
 			{
 				return;
@@ -423,7 +423,7 @@ void world::impl::process_blocklight_add()
 			if(color2.b < color.b) { color2.b = color.b; set = true; }
 			if(set)
 			{
-				this->world.set_blocklight(pos2, color2, false); // this-> to work around MSVC lambda scope bug
+				this_world.set_blocklight(pos2, color2, false);
 				blocklight_add.emplace(pos2);
 			}
 		};
@@ -439,12 +439,12 @@ void world::impl::process_blocklight_add()
 
 void world::impl::sub_blocklight(const block_in_world& block_pos)
 {
-	const graphics::color color = world.get_blocklight(block_pos);
+	const graphics::color color = this_world.get_blocklight(block_pos);
 	if(color == 0)
 	{
 		return;
 	}
-	world.set_blocklight(block_pos, {0, 0, 0}, false);
+	this_world.set_blocklight(block_pos, {0, 0, 0}, false);
 
 	std::queue<std::tuple<block_in_world, graphics::color>> q;
 	q.emplace(block_pos, color);
@@ -468,7 +468,7 @@ void world::impl::sub_blocklight(const block_in_world& block_pos)
 		)
 		{
 			const block_in_world pos2{pos.x + x, pos.y + y, pos.z + z};
-			graphics::color color2 = this->world.get_blocklight(pos2); // this-> to work around MSVC lambda scope bug
+			graphics::color color2 = this_world.get_blocklight(pos2);
 			graphics::color color_set = color2;
 			graphics::color color_put(0, 0, 0);
 
@@ -488,7 +488,7 @@ void world::impl::sub_blocklight(const block_in_world& block_pos)
 			}
 			if(set)
 			{
-				this->world.set_blocklight(pos2, color_set, false); // this-> to work around MSVC lambda scope bug
+				this_world.set_blocklight(pos2, color_set, false);
 				q.emplace(pos2, color_put);
 			}
 		};
@@ -807,7 +807,7 @@ void world::impl::update_chunk_neighbor
 	const bool thread
 )
 {
-	shared_ptr<Chunk> chunk = world.get_chunk(chunk_pos + offset);
+	shared_ptr<Chunk> chunk = this_world.get_chunk(chunk_pos + offset);
 	if(chunk != nullptr)
 	{
 		if(thread)
@@ -881,7 +881,7 @@ void world::impl::gen_chunk(shared_ptr<Chunk> chunk) const
 
 			// TODO: investigate performance of using strings here vs caching the IDs
 			const string t = y > -m / 2 ? "test_white" : "test_black";
-			chunk->set_block(block_in_chunk(block_pos), world.block_registry.get_default(t));
+			chunk->set_block(block_in_chunk(block_pos), this_world.block_registry.get_default(t));
 		}
 	}
 }
