@@ -132,42 +132,52 @@ void Player::move(const glm::dvec3& acceleration)
 	{
 		if(move_vec.y < 0)
 		{
-			bool onGroundCheck = false;
+			bool on_ground_check = false;
 			const position::block_in_world pos_feet_new(glm::dvec3(position.x, position.y + move_vec.y, position.z));
-			shared_ptr<block::base> blockOn;
-			bool blockOnBelow = false;
-			int_fast64_t offsetx;
-			int_fast64_t offsetz;
-			for(offsetx = -1; offsetx <= 1; ++offsetx)
-			for (offsetz = -1; offsetz <= 1; ++offsetz)
+			shared_ptr<block::base> block_on;
+			bool block_on_below = false;
+			int_fast64_t offset_x;
+			int_fast64_t offset_z;
+			for(offset_x = -1; offset_x <= 1; ++offset_x) 
 			{
-				blockOn = g.world.get_block( position::block_in_world (
-					pos_feet_new.x + (offsetx * abs_offset),
-					pos_feet_new.y,
-					pos_feet_new.z + (offsetz * abs_offset)));
+				for (offset_z = -1; offset_z <= 1; ++offset_z)
+				{
+					block_on = g.world.get_block(position::block_in_world(
+						pos_feet_new.x + (offset_x * abs_offset),
+						pos_feet_new.y,
+						pos_feet_new.z + (offset_z * abs_offset)));
 
-				if (blockOn->is_solid()) {
-					if (pos_feet_new.y <= position.y - 0.5) {
-						int_fast64_t offsety;
-						bool blockBlocking = false;
-						for (offsety = 1; offsety <= height && !blockBlocking; ++offsety) {
-							shared_ptr<block::base> blockingCheck = g.world.get_block(position::block_in_world(
-								pos_feet_new.x + (offsetx * abs_offset),
-								pos_feet_new.y + offsety,
-								pos_feet_new.z + (offsetz * abs_offset)));
-							if (blockingCheck->is_solid())
-								blockBlocking = true;
-						}
-						if (!blockBlocking) {
-							if (offsetx == 0 && offsetz == 0)
-								blockOnBelow = true;
-							onGroundCheck = true;
+					if (block_on->is_solid())
+					{
+						if (pos_feet_new.y <= position.y - 0.5)
+						{
+							int_fast64_t offset_y;
+							bool block_blocking = false;
+							for (offset_y = 1; offset_y <= height && !block_blocking; ++offset_y)
+							{
+								shared_ptr<block::base> blocking_check = g.world.get_block(position::block_in_world(
+									pos_feet_new.x + (offset_x * abs_offset),
+									pos_feet_new.y + offset_y,
+									pos_feet_new.z + (offset_z * abs_offset)));
+								if (blocking_check->is_solid())
+								{
+									block_blocking = true;
+								}
+							}
+							if (!block_blocking) 
+							{
+								if (offset_x == 0 && offset_z == 0)
+								{
+									block_on_below = true;
+								}
+								on_ground_check = true;
+							}
 						}
 					}
 				}
 			}
 
-			if (onGroundCheck)
+			if (on_ground_check)
 			if (flags.on_ground)
 			{
 				position.y = pos_feet_new.y + 1;
@@ -177,11 +187,11 @@ void Player::move(const glm::dvec3& acceleration)
 				}
 				else
 				{
-					velocity.y *= -blockOn->bounciness();
+					velocity.y *= -block_on->bounciness();
 				}
 			}
 
-			flags.on_ground = onGroundCheck;
+			flags.on_ground = on_ground_check;
 
 		}
 		else if(move_vec.y > 0)
