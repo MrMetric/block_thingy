@@ -140,48 +140,45 @@ void Player::move(const glm::dvec3& acceleration)
 			int_fast64_t offset_z;
 			for(offset_x = -1; offset_x <= 1; ++offset_x) 
 			{
-				for (offset_z = -1; offset_z <= 1; ++offset_z)
+				for(offset_z = -1; offset_z <= 1; ++offset_z)
 				{
 					block_on = g.world.get_block(position::block_in_world(
 						pos_feet_new.x + (offset_x * abs_offset),
 						pos_feet_new.y,
 						pos_feet_new.z + (offset_z * abs_offset)));
 
-					if (block_on->is_solid())
+					if(block_on->is_solid() && pos_feet_new.y <= position.y - 0.5)
 					{
-						if (pos_feet_new.y <= position.y - 0.5)
+						int_fast64_t offset_y;
+						bool block_blocking = false;
+						for(offset_y = 1; offset_y <= height; ++offset_y)
 						{
-							int_fast64_t offset_y;
-							bool block_blocking = false;
-							for (offset_y = 1; offset_y <= height && !block_blocking; ++offset_y)
+							shared_ptr<block::base> blocking_check = g.world.get_block(position::block_in_world(
+								pos_feet_new.x + (offset_x * abs_offset),
+								pos_feet_new.y + offset_y,
+								pos_feet_new.z + (offset_z * abs_offset)));
+							if(blocking_check->is_solid())
 							{
-								shared_ptr<block::base> blocking_check = g.world.get_block(position::block_in_world(
-									pos_feet_new.x + (offset_x * abs_offset),
-									pos_feet_new.y + offset_y,
-									pos_feet_new.z + (offset_z * abs_offset)));
-								if (blocking_check->is_solid())
-								{
-									block_blocking = true;
-								}
+								block_blocking = true;
+								break;
 							}
-							if (!block_blocking) 
+						}
+						if(!block_blocking) 
+						{
+							if(offset_x == 0 && offset_z == 0)
 							{
-								if (offset_x == 0 && offset_z == 0)
-								{
-									block_on_below = true;
-								}
-								on_ground_check = true;
+								block_on_below = true;
 							}
+							on_ground_check = true;
 						}
 					}
 				}
 			}
 
-			if (on_ground_check)
-			if (flags.on_ground)
+			if(on_ground_check)
 			{
 				position.y = pos_feet_new.y + 1;
-				if (flags.on_ground)
+				if(flags.on_ground)
 				{
 					velocity.y = 0;
 				}
@@ -192,7 +189,6 @@ void Player::move(const glm::dvec3& acceleration)
 			}
 
 			flags.on_ground = on_ground_check;
-
 		}
 		else if(move_vec.y > 0)
 		{
