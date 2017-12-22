@@ -132,25 +132,43 @@ void Player::move(const glm::dvec3& acceleration)
 	{
 		if(move_vec.y < 0)
 		{
+			bool onGroundCheck = false;
 			const position::block_in_world pos_feet_new(glm::dvec3(position.x, position.y + move_vec.y, position.z));
-			const shared_ptr<block::base> block = g.world.get_block(pos_feet_new);
-			if(block->is_solid())
+			shared_ptr<block::base> blockOn;
+			bool blockOnBelow = false;
+			int_fast64_t offsetx;
+			int_fast64_t offsetz;
+			for(offsetx = -1; offsetx <= 1; ++offsetx)
+			for (offsetz = -1; offsetz <= 1; ++offsetz)
+			{
+				blockOn = g.world.get_block( position::block_in_world (
+					pos_feet_new.x + (offsetx * abs_offset),
+					pos_feet_new.y,
+					pos_feet_new.z + (offsetz * abs_offset)));
+
+				if (blockOn->is_solid()) {
+					if (offsetx == 0 && offsetz == 0)
+						blockOnBelow = true;
+					onGroundCheck = true;
+				}
+			}
+
+			if (onGroundCheck)
+			if (flags.on_ground)
 			{
 				position.y = pos_feet_new.y + 1;
-				if(flags.on_ground)
+				if (flags.on_ground)
 				{
 					velocity.y = 0;
 				}
 				else
 				{
-					velocity.y *= -block->bounciness();
-					flags.on_ground = true;
+					velocity.y *= -blockOn->bounciness();
 				}
 			}
-			else
-			{
-				flags.on_ground = false;
-			}
+
+			flags.on_ground = onGroundCheck;
+
 		}
 		else if(move_vec.y > 0)
 		{
