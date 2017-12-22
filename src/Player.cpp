@@ -147,9 +147,23 @@ void Player::move(const glm::dvec3& acceleration)
 					pos_feet_new.z + (offsetz * abs_offset)));
 
 				if (blockOn->is_solid()) {
-					if (offsetx == 0 && offsetz == 0)
-						blockOnBelow = true;
-					onGroundCheck = true;
+					if (pos_feet_new.y <= position.y - 0.5) {
+						int_fast64_t offsety;
+						bool blockBlocking = false;
+						for (offsety = 1; offsety <= height && !blockBlocking; ++offsety) {
+							shared_ptr<block::base> blockingCheck = g.world.get_block(position::block_in_world(
+								pos_feet_new.x + (offsetx * abs_offset),
+								pos_feet_new.y + offsety,
+								pos_feet_new.z + (offsetz * abs_offset)));
+							if (blockingCheck->is_solid())
+								blockBlocking = true;
+						}
+						if (!blockBlocking) {
+							if (offsetx == 0 && offsetz == 0)
+								blockOnBelow = true;
+							onGroundCheck = true;
+						}
+					}
 				}
 			}
 
