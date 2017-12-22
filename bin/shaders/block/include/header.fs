@@ -1,6 +1,7 @@
 #version 330
 
 const float M_TAU = 6.283185307179586476925286766559;
+const float CHUNK_SIZE = 32; // !!! this needs to match the value in src/fwd/chunk/Chunk.hpp
 
 uniform float global_time;
 uniform sampler2DArray tex;
