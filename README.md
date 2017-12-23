@@ -48,8 +48,8 @@ libpng | ❌
 
 The only compilers that I guarantee will work are:
 
- * ~~GCC == 7.2.1~~ (currently broken)
- * Clang == 5.0.0
+ * GCC == 7.2.1
+ * Clang == 5.0.1
 
 Other versions of these compilers might work, but I do not guarantee that they do. I also do not guarantee that any other compilers work, although I do try to stick to standard C++ and use `#ifdef`s around non-standard features.
 
