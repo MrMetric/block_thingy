@@ -138,14 +138,14 @@ void Player::move(const glm::dvec3& acceleration)
 			bool block_on_below = false;
 			int_fast64_t offset_x;
 			int_fast64_t offset_z;
-			for(offset_x = -1; offset_x <= 1; ++offset_x) 
+			for(offset_x = -1; offset_x <= 1; ++offset_x)
 			{
 				for(offset_z = -1; offset_z <= 1; ++offset_z)
 				{
 					block_on = g.world.get_block(position::block_in_world(
-						pos_feet_new.x + (offset_x * abs_offset),
+						static_cast<position::block_in_world::value_type>(std::floor(position.x + (offset_x * abs_offset))),
 						pos_feet_new.y,
-						pos_feet_new.z + (offset_z * abs_offset)));
+						static_cast<position::block_in_world::value_type>(std::floor(position.z + (offset_z * abs_offset)))));
 
 					if(block_on->is_solid() && pos_feet_new.y <= position.y - 0.5)
 					{
@@ -153,10 +153,10 @@ void Player::move(const glm::dvec3& acceleration)
 						bool block_blocking = false;
 						for(offset_y = 1; offset_y <= height; ++offset_y)
 						{
-							shared_ptr<block::base> blocking_check = g.world.get_block(position::block_in_world(
-								pos_feet_new.x + (offset_x * abs_offset),
+							shared_ptr<block::base> blocking_check = g.world.get_block(position::block_in_world(glm::dvec3(
+								static_cast<position::block_in_world::value_type>(std::floor(position.x + (offset_x * abs_offset))),
 								pos_feet_new.y + offset_y,
-								pos_feet_new.z + (offset_z * abs_offset)));
+								static_cast<position::block_in_world::value_type>(std::floor(position.z + (offset_z * abs_offset))))));
 							if(blocking_check->is_solid())
 							{
 								block_blocking = true;
@@ -177,7 +177,7 @@ void Player::move(const glm::dvec3& acceleration)
 
 			if(on_ground_check)
 			{
-				position.y = pos_feet_new.y + 1;
+				static_cast<position::block_in_world::value_type>(position.y = std::round(pos_feet_new.y + 1));
 				if(flags.on_ground)
 				{
 					velocity.y = 0;
