@@ -132,25 +132,61 @@ void Player::move(const glm::dvec3& acceleration)
 	{
 		if(move_vec.y < 0)
 		{
+			bool on_ground_check = false;
 			const position::block_in_world pos_feet_new(glm::dvec3(position.x, position.y + move_vec.y, position.z));
-			const shared_ptr<block::base> block = g.world.get_block(pos_feet_new);
-			if(block->is_solid())
+			shared_ptr<block::base> block_on;
+			bool block_on_below = false;
+			for(int_fast64_t offset_x = -1; offset_x <= 1; ++offset_x)
 			{
-				position.y = pos_feet_new.y + 1;
+				for(int_fast64_t offset_z = -1; offset_z <= 1; ++offset_z)
+				{
+					block_on = g.world.get_block(position::block_in_world(glm::dvec3(
+						position.x + offset_x * abs_offset,
+						pos_feet_new.y,
+						position.z + offset_z * abs_offset)));
+
+					if(block_on->is_solid() && pos_feet_new.y <= position.y - 0.5)
+					{
+						int_fast64_t offset_y;
+						bool block_blocking = false;
+						for(offset_y = 1; offset_y <= height; ++offset_y)
+						{
+							shared_ptr<block::base> blocking_check = g.world.get_block(position::block_in_world(glm::dvec3(
+								position.x + offset_x * abs_offset,
+								pos_feet_new.y + offset_y,
+								position.z + offset_z * abs_offset)));
+							if(blocking_check->is_solid())
+							{
+								block_blocking = true;
+								break;
+							}
+						}
+						if(!block_blocking) 
+						{
+							if(offset_x == 0 && offset_z == 0)
+							{
+								block_on_below = true;
+							}
+							on_ground_check = true;
+						}
+					}
+				}
+			}
+
+			if(on_ground_check)
+			{
+				position.y = static_cast<position::block_in_world::value_type>(std::round(pos_feet_new.y + 1));
 				if(flags.on_ground)
 				{
 					velocity.y = 0;
 				}
 				else
 				{
-					velocity.y *= -block->bounciness();
-					flags.on_ground = true;
+					velocity.y *= -block_on->bounciness();
 				}
 			}
-			else
-			{
-				flags.on_ground = false;
-			}
+
+			flags.on_ground = on_ground_check;
 		}
 		else if(move_vec.y > 0)
 		{
