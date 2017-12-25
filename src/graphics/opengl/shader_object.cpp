@@ -96,6 +96,7 @@ string do_include(const fs::path& file_path, std::size_t file_number, std::vecto
 	std::size_t line_number = 1;
 	for(string line; std::getline(input, line); ++line_number)
 	{
+		util::replace(line, "BT_CHUNK_SIZE", BT_CHUNK_SIZE_STR);
 		if(file_number != 0 && line_number == 1)
 		{
 			if(util::string_starts_with(line, "#version"))

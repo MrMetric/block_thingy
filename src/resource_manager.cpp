@@ -520,7 +520,7 @@ resource<shader_object> resource_manager::get_shader_object(fs::path path, const
 	{
 		// the shader object is not in the cache, so compile and add it
 		i = pImpl->cache_shader_object.emplace(path.string(), std::make_unique<shader_object>(path, type)).first;
-	#ifdef BT_RELOADABLE_SHADERS
+	#ifdef BT_WATCH_SHADERS
 		pImpl->file_watcher.add_watch(path);
 	#endif
 	}

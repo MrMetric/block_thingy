@@ -3,7 +3,7 @@
 #include <ostream>
 #include <sstream>
 
-#ifdef DEBUG_BUILD
+#ifdef BT_DEBUG_BUILD
 	#include <stdexcept>
 #endif
 
@@ -28,7 +28,7 @@ block_in_chunk::block_in_chunk(const value_type x, const value_type y, const val
 	y(y),
 	z(z)
 {
-#ifdef DEBUG_BUILD
+#ifdef BT_DEBUG_BUILD
 	check_bounds();
 #endif
 }
@@ -57,7 +57,7 @@ block_in_chunk& block_in_chunk::operator+=(const block_in_chunk& that)
 	x += that.x;
 	y += that.y;
 	z += that.z;
-#ifdef DEBUG_BUILD
+#ifdef BT_DEBUG_BUILD
 	check_bounds();
 #endif
 	return *this;
@@ -78,7 +78,7 @@ block_in_chunk::operator block_in_chunk::vec_type() const
 	return {x, y, z};
 }
 
-#ifdef DEBUG_BUILD
+#ifdef BT_DEBUG_BUILD
 void block_in_chunk::check_bounds()
 {
 	if(x >= CHUNK_SIZE

@@ -89,7 +89,7 @@ int main(const int argc, char** argv)
 	CodePageHandler cp(CP_UTF8);
 #endif
 
-#ifdef DEBUG_BUILD
+#ifdef BT_DEBUG_BUILD
 	LOG(INFO) << "This is a debug build\n";
 #endif
 

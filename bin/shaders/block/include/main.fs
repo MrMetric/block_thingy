@@ -56,7 +56,7 @@ void main()
 	{
 		lpos[iz] += 0.5;
 	}
-	const float div = CHUNK_SIZE + 2;
+	const float div = BT_CHUNK_SIZE + 2;
 #ifndef NO_FANCY_LIGHT_SMOOTHING
 	if(light_smoothing == 2)
 	{

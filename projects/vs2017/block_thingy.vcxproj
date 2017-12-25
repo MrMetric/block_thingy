@@ -346,7 +346,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;DEBUG_BUILD;GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;BT_CHUNK_SIZE=32;BT_CHUNK_SIZE_STR="32";BT_DEBUG_BUILD;GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
@@ -368,7 +368,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;DEBUG_BUILD;GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;BT_CHUNK_SIZE=32;BT_CHUNK_SIZE_STR="32";BT_DEBUG_BUILD;GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
@@ -392,7 +392,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;BT_CHUNK_SIZE=32;BT_CHUNK_SIZE_STR="32";GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
@@ -418,7 +418,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;BT_CHUNK_SIZE=32;BT_CHUNK_SIZE_STR="32";GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>

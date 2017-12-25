@@ -4,7 +4,7 @@
 #include <iosfwd>
 #include <stdint.h>
 
-#ifdef DEBUG_BUILD
+#ifdef BT_DEBUG_BUILD
 	#include <stdexcept>
 	#include <string>
 #endif
@@ -26,7 +26,7 @@ struct chunk_in_world
 
 	value_type operator[](const std::ptrdiff_t i) const
 	{
-	#ifdef DEBUG_BUILD
+	#ifdef BT_DEBUG_BUILD
 		if(i > 2)
 		{
 			throw std::out_of_range("position::chunk_in_world::operator[]: " + std::to_string(i) + " > 2");
@@ -36,7 +36,7 @@ struct chunk_in_world
 	}
 	value_type& operator[](const std::ptrdiff_t i)
 	{
-	#ifdef DEBUG_BUILD
+	#ifdef BT_DEBUG_BUILD
 		if(i > 2)
 		{
 			throw std::out_of_range("position::chunk_in_world::operator[]: " + std::to_string(i) + " > 2");

@@ -535,7 +535,7 @@ static GLuint make_program(const std::vector<GLuint>& objects, const string& deb
 		throw std::runtime_error("error linking program " + debug_name + ":\n" + log);
 	}
 
-#ifdef DEBUG_BUILD
+#ifdef BT_DEBUG_BUILD
 	glValidateProgram(program);
 	glGetProgramiv(program, GL_VALIDATE_STATUS, &is_good);
 	if(!is_good)

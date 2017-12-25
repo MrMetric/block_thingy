@@ -26,7 +26,7 @@ std::streambuf::int_type nullbuf::overflow(std::streambuf::int_type c)
 
 std::ostream& log(const string& category)
 {
-	#ifndef DEBUG_BUILD
+	#ifndef BT_DEBUG_BUILD
 	if(category == "DEBUG")
 	{
 		static nullbuf null_buffer;
@@ -42,7 +42,7 @@ std::ostream& log(const string& category)
 	{
 		// no formatting
 	}
-#ifdef DEBUG_BUILD
+#ifdef BT_DEBUG_BUILD
 	else if(category == "DEBUG")
 	{
 		o << format::blue;

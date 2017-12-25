@@ -40,6 +40,15 @@ inline std::string strip_whitespace(std::string s)
 	return strip(s, " \t\r\n");
 }
 
+inline void replace(std::string& s, const std::string& a, const std::string& b)
+{
+	auto i = s.find(a);
+	if(i != std::string::npos)
+	{
+		s.replace(i, a.size(), b);
+	}
+}
+
 template<typename T>
 inline void delete_element(T& t, typename T::value_type e)
 {
