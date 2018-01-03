@@ -8,6 +8,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -48,6 +49,7 @@
 #include "position/block_in_chunk.hpp"
 #include "position/block_in_world.hpp"
 #include "position/chunk_in_world.hpp"
+#include "util/demangled_name.hpp"
 #include "util/filesystem.hpp"
 #include "util/key_press.hpp"
 #include "util/logger.hpp"
@@ -59,6 +61,14 @@ using std::string;
 using std::unique_ptr;
 
 namespace block_thingy {
+
+namespace detail {
+
+gui_maker_base::~gui_maker_base()
+{
+}
+
+}
 
 game* game::instance = nullptr;
 
@@ -88,6 +98,8 @@ struct game::impl
 	std::vector<Command> commands;
 	void add_commands();
 
+	std::unordered_map<string, unique_ptr<detail::gui_maker_base>> gui_makers;
+	graphics::gui::Base* root_gui;
 	unique_ptr<graphics::gui::Base> temp_gui;
 
 	bool just_opened_gui;
@@ -133,7 +145,12 @@ game::game()
 		block_registry.reset_extid_map();
 	}
 
-	gui = std::make_unique<graphics::gui::Play>(*this);
+	register_gui<graphics::gui::Console>("console");
+	register_gui<graphics::gui::Pause>("pause");
+	register_gui<graphics::gui::Play>("play");
+
+	gui = make_gui("play");
+	pImpl->root_gui = gui.get();
 	gui->init();
 
 	gfx.hook_events(event_manager);
@@ -155,13 +172,13 @@ game::game()
 		assert(window == Gfx::instance->window);
 		if(!focused)
 		{
-			if(game::instance->gui->type() == "Play")
+			if(game::instance->gui->type() == "play")
 			{
-				Console::instance->run_line("open_gui Pause");
+				Console::instance->run_line("open_gui pause");
 			}
 		}
 		// check if pause because a focus event is sent when the game starts
-		else if(game::instance->gui->type() == "Pause")
+		else if(game::instance->gui->type() == "pause")
 		{
 			// when the game is paused after losing focus, the cursor stays hidden
 			// GLFW ignores setting the cursor to its current state, so re-hide it first
@@ -355,6 +372,16 @@ void game::draw_world
 	}
 }
 
+unique_ptr<graphics::gui::Base> game::make_gui(const string& type)
+{
+	const auto i = pImpl->gui_makers.find(type);
+	if(i == pImpl->gui_makers.cend())
+	{
+		return nullptr;
+	}
+	return i->second->make(*this);
+}
+
 void game::open_gui(unique_ptr<graphics::gui::Base> gui)
 {
 	if(gui == nullptr)
@@ -375,9 +402,18 @@ void game::open_gui(unique_ptr<graphics::gui::Base> gui)
 
 void game::close_gui()
 {
+	if(gui->parent == nullptr)
+	{
+		if(gui.get() != pImpl->root_gui)
+		{
+			LOG(BUG) << "attempted to close a GUI which erroneously has no parent (type: " << gui->type() << ")\n";
+		}
+		return;
+	}
+
 	// code may be running in the GUI, such as from clicking the Resume button in the pause menu
 	// after immediate destructing, graphics::gui::widget::Container will continue its mousepress loop
-	// this could crash the engine, so temp_gui keeps it for the rest of the frame
+	// this invokes undefined behavior, so temp_gui keeps it for the rest of the frame
 	pImpl->temp_gui = std::move(gui);
 	gui = std::move(pImpl->temp_gui->parent);
 	gui->init();
@@ -466,6 +502,11 @@ void game::joypress(const int joystick, const int button, const bool pressed)
 void game::joymove(const glm::dvec2& offset)
 {
 	gui->joymove(offset);
+}
+
+void game::register_gui(const string& type, unique_ptr<detail::gui_maker_base> maker)
+{
+	pImpl->gui_makers.emplace(type, std::move(maker));
 }
 
 void game::impl::find_hovered_block()
@@ -789,26 +830,29 @@ void game::impl::add_commands()
 	{
 		if(args.size() != 1)
 		{
-			LOG(ERROR) << "Usage: open_gui <string: name>\n";
+			LOG(ERROR) << "Usage: open_gui <string: type>\n";
 			return;
 		}
-		const string name = args[0];
+		const string& type = args[0];
+		if(g.gui->type() == type)
+		{
+			return;
+		}
+
 		unique_ptr<graphics::gui::Base> gui;
-		if(g.gui->type() == name)
+		try
 		{
+			gui = g.make_gui(type);
+		}
+		catch(const std::exception& e)
+		{
+			LOG(ERROR) << "got " << util::demangled_name(e) << " while opening \"" << type << "\" GUI: " << e.what() << '\n';
 			return;
 		}
-		if(name == "Pause")
+
+		if(gui == nullptr)
 		{
-			gui = std::make_unique<graphics::gui::Pause>(g);
-		}
-		else if(name == "Console")
-		{
-			gui = std::make_unique<graphics::gui::Console>(g);
-		}
-		else
-		{
-			LOG(ERROR) << "No such GUI: " << name << '\n';
+			LOG(ERROR) << "no such GUI type: " << type << '\n';
 			return;
 		}
 		g.open_gui(std::move(gui));

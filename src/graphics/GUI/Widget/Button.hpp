@@ -32,9 +32,25 @@ public:
 	void on_click(std::function<void()> click_handler);
 
 	glm::dvec4 color;
-	glm::dvec4 hover_color;
+	glm::dvec4 color_disabled;
+	glm::dvec4 color_hover;
+	const glm::dvec4& get_color() const;
+
+	bool get_enabled() const
+	{
+		return enabled;
+	}
+	void set_enabled(const bool e)
+	{
+		enabled = e;
+		if(!e)
+		{
+			mousedown = false;
+		}
+	}
 
 private:
+	bool enabled;
 	bool mousedown;
 	std::string text;
 	glm::dvec2 text_size;

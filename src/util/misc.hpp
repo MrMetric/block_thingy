@@ -43,7 +43,16 @@ inline std::string strip_whitespace(std::string s)
 inline void replace(std::string& s, const std::string& a, const std::string& b)
 {
 	auto i = s.find(a);
-	if(i != std::string::npos)
+	while(i != std::string::npos)
+	{
+		s.replace(i, a.size(), b);
+		i = s.find(a, i + b.size());
+	}
+}
+
+inline void replace_once(std::string& s, const std::string& a, const std::string& b)
+{
+	if(const auto i = s.find(a); i != std::string::npos)
 	{
 		s.replace(i, a.size(), b);
 	}

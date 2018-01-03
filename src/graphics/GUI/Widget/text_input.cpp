@@ -1,4 +1,4 @@
-#include "TextInput.hpp"
+#include "text_input.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -21,7 +21,7 @@ using std::string;
 
 namespace block_thingy::graphics::gui::widget {
 
-TextInput::TextInput
+text_input::text_input
 (
 	const string& content,
 	const string& placeholder
@@ -39,16 +39,16 @@ TextInput::TextInput
 	style["size.y"] = 40.0;
 }
 
-string TextInput::type() const
+string text_input::type() const
 {
-	return "TextInput";
+	return "text_input";
 }
 
-void TextInput::draw()
+void text_input::draw()
 {
 	Base::draw();
 
-	Gfx::instance->draw_rectangle(position, size, invalid ? glm::dvec4(0.2, 0.01, 0.02, 0.85) : glm::dvec4(0.01, 0.01, 0.02, 0.85));
+	Gfx::instance->draw_rectangle(position, size, invalid ? glm::dvec4(0.2, 0.02, 0.04, 0.85) : glm::dvec4(0.02, 0.02, 0.04, 0.85));
 
 	glm::dvec2 text_pos;
 	double cursor_offset;
@@ -118,7 +118,7 @@ void TextInput::draw()
 	}
 }
 
-void TextInput::keypress(const util::key_press& press)
+void text_input::keypress(const util::key_press& press)
 {
 	if(!focus) return;
 	if(press.action == GLFW_RELEASE) return; // must be press or repeat
@@ -324,7 +324,7 @@ void TextInput::keypress(const util::key_press& press)
 	}
 }
 
-void TextInput::charpress(const util::char_press& press)
+void text_input::charpress(const util::char_press& press)
 {
 	if(!focus) return;
 
@@ -343,7 +343,7 @@ void TextInput::charpress(const util::char_press& press)
 	blink_start_time = glfwGetTime();
 }
 
-void TextInput::mousepress(const util::mouse_press& press)
+void text_input::mousepress(const util::mouse_press& press)
 {
 	// TODO: option for left-handed mouse
 	if(press.button == GLFW_MOUSE_BUTTON_LEFT)
@@ -353,7 +353,7 @@ void TextInput::mousepress(const util::mouse_press& press)
 	}
 }
 
-void TextInput::read_layout(const json& layout)
+void text_input::read_layout(const json& layout)
 {
 	Base::read_layout(layout);
 
@@ -361,12 +361,12 @@ void TextInput::read_layout(const json& layout)
 	placeholder = get_layout_var<string>(layout, "placeholder", "");
 }
 
-string TextInput::get_text() const
+string text_input::get_text() const
 {
 	return content.get8();
 }
 
-void TextInput::set_text(const string& text)
+void text_input::set_text(const string& text)
 {
 	const string old = content.get8();
 	if(text == old) return;
@@ -378,7 +378,7 @@ void TextInput::set_text(const string& text)
 	blink_start_time = glfwGetTime();
 }
 
-void TextInput::clear()
+void text_input::clear()
 {
 	if(content.empty()) return;
 
@@ -392,7 +392,7 @@ void TextInput::clear()
 }
 
 // TODO: using this will not unfocus any other focused text input
-void TextInput::set_focus(const bool focus)
+void text_input::set_focus(const bool focus)
 {
 	this->focus = focus;
 	if(focus)
@@ -401,12 +401,12 @@ void TextInput::set_focus(const bool focus)
 	}
 }
 
-void TextInput::on_change(on_change_callback_t callback)
+void text_input::on_change(on_change_callback_t callback)
 {
 	on_change_callbacks.emplace_back(callback);
 }
 
-void TextInput::trigger_on_change(const string& old_value)
+void text_input::trigger_on_change(const string& old_value)
 {
 	const string new_value = content.get8();
 	for(on_change_callback_t& callback : on_change_callbacks)
@@ -415,12 +415,12 @@ void TextInput::trigger_on_change(const string& old_value)
 	}
 }
 
-void TextInput::on_keypress(on_keypress_callback_t callback)
+void text_input::on_keypress(on_keypress_callback_t callback)
 {
 	on_keypress_callbacks.emplace_back(callback);
 }
 
-void TextInput::trigger_on_keypress(const util::key_press& press)
+void text_input::trigger_on_keypress(const util::key_press& press)
 {
 	for(on_keypress_callback_t& callback : on_keypress_callbacks)
 	{
@@ -428,7 +428,7 @@ void TextInput::trigger_on_keypress(const util::key_press& press)
 	}
 }
 
-void TextInput::delete_selection()
+void text_input::delete_selection()
 {
 	assert(selection_start != cursor_pos);
 	const string old = content.get8();

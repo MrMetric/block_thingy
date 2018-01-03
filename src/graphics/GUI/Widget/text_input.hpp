@@ -10,10 +10,10 @@
 
 namespace block_thingy::graphics::gui::widget {
 
-class TextInput : public Base
+class text_input : public Base
 {
 public:
-	TextInput
+	text_input
 	(
 		const std::string& content = "",
 		const std::string& placeholder = ""
@@ -35,11 +35,11 @@ public:
 
 	void set_focus(bool);
 
-	using on_change_callback_t = std::function<void(TextInput&, const std::string& old_value, const std::string& new_value)>;
+	using on_change_callback_t = std::function<void(text_input&, const std::string& old_value, const std::string& new_value)>;
 	void on_change(on_change_callback_t);
 	void trigger_on_change(const std::string& old_value);
 
-	using on_keypress_callback_t = std::function<void(TextInput&, const util::key_press&)>;
+	using on_keypress_callback_t = std::function<void(text_input&, const util::key_press&)>;
 	void on_keypress(on_keypress_callback_t);
 	void trigger_on_keypress(const util::key_press&);
 

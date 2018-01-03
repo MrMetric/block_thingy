@@ -6,7 +6,7 @@
 #include "fwd/game.hpp"
 #include "Player.hpp"
 #include "block/enums/visibility_type.hpp"
-#include "graphics/GUI/Light.hpp"
+#include "graphics/GUI/light.hpp"
 #include "storage/Interface.hpp"
 #include "storage/msgpack/color.hpp"
 #include "fwd/world/world.hpp"
@@ -46,7 +46,7 @@ void test_light::use_start
 	const enums::Face /*face*/
 )
 {
-	player.open_gui(std::make_unique<graphics::gui::Light>(g, world, *this, pos));
+	player.open_gui(std::make_unique<graphics::gui::light>(g, world, *this, pos));
 }
 
 void test_light::save(storage::OutputInterface& i) const

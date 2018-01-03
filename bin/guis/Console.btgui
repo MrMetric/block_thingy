@@ -1,20 +1,31 @@
 {
-	"pos" = "parent.pos"
-	"size" = "parent.size"
+	"layout" =
+	{
+		"pos" = "parent.pos"
+		"size" = "parent.size"
+	}
 	"widgets" =
 	[
 		{
-			"type" = "Text"
+			"type" = "text"
 			"text" = "Console"
-			"center.x" = "parent.center.x"
-			"pos.y" = 8
+
+			"layout" =
+			{
+				"center.x" = "parent.center.x"
+				"pos.y" = 8
+			}
 		}
 		{
-			"type" = "TextInput"
+			"type" = "text_input"
 			"id" = "input"
-			"pos.x" = "parent.pos.x"
-			"end.y" = "parent.end.y"
-			"size.x" = "parent.size.x"
+
+			"layout" =
+			{
+				"pos.x" = "parent.pos.x"
+				"end.y" = "parent.end.y"
+				"size.x" = "parent.size.x"
+			}
 		}
 	]
 }

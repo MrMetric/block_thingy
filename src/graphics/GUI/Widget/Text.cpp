@@ -22,7 +22,7 @@ Text::Text
 
 string Text::type() const
 {
-	return "Text";
+	return "text";
 }
 
 void Text::draw()

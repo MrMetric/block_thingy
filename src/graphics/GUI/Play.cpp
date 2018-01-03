@@ -38,7 +38,7 @@ Play::Play(game& g)
 
 string Play::type() const
 {
-	return "Play";
+	return "play";
 }
 
 void Play::init()
@@ -50,7 +50,7 @@ void Play::init()
 
 void Play::close()
 {
-	Console::instance->run_line("open_gui Pause");
+	Console::instance->run_line("open_gui pause");
 }
 
 void Play::draw()

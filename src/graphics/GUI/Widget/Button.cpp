@@ -17,8 +17,10 @@ Button::Button
 	const string& text
 )
 :
-	color(0.01, 0.01, 0.02, 0.85),
-	hover_color(0, 0, 0, 1),
+	color(0.02, 0.02, 0.04, 0.85),
+	color_disabled(0.04, 0.02, 0.02, 0.85),
+	color_hover(0, 0, 0, 1),
+	enabled(true),
 	mousedown(false)
 {
 	set_text(text);
@@ -28,14 +30,14 @@ Button::Button
 
 string Button::type() const
 {
-	return "Button";
+	return "button";
 }
 
 void Button::draw()
 {
 	Base::draw();
 
-	Gfx::instance->draw_rectangle(position, size, hover ? hover_color : color);
+	Gfx::instance->draw_rectangle(position, size, get_color());
 	Gfx::instance->gui_text.draw(text, text_position);
 }
 
@@ -43,6 +45,10 @@ void Button::mousepress(const util::mouse_press& press)
 {
 	// TODO: option for left-handed mouse
 	if(press.button != GLFW_MOUSE_BUTTON_LEFT)
+	{
+		return;
+	}
+	if(!enabled)
 	{
 		return;
 	}
@@ -76,41 +82,56 @@ void Button::read_layout(const json& layout)
 
 	set_text(get_layout_var<string>(layout, "text", ""));
 
-	const json command = *layout.find("command");
-	if(command.is_string())
+	if(const auto i_command = layout.find("command"); i_command != layout.cend())
 	{
-		const string c = command;
-		on_click([c]()
+		const json& command = *i_command;
+		if(command.is_string())
 		{
-			Console::instance->run_line(c);
-		});
-	}
-	else if(command.is_array())
-	{
-		bool good = true;
-		for(const json& c : command)
-		{
-			if(!c.is_string())
+			const string c = command.get<string>();
+			on_click([c]()
 			{
-				LOG(ERROR) << "Button command list has a non-string (" << c.type_name() << ")\n";
-				good = false;
-			}
-		}
-		if(good)
-		{
-			const std::vector<string> commands = command;
-			on_click([commands]()
-			{
-				for(const string& c : commands)
-				{
-					Console::instance->run_line(c);
-				}
+				Console::instance->run_line(c);
 			});
 		}
+		else if(command.is_array())
+		{
+			bool good = true;
+			for(const json& c : command)
+			{
+				if(!c.is_string())
+				{
+					LOG(ERROR) << "button command list has a non-string (" << c.type_name() << ")\n";
+					good = false;
+				}
+			}
+			if(good)
+			{
+				const std::vector<string> commands = command;
+				on_click([commands]()
+				{
+					for(const string& c : commands)
+					{
+						Console::instance->run_line(c);
+					}
+				});
+			}
+		}
+		else
+		{
+			LOG(ERROR) << "button property \"command\" must be a string or a string list, but is " << command.type_name() << '\n';
+		}
 	}
-	else
+
+	if(const auto i_enabled = layout.find("enabled"); i_enabled != layout.cend())
 	{
-		LOG(ERROR) << "Button command should be a string or a string list, but is " << command.type_name() << '\n';
+		if(i_enabled->is_boolean())
+		{
+			set_enabled(i_enabled->get<bool>());
+		}
+		else
+		{
+			LOG(ERROR) << "button property \"enabled\" must be a boolean, but is " << i_enabled->type_name() << '\n';
+		}
 	}
 }
 
@@ -133,6 +154,19 @@ void Button::set_text(const string& text)
 void Button::on_click(std::function<void()> click_handler)
 {
 	click_handlers.emplace_back(std::move(click_handler));
+}
+
+const glm::dvec4& Button::get_color() const
+{
+	if(!enabled)
+	{
+		return color_disabled;
+	}
+	if(hover)
+	{
+		return color_hover;
+	}
+	return color;
 }
 
 }

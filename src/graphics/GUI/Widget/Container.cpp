@@ -8,7 +8,7 @@
 #include "console/Console.hpp"
 #include "graphics/GUI/Widget/Button.hpp"
 #include "graphics/GUI/Widget/Text.hpp"
-#include "graphics/GUI/Widget/TextInput.hpp"
+#include "graphics/GUI/Widget/text_input.hpp"
 #include "util/misc.hpp"
 
 using std::string;
@@ -21,15 +21,15 @@ Container::Container()
 
 string Container::type() const
 {
-	return "Container";
+	return "container";
 }
 
 void Container::draw()
 {
 	if(settings::get<bool>("show_container_bounds"))
 	{
-		Gfx::instance->draw_rectangle(position, size, {0.2, 0.1, 0, 0.4});
-		Gfx::instance->draw_border(position, size, glm::dvec4(2), {0, 0, 0.1, 0.4});
+		Gfx::instance->draw_rectangle(position, size, {0.8, 0.4, 0, 0.4});
+		Gfx::instance->draw_border(position, size, glm::dvec4(2), {0, 0, 0.4, 0.4});
 	}
 	for(auto& widget : widgets)
 	{
@@ -146,11 +146,11 @@ void Container::read_layout(const json& layout)
 	const json::const_iterator i_auto_layout = layout.find("auto_layout");
 	if(i_auto_layout != layout.cend())
 	{
-		if(!i_auto_layout->is_object())
+		const json& auto_layout = *i_auto_layout;
+		if(!auto_layout.is_object())
 		{
 			// TODO: warning/error
 		}
-		const json& auto_layout = *i_auto_layout;
 		const string type = get_layout_var<string>(auto_layout, "type");
 		if(type != "column" && type != "row")
 		{
@@ -185,29 +185,30 @@ void Container::read_layout(const json& layout)
 	const json::const_iterator i_widgets = layout.find("widgets");
 	if(i_widgets != layout.cend())
 	{
-		if(!i_widgets->is_array())
+		const json& widgets = *i_widgets;
+		if(!widgets.is_array())
 		{
 			// TODO: warning/error
 		}
-		for(const json& w_layout : *i_widgets)
+		for(const json& w_layout : widgets)
 		{
 			const string type = get_layout_var<string>(w_layout, "type");
 			Base* widget;
-			if(type == "Button")
+			if(type == "button")
 			{
 				widget = &add<Button>();
 			}
-			else if(type == "Container")
+			else if(type == "container")
 			{
 				widget = &add<Container>();
 			}
-			else if(type == "Text")
+			else if(type == "text")
 			{
 				widget = &add<Text>();
 			}
-			else if(type == "TextInput")
+			else if(type == "text_input")
 			{
-				widget = &add<TextInput>();
+				widget = &add<text_input>();
 			}
 			else
 			{
@@ -215,7 +216,7 @@ void Container::read_layout(const json& layout)
 				throw std::runtime_error("unknown widget type: " + type);
 			}
 
-			if(type == "Button" || type == "TextInput")
+			if(type == "button" || type == "text_input")
 			{
 				widget->set_border_size(glm::dvec4(2));
 				widget->set_border_color(glm::dvec4(1));

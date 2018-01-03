@@ -82,10 +82,9 @@ void Base::set_border_color(glm::dvec4 v)
 	border_color = std::move(v);
 }
 
-void Base::read_layout(const json& layout)
+void Base::read_layout(const json& j)
 {
-	const json::const_iterator i_id = layout.find("id");
-	if(i_id != layout.cend())
+	if(const auto i_id = j.find("id"); i_id != j.cend())
 	{
 		if(i_id->is_string())
 		{
@@ -97,17 +96,39 @@ void Base::read_layout(const json& layout)
 		}
 	}
 
+	const auto i_layout = j.find("layout");
+	if(i_layout == j.cend())
+	{
+		return;
+	}
+	const json& layout = *i_layout;
+
+	// TODO: this is shit
 	auto translate_vec2 = [this, &layout](const string& name)
 	{
-		const json::const_iterator i = layout.find(name);
-		if(i != layout.cend())
+		if(const auto i = layout.find(name); i != layout.cend())
 		{
 			if(i->is_string())
 			{
-				const string value = *i;
-				// TODO: handle `value == "default"`
-				style[name + ".x"] = value + ".x";
-				style[name + ".y"] = value + ".y";
+				const string value = i->get<string>();
+
+				string value_x = value;
+				util::replace(value_x, "center", "center.x");
+				util::replace(value_x, "end"   , "end.x"   );
+				util::replace(value_x, "pos"   , "pos.x"   );
+				util::replace(value_x, "size"  , "size.x"  );
+				style[name + ".x"] = value_x;
+
+				string value_y = value;
+				util::replace(value_y, "center", "center.y");
+				util::replace(value_y, "end"   , "end.y"   );
+				util::replace(value_y, "pos"   , "pos.y"   );
+				util::replace(value_y, "size"  , "size.y"  );
+				style[name + ".y"] = value_y;
+			}
+			else if(i->is_number())
+			{
+				style[name + ".x"] = style[name + ".y"] = i->get<double>();
 			}
 			else
 			{
@@ -123,20 +144,14 @@ void Base::read_layout(const json& layout)
 	for(json::const_iterator i = layout.cbegin(); i != layout.cend(); ++i)
 	{
 		const string& k = i.key();
-		// TODO: better not-layout checking
-		if(k == "type" || k == "id" || k == "text" || k == "command" || k == "placeholder")
+		const json& v = i.value();
+		if(v.is_number())
 		{
-			continue;
+			style[k] = v.get<double>();
 		}
-		const json& j = i.value();
-		if(j.is_number())
+		else if(v.is_string())
 		{
-			style[k] = j.get<double>();
-		}
-		else if(j.is_string())
-		{
-			const string s = j.get<string>();
-			if(s != "default")
+			if(const string s = v.get<string>(); s != "default")
 			{
 				style[k] = s;
 			}
@@ -152,18 +167,20 @@ void Base::apply_layout
 {
 	solver.add_constraints
 	({
-		style_vars["pos.x"] == style_vars["center.x"] - style_vars["size.x"] / 2,
-		style_vars["pos.y"] == style_vars["center.y"] - style_vars["size.y"] / 2,
-		style_vars["end.x"] == style_vars["pos.x"] + style_vars["size.x"],
-		style_vars["end.y"] == style_vars["pos.y"] + style_vars["size.y"],
+		style_vars["size.x"] >= 0 | rhea::strength::required(),
+		style_vars["size.y"] >= 0 | rhea::strength::required(),
+		style_vars["pos.x"] == style_vars["center.x"] - style_vars["size.x"] / 2 | rhea::strength::required(),
+		style_vars["pos.y"] == style_vars["center.y"] - style_vars["size.y"] / 2 | rhea::strength::required(),
+		style_vars["end.x"] == style_vars["pos.x"] + style_vars["size.x"] | rhea::strength::required(),
+		style_vars["end.y"] == style_vars["pos.y"] + style_vars["size.y"] | rhea::strength::required(),
 	});
 
 	for(const auto& p : style)
 	{
-		const double* d;
-		if((d = p.second.get<double>()) != nullptr)
+		if(const double* d = p.second.get<double>(); d != nullptr)
 		{
 			solver.add_constraint(style_vars[p.first] == *d);
+			continue;
 		}
 
 		// TODO: better checking
@@ -171,8 +188,7 @@ void Base::apply_layout
 		{
 			continue;
 		}
-		const string* s;
-		if((s = p.second.get<string>()) != nullptr && !s->empty())
+		if(const string* s = p.second.get<string>(); s != nullptr && !s->empty())
 		{
 			if(util::string_starts_with(*s, "parent."))
 			{
@@ -190,8 +206,8 @@ void Base::use_layout()
 {
 	position.x = style_vars["pos.x"].value() + border_size.x;
 	position.y = style_vars["pos.y"].value() + border_size.z;
-	size.x = style_vars["size.x"].value() - border_size.x - border_size.y;
-	size.y = style_vars["size.y"].value() - border_size.z - border_size.w;
+	size.x = std::max(0.0, style_vars["size.x"].value() - border_size.x - border_size.y);
+	size.y = std::max(0.0, style_vars["size.y"].value() - border_size.z - border_size.w);
 }
 
 template<>

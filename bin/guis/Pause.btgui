@@ -4,25 +4,28 @@
 		"type" = "column"
 		"spacing" = 8
 	}
-	"center" = "parent.center"
+	"layout" =
+	{
+		"center" = "parent.center"
+	}
 	"widgets" =
 	[
 		{
-			"type" = "Text"
+			"type" = "text"
 			"text" = "Paused"
 		}
 		{
-			"type" = "Button"
+			"type" = "button"
 			"text" = "Resume"
 			"command" = "close_gui"
 		}
 		{
-			"type" = "Button"
+			"type" = "button"
 			"text" = "Save"
 			"command" = "save"
 		}
 		{
-			"type" = "Button"
+			"type" = "button"
 			"text" = "Save & Quit"
 			"command" =
 			[
@@ -31,7 +34,7 @@
 			]
 		}
 		{
-			"type" = "Button"
+			"type" = "button"
 			"text" = "Quit"
 			"command" = "quit"
 		}

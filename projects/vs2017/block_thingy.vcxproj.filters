@@ -294,7 +294,7 @@
     <ClCompile Include="..\..\src\graphics\GUI\Console.cpp">
       <Filter>Source Files\graphics\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\GUI\Light.cpp">
+    <ClCompile Include="..\..\src\graphics\GUI\light.cpp">
       <Filter>Source Files\graphics\GUI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\GUI\Pause.cpp">
@@ -315,7 +315,7 @@
     <ClCompile Include="..\..\src\graphics\GUI\Widget\Text.cpp">
       <Filter>Source Files\graphics\GUI\Widget</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\graphics\GUI\Widget\TextInput.cpp">
+    <ClCompile Include="..\..\src\graphics\GUI\Widget\text_input.cpp">
       <Filter>Source Files\graphics\GUI\Widget</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\GUI\Widget\Component\Base.cpp">
@@ -644,7 +644,7 @@
     <ClInclude Include="..\..\src\fwd\graphics\GUI\Widget\Container.hpp">
       <Filter>Source Files\fwd\graphics\GUI\Widget</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\graphics\GUI\Widget\TextInput.hpp">
+    <ClInclude Include="..\..\src\fwd\graphics\GUI\Widget\text_input.hpp">
       <Filter>Source Files\fwd\graphics\GUI\Widget</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\fwd\graphics\GUI\Widget\Component\Base.hpp">
@@ -722,7 +722,7 @@
     <ClInclude Include="..\..\src\graphics\GUI\Console.hpp">
       <Filter>Source Files\graphics\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\GUI\Light.hpp">
+    <ClInclude Include="..\..\src\graphics\GUI\light.hpp">
       <Filter>Source Files\graphics\GUI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\graphics\GUI\Pause.hpp">
@@ -743,7 +743,7 @@
     <ClInclude Include="..\..\src\graphics\GUI\Widget\Text.hpp">
       <Filter>Source Files\graphics\GUI\Widget</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\graphics\GUI\Widget\TextInput.hpp">
+    <ClInclude Include="..\..\src\graphics\GUI\Widget\text_input.hpp">
       <Filter>Source Files\graphics\GUI\Widget</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\graphics\GUI\Widget\Component\Base.hpp">

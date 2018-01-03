@@ -29,6 +29,28 @@
 
 namespace block_thingy {
 
+class game;
+
+namespace detail {
+
+struct gui_maker_base
+{
+	virtual ~gui_maker_base();
+
+	virtual std::unique_ptr<graphics::gui::Base> make(game&) const = 0;
+};
+
+template<typename T>
+struct gui_maker : gui_maker_base
+{
+	std::unique_ptr<graphics::gui::Base> make(game& g) const
+	{
+		return std::make_unique<T>(g);
+	}
+};
+
+}
+
 class game
 {
 public:
@@ -68,6 +90,13 @@ public:
 		const glm::dmat4& cam_rotation,
 		const glm::dmat4& projection_matrix
 	);
+
+	template<typename T>
+	void register_gui(const std::string& type)
+	{
+		register_gui(type, std::make_unique<detail::gui_maker<T>>());
+	}
+	std::unique_ptr<graphics::gui::Base> make_gui(const std::string& type);
 	void open_gui(std::unique_ptr<graphics::gui::Base>);
 	void close_gui();
 	void quit();
@@ -106,6 +135,8 @@ public:
 	std::unique_ptr<graphics::gui::Base> gui;
 
 private:
+	void register_gui(const std::string& type, std::unique_ptr<detail::gui_maker_base>);
+
 	struct impl;
 	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };

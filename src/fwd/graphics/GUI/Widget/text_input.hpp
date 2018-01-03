@@ -1,4 +1,4 @@
 namespace block_thingy::graphics::gui::widget
 {
-	class TextInput;
+	class text_input;
 }

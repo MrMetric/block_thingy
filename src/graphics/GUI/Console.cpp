@@ -4,7 +4,7 @@
 
 #include "Gfx.hpp"
 #include "console/Console.hpp"
-#include "graphics/GUI/Widget/TextInput.hpp"
+#include "graphics/GUI/Widget/text_input.hpp"
 #include "util/key_press.hpp"
 
 using std::string;
@@ -15,10 +15,10 @@ Console::Console(game& g)
 :
 	Base(g, "guis/Console.btgui")
 {
-	auto input = root.get_widget_by_id<widget::TextInput>("input");
+	auto input = root.get_widget_by_id<widget::text_input>("input");
 	if(input != nullptr)
 	{
-		input->on_keypress([](widget::TextInput& input, const util::key_press& press)
+		input->on_keypress([](widget::text_input& input, const util::key_press& press)
 		{
 			if(press.key == GLFW_KEY_ENTER)
 			{
@@ -32,7 +32,7 @@ Console::Console(game& g)
 
 string Console::type() const
 {
-	return "Console";
+	return "console";
 }
 
 void Console::init()

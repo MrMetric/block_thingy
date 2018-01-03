@@ -1,4 +1,4 @@
-#include "Light.hpp"
+#include "light.hpp"
 
 #include <stdexcept>
 #include <string>
@@ -8,14 +8,14 @@
 #include "game.hpp"
 #include "Gfx.hpp"
 #include "block/test_light.hpp"
-#include "graphics/GUI/Widget/TextInput.hpp"
+#include "graphics/GUI/Widget/text_input.hpp"
 #include "util/misc.hpp"
 
 using std::string;
 
 namespace block_thingy::graphics::gui {
 
-Light::Light
+light::light
 (
 	game& g,
 	world::world& world,
@@ -31,11 +31,11 @@ Light::Light
 	const graphics::color c = block.light();
 	for(std::ptrdiff_t i = 0; i < 3; ++i)
 	{
-		auto w = root.get_widget_by_id<widget::TextInput>(std::to_string(i));
+		auto w = root.get_widget_by_id<widget::text_input>(std::to_string(i));
 		if(w != nullptr)
 		{
 			w->set_text(std::to_string(c[i]));
-			w->on_change([this, i](widget::TextInput& w, const string& /*old_value*/, const string& new_value)
+			w->on_change([this, i](widget::text_input& w, const string& /*old_value*/, const string& new_value)
 			{
 				on_change(i, w, new_value);
 			});
@@ -43,23 +43,23 @@ Light::Light
 	}
 }
 
-string Light::type() const
+string light::type() const
 {
-	return "Light";
+	return "light";
 }
 
-void Light::init()
+void light::init()
 {
 	glfwSetInputMode(g.gfx.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
-void Light::draw()
+void light::draw()
 {
 	parent->draw();
 	Base::draw();
 }
 
-void Light::on_change(std::ptrdiff_t i, widget::TextInput& w, const string& new_value)
+void light::on_change(std::ptrdiff_t i, widget::text_input& w, const string& new_value)
 {
 	bool invalid = false;
 	int v = 0;

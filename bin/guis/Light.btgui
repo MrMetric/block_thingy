@@ -4,25 +4,28 @@
 		"type" = "column"
 		"spacing" = 8
 	}
-	"center" = "parent.center"
+	"layout" =
+	{
+		"center" = "parent.center"
+	}
 	"widgets" =
 	[
 		{
-			"type" = "Text"
+			"type" = "text"
 			"text" = "Edit light"
 		}
 		{
-			"type" = "TextInput"
+			"type" = "text_input"
 			"id" = "0"
 			"placeholder" = "red"
 		}
 		{
-			"type" = "TextInput"
+			"type" = "text_input"
 			"id" = "1"
 			"placeholder" = "green"
 		}
 		{
-			"type" = "TextInput"
+			"type" = "text_input"
 			"id" = "2"
 			"placeholder" = "blue"
 		}

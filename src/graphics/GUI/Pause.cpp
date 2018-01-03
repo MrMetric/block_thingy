@@ -7,7 +7,7 @@
 #include "console/Console.hpp"
 #include "graphics/GUI/Widget/Button.hpp"
 #include "graphics/GUI/Widget/Text.hpp"
-#include "graphics/GUI/Widget/TextInput.hpp"
+#include "graphics/GUI/Widget/text_input.hpp"
 #include "graphics/opengl/push_state.hpp"
 
 using std::string;
@@ -22,7 +22,7 @@ Pause::Pause(game& g)
 
 string Pause::type() const
 {
-	return "Pause";
+	return "pause";
 }
 
 void Pause::init()

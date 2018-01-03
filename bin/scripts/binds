@@ -19,7 +19,7 @@ bind f3 'toggle_bool show_debug_info'
 bind f9 'toggle_bool show_chunk_outlines'
 bind f11 'toggle_bool fullscreen'
 bind esc close_gui
-bind ` 'open_gui Console'
+bind ` 'open_gui console'
 bind , 'toggle_bool wireframe'
 bind = 'set_int render_distance + 1'
 bind - 'set_int render_distance - 1'
