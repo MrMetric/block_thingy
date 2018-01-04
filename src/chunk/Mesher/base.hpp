@@ -75,16 +75,16 @@ enum class Side : int8_t
 	bottom = -1,
 };
 
-class Base
+class base
 {
 public:
-	Base();
-	virtual ~Base();
+	base();
+	virtual ~base();
 
-	Base(Base&&) = delete;
-	Base(const Base&) = delete;
-	Base& operator=(Base&&) = delete;
-	Base& operator=(const Base&) = delete;
+	base(base&&) = delete;
+	base(const base&) = delete;
+	base& operator=(base&&) = delete;
+	base& operator=(const base&) = delete;
 
 	virtual meshmap_t make_mesh(const Chunk&) = 0;
 

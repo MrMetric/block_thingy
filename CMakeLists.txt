@@ -89,6 +89,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=shorten-64-to-32
 		-Werror=sign-compare
 		-Werror=sign-conversion
+		-Werror=static-inline-explicit-instantiation # note: GCC says that `inline template<>` is invalid syntax
 		-Werror=strict-prototypes
 		-Werror=string-plus-int
 		-Werror=uninitialized

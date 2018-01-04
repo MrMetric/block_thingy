@@ -225,7 +225,7 @@
     <ClCompile Include="..\..\src\chunk\Chunk.cpp">
       <Filter>Source Files\chunk</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\chunk\Mesher\Base.cpp">
+    <ClCompile Include="..\..\src\chunk\Mesher\base.cpp">
       <Filter>Source Files\chunk\Mesher</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\chunk\Mesher\Greedy.cpp">
@@ -539,7 +539,7 @@
     <ClInclude Include="..\..\src\chunk\ChunkData.hpp">
       <Filter>Source Files\chunk</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\chunk\Mesher\Base.hpp">
+    <ClInclude Include="..\..\src\chunk\Mesher\base.hpp">
       <Filter>Source Files\chunk\Mesher</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\chunk\Mesher\Greedy.hpp">
@@ -614,7 +614,7 @@
     <ClInclude Include="..\..\src\fwd\chunk\Chunk.hpp">
       <Filter>Source Files\fwd\chunk</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\chunk\Mesher\Base.hpp">
+    <ClInclude Include="..\..\src\fwd\chunk\Mesher\base.hpp">
       <Filter>Source Files\fwd\chunk\Mesher</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\fwd\console\Console.hpp">

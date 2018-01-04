@@ -14,6 +14,7 @@ struct Plugin::impl
 {
 	impl(const fs::path& path)
 	:
+		handle(nullptr),
 		path(path)
 	{
 	#ifdef HAVE_POSIX

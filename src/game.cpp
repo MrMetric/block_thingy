@@ -42,6 +42,7 @@
 #include "graphics/GUI/Console.hpp"
 #include "graphics/GUI/Pause.hpp"
 #include "graphics/GUI/Play.hpp"
+#include "graphics/opengl/push_state.hpp"
 #include "physics/ray.hpp"
 #include "physics/raycast_hit.hpp"
 #include "physics/raycast_util.hpp"
@@ -109,23 +110,23 @@ struct game::impl
 	int consume_key_release_scancode;
 };
 
-static unique_ptr<mesher::Base> make_mesher(const string& name)
+static unique_ptr<mesher::base> make_mesher(const string& name)
 {
-	unique_ptr<mesher::Base> mesher;
-	if(name == "Greedy")
+	unique_ptr<mesher::base> mesher;
+	if(name == "greedy")
 	{
-		return std::make_unique<mesher::Greedy>();
+		return std::make_unique<mesher::greedy>();
 	}
-	else if(name == "Simple")
+	else if(name == "simple")
 	{
-		return std::make_unique<mesher::Simple>();
+		return std::make_unique<mesher::simple>();
 	}
-	else if(name == "Simple2")
+	else if(name == "simple2")
 	{
-		return std::make_unique<mesher::Simple2>();
+		return std::make_unique<mesher::simple2>();
 	}
 	LOG(ERROR) << "No such mesher: " << name << '\n';
-	return make_mesher("Simple2");
+	return make_mesher("simple2");
 }
 
 game::game()
@@ -160,14 +161,14 @@ game::game()
 
 	update_framebuffer_size(gfx.window_size);
 
-	glfwSetJoystickCallback([](int joystick, int event)
+	glfwSetJoystickCallback([](const int joystick, const int event)
 	{
 		if(joystick == GLFW_JOYSTICK_1 && event == GLFW_DISCONNECTED)
 		{
 			game::instance->player.set_analog_motion({ 0, 0 });
 		}
 	});
-	glfwSetWindowFocusCallback(gfx.window, []([[maybe_unused]] GLFWwindow* window, int focused)
+	glfwSetWindowFocusCallback(gfx.window, []([[maybe_unused]] GLFWwindow* window, const int focused)
 	{
 		assert(window == Gfx::instance->window);
 		if(!focused)
@@ -288,7 +289,7 @@ void game::draw()
 		assert(count % 2 == 0);
 
 		assert(count == 8); // assume XInput
-		/* layout:
+		/* layout on my computer:
 		stick L x
 		stick L y
 		LT (PlayStation's L2)
@@ -297,6 +298,9 @@ void game::draw()
 		RT (PlayStation's R2)
 		d-pad x
 		d-pad y
+
+		this is different on my other computer
+		TODO: find out how to always have the right values
 		*/
 
 		glm::dvec2 stickL(fix_axis(axes[0]), fix_axis(axes[1]));
@@ -339,10 +343,7 @@ void game::draw_world
 )
 {
 	const bool wireframe = settings::get<bool>("wireframe");
-	if(wireframe)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
+	graphics::opengl::push_state<GLenum, GL_POLYGON_MODE> _polygon_mode(wireframe ? GL_LINE : GL_FILL);
 
 	gfx.set_camera_view(cam_position, cam_rotation, projection_matrix);
 	position::block_in_world render_origin(cam_position);
@@ -364,11 +365,6 @@ void game::draw_world
 	{
 		const glm::dvec4 color = world.get_block(hovered_block->pos)->selection_color();
 		gfx.draw_block_outline(hovered_block->pos, color);
-	}
-
-	if(wireframe)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 }
 
@@ -800,7 +796,7 @@ void game::impl::add_commands()
 		const position::block_in_world::value_type ysize = 9;
 		const position::block_in_world::value_type xsize = 9;
 		const block::enums::type_t i = static_cast<block::enums::type_t>(g.copied_block->type()); // TODO: use copied_block instance
-		block::enums::type_t nazi[ysize][xsize]
+		const block::enums::type_t nazi[ysize][xsize]
 		{
 			{ i, 1, 1, 1, i, i, i, i, i, },
 			{ i, 1, 1, 1, i, 1, 1, 1, 1, },
@@ -814,15 +810,11 @@ void game::impl::add_commands()
 		};
 		position::block_in_world pos;
 		for(pos.x = 0; pos.x < xsize; ++pos.x)
+		for(pos.y = ysize - 1; pos.y >= 0; --pos.y)
+		for(pos.z = 0; pos.z < 1; ++pos.z)
 		{
-			for(pos.y = ysize - 1; pos.y >= 0; --pos.y)
-			{
-				for(pos.z = 0; pos.z < 1; ++pos.z)
-				{
-					const auto type = static_cast<block::enums::type>(nazi[pos.y][pos.x]);
-					g.world.set_block(pos + start_pos, g.block_registry.get_default(type));
-				}
-			}
+			const auto type = static_cast<block::enums::type>(nazi[pos.y][pos.x]);
+			g.world.set_block(pos + start_pos, g.block_registry.get_default(type));
 		}
 	});
 

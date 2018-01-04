@@ -35,7 +35,7 @@ void Pause::draw()
 	parent->draw();
 
 	{
-		opengl::push_state<GLboolean> depth_test(GL_DEPTH_TEST, false);
+		opengl::push_state<GLboolean, GL_DEPTH_TEST> _depth_test(false);
 		Gfx::instance->draw_rectangle({0, 0}, static_cast<glm::dvec2>(Gfx::instance->window_size), {0, 0, 0, 0.3});
 	}
 

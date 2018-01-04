@@ -14,7 +14,7 @@ namespace block_thingy::mesher {
 using block::enums::Face;
 using position::block_in_chunk;
 
-meshmap_t Simple2::make_mesh(const Chunk& chunk)
+meshmap_t simple2::make_mesh(const Chunk& chunk)
 {
 	meshmap_t meshes;
 
@@ -75,7 +75,7 @@ meshmap_t Simple2::make_mesh(const Chunk& chunk)
 					block.is_translucent(),
 					tex.unit,
 				};
-				Base::add_face(meshes[key], {x, y, z}, face, 1, 1, tex.index, block.rotation(face));
+				base::add_face(meshes[key], {x, y, z}, face, 1, 1, tex.index, block.rotation(face));
 			}
 		}
 	}

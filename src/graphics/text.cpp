@@ -130,13 +130,13 @@ void text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec3& col
 		const float y2 = 1.0f - ch.flip;
 		const float vertexes[] =
 		{
-			xpos,     ypos + h, 0.0f, y2,
-			xpos,     ypos,     0.0f, y1,
 			xpos + w, ypos,     1.0f, y1,
+			xpos,     ypos,     0.0f, y1,
+			xpos,     ypos + h, 0.0f, y2,
 
 			xpos,     ypos + h, 0.0f, y2,
-			xpos + w, ypos,     1.0f, y1,
 			xpos + w, ypos + h, 1.0f, y2,
+			xpos + w, ypos,     1.0f, y1,
 		};
 
 		glBindTexture(GL_TEXTURE_2D, ch.texture.get_name());

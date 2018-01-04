@@ -524,40 +524,40 @@ void Gfx::draw_border(glm::dvec2 position, glm::dvec2 size, glm::dvec4 border_si
 	const float v[] =
 	{
 		// left
-		x - sx1, y - sy1    ,
-		x      , y - sy1    ,
 		x      , y + h + sy2,
+		x      , y - sy1    ,
+		x - sx1, y - sy1    ,
 
 		x - sx1, y - sy1    ,
-		x      , y + h + sy2,
 		x - sx1, y + h + sy2,
+		x      , y + h + sy2,
 
 		// right
-		x + w      , y - sy1    ,
-		x + w + sx2, y - sy1    ,
 		x + w + sx2, y + h + sy2,
+		x + w + sx2, y - sy1    ,
+		x + w      , y - sy1    ,
 
 		x + w      , y - sy1    ,
-		x + w + sx2, y + h + sy2,
 		x + w      , y + h + sy2,
+		x + w + sx2, y + h + sy2,
 
 		// top
-		x    , y - sy1,
-		x + w, y - sy1,
 		x + w, y      ,
+		x + w, y - sy1,
+		x    , y - sy1,
 
 		x    , y - sy1,
-		x + w, y      ,
 		x    , y      ,
+		x + w, y      ,
 
 		// bottom
-		x    , y + h      ,
-		x + w, y + h      ,
 		x + w, y + h + sy2,
+		x + w, y + h      ,
+		x    , y + h      ,
 
 		x    , y + h      ,
-		x + w, y + h + sy2,
 		x    , y + h + sy2,
+		x + w, y + h + sy2,
 	};
 	gui_rectangle_vbo.data(sizeof(v), v, graphics::opengl::vertex_buffer::usage_hint::dynamic_draw);
 

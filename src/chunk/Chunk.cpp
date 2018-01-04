@@ -15,7 +15,7 @@
 #include "game.hpp"
 #include "settings.hpp"
 #include "fwd/block/base.hpp"
-#include "chunk/Mesher/Base.hpp"
+#include "chunk/Mesher/base.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_change_setting.hpp"
@@ -224,6 +224,11 @@ void Chunk::render(const bool translucent_pass)
 {
 	std::lock_guard<std::mutex> g(pImpl->mesh_mutex);
 
+	if(pImpl->meshes.empty())
+	{
+		return;
+	}
+
 	if(pImpl->changed)
 	{
 		if(pImpl->light_tex == nullptr)
@@ -234,11 +239,6 @@ void Chunk::render(const bool translucent_pass)
 		pImpl->update_vaos();
 
 		pImpl->changed = false;
-	}
-
-	if(pImpl->meshes.empty())
-	{
-		return;
 	}
 
 	if(pImpl->light_changed && pImpl->light_tex != nullptr)

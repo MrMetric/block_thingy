@@ -21,7 +21,7 @@
 #include "block/BlockRegistry.hpp"
 #include "block/enums/type.hpp"
 #include "chunk/Chunk.hpp"
-#include "chunk/Mesher/Base.hpp"
+#include "chunk/Mesher/base.hpp"
 #include "graphics/color.hpp"
 #include "position/block_in_chunk.hpp"
 #include "position/block_in_world.hpp"
@@ -121,7 +121,7 @@ world::world
 (
 	const fs::path& file_path,
 	block::BlockRegistry& block_registry,
-	unique_ptr<mesher::Base> mesher
+	unique_ptr<mesher::base> mesher
 )
 :
 	block_registry(block_registry),
@@ -722,7 +722,7 @@ double world::get_time() const
 	return ticks / 60.0;
 }
 
-void world::set_mesher(unique_ptr<mesher::Base> mesher)
+void world::set_mesher(unique_ptr<mesher::base> mesher)
 {
 	assert(mesher != nullptr);
 	this->mesher = std::move(mesher);

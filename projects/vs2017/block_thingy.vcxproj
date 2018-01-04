@@ -49,7 +49,7 @@
     <ClCompile Include="..\..\src\block\enums\type.cpp" />
     <ClCompile Include="..\..\src\block\enums\visibility_type.cpp" />
     <ClCompile Include="..\..\src\chunk\Chunk.cpp" />
-    <ClCompile Include="..\..\src\chunk\Mesher\Base.cpp" />
+    <ClCompile Include="..\..\src\chunk\Mesher\base.cpp" />
     <ClCompile Include="..\..\src\chunk\Mesher\Greedy.cpp" />
     <ClCompile Include="..\..\src\chunk\Mesher\Simple.cpp" />
     <ClCompile Include="..\..\src\chunk\Mesher\Simple2.cpp" />
@@ -155,7 +155,7 @@
     <ClInclude Include="..\..\src\block\enums\visibility_type.hpp" />
     <ClInclude Include="..\..\src\chunk\Chunk.hpp" />
     <ClInclude Include="..\..\src\chunk\ChunkData.hpp" />
-    <ClInclude Include="..\..\src\chunk\Mesher\Base.hpp" />
+    <ClInclude Include="..\..\src\chunk\Mesher\base.hpp" />
     <ClInclude Include="..\..\src\chunk\Mesher\Greedy.hpp" />
     <ClInclude Include="..\..\src\chunk\Mesher\Simple.hpp" />
     <ClInclude Include="..\..\src\chunk\Mesher\Simple2.hpp" />
@@ -180,7 +180,7 @@
     <ClInclude Include="..\..\src\fwd\block\enums\type.hpp" />
     <ClInclude Include="..\..\src\fwd\block\enums\visibility_type.hpp" />
     <ClInclude Include="..\..\src\fwd\chunk\Chunk.hpp" />
-    <ClInclude Include="..\..\src\fwd\chunk\Mesher\Base.hpp" />
+    <ClInclude Include="..\..\src\fwd\chunk\Mesher\base.hpp" />
     <ClInclude Include="..\..\src\fwd\console\Console.hpp" />
     <ClInclude Include="..\..\src\fwd\event\Event.hpp" />
     <ClInclude Include="..\..\src\fwd\event\EventManager.hpp" />

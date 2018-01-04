@@ -1,4 +1,4 @@
-#include "Base.hpp"
+#include "base.hpp"
 
 #include <cassert>
 
@@ -33,11 +33,11 @@ mesh_vertex_t::mesh_vertex_t
 {
 }
 
-Base::Base()
+base::base()
 {
 }
 
-Base::~Base()
+base::~base()
 {
 }
 
@@ -54,7 +54,7 @@ static void add_square
 	mesh.emplace_back(p3, p4, p1);
 }
 
-void Base::add_face
+void base::add_face
 (
 	mesh_t& mesh,
 	u8vec3 xyz,
@@ -104,7 +104,7 @@ void Base::add_face
 	}
 }
 
-u8vec3 Base::get_i(const Face face)
+u8vec3 base::get_i(const Face face)
 {
 	if(face == Face::right || face == Face::left)
 	{
@@ -121,12 +121,12 @@ u8vec3 Base::get_i(const Face face)
 	}
 }
 
-Side Base::to_side(const Face face)
+Side base::to_side(const Face face)
 {
 	return (face == Face::top || face == Face::front || face == Face::right) ? Side::top : Side::bottom;
 }
 
-const block::base& Base::block_at
+const block::base& base::block_at
 (
 	const Chunk& chunk,
 	const int_fast16_t x,
@@ -149,7 +149,7 @@ const block::base& Base::block_at
 	#undef s
 }
 
-bool Base::block_visible_from
+bool base::block_visible_from
 (
 	const Chunk& chunk,
 	const block::base& block,

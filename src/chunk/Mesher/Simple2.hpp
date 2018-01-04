@@ -1,9 +1,9 @@
 #pragma once
-#include "Base.hpp"
+#include "base.hpp"
 
 namespace block_thingy::mesher {
 
-class Simple2 : public Base
+class simple2 : public base
 {
 public:
 	meshmap_t make_mesh(const Chunk&) override;

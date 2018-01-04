@@ -12,7 +12,7 @@
 #include "fwd/block/base.hpp"
 #include "fwd/block/BlockRegistry.hpp"
 #include "fwd/chunk/Chunk.hpp"
-#include "fwd/chunk/Mesher/Base.hpp"
+#include "fwd/chunk/Mesher/base.hpp"
 #include "fwd/graphics/color.hpp"
 #include "fwd/position/block_in_world.hpp"
 #include "fwd/position/chunk_in_world.hpp"
@@ -28,7 +28,7 @@ public:
 	(
 		const fs::path& file_path,
 		block::BlockRegistry&,
-		std::unique_ptr<mesher::Base>
+		std::unique_ptr<mesher::base>
 	);
 	~world();
 
@@ -69,8 +69,8 @@ public:
 
 	block::BlockRegistry& block_registry;
 
-	void set_mesher(std::unique_ptr<mesher::Base>);
-	std::unique_ptr<mesher::Base> mesher;
+	void set_mesher(std::unique_ptr<mesher::base>);
+	std::unique_ptr<mesher::base> mesher;
 	bool is_meshing_queued(const std::shared_ptr<Chunk>&) const;
 	bool is_meshing_queued(const position::chunk_in_world&) const;
 

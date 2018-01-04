@@ -66,8 +66,7 @@ void Base::close()
 
 void Base::draw()
 {
-	opengl::push_state<GLboolean> depth_test(GL_DEPTH_TEST, false);
-	opengl::push_state<GLboolean> cull_face(GL_CULL_FACE, false);
+	opengl::push_state<GLboolean, GL_DEPTH_TEST> _depth_test(false);
 
 	root.draw();
 	draw_gui();

@@ -29,7 +29,7 @@ static void add_surface(const Chunk&, meshmap_t&, surface_t&, Face);
 static Rectangle yield_rectangle(surface_t&);
 static void generate_surface(const Chunk&, surface_t&, u8vec3&, const u8vec3&, Face);
 
-meshmap_t Greedy::make_mesh(const Chunk& chunk)
+meshmap_t greedy::make_mesh(const Chunk& chunk)
 {
 	meshmap_t meshes;
 
@@ -52,7 +52,7 @@ void add_surface
 	const Face face
 )
 {
-	const u8vec3 i = Base::get_i(face);
+	const u8vec3 i = base::get_i(face);
 
 	u8vec3 pos;
 	for(pos[1] = 0; pos[1] < CHUNK_SIZE; ++pos[1])
@@ -72,7 +72,7 @@ void add_surface
 			xyz[i.y] = pos.y;
 			xyz[i.z] = rekt.z;
 
-			Base::add_face(meshes[rekt.key], xyz, face, rekt.w, rekt.h, rekt.tex_index, rekt.rotation);
+			base::add_face(meshes[rekt.key], xyz, face, rekt.w, rekt.h, rekt.tex_index, rekt.rotation);
 		}
 	}
 }
@@ -86,7 +86,7 @@ void generate_surface
 	const Face face
 )
 {
-	const Side side = Base::to_side(face);
+	const Side side = base::to_side(face);
 	const auto offset = static_cast<int8_t>(side);
 	for(pos[0] = 0; pos[0] < CHUNK_SIZE; ++pos[0])
 	{
@@ -98,8 +98,8 @@ void generate_surface
 			int8_t o[] = {0, 0, 0};
 			o[i.y] = offset;
 
-			const block::base& block = Base::block_at(chunk, x, y, z);
-			if(Base::block_visible_from(chunk, block, x + o[0], y + o[1], z + o[2]))
+			const block::base& block = base::block_at(chunk, x, y, z);
+			if(base::block_visible_from(chunk, block, x + o[0], y + o[1], z + o[2]))
 			{
 				const auto tex = game::instance->resource_manager.get_block_texture(block.texture(face));
 				surface[pos[2]][pos[0]] =
