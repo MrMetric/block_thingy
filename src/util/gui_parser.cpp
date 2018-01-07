@@ -82,23 +82,23 @@ std::vector<string> parse_expression(const string& expr)
 			++i;
 			continue;
 		}
-		if(!std::isalnum(c) && c != '_')
+		if(!std::isalnum(c) && c != '_' && c != '$')
 		{
 			std::ostringstream ss;
 			ss << "unexpected character " << c << " at position " << (i - expr.cbegin())
 			<< " in expression " << expr;
 			throw std::runtime_error(ss.str());
 		}
-		string token;
-		while(std::isalnum(c) || c == '_' || c == '.')
+		string token(1, c);
+		++i;
+		for(; i != expr.cend(); ++i)
 		{
-			token += c;
-			++i;
-			if(i == expr.cend())
+			c = *i;
+			if(!std::isalnum(c) && c != '_' && c != '.')
 			{
 				break;
 			}
-			c = *i;
+			token += c;
 		}
 		tokens.emplace_back(std::move(token));
 	}

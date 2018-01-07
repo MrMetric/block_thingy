@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "Gfx.hpp"
+#include "graphics/GUI/Widget/Container.hpp"
 #include "graphics/GUI/Widget/Component/Base.hpp"
 #include "util/logger.hpp"
 #include "util/misc.hpp"
@@ -13,8 +14,9 @@ using std::string;
 
 namespace block_thingy::graphics::gui::widget {
 
-Base::Base()
+Base::Base(Base* const parent)
 :
+	parent(parent),
 	hover(false)
 {
 }
@@ -128,17 +130,18 @@ void Base::read_layout(const json& j)
 
 			auto token_is_vec = [](string token) -> bool
 			{
-				if(util::string_starts_with(token, "window."))
+				if(const std::size_t dot_pos = token.find_last_of('.'); dot_pos != string::npos)
 				{
-					token = token.substr(7);
-				}
-				else while(util::string_starts_with(token, "parent."))
-				{
-					token = token.substr(7);
+					token = token.substr(dot_pos + 1);
 				}
 				return token == "center" || token == "end" || token == "pos" || token == "size";
 			};
 			const string token = jtoken.get<string>();
+			if(token.empty())
+			{
+				LOG(ERROR) << type() << " has an empty layout item\n";
+				goto continue_outer;
+			}
 			if(token_is_vec(token))
 			{
 				lx.emplace_back(token + ".x");
@@ -163,8 +166,8 @@ void Base::read_layout(const json& j)
 void Base::apply_layout
 (
 	rhea::simplex_solver& solver,
-	Base::style_vars_t& window_vars,
-	Base::style_vars_t& parent_vars
+	Container& root,
+	Base::style_vars_t& window_vars
 )
 {
 	solver.add_constraints
@@ -192,6 +195,13 @@ void Base::apply_layout
 		bool bad = false;
 		for(const string& part : expr_parts)
 		{
+			if(part.empty())
+			{
+				// note: this will happen only if someone adds bad stuff directly to layout_expressions
+				LOG(ERROR) << "expression has an empty token\n";
+				bad = true;
+				break;
+			}
 			if(part == "=")
 			{
 				if(stack.size() != 2)
@@ -276,24 +286,29 @@ void Base::apply_layout
 			else
 			{
 				// operand
+				if(part[0] == '$')
+				{
+					const std::size_t dot_pos = part.find('.');
+					const string that_name = part.substr(1, dot_pos - 1);
+					Base* that = root.get_widget_by_id<Base>(that_name);
+					if(that == nullptr)
+					{
+						LOG(ERROR) << "element " << that_name << " not found for " << part << '\n';
+						bad = true;
+						break;
+					}
+					const string var_name = part.substr(dot_pos + 1);
+					stack.emplace(that->get_layout_var(var_name, window_vars));
+					continue;
+				}
+
 				try
 				{
 					stack.emplace(std::stod(part));
 				}
 				catch(const std::invalid_argument&)
 				{
-					if(util::string_starts_with(part, "parent."))
-					{
-						stack.emplace(parent_vars[part.substr(7)]);
-					}
-					else if(util::string_starts_with(part, "window."))
-					{
-						stack.emplace(window_vars[part.substr(7)]);
-					}
-					else
-					{
-						stack.emplace(style_vars[part]);
-					}
+					stack.emplace(get_layout_var(part, window_vars));
 				}
 				catch(const std::out_of_range&)
 				{
@@ -347,6 +362,23 @@ void Base::use_layout()
 	position.y = style_vars["pos.y"].value() + border_size.z;
 	size.x = std::max(0.0, style_vars["size.x"].value() - border_size.x - border_size.y);
 	size.y = std::max(0.0, style_vars["size.y"].value() - border_size.z - border_size.w);
+}
+
+rhea::variable& Base::get_layout_var(const string& name, style_vars_t& window_vars)
+{
+	if(util::string_starts_with(name, "parent."))
+	{
+		if(parent != nullptr)
+		{
+			return parent->get_layout_var(name.substr(7), window_vars);
+		}
+		return window_vars[name.substr(7)];
+	}
+	if(util::string_starts_with(name, "window."))
+	{
+		return window_vars[name.substr(7)];
+	}
+	return style_vars[name];
 }
 
 template<>

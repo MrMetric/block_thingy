@@ -12,6 +12,7 @@
 #include <rhea/variable.hpp>
 #include <strict_variant/variant.hpp>
 
+#include "fwd/graphics/GUI/Widget/Container.hpp"
 #include "fwd/graphics/GUI/Widget/Component/Base.hpp"
 #include "fwd/util/char_press.hpp"
 #include "fwd/util/key_press.hpp"
@@ -22,7 +23,7 @@ namespace block_thingy::graphics::gui::widget {
 class Base
 {
 public:
-	Base();
+	Base(Base* parent);
 	virtual ~Base();
 
 	virtual std::string type() const = 0;
@@ -46,9 +47,11 @@ public:
 	using style_vars_t = std::map<std::string, rhea::variable>;
 
 	virtual void read_layout(const json&);
-	virtual void apply_layout(rhea::simplex_solver&, style_vars_t& window_vars, style_vars_t& parent_vars);
+	virtual void apply_layout(rhea::simplex_solver&, Container& root, style_vars_t& window_vars);
 	virtual void use_layout();
+	rhea::variable& get_layout_var(const std::string& name, style_vars_t& window_vars);
 
+	Base* parent;
 	style_t style;
 	std::vector<std::vector<std::string>> layout_expressions;
 	style_vars_t style_vars;

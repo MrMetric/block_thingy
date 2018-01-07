@@ -14,9 +14,11 @@ namespace block_thingy::graphics::gui::widget {
 
 Button::Button
 (
+	Base* const parent,
 	const string& text
 )
 :
+	Base(parent),
 	color(0.02, 0.02, 0.04, 0.85),
 	color_disabled(0.04, 0.02, 0.02, 0.85),
 	color_hover(0, 0, 0, 1),

@@ -15,6 +15,7 @@ class Button : public Base
 public:
 	Button
 	(
+		Base* parent,
 		const std::string& text = ""
 	);
 

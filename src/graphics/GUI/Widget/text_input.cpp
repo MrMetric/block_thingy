@@ -23,10 +23,12 @@ namespace block_thingy::graphics::gui::widget {
 
 text_input::text_input
 (
+	Base* const parent,
 	const string& content,
 	const string& placeholder
 )
 :
+	Base(parent),
 	invalid(false),
 	content(content),
 	placeholder(placeholder),

@@ -28,7 +28,8 @@ Base::Base
 	const fs::path& layout_path
 )
 :
-	g(g)
+	g(g),
+	root(nullptr)
 {
 	if(!layout_path.empty())
 	{
@@ -148,7 +149,7 @@ void Base::update_framebuffer_size(const window_size_t& window_size)
 		window_vars["center.y"] == window_vars["size.y"] / 2 | rhea::strength::required(),
 	});
 
-	root.apply_layout(solver, window_vars, window_vars);
+	root.apply_layout(solver, root, window_vars);
 	root.use_layout();
 }
 

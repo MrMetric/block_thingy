@@ -14,7 +14,7 @@ namespace block_thingy::graphics::gui::widget {
 class Container : public Base
 {
 public:
-	Container();
+	Container(Base* parent);
 
 	std::string type() const override;
 
@@ -28,13 +28,13 @@ public:
 	glm::dvec2 get_size() const override;
 
 	void read_layout(const json&) override;
-	void apply_layout(rhea::simplex_solver&, Base::style_vars_t& window_vars, Base::style_vars_t& parent_vars) override;
+	void apply_layout(rhea::simplex_solver&, Container& root, Base::style_vars_t& window_vars) override;
 	void use_layout() override;
 
 	template<typename T, typename... Args>
 	T& add(Args&&... args)
 	{
-		widgets.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
+		widgets.emplace_back(std::make_unique<T>(this, std::forward<Args>(args)...));
 		// TODO?: apply_layout(solver);
 		return *dynamic_cast<T*>(widgets.back().get());
 	}

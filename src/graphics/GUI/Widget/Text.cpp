@@ -10,9 +10,11 @@ namespace block_thingy::graphics::gui::widget {
 
 Text::Text
 (
+	Base* const parent,
 	const string& text
 )
 :
+	Base(parent),
 	text(text)
 {
 	size = Gfx::instance->gui_text.get_size(text);

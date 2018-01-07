@@ -10,6 +10,7 @@ class Text : public Base
 public:
 	Text
 	(
+		Base* parent,
 		const std::string& text = ""
 	);
 

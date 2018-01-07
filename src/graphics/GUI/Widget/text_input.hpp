@@ -15,6 +15,7 @@ class text_input : public Base
 public:
 	text_input
 	(
+		Base* parent,
 		const std::string& content = "",
 		const std::string& placeholder = ""
 	);
