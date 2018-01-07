@@ -1,33 +1,17 @@
-{
-	"auto_layout" =
-	{
-		"type" = "column"
-		"spacing" = 8
-	}
-	"layout" =
-	{
-		"center" = "parent.center"
-	}
-	"widgets" =
-	[
-		{
-			"type" = "text"
-			"text" = "Edit light"
-		}
-		{
-			"type" = "text_input"
-			"id" = "0"
-			"placeholder" = "red"
-		}
-		{
-			"type" = "text_input"
-			"id" = "1"
-			"placeholder" = "green"
-		}
-		{
-			"type" = "text_input"
-			"id" = "2"
-			"placeholder" = "blue"
-		}
-	]
-}
+auto_layout:
+	type: "column"
+	spacing: 8
+layout:
+	center = parent.center
+widgets:
+	text:
+		text: "Edit light"
+	text_input:
+		id: "0"
+		placeholder: "red"
+	text_input:
+		id: "1"
+		placeholder: "green"
+	text_input:
+		id: "2"
+		placeholder: "blue"

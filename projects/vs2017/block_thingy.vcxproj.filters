@@ -396,6 +396,9 @@
     <ClCompile Include="..\..\src\util\FileWatcher.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\util\gui_parser.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\util\key_mods.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
@@ -870,6 +873,9 @@
       <Filter>Source Files\util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\util\FileWatcher.hpp">
+      <Filter>Source Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\util\gui_parser.hpp">
       <Filter>Source Files\util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\util\key_mods.hpp">

@@ -9,6 +9,7 @@
 #include "graphics/GUI/light.hpp"
 #include "storage/Interface.hpp"
 #include "storage/msgpack/color.hpp"
+#include "util/demangled_name.hpp"
 #include "fwd/world/world.hpp"
 
 using std::string;
@@ -46,7 +47,14 @@ void test_light::use_start
 	const enums::Face /*face*/
 )
 {
-	player.open_gui(std::make_unique<graphics::gui::light>(g, world, *this, pos));
+	try
+	{
+		player.open_gui(std::make_unique<graphics::gui::light>(g, world, *this, pos));
+	}
+	catch(const std::exception& e)
+	{
+		LOG(ERROR) << "got " << util::demangled_name(e) << " while opening \"light\" GUI: " << e.what() << '\n';
+	}
 }
 
 void test_light::save(storage::OutputInterface& i) const

@@ -1,42 +1,22 @@
-{
-	"auto_layout" =
-	{
-		"type" = "column"
-		"spacing" = 8
-	}
-	"layout" =
-	{
-		"center" = "parent.center"
-	}
-	"widgets" =
-	[
-		{
-			"type" = "text"
-			"text" = "Paused"
-		}
-		{
-			"type" = "button"
-			"text" = "Resume"
-			"command" = "close_gui"
-		}
-		{
-			"type" = "button"
-			"text" = "Save"
-			"command" = "save"
-		}
-		{
-			"type" = "button"
-			"text" = "Save & Quit"
-			"command" =
-			[
-				"save"
-				"quit"
-			]
-		}
-		{
-			"type" = "button"
-			"text" = "Quit"
-			"command" = "quit"
-		}
-	]
-}
+auto_layout:
+	type: "column"
+	spacing: 8
+layout:
+	center = parent.center
+widgets:
+	text:
+		text: "Paused"
+	button:
+		text: "Resume"
+		command: "close_gui"
+	button:
+		text: "Save"
+		command: "save"
+	button:
+		text: "Save & Quit"
+		command:
+			"save"
+			"quit"
+	button:
+		text: "Quit"
+		command: "quit"

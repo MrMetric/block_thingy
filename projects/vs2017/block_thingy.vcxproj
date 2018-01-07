@@ -106,6 +106,7 @@
     <ClCompile Include="..\..\src\util\copy_stream.cpp" />
     <ClCompile Include="..\..\src\util\demangled_name.cpp" />
     <ClCompile Include="..\..\src\util\FileWatcher.cpp" />
+    <ClCompile Include="..\..\src\util\gui_parser.cpp" />
     <ClCompile Include="..\..\src\util\key_mods.cpp" />
     <ClCompile Include="..\..\src\util\key_press.cpp" />
     <ClCompile Include="..\..\src\util\logger.cpp" />
@@ -266,6 +267,7 @@
     <ClInclude Include="..\..\src\util\demangled_name.hpp" />
     <ClInclude Include="..\..\src\util\filesystem.hpp" />
     <ClInclude Include="..\..\src\util\FileWatcher.hpp" />
+    <ClInclude Include="..\..\src\util\gui_parser.hpp" />
     <ClInclude Include="..\..\src\util\key_mods.hpp" />
     <ClInclude Include="..\..\src\util\key_press.hpp" />
     <ClInclude Include="..\..\src\util\logger.hpp" />

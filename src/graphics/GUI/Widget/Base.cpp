@@ -1,7 +1,12 @@
 #include "Base.hpp"
 
+#include <cassert>
+#include <stack>
+#include <utility>
+
 #include "Gfx.hpp"
 #include "graphics/GUI/Widget/Component/Base.hpp"
+#include "util/logger.hpp"
 #include "util/misc.hpp"
 
 using std::string;
@@ -92,7 +97,8 @@ void Base::read_layout(const json& j)
 		}
 		else
 		{
-			// TODO: warning
+			// TODO: add file name to errors
+			LOG(ERROR) << type() << " attribute \"id\" must be a string, but is " << i_id->type_name() << '\n';
 		}
 	}
 
@@ -102,66 +108,62 @@ void Base::read_layout(const json& j)
 		return;
 	}
 	const json& layout = *i_layout;
-
-	// TODO: this is shit
-	auto translate_vec2 = [this, &layout](const string& name)
+	for(const json& layout_item : layout)
 	{
-		if(const auto i = layout.find(name); i != layout.cend())
+		if(!layout_item.is_array())
 		{
-			if(i->is_string())
+			LOG(ERROR) << type() << " layout item must be a list, but is " << layout_item.type_name() << '\n';
+			continue;
+		}
+		std::vector<string> lx;
+		std::vector<string> ly;
+		bool has_vec = false;
+		for(const json& jtoken : layout_item)
+		{
+			if(!jtoken.is_string())
 			{
-				const string value = i->get<string>();
-
-				string value_x = value;
-				util::replace(value_x, "center", "center.x");
-				util::replace(value_x, "end"   , "end.x"   );
-				util::replace(value_x, "pos"   , "pos.x"   );
-				util::replace(value_x, "size"  , "size.x"  );
-				style[name + ".x"] = value_x;
-
-				string value_y = value;
-				util::replace(value_y, "center", "center.y");
-				util::replace(value_y, "end"   , "end.y"   );
-				util::replace(value_y, "pos"   , "pos.y"   );
-				util::replace(value_y, "size"  , "size.y"  );
-				style[name + ".y"] = value_y;
+				LOG(ERROR) << type() << " layout item must be a string list, but has a " << jtoken.type_name() << '\n';
+				goto continue_outer;
 			}
-			else if(i->is_number())
+
+			auto token_is_vec = [](string token) -> bool
 			{
-				style[name + ".x"] = style[name + ".y"] = i->get<double>();
+				if(util::string_starts_with(token, "window."))
+				{
+					token = token.substr(7);
+				}
+				else while(util::string_starts_with(token, "parent."))
+				{
+					token = token.substr(7);
+				}
+				return token == "center" || token == "end" || token == "pos" || token == "size";
+			};
+			const string token = jtoken.get<string>();
+			if(token_is_vec(token))
+			{
+				lx.emplace_back(token + ".x");
+				ly.emplace_back(token + ".y");
+				has_vec = true;
 			}
 			else
 			{
-				// TODO: warning
+				lx.emplace_back(token);
+				ly.emplace_back(token);
 			}
 		}
-	};
-	translate_vec2("center");
-	translate_vec2("end");
-	translate_vec2("pos");
-	translate_vec2("size");
-
-	for(json::const_iterator i = layout.cbegin(); i != layout.cend(); ++i)
-	{
-		const string& k = i.key();
-		const json& v = i.value();
-		if(v.is_number())
+		layout_expressions.emplace_back(std::move(lx));
+		if(has_vec)
 		{
-			style[k] = v.get<double>();
+			layout_expressions.emplace_back(std::move(ly));
 		}
-		else if(v.is_string())
-		{
-			if(const string s = v.get<string>(); s != "default")
-			{
-				style[k] = s;
-			}
-		}
+		continue_outer:;
 	}
 }
 
 void Base::apply_layout
 (
 	rhea::simplex_solver& solver,
+	Base::style_vars_t& window_vars,
 	Base::style_vars_t& parent_vars
 )
 {
@@ -179,24 +181,161 @@ void Base::apply_layout
 	{
 		if(const double* d = p.second.get<double>(); d != nullptr)
 		{
-			solver.add_constraint(style_vars[p.first] == *d);
+			solver.add_constraint(style_vars[p.first] == *d | rhea::strength::weak());
 			continue;
 		}
+	}
 
-		// TODO: better checking
-		if(p.first == "auto_layout")
+	for(const std::vector<string>& expr_parts : layout_expressions)
+	{
+		std::stack<strict_variant::variant<rhea::linear_expression, double>> stack;
+		bool bad = false;
+		for(const string& part : expr_parts)
 		{
-			continue;
-		}
-		if(const string* s = p.second.get<string>(); s != nullptr && !s->empty())
-		{
-			if(util::string_starts_with(*s, "parent."))
+			if(part == "=")
 			{
-				solver.add_constraint(style_vars[p.first] == parent_vars[s->substr(7)]);
+				if(stack.size() != 2)
+				{
+					if(stack.empty())
+					{
+						LOG(ERROR) << "operator = is missing its operands\n";
+					}
+					else if(stack.size() == 1)
+					{
+						LOG(ERROR) << "operator = is missing an operand\n";
+					}
+					else
+					{
+						// this happens if you do stuff like: x + (2 = y)
+						// note that util::gui_parser handles this, so it will happen only if a user supplies custom data
+						LOG(ERROR) << "operator = has too many operands (" << stack.size() << ")\n";
+					}
+					bad = true;
+				}
+				// TODO: check if this is the expression's end
+				break;
+			}
+			else if(part == "+" || part == "-" || part == "*" || part == "/")
+			{
+				// operator
+				if(stack.size() < 2)
+				{
+					if(stack.empty())
+					{
+						LOG(ERROR) << "operator " + part + " is missing its operands\n";
+					}
+					else
+					{
+						LOG(ERROR) << "operator " + part + " is missing an operand\n";
+					}
+					bad = true;
+					break;
+				}
+
+				const auto var2 = stack.top(); stack.pop();
+				const auto var1 = stack.top(); stack.pop();
+				const rhea::linear_expression* rvar1 = var1.get<rhea::linear_expression>();
+				const rhea::linear_expression* rvar2 = var2.get<rhea::linear_expression>();
+				const double* dvar1 = var1.get<double>();
+				const double* dvar2 = var2.get<double>();
+				#define DO_OP(OPERATOR) \
+				if(part == #OPERATOR) \
+				{ \
+					if(dvar1 != nullptr) \
+					{ \
+						if(dvar2 != nullptr) \
+						{ \
+							stack.emplace(*dvar1 OPERATOR *dvar2); \
+						} \
+						else \
+						{ \
+							stack.emplace(*dvar1 OPERATOR *rvar2); \
+						} \
+					} \
+					else \
+					{ \
+						if(dvar2 != nullptr) \
+						{ \
+							stack.emplace(*rvar1 OPERATOR *dvar2); \
+						} \
+						else \
+						{ \
+							stack.emplace(*rvar1 OPERATOR *rvar2); \
+						} \
+					} \
+				}
+				DO_OP(+)
+				else DO_OP(-)
+				else DO_OP(*)
+				else DO_OP(/)
+				else
+				{
+					assert(false);
+				}
 			}
 			else
 			{
-				solver.add_constraint(style_vars[p.first] == style_vars[*s]);
+				// operand
+				try
+				{
+					stack.emplace(std::stod(part));
+				}
+				catch(const std::invalid_argument&)
+				{
+					if(util::string_starts_with(part, "parent."))
+					{
+						stack.emplace(parent_vars[part.substr(7)]);
+					}
+					else if(util::string_starts_with(part, "window."))
+					{
+						stack.emplace(window_vars[part.substr(7)]);
+					}
+					else
+					{
+						stack.emplace(style_vars[part]);
+					}
+				}
+				catch(const std::out_of_range&)
+				{
+					// TODO: warning
+					LOG(WARN) << "number out of range: " << part << '\n';
+					stack.emplace(0.0);
+				}
+			}
+		}
+
+		if(bad)
+		{
+			continue;
+		}
+
+		const auto var1 = stack.top(); stack.pop();
+		const auto var2 = stack.top(); stack.pop();
+		const rhea::linear_expression* rvar1 = var1.get<rhea::linear_expression>();
+		const rhea::linear_expression* rvar2 = var2.get<rhea::linear_expression>();
+		const double* dvar1 = var1.get<double>();
+		const double* dvar2 = var2.get<double>();
+		// TODO: add syntax to specify strength
+		if(dvar1 != nullptr)
+		{
+			if(dvar2 != nullptr)
+			{
+				// TODO: warning
+			}
+			else
+			{
+				solver.add_constraint(*dvar1 == *rvar2 | rhea::strength::strong());
+			}
+		}
+		else
+		{
+			if(dvar2 != nullptr)
+			{
+				solver.add_constraint(*rvar1 == *dvar2 | rhea::strength::strong());
+			}
+			else
+			{
+				solver.add_constraint(*rvar1 == *rvar2 | rhea::strength::strong());
 			}
 		}
 	}

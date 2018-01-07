@@ -46,10 +46,11 @@ public:
 	using style_vars_t = std::map<std::string, rhea::variable>;
 
 	virtual void read_layout(const json&);
-	virtual void apply_layout(rhea::simplex_solver&, style_vars_t& parent_vars);
+	virtual void apply_layout(rhea::simplex_solver&, style_vars_t& window_vars, style_vars_t& parent_vars);
 	virtual void use_layout();
 
 	style_t style;
+	std::vector<std::vector<std::string>> layout_expressions;
 	style_vars_t style_vars;
 	std::string id;
 

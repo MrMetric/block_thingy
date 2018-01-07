@@ -4,7 +4,6 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <json.hpp>
 
 #include "game.hpp"
 #include "Gfx.hpp"
@@ -14,6 +13,7 @@
 #include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"
 #include "graphics/opengl/push_state.hpp"
+#include "util/gui_parser.hpp"
 #include "util/key_press.hpp"
 #include "util/logger.hpp"
 #include "util/misc.hpp"
@@ -32,7 +32,7 @@ Base::Base
 {
 	if(!layout_path.empty())
 	{
-		root.read_layout(json::parse(util::read_file(layout_path)));
+		root.read_layout(util::parse_gui(layout_path));
 	}
 	event_handler = g.event_manager.add_handler(EventType::window_size_change, [this](const Event& event)
 	{
@@ -138,17 +138,17 @@ void Base::update_framebuffer_size(const window_size_t& window_size)
 	widget::Base::style_vars_t window_vars;
 	solver.add_constraints
 	({
-		window_vars["pos.x"] == 0,
-		window_vars["pos.y"] == 0,
-		window_vars["size.x"] == window_size.x,
-		window_vars["size.y"] == window_size.y,
-		window_vars["end.x"] == window_vars["size.x"],
-		window_vars["end.y"] == window_vars["size.y"],
-		window_vars["center.x"] == window_vars["size.x"] / 2,
-		window_vars["center.y"] == window_vars["size.y"] / 2,
+		window_vars["pos.x"   ] == 0                         | rhea::strength::required(),
+		window_vars["pos.y"   ] == 0                         | rhea::strength::required(),
+		window_vars["size.x"  ] == window_size.x             | rhea::strength::required(),
+		window_vars["size.y"  ] == window_size.y             | rhea::strength::required(),
+		window_vars["end.x"   ] == window_vars["size.x"]     | rhea::strength::required(),
+		window_vars["end.y"   ] == window_vars["size.y"]     | rhea::strength::required(),
+		window_vars["center.x"] == window_vars["size.x"] / 2 | rhea::strength::required(),
+		window_vars["center.y"] == window_vars["size.y"] / 2 | rhea::strength::required(),
 	});
 
-	root.apply_layout(solver, window_vars);
+	root.apply_layout(solver, window_vars, window_vars);
 	root.use_layout();
 }
 

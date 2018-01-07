@@ -28,7 +28,7 @@ public:
 	glm::dvec2 get_size() const override;
 
 	void read_layout(const json&) override;
-	void apply_layout(rhea::simplex_solver&, Base::style_vars_t& parent_vars) override;
+	void apply_layout(rhea::simplex_solver&, Base::style_vars_t& window_vars, Base::style_vars_t& parent_vars) override;
 	void use_layout() override;
 
 	template<typename T, typename... Args>

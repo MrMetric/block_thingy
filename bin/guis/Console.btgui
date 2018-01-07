@@ -1,31 +1,15 @@
-{
-	"layout" =
-	{
-		"pos" = "parent.pos"
-		"size" = "parent.size"
-	}
-	"widgets" =
-	[
-		{
-			"type" = "text"
-			"text" = "Console"
-
-			"layout" =
-			{
-				"center.x" = "parent.center.x"
-				"pos.y" = 8
-			}
-		}
-		{
-			"type" = "text_input"
-			"id" = "input"
-
-			"layout" =
-			{
-				"pos.x" = "parent.pos.x"
-				"end.y" = "parent.end.y"
-				"size.x" = "parent.size.x"
-			}
-		}
-	]
-}
+layout:
+	pos = parent.pos
+	size = parent.size
+widgets:
+	text:
+		text: "Console"
+		layout:
+			center.x = parent.center.x
+			pos.y = parent.pos.y + 8
+	text_input:
+		id: "input"
+		layout:
+			pos.x = parent.pos.x
+			end.y = parent.end.y
+			size.x = parent.size.x

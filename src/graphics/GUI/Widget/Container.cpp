@@ -237,15 +237,16 @@ void Container::read_layout(const json& layout)
 void Container::apply_layout
 (
 	rhea::simplex_solver& solver,
+	Base::style_vars_t& window_vars,
 	Base::style_vars_t& parent_vars
 )
 {
-	Base::apply_layout(solver, parent_vars);
+	Base::apply_layout(solver, window_vars, parent_vars);
 
 	// must be before auto_layout
 	for(auto& widget : widgets)
 	{
-		widget->apply_layout(solver, style_vars);
+		widget->apply_layout(solver, window_vars, style_vars);
 	}
 
 	if(style.count("auto_layout") != 0)
