@@ -296,8 +296,7 @@ json gui_parser::read_primitive_thing(const string& text)
 	}
 	catch(const std::out_of_range&)
 	{
-		LOG(WARN) << name << ':' << line_number << ": number out of range: " << text << '\n';
-		return 0;
+		throw std::runtime_error(name + ':' + std::to_string(line_number) + ": number out of range: " + text);
 	}
 
 	if(text.size() > 1 && (text[0] == '"' || text[0] == '\'') && text.back() == text[0])

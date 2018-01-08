@@ -312,9 +312,9 @@ void Base::apply_layout
 				}
 				catch(const std::out_of_range&)
 				{
-					// TODO: warning
-					LOG(WARN) << "number out of range: " << part << '\n';
-					stack.emplace(0.0);
+					LOG(ERROR) << "number out of range: " << part << '\n';
+					bad = true;
+					break;
 				}
 			}
 		}
