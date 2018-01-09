@@ -15,24 +15,23 @@ texture::texture()
 
 texture::texture(const GLenum type)
 :
-	type(type)
+	type(type),
+	inited(true)
 {
 	glCreateTextures(type, 1, &name);
-
-	inited = true;
 }
 
-texture::texture(texture&& that)
+texture::texture(texture&& that) noexcept
 :
-	type(that.type)
+	type(that.type),
+	inited(that.inited),
+	name(that.name)
 {
-	name = that.name;
-	inited = that.inited;
-	if(inited)
+	if(that.inited)
 	{
-		that.name = 0;
 		//that.type = 0;
 		that.inited = false;
+		that.name = 0;
 	}
 }
 
@@ -141,11 +140,6 @@ void texture::parameter(texture::Parameter p, GLint value)
 		glBindTexture(type, name);
 		glTexParameteri(type, static_cast<GLenum>(p), value);
 	}
-}
-
-GLuint texture::get_name()
-{
-	return name;
 }
 
 }

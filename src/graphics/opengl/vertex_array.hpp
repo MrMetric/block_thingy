@@ -15,12 +15,15 @@ public:
 	vertex_array(const vertex_buffer&);
 	~vertex_array();
 
-	vertex_array(vertex_array&&);
+	vertex_array(vertex_array&&) noexcept;
 	vertex_array(const vertex_array&) = delete;
 	vertex_array& operator=(vertex_array&&) = delete;
 	vertex_array& operator=(const vertex_array&) = delete;
 
-	GLuint get_name();
+	GLuint get_name()
+	{
+		return name;
+	}
 
 	void attrib(GLuint index, bool enabled);
 

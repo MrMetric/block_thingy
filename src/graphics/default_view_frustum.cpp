@@ -72,10 +72,12 @@ default_view_frustum::default_view_frustum
 	planes.pop_back();
 }
 
-default_view_frustum::default_view_frustum(default_view_frustum&& that)
+default_view_frustum::default_view_frustum(default_view_frustum&& that) noexcept
 :
 	planes(std::move(that.planes))
 {
+	static_assert(noexcept(std::vector<plane>(std::move(planes))),
+		"std::vector<graphics::plane> move constructor is not noexcept 🤔");
 }
 
 default_view_frustum::default_view_frustum(const default_view_frustum& that)
@@ -84,8 +86,10 @@ default_view_frustum::default_view_frustum(const default_view_frustum& that)
 {
 }
 
-default_view_frustum& default_view_frustum::operator=(default_view_frustum&& that)
+default_view_frustum& default_view_frustum::operator=(default_view_frustum&& that) noexcept
 {
+	static_assert(noexcept(planes = std::move(that.planes)),
+		"std::vector<graphics::plane> move assignment operator is not noexcept 🤔");
 	planes = std::move(that.planes);
 	return *this;
 }

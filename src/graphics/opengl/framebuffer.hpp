@@ -13,7 +13,7 @@ public:
 	framebuffer();
 	~framebuffer();
 
-	framebuffer(framebuffer&&);
+	framebuffer(framebuffer&&) noexcept;
 	framebuffer(const framebuffer&) = delete;
 	framebuffer& operator=(framebuffer&&) = delete;
 	framebuffer& operator=(const framebuffer&) = delete;
@@ -28,7 +28,10 @@ public:
 	 */
 	void attach_texture(GLenum attachment_point, texture&, GLint mipmap_level);
 
-	GLuint get_name();
+	GLuint get_name()
+	{
+		return name;
+	}
 
 private:
 	bool inited;

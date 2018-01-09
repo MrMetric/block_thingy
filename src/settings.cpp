@@ -99,8 +99,9 @@ void set(const string& name, T value)
 		{
 			game::instance->event_manager.do_event(Event_change_setting(name, old_value, settings[name]));
 		}
+		return;
 	}
-	else if(has(name))
+	if(has(name))
 	{
 		throw std::runtime_error("can not set " + get_type_name(name) + " setting " + name + " to " + get_type_name_T<T>());
 	}
@@ -497,12 +498,12 @@ void add_command_handlers()
 	} \
 	catch(const std::invalid_argument&) \
 	{ \
-		LOG(ERROR) << "error setting " type " " << name << "[" #var "]" << " = " << s << ": not a number\n"; \
+		LOG(ERROR) << "error setting " type " " << (name) << "[" #var "]" << " = " << (s) << ": not a number\n"; \
 		return; \
 	} \
 	catch(const std::out_of_range&) \
 	{ \
-		LOG(ERROR) << "error setting " type " " << name << "[" #var "]" << " = " << s << ": out of range\n"; \
+		LOG(ERROR) << "error setting " type " " << (name) << "[" #var "]" << " = " << (s) << ": out of range\n"; \
 		return; \
 	} \
 	const double var = _ ## var ## _;

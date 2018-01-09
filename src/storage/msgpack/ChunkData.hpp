@@ -57,7 +57,7 @@ void ChunkData<T>::load(const msgpack::object& o)
 
 	if(v[1].type != msgpack::type::ARRAY)
 	{
-	 throw msgpack::type_error();
+		throw msgpack::type_error();
 	}
 	// msgpack errors on > instead of !=
 	if(v[1].via.array.size != CHUNK_BLOCK_COUNT)

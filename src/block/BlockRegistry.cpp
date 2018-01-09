@@ -16,7 +16,6 @@
 #include "block/test.hpp"
 #include "block/test_light.hpp"
 #include "block/unknown.hpp"
-#include "block/enums/Face.hpp"
 #include "block/enums/type.hpp"
 #include "util/logger.hpp"
 
@@ -26,21 +25,7 @@ using std::unique_ptr;
 
 namespace block_thingy::block {
 
-using enums::Face;
-
-BlockMaker::BlockMaker()
-{
-}
-
-BlockMaker::BlockMaker(const BlockMaker&)
-{
-}
-
-BlockMaker::~BlockMaker()
-{
-}
-
-shared_ptr<base> BlockMaker::make(const enums::type) const
+shared_ptr<base> block_maker::make(const enums::type /*type*/) const
 {
 	return nullptr;
 }
@@ -256,7 +241,7 @@ void BlockRegistry::make_strid_to_extid_map()
 enums::type BlockRegistry::add_
 (
 	const string& strid,
-	unique_ptr<BlockMaker> maker
+	unique_ptr<block_maker> maker
 )
 {
 	const enums::type t = static_cast<enums::type>(get_max_id());

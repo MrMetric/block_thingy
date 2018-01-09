@@ -9,7 +9,7 @@ namespace block_thingy {
 class ArgumentParser
 {
 public:
-	ArgumentParser();
+	ArgumentParser() = default;
 
 	ArgumentParser(ArgumentParser&&) = delete;
 	ArgumentParser(const ArgumentParser&) = delete;

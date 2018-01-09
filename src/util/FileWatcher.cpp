@@ -18,6 +18,8 @@ struct FileWatcher::impl
 	std::vector<std::unique_ptr<InotifyWatch>> inotify_watches;
 #endif
 
+	impl() = default;
+
 	~impl()
 	{
 	#ifdef USE_INOTIFY
@@ -25,6 +27,11 @@ struct FileWatcher::impl
 		inotify.RemoveAll();
 	#endif
 	}
+
+	impl(impl&&) = delete;
+	impl(const impl&) = delete;
+	impl& operator=(impl&&) = delete;
+	impl& operator=(const impl&) = delete;
 };
 
 FileWatcher::FileWatcher()

@@ -4,10 +4,6 @@ using std::string;
 
 namespace block_thingy {
 
-ArgumentParser::ArgumentParser()
-{
-}
-
 std::vector<string> ArgumentParser::parse_args(const string& argline)
 {
 	std::vector<string> args;

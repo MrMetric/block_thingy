@@ -128,7 +128,7 @@ void text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec3& col
 		const float h = ch.size.y;
 		const float y1 = ch.flip ? 1.0f : 0.0f;
 		const float y2 = 1.0f - ch.flip;
-		const float vertexes[] =
+		const float vertexes[]
 		{
 			xpos + w, ypos,     1.0f, y1,
 			xpos,     ypos,     0.0f, y1,
@@ -141,7 +141,7 @@ void text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec3& col
 
 		glBindTexture(GL_TEXTURE_2D, ch.texture.get_name());
 
-		vbo.data(sizeof(vertexes), vertexes, opengl::vertex_buffer::usage_hint::dynamic_draw);
+		vbo.data(vertexes, opengl::vertex_buffer::usage_hint::dynamic_draw);
 		vao.draw(GL_TRIANGLES, 0, sizeof(vertexes) / sizeof(vertexes[0]) / 4);
 	});
 }
@@ -185,7 +185,7 @@ std::tuple<glm::dvec2, std::vector<double>> text::loop
 (
 	const u32string& s,
 	glm::dvec2 pos,
-	std::function<void(const glm::dvec2&, character&)> f
+	const std::function<void(const glm::dvec2&, character&)>& f
 )
 {
 	std::vector<double> widths;

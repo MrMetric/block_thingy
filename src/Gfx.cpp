@@ -79,6 +79,7 @@ Gfx::Gfx()
 	gui_text(settings::get<string>("font"), static_cast<FT_UInt>(settings::get<int64_t>("font_size"))),
 	screen_rt(window_size, 8),
 	buf_rt(window_size),
+	screen_shader(nullptr),
 	quad_vbo({3, GL_BYTE}),
 	quad_vao(quad_vbo),
 	s_gui_shape("shaders/gui_shape"),
@@ -259,7 +260,7 @@ void Gfx::opengl_setup()
 
 	set_screen_shader(settings::get<string>("screen_shader"));
 
-	const GLbyte quad_vertex_buffer_data[] =
+	const GLbyte quad_vertex_buffer_data[]
 	{
 		-1, -1, 0,
 		 1, -1, 0,
@@ -268,7 +269,7 @@ void Gfx::opengl_setup()
 		 1, -1, 0,
 		 1,  1, 0,
 	};
-	quad_vbo.data(sizeof(quad_vertex_buffer_data), quad_vertex_buffer_data, graphics::opengl::vertex_buffer::usage_hint::static_draw);
+	quad_vbo.data(quad_vertex_buffer_data, graphics::opengl::vertex_buffer::usage_hint::static_draw);
 }
 
 void Gfx::update_framebuffer_size(const window_size_t& window_size)
@@ -389,7 +390,8 @@ void Gfx::draw_box_outline(const glm::dvec3& min_, const glm::dvec3& max_, const
 	const glm::vec3 min(min_ + o);
 	const glm::vec3 max(max_ + o);
 
-	const float vertexes[] = {
+	const float vertexes[]
+	{
 		min.x, min.y, min.z,
 		max.x, min.y, min.z,
 
@@ -426,7 +428,7 @@ void Gfx::draw_box_outline(const glm::dvec3& min_, const glm::dvec3& max_, const
 		max.x, min.y, min.z,
 		max.x, min.y, max.z,
 	};
-	outline_vbo.data(sizeof(vertexes), vertexes, graphics::opengl::vertex_buffer::usage_hint::dynamic_draw);
+	outline_vbo.data(vertexes, graphics::opengl::vertex_buffer::usage_hint::dynamic_draw);
 
 	s_lines.uniform("mvp_matrix", glm::mat4(vp_matrix));
 	s_lines.uniform("color", glm::vec4(color));
@@ -489,7 +491,7 @@ void Gfx::draw_rectangle(glm::dvec2 position, glm::dvec2 size, const glm::dvec4&
 	const float x = static_cast<float>(position.x);
 	const float y = static_cast<float>(position.y);
 
-	const float v[] =
+	const float v[]
 	{
 		x + w, y + h,
 		x + w, y    ,
@@ -499,7 +501,7 @@ void Gfx::draw_rectangle(glm::dvec2 position, glm::dvec2 size, const glm::dvec4&
 		x    , y + h,
 		x + w, y + h,
 	};
-	gui_rectangle_vbo.data(sizeof(v), v, graphics::opengl::vertex_buffer::usage_hint::dynamic_draw);
+	gui_rectangle_vbo.data(v, graphics::opengl::vertex_buffer::usage_hint::dynamic_draw);
 
 	s_gui_shape.uniform("color", glm::vec4(color));
 
@@ -521,7 +523,7 @@ void Gfx::draw_border(glm::dvec2 position, glm::dvec2 size, glm::dvec4 border_si
 	const float sy1 = static_cast<float>(border_size.z);
 	const float sy2 = static_cast<float>(border_size.w);
 
-	const float v[] =
+	const float v[]
 	{
 		// left
 		x      , y + h + sy2,
@@ -559,7 +561,7 @@ void Gfx::draw_border(glm::dvec2 position, glm::dvec2 size, glm::dvec4 border_si
 		x    , y + h + sy2,
 		x + w, y + h + sy2,
 	};
-	gui_rectangle_vbo.data(sizeof(v), v, graphics::opengl::vertex_buffer::usage_hint::dynamic_draw);
+	gui_rectangle_vbo.data(v, graphics::opengl::vertex_buffer::usage_hint::dynamic_draw);
 
 	s_gui_shape.uniform("color", glm::vec4(color));
 

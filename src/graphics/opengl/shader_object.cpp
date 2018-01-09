@@ -13,7 +13,7 @@ using std::string;
 
 namespace block_thingy::graphics::opengl {
 
-string get_log(const GLuint object);
+string get_log(GLuint object);
 string do_include(const fs::path& file_path, std::size_t file_number, std::vector<fs::path>& file_paths);
 
 shader_object::shader_object()
@@ -23,7 +23,9 @@ shader_object::shader_object()
 {
 }
 
-shader_object::shader_object(const fs::path& file_path, GLenum type)
+shader_object::shader_object(const fs::path& file_path, const GLenum type)
+:
+	inited(true)
 {
 	LOG(INFO) << "compiling shader: " << file_path.u8string() << '\n';
 
@@ -57,18 +59,17 @@ shader_object::shader_object(const fs::path& file_path, GLenum type)
 	{
 		LOG(DEBUG) << "info log for " << file_path.u8string() << ":\n" << log << '\n';
 	}
-
-	inited = true;
 }
 
-shader_object::shader_object(shader_object&& that)
+shader_object::shader_object(shader_object&& that) noexcept
+:
+	inited(that.inited),
+	name(that.name)
 {
-	name = that.name;
-	inited = that.inited;
-	if(inited)
+	if(that.inited)
 	{
-		that.name = 0;
 		that.inited = false;
+		that.name = 0;
 	}
 }
 
@@ -78,11 +79,6 @@ shader_object::~shader_object()
 	{
 		glDeleteShader(name);
 	}
-}
-
-GLuint shader_object::get_name()
-{
-	return name;
 }
 
 static const string include_str = "#include";

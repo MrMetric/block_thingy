@@ -48,16 +48,17 @@ struct operator_info
 };
 static const std::unordered_map<string, operator_info> OPERATORS
 {
-	{"=" , {0, true}},
-	{"+" , {1, true}},
-	{"-" , {1, true}},
-	{"*" , {2, true}},
+	{"=", {0, true}},
+	{"+", {1, true}},
+	{"-", {1, true}},
+	{"*", {2, true}},
 	{"/", {2, true}},
 };
 std::vector<string> parse_expression(const string& expr)
 {
 	std::vector<string> tokens;
 
+	// TODO: add relational operators > < >= <=
 	bool has_equals = false;
 	for(auto i = expr.cbegin(); i != expr.cend();)
 	{

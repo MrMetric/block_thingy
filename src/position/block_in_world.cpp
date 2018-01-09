@@ -26,7 +26,7 @@ block_in_world::block_in_world(const value_type x, const value_type y, const val
 }
 
 #undef t
-#define t(a, b) static_cast<value_type>(a) * CHUNK_SIZE + b
+#define t(a, b) (static_cast<value_type>(a) * CHUNK_SIZE + (b))
 block_in_world::block_in_world(const chunk_in_world& chunk_pos, const block_in_chunk& block_pos)
 {
 	x = t(chunk_pos.x, block_pos.x);

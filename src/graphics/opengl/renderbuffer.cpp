@@ -6,13 +6,30 @@
 namespace block_thingy::graphics::opengl {
 
 renderbuffer::renderbuffer()
+:
+	inited(true)
 {
 	glCreateRenderbuffers(1, &name);
 }
 
 renderbuffer::~renderbuffer()
 {
-	glDeleteRenderbuffers(1, &name);
+	if(inited)
+	{
+		glDeleteRenderbuffers(1, &name);
+	}
+}
+
+renderbuffer::renderbuffer(renderbuffer&& that) noexcept
+:
+	inited(that.inited),
+	name(that.name)
+{
+	if(that.inited)
+	{
+		that.inited = false;
+		that.name = 0;
+	}
 }
 
 void renderbuffer::storage
@@ -36,11 +53,6 @@ void renderbuffer::storage
 	{
 		glNamedRenderbufferStorage(name, internal_format, width, height);
 	}
-}
-
-GLuint renderbuffer::get_name()
-{
-	return name;
 }
 
 }

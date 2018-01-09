@@ -17,7 +17,7 @@ public:
 	);
 	~Plugin();
 
-	Plugin(Plugin&&);
+	Plugin(Plugin&&) noexcept;
 	Plugin(const Plugin&) = delete;
 	Plugin& operator=(Plugin&&) = delete;
 	Plugin& operator=(const Plugin&) = delete;

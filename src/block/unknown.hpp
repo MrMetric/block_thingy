@@ -12,7 +12,7 @@ class unknown : public base
 {
 public:
 	unknown(enums::type);
-	unknown(enums::type, const std::string& strid);
+	unknown(enums::type, std::string strid);
 
 	unknown& operator=(const base&) override;
 

@@ -95,7 +95,7 @@ void generate_surface
 			const auto x = pos[i.x];
 			const auto y = pos[i.y];
 			const auto z = pos[i.z];
-			int8_t o[] = {0, 0, 0};
+			int8_t o[] {0, 0, 0};
 			o[i.y] = offset;
 
 			const block::base& block = base::block_at(chunk, x, y, z);

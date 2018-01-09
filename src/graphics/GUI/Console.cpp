@@ -13,7 +13,7 @@ namespace block_thingy::graphics::gui {
 
 Console::Console(game& g)
 :
-	Base(g, "guis/Console.btgui")
+	Base(g, "guis/console.btgui")
 {
 	auto input = root.get_widget_by_id<widget::text_input>("input");
 	if(input != nullptr)

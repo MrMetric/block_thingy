@@ -81,6 +81,11 @@ struct resource_manager::impl
 	{
 	}
 
+	impl(impl&&) = delete;
+	impl(const impl&) = delete;
+	impl& operator=(impl&&) = delete;
+	impl& operator=(const impl&) = delete;
+
 	block_texture& get_block_texture(uint32_t res)
 	{
 		const auto i = block_textures.find(res);
@@ -168,7 +173,7 @@ static std::unordered_map<string, string> parse_block(const string& s)
 	for(string line; std::getline(ss, line);)
 	{
 		std::vector<string> parts = ArgumentParser().parse_args(line);
-		if(parts.size() == 0) continue; // comment or empty
+		if(parts.empty()) continue; // comment or empty
 		if(parts.size() != 2)
 		{
 			// TODO

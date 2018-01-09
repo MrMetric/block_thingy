@@ -8,9 +8,9 @@
 
 namespace block_thingy::graphics::opengl {
 
-vertex_buffer::vertex_buffer(Format format)
+vertex_buffer::vertex_buffer(const Format& format)
 :
-	vertex_buffer(std::vector<Format>{std::move(format)})
+	vertex_buffer(std::vector<Format>{format})
 {
 }
 
@@ -58,20 +58,16 @@ vertex_buffer::~vertex_buffer()
 }
 
 vertex_buffer::vertex_buffer(vertex_buffer&& that)
+:
+	inited(that.inited),
+	name(that.name),
+	formats(std::move(that.formats))
 {
-	name = that.name;
-	inited = that.inited;
-	if(inited)
+	if(that.inited)
 	{
-		that.name = 0;
 		that.inited = false;
-		formats = std::move(that.formats);
+		that.name = 0;
 	}
-}
-
-GLuint vertex_buffer::get_name()
-{
-	return name;
 }
 
 void vertex_buffer::data(const std::size_t size, const void* data, const usage_hint usage)

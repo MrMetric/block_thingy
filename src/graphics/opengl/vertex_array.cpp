@@ -40,14 +40,15 @@ vertex_array::vertex_array(const vertex_buffer& vbo)
 	}
 }
 
-vertex_array::vertex_array(vertex_array&& that)
+vertex_array::vertex_array(vertex_array&& that) noexcept
+:
+	inited(that.inited),
+	name(that.name)
 {
-	name = that.name;
-	inited = that.inited;
-	if(inited)
+	if(that.inited)
 	{
-		that.name = 0;
 		that.inited = false;
+		that.name = 0;
 	}
 }
 
@@ -57,11 +58,6 @@ vertex_array::~vertex_array()
 	{
 		glDeleteVertexArrays(1, &name);
 	}
-}
-
-GLuint vertex_array::get_name()
-{
-	return name;
 }
 
 void vertex_array::attrib(const GLuint index, const bool enabled)

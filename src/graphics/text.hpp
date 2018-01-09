@@ -77,7 +77,7 @@ private:
 	(
 		const std::u32string&,
 		glm::dvec2,
-		std::function<void(const glm::dvec2&, character&)>
+		const std::function<void(const glm::dvec2&, character&)>&
 	);
 	character& get_char(char32_t);
 	character load_char(char32_t) const;

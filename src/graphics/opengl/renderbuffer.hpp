@@ -12,7 +12,7 @@ public:
 	renderbuffer();
 	~renderbuffer();
 
-	renderbuffer(renderbuffer&&);
+	renderbuffer(renderbuffer&&) noexcept;
 	renderbuffer(const renderbuffer&) = delete;
 	renderbuffer& operator=(renderbuffer&&) = delete;
 	renderbuffer& operator=(const renderbuffer&) = delete;
@@ -29,9 +29,13 @@ public:
 		GLsizei samples = 0
 	);
 
-	GLuint get_name();
+	GLuint get_name()
+	{
+		return name;
+	}
 
 private:
+	bool inited;
 	GLuint name;
 };
 

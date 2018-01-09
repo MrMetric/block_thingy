@@ -16,7 +16,7 @@ namespace block_thingy::graphics::gui {
 
 Pause::Pause(game& g)
 :
-	Base(g, "guis/Pause.btgui")
+	Base(g, "guis/pause.btgui")
 {
 }
 

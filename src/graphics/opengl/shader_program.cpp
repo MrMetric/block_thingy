@@ -26,10 +26,17 @@ using std::unique_ptr;
 namespace block_thingy::graphics::opengl {
 
 static GLuint make_program(const std::vector<GLuint>& objects, const string& debug_name);
-static std::vector<string> get_uniform_names(const GLuint name);
+static std::vector<string> get_uniform_names(GLuint name);
 
 struct shader_program::impl
 {
+	impl() = default;
+
+	impl(impl&&) = delete;
+	impl(const impl&) = delete;
+	impl& operator=(impl&&) = delete;
+	impl& operator=(const impl&) = delete;
+
 	std::vector<resource<shader_object>> res;
 
 #ifdef BT_RELOADABLE_SHADERS
@@ -65,6 +72,7 @@ shader_program::shader_program
 	const string& debug_name
 )
 :
+	inited(true),
 	pImpl(std::make_unique<impl>())
 {
 #ifdef BT_RELOADABLE_SHADERS
@@ -123,8 +131,6 @@ shader_program::shader_program
 	#endif
 	}
 	pImpl->init(*this, debug_name);
-
-	inited = true;
 }
 
 shader_program::~shader_program()
@@ -136,14 +142,16 @@ shader_program::~shader_program()
 }
 
 shader_program::shader_program(shader_program&& that)
+:
+	inited(that.inited),
+	name(that.name),
+	uniforms(std::move(that.uniforms)),
+	pImpl(std::move(that.pImpl))
 {
-	name = that.name;
-	inited = that.inited;
-	if(inited)
+	if(that.inited)
 	{
-		that.name = 0;
-		uniforms = std::move(that.uniforms);
 		that.inited = false;
+		that.name = 0;
 	}
 }
 

@@ -35,15 +35,15 @@ void Base::draw()
 	}
 }
 
-void Base::keypress(const util::key_press&)
+void Base::keypress(const util::key_press& /*press*/)
 {
 }
 
-void Base::charpress(const util::char_press&)
+void Base::charpress(const util::char_press& /*press*/)
 {
 }
 
-void Base::mousepress(const util::mouse_press&)
+void Base::mousepress(const util::mouse_press& /*press*/)
 {
 }
 
@@ -78,15 +78,15 @@ void Base::add_modifier(std::shared_ptr<component::Base> m)
 	modifiers.emplace_back(m);
 }
 
-void Base::set_border_size(glm::dvec4 v)
+void Base::set_border_size(const glm::dvec4& v)
 {
-	border_size = std::move(v);
+	border_size = v;
 	// TODO: trigger layout recalculation
 }
 
-void Base::set_border_color(glm::dvec4 v)
+void Base::set_border_color(const glm::dvec4& v)
 {
-	border_color = std::move(v);
+	border_color = v;
 }
 
 void Base::read_layout(const json& j)
@@ -225,7 +225,7 @@ void Base::apply_layout
 				// TODO: check if this is the expression's end
 				break;
 			}
-			else if(part == "+" || part == "-" || part == "*" || part == "/")
+			if(part == "+" || part == "-" || part == "*" || part == "/")
 			{
 				// operator
 				if(stack.size() < 2)

@@ -24,7 +24,7 @@ chunk_in_world::chunk_in_world(const value_type x, const value_type y, const val
 {
 }
 
-#define t(a) static_cast<value_type>(std::floor(a / static_cast<double>(CHUNK_SIZE)))
+#define t(a) static_cast<value_type>(std::floor((a) / static_cast<double>(CHUNK_SIZE)))
 chunk_in_world::chunk_in_world(const block_in_world& pos)
 {
 	x = t(pos.x);

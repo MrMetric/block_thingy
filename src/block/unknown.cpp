@@ -1,5 +1,7 @@
 #include "unknown.hpp"
 
+#include <utility>
+
 #include "block/enums/visibility_type.hpp"
 #include "storage/Interface.hpp"
 
@@ -16,11 +18,11 @@ unknown::unknown(const enums::type t)
 unknown::unknown
 (
 	const enums::type t,
-	const string& strid
+	string strid
 )
 :
 	base(t, enums::visibility_type::opaque),
-	strid(strid)
+	strid(std::move(strid))
 {
 }
 

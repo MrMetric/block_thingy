@@ -20,7 +20,7 @@ public:
 	Player
 	(
 		game&,
-		const std::string& name
+		std::string name
 	);
 
 	Player(Player&&) = delete;

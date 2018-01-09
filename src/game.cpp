@@ -75,11 +75,12 @@ game* game::instance = nullptr;
 
 struct game::impl
 {
-	impl(game& g)
+	explicit impl(game& g)
 	:
 		g(g),
 		delta_time(0),
 		fps(999),
+		root_gui(nullptr),
 		just_opened_gui(false),
 		last_key(0),
 		last_key_scancode(0),
@@ -87,6 +88,11 @@ struct game::impl
 		consume_key_release_scancode(0)
 	{
 	}
+
+	impl(impl&&) = delete;
+	impl(const impl&) = delete;
+	impl& operator=(impl&&) = delete;
+	impl& operator=(const impl&) = delete;
 
 	game& g;
 
@@ -117,11 +123,11 @@ static unique_ptr<mesher::base> make_mesher(const string& name)
 	{
 		return std::make_unique<mesher::greedy>();
 	}
-	else if(name == "simple")
+	if(name == "simple")
 	{
 		return std::make_unique<mesher::simple>();
 	}
-	else if(name == "simple2")
+	if(name == "simple2")
 	{
 		return std::make_unique<mesher::simple2>();
 	}
@@ -751,7 +757,7 @@ void game::impl::add_commands()
 	COMMAND("screenshot")
 	{
 		string filename;
-		if(args.size() == 0)
+		if(args.empty())
 		{
 			filename = util::datetime() + ".png";
 		}

@@ -13,7 +13,7 @@ class image
 {
 public:
 	image();
-	image(const fs::path&);
+	explicit image(const fs::path&);
 	image(uint32_t width, uint32_t height, std::vector<uint8_t> data);
 	~image();
 

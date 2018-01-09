@@ -11,17 +11,17 @@
 
 namespace block_thingy::block {
 
-class BlockMaker
+class block_maker
 {
 public:
-	BlockMaker();
-	BlockMaker(const BlockMaker&);
-	virtual ~BlockMaker();
+	block_maker() = default;
+	block_maker(const block_maker&) = default;
+	virtual ~block_maker() = default;
 	virtual std::shared_ptr<base> make(enums::type) const;
 };
 
 template<typename T>
-class BlockMakerInstance : public BlockMaker
+class block_maker_instance : public block_maker
 {
 public:
 	std::shared_ptr<base> make(const enums::type t) const override
@@ -43,7 +43,7 @@ public:
 	template<typename T, typename... Args>
 	enums::type add(const std::string& strid, Args&&... args)
 	{
-		enums::type t = add_(strid, std::make_unique<BlockMakerInstance<T>>());
+		enums::type t = add_(strid, std::make_unique<block_maker_instance<T>>());
 		default_blocks[t] = std::make_shared<T>(t, std::forward<Args>(args)...);
 		return t;
 	}
@@ -77,11 +77,11 @@ public:
 
 private:
 	void make_strid_to_extid_map();
-	enums::type add_(const std::string& strid, std::unique_ptr<BlockMaker>);
+	enums::type add_(const std::string& strid, std::unique_ptr<block_maker>);
 
 	mutable std::map<enums::type, std::shared_ptr<base>> default_blocks;
 	mutable std::mutex default_blocks_mutex;
-	std::map<enums::type, std::unique_ptr<BlockMaker>> block_makers;
+	std::map<enums::type, std::unique_ptr<block_maker>> block_makers;
 
 	std::map<std::string, enums::type> strid_to_id;
 	std::map<enums::type, std::string> id_to_strid;

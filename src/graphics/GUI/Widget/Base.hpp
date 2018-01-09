@@ -26,6 +26,11 @@ public:
 	Base(Base* parent);
 	virtual ~Base();
 
+	Base(Base&&) = delete;
+	Base(const Base&) = delete;
+	Base& operator=(Base&&) = delete;
+	Base& operator=(const Base&) = delete;
+
 	virtual std::string type() const = 0;
 
 	virtual void draw();
@@ -40,8 +45,8 @@ public:
 
 	void add_modifier(std::shared_ptr<component::Base>);
 
-	void set_border_size(glm::dvec4);
-	void set_border_color(glm::dvec4);
+	void set_border_size(const glm::dvec4&);
+	void set_border_color(const glm::dvec4&);
 
 	using style_t = std::map<std::string, strict_variant::variant<std::string, double>>;
 	using style_vars_t = std::map<std::string, rhea::variable>;

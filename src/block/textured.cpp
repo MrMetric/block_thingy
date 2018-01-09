@@ -1,14 +1,11 @@
 #include "textured.hpp"
 
 #include "game.hpp"
-#include "block/enums/Face.hpp"
 #include "block/enums/visibility_type.hpp"
 
 using std::string;
 
 namespace block_thingy::block {
-
-using enums::Face;
 
 static enums::visibility_type get_visibility_type(const fs::path& path)
 {

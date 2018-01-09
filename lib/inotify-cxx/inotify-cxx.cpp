@@ -21,8 +21,8 @@
  */
 
 #include <algorithm>
+#include <cerrno>
 #include <cstdio>
-#include <errno.h>
 #include <fcntl.h>
 #include <fstream>
 #include <iterator>
@@ -39,6 +39,12 @@
 #endif
 
 #include "inotify-cxx.hpp"
+
+/// Helper macro for creating exception messages.
+/**
+ * It prepends the message by the function name.
+ */
+#define IN_EXC_MSG(msg) (std::string(__PRETTY_FUNCTION__) + ": " + msg)
 
 /// Event struct size
 constexpr std::size_t INOTIFY_EVENT_SIZE = sizeof(inotify_event);
@@ -98,9 +104,9 @@ InotifyWatch* InotifyEvent::GetWatch()
 	return m_pWatch;
 }
 
-InotifyWatch::InotifyWatch(const std::string& path, uint32_t mask, bool enabled)
+InotifyWatch::InotifyWatch(std::string path, uint32_t mask, bool enabled)
 :
-	m_path(path),
+	m_path(std::move(path)),
 	m_uMask(mask),
 	m_wd(-1),
 	m_pInotify(nullptr),

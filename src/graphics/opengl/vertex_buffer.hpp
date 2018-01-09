@@ -11,7 +11,7 @@ class vertex_buffer
 {
 public:
 	struct Format;
-	vertex_buffer(Format);
+	vertex_buffer(const Format&);
 	vertex_buffer(std::vector<Format>);
 	~vertex_buffer();
 
@@ -20,7 +20,10 @@ public:
 	vertex_buffer& operator=(vertex_buffer&&) = delete;
 	vertex_buffer& operator=(const vertex_buffer&) = delete;
 
-	GLuint get_name();
+	GLuint get_name()
+	{
+		return name;
+	}
 
 	enum class usage_hint : GLenum
 	{
@@ -35,6 +38,11 @@ public:
 		dynamic_copy = GL_DYNAMIC_COPY,
 	};
 	void data(std::size_t size, const void* data, usage_hint);
+	template<typename T, std::size_t N>
+	void data(T(&p)[N], const usage_hint hint)
+	{
+		data(sizeof(p), p, hint);
+	}
 
 	struct Format
 	{

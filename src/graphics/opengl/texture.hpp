@@ -13,7 +13,7 @@ public:
 	texture(GLenum type);
 	~texture();
 
-	texture(texture&&);
+	texture(texture&&) noexcept;
 	texture(const texture&) = delete;
 	texture& operator=(texture&&) = delete;
 	texture& operator=(const texture&) = delete;
@@ -89,7 +89,10 @@ public:
 	};
 	void parameter(Parameter, GLint value);
 
-	GLuint get_name();
+	GLuint get_name()
+	{
+		return name;
+	}
 
 	const GLenum type;
 

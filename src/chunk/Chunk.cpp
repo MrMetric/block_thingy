@@ -87,6 +87,11 @@ struct Chunk::impl
 		}
 	}
 
+	impl(impl&&) = delete;
+	impl(const impl&) = delete;
+	impl& operator=(impl&&) = delete;
+	impl& operator=(const impl&) = delete;
+
 	void init_light_tex()
 	{
 		light_tex = std::make_unique<graphics::opengl::texture>(GL_TEXTURE_3D);

@@ -110,15 +110,12 @@ u8vec3 base::get_i(const Face face)
 	{
 		return {1, 0, 2};
 	}
-	else if(face == Face::top || face == Face::bottom)
+	if(face == Face::top || face == Face::bottom)
 	{
 		return {2, 1, 0};
 	}
-	else
-	{
-		assert(face == Face::front || face == Face::back);
-		return {0, 2, 1};
-	}
+	assert(face == Face::front || face == Face::back);
+	return {0, 2, 1};
 }
 
 Side base::to_side(const Face face)

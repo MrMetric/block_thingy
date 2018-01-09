@@ -12,7 +12,7 @@ namespace block_thingy {
 
 struct Plugin::impl
 {
-	impl(const fs::path& path)
+	explicit impl(const fs::path& path)
 	:
 		handle(nullptr),
 		path(path)
@@ -44,6 +44,11 @@ struct Plugin::impl
 		}
 	#endif
 	}
+
+	impl(impl&&) = delete;
+	impl(const impl&) = delete;
+	impl& operator=(impl&&) = delete;
+	impl& operator=(const impl&) = delete;
 
 	void* get_symbol(const string& name)
 	{
@@ -80,9 +85,10 @@ Plugin::~Plugin()
 {
 }
 
-Plugin::Plugin(Plugin&& that)
+Plugin::Plugin(Plugin&& that) noexcept
+:
+	pImpl(std::move(that.pImpl))
 {
-	pImpl = std::move(that.pImpl);
 }
 
 void Plugin::init(game& g)

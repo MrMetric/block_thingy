@@ -20,7 +20,7 @@ bool air::is_selectable() const
 	return false;
 }
 
-bool air::is_replaceable_by(const base&) const
+bool air::is_replaceable_by(const base& /*block*/) const
 {
 	return true;
 }

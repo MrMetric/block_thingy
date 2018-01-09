@@ -72,6 +72,11 @@ struct world::impl
 	{
 	}
 
+	impl(impl&&) = delete;
+	impl(const impl&) = delete;
+	impl& operator=(impl&&) = delete;
+	impl& operator=(const impl&) = delete;
+
 	world& this_world;
 
 	position::unordered_map_t<chunk_in_world, shared_ptr<Chunk>> chunks;
@@ -103,7 +108,7 @@ struct world::impl
 
 	util::ThreadThingy<chunk_in_world, position::hasher_t<chunk_in_world>> gen_thread;
 	moodycamel::ConcurrentQueue<shared_ptr<Chunk>> generated_chunks;
-	void gen_chunk(shared_ptr<Chunk>) const;
+	void gen_chunk(shared_ptr<Chunk>&) const;
 
 	util::ThreadThingy<chunk_in_world, position::hasher_t<chunk_in_world>> load_thread;
 	moodycamel::ConcurrentQueue<shared_ptr<Chunk>> loaded_chunks;
@@ -504,7 +509,7 @@ void world::impl::sub_blocklight(const block_in_world& block_pos)
 
 void world::impl::update_blocklight_around(const block_in_world& block_pos)
 {
-	#define a(x_, y_, z_) blocklight_add.emplace(block_pos.x + x_, block_pos.y + y_, block_pos.z + z_)
+	#define a(x_, y_, z_) blocklight_add.emplace(block_pos.x + (x_), block_pos.y + (y_), block_pos.z + (z_))
 	a( 0,  0, -1);
 	a( 0,  0, +1);
 	a( 0, -1,  0);
@@ -839,7 +844,7 @@ static double sum_noise
 	return val;
 }
 
-void world::impl::gen_chunk(shared_ptr<Chunk> chunk) const
+void world::impl::gen_chunk(shared_ptr<Chunk>& chunk) const
 {
 	assert(chunk != nullptr);
 

@@ -94,7 +94,7 @@ int main(const int argc, char** argv)
 #endif
 
 	const string compiler_info = util::compiler_info();
-	if(compiler_info != "")
+	if(!compiler_info.empty())
 	{
 		LOG(DEBUG) << "Compiled by " << compiler_info << '\n';
 	}

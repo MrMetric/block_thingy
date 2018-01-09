@@ -23,7 +23,7 @@ light::light
 	const position::block_in_world& block_pos
 )
 :
-	Base(g, "guis/Light.btgui"),
+	Base(g, "guis/light.btgui"),
 	world(world),
 	block(block),
 	block_pos(block_pos)

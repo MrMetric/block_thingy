@@ -17,6 +17,13 @@ namespace block_thingy {
 struct PluginManager::impl
 {
 	std::vector<Plugin> plugins;
+
+	impl() = default;
+
+	impl(impl&&) = delete;
+	impl(const impl&) = delete;
+	impl& operator=(impl&&) = delete;
+	impl& operator=(const impl&) = delete;
 };
 
 PluginManager* PluginManager::instance = nullptr;
@@ -29,7 +36,11 @@ PluginManager::PluginManager()
 	fs::create_directory("plugins");
 	for(const auto& entry : fs::directory_iterator("plugins"))
 	{
+	#ifdef _WIN32
+		const fs::path sopath = entry.path() / "plugin.dll";
+	#else
 		const fs::path sopath = entry.path() / "plugin.so";
+	#endif
 		if(!fs::is_regular_file(sopath))
 		{
 			continue;

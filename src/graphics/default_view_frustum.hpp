@@ -30,9 +30,9 @@ public:
 		double ratio
 	);
 
-	default_view_frustum(default_view_frustum&&);
+	default_view_frustum(default_view_frustum&&) noexcept;
 	default_view_frustum(const default_view_frustum&);
-	default_view_frustum& operator=(default_view_frustum&&);
+	default_view_frustum& operator=(default_view_frustum&&) noexcept;
 	default_view_frustum& operator=(const default_view_frustum&);
 
 	bool inside(const glm::dvec3&) const override;

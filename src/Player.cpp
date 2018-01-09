@@ -1,6 +1,7 @@
 #include "Player.hpp"
 
 #include <cmath>
+#include <utility>
 
 #include <glm/common.hpp>			// glm::sign
 #include <glm/trigonometric.hpp>	// glm::radians
@@ -23,10 +24,10 @@ namespace block_thingy {
 Player::Player
 (
 	game& g,
-	const string& name
+	string name
 )
 :
-	name(name),
+	name(std::move(name)),
 	reach_distance(16),
 	spawn_position(0.5, 1.0, 0.5), // TODO: generate this
 	position(spawn_position, [this, &g](glm::dvec3 p)
@@ -135,7 +136,6 @@ void Player::move(const glm::dvec3& acceleration)
 			bool on_ground_check = false;
 			const position::block_in_world pos_feet_new(glm::dvec3(position.x, position.y + move_vec.y, position.z));
 			shared_ptr<block::base> block_on;
-			bool block_on_below = false;
 			for(int_fast64_t offset_x = -1; offset_x <= 1; ++offset_x)
 			{
 				for(int_fast64_t offset_z = -1; offset_z <= 1; ++offset_z)
@@ -161,12 +161,8 @@ void Player::move(const glm::dvec3& acceleration)
 								break;
 							}
 						}
-						if(!block_blocking) 
+						if(!block_blocking)
 						{
-							if(offset_x == 0 && offset_z == 0)
-							{
-								block_on_below = true;
-							}
 							on_ground_check = true;
 						}
 					}

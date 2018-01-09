@@ -57,7 +57,7 @@ struct image::impl
 	{
 	}
 
-	impl(const fs::path& path)
+	explicit impl(const fs::path& path)
 	{
 		if(path.extension() == ".png")
 		{
@@ -83,6 +83,11 @@ struct image::impl
 		}
 		check_transparency();
 	}
+
+	impl(impl&&) = delete;
+	impl(const impl&) = delete;
+	impl& operator=(impl&&) = delete;
+	impl& operator=(const impl&) = delete;
 
 	void check_transparency()
 	{
@@ -305,7 +310,7 @@ void write_png
 		png_destroy_write_struct(&png_ptr, nullptr);
 		throw std::runtime_error("png_create_info_struct returned null");
 	}
-	FILE* fp = fopen(path.string().c_str(), "wb");
+	FILE* fp = std::fopen(path.string().c_str(), "wb");
 	if(fp == nullptr)
 	{
 		png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);

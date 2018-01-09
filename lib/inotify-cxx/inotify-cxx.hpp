@@ -31,12 +31,6 @@
 // Please ensure that the following header file takes the right place
 #include <sys/inotify.h>
 
-/// Helper macro for creating exception messages.
-/**
- * It prepends the message by the function name.
- */
-#define IN_EXC_MSG(msg) (std::string(__PRETTY_FUNCTION__) + ": " + msg)
-
 /// inotify capability/limit identifiers
 enum class InotifyCapability
 {
@@ -189,7 +183,7 @@ public:
 	 * \param[in] mask mask for events
 	 * \param[in] enabled events enabled yes/no
 	 */
-	InotifyWatch(const std::string& path, uint32_t mask, bool enabled = true);
+	InotifyWatch(std::string path, uint32_t mask, bool enabled = true);
 
 	std::string GetPath() const;
 

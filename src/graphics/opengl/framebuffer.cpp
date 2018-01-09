@@ -6,10 +6,10 @@
 namespace block_thingy::graphics::opengl {
 
 framebuffer::framebuffer()
+:
+	inited(true)
 {
 	glCreateFramebuffers(1, &name);
-
-	inited = true;
 }
 
 framebuffer::~framebuffer()
@@ -17,10 +17,11 @@ framebuffer::~framebuffer()
 	glDeleteFramebuffers(1, &name);
 }
 
-framebuffer::framebuffer(framebuffer&& that)
+framebuffer::framebuffer(framebuffer&& that) noexcept
+:
+	inited(that.inited),
+	name(that.name)
 {
-	name = that.name;
-	inited = that.inited;
 	if(that.inited)
 	{
 		that.name = 0;
@@ -36,11 +37,6 @@ void framebuffer::attach_renderbuffer(GLenum attachment_point, renderbuffer& rb)
 void framebuffer::attach_texture(GLenum attachment_point, texture& tex, GLint mipmap_level)
 {
 	glNamedFramebufferTexture(name, attachment_point, tex.get_name(), mipmap_level);
-}
-
-GLuint framebuffer::get_name()
-{
-	return name;
 }
 
 }
