@@ -22,8 +22,20 @@ public:
 	Plugin& operator=(Plugin&&) = delete;
 	Plugin& operator=(const Plugin&) = delete;
 
+	bool is_inited() const
+	{
+		return inited;
+	}
+	std::string name() const
+	{
+		return name_;
+	}
+
 private:
 	friend class PluginManager;
+
+	bool inited;
+	std::string name_;
 
 	void init(game&);
 
