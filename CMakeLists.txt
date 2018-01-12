@@ -64,7 +64,7 @@ pkg_search_module(LIBPNG REQUIRED libpng)
 pkg_search_module(MSGPACK REQUIRED msgpack>=2.0.0) # TODO: determine minimum version
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	set(FSANITIZE -fsanitize=undefined,thread)
+	set(FSANITIZE -fsanitize=address,undefined)
 	set(FLAGS
 		-isystem "${PROJECT_SOURCE_DIR}/lib"
 		-iquote "${PROJECT_SOURCE_DIR}/src"
@@ -110,7 +110,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Wno-undefined-func-template
 	)
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-	set(FSANITIZE -fsanitize=undefined,thread)
+	set(FSANITIZE -fsanitize=address,undefined)
 	set(FLAGS
 		-isystem "${PROJECT_SOURCE_DIR}/lib"
 		-iquote "${PROJECT_SOURCE_DIR}/src"

@@ -1,6 +1,7 @@
 #include "misc.hpp"
 
 #include <algorithm>
+#include <cassert>
 #include <cstddef>
 #include <cerrno>
 #include <chrono>
@@ -70,22 +71,28 @@ string read_file(const fs::path& path, const bool is_text)
 
 string gl_object_log(const GLuint object)
 {
-	GLint log_length;
+	GLint log_length_;
 	if(glIsShader(object))
 	{
-		glGetShaderiv(object, GL_INFO_LOG_LENGTH, &log_length);
+		glGetShaderiv(object, GL_INFO_LOG_LENGTH, &log_length_);
 	}
 	else if(glIsProgram(object))
 	{
-		glGetProgramiv(object, GL_INFO_LOG_LENGTH, &log_length);
+		glGetProgramiv(object, GL_INFO_LOG_LENGTH, &log_length_);
 	}
 	else
 	{
 		throw std::runtime_error("can not get log for an OpenGL object that is not a shader or a program");
 	}
 
-	unique_ptr<char[]> log = std::make_unique<char[]>(static_cast<std::size_t>(log_length));
+	if(log_length_ == 0)
+	{
+		return "";
+	}
+	assert(log_length_ >= 0);
+	const auto log_length = static_cast<std::size_t>(log_length_);
 
+	unique_ptr<char[]> log = std::make_unique<char[]>(log_length);
 	if(glIsShader(object))
 	{
 		glGetShaderInfoLog(object, log_length, nullptr, log.get());
@@ -94,8 +101,7 @@ string gl_object_log(const GLuint object)
 	{
 		glGetProgramInfoLog(object, log_length, nullptr, log.get());
 	}
-
-	return string(log.get());
+	return string(log.get(), log_length);
 }
 
 bool is_integer(const string& s)
