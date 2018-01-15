@@ -11,6 +11,7 @@
 #include <concurrentqueue/concurrentqueue.hpp>
 
 #include "game.hpp"
+#include "Gfx.hpp"
 #include "settings.hpp"
 #include "block/base.hpp"
 #include "block/textured.hpp"
@@ -579,6 +580,17 @@ resource<shader_program> resource_manager::get_shader_program(const fs::path& pa
 			i->second->uniform("light", 1); // the texture unit
 			i->second->uniform("light_smoothing", static_cast<int>(settings::get<int64_t>("light_smoothing")));
 			i->second->uniform("min_light", static_cast<float>(settings::get<double>("min_light")));
+		}
+		else
+	#ifdef _WIN32
+		if(util::string_starts_with(path.string(), "shaders\\screen\\"))
+	#else
+		if(util::string_starts_with(path, "shaders/screen/"))
+	#endif
+		{
+			// the default value is 0, so setting it explicitly is not needed
+			//i->second->uniform("tex", 0);
+			i->second->uniform("tex_size", static_cast<glm::vec2>(Gfx::instance->window_size));
 		}
 	}
 	else if(reload)

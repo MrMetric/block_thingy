@@ -6,4 +6,4 @@ in vec2 UV;
 out vec4 FragColor;
 uniform sampler2D tex;
 uniform vec2 tex_size;
-uniform float time;
+uniform float global_time;

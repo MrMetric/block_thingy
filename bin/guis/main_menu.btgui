@@ -1,0 +1,18 @@
+auto_layout:
+	type: "column"
+	spacing: 8
+layout:
+	center = parent.center
+widgets:
+	button:
+		id: "btn_singleplayer"
+		text: "Create/load world"
+	button:
+		text: "Connect to server"
+		enabled: false
+	button:
+		text: "Settings"
+		enabled: false
+	button:
+		text: "Quit"
+		command: "quit"

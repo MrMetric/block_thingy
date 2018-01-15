@@ -173,7 +173,7 @@ enums::type_external BlockRegistry::get_extid(const enums::type t) const
 	return i->second;
 }
 
-void BlockRegistry::reset_extid_map()
+void BlockRegistry::gen_extid_map()
 {
 	extid_to_strid.clear();
 	for(const auto& p : id_to_strid)

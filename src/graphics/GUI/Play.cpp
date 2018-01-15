@@ -8,7 +8,6 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtx/io.hpp>
 
-#include "camera.hpp"
 #include "game.hpp"
 #include "Gfx.hpp"
 #include "Player.hpp"
@@ -18,6 +17,7 @@
 #include "block/enums/type.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
+#include "graphics/camera.hpp"
 #include "graphics/color.hpp"
 #include "position/block_in_chunk.hpp"
 #include "position/block_in_world.hpp"
@@ -55,10 +55,6 @@ void Play::close()
 
 void Play::draw()
 {
-	if(g.gui.get() == this)
-	{
-		g.step_world();
-	}
 	g.draw_world();
 	Base::draw();
 }
@@ -143,7 +139,7 @@ void Play::draw_debug_text()
 	ss << "field of view: " << settings::get<double>("fov") << '\n';
 	ss << "projection type: " << settings::get<string>("projection_type") << '\n';
 
-	const glm::dvec3 pos = g.player.position();
+	const glm::dvec3 pos = g.player->position();
 	ss << "position: " << pos << '\n';
 
 	std::ostringstream ss2;
@@ -159,9 +155,11 @@ void Play::draw_debug_text()
 	ss << ss2.str();
 
 	ss << "rotation: " << g.camera.rotation << '\n';
-	ss << "ticks: " << g.world.get_ticks() << '\n';
-	ss << "time: " << g.world.get_time() << '\n';
-	ss << "noclip: " << g.player.get_noclip() << '\n';
+	ss << "global ticks: " << g.get_global_ticks() << '\n';
+	ss << "global time : " << g.get_global_time() << '\n';
+	ss << "world ticks : " << g.world->get_ticks() << '\n';
+	ss << "world time  : " << g.world->get_time() << '\n';
+	ss << "noclip: " << g.player->get_noclip() << '\n';
 	auto show_block = [](const block::base& block) -> string
 	{
 		std::ostringstream ss;
@@ -174,12 +172,12 @@ void Play::draw_debug_text()
 	}
 	if(g.hovered_block != nullopt)
 	{
-		const shared_ptr<block::base> hovered = g.world.get_block(g.hovered_block->pos);
+		const shared_ptr<block::base> hovered = g.world->get_block(g.hovered_block->pos);
 		ss << "hovered: " << show_block(*hovered) << '\n';
 		ss << "\tface: " << g.hovered_block->face() << '\n';
 		ss << "\trotation: " << glm::io::width(2) << hovered->rotation() << '\n';
 		ss << "\temitted light: " << hovered->light() << '\n';
-		ss << "\tlight: " << g.world.get_blocklight(g.hovered_block->adjacent()) << '\n';
+		ss << "\tlight: " << g.world->get_blocklight(g.hovered_block->adjacent()) << '\n';
 	}
 
 	g.gfx.gui_text.draw(ss.str(), {8.0, 8.0});

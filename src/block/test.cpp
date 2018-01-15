@@ -1,11 +1,10 @@
 #include "test.hpp"
 
-#include <glm/gtx/color_space.hpp>
 #include <glm/vec3.hpp>
+#include <glm/gtx/color_space.hpp>
 
 #include "game.hpp"
 #include "block/enums/visibility_type.hpp"
-#include "world/world.hpp"
 
 namespace block_thingy::block {
 
@@ -22,7 +21,7 @@ double test::bounciness() const
 
 glm::dvec4 test::selection_color() const
 {
-	const auto t = game::instance->world.get_ticks();
+	const auto t = game::instance->get_global_ticks();
 	return {glm::rgbColor(glm::dvec3(t % 360, 1, 1)), 1};
 }
 

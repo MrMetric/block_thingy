@@ -11,7 +11,6 @@
 #include <glad/glad.h>
 #include <glm/vec3.hpp>
 
-#include "camera.hpp"
 #include "game.hpp"
 #include "settings.hpp"
 #include "fwd/block/base.hpp"
@@ -19,6 +18,7 @@
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_change_setting.hpp"
+#include "graphics/camera.hpp"
 #include "graphics/color.hpp"
 #include "graphics/opengl/shader_program.hpp"
 #include "graphics/opengl/texture.hpp"

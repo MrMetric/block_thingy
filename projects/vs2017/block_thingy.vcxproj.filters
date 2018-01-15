@@ -159,9 +159,6 @@
     <ClCompile Include="..\..\lib\rhea\symbol.cpp">
       <Filter>Library Files\rhea</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -264,6 +261,9 @@
     <ClCompile Include="..\..\src\event\type\Event_window_size_change.cpp">
       <Filter>Source Files\event\type</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\graphics\camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\graphics\color.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
@@ -295,6 +295,9 @@
       <Filter>Source Files\graphics\GUI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\GUI\light.cpp">
+      <Filter>Source Files\graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\GUI\main_menu.cpp">
       <Filter>Source Files\graphics\GUI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\GUI\Pause.cpp">
@@ -473,9 +476,6 @@
     <ClInclude Include="..\..\lib\rhea\variable.hpp">
       <Filter>Library Files\rhea</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\camera.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\fps_manager.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -632,6 +632,9 @@
     <ClInclude Include="..\..\src\fwd\event\EventType.hpp">
       <Filter>Source Files\fwd\event</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\fwd\graphics\camera.hpp">
+      <Filter>Source Files\fwd</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\fwd\graphics\color.hpp">
       <Filter>Source Files\fwd\graphics</Filter>
     </ClInclude>
@@ -689,6 +692,9 @@
     <ClInclude Include="..\..\src\fwd\world\world.hpp">
       <Filter>Source Files\fwd\world</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\graphics\camera.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\graphics\color.hpp">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
@@ -726,6 +732,9 @@
       <Filter>Source Files\graphics\GUI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\graphics\GUI\light.hpp">
+      <Filter>Source Files\graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\graphics\GUI\main_menu.hpp">
       <Filter>Source Files\graphics\GUI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\graphics\GUI\Pause.hpp">

@@ -5,6 +5,7 @@
 #include <glm/mat4x4.hpp>
 
 #include "fwd/resource_manager.hpp"
+#include "fwd/graphics/camera.hpp"
 #include "fwd/position/block_in_world.hpp"
 #include "fwd/world/world.hpp"
 
@@ -17,6 +18,7 @@ std::tuple<uint64_t, uint64_t> draw_world
 (
 	world::world&,
 	resource_manager&,
+	graphics::camera&,
 	const glm::dmat4& vp_matrix,
 	const position::block_in_world& origin,
 	uint64_t render_distance

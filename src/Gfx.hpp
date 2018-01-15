@@ -10,6 +10,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
+#include "resource_manager.hpp"
 #include "fwd/event/EventManager.hpp"
 #include "graphics/render_target.hpp"
 #include "graphics/text.hpp"
@@ -74,8 +75,7 @@ public:
 
 	graphics::render_target screen_rt;
 	graphics::render_target buf_rt;
-	std::map<std::string, graphics::opengl::shader_program> screen_shaders;
-	graphics::opengl::shader_program* screen_shader;
+	resource<graphics::opengl::shader_program> screen_shader;
 	graphics::opengl::vertex_buffer quad_vbo;
 	graphics::opengl::vertex_array quad_vao;
 	void set_screen_shader(const std::string&);

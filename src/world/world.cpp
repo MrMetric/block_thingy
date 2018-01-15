@@ -669,7 +669,7 @@ void world::step(double delta_time)
 
 	for(auto& p : pImpl->players)
 	{
-		p.second->step(delta_time);
+		p.second->step(*this, delta_time);
 	}
 
 	ticks += 1;

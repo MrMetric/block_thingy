@@ -27,7 +27,6 @@
     <ClCompile Include="..\..\lib\rhea\link_variable.cpp" />
     <ClCompile Include="..\..\lib\rhea\simplex_solver.cpp" />
     <ClCompile Include="..\..\lib\rhea\symbol.cpp" />
-    <ClCompile Include="..\..\src\camera.cpp" />
     <ClCompile Include="..\..\src\game.cpp" />
     <ClCompile Include="..\..\src\Gfx.cpp" />
     <ClCompile Include="..\..\src\language.cpp" />
@@ -62,6 +61,7 @@
     <ClCompile Include="..\..\src\event\type\Event_change_setting.cpp" />
     <ClCompile Include="..\..\src\event\type\Event_enter_block.cpp" />
     <ClCompile Include="..\..\src\event\type\Event_window_size_change.cpp" />
+    <ClCompile Include="..\..\src\graphics\camera.cpp" />
     <ClCompile Include="..\..\src\graphics\color.cpp" />
     <ClCompile Include="..\..\src\graphics\default_view_frustum.cpp" />
     <ClCompile Include="..\..\src\graphics\frustum.cpp" />
@@ -73,6 +73,7 @@
     <ClCompile Include="..\..\src\graphics\GUI\Base.cpp" />
     <ClCompile Include="..\..\src\graphics\GUI\Console.cpp" />
     <ClCompile Include="..\..\src\graphics\GUI\light.cpp" />
+    <ClCompile Include="..\..\src\graphics\GUI\main_menu.cpp" />
     <ClCompile Include="..\..\src\graphics\GUI\Pause.cpp" />
     <ClCompile Include="..\..\src\graphics\GUI\Play.cpp" />
     <ClCompile Include="..\..\src\graphics\GUI\Widget\Base.cpp" />
@@ -133,7 +134,6 @@
     <ClInclude Include="..\..\lib\rhea\strength.hpp" />
     <ClInclude Include="..\..\lib\rhea\symbol.hpp" />
     <ClInclude Include="..\..\lib\rhea\variable.hpp" />
-    <ClInclude Include="..\..\src\camera.hpp" />
     <ClInclude Include="..\..\src\fps_manager.hpp" />
     <ClInclude Include="..\..\src\game.hpp" />
     <ClInclude Include="..\..\src\Gfx.hpp" />
@@ -186,6 +186,7 @@
     <ClInclude Include="..\..\src\fwd\event\Event.hpp" />
     <ClInclude Include="..\..\src\fwd\event\EventManager.hpp" />
     <ClInclude Include="..\..\src\fwd\event\EventType.hpp" />
+    <ClInclude Include="..\..\src\fwd\graphics\camera.hpp" />
     <ClInclude Include="..\..\src\fwd\graphics\color.hpp" />
     <ClInclude Include="..\..\src\fwd\graphics\image.hpp" />
     <ClInclude Include="..\..\src\fwd\graphics\GUI\Base.hpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="..\..\src\fwd\util\key_press.hpp" />
     <ClInclude Include="..\..\src\fwd\util\mouse_press.hpp" />
     <ClInclude Include="..\..\src\fwd\world\world.hpp" />
+    <ClInclude Include="..\..\src\graphics\camera.hpp" />
     <ClInclude Include="..\..\src\graphics\color.hpp" />
     <ClInclude Include="..\..\src\graphics\default_view_frustum.hpp" />
     <ClInclude Include="..\..\src\graphics\frustum.hpp" />
@@ -218,6 +220,7 @@
     <ClInclude Include="..\..\src\graphics\GUI\Base.hpp" />
     <ClInclude Include="..\..\src\graphics\GUI\Console.hpp" />
     <ClInclude Include="..\..\src\graphics\GUI\light.hpp" />
+    <ClInclude Include="..\..\src\graphics\GUI\main_menu.hpp" />
     <ClInclude Include="..\..\src\graphics\GUI\Pause.hpp" />
     <ClInclude Include="..\..\src\graphics\GUI\Play.hpp" />
     <ClInclude Include="..\..\src\graphics\GUI\Widget\Base.hpp" />

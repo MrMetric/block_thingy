@@ -11,6 +11,7 @@
 #include "physics/AABB.hpp"
 #include "fwd/position/block_in_world.hpp"
 #include "util/Property.hpp"
+#include "fwd/world/world.hpp"
 
 namespace block_thingy {
 
@@ -31,8 +32,8 @@ public:
 	const std::string name;
 	double reach_distance;
 
-	void move(const glm::dvec3& acceleration);
-	void step(double delta_time);
+	void move(world::world&, const glm::dvec3& acceleration);
+	void step(world::world&, double delta_time);
 	glm::dvec3 apply_movement_input(glm::dvec3 acceleration, double move_speed);
 	void set_analog_motion(const glm::dvec2&);
 	void respawn();

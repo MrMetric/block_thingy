@@ -8,7 +8,7 @@
 #include "event/EventType.hpp"
 #include "event/type/Event_change_setting.hpp"
 
-namespace block_thingy {
+namespace block_thingy::graphics {
 
 camera::camera()
 :

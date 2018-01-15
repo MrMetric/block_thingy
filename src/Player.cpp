@@ -51,7 +51,7 @@ Player::Player
 {
 }
 
-void Player::move(const glm::dvec3& acceleration)
+void Player::move(world::world& world, const glm::dvec3& acceleration)
 {
 	const double sinY = std::sin(glm::radians(rotation().y));
 	const double cosY = std::cos(glm::radians(rotation().y));
@@ -85,7 +85,7 @@ void Player::move(const glm::dvec3& acceleration)
 	}
 
 	const position::block_in_world block_pos_old(position);
-	auto loop = [this, &new_position, &block_pos_old](const bool corners)
+	auto loop = [this, &world, &new_position, &block_pos_old](const bool corners)
 	{
 		position::block_in_world block_pos_offset;
 		for(block_pos_offset.y = 0; block_pos_offset.y <= std::floor(height); ++block_pos_offset.y)
@@ -98,7 +98,7 @@ void Player::move(const glm::dvec3& acceleration)
 			if(skip) continue;
 
 			const position::block_in_world block_pos = block_pos_old + block_pos_offset;
-			if(!g.world.get_block(block_pos)->is_solid())
+			if(!world.get_block(block_pos)->is_solid())
 			{
 				continue;
 			}
@@ -140,7 +140,7 @@ void Player::move(const glm::dvec3& acceleration)
 			{
 				for(int_fast64_t offset_z = -1; offset_z <= 1; ++offset_z)
 				{
-					block_on = g.world.get_block(position::block_in_world(glm::dvec3(
+					block_on = world.get_block(position::block_in_world(glm::dvec3(
 						position.x + offset_x * abs_offset,
 						pos_feet_new.y,
 						position.z + offset_z * abs_offset)));
@@ -151,7 +151,7 @@ void Player::move(const glm::dvec3& acceleration)
 						bool block_blocking = false;
 						for(offset_y = 1; offset_y <= height; ++offset_y)
 						{
-							shared_ptr<block::base> blocking_check = g.world.get_block(position::block_in_world(glm::dvec3(
+							shared_ptr<block::base> blocking_check = world.get_block(position::block_in_world(glm::dvec3(
 								position.x + offset_x * abs_offset,
 								pos_feet_new.y + offset_y,
 								position.z + offset_z * abs_offset)));
@@ -187,7 +187,7 @@ void Player::move(const glm::dvec3& acceleration)
 		else if(move_vec.y > 0)
 		{
 			const position::block_in_world pos_head_new(glm::dvec3(position.x, position.y + move_vec.y + height, position.z));
-			const shared_ptr<block::base> block = g.world.get_block(pos_head_new);
+			const shared_ptr<block::base> block = world.get_block(pos_head_new);
 			if(block->is_solid())
 			{
 				position.y = pos_head_new.y - height;
@@ -205,7 +205,7 @@ void Player::move(const glm::dvec3& acceleration)
 	this->velocity = velocity;
 }
 
-void Player::step(const double delta_time)
+void Player::step(world::world& world, const double delta_time)
 {
 	glm::dvec3 acceleration;
 	acceleration.y -= 0.5; // gravity
@@ -256,16 +256,16 @@ void Player::step(const double delta_time)
 	if(acceleration != glm::dvec3(0))
 	{
 		const position::block_in_world old_position(position());
-		move(acceleration * delta_time);
+		move(world, acceleration * delta_time);
 		const position::block_in_world new_position(position());
 		if(new_position != old_position)
 		{
-			const shared_ptr<block::base> block = g.world.get_block(new_position);
+			const shared_ptr<block::base> block = world.get_block(new_position);
 			if(block->type() != block::enums::type::none
 			&& block->type() != block::enums::type::air
 			&& !block->is_solid())
 			{
-				g.event_manager.do_event(Event_enter_block(g.world, *this, block));
+				g.event_manager.do_event(Event_enter_block(world, *this, block));
 			}
 		}
 

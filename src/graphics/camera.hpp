@@ -3,7 +3,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-namespace block_thingy {
+namespace block_thingy::graphics {
 
 class camera
 {

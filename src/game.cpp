@@ -40,6 +40,7 @@
 #include "graphics/render_world.hpp"
 #include "graphics/GUI/Base.hpp"
 #include "graphics/GUI/Console.hpp"
+#include "graphics/GUI/main_menu.hpp"
 #include "graphics/GUI/Pause.hpp"
 #include "graphics/GUI/Play.hpp"
 #include "graphics/opengl/push_state.hpp"
@@ -80,6 +81,7 @@ struct game::impl
 		g(g),
 		delta_time(0),
 		fps(999),
+		global_ticks(0),
 		root_gui(nullptr),
 		just_opened_gui(false),
 		last_key(0),
@@ -98,6 +100,7 @@ struct game::impl
 
 	double delta_time;
 	fps_manager fps;
+	uint64_t global_ticks;
 	std::tuple<uint64_t, uint64_t> draw_stats;
 
 	void find_hovered_block();
@@ -138,25 +141,17 @@ static unique_ptr<mesher::base> make_mesher(const string& name)
 game::game()
 :
 	set_instance(this),
-	world("worlds/test", block_registry, make_mesher(settings::get<string>("mesher"))),
-	player_ptr(world.add_player("test_player")),
-	player(*player_ptr),
 	keybinder(*Console::instance),
 	pImpl(std::make_unique<impl>(*this))
 {
 	resource_manager.load_blocks(*this);
 
-	if(block_registry.get_extid_map().empty())
-	{
-		// this should be done when starting a new world, but the design does not work that way yet
-		block_registry.reset_extid_map();
-	}
-
 	register_gui<graphics::gui::Console>("console");
+	register_gui<graphics::gui::main_menu>("main_menu");
 	register_gui<graphics::gui::Pause>("pause");
 	register_gui<graphics::gui::Play>("play");
 
-	gui = make_gui("play");
+	gui = make_gui("main_menu");
 	pImpl->root_gui = gui.get();
 	gui->init();
 
@@ -169,9 +164,9 @@ game::game()
 
 	glfwSetJoystickCallback([](const int joystick, const int event)
 	{
-		if(joystick == GLFW_JOYSTICK_1 && event == GLFW_DISCONNECTED)
+		if(joystick == GLFW_JOYSTICK_1 && event == GLFW_DISCONNECTED && game::instance->player != nullptr)
 		{
-			game::instance->player.set_analog_motion({ 0, 0 });
+			game::instance->player->set_analog_motion({ 0, 0 });
 		}
 	});
 	glfwSetWindowFocusCallback(gfx.window, []([[maybe_unused]] GLFWwindow* window, const int focused)
@@ -184,8 +179,8 @@ game::game()
 				Console::instance->run_line("open_gui pause");
 			}
 		}
-		// check if pause because a focus event is sent when the game starts
-		else if(game::instance->gui->type() == "pause")
+		// note: a focus event is sent when the engine starts, so this applies only when the root GUI does not hide the cursor
+		else
 		{
 			// when the game is paused after losing focus, the cursor stays hidden
 			// GLFW ignores setting the cursor to its current state, so re-hide it first
@@ -196,12 +191,17 @@ game::game()
 
 	event_manager.add_handler(EventType::change_setting, [&game=*this](const Event& event)
 	{
+		if(game.world == nullptr)
+		{
+			return;
+		}
+
 		const auto& e = static_cast<const Event_change_setting&>(event);
 
 		if(e.name == "mesher")
 		{
 			const string name = *e.new_value.get<string>();
-			game.world.set_mesher(make_mesher(name));
+			game.world->set_mesher(make_mesher(name));
 		}
 	});
 
@@ -218,7 +218,7 @@ game::~game()
 void game::draw()
 {
 	// TODO: use double when available
-	const float global_time = static_cast<float>(world.get_time());
+	const float global_time = static_cast<float>(get_global_time());
 	resource_manager.foreach_shader_program([global_time](resource<graphics::opengl::shader_program> r)
 	{
 		r->uniform("global_time", global_time);
@@ -254,7 +254,6 @@ void game::draw()
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(gfx.buf_rt.frame_texture.type, gfx.buf_rt.frame_texture.get_name());
-	gfx.screen_shader->uniform("time", static_cast<float>(world.get_time()));
 	gfx.screen_shader->use();
 	gfx.quad_vao.draw(GL_TRIANGLES, 0, 6);
 
@@ -266,8 +265,7 @@ void game::draw()
 		glEnable(GL_SCISSOR_TEST);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 		glDisable(GL_SCISSOR_TEST);
-		// TODO: split stepping and drawing to allow using gui->draw() here
-		draw_world();
+		gui->draw();
 	}
 
 
@@ -312,18 +310,30 @@ void game::draw()
 		glm::dvec2 stickL(fix_axis(axes[0]), fix_axis(axes[1]));
 		glm::dvec2 stickR(fix_axis(axes[3]), fix_axis(axes[4]));
 
-		player.set_analog_motion(stickL);
+		if(player != nullptr)
+		{
+			player->set_analog_motion(stickL);
+		}
 		joymove(stickR);
 	}
 
 	pImpl->delta_time = pImpl->fps.enforce_fps();
+
+	// TODO: draw and step on different threads
+	step();
 }
 
-void game::step_world()
+void game::step()
 {
-	player.rotation = camera.rotation;
-	world.step(pImpl->delta_time);
-	pImpl->find_hovered_block();
+	if(gui->type() == "play")
+	{
+		assert(player != nullptr);
+		assert(world != nullptr);
+		player->rotation = camera.rotation;
+		world->step(pImpl->delta_time);
+		pImpl->find_hovered_block();
+	}
+	++pImpl->global_ticks;
 }
 
 void game::draw_world()
@@ -355,8 +365,9 @@ void game::draw_world
 	position::block_in_world render_origin(cam_position);
 	const std::tuple<uint64_t, uint64_t> draw_stats = graphics::draw_world
 	(
-		world,
+		*world,
 		resource_manager,
+		camera,
 		gfx.vp_matrix,
 		render_origin,
 		static_cast<uint64_t>(settings::get<int64_t>("render_distance"))
@@ -369,7 +380,7 @@ void game::draw_world
 
 	if(hovered_block != nullopt && settings::get<bool>("show_HUD"))
 	{
-		const glm::dvec4 color = world.get_block(hovered_block->pos)->selection_color();
+		const glm::dvec4 color = world->get_block(hovered_block->pos)->selection_color();
 		gfx.draw_block_outline(hovered_block->pos, color);
 	}
 }
@@ -423,12 +434,43 @@ void game::close_gui()
 
 void game::quit()
 {
-	glfwSetWindowShouldClose(gfx.window, GL_TRUE);
+	if(gui->parent == nullptr)
+	{
+		assert(gui.get() == pImpl->root_gui);
+		glfwSetWindowShouldClose(gfx.window, true);
+		return;
+	}
+	pImpl->temp_gui = std::move(gui);
+	gui = std::move(pImpl->temp_gui->parent);
+	while(gui->parent != nullptr)
+	{
+		gui = std::move(gui->parent);
+	}
+	gui->init();
+	player = nullptr;
+	world = nullptr;
+}
+
+void game::load_world(fs::path path)
+{
+	if(path.is_relative() && (fs::is_directory("worlds") || fs::create_directory("worlds")))
+	{
+		path = "worlds" / path;
+	}
+	if(world != nullptr)
+	{
+		LOG(ERROR) << "can not load world " << path.u8string() << " because a world is already loaded\n";
+		return;
+	}
+	LOG(INFO) << "loading world " << path.u8string() << '\n';
+	world = std::make_shared<world::world>(path, block_registry, make_mesher(settings::get<string>("mesher")));
+	player = world->add_player("test_player");
+	open_gui(make_gui("play"));
 }
 
 void game::screenshot(fs::path path) const
 {
-	if(fs::is_directory("screenshots") || fs::create_directory("screenshots"))
+	if(path.is_relative() && (fs::is_directory("screenshots") || fs::create_directory("screenshots")))
 	{
 		path = "screenshots" / path;
 	}
@@ -445,6 +487,16 @@ void game::screenshot(fs::path path) const
 double game::get_fps() const
 {
 	return pImpl->fps.get_fps();
+}
+
+uint64_t game::get_global_ticks() const
+{
+	return pImpl->global_ticks;
+}
+
+double game::get_global_time() const
+{
+	return pImpl->global_ticks / 60.0;
 }
 
 std::tuple<uint64_t, uint64_t> game::get_draw_stats() const
@@ -525,9 +577,9 @@ void game::impl::find_hovered_block()
 	ray.origin += offset;
 	g.hovered_block = physics::raycast
 	(
-		g.world,
+		*g.world,
 		ray,
-		g.player.reach_distance
+		g.player->reach_distance
 	);
 }
 
@@ -544,9 +596,17 @@ void game::impl::add_commands()
 		[[maybe_unused]] const std::vector<string>& args \
 	)
 
+	#define ASSERT_IN_GAME(name) \
+	if(g.world == nullptr) \
+	{ \
+		LOG(ERROR) << name " command can be used only in-game\n"; \
+		return; \
+	}
+
 	COMMAND("save")
 	{
-		g.world.save();
+		ASSERT_IN_GAME("save");
+		g.world->save();
 	});
 	COMMAND("quit")
 	{
@@ -555,20 +615,24 @@ void game::impl::add_commands()
 
 	COMMAND("break_block")
 	{
+		ASSERT_IN_GAME("break_block");
+
 		if(g.hovered_block == nullopt)
 		{
 			return;
 		}
 
 		const position::block_in_world pos = g.hovered_block->pos;
-		shared_ptr<block::base> block = g.world.get_block(pos);
+		shared_ptr<block::base> block = g.world->get_block(pos);
 		if(block->type() != block::enums::type::none) // TODO: breakability check
 		{
-			g.world.set_block(pos, g.block_registry.get_default(block::enums::type::air), false);
+			g.world->set_block(pos, g.block_registry.get_default(block::enums::type::air), false);
 		}
 	});
 	COMMAND("place_block")
 	{
+		ASSERT_IN_GAME("place_block");
+
 		if(g.hovered_block == nullopt || g.copied_block == nullptr)
 		{
 			return;
@@ -576,21 +640,25 @@ void game::impl::add_commands()
 
 		shared_ptr<block::base> block = g.copied_block;
 		const position::block_in_world pos = g.hovered_block->adjacent();
-		if(g.world.get_block(pos)->is_replaceable_by(*block)
-		&& (player.can_place_block_at(pos) || !block->is_solid()))
+		if(g.world->get_block(pos)->is_replaceable_by(*block)
+		&& (player->can_place_block_at(pos) || !block->is_solid()))
 		{
-			g.world.set_block(pos, block, false);
+			g.world->set_block(pos, block, false);
 		}
 	});
 	COMMAND("copy_block")
 	{
+		ASSERT_IN_GAME("copy_block");
+
 		if(g.hovered_block != nullopt)
 		{
-			g.copied_block = g.world.get_block(g.hovered_block->pos);
+			g.copied_block = g.world->get_block(g.hovered_block->pos);
 		}
 	});
 	COMMAND("set_block")
 	{
+		ASSERT_IN_GAME("set_block");
+
 		if(args.size() != 1)
 		{
 			LOG(ERROR) << "Usage: set_block <string: strid>\n";
@@ -609,49 +677,60 @@ void game::impl::add_commands()
 	// TODO: less copy/paste
 	COMMAND("+forward")
 	{
-		player.move_forward(true);
+		ASSERT_IN_GAME("+forward");
+		player->move_forward(true);
 	});
 	COMMAND("-forward")
 	{
-		player.move_forward(false);
+		ASSERT_IN_GAME("-forward");
+		player->move_forward(false);
 	});
 	COMMAND("+backward")
 	{
-		player.move_backward(true);
+		ASSERT_IN_GAME("+backward");
+		player->move_backward(true);
 	});
 	COMMAND("-backward")
 	{
-		player.move_backward(false);
+		ASSERT_IN_GAME("-backward");
+		player->move_backward(false);
 	});
 	COMMAND("+left")
 	{
-		player.move_left(true);
+		ASSERT_IN_GAME("+left");
+		player->move_left(true);
 	});
 	COMMAND("-left")
 	{
-		player.move_left(false);
+		ASSERT_IN_GAME("-left");
+		player->move_left(false);
 	});
 	COMMAND("+right")
 	{
-		player.move_right(true);
+		ASSERT_IN_GAME("+right");
+		player->move_right(true);
 	});
 	COMMAND("-right")
 	{
-		player.move_right(false);
+		ASSERT_IN_GAME("-right");
+		player->move_right(false);
 	});
 	COMMAND("jump")
 	{
-		player.jump();
+		ASSERT_IN_GAME("jump");
+		player->jump();
 	});
 	COMMAND("+use")
 	{
+		ASSERT_IN_GAME("+use");
+
 		if(g.hovered_block != nullopt)
 		{
-			g.world.get_block(g.hovered_block->pos)->use_start
+			g.world->get_block(g.hovered_block->pos)->use_start
 			(
 				g,
-				g.world,
-				player,
+				*g.world,
+				*player,
 				g.hovered_block->pos,
 				g.hovered_block->face()
 			);
@@ -659,29 +738,36 @@ void game::impl::add_commands()
 	});
 	COMMAND("-use")
 	{
+		ASSERT_IN_GAME("-use");
 		// TODO
 	});
 	COMMAND("+sprint")
 	{
-		player.go_faster(true);
+		ASSERT_IN_GAME("+sprint");
+		player->go_faster(true);
 	});
 	COMMAND("-sprint")
 	{
-		player.go_faster(false);
+		ASSERT_IN_GAME("-sprint");
+		player->go_faster(false);
 	});
 
 	COMMAND("noclip")
 	{
-		player.toggle_noclip();
+		ASSERT_IN_GAME("noclip");
+		player->toggle_noclip();
 	});
 	COMMAND("respawn")
 	{
-		player.respawn();
-		LOG(INFO) << "respawned at " << glm::to_string(player.position()) << '\n';
+		ASSERT_IN_GAME("respawn");
+		player->respawn();
+		LOG(INFO) << "respawned at " << glm::to_string(player->position()) << '\n';
 	});
 
 	COMMAND("save_pos")
 	{
+		ASSERT_IN_GAME("save_pos");
+
 		if(args.size() != 1)
 		{
 			LOG(ERROR) << "Usage: save_pos <string: filename>\n";
@@ -691,10 +777,10 @@ void game::impl::add_commands()
 		std::ofstream streem(save_name);
 		streem.precision(std::numeric_limits<double>::max_digits10);
 
-		const glm::dvec3 pos = player.position();
+		const glm::dvec3 pos = player->position();
 		streem << pos.x << ' ' << pos.y << ' ' << pos.z << '\n';
 
-		const glm::dvec3 rot = player.rotation();
+		const glm::dvec3 rot = player->rotation();
 		streem << rot.x << ' ' << rot.y << ' ' << rot.z << '\n';
 
 		streem.flush();
@@ -702,6 +788,8 @@ void game::impl::add_commands()
 	});
 	COMMAND("load_pos")
 	{
+		ASSERT_IN_GAME("load_pos");
+
 		if(args.size() != 1)
 		{
 			LOG(ERROR) << "Usage: load_pos <string: filename>\n";
@@ -714,19 +802,21 @@ void game::impl::add_commands()
 		streem >> pos.x;
 		streem >> pos.y;
 		streem >> pos.z;
-		player.position = pos;
+		player->position = pos;
 		LOG(INFO) << "set position to " << glm::to_string(pos) << '\n';
 
 		glm::dvec3 rot;
 		streem >> rot.x;
 		streem >> rot.y;
 		streem >> rot.z;
-		player.rotation = rot;
+		player->rotation = rot;
 		LOG(INFO) << "set rotation to " << glm::to_string(rot) << '\n';
 	});
 
 	COMMAND("cam.rot")
 	{
+		ASSERT_IN_GAME("cam.rot");
+
 		if(args.size() != 2)
 		{
 			LOG(ERROR) << "Usage: cam.rot x|y|z <number: degrees>\n";
@@ -782,17 +872,23 @@ void game::impl::add_commands()
 
 	COMMAND("reach_distance++")
 	{
-		player.reach_distance += 1;
-		LOG(INFO) << "reach distance: " << player.reach_distance << '\n';
+		ASSERT_IN_GAME("reach_distance++");
+
+		player->reach_distance += 1;
+		LOG(INFO) << "reach distance: " << player->reach_distance << '\n';
 	});
 	COMMAND("reach_distance--")
 	{
-		player.reach_distance -= 1;
-		LOG(INFO) << "reach distance: " << player.reach_distance << '\n';
+		ASSERT_IN_GAME("reach_distance--");
+
+		player->reach_distance -= 1;
+		LOG(INFO) << "reach distance: " << player->reach_distance << '\n';
 	});
 
 	COMMAND("nazi")
 	{
+		ASSERT_IN_GAME("nazi");
+
 		if(g.hovered_block == nullopt || g.copied_block == nullptr)
 		{
 			return;
@@ -820,7 +916,7 @@ void game::impl::add_commands()
 		for(pos.z = 0; pos.z < 1; ++pos.z)
 		{
 			const auto type = static_cast<block::enums::type>(nazi[pos.y][pos.x]);
-			g.world.set_block(pos + start_pos, g.block_registry.get_default(type));
+			g.world->set_block(pos + start_pos, g.block_registry.get_default(type));
 		}
 	});
 
@@ -857,9 +953,11 @@ void game::impl::add_commands()
 	});
 	COMMAND("close_gui")
 	{
+		assert(g.gui != nullptr);
 		g.gui->close();
 	});
 
+	#undef ASSERT_IN_GAME
 	#undef COMMAND
 }
 

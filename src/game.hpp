@@ -9,7 +9,6 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
 
-#include "camera.hpp"
 #include "Gfx.hpp"
 #include "fwd/Player.hpp"
 #include "resource_manager.hpp"
@@ -17,6 +16,7 @@
 #include "fwd/block/enums/type.hpp"
 #include "console/KeybindManager.hpp"
 #include "event/EventManager.hpp"
+#include "graphics/camera.hpp"
 #include "graphics/GUI/Base.hpp"
 #include "physics/raycast_hit.hpp"
 #include "shim/propagate_const.hpp"
@@ -76,7 +76,7 @@ private:
 
 public:
 	void draw();
-	void step_world();
+	void step();
 	void draw_world();
 	void draw_world
 	(
@@ -101,8 +101,11 @@ public:
 	void close_gui();
 	void quit();
 
+	void load_world(fs::path);
 	void screenshot(fs::path) const;
 	double get_fps() const;
+	uint64_t get_global_ticks() const;
+	double get_global_time() const;
 
 	/**
 	 * @return The amount of chunks considered for drawing and the amount of chunks drawn in the last frame
@@ -126,11 +129,10 @@ public:
 	EventManager event_manager;
 	Gfx gfx;
 
-	block_thingy::camera camera;
+	graphics::camera camera;
 	block::BlockRegistry block_registry; // must be initialized before world
-	world::world world;
-	std::shared_ptr<Player> player_ptr;
-	Player& player;
+	std::shared_ptr<world::world> world;
+	std::shared_ptr<Player> player;
 	KeybindManager keybinder;
 	std::unique_ptr<graphics::gui::Base> gui;
 

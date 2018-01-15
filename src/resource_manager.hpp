@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <functional>
 #include <memory>
 #include <string>
@@ -27,16 +28,22 @@ public:
 		id(id),
 		p(p)
 	{
-		update_funcs.emplace(id, std::vector<update_func_t>(1));
+		if(p != nullptr)
+		{
+			update_funcs.emplace(id, std::vector<update_func_t>(1));
+		}
 	}
 
 	T& operator*() const
 	{
+		assert(p != nullptr);
+		assert(*p != nullptr);
 		return **p;
 	}
 
 	T* operator->() const
 	{
+		assert(p != nullptr);
 		return p->get();
 	}
 

@@ -17,7 +17,6 @@
 #include <glm/gtc/matrix_transform.hpp>		// glm::perspective
 #include <glm/gtx/transform.hpp>			// glm::rotate, glm::translate
 
-#include "camera.hpp"
 #include "game.hpp"
 #include "settings.hpp"
 #include "block/enums/type.hpp"
@@ -25,6 +24,7 @@
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
 #include "event/type/Event_change_setting.hpp"
+#include "graphics/camera.hpp"
 #include "graphics/primitive.hpp"
 #include "graphics/opengl/shader_program.hpp"
 #include "graphics/opengl/vertex_array.hpp"
@@ -79,7 +79,7 @@ Gfx::Gfx()
 	gui_text(settings::get<string>("font"), static_cast<FT_UInt>(settings::get<int64_t>("font_size"))),
 	screen_rt(window_size, 8),
 	buf_rt(window_size),
-	screen_shader(nullptr),
+	screen_shader(nullptr, "null"),
 	quad_vbo({3, GL_BYTE}),
 	quad_vao(quad_vbo),
 	s_gui_shape("shaders/gui_shape"),
@@ -122,11 +122,11 @@ void Gfx::hook_events(EventManager& event_manager)
 			const int light_smoothing = static_cast<int>(*e.new_value.get<int64_t>());
 			game::instance->resource_manager.foreach_shader_program([light_smoothing](resource<shader_program> r)
 			{
-				#ifdef _WIN32
+			#ifdef _WIN32
 				if(util::string_starts_with(r.get_id(), "shaders\\block\\"))
-				#else
+			#else
 				if(util::string_starts_with(r.get_id(), "shaders/block/"))
-				#endif
+			#endif
 				{
 					r->uniform("light_smoothing", light_smoothing);
 				}
@@ -137,11 +137,11 @@ void Gfx::hook_events(EventManager& event_manager)
 			const float min_light = static_cast<float>(*e.new_value.get<double>());
 			game::instance->resource_manager.foreach_shader_program([min_light](resource<shader_program> r)
 			{
-				#ifdef _WIN32
+			#ifdef _WIN32
 				if(util::string_starts_with(r.get_id(), "shaders\\block\\"))
-				#else
+			#else
 				if(util::string_starts_with(r.get_id(), "shaders/block/"))
-				#endif
+			#endif
 				{
 					r->uniform("min_light", min_light);
 				}
@@ -288,25 +288,24 @@ void Gfx::update_framebuffer_size(const window_size_t& window_size)
 
 	screen_rt.resize(window_size);
 	buf_rt.resize(window_size);
-	screen_shader->uniform("tex_size", static_cast<glm::vec2>(window_size));
+
+	const auto window_size_f = static_cast<glm::vec2>(window_size);
+	game::instance->resource_manager.foreach_shader_program([&window_size_f](resource<graphics::opengl::shader_program> r)
+	{
+	#ifdef _WIN32
+		if(util::string_starts_with(r.get_id(), "shaders\\screen\\"))
+	#else
+		if(util::string_starts_with(r.get_id(), "shaders/screen/"))
+	#endif
+		{
+			r->uniform("tex_size", window_size_f);
+		}
+	});
 }
 
 void Gfx::set_screen_shader(const string& name)
 {
-	const auto i = screen_shaders.find(name);
-	if(i != screen_shaders.cend())
-	{
-		screen_shader = &i->second;
-	}
-	else
-	{
-		const string path = "shaders/screen/" + name;
-		screen_shader = &screen_shaders.emplace(name, path).first->second;
-
-		// the default value is 0, so setting it explicitly is not needed
-		//screen_shader->uniform("tex", 0);
-	}
-	screen_shader->uniform("tex_size", static_cast<glm::vec2>(window_size));
+	screen_shader = game::instance->resource_manager.get_shader_program("shaders/screen/" + name);
 }
 
 void Gfx::set_fullscreen(const bool fullscreen)

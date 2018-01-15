@@ -5,11 +5,11 @@
 
 #include <glm/trigonometric.hpp>
 
-#include "game.hpp"
 #include "Gfx.hpp"
 #include "resource_manager.hpp"
 #include "settings.hpp"
 #include "chunk/Chunk.hpp"
+#include "graphics/camera.hpp"
 #include "graphics/default_view_frustum.hpp"
 #include "graphics/null_frustum.hpp"
 #include "graphics/opengl/shader_program.hpp"
@@ -32,14 +32,13 @@ std::tuple<uint64_t, uint64_t> draw_world
 (
 	world::world& world,
 	resource_manager& resource_manager,
+	graphics::camera& camera,
 	const glm::dmat4& vp_matrix_,
 	const block_in_world& origin,
 	const uint64_t render_distance
 )
 {
-	const glm::dvec3 camera_position = game::instance->camera.position;
-	const glm::dvec3 camera_rotation = game::instance->camera.rotation;
-	const chunk_in_world camera_chunk{block_in_world(camera_position)};
+	const chunk_in_world camera_chunk{block_in_world(camera.position)};
 
 	const glm::mat4 vp_matrix(vp_matrix_);
 	resource_manager.foreach_shader_program([&vp_matrix](resource<shader_program> r)
@@ -59,7 +58,7 @@ std::tuple<uint64_t, uint64_t> draw_world
 	{
 		const string projection_type = settings::get<string>("projection_type");
 		const glm::dvec3& pos = Gfx::instance->graphical_position;
-		const glm::dvec3 rot = glm::radians(camera_rotation);
+		const glm::dvec3 rot = glm::radians(camera.rotation);
 		const double near = settings::get<double>("near_plane");
 		const double far = settings::get<double>("far_plane");
 		const double fov = glm::radians(settings::get<double>("fov"));

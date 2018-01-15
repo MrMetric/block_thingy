@@ -69,7 +69,7 @@ public:
 	enums::type_external get_extid(enums::type) const;
 
 	using extid_map_t = std::map<enums::type_external, std::string>;
-	void reset_extid_map();
+	void gen_extid_map();
 	void set_extid_map(extid_map_t);
 	const extid_map_t& get_extid_map() const;
 
