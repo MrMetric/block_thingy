@@ -8,11 +8,12 @@
 #include "fwd/game.hpp"
 #include "fwd/event/EventManager.hpp"
 #include "graphics/GUI/Widget/Container.hpp"
+#include "fwd/input/char_press.hpp"
+#include "fwd/input/joy_press.hpp"
+#include "fwd/input/key_press.hpp"
+#include "fwd/input/mouse_press.hpp"
 #include "types/window_size_t.hpp"
-#include "fwd/util/char_press.hpp"
 #include "util/filesystem.hpp"
-#include "fwd/util/key_press.hpp"
-#include "fwd/util/mouse_press.hpp"
 
 namespace block_thingy::graphics::gui {
 
@@ -33,7 +34,8 @@ public:
 
 	virtual std::string type() const = 0;
 
-	virtual void init();
+	virtual void switch_to();
+	virtual void switch_from();
 	virtual void close();
 	virtual void draw();
 
@@ -41,7 +43,6 @@ public:
 	virtual void charpress(const util::char_press&);
 	virtual void mousepress(const util::mouse_press&);
 	virtual void mousemove(const glm::dvec2& position);
-	virtual void joypress(int joystick, int button, bool pressed);
 	virtual void joymove(const glm::dvec2& offset);
 
 	std::unique_ptr<Base> parent;

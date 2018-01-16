@@ -13,8 +13,10 @@
 #include "event/EventType.hpp"
 #include "event/type/Event_window_size_change.hpp"
 #include "graphics/opengl/push_state.hpp"
+#include "input/joy_press.hpp"
+#include "input/key_press.hpp"
+#include "input/mouse_press.hpp"
 #include "util/gui_parser.hpp"
-#include "util/key_press.hpp"
 #include "util/logger.hpp"
 #include "util/misc.hpp"
 
@@ -56,7 +58,14 @@ Base::~Base()
 	}
 }
 
-void Base::init()
+void Base::switch_to()
+{
+	double x, y;
+	glfwGetCursorPos(g.gfx.window, &x, &y);
+	mousemove({x, y});
+}
+
+void Base::switch_from()
 {
 }
 
@@ -94,6 +103,13 @@ void Base::keypress(const util::key_press& press)
 			return;
 		}
 	}
+	if(press.key == 1000) // TODO
+	{
+		double x, y;
+		glfwGetCursorPos(g.gfx.window, &x, &y);
+		mousepress({{x, y}, GLFW_MOUSE_BUTTON_LEFT, press.action, 0});
+		return;
+	}
 	root.keypress(press);
 }
 
@@ -121,11 +137,6 @@ void Base::joymove(const glm::dvec2& offset)
 	y += offset.y * mouse_speed;
 	glfwSetCursorPos(g.gfx.window, x, y);
 	mousemove(glm::dvec2(x, y));
-}
-
-void Base::joypress(const int joystick, const int button, const bool pressed)
-{
-	// TODO
 }
 
 void Base::draw_gui()

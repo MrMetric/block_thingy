@@ -90,6 +90,11 @@
     <ClCompile Include="..\..\src\graphics\opengl\texture.cpp" />
     <ClCompile Include="..\..\src\graphics\opengl\vertex_array.cpp" />
     <ClCompile Include="..\..\src\graphics\opengl\vertex_buffer.cpp" />
+    <ClCompile Include="..\..\src\input\char_press.cpp" />
+    <ClCompile Include="..\..\src\input\joy_press.cpp" />
+    <ClCompile Include="..\..\src\input\key_mods.cpp" />
+    <ClCompile Include="..\..\src\input\key_press.cpp" />
+    <ClCompile Include="..\..\src\input\mouse_press.cpp" />
     <ClCompile Include="..\..\src\physics\AABB.cpp" />
     <ClCompile Include="..\..\src\physics\ray.cpp" />
     <ClCompile Include="..\..\src\physics\raycast_hit.cpp" />
@@ -101,18 +106,14 @@
     <ClCompile Include="..\..\src\position\chunk_in_world.cpp" />
     <ClCompile Include="..\..\src\storage\Interface.cpp" />
     <ClCompile Include="..\..\src\storage\world_file.cpp" />
-    <ClCompile Include="..\..\src\util\char_press.cpp" />
     <ClCompile Include="..\..\src\util\clipboard.cpp" />
     <ClCompile Include="..\..\src\util\compiler_info.cpp" />
     <ClCompile Include="..\..\src\util\copy_stream.cpp" />
     <ClCompile Include="..\..\src\util\demangled_name.cpp" />
     <ClCompile Include="..\..\src\util\FileWatcher.cpp" />
     <ClCompile Include="..\..\src\util\gui_parser.cpp" />
-    <ClCompile Include="..\..\src\util\key_mods.cpp" />
-    <ClCompile Include="..\..\src\util\key_press.cpp" />
     <ClCompile Include="..\..\src\util\logger.cpp" />
     <ClCompile Include="..\..\src\util\misc.cpp" />
-    <ClCompile Include="..\..\src\util\mouse_press.cpp" />
     <ClCompile Include="..\..\src\util\unicode.cpp" />
     <ClCompile Include="..\..\src\world\world.cpp" />
   </ItemGroup>
@@ -194,6 +195,11 @@
     <ClInclude Include="..\..\src\fwd\graphics\GUI\Widget\Container.hpp" />
     <ClInclude Include="..\..\src\fwd\graphics\GUI\Widget\text_input.hpp" />
     <ClInclude Include="..\..\src\fwd\graphics\GUI\Widget\Component\Base.hpp" />
+    <ClInclude Include="..\..\src\fwd\input\char_press.hpp" />
+    <ClInclude Include="..\..\src\fwd\input\joy_press.hpp" />
+    <ClInclude Include="..\..\src\fwd\input\key_mods.hpp" />
+    <ClInclude Include="..\..\src\fwd\input\key_press.hpp" />
+    <ClInclude Include="..\..\src\fwd\input\mouse_press.hpp" />
     <ClInclude Include="..\..\src\fwd\physics\AABB.hpp" />
     <ClInclude Include="..\..\src\fwd\physics\ray.hpp" />
     <ClInclude Include="..\..\src\fwd\physics\raycast_hit.hpp" />
@@ -201,10 +207,6 @@
     <ClInclude Include="..\..\src\fwd\position\block_in_world.hpp" />
     <ClInclude Include="..\..\src\fwd\position\chunk_in_world.hpp" />
     <ClInclude Include="..\..\src\fwd\storage\Interface.hpp" />
-    <ClInclude Include="..\..\src\fwd\util\char_press.hpp" />
-    <ClInclude Include="..\..\src\fwd\util\key_mods.hpp" />
-    <ClInclude Include="..\..\src\fwd\util\key_press.hpp" />
-    <ClInclude Include="..\..\src\fwd\util\mouse_press.hpp" />
     <ClInclude Include="..\..\src\fwd\world\world.hpp" />
     <ClInclude Include="..\..\src\graphics\camera.hpp" />
     <ClInclude Include="..\..\src\graphics\color.hpp" />
@@ -238,6 +240,11 @@
     <ClInclude Include="..\..\src\graphics\opengl\texture.hpp" />
     <ClInclude Include="..\..\src\graphics\opengl\vertex_array.hpp" />
     <ClInclude Include="..\..\src\graphics\opengl\vertex_buffer.hpp" />
+    <ClInclude Include="..\..\src\input\char_press.hpp" />
+    <ClInclude Include="..\..\src\input\joy_press.hpp" />
+    <ClInclude Include="..\..\src\input\key_mods.hpp" />
+    <ClInclude Include="..\..\src\input\key_press.hpp" />
+    <ClInclude Include="..\..\src\input\mouse_press.hpp" />
     <ClInclude Include="..\..\src\physics\AABB.hpp" />
     <ClInclude Include="..\..\src\physics\ray.hpp" />
     <ClInclude Include="..\..\src\physics\raycast_hit.hpp" />
@@ -263,7 +270,6 @@
     <ClInclude Include="..\..\src\storage\msgpack\Property.hpp" />
     <ClInclude Include="..\..\src\storage\msgpack\world.hpp" />
     <ClInclude Include="..\..\src\types\window_size_t.hpp" />
-    <ClInclude Include="..\..\src\util\char_press.hpp" />
     <ClInclude Include="..\..\src\util\clipboard.hpp" />
     <ClInclude Include="..\..\src\util\compiler_info.hpp" />
     <ClInclude Include="..\..\src\util\copy_stream.hpp" />
@@ -271,11 +277,8 @@
     <ClInclude Include="..\..\src\util\filesystem.hpp" />
     <ClInclude Include="..\..\src\util\FileWatcher.hpp" />
     <ClInclude Include="..\..\src\util\gui_parser.hpp" />
-    <ClInclude Include="..\..\src\util\key_mods.hpp" />
-    <ClInclude Include="..\..\src\util\key_press.hpp" />
     <ClInclude Include="..\..\src\util\logger.hpp" />
     <ClInclude Include="..\..\src\util\misc.hpp" />
-    <ClInclude Include="..\..\src\util\mouse_press.hpp" />
     <ClInclude Include="..\..\src\util\Property.hpp" />
     <ClInclude Include="..\..\src\util\ThreadThingy.hpp" />
     <ClInclude Include="..\..\src\util\unicode.hpp" />

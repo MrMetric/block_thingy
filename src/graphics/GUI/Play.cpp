@@ -19,10 +19,10 @@
 #include "console/KeybindManager.hpp"
 #include "graphics/camera.hpp"
 #include "graphics/color.hpp"
+#include "input/key_mods.hpp"
 #include "position/block_in_chunk.hpp"
 #include "position/block_in_world.hpp"
 #include "position/chunk_in_world.hpp"
-#include "util/key_mods.hpp"
 
 using std::nullopt;
 using std::shared_ptr;
@@ -41,11 +41,18 @@ string Play::type() const
 	return "play";
 }
 
-void Play::init()
+void Play::switch_to()
 {
-	glClearColor(0, 0, 0.1f, 0);
+	Base::switch_to();
+
+	glClearColor(0, 0, 0.1f, 1);
 	glfwSetInputMode(g.gfx.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	g.gfx.center_cursor();
+}
+
+void Play::switch_from()
+{
+	glfwSetInputMode(g.gfx.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 void Play::close()
@@ -73,11 +80,6 @@ void Play::mousemove(const glm::dvec2& position)
 {
 	g.camera.mousemove(position - g.gfx.window_mid);
 	g.gfx.center_cursor();
-}
-
-void Play::joypress(const int joystick, const int button, const bool pressed)
-{
-	g.keybinder.joypress(joystick, button, pressed);
 }
 
 void Play::joymove(const glm::dvec2& offset)

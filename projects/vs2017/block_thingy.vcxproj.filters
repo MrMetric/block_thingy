@@ -348,6 +348,21 @@
     <ClCompile Include="..\..\src\graphics\opengl\vertex_buffer.cpp">
       <Filter>Source Files\graphics\opengl</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\input\char_press.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\joy_press.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\key_mods.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\key_press.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\input\mouse_press.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\physics\AABB.cpp">
       <Filter>Source Files\physics</Filter>
     </ClCompile>
@@ -381,9 +396,6 @@
     <ClCompile Include="..\..\src\storage\world_file.cpp">
       <Filter>Source Files\storage</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\util\char_press.cpp">
-      <Filter>Source Files\util</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\util\clipboard.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
@@ -402,19 +414,10 @@
     <ClCompile Include="..\..\src\util\gui_parser.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\util\key_mods.cpp">
-      <Filter>Source Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\util\key_press.cpp">
-      <Filter>Source Files\util</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\util\logger.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\util\misc.cpp">
-      <Filter>Source Files\util</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\util\mouse_press.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\util\unicode.cpp">
@@ -656,6 +659,21 @@
     <ClInclude Include="..\..\src\fwd\graphics\GUI\Widget\Component\Base.hpp">
       <Filter>Source Files\fwd\graphics\GUI\Widget\Component</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\fwd\input\char_press.hpp">
+      <Filter>Source Files\fwd\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\fwd\input\joy_press.hpp">
+      <Filter>Source Files\fwd\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\fwd\input\key_mods.hpp">
+      <Filter>Source Files\fwd\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\fwd\input\key_press.hpp">
+      <Filter>Source Files\fwd\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\fwd\input\mouse_press.hpp">
+      <Filter>Source Files\fwd\input</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\fwd\physics\AABB.hpp">
       <Filter>Source Files\fwd\physics</Filter>
     </ClInclude>
@@ -676,18 +694,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\fwd\storage\Interface.hpp">
       <Filter>Source Files\fwd\storage</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\fwd\util\char_press.hpp">
-      <Filter>Source Files\fwd\util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\fwd\util\key_mods.hpp">
-      <Filter>Source Files\fwd\util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\fwd\util\key_press.hpp">
-      <Filter>Source Files\fwd\util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\fwd\util\mouse_press.hpp">
-      <Filter>Source Files\fwd\util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\fwd\world\world.hpp">
       <Filter>Source Files\fwd\world</Filter>
@@ -788,6 +794,21 @@
     <ClInclude Include="..\..\src\graphics\opengl\vertex_buffer.hpp">
       <Filter>Source Files\graphics\opengl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\input\char_press.hpp">
+      <Filter>Source Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\input\joy_press.hpp">
+      <Filter>Source Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\input\key_mods.hpp">
+      <Filter>Source Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\input\key_press.hpp">
+      <Filter>Source Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\input\mouse_press.hpp">
+      <Filter>Source Files\input</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\physics\AABB.hpp">
       <Filter>Source Files\physics</Filter>
     </ClInclude>
@@ -863,9 +884,6 @@
     <ClInclude Include="..\..\src\types\window_size_t.hpp">
       <Filter>Source Files\types</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\util\char_press.hpp">
-      <Filter>Source Files\util</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\util\clipboard.hpp">
       <Filter>Source Files\util</Filter>
     </ClInclude>
@@ -887,19 +905,10 @@
     <ClInclude Include="..\..\src\util\gui_parser.hpp">
       <Filter>Source Files\util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\util\key_mods.hpp">
-      <Filter>Source Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\util\key_press.hpp">
-      <Filter>Source Files\util</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\util\logger.hpp">
       <Filter>Source Files\util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\util\misc.hpp">
-      <Filter>Source Files\util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\util\mouse_press.hpp">
       <Filter>Source Files\util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\util\Property.hpp">

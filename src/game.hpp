@@ -18,13 +18,14 @@
 #include "event/EventManager.hpp"
 #include "graphics/camera.hpp"
 #include "graphics/GUI/Base.hpp"
+#include "fwd/input/char_press.hpp"
+#include "fwd/input/joy_press.hpp"
+#include "fwd/input/key_press.hpp"
+#include "fwd/input/mouse_press.hpp"
 #include "physics/raycast_hit.hpp"
 #include "shim/propagate_const.hpp"
 #include "types/window_size_t.hpp"
-#include "fwd/util/char_press.hpp"
 #include "util/filesystem.hpp"
-#include "fwd/util/key_press.hpp"
-#include "fwd/util/mouse_press.hpp"
 #include "world/world.hpp"
 
 namespace block_thingy {
@@ -117,7 +118,7 @@ public:
 	void charpress(const util::char_press&);
 	void mousepress(const util::mouse_press&);
 	void mousemove(const glm::dvec2& position);
-	void joypress(int joystick, int button, bool pressed);
+	void joypress(const input::joy_press&);
 	void joymove(const glm::dvec2& offset);
 
 	std::shared_ptr<block::base> copied_block;

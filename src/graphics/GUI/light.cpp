@@ -48,11 +48,6 @@ string light::type() const
 	return "light";
 }
 
-void light::init()
-{
-	glfwSetInputMode(g.gfx.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-}
-
 void light::draw()
 {
 	parent->draw();

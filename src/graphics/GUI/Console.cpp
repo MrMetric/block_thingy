@@ -5,7 +5,7 @@
 #include "Gfx.hpp"
 #include "console/Console.hpp"
 #include "graphics/GUI/Widget/text_input.hpp"
-#include "util/key_press.hpp"
+#include "input/key_press.hpp"
 
 using std::string;
 
@@ -33,11 +33,6 @@ Console::Console(game& g)
 string Console::type() const
 {
 	return "console";
-}
-
-void Console::init()
-{
-	glfwSetInputMode(Gfx::instance->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 void Console::draw()

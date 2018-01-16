@@ -8,10 +8,11 @@
 #include <GLFW/glfw3.h>
 
 #include "console/Console.hpp"
-#include "util/key_press.hpp"
+#include "input/joy_press.hpp"
+#include "input/key_press.hpp"
+#include "input/mouse_press.hpp"
 #include "util/logger.hpp"
 #include "util/misc.hpp"
-#include "util/mouse_press.hpp"
 
 using std::string;
 
@@ -110,37 +111,6 @@ void KeybindManager::keypress(const util::key_press& press)
 void KeybindManager::mousepress(const util::mouse_press& press)
 {
 	keypress({press.button, 0, press.action, press.mods});
-}
-
-void KeybindManager::joypress(const int joystick, const int button, const bool pressed)
-{
-	const auto i = joystate.find(button);
-	if(i == joystate.cend())
-	{
-		joystate[button] = 0;
-	}
-
-	const int key = 1000 * joystick + button;
-
-	if(!pressed)
-	{
-		joystate[button] = 0;
-		keypress({key, 0, GLFW_RELEASE, 0});
-		return;
-	}
-
-	++joystate[button];
-	if(joystate[button] == 1)
-	{
-		keypress({key, 0, GLFW_PRESS, 0});
-		return;
-	}
-
-	if(joystate[button] >= 30 && joystate[button] % 15 == 0)
-	{
-		keypress({key, 0, GLFW_REPEAT, 0});
-		return;
-	}
 }
 
 // I think this is too long :[

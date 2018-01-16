@@ -29,15 +29,15 @@
 #include "graphics/opengl/shader_program.hpp"
 #include "graphics/opengl/vertex_array.hpp"
 #include "graphics/opengl/vertex_buffer.hpp"
+#include "input/char_press.hpp"
+#include "input/key_press.hpp"
+#include "input/mouse_press.hpp"
 #include "physics/AABB.hpp"
 #include "position/block_in_chunk.hpp"
 #include "position/block_in_world.hpp"
 #include "position/chunk_in_world.hpp"
-#include "util/char_press.hpp"
-#include "util/key_press.hpp"
 #include "util/logger.hpp"
 #include "util/misc.hpp"
-#include "util/mouse_press.hpp"
 
 #ifdef near
 	#undef near
@@ -206,7 +206,7 @@ GLFWwindow* Gfx::init_glfw()
 		}
 		game::instance->update_framebuffer_size(window_size_t(width, height));
 	});
-	glfwSetKeyCallback(window, [](GLFWwindow*, int key, int scancode, int action, int mods)
+	glfwSetKeyCallback(window, [](GLFWwindow*, const int key, const int scancode, const int action, const int mods)
 	{
 		if(key == GLFW_KEY_UNKNOWN)
 		{
@@ -214,17 +214,19 @@ GLFWwindow* Gfx::init_glfw()
 		}
 		game::instance->keypress({key, scancode, action, mods});
 	});
-	glfwSetCharModsCallback(window, [](GLFWwindow*, unsigned int codepoint, int mods)
+	glfwSetCharModsCallback(window, [](GLFWwindow*, const unsigned int codepoint, const int mods)
 	{
 		game::instance->charpress({static_cast<char32_t>(codepoint), mods});
 	});
-	glfwSetMouseButtonCallback(window, [](GLFWwindow*, int button, int action, int mods)
+	glfwSetMouseButtonCallback(window, [](GLFWwindow* window, const int button, const int action, const int mods)
 	{
-		game::instance->mousepress({button, action, mods});
+		glm::dvec2 pos(glm::uninitialize);
+		glfwGetCursorPos(window, &pos.x, &pos.y);
+		game::instance->mousepress({pos, button, action, mods});
 	});
-	glfwSetCursorPosCallback(window, [](GLFWwindow*, double x, double y)
+	glfwSetCursorPosCallback(window, [](GLFWwindow*, const double x, const double y)
 	{
-		game::instance->mousemove(glm::dvec2(x, y));
+		game::instance->mousemove({x, y});
 	});
 
 	// TODO: loading screen
@@ -290,7 +292,7 @@ void Gfx::update_framebuffer_size(const window_size_t& window_size)
 	buf_rt.resize(window_size);
 
 	const auto window_size_f = static_cast<glm::vec2>(window_size);
-	game::instance->resource_manager.foreach_shader_program([&window_size_f](resource<graphics::opengl::shader_program> r)
+	game::instance->resource_manager.foreach_shader_program([&window_size_f](resource<shader_program> r)
 	{
 	#ifdef _WIN32
 		if(util::string_starts_with(r.get_id(), "shaders\\screen\\"))

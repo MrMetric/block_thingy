@@ -1,7 +1,7 @@
 #pragma once
 
-#include "util/key_mods.hpp"
-#include "fwd/util/mouse_press.hpp"
+#include "input/key_mods.hpp"
+#include "fwd/input/mouse_press.hpp"
 
 namespace block_thingy::util {
 

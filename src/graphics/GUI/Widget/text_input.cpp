@@ -8,11 +8,11 @@
 
 #include "Gfx.hpp"
 #include "settings.hpp"
-#include "util/char_press.hpp"
+#include "input/char_press.hpp"
+#include "input/key_press.hpp"
+#include "input/mouse_press.hpp"
 #include "util/clipboard.hpp"
-#include "util/key_press.hpp"
 #include "util/misc.hpp"
-#include "util/mouse_press.hpp"
 #include "util/unicode.hpp"
 
 #define M_TAU 6.283185307179586476925286766559005768

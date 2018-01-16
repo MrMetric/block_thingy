@@ -337,7 +337,7 @@ json gui_parser::read_object(const std::size_t indent_level)
 			// TODO: line number might be wrong
 			throw std::runtime_error(name + ':' + std::to_string(line_number + 1) + ": non-object in map");
 		}
-		assert(thing.size() != 1); // TODO: determine if this can happen
+		assert(thing.size() == 1); // TODO: determine if this can fail
 		const json::const_iterator i = thing.cbegin();
 		map.emplace(i.key(), i.value());
 	}

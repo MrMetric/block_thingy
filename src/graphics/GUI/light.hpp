@@ -19,7 +19,6 @@ public:
 
 	std::string type() const override;
 
-	void init() override;
 	void draw() override;
 
 private:

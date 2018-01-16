@@ -1,5 +1,7 @@
 #include "main_menu.hpp"
 
+#include <glad/glad.h>
+
 #include "game.hpp"
 #include "graphics/GUI/Widget/Button.hpp"
 
@@ -14,7 +16,7 @@ main_menu::main_menu(game& g)
 	auto btn = root.get_widget_by_id<widget::Button>("btn_singleplayer");
 	if(btn != nullptr)
 	{
-		btn->on_click([&g]()
+		btn->on_click([&g](widget::Button&, const glm::dvec2& /*position*/)
 		{
 			g.load_world("test");
 		});
@@ -24,6 +26,13 @@ main_menu::main_menu(game& g)
 string main_menu::type() const
 {
 	return "main_menu";
+}
+
+void main_menu::switch_to()
+{
+	Base::switch_to();
+
+	glClearColor(0, 0, 0, 1);
 }
 
 }

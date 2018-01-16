@@ -44,6 +44,8 @@
 #include "graphics/GUI/Pause.hpp"
 #include "graphics/GUI/Play.hpp"
 #include "graphics/opengl/push_state.hpp"
+#include "input/joy_press.hpp"
+#include "input/key_press.hpp"
 #include "physics/ray.hpp"
 #include "physics/raycast_hit.hpp"
 #include "physics/raycast_util.hpp"
@@ -53,7 +55,6 @@
 #include "position/chunk_in_world.hpp"
 #include "util/demangled_name.hpp"
 #include "util/filesystem.hpp"
-#include "util/key_press.hpp"
 #include "util/logger.hpp"
 #include "util/misc.hpp"
 
@@ -108,6 +109,9 @@ struct game::impl
 	std::vector<Command> commands;
 	void add_commands();
 
+	std::unordered_map<int, uint64_t> joystate;
+	void do_joystick_input(int joystick);
+
 	std::unordered_map<string, unique_ptr<detail::gui_maker_base>> gui_makers;
 	graphics::gui::Base* root_gui;
 	unique_ptr<graphics::gui::Base> temp_gui;
@@ -153,7 +157,7 @@ game::game()
 
 	gui = make_gui("main_menu");
 	pImpl->root_gui = gui.get();
-	gui->init();
+	gui->switch_to();
 
 	gfx.hook_events(event_manager);
 
@@ -257,8 +261,7 @@ void game::draw()
 	gfx.screen_shader->use();
 	gfx.quad_vao.draw(GL_TRIANGLES, 0, 6);
 
-	// TODO: it might be faster to listen for the change event and set a private bool instead of getting the value every frame
-	if(settings::get<string>("screen_shader") != "default")
+	if(settings::get<bool>("screen_shader_debug"))
 	{
 		glViewport(3 * gfx.window_size.x / 4, 0, gfx.window_size.x / 4, gfx.window_size.y / 4);
 		glScissor(3 * gfx.window_size.x / 4, 0, gfx.window_size.x / 4, gfx.window_size.y / 4);
@@ -274,47 +277,9 @@ void game::draw()
 	glfwPollEvents();
 	pImpl->just_opened_gui = false;
 
-	if(glfwJoystickPresent(GLFW_JOYSTICK_1))
+	for(int joystick = GLFW_JOYSTICK_1; joystick <= GLFW_JOYSTICK_LAST; ++joystick)
 	{
-		int count;
-
-		const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &count);
-		for(int i = 0; i < count; ++i)
-		{
-			joypress(1, i, buttons[i] != 0);
-		}
-
-		auto fix_axis = [](const float axis) -> float
-		{
-			return (std::abs(axis) < 0.1f) ? 0 : axis;
-		};
-
-		const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
-		assert(count % 2 == 0);
-
-		assert(count == 8); // assume XInput
-		/* layout on my computer:
-		stick L x
-		stick L y
-		LT (PlayStation's L2)
-		stick R x
-		stick R y
-		RT (PlayStation's R2)
-		d-pad x
-		d-pad y
-
-		this is different on my other computer
-		TODO: find out how to always have the right values
-		*/
-
-		glm::dvec2 stickL(fix_axis(axes[0]), fix_axis(axes[1]));
-		glm::dvec2 stickR(fix_axis(axes[3]), fix_axis(axes[4]));
-
-		if(player != nullptr)
-		{
-			player->set_analog_motion(stickL);
-		}
-		joymove(stickR);
+		pImpl->do_joystick_input(joystick);
 	}
 
 	pImpl->delta_time = pImpl->fps.enforce_fps();
@@ -395,20 +360,18 @@ unique_ptr<graphics::gui::Base> game::make_gui(const string& type)
 	return i->second->make(*this);
 }
 
-void game::open_gui(unique_ptr<graphics::gui::Base> gui)
+void game::open_gui(unique_ptr<graphics::gui::Base> new_gui)
 {
-	if(gui == nullptr)
+	if(new_gui == nullptr)
 	{
 		LOG(WARN) << "Tried to open a null GUI\n";
 		return;
 	}
-	gui->init();
-	gui->parent = std::move(this->gui);
-	this->gui = std::move(gui);
 
-	double x, y;
-	glfwGetCursorPos(gfx.window, &x, &y);
-	this->gui->mousemove(glm::dvec2(x, y));
+	new_gui->parent = std::move(gui);
+	gui = std::move(new_gui);
+	gui->parent->switch_from();
+	gui->switch_to();
 
 	pImpl->just_opened_gui = true;
 }
@@ -429,7 +392,8 @@ void game::close_gui()
 	// this invokes undefined behavior, so temp_gui keeps it for the rest of the frame
 	pImpl->temp_gui = std::move(gui);
 	gui = std::move(pImpl->temp_gui->parent);
-	gui->init();
+	pImpl->temp_gui->switch_from();
+	gui->switch_to();
 }
 
 void game::quit()
@@ -446,7 +410,9 @@ void game::quit()
 	{
 		gui = std::move(gui->parent);
 	}
-	gui->init();
+	assert(gui.get() == pImpl->root_gui);
+	pImpl->temp_gui->switch_from();
+	gui->switch_to();
 	player = nullptr;
 	world = nullptr;
 }
@@ -548,9 +514,11 @@ void game::mousemove(const glm::dvec2& position)
 	gui->mousemove(position);
 }
 
-void game::joypress(const int joystick, const int button, const bool pressed)
+void game::joypress(const input::joy_press& press)
 {
-	gui->joypress(joystick, button, pressed);
+	static_assert(GLFW_JOYSTICK_1 == 0);
+	const int key = 1000 * (press.joystick + 1) + press.button;
+	keypress({key, 0, press.action, 0});
 }
 
 void game::joymove(const glm::dvec2& offset)
@@ -959,6 +927,89 @@ void game::impl::add_commands()
 
 	#undef ASSERT_IN_GAME
 	#undef COMMAND
+}
+
+void game::impl::do_joystick_input(const int joystick)
+{
+	if(!glfwJoystickPresent(joystick))
+	{
+		return;
+	}
+
+	int button_count;
+	const unsigned char* buttons = glfwGetJoystickButtons(joystick, &button_count);
+	assert(button_count < 256);
+	for(int button = 0; button < button_count; ++button)
+	{
+		auto& button_time = joystate[joystick * 256 + button];
+
+		const bool pressed = buttons[button] != 0;
+		if(!pressed)
+		{
+			if(button_time != 0)
+			{
+				button_time = 0;
+				g.joypress({joystick, button, GLFW_RELEASE});
+			}
+			continue;
+		}
+
+		++button_time;
+		if(button_time == 1)
+		{
+			g.joypress({joystick, button, GLFW_PRESS});
+			continue;
+		}
+
+		if(button_time >= 30 && button_time % 15 == 0)
+		{
+			g.joypress({joystick, button, GLFW_REPEAT});
+			continue;
+		}
+	}
+
+	int axis_count;
+	const float* axes = glfwGetJoystickAxes(joystick, &axis_count);
+	assert(axis_count % 2 == 0);
+
+	assert(axis_count == 8); // assume XInput
+	/* layout on my computer:
+	stick L x
+	stick L y
+	LT (PlayStation's L2)
+	stick R x
+	stick R y
+	RT (PlayStation's R2)
+	d-pad x
+	d-pad y
+
+	this is different on my other computer
+	TODO: find out how to always have the right values
+	*/
+
+	const double deadzone = settings::get<double>("joystick_deadzone");
+	auto fix_axes = [deadzone](const float x_, const float y_) -> glm::dvec2
+	{
+		const double x = static_cast<double>(x_);
+		const double y = static_cast<double>(y_);
+		if(std::abs(x) < deadzone && std::abs(y) < deadzone)
+		{
+			return {0, 0};
+		}
+		return {x, y};
+	};
+
+	glm::dvec2 stickL = (fix_axes(axes[0], axes[1]));
+	glm::dvec2 stickR = (fix_axes(axes[3], axes[4]));
+
+	if(g.player != nullptr)
+	{
+		g.player->set_analog_motion(stickL);
+	}
+	if(stickR.x != 0 || stickR.y != 0)
+	{
+		g.joymove(stickR);
+	}
 }
 
 }

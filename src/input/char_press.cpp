@@ -1,6 +1,6 @@
 #include "char_press.hpp"
 
-#include "util/key_mods.hpp"
+#include "input/key_mods.hpp"
 
 namespace block_thingy::util {
 

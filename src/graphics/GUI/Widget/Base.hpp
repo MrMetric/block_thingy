@@ -14,9 +14,9 @@
 
 #include "fwd/graphics/GUI/Widget/Container.hpp"
 #include "fwd/graphics/GUI/Widget/Component/Base.hpp"
-#include "fwd/util/char_press.hpp"
-#include "fwd/util/key_press.hpp"
-#include "fwd/util/mouse_press.hpp"
+#include "fwd/input/char_press.hpp"
+#include "fwd/input/key_press.hpp"
+#include "fwd/input/mouse_press.hpp"
 
 namespace block_thingy::graphics::gui::widget {
 

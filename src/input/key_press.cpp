@@ -1,6 +1,6 @@
 #include "key_press.hpp"
 
-#include "util/mouse_press.hpp"
+#include "input/mouse_press.hpp"
 
 namespace block_thingy::util {
 

@@ -9,6 +9,8 @@ public:
 	main_menu(game&);
 
 	std::string type() const override;
+
+	void switch_to() override;
 };
 
 }

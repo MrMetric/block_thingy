@@ -5,8 +5,8 @@
 
 #include "Gfx.hpp"
 #include "console/Console.hpp"
+#include "input/mouse_press.hpp"
 #include "util/logger.hpp"
-#include "util/mouse_press.hpp"
 
 using std::string;
 
@@ -71,9 +71,10 @@ void Button::mousepress(const util::mouse_press& press)
 	{
 		// mouse up (click)
 		mousedown = false;
-		for(const auto& handler : click_handlers)
+		const glm::dvec2 relative_position = press.position - position;
+		for(const auto& handler : on_click_callbacks)
 		{
-			handler();
+			handler(*this, relative_position);
 		}
 	}
 }
@@ -90,7 +91,7 @@ void Button::read_layout(const json& layout)
 		if(command.is_string())
 		{
 			const string c = command.get<string>();
-			on_click([c]()
+			on_click([c](Button&, const glm::dvec2& /*position*/)
 			{
 				Console::instance->run_line(c);
 			});
@@ -109,7 +110,7 @@ void Button::read_layout(const json& layout)
 			if(good)
 			{
 				const std::vector<string> commands = command;
-				on_click([commands]()
+				on_click([commands](Button&, const glm::dvec2& /*position*/)
 				{
 					for(const string& c : commands)
 					{
@@ -153,9 +154,9 @@ void Button::set_text(const string& text)
 	}
 }
 
-void Button::on_click(std::function<void()> click_handler)
+void Button::on_click(on_click_callback_t callback)
 {
-	click_handlers.emplace_back(std::move(click_handler));
+	on_click_callbacks.emplace_back(std::move(callback));
 }
 
 const glm::dvec4& Button::get_color() const

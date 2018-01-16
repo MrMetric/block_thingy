@@ -30,7 +30,8 @@ public:
 
 	void set_text(const std::string&);
 
-	void on_click(std::function<void()> click_handler);
+	using on_click_callback_t = std::function<void(Button&, const glm::dvec2&)>;
+	void on_click(on_click_callback_t);
 
 	glm::dvec4 color;
 	glm::dvec4 color_disabled;
@@ -56,7 +57,7 @@ private:
 	std::string text;
 	glm::dvec2 text_size;
 	glm::dvec2 text_position;
-	std::vector<std::function<void()>> click_handlers;
+	std::vector<on_click_callback_t> on_click_callbacks;
 };
 
 }
