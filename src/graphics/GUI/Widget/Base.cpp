@@ -35,15 +35,15 @@ void Base::draw()
 	}
 }
 
-void Base::keypress(const util::key_press& /*press*/)
+void Base::keypress(const input::key_press& /*press*/)
 {
 }
 
-void Base::charpress(const util::char_press& /*press*/)
+void Base::charpress(const input::char_press& /*press*/)
 {
 }
 
-void Base::mousepress(const util::mouse_press& /*press*/)
+void Base::mousepress(const input::mouse_press& /*press*/)
 {
 }
 

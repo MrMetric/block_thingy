@@ -35,9 +35,9 @@ public:
 
 	virtual void draw();
 
-	virtual void keypress(const util::key_press&);
-	virtual void charpress(const util::char_press&);
-	virtual void mousepress(const util::mouse_press&);
+	virtual void keypress(const input::key_press&);
+	virtual void charpress(const input::char_press&);
+	virtual void mousepress(const input::mouse_press&);
 	virtual void mousemove(const glm::dvec2& position);
 
 	virtual glm::dvec2 get_size() const;

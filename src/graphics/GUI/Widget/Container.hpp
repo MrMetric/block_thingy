@@ -20,9 +20,9 @@ public:
 
 	void draw() override;
 
-	void keypress(const util::key_press&) override;
-	void charpress(const util::char_press&) override;
-	void mousepress(const util::mouse_press&) override;
+	void keypress(const input::key_press&) override;
+	void charpress(const input::char_press&) override;
+	void mousepress(const input::mouse_press&) override;
 	void mousemove(const glm::dvec2& position) override;
 
 	glm::dvec2 get_size() const override;

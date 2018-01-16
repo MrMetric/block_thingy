@@ -19,8 +19,8 @@ public:
 	void close() override;
 	void draw() override;
 
-	void keypress(const util::key_press&) override;
-	void mousepress(const util::mouse_press&) override;
+	void keypress(const input::key_press&) override;
+	void mousepress(const input::mouse_press&) override;
 	void mousemove(const glm::dvec2& position) override;
 	void joymove(const glm::dvec2& offset) override;
 

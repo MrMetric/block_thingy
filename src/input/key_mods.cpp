@@ -2,7 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
-namespace block_thingy::util {
+namespace block_thingy::input {
 
 key_mods::key_mods()
 :

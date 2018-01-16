@@ -120,7 +120,7 @@ void text_input::draw()
 	}
 }
 
-void text_input::keypress(const util::key_press& press)
+void text_input::keypress(const input::key_press& press)
 {
 	if(!focus) return;
 	if(press.action == GLFW_RELEASE) return; // must be press or repeat
@@ -326,7 +326,7 @@ void text_input::keypress(const util::key_press& press)
 	}
 }
 
-void text_input::charpress(const util::char_press& press)
+void text_input::charpress(const input::char_press& press)
 {
 	if(!focus) return;
 
@@ -345,7 +345,7 @@ void text_input::charpress(const util::char_press& press)
 	blink_start_time = glfwGetTime();
 }
 
-void text_input::mousepress(const util::mouse_press& press)
+void text_input::mousepress(const input::mouse_press& press)
 {
 	// TODO: option for left-handed mouse
 	if(press.button == GLFW_MOUSE_BUTTON_LEFT)
@@ -422,7 +422,7 @@ void text_input::on_keypress(on_keypress_callback_t callback)
 	on_keypress_callbacks.emplace_back(callback);
 }
 
-void text_input::trigger_on_keypress(const util::key_press& press)
+void text_input::trigger_on_keypress(const input::key_press& press)
 {
 	for(on_keypress_callback_t& callback : on_keypress_callbacks)
 	{

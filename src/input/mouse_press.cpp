@@ -1,6 +1,6 @@
 #include "mouse_press.hpp"
 
-namespace block_thingy::util {
+namespace block_thingy::input {
 
 mouse_press::mouse_press(const glm::dvec2& position, const int button, const int action, const int mods)
 :

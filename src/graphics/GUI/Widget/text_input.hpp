@@ -24,9 +24,9 @@ public:
 
 	void draw() override;
 
-	void keypress(const util::key_press&) override;
-	void charpress(const util::char_press&) override;
-	void mousepress(const util::mouse_press&) override;
+	void keypress(const input::key_press&) override;
+	void charpress(const input::char_press&) override;
+	void mousepress(const input::mouse_press&) override;
 
 	void read_layout(const json&) override;
 
@@ -40,9 +40,9 @@ public:
 	void on_change(on_change_callback_t);
 	void trigger_on_change(const std::string& old_value);
 
-	using on_keypress_callback_t = std::function<void(text_input&, const util::key_press&)>;
+	using on_keypress_callback_t = std::function<void(text_input&, const input::key_press&)>;
 	void on_keypress(on_keypress_callback_t);
-	void trigger_on_keypress(const util::key_press&);
+	void trigger_on_keypress(const input::key_press&);
 
 	bool invalid;
 

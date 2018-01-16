@@ -82,7 +82,7 @@ void Base::draw()
 	draw_gui();
 }
 
-void Base::keypress(const util::key_press& press)
+void Base::keypress(const input::key_press& press)
 {
 	// TODO: proper input handling
 	if(press.action == GLFW_PRESS)
@@ -113,12 +113,12 @@ void Base::keypress(const util::key_press& press)
 	root.keypress(press);
 }
 
-void Base::charpress(const util::char_press& press)
+void Base::charpress(const input::char_press& press)
 {
 	root.charpress(press);
 }
 
-void Base::mousepress(const util::mouse_press& press)
+void Base::mousepress(const input::mouse_press& press)
 {
 	root.mousepress(press);
 }

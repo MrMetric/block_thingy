@@ -43,7 +43,7 @@ void Button::draw()
 	Gfx::instance->gui_text.draw(text, text_position);
 }
 
-void Button::mousepress(const util::mouse_press& press)
+void Button::mousepress(const input::mouse_press& press)
 {
 	// TODO: option for left-handed mouse
 	if(press.button != GLFW_MOUSE_BUTTON_LEFT)

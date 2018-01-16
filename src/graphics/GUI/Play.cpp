@@ -66,12 +66,12 @@ void Play::draw()
 	Base::draw();
 }
 
-void Play::keypress(const util::key_press& press)
+void Play::keypress(const input::key_press& press)
 {
 	g.keybinder.keypress(press);
 }
 
-void Play::mousepress(const util::mouse_press& press)
+void Play::mousepress(const input::mouse_press& press)
 {
 	g.keybinder.mousepress(press);
 }

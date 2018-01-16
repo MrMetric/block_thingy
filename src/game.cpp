@@ -476,7 +476,7 @@ void game::update_framebuffer_size(const window_size_t& window_size)
 	event_manager.do_event(Event_window_size_change(window_size));
 }
 
-void game::keypress(const util::key_press& press)
+void game::keypress(const input::key_press& press)
 {
 	if(pImpl->consume_key_release == press.key && pImpl->consume_key_release_scancode == press.scancode)
 	{
@@ -492,7 +492,7 @@ void game::keypress(const util::key_press& press)
 	gui->keypress(press);
 }
 
-void game::charpress(const util::char_press& press)
+void game::charpress(const input::char_press& press)
 {
 	if(pImpl->just_opened_gui)
 	{
@@ -504,7 +504,7 @@ void game::charpress(const util::char_press& press)
 	gui->charpress(press);
 }
 
-void game::mousepress(const util::mouse_press& press)
+void game::mousepress(const input::mouse_press& press)
 {
 	gui->mousepress(press);
 }
@@ -931,20 +931,18 @@ void game::impl::add_commands()
 
 void game::impl::do_joystick_input(const int joystick)
 {
-	if(!glfwJoystickPresent(joystick))
+	int button_count;
+	const unsigned char* buttons = glfwGetJoystickButtons(joystick, &button_count);
+	if(buttons == nullptr) // joystick not present
 	{
 		return;
 	}
-
-	int button_count;
-	const unsigned char* buttons = glfwGetJoystickButtons(joystick, &button_count);
 	assert(button_count < 256);
 	for(int button = 0; button < button_count; ++button)
 	{
 		auto& button_time = joystate[joystick * 256 + button];
 
-		const bool pressed = buttons[button] != 0;
-		if(!pressed)
+		if(buttons[button] == GLFW_RELEASE)
 		{
 			if(button_time != 0)
 			{
@@ -970,6 +968,10 @@ void game::impl::do_joystick_input(const int joystick)
 
 	int axis_count;
 	const float* axes = glfwGetJoystickAxes(joystick, &axis_count);
+	if(axes == nullptr) // joystick not present
+	{
+		return;
+	}
 	assert(axis_count % 2 == 0);
 
 	assert(axis_count == 8); // assume XInput

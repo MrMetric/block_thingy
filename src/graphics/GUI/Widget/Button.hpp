@@ -23,7 +23,7 @@ public:
 
 	void draw() override;
 
-	void mousepress(const util::mouse_press&) override;
+	void mousepress(const input::mouse_press&) override;
 
 	void read_layout(const json&) override;
 	void use_layout() override;

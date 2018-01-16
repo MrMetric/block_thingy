@@ -3,7 +3,7 @@
 #include "input/key_mods.hpp"
 #include "fwd/input/mouse_press.hpp"
 
-namespace block_thingy::util {
+namespace block_thingy::input {
 
 struct key_press
 {

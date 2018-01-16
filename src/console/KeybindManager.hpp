@@ -26,8 +26,8 @@ public:
 	void bind_key(const std::string& key, const std::string& command);
 	void unbind_key(int key);
 
-	void keypress(const util::key_press&);
-	void mousepress(const util::mouse_press&);
+	void keypress(const input::key_press&);
+	void mousepress(const input::mouse_press&);
 
 	static int translate_key(std::string key);
 

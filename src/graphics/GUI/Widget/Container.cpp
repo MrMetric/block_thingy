@@ -39,7 +39,7 @@ void Container::draw()
 	}
 }
 
-void Container::keypress(const util::key_press& press)
+void Container::keypress(const input::key_press& press)
 {
 	for(auto& widget : widgets)
 	{
@@ -47,7 +47,7 @@ void Container::keypress(const util::key_press& press)
 	}
 }
 
-void Container::charpress(const util::char_press& press)
+void Container::charpress(const input::char_press& press)
 {
 	for(auto& widget : widgets)
 	{
@@ -55,7 +55,7 @@ void Container::charpress(const util::char_press& press)
 	}
 }
 
-void Container::mousepress(const util::mouse_press& press)
+void Container::mousepress(const input::mouse_press& press)
 {
 	for(auto& widget : widgets)
 	{

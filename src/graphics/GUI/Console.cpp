@@ -18,7 +18,7 @@ Console::Console(game& g)
 	auto input = root.get_widget_by_id<widget::text_input>("input");
 	if(input != nullptr)
 	{
-		input->on_keypress([](widget::text_input& input, const util::key_press& press)
+		input->on_keypress([](widget::text_input& input, const input::key_press& press)
 		{
 			if(press.key == GLFW_KEY_ENTER)
 			{

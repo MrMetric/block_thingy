@@ -1,4 +1,4 @@
-namespace block_thingy::util
+namespace block_thingy::input
 {
 	struct key_mods;
 }

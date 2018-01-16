@@ -114,9 +114,9 @@ public:
 	std::tuple<uint64_t, uint64_t> get_draw_stats() const;
 
 	void update_framebuffer_size(const window_size_t&);
-	void keypress(const util::key_press&);
-	void charpress(const util::char_press&);
-	void mousepress(const util::mouse_press&);
+	void keypress(const input::key_press&);
+	void charpress(const input::char_press&);
+	void mousepress(const input::mouse_press&);
 	void mousemove(const glm::dvec2& position);
 	void joypress(const input::joy_press&);
 	void joymove(const glm::dvec2& offset);

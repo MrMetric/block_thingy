@@ -2,7 +2,7 @@
 
 #include "input/mouse_press.hpp"
 
-namespace block_thingy::util {
+namespace block_thingy::input {
 
 key_press::key_press(const int key, const int scancode, const int action, const int mods)
 :

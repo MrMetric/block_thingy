@@ -75,7 +75,7 @@ void KeybindManager::unbind_key(const int key)
 	keybinds.erase(key);
 }
 
-void KeybindManager::keypress(const util::key_press& press)
+void KeybindManager::keypress(const input::key_press& press)
 {
 	if(press.action == GLFW_PRESS || press.action == GLFW_REPEAT)
 	{
@@ -108,7 +108,7 @@ void KeybindManager::keypress(const util::key_press& press)
 	}
 }
 
-void KeybindManager::mousepress(const util::mouse_press& press)
+void KeybindManager::mousepress(const input::mouse_press& press)
 {
 	keypress({press.button, 0, press.action, press.mods});
 }
