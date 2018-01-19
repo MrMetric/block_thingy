@@ -2,6 +2,7 @@
 
 #include <map>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -54,9 +55,11 @@ public:
 	virtual void read_layout(const json&);
 	virtual void apply_layout(rhea::simplex_solver&, Container& root, style_vars_t& window_vars);
 	virtual void use_layout();
-	rhea::variable& get_layout_var(const std::string& name, style_vars_t& window_vars);
+	std::optional<rhea::variable> get_layout_var(const std::string& name, style_vars_t& window_vars);
 
 	Base* parent;
+	Base* sibling_prev;
+	Base* sibling_next;
 	style_t style;
 	std::vector<std::vector<std::string>> layout_expressions;
 	style_vars_t style_vars;

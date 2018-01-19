@@ -198,19 +198,19 @@ void Container::read_layout(const json& layout)
 			Base* widget;
 			if(type == "button")
 			{
-				widget = &add<Button>();
+				widget = &emplace_back<Button>();
 			}
 			else if(type == "container")
 			{
-				widget = &add<Container>();
+				widget = &emplace_back<Container>();
 			}
 			else if(type == "text")
 			{
-				widget = &add<Text>();
+				widget = &emplace_back<Text>();
 			}
 			else if(type == "text_input")
 			{
-				widget = &add<text_input>();
+				widget = &emplace_back<text_input>();
 			}
 			else
 			{
@@ -311,6 +311,17 @@ void Container::use_layout()
 	for(const auto& widget : widgets)
 	{
 		widget->use_layout();
+	}
+}
+
+void Container::add_back()
+{
+	if(widgets.size() > 1)
+	{
+		Base* next = widgets.back().get();
+		Base* prev = (widgets.end() - 2)->get();
+		prev->sibling_next = next;
+		next->sibling_prev = prev;
 	}
 }
 

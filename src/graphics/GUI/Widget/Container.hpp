@@ -32,10 +32,10 @@ public:
 	void use_layout() override;
 
 	template<typename T, typename... Args>
-	T& add(Args&&... args)
+	T& emplace_back(Args&&... args)
 	{
 		widgets.emplace_back(std::make_unique<T>(this, std::forward<Args>(args)...));
-		// TODO?: apply_layout(solver);
+		add_back();
 		return *dynamic_cast<T*>(widgets.back().get());
 	}
 
@@ -63,6 +63,7 @@ public:
 
 private:
 	std::vector<std::unique_ptr<Base>> widgets;
+	void add_back();
 };
 
 }

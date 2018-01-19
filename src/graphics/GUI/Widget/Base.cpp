@@ -10,6 +10,7 @@
 #include "util/logger.hpp"
 #include "util/misc.hpp"
 
+using std::nullopt;
 using std::string;
 
 namespace block_thingy::graphics::gui::widget {
@@ -17,6 +18,8 @@ namespace block_thingy::graphics::gui::widget {
 Base::Base(Base* const parent)
 :
 	parent(parent),
+	sibling_prev(nullptr),
+	sibling_next(nullptr),
 	hover(false)
 {
 }
@@ -298,7 +301,14 @@ void Base::apply_layout
 						break;
 					}
 					const string var_name = part.substr(dot_pos + 1);
-					stack.emplace(that->get_layout_var(var_name, window_vars));
+					auto var = that->get_layout_var(var_name, window_vars);
+					if(!var.has_value())
+					{
+						LOG(ERROR) << "unable to get layout var " << part << '\n';
+						bad = true;
+						break;
+					}
+					stack.emplace(*var);
 					continue;
 				}
 
@@ -308,7 +318,14 @@ void Base::apply_layout
 				}
 				catch(const std::invalid_argument&)
 				{
-					stack.emplace(get_layout_var(part, window_vars));
+					auto var = get_layout_var(part, window_vars);
+					if(!var.has_value())
+					{
+						LOG(ERROR) << "unable to get layout var " << part << '\n';
+						bad = true;
+						break;
+					}
+					stack.emplace(*var);
 				}
 				catch(const std::out_of_range&)
 				{
@@ -364,15 +381,31 @@ void Base::use_layout()
 	size.y = std::max(0.0, style_vars["size.y"].value() - border_size.z - border_size.w);
 }
 
-rhea::variable& Base::get_layout_var(const string& name, style_vars_t& window_vars)
+std::optional<rhea::variable> Base::get_layout_var(const string& name, style_vars_t& window_vars)
 {
+	if(util::string_starts_with(name, "sibling_prev."))
+	{
+		if(sibling_prev == nullptr)
+		{
+			return nullopt;
+		}
+		return sibling_prev->get_layout_var(name.substr(13), window_vars);
+	}
+	if(util::string_starts_with(name, "sibling_next."))
+	{
+		if(sibling_next == nullptr)
+		{
+			return nullopt;
+		}
+		return sibling_next->get_layout_var(name.substr(13), window_vars);
+	}
 	if(util::string_starts_with(name, "parent."))
 	{
-		if(parent != nullptr)
+		if(parent == nullptr)
 		{
-			return parent->get_layout_var(name.substr(7), window_vars);
+			return window_vars[name.substr(7)];
 		}
-		return window_vars[name.substr(7)];
+		return parent->get_layout_var(name.substr(7), window_vars);
 	}
 	if(util::string_starts_with(name, "window."))
 	{
