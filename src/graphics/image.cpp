@@ -1,5 +1,6 @@
 #include "image.hpp"
 
+#include <array>
 #include <cassert>
 #include <cstdio>
 #include <cstring>
@@ -8,6 +9,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <tuple>
 
 #if defined(__clang__)
 	#pragma clang diagnostic push
@@ -26,19 +28,13 @@ using std::unique_ptr;
 
 namespace block_thingy::graphics {
 
-static void read_png
-(
-	const fs::path&,
-	uint32_t& width,
-	uint32_t& height,
-	std::vector<uint8_t>& data
-);
+static std::tuple<std::vector<uint8_t>, uint32_t, uint32_t> read_png(const fs::path&);
 static void write_png
 (
 	const fs::path&,
+	const std::vector<uint8_t>& data,
 	uint32_t width,
-	uint32_t height,
-	const uint8_t* data
+	uint32_t height
 );
 
 static void write_raw
@@ -61,7 +57,7 @@ struct image::impl
 	{
 		if(path.extension() == ".png")
 		{
-			read_png(path, width, height, data);
+			std::tie(data, width, height) = read_png(path);
 		}
 		else
 		{
@@ -155,7 +151,7 @@ void image::write(const fs::path& path) const
 {
 	if(path.extension() == ".png")
 	{
-		write_png(path, pImpl->width, pImpl->height, get_data());
+		write_png(path, pImpl->data, pImpl->width, pImpl->height);
 	}
 	else if(path.extension() == ".raw")
 	{
@@ -180,32 +176,56 @@ static string png_color_type_name(const int color_type)
 	return std::to_string(color_type);
 }
 
-struct png_read_deleter
+struct png_read
 {
 	png_struct* png;
 	png_info* info;
-	png_info* end;
 
-	png_read_deleter(png_struct* png)
-	:
-		png(png),
-		info(nullptr),
-		end(nullptr)
+	png_read(const fs::path& path, std::FILE* file)
 	{
+		std::array<png_byte, 8> header;
+		const std::size_t sig_size = std::fread(header.data(), sizeof(png_byte), header.size(), file);
+		if(sig_size != header.size() || png_sig_cmp(header.data(), 0, header.size()))
+		{
+			throw std::runtime_error("not a PNG file: " + path.u8string());
+		}
+
+		png = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+		if(png == nullptr)
+		{
+			throw std::runtime_error("png_create_read_struct returned null");
+		}
+
+		info = png_create_info_struct(png);
+		if(info == nullptr)
+		{
+			throw std::runtime_error("png_create_info_struct returned null");
+		}
+
+		if(setjmp(png_jmpbuf(png)))
+		{
+			throw std::runtime_error("error during png_init_io");
+		}
+		png_init_io(png, file);
+
+		png_set_sig_bytes(png, header.size());
+		png_read_info(png, info);
 	}
 
-	~png_read_deleter()
+	png_read(png_read&&) = delete;
+	png_read(const png_read&) = delete;
+	png_read& operator=(png_read&&) = delete;
+	png_read& operator=(const png_read&) = delete;
+
+	~png_read()
 	{
-		png_destroy_read_struct(&png, &info, &end);
+		png_destroy_read_struct(&png, &info, nullptr);
 	}
 };
 
-void read_png
+std::tuple<std::vector<uint8_t>, uint32_t, uint32_t> read_png
 (
-	const fs::path& path,
-	uint32_t& width,
-	uint32_t& height,
-	std::vector<uint8_t>& data
+	const fs::path& path
 )
 {
 	auto file = unique_ptr<std::FILE, decltype(&std::fclose)>(std::fopen(path.string().c_str(), "rb"), &std::fclose);
@@ -213,77 +233,49 @@ void read_png
 	{
 		throw std::runtime_error("unable to read " + path.u8string());
 	}
-	png_byte header[8];
-	const std::size_t png_sig_size = std::fread(header, 1, 8, file.get());
-	if(png_sig_size != 8 || png_sig_cmp(header, 0, 8))
-	{
-		throw std::runtime_error("not a PNG file: " + path.u8string());
-	}
 
-	png_struct* png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-	if(png_ptr == nullptr)
-	{
-		throw std::runtime_error("png_create_read_struct returned null");
-	}
-	png_read_deleter deleter(png_ptr);
+	png_read read(path, file.get());
 
-	png_info* info_ptr = png_create_info_struct(png_ptr);
-	if(info_ptr == nullptr)
-	{
-		throw std::runtime_error("png_create_info_struct returned null");
-	}
-	deleter.info = info_ptr;
-
-	if(setjmp(png_jmpbuf(png_ptr)))
-	{
-		throw std::runtime_error("error during png_init_io");
-	}
-
-	png_init_io(png_ptr, file.get());
-	png_set_sig_bytes(png_ptr, 8);
-
-	png_read_info(png_ptr, info_ptr);
-
-	width = png_get_image_width(png_ptr, info_ptr);
-	height = png_get_image_height(png_ptr, info_ptr);
-	const int color_type = png_get_color_type(png_ptr, info_ptr);
-	const int bit_depth = png_get_bit_depth(png_ptr, info_ptr);
+	const uint32_t width = png_get_image_width(read.png, read.info);
+	const uint32_t height = png_get_image_height(read.png, read.info);
+	const auto color_type = png_get_color_type(read.png, read.info);
+	const auto bit_depth = png_get_bit_depth(read.png, read.info);
 
 	if(bit_depth == 16)
 	{
 	#if PNG_LIBPNG_VER >= 10504
-		png_set_scale_16(png_ptr);
+		png_set_scale_16(read.png);
 	#else
-		png_set_strip_16(png_ptr);
+		png_set_strip_16(read.png);
 	#endif
 	}
 	if(color_type == PNG_COLOR_TYPE_PALETTE)
 	{
-		png_set_palette_to_rgb(png_ptr);
+		png_set_palette_to_rgb(read.png);
 	}
-	const bool has_tRNS = png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS);
+	const bool has_tRNS = png_get_valid(read.png, read.info, PNG_INFO_tRNS);
 	if(has_tRNS)
 	{
-		png_set_tRNS_to_alpha(png_ptr);
+		png_set_tRNS_to_alpha(read.png);
 	}
 	if(color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
 	{
-		png_set_expand_gray_1_2_4_to_8(png_ptr);
+		png_set_expand_gray_1_2_4_to_8(read.png);
 	}
 	if(color_type == PNG_COLOR_TYPE_RGB || (color_type == PNG_COLOR_TYPE_PALETTE && !has_tRNS))
 	{
-		png_set_filler(png_ptr, 0xFF, PNG_FILLER_AFTER);
+		png_set_filler(read.png, 0xFF, PNG_FILLER_AFTER);
 	}
 
-	const int number_of_passes = png_set_interlace_handling(png_ptr); // is this needed for reading?
-	png_read_update_info(png_ptr, info_ptr);
+	const auto number_of_passes = png_set_interlace_handling(read.png); // is this needed for reading?
+	png_read_update_info(read.png, read.info);
 
-	if(setjmp(png_jmpbuf(png_ptr)))
+	if(setjmp(png_jmpbuf(read.png)))
 	{
 		throw std::runtime_error("error while reading PNG file " + path.u8string());
 	}
 
-	std::size_t rowbytes = png_get_rowbytes(png_ptr, info_ptr);
+	std::size_t rowbytes = png_get_rowbytes(read.png, read.info);
 
 	LOG(DEBUG) << path.u8string() << ": " << width << "×" << height
 			   << "; bit depth = " << bit_depth
@@ -293,26 +285,41 @@ void read_png
 			   << '\n'
 			;
 
-	data.resize(height * rowbytes);
+	std::vector<uint8_t> data(height * rowbytes);
 	for(std::size_t y = height; y > 0; --y)
 	{
-		png_read_row(png_ptr, &data[(y - 1) * rowbytes], nullptr);
+		png_read_row(read.png, &data[(y - 1) * rowbytes], nullptr);
 	}
+	return {std::move(data), width, height};
 }
 
-struct png_write_deleter
+struct png_write
 {
 	png_struct* png;
 	png_info* info;
 
-	png_write_deleter(png_struct* png)
-	:
-		png(png),
-		info(nullptr)
+	png_write(std::FILE* file)
 	{
+		png = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+		if(png == nullptr)
+		{
+			throw std::runtime_error("png_create_write_struct returned null");
+		}
+
+		info = png_create_info_struct(png);
+		if(info == nullptr)
+		{
+			throw std::runtime_error("png_create_info_struct returned null");
+		}
+
+		if(setjmp(png_jmpbuf(png)))
+		{
+			throw std::runtime_error("error during png_init_io");
+		}
+		png_init_io(png, file);
 	}
 
-	~png_write_deleter()
+	~png_write()
 	{
 		png_free_data(png, info, PNG_FREE_ALL, -1);
 		png_destroy_write_struct(&png, &info);
@@ -322,9 +329,9 @@ struct png_write_deleter
 void write_png
 (
 	const fs::path& path,
+	const std::vector<uint8_t>& data,
 	const uint32_t width,
-	const uint32_t height,
-	const uint8_t* data
+	const uint32_t height
 )
 {
 	// http://www.libpng.org/pub/png/spec/iso/index-object.html#3PNGfourByteUnSignedInteger
@@ -338,36 +345,25 @@ void write_png
 		throw std::invalid_argument("height");
 	}
 
-
-	png_struct* png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-	if(png_ptr == nullptr)
-	{
-		throw std::runtime_error("png_create_write_struct returned null");
-	}
-	png_write_deleter deleter(png_ptr);
-
-	png_info* info_ptr = png_create_info_struct(png_ptr);
-	if(info_ptr == nullptr)
-	{
-		throw std::runtime_error("png_create_info_struct returned null");
-	}
-	deleter.info = info_ptr;
+	assert(data.size() == 4 * width * height);
 
 	auto file = unique_ptr<std::FILE, decltype(&std::fclose)>(std::fopen(path.string().c_str(), "wb"), &std::fclose);
 	if(file == nullptr)
 	{
 		throw std::runtime_error(string("error opening png file for writing: ") + std::strerror(errno));
 	}
-	png_init_io(png_ptr, file.get());
+
+	png_write write(file.get());
+
 	const int bit_depth = 8;
-	png_set_IHDR(png_ptr, info_ptr, width, height, bit_depth, PNG_COLOR_TYPE_RGBA, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-	png_write_info(png_ptr, info_ptr);
-	const std::size_t rowsize = png_get_rowbytes(png_ptr, info_ptr);
+	png_set_IHDR(write.png, write.info, width, height, bit_depth, PNG_COLOR_TYPE_RGBA, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+	png_write_info(write.png, write.info);
+	const std::size_t rowsize = png_get_rowbytes(write.png, write.info);
 	for(std::size_t y = height; y > 0; --y)
 	{
-		png_write_row(png_ptr, const_cast<uint8_t*>(data + (y - 1) * rowsize));
+		png_write_row(write.png, const_cast<uint8_t*>(data.data() + (y - 1) * rowsize));
 	}
-	png_write_end(png_ptr, info_ptr);
+	png_write_end(write.png, write.info);
 }
 
 void write_raw
