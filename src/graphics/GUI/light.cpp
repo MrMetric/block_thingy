@@ -31,7 +31,7 @@ light::light
 	const graphics::color c = block.light();
 	for(std::ptrdiff_t i = 0; i < 3; ++i)
 	{
-		auto w = root.get_widget_by_id<widget::text_input>(std::to_string(i));
+		auto w = root.get_widget_by_id_t<widget::text_input>(std::to_string(i));
 		if(w != nullptr)
 		{
 			w->set_text(std::to_string(c[i]));

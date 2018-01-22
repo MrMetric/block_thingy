@@ -57,6 +57,10 @@ public:
 	virtual void use_layout();
 	std::optional<rhea::variable> get_layout_var(const std::string& name, style_vars_t& window_vars);
 
+	void add_layout_expression(const std::string&);
+	void add_layout_expression(const json&);
+	void add_layout_expression(const std::vector<std::string>&);
+
 	Base* parent;
 	Base* sibling_prev;
 	Base* sibling_next;
@@ -74,26 +78,39 @@ protected:
 
 	bool hover;
 
+	static void add_layout_expression
+	(
+		std::vector<std::vector<std::string>>& expressions,
+		const json& expression,
+		const std::string& widget_info
+	);
+	static void add_layout_expression
+	(
+		std::vector<std::vector<std::string>>& expressions,
+		const std::vector<std::string>& expression,
+		const std::string& widget_info
+	);
+
 	template<typename T>
 	T get_layout_var
 	(
 		const json& layout,
 		const std::string& key,
 		const T* default_ = nullptr
-	);
+	) const;
 	template<typename T>
 	T get_layout_var
 	(
 		const json& layout,
 		const std::string& key,
 		const T& default_
-	);
+	) const;
 
 private:
 	std::vector<std::shared_ptr<component::Base>> modifiers;
 };
 
-template<> char Base::get_layout_var(const json&, const std::string&, const char*) = delete;
-template<> char Base::get_layout_var(const json&, const std::string&, const char&) = delete;
+template<> char Base::get_layout_var(const json&, const std::string&, const char*) const = delete;
+template<> char Base::get_layout_var(const json&, const std::string&, const char&) const = delete;
 
 }

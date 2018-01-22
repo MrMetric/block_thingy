@@ -76,6 +76,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=extra-semi
 		-Werror=extra-tokens
 		-Werror=float-conversion
+		-Werror=inconsistent-missing-destructor-override
 		-Werror=inconsistent-missing-override
 		-Werror=invalid-pp-token
 		-Werror=mismatched-tags

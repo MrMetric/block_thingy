@@ -249,7 +249,7 @@ json gui_parser::read_thing(const std::size_t indent_level)
 
 			return {{key, widgets}};
 		}
-		if(key == "layout")
+		if(key == "layout" || key == "child_layout")
 		{
 			json layout = read_string_list(indent_level + 1);
 			for(json& expr : layout)

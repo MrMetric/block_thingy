@@ -15,7 +15,7 @@ Console::Console(game& g)
 :
 	Base(g, "guis/console.btgui")
 {
-	auto input = root.get_widget_by_id<widget::text_input>("input");
+	auto input = root.get_widget_by_id_t<widget::text_input>("input");
 	if(input != nullptr)
 	{
 		input->on_keypress([](widget::text_input& input, const input::key_press& press)

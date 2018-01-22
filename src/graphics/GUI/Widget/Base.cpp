@@ -7,6 +7,7 @@
 #include "Gfx.hpp"
 #include "graphics/GUI/Widget/Container.hpp"
 #include "graphics/GUI/Widget/Component/Base.hpp"
+#include "util/gui_parser.hpp"
 #include "util/logger.hpp"
 #include "util/misc.hpp"
 
@@ -113,56 +114,9 @@ void Base::read_layout(const json& j)
 		return;
 	}
 	const json& layout = *i_layout;
-	for(const json& layout_item : layout)
+	for(const json& expression : layout)
 	{
-		if(!layout_item.is_array())
-		{
-			LOG(ERROR) << type() << " layout item must be a list, but is " << layout_item.type_name() << '\n';
-			continue;
-		}
-		std::vector<string> lx;
-		std::vector<string> ly;
-		bool has_vec = false;
-		for(const json& jtoken : layout_item)
-		{
-			if(!jtoken.is_string())
-			{
-				LOG(ERROR) << type() << " layout item must be a string list, but has a " << jtoken.type_name() << '\n';
-				goto continue_outer;
-			}
-
-			auto token_is_vec = [](string token) -> bool
-			{
-				if(const std::size_t dot_pos = token.find_last_of('.'); dot_pos != string::npos)
-				{
-					token = token.substr(dot_pos + 1);
-				}
-				return token == "center" || token == "end" || token == "pos" || token == "size";
-			};
-			const string token = jtoken.get<string>();
-			if(token.empty())
-			{
-				LOG(ERROR) << type() << " has an empty layout item\n";
-				goto continue_outer;
-			}
-			if(token_is_vec(token))
-			{
-				lx.emplace_back(token + ".x");
-				ly.emplace_back(token + ".y");
-				has_vec = true;
-			}
-			else
-			{
-				lx.emplace_back(token);
-				ly.emplace_back(token);
-			}
-		}
-		layout_expressions.emplace_back(std::move(lx));
-		if(has_vec)
-		{
-			layout_expressions.emplace_back(std::move(ly));
-		}
-		continue_outer:;
+		add_layout_expression(expression);
 	}
 }
 
@@ -293,7 +247,7 @@ void Base::apply_layout
 				{
 					const std::size_t dot_pos = part.find('.');
 					const string that_name = part.substr(1, dot_pos - 1);
-					Base* that = root.get_widget_by_id<Base>(that_name);
+					Base* that = root.get_widget_by_id(that_name);
 					if(that == nullptr)
 					{
 						LOG(ERROR) << "element " << that_name << " not found for " << part << '\n';
@@ -414,13 +368,94 @@ std::optional<rhea::variable> Base::get_layout_var(const string& name, style_var
 	return style_vars[name];
 }
 
-template<>
-string Base::get_layout_var
+void Base::add_layout_expression(const string& expression)
+{
+	add_layout_expression(util::parse_expression(expression));
+}
+
+void Base::add_layout_expression(const json& expression)
+{
+	add_layout_expression(layout_expressions, expression, type());
+}
+
+void Base::add_layout_expression(const std::vector<string>& expression)
+{
+	add_layout_expression(layout_expressions, expression, type());
+}
+
+void Base::add_layout_expression
+(
+	std::vector<std::vector<string>>& expressions,
+	const json& jexpression,
+	const string& widget_info
+)
+{
+	if(!jexpression.is_array())
+	{
+		throw std::runtime_error(widget_info + " layout expression must be an array, but is a " + jexpression.type_name());
+	}
+	std::vector<string> expression;
+	expression.reserve(jexpression.size());
+	for(const json& jtoken : jexpression)
+	{
+		if(!jtoken.is_string())
+		{
+			throw std::runtime_error(widget_info + " layout token must be a string, but is a " + jtoken.type_name());
+		}
+		expression.emplace_back(jtoken.get<string>());
+	}
+	add_layout_expression(expressions, expression, widget_info);
+}
+
+void Base::add_layout_expression
+(
+	std::vector<std::vector<string>>& expressions,
+	const std::vector<string>&
+	expression, const string& widget_info
+)
+{
+	std::vector<string> lx;
+	std::vector<string> ly;
+	bool has_vec = false;
+	for(const string& token : expression)
+	{
+		if(token.empty())
+		{
+			throw std::runtime_error(widget_info + " has an empty token");
+		}
+
+		string t = token;
+		if(const std::size_t dot_pos = t.find_last_of('.'); dot_pos != string::npos)
+		{
+			t = t.substr(dot_pos + 1);
+		}
+
+		if(t == "center" || t == "end" || t == "pos" || t == "size")
+		{
+			lx.emplace_back(token + ".x");
+			ly.emplace_back(token + ".y");
+			has_vec = true;
+		}
+		else
+		{
+			lx.emplace_back(token);
+			ly.emplace_back(token);
+		}
+	}
+	expressions.emplace_back(std::move(lx));
+	if(has_vec)
+	{
+		expressions.emplace_back(std::move(ly));
+	}
+}
+
+template<typename T>
+T Base::get_layout_var
 (
 	const json& j,
 	const string& key,
-	const string* default_
-)
+	const T* default_
+) const
 {
 	const json::const_iterator i = j.find(key);
 	if(i == j.cend())
@@ -432,60 +467,51 @@ string Base::get_layout_var
 		}
 		return *default_;
 	}
-	if(!i->is_string())
+	if constexpr(std::is_same_v<T, string>)
 	{
-		// TODO: use custom exception class
-		throw std::runtime_error("widget property '" + key + "' must be a string, but is " + i->type_name());
-	}
-	return i->get<string>();
-}
-
-template<>
-string Base::get_layout_var
-(
-	const json& j,
-	const string& key,
-	const string& default_
-)
-{
-	return get_layout_var(j, key, &default_);
-}
-
-template<>
-double Base::get_layout_var
-(
-	const json& j,
-	const string& key,
-	const double* default_
-)
-{
-	const json::const_iterator i = j.find(key);
-	if(i == j.cend())
-	{
-		if(default_ == nullptr)
+		if(!i->is_string())
 		{
 			// TODO: use custom exception class
-			throw std::runtime_error("required widget property '" + key + "' not found");
+			throw std::runtime_error("widget property '" + key + "' must be a string, but is " + i->type_name());
 		}
-		return *default_;
 	}
-	if(!i->is_number())
+	else if constexpr(std::is_same_v<T, double>)
 	{
-		// TODO: use custom exception class
-		throw std::runtime_error("widget property '" + key + "' must be a number, but is " + i->type_name());
+		if(!i->is_number())
+		{
+			// TODO: use custom exception class
+			throw std::runtime_error("widget property '" + key + "' must be a number, but is " + i->type_name());
+		}
 	}
-	return i->get<double>();
+	else if constexpr(std::is_same_v<T, bool>)
+	{
+		if(!i->is_boolean())
+		{
+			// TODO: use custom exception class
+			throw std::runtime_error("widget property '" + key + "' must be a bool, but is " + i->type_name());
+		}
+	}
+	return i->get<T>();
 }
 
-template<>
-double Base::get_layout_var
+template<typename T>
+T Base::get_layout_var
 (
 	const json& j,
 	const string& key,
-	const double& default_
-)
+	const T& default_
+) const
 {
 	return get_layout_var(j, key, &default_);
 }
+
+template string Base::get_layout_var(const json&, const string&, const string*) const;
+template string Base::get_layout_var(const json&, const string&, const string&) const;
+
+template double Base::get_layout_var(const json&, const string&, const double*) const;
+template double Base::get_layout_var(const json&, const string&, const double&) const;
+
+template bool Base::get_layout_var(const json&, const string&, const bool*) const;
+template bool Base::get_layout_var(const json&, const string&, const bool&) const;
 
 }

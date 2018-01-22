@@ -4,10 +4,11 @@
 #include <memory>
 #include <string>
 #include <utility>
-#include <vector>
 
 #include <glm/vec2.hpp>
 #include <json.hpp>
+
+#include "shim/propagate_const.hpp"
 
 namespace block_thingy::graphics::gui::widget {
 
@@ -15,6 +16,7 @@ class Container : public Base
 {
 public:
 	Container(Base* parent);
+	~Container() override;
 
 	std::string type() const override;
 
@@ -34,36 +36,23 @@ public:
 	template<typename T, typename... Args>
 	T& emplace_back(Args&&... args)
 	{
-		widgets.emplace_back(std::make_unique<T>(this, std::forward<Args>(args)...));
-		add_back();
-		return *dynamic_cast<T*>(widgets.back().get());
+		Base* new_widget = add_back(std::make_unique<T>(this, std::forward<Args>(args)...));
+		return *dynamic_cast<T*>(new_widget);
 	}
 
+	Base* get_widget_by_id(const std::string& id);
+
 	template<typename T>
-	T* get_widget_by_id(const std::string& id)
+	T* get_widget_by_id_t(const std::string& id)
 	{
-		for(auto& w : widgets)
-		{
-			if(w->id == id)
-			{
-				return dynamic_cast<T*>(w.get());
-			}
-			Container* c = dynamic_cast<Container*>(w.get());
-			if(c != nullptr)
-			{
-				T* w2 = c->get_widget_by_id<T>(id);
-				if(w2 != nullptr)
-				{
-					return w2;
-				}
-			}
-		}
-		return nullptr;
+		return dynamic_cast<T*>(get_widget_by_id(id));
 	}
 
 private:
-	std::vector<std::unique_ptr<Base>> widgets;
-	void add_back();
+	struct impl;
+	std::propagate_const<std::unique_ptr<impl>> pImpl;
+
+	Base* add_back(std::unique_ptr<Base>);
 };
 
 }
