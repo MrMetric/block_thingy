@@ -52,7 +52,7 @@ string read_file(const fs::path& path, const bool is_text)
 		{
 			return "";
 		}
-		inpoot.seekg(0, std::ifstream::beg);
+		inpoot.seekg(0);
 		unique_ptr<char[]> buf = std::make_unique<char[]>(fsize);
 		inpoot.read(buf.get(), static_cast<std::streamsize>(fsize));
 		string s(buf.get(), fsize);

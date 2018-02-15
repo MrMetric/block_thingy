@@ -10,7 +10,7 @@ using std::string;
 
 namespace block_thingy::util {
 
-struct FileWatcher::impl
+struct file_watcher::impl
 {
 #ifdef USE_INOTIFY
 	Inotify inotify;
@@ -34,7 +34,7 @@ struct FileWatcher::impl
 	impl& operator=(const impl&) = delete;
 };
 
-FileWatcher::FileWatcher()
+file_watcher::file_watcher()
 :
 	pImpl(std::make_unique<impl>())
 {
@@ -43,11 +43,11 @@ FileWatcher::FileWatcher()
 #endif
 }
 
-FileWatcher::~FileWatcher()
+file_watcher::~file_watcher()
 {
 }
 
-void FileWatcher::add_watch(const fs::path& file_path)
+void file_watcher::add_watch(const fs::path& file_path)
 {
 	if(has_watch(file_path))
 	{
@@ -60,7 +60,7 @@ void FileWatcher::add_watch(const fs::path& file_path)
 #endif
 }
 
-bool FileWatcher::has_watch(const fs::path& file_path) const
+bool file_watcher::has_watch(const fs::path& file_path) const
 {
 #ifdef USE_INOTIFY
 	return pImpl->inotify.HasWatch(file_path);
@@ -69,7 +69,7 @@ bool FileWatcher::has_watch(const fs::path& file_path) const
 #endif
 }
 
-std::vector<fs::path> FileWatcher::get_updates()
+std::vector<fs::path> file_watcher::get_updates()
 {
 	std::vector<fs::path> paths;
 

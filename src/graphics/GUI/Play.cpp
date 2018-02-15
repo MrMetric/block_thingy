@@ -157,6 +157,7 @@ void Play::draw_debug_text()
 	ss << ss2.str();
 
 	ss << "rotation: " << g.camera.rotation << '\n';
+	ss << "velocity: " << g.player->velocity() << '\n';
 	ss << "global ticks: " << g.get_global_ticks() << '\n';
 	ss << "global time : " << g.get_global_time() << '\n';
 	ss << "world ticks : " << g.world->get_ticks() << '\n';

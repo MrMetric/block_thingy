@@ -54,9 +54,9 @@ public:
 	void open_gui(std::unique_ptr<graphics::gui::Base>);
 
 	glm::dvec3 spawn_position;
-	Property<glm::dvec3> position;
-	Property<glm::dvec3> rotation;
-	Property<glm::dvec3> velocity;
+	util::property<glm::dvec3> position;
+	util::property<glm::dvec3> rotation;
+	util::property<glm::dvec3> velocity;
 
 private:
 	game& g;

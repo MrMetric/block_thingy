@@ -114,7 +114,7 @@ struct resource_manager::impl
 		return block_textures.at(res);
 	}
 
-	util::FileWatcher file_watcher;
+	util::file_watcher file_watcher;
 	moodycamel::ConcurrentQueue<std::function<void()>> work;
 	const std::thread::id main_thread_id;
 

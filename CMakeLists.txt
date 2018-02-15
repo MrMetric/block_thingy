@@ -163,7 +163,7 @@ target_link_libraries(block_thingy
 	${FREETYPE_LDFLAGS}
 	${GLFW_LDFLAGS}
 	${LIBPNG_LDFLAGS}
-	${MSGPACK_LDFLAGS}
+	# no ${MSGPACK_LDFLAGS} because it is used as a header-only library
 	-ldl
 	-lpthread
 	-lz

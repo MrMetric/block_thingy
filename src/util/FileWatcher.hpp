@@ -8,11 +8,11 @@
 
 namespace block_thingy::util {
 
-class FileWatcher
+class file_watcher
 {
 public:
-	FileWatcher();
-	~FileWatcher();
+	file_watcher();
+	~file_watcher();
 
 	void add_watch(const fs::path&);
 	bool has_watch(const fs::path&) const;

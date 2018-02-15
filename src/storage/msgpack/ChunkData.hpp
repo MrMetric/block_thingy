@@ -12,7 +12,7 @@ using T = std::shared_ptr<block::base>;
 
 template<>
 template<>
-void ChunkData<T>::save(msgpack::packer<zstr::ostream>& o) const
+void chunk_data<T>::save(msgpack::packer<zstr::ostream>& o) const
 {
 	o.pack_array(2);
 
@@ -41,7 +41,7 @@ void ChunkData<T>::save(msgpack::packer<zstr::ostream>& o) const
 
 template<>
 template<>
-void ChunkData<T>::load(const msgpack::object& o)
+void chunk_data<T>::load(const msgpack::object& o)
 {
 	if(o.type != msgpack::type::ARRAY)
 	{
@@ -77,25 +77,25 @@ namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
 namespace adaptor {
 
-using block_thingy::ChunkData;
+using block_thingy::chunk_data;
 
 template<typename T>
-struct pack<ChunkData<T>>
+struct pack<chunk_data<T>>
 {
 	template<typename Stream>
-	packer<Stream>& operator()(packer<Stream>& o, const ChunkData<T>& chunk_data) const
+	packer<Stream>& operator()(packer<Stream>& o, const chunk_data<T>& data) const
 	{
-		chunk_data.save(o);
+		data.save(o);
 		return o;
 	}
 };
 
 template<typename T>
-struct convert<ChunkData<T>>
+struct convert<chunk_data<T>>
 {
-	const msgpack::object& operator()(const msgpack::object& o, ChunkData<T>& chunk_data) const
+	const msgpack::object& operator()(const msgpack::object& o, chunk_data<T>& data) const
 	{
-		chunk_data.load(o);
+		data.load(o);
 		return o;
 	}
 };

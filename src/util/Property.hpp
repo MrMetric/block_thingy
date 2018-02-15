@@ -2,11 +2,20 @@
 
 #include <functional>
 
+namespace block_thingy::util {
+
 template<typename T>
-class Property
+class property
 {
 public:
-	Property
+	property(T value)
+	:
+		value(value),
+		set([](T){})
+	{
+	}
+
+	property
 	(
 		T value,
 		std::function<void(T)> set
@@ -17,10 +26,10 @@ public:
 	{
 	}
 
-	Property(Property&&) = delete;
-	Property(const Property&) = delete;
-	Property& operator=(Property&&) = delete;
-	Property& operator=(const Property&) = delete;
+	property(property&&) = delete;
+	property(const property&) = delete;
+	property& operator=(property&&) = delete;
+	property& operator=(const property&) = delete;
 
 	T operator()() const
 	{
@@ -37,3 +46,5 @@ private:
 	T value;
 	std::function<void(T)> set;
 };
+
+}

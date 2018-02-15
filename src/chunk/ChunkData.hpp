@@ -16,10 +16,10 @@
 namespace block_thingy {
 
 template<typename T>
-class ChunkData
+class chunk_data
 {
 public:
-	ChunkData()
+	chunk_data()
 	{
 		// explicit template instantiation does not work with both MSVC and GCC/Clang
 		// with MSVC, putting a prototype in this file with the definition in a cpp file causes a linking error
@@ -30,25 +30,25 @@ public:
 		}
 	}
 
-	ChunkData(T block)
+	chunk_data(T block)
 	{
 		fill(std::move(block));
 	}
 
-	ChunkData(ChunkData&& that)
+	chunk_data(chunk_data&& that)
 	:
 		blocks(std::move(that.blocks))
 	{
 	}
-	ChunkData& operator=(ChunkData&& that)
+	chunk_data& operator=(chunk_data&& that)
 	{
 		std::lock_guard<std::mutex> g(blocks_mutex);
 		blocks = std::move(that.blocks);
 		return *this;
 	}
 
-	ChunkData(const ChunkData&) = delete;
-	ChunkData& operator=(const ChunkData&) = delete;
+	chunk_data(const chunk_data&) = delete;
+	chunk_data& operator=(const chunk_data&) = delete;
 
 	const T& get(const position::block_in_chunk& pos) const
 	{

@@ -197,14 +197,19 @@ GLFWwindow* Gfx::init_glfw()
 
 	glfwSetFramebufferSizeCallback(window, [](GLFWwindow*, int width, int height)
 	{
-		assert(width >= 0);
-		assert(height >= 0);
 		if(width == 0 || height == 0)
 		{
 			// happens when minimizing on Windows
 			return;
 		}
-		game::instance->update_framebuffer_size(window_size_t(width, height));
+		assert(width > 0);
+		assert(height > 0);
+		const window_size_t new_size(width, height);
+		if(new_size == Gfx::instance->window_size)
+		{
+			return;
+		}
+		game::instance->update_framebuffer_size(new_size);
 	});
 	glfwSetKeyCallback(window, [](GLFWwindow*, const int key, const int scancode, const int action, const int mods)
 	{

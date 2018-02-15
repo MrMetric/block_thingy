@@ -129,7 +129,7 @@ struct Chunk::impl
 	void update_vaos();
 
 private:
-	ChunkData<graphics::color> blocklight;
+	chunk_data<graphics::color> blocklight;
 	std::array<uint8_t, CHUNK_SIZE_2 * CHUNK_SIZE_2 * CHUNK_SIZE_2 * 3> light_tex_buf;
 };
 

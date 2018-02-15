@@ -12,7 +12,7 @@
 
 namespace block_thingy {
 
-using chunk_blocks_t = ChunkData<std::shared_ptr<block::base>>;
+using chunk_blocks_t = chunk_data<std::shared_ptr<block::base>>;
 
 class Chunk
 {

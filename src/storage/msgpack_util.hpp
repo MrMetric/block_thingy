@@ -34,7 +34,7 @@ bool find_in_map
 (
 	const std::map<std::string, msgpack::object>& map,
 	const std::string& key,
-	Property<T>& p
+	util::property<T>& p
 )
 {
 	T v;
