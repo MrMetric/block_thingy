@@ -82,6 +82,11 @@ void Base::draw()
 	draw_gui();
 }
 
+void Base::refresh_layout()
+{
+	update_framebuffer_size(g.gfx.window_size);
+}
+
 void Base::keypress(const input::key_press& press)
 {
 	// TODO: proper input handling

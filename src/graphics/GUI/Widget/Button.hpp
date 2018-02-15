@@ -8,6 +8,8 @@
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 
+#include "shim/propagate_const.hpp"
+
 namespace block_thingy::graphics::gui::widget {
 
 class Button : public Base
@@ -18,6 +20,7 @@ public:
 		Base* parent,
 		const std::string& text = ""
 	);
+	~Button() override;
 
 	std::string type() const override;
 
@@ -38,26 +41,12 @@ public:
 	glm::dvec4 color_hover;
 	const glm::dvec4& get_color() const;
 
-	bool get_enabled() const
-	{
-		return enabled;
-	}
-	void set_enabled(const bool e)
-	{
-		enabled = e;
-		if(!e)
-		{
-			mousedown = false;
-		}
-	}
+	bool enabled() const;
+	void enabled(bool);
 
 private:
-	bool enabled;
-	bool mousedown;
-	std::string text;
-	glm::dvec2 text_size;
-	glm::dvec2 text_position;
-	std::vector<on_click_callback_t> on_click_callbacks;
+	struct impl;
+	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };
 
 }

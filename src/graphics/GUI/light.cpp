@@ -56,31 +56,31 @@ void light::draw()
 
 void light::on_change(std::ptrdiff_t i, widget::text_input& w, const string& new_value)
 {
-	bool invalid = false;
+	bool valid = true;
 	int v = 0;
 	try
 	{
 		v = util::stoi(new_value);
 		if(v < 0)
 		{
-			invalid = true;
+			valid = false;
 			v = 0;
 		}
 		else if(v > graphics::color::max)
 		{
-			invalid = true;
+			valid = false;
 			v = graphics::color::max;
 		}
 	}
 	catch(const std::invalid_argument&)
 	{
-		invalid = true;
+		valid = false;
 	}
 	catch(const std::out_of_range&)
 	{
-		invalid = true;
+		valid = false;
 	}
-	w.invalid = invalid;
+	w.valid(valid);
 	auto c = block.light();
 	if(v != c[i])
 	{

@@ -1,5 +1,6 @@
 #include "unicode.hpp"
 
+#include <cassert>
 #include <codecvt>
 #include <locale>
 
@@ -14,6 +15,13 @@ namespace block_thingy::util {
 #else
 	static std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> convert;
 #endif
+
+char32_t utf8_to_utf32(const char c)
+{
+	u32string s = utf8_to_utf32(string(1, c));
+	assert(s.size() == 1);
+	return s[0];
+}
 
 u32string utf8_to_utf32(const string& s)
 {

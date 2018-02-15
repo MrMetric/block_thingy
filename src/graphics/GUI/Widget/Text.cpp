@@ -8,6 +8,22 @@ using std::string;
 
 namespace block_thingy::graphics::gui::widget {
 
+struct Text::impl
+{
+	impl(const string& text)
+	:
+		text(text)
+	{
+	}
+
+	impl(impl&&) = delete;
+	impl(const impl&) = delete;
+	impl& operator=(impl&&) = delete;
+	impl& operator=(const impl&) = delete;
+
+	component::Text text;
+};
+
 Text::Text
 (
 	Base* const parent,
@@ -15,11 +31,15 @@ Text::Text
 )
 :
 	Base(parent),
-	text(text)
+	pImpl(std::make_unique<impl>(text))
 {
-	size = Gfx::instance->gui_text.get_size(text);
+	size = pImpl->text.get_size();
 	style["size.x"] = size.x;
 	style["size.y"] = size.y;
+}
+
+Text::~Text()
+{
 }
 
 string Text::type() const
@@ -31,21 +51,35 @@ void Text::draw()
 {
 	Base::draw();
 
-	Gfx::instance->gui_text.draw(text, position);
+	pImpl->text.draw(position, size);
 }
 
 void Text::read_layout(const json& layout)
 {
-	if(layout.count("text") != 0)
-	{
-		text = get_layout_var<string>(layout, "text", "");
-		size = Gfx::instance->gui_text.get_size(text);
-		style["size.x"] = size.x;
-		style["size.y"] = size.y;
-	}
+	set_text(get_layout_var<string>(layout, "text", ""));
 
 	// to avoid overwriting a custom size, call Base *after* text init
 	Base::read_layout(layout);
+}
+
+string Text::get_text() const
+{
+	return pImpl->text.get8();
+}
+
+void Text::set_text(const string& s)
+{
+	auto& text = pImpl->text;
+
+	if(text == s)
+	{
+		return;
+	}
+
+	text = s;
+	size = text.get_size();
+	style["size.x"] = size.x;
+	style["size.y"] = size.y;
 }
 
 }

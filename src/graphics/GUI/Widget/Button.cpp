@@ -12,6 +12,30 @@ using std::string;
 
 namespace block_thingy::graphics::gui::widget {
 
+struct Button::impl
+{
+	impl();
+
+	impl(impl&&) = delete;
+	impl(const impl&) = delete;
+	impl& operator=(impl&&) = delete;
+	impl& operator=(const impl&) = delete;
+
+	bool enabled;
+	bool mousedown;
+	string text;
+	glm::dvec2 text_size;
+	glm::dvec2 text_position;
+	std::vector<on_click_callback_t> on_click_callbacks;
+};
+
+Button::impl::impl()
+:
+	enabled(true),
+	mousedown(false)
+{
+}
+
 Button::Button
 (
 	Base* const parent,
@@ -22,12 +46,15 @@ Button::Button
 	color(0.02, 0.02, 0.04, 0.85),
 	color_disabled(0.04, 0.02, 0.02, 0.85),
 	color_hover(0, 0, 0, 1),
-	enabled(true),
-	mousedown(false)
+	pImpl(std::make_unique<impl>())
 {
 	set_text(text);
 	style["size.x"] = 256.0;
 	style["size.y"] = 64.0;
+}
+
+Button::~Button()
+{
 }
 
 string Button::type() const
@@ -40,20 +67,18 @@ void Button::draw()
 	Base::draw();
 
 	Gfx::instance->draw_rectangle(position, size, get_color());
-	Gfx::instance->gui_text.draw(text, text_position);
+	Gfx::instance->gui_text.draw(pImpl->text, pImpl->text_position);
 }
 
 void Button::mousepress(const input::mouse_press& press)
 {
 	// TODO: option for left-handed mouse
-	if(press.button != GLFW_MOUSE_BUTTON_LEFT)
+	if(press.button != GLFW_MOUSE_BUTTON_LEFT
+	|| !pImpl->enabled)
 	{
 		return;
 	}
-	if(!enabled)
-	{
-		return;
-	}
+	auto& mousedown = pImpl->mousedown;
 	if(!hover)
 	{
 		if(mousedown && press.action == GLFW_RELEASE)
@@ -72,7 +97,7 @@ void Button::mousepress(const input::mouse_press& press)
 		// mouse up (click)
 		mousedown = false;
 		const glm::dvec2 relative_position = press.position - position;
-		for(const auto& handler : on_click_callbacks)
+		for(const auto& handler : pImpl->on_click_callbacks)
 		{
 			handler(*this, relative_position);
 		}
@@ -129,7 +154,7 @@ void Button::read_layout(const json& layout)
 	{
 		if(i_enabled->is_boolean())
 		{
-			set_enabled(i_enabled->get<bool>());
+			enabled(i_enabled->get<bool>());
 		}
 		else
 		{
@@ -142,26 +167,26 @@ void Button::use_layout()
 {
 	Base::use_layout();
 
-	text_position = position + (size - text_size) * 0.5;
+	pImpl->text_position = position + (size - pImpl->text_size) * 0.5;
 }
 
 void Button::set_text(const string& text)
 {
-	if(this->text != text)
+	if(pImpl->text != text)
 	{
-		this->text = text;
-		text_size = Gfx::instance->gui_text.get_size(text);
+		pImpl->text = text;
+		pImpl->text_size = Gfx::instance->gui_text.get_size(text);
 	}
 }
 
 void Button::on_click(on_click_callback_t callback)
 {
-	on_click_callbacks.emplace_back(std::move(callback));
+	pImpl->on_click_callbacks.emplace_back(std::move(callback));
 }
 
 const glm::dvec4& Button::get_color() const
 {
-	if(!enabled)
+	if(!pImpl->enabled)
 	{
 		return color_disabled;
 	}
@@ -170,6 +195,20 @@ const glm::dvec4& Button::get_color() const
 		return color_hover;
 	}
 	return color;
+}
+
+bool Button::enabled() const
+{
+	return pImpl->enabled;
+}
+
+void Button::enabled(const bool e)
+{
+	pImpl->enabled = e;
+	if(!e)
+	{
+		pImpl->mousedown = false;
+	}
 }
 
 }

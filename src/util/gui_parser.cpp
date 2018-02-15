@@ -191,6 +191,16 @@ gui_parser::gui_parser(string name, const string& text)
 	}
 }
 
+static std::size_t get_indent_level(const string& line)
+{
+	const std::size_t i = line.find_first_not_of('\t');
+	if(i == string::npos)
+	{
+		return line.size();
+	}
+	return i;
+}
+
 json gui_parser::read_thing(const std::size_t indent_level)
 {
 	if(line_number >= lines.size())
@@ -203,7 +213,7 @@ json gui_parser::read_thing(const std::size_t indent_level)
 		++line_number;
 		return read_thing(indent_level);
 	}
-	const std::size_t line_indent_level = line.find_first_not_of('\t');
+	const std::size_t line_indent_level = get_indent_level(line);
 	if(line_indent_level < indent_level)
 	{
 		return {};
@@ -355,7 +365,7 @@ json gui_parser::read_string_list(const std::size_t indent_level)
 			++line_number;
 			continue;
 		}
-		const std::size_t line_indent_level = line.find_first_not_of('\t');
+		const std::size_t line_indent_level = get_indent_level(line);
 		if(line_indent_level < indent_level)
 		{
 			break;

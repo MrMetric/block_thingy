@@ -3,6 +3,9 @@
 
 #include <string>
 
+#include "graphics/GUI/Widget/Component/Text.hpp"
+#include "shim/propagate_const.hpp"
+
 namespace block_thingy::graphics::gui::widget {
 
 class Text : public Base
@@ -13,6 +16,7 @@ public:
 		Base* parent,
 		const std::string& text = ""
 	);
+	~Text() override;
 
 	std::string type() const override;
 
@@ -20,8 +24,12 @@ public:
 
 	void read_layout(const json&) override;
 
+	std::string get_text() const;
+	void set_text(const std::string&);
+
 private:
-	std::string text;
+	struct impl;
+	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };
 
 }

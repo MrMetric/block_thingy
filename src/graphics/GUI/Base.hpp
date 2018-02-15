@@ -38,6 +38,7 @@ public:
 	virtual void switch_from();
 	virtual void close();
 	virtual void draw();
+	void refresh_layout();
 
 	virtual void keypress(const input::key_press&);
 	virtual void charpress(const input::char_press&);

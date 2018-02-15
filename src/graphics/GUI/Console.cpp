@@ -26,7 +26,7 @@ Console::Console(game& g)
 				input.clear();
 			}
 		});
-		input->set_focus(true);
+		input->focused(true);
 	}
 }
 

@@ -13,18 +13,9 @@ Text::Text(const string& s)
 	operator=(s);
 }
 
-void Text::draw(const glm::dvec2& w_position, const glm::dvec2& w_size)
+void Text::draw(const glm::dvec2& w_position, const glm::dvec2& /*w_size*/) const
 {
-	Gfx::instance->gui_text.draw(text, draw_position(w_position, w_size));
-}
-
-glm::dvec2 Text::draw_position(const glm::dvec2& w_position, const glm::dvec2& w_size) const
-{
-	return glm::round(glm::dvec2
-	{
-		w_position.x + 8,
-		w_position.y + (w_size.y - size.y) * 0.5,
-	});
+	Gfx::instance->gui_text.draw(text, w_position);
 }
 
 string Text::get8() const
@@ -46,6 +37,10 @@ void Text::clear()
 	operator=(u32string());
 }
 
+Text& Text::operator=(const char c)
+{
+	return operator=(util::utf8_to_utf32(c));
+}
 Text& Text::operator=(const char32_t c)
 {
 	text = c;
@@ -63,6 +58,10 @@ Text& Text::operator=(const u32string& s)
 	return *this;
 }
 
+Text& Text::operator+=(const char c)
+{
+	return operator+=(util::utf8_to_utf32(c));
+}
 Text& Text::operator+=(const char32_t c)
 {
 	text += c;
@@ -78,6 +77,23 @@ Text& Text::operator+=(const u32string& s)
 	text += s;
 	update_info();
 	return *this;
+}
+
+bool Text::operator==(const char c) const
+{
+	return operator==(util::utf8_to_utf32(c));
+}
+bool Text::operator==(const char32_t c) const
+{
+	return text.size() == 1 && text[0] == c;
+}
+bool Text::operator==(const string& s) const
+{
+	return text == util::utf8_to_utf32(s);
+}
+bool Text::operator==(const u32string& s) const
+{
+	return text == s;
 }
 
 void Text::pop_back()

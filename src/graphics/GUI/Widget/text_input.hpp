@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "graphics/GUI/Widget/Component/Text.hpp"
+#include "shim/propagate_const.hpp"
 
 namespace block_thingy::graphics::gui::widget {
 
@@ -19,6 +20,7 @@ public:
 		const std::string& content = "",
 		const std::string& placeholder = ""
 	);
+	~text_input() override;
 
 	std::string type() const override;
 
@@ -31,10 +33,9 @@ public:
 	void read_layout(const json&) override;
 
 	std::string get_text() const;
-	void set_text(const std::string&);
+	void set_text(const std::string&, bool reset_cursor = true);
 	void clear();
-
-	void set_focus(bool);
+	void delete_selection();
 
 	using on_change_callback_t = std::function<void(text_input&, const std::string& old_value, const std::string& new_value)>;
 	void on_change(on_change_callback_t);
@@ -44,19 +45,23 @@ public:
 	void on_keypress(on_keypress_callback_t);
 	void trigger_on_keypress(const input::key_press&);
 
-	bool invalid;
+	glm::dvec4 color;
+	glm::dvec4 color_disabled;
+	glm::dvec4 color_invalid;
+	const glm::dvec4& get_color() const;
+
+	bool enabled() const;
+	void enabled(bool);
+
+	bool valid() const;
+	void valid(bool);
+
+	bool focused() const;
+	void focused(bool);
 
 private:
-	component::Text content;
-	component::Text placeholder;
-	bool focus;
-	double blink_start_time;
-	std::size_t cursor_pos;
-	std::size_t selection_start;
-	std::vector<on_change_callback_t> on_change_callbacks;
-	std::vector<on_keypress_callback_t> on_keypress_callbacks;
-
-	void delete_selection();
+	struct impl;
+	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };
 
 }
