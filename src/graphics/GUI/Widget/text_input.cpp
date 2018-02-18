@@ -103,7 +103,7 @@ void text_input::draw()
 	}
 
 	const auto& cursor_pos = pImpl->cursor_pos;
-	const auto& selection_start = pImpl->cursor_pos;
+	const auto& selection_start = pImpl->selection_start;
 
 	const double cursor_offset = content.empty() ? 0 : Gfx::instance->gui_text.get_size(content.get32().substr(0, cursor_pos)).x;
 	if(selection_start != cursor_pos)
