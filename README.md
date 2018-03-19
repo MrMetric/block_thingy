@@ -29,18 +29,18 @@ $ git submodule update --init --recursive
 If you are using Windows, you must run `fix_symlinks.bat` before building or running block_thingy. This is because Git incorrectly translates each symbolic link to be just a text file with the link path as the content. If you are using Windows 10, you must enable [developer mode](https://docs.microsoft.com/en-us/windows/uwp/get-started/enable-your-device-for-development) for `fix_symlinks.bat` to work. Refer to this official Windows blog post for more information: [Symlinks in Windows 10!](https://blogs.windows.com/buildingapps/2016/12/02/symlinks-windows-10/).
 
 ## Dependencies
-thing | included?
------ | ---------
-[FreeType 2](https://www.freetype.org/) | ❌
-[glad](https://github.com/Dav1dde/glad) | ✔ (direct)
-[GLFW 3](https://github.com/glfw/glfw) | ❌
-[GLM](https://github.com/g-truc/glm) | ✔ (submodule)
-libpng | ❌
-[moodycamel::ConcurrentQueue](https://github.com/cameron314/concurrentqueue) | ✔ (direct)
-[msgpack-c](https://github.com/msgpack/msgpack-c/) | ❌
-[rhea 0.3](https://github.com/Nocte-/rhea/tree/0.3) | ✔ (submodule)
-[strict variant](https://github.com/cbeck88/strict-variant) | ✔ (submodule)
-[webgl-noise](https://github.com/stegu/webgl-noise) | ✔ (submodule)
+thing | included? | license
+----- | --------- | -------
+[FreeType 2](https://www.freetype.org/) | ❌ | [GPLv2 \| FTL (compatible with GPLv3)](https://www.freetype.org/license.html)
+[glad](https://github.com/Dav1dde/glad) | ✔ (direct) | [MIT](https://github.com/Dav1dde/glad/blob/master/LICENSE)
+[GLFW 3](https://github.com/glfw/glfw) | ❌ | [zlib](https://github.com/glfw/glfw/blob/master/LICENSE.md)
+[GLM](https://github.com/g-truc/glm) | ✔ (submodule) | MIT
+libpng | ❌ | libpng
+[moodycamel::ConcurrentQueue](https://github.com/cameron314/concurrentqueue) | ✔ (direct) | [simplified BSD \| Boost](https://github.com/cameron314/concurrentqueue/blob/master/LICENSE.md)
+[msgpack-c](https://github.com/msgpack/msgpack-c/) | ❌ | [Boost](https://github.com/msgpack/msgpack-c/blob/master/LICENSE_1_0.txt)
+[rhea 0.3](https://github.com/Nocte-/rhea/tree/0.3) | ✔ (submodule) | [MIT](https://github.com/Nocte-/rhea/blob/0.3/LICENSE.md)
+[strict variant](https://github.com/cbeck88/strict-variant) | ✔ (submodule) | [Boost](https://github.com/cbeck88/strict-variant/blob/master/LICENSE)
+[webgl-noise](https://github.com/stegu/webgl-noise) | ✔ (submodule) | [MIT](https://github.com/stegu/webgl-noise/blob/master/LICENSE)
 
 ## GNU/Linux
 
