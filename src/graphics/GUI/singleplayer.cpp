@@ -26,7 +26,7 @@ singleplayer::singleplayer(game& g)
 	}
 	auto& world_list = *world_list_;
 
-	std::vector<string> dirs;
+	std::vector<fs::path> dirs;
 	for(const fs::directory_entry& entry : fs::directory_iterator("worlds"))
 	{
 		const fs::path& path = entry.path();
@@ -37,17 +37,18 @@ singleplayer::singleplayer(game& g)
 		dirs.emplace_back(path.filename());
 	}
 	std::sort(dirs.begin(), dirs.end());
-	for(const string& dir : dirs)
+	for(const fs::path& dir : dirs)
 	{
-		storage::world_file file("worlds/" + dir);
+		storage::world_file file("worlds" / dir);
 		string world_name = file.get_name();
 		if(world_name.empty())
 		{
 			world_name = "(unnamed)";
 		}
-		if(dir != world_name)
+		const string dirstr = dir.u8string();
+		if(dirstr != world_name)
 		{
-			world_name += " [" + dir + ']';
+			world_name += " [" + dirstr + ']';
 		}
 
 		auto& btn = world_list.emplace_back<widget::Button>(world_name);
