@@ -300,10 +300,16 @@
     <ClCompile Include="..\..\src\graphics\GUI\main_menu.cpp">
       <Filter>Source Files\graphics\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\graphics\GUI\new_world.cpp">
+      <Filter>Source Files\graphics\GUI</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\graphics\GUI\Pause.cpp">
       <Filter>Source Files\graphics\GUI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\GUI\Play.cpp">
+      <Filter>Source Files\graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\graphics\GUI\singleplayer.cpp">
       <Filter>Source Files\graphics\GUI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\graphics\GUI\Widget\Base.cpp">
@@ -403,6 +409,9 @@
       <Filter>Source Files\util</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\util\copy_stream.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\util\crc32.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\util\demangled_name.cpp">
@@ -743,10 +752,16 @@
     <ClInclude Include="..\..\src\graphics\GUI\main_menu.hpp">
       <Filter>Source Files\graphics\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\graphics\GUI\new_world.hpp">
+      <Filter>Source Files\graphics\GUI</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\src\graphics\GUI\Pause.hpp">
       <Filter>Source Files\graphics\GUI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\graphics\GUI\Play.hpp">
+      <Filter>Source Files\graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\graphics\GUI\singleplayer.hpp">
       <Filter>Source Files\graphics\GUI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\graphics\GUI\Widget\Base.hpp">
@@ -891,6 +906,9 @@
       <Filter>Source Files\util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\util\copy_stream.hpp">
+      <Filter>Source Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\util\crc32.hpp">
       <Filter>Source Files\util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\util\demangled_name.hpp">
