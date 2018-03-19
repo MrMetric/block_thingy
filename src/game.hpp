@@ -102,6 +102,7 @@ public:
 	void close_gui();
 	void quit();
 
+	void new_world(fs::path, const std::string& name, double seed);
 	void load_world(fs::path);
 	void screenshot(fs::path) const;
 	double get_fps() const;

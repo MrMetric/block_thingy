@@ -13,14 +13,6 @@ main_menu::main_menu(game& g)
 :
 	Base(g, "guis/main_menu.btgui")
 {
-	auto btn = root.get_widget_by_id_t<widget::Button>("btn_singleplayer");
-	if(btn != nullptr)
-	{
-		btn->on_click([&g](widget::Button&, const glm::dvec2& /*position*/)
-		{
-			g.load_world("test");
-		});
-	}
 }
 
 string main_menu::type() const

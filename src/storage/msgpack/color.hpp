@@ -29,10 +29,11 @@ struct convert<color>
 	{
 		if(o.type != msgpack::type::ARRAY) throw msgpack::type_error();
 		if(o.via.array.size != 3) throw msgpack::type_error();
+		const auto& a = o.via.array.ptr;
 
-		color.r = o.via.array.ptr[0].as<decltype(color.r)>();
-		color.g = o.via.array.ptr[1].as<decltype(color.g)>();
-		color.b = o.via.array.ptr[2].as<decltype(color.b)>();
+		color.r = a[0].as<decltype(color.r)>();
+		color.g = a[1].as<decltype(color.g)>();
+		color.b = a[2].as<decltype(color.b)>();
 
 		return o;
 	}

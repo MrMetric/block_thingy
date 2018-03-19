@@ -14,20 +14,24 @@ namespace block_thingy::world {
 template<>
 void world::save(msgpack::packer<std::ofstream>& o) const
 {
-	o.pack_array(2);
+	o.pack_array(4);
+	o.pack(get_name());
+	o.pack(get_seed());
 	o.pack(get_ticks());
-
 	o.pack(block_registry.get_extid_map());
 }
 
 template<>
 void world::load(const msgpack::object& o)
 {
-	const auto v = o.as<std::vector<msgpack::object>>();
-	ticks = v.at(0).as<decltype(ticks)>();
+	if(o.type != msgpack::type::ARRAY) throw msgpack::type_error();
+	if(o.via.array.size != 4) throw msgpack::type_error();
+	const auto& a = o.via.array.ptr;
 
-	// poor design?
-	block_registry.set_extid_map(v.at(1).as<block::BlockRegistry::extid_map_t>());
+	set_name(a[0].as<std::string>());
+	set_seed(a[1].as<double>());
+	set_ticks(a[2].as<uint64_t>());
+	block_registry.set_extid_map(a[3].as<block::BlockRegistry::extid_map_t>());
 }
 
 }

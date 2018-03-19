@@ -11,3 +11,9 @@ block.test_glass	= Glass
 block.test_marble	= Marble
 block.test_white	= White
 block.unknown		= Unknown
+
+gui.new_world.dir_create_error	= Error creating directory:
+gui.new_world.dir_name_required	= Error: A directory name is required
+gui.new_world.dir_exists		= Warning: That directory already exists
+gui.new_world.file_conflict		= Error: There is a file with that name
+gui.new_world.world_exists		= Error: A world already exists in that directory

@@ -41,8 +41,10 @@
 #include "graphics/GUI/Base.hpp"
 #include "graphics/GUI/Console.hpp"
 #include "graphics/GUI/main_menu.hpp"
+#include "graphics/GUI/new_world.hpp"
 #include "graphics/GUI/Pause.hpp"
 #include "graphics/GUI/Play.hpp"
+#include "graphics/GUI/singleplayer.hpp"
 #include "graphics/opengl/push_state.hpp"
 #include "input/joy_press.hpp"
 #include "input/key_press.hpp"
@@ -152,8 +154,10 @@ game::game()
 
 	register_gui<graphics::gui::Console>("console");
 	register_gui<graphics::gui::main_menu>("main_menu");
+	register_gui<graphics::gui::new_world>("new_world");
 	register_gui<graphics::gui::Pause>("pause");
 	register_gui<graphics::gui::Play>("play");
+	register_gui<graphics::gui::singleplayer>("singleplayer");
 
 	gui = make_gui("main_menu");
 	pImpl->root_gui = gui.get();
@@ -415,6 +419,13 @@ void game::quit()
 	gui->switch_to();
 	player = nullptr;
 	world = nullptr;
+}
+
+void game::new_world(fs::path path, const string& name, const double seed)
+{
+	load_world(std::move(path));
+	world->set_name(name);
+	world->set_seed(seed);
 }
 
 void game::load_world(fs::path path)
@@ -923,6 +934,17 @@ void game::impl::add_commands()
 	{
 		assert(g.gui != nullptr);
 		g.gui->close();
+	});
+
+	COMMAND("set_world_name")
+	{
+		ASSERT_IN_GAME("set_world_name");
+		if(args.size() != 1)
+		{
+			LOG(ERROR) << "Usage: set_world_name <string: name>\n";
+			return;
+		}
+		g.world->set_name(args[0]);
 	});
 
 	#undef ASSERT_IN_GAME

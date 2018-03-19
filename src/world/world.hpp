@@ -1,11 +1,11 @@
 #pragma once
 
 #include <functional>
+#include <map>
 #include <memory>
 #include <queue>
 #include <stdint.h>
 #include <string>
-#include <unordered_map>
 #include <unordered_set>
 
 #include "fwd/Player.hpp"
@@ -26,7 +26,7 @@ class world
 public:
 	world
 	(
-		const fs::path& file_path,
+		const fs::path& dir_path,
 		block::BlockRegistry&,
 		std::unique_ptr<mesher::base>
 	);
@@ -60,9 +60,15 @@ public:
 
 	std::shared_ptr<Player> add_player(const std::string& name);
 	std::shared_ptr<Player> get_player(const std::string& name);
-	const std::unordered_map<std::string, std::shared_ptr<Player>>& get_players();
+	const std::map<std::string, std::shared_ptr<Player>>& get_players();
 
 	void save();
+
+	std::string get_name() const;
+	void set_name(const std::string&);
+
+	double get_seed() const;
+	void set_seed(double);
 
 	uint64_t get_ticks() const;
 	double get_time() const;
@@ -79,7 +85,8 @@ public:
 	template<typename T> void load(const T&);
 
 private:
-	uint64_t ticks;
+	// for loading
+	void set_ticks(uint64_t);
 
 	struct impl;
 	std::propagate_const<std::unique_ptr<impl>> pImpl;

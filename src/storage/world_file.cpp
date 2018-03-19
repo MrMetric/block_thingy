@@ -27,22 +27,56 @@ using std::unique_ptr;
 
 namespace block_thingy::storage {
 
-world_file::world_file(const fs::path& world_dir, world::world& world)
+world_file::world_file(const fs::path& world_dir)
 :
 	world_path(world_dir / "world"),
 	player_dir(world_dir / "players"),
-	chunk_dir(world_dir / "chunks"),
-	world(world)
+	chunk_dir(world_dir / "chunks")
+{
+}
+
+string world_file::get_name() const
+{
+	if(!fs::is_regular_file(world_path))
+	{
+		if(fs::exists(world_path))
+		{
+			throw std::runtime_error("error loading " + world_path.u8string() + ": not a regular file");
+		}
+		throw std::runtime_error("error loading " + world_path.u8string() + ": file not found");
+	}
+
+	const string bytes = util::read_file(world_path);
+	msgpack::unpacked u;
+	msgpack::unpack(u, bytes.data(), bytes.length());
+	msgpack::object o = u.get();
+	if(o.type != msgpack::type::ARRAY
+	|| o.via.array.size < 1)
+	{
+		throw std::runtime_error("error loading " + world_path.u8string() + ": bad file format");
+	}
+	const auto& a = o.via.array.ptr;
+
+	if(a[0].type != msgpack::type::STR)
+	{
+		throw std::runtime_error("error loading " + world_path.u8string() + ": name is not a string");
+	}
+
+	return a[0].as<string>();
+}
+
+void world_file::load(world::world& world)
 {
 	fs::create_directories(player_dir);
 	fs::create_directories(chunk_dir);
 
-	if(!fs::exists(world_path))
+	if(!fs::is_regular_file(world_path))
 	{
 		return;
 	}
+
 	LOG(INFO) << "loading world: " << world_path.u8string() << '\n';
-	string bytes = util::read_file(world_path);
+	const string bytes = util::read_file(world_path);
 	try
 	{
 		unpack_bytes(bytes, world);
@@ -53,18 +87,10 @@ world_file::world_file(const fs::path& world_dir, world::world& world)
 	}
 }
 
-void world_file::save_world()
+void world_file::save_world(world::world& world)
 {
 	std::ofstream stream(world_path, std::ofstream::binary);
 	msgpack::pack(stream, world);
-}
-
-void world_file::save_players()
-{
-	for(const auto& p : world.get_players())
-	{
-		save_player(*p.second);
-	}
 }
 
 void world_file::save_player(const Player& player)
@@ -112,7 +138,7 @@ void world_file::save_chunk(const Chunk& chunk)
 	msgpack::pack(stream, chunk);
 }
 
-unique_ptr<Chunk> world_file::load_chunk(const position::chunk_in_world& position)
+unique_ptr<Chunk> world_file::load_chunk(world::world& world, const position::chunk_in_world& position)
 {
 	fs::path file_path = chunk_path(position);
 	if(!fs::exists(file_path))

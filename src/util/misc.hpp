@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <optional>
 #include <string>
 
 #include <glad/glad.h>
@@ -79,6 +80,7 @@ bool is_integer(const std::string&);
 int stoi(const std::string&);
 long stol(const std::string&);
 long long stoll(const std::string&);
+std::optional<double> stod(const std::string&) noexcept;
 
 std::string datetime();
 

@@ -45,11 +45,13 @@ struct world::impl
 	impl
 	(
 		world& world,
-		const fs::path& file_path
+		const fs::path& dir_path
 	)
 	:
 		this_world(world),
-		file(file_path, world),
+		file(dir_path),
+		seed(0),
+		ticks(0),
 		gen_thread([this, &world](const chunk_in_world& pos)
 		{
 			shared_ptr<Chunk> chunk = std::make_shared<Chunk>(pos, world);
@@ -58,7 +60,7 @@ struct world::impl
 		}, 2, position::hasher<chunk_in_world>),
 		load_thread([this](const chunk_in_world& pos)
 		{
-			shared_ptr<Chunk> chunk(file.load_chunk(pos));
+			shared_ptr<Chunk> chunk(file.load_chunk(this_world, pos));
 			assert(chunk != nullptr);
 			loaded_chunks.enqueue(chunk);
 			mesh_thread.enqueue(chunk);
@@ -84,9 +86,12 @@ struct world::impl
 
 	std::unordered_set<chunk_in_world, position::hasher_struct<chunk_in_world>> chunks_to_save;
 
-	std::unordered_map<string, shared_ptr<Player>> players;
+	std::map<string, shared_ptr<Player>> players;
 
 	storage::world_file file;
+	string name;
+	double seed;
+	uint64_t ticks;
 
 	void update_chunk_neighbors
 	(
@@ -124,20 +129,20 @@ struct world::impl
 
 world::world
 (
-	const fs::path& file_path,
+	const fs::path& dir_path,
 	block::BlockRegistry& block_registry,
 	unique_ptr<mesher::base> mesher
 )
 :
 	block_registry(block_registry),
 	mesher(std::move(mesher)),
-	ticks(0),
 	pImpl(std::make_unique<impl>
 	(
 		*this,
-		file_path
+		dir_path
 	))
 {
+	pImpl->file.load(*this);
 }
 
 world::~world()
@@ -672,7 +677,7 @@ void world::step(double delta_time)
 		p.second->step(*this, delta_time);
 	}
 
-	ticks += 1;
+	pImpl->ticks += 1;
 }
 
 shared_ptr<Player> world::add_player(const string& name)
@@ -694,15 +699,18 @@ shared_ptr<Player> world::get_player(const string& name)
 	return i->second;
 }
 
-const std::unordered_map<string, shared_ptr<Player>>& world::get_players()
+const std::map<string, shared_ptr<Player>>& world::get_players()
 {
 	return pImpl->players;
 }
 
 void world::save()
 {
-	pImpl->file.save_world();
-	pImpl->file.save_players();
+	pImpl->file.save_world(*this);
+	for(const auto& [name, player] : pImpl->players)
+	{
+		pImpl->file.save_player(*player);
+	}
 
 	while(!pImpl->chunks_to_save.empty())
 	{
@@ -717,14 +725,32 @@ void world::save()
 	}
 }
 
+string world::get_name() const
+{
+	return pImpl->name;
+}
+void world::set_name(const string& name)
+{
+	pImpl->name = name;
+}
+
+double world::get_seed() const
+{
+	return pImpl->seed;
+}
+void world::set_seed(const double seed)
+{
+	pImpl->seed = seed;
+}
+
 uint_fast64_t world::get_ticks() const
 {
-	return ticks;
+	return pImpl->ticks;
 }
 
 double world::get_time() const
 {
-	return ticks / 60.0;
+	return pImpl->ticks / 60.0;
 }
 
 void world::set_mesher(unique_ptr<mesher::base> mesher)
@@ -749,6 +775,11 @@ bool world::is_meshing_queued(const shared_ptr<Chunk>& chunk) const
 bool world::is_meshing_queued(const chunk_in_world& chunk_pos) const
 {
 	return is_meshing_queued(get_chunk(chunk_pos));
+}
+
+void world::set_ticks(const uint64_t ticks)
+{
+	pImpl->ticks = ticks;
 }
 
 void world::impl::update_chunk_neighbors
@@ -828,12 +859,14 @@ void world::impl::update_chunk_neighbor
 
 static double sum_noise
 (
-	const glm::dvec2& P,
+	const double seed,
+	const glm::dvec2& P_,
 	const double base_freq,
 	const double freq_mul,
 	const std::size_t iterations
 )
 {
+	const glm::dvec3 P(P_, seed);
 	double val = 0;
 	double freq = base_freq;
 	for(std::size_t i = 0; i < iterations; i++)
@@ -863,11 +896,11 @@ void world::impl::gen_chunk(shared_ptr<Chunk>& chunk) const
 		}
 
 		// https://www.shadertoy.com/view/Xl3GWS
-		auto get_max_y = [](const block_in_world::value_type x, const block_in_world::value_type z) -> double
+		auto get_max_y = [seed=this->seed](const block_in_world::value_type x, const block_in_world::value_type z) -> double
 		{
 			// coords must not be (0, 0) (it makes this function always return 0)
 			const glm::dvec2 coords = (x == 0 && z == 0) ? glm::dvec2(0.0001) : glm::dvec2(x, z) / 1024.0;
-			const glm::dvec2 n(-sum_noise(coords, 1, 2.07, 8));
+			const glm::dvec2 n(-sum_noise(seed, coords, 1, 2.07, 8));
 
 			const double a = n.x * n.y;
 			const double b = glm::mod(a, 1.0);

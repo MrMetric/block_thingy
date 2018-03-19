@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <cerrno>
 #include <chrono>
+#include <cmath>
 #include <cstring>
 #include <ctime>
 #include <fstream>
@@ -151,6 +152,21 @@ long long stoll(const string& s)
 		throw std::invalid_argument("stol");
 	}
 	return std::stoll(s);
+}
+std::optional<double> stod(const string& s) noexcept
+{
+	try
+	{
+		const double d = std::stod(s);
+		if(!std::isnan(d) && !std::isinf(d))
+		{
+			return d;
+		}
+	}
+	catch(...)
+	{
+	}
+	return {};
 }
 
 string datetime()

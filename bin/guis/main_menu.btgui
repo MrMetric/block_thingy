@@ -7,6 +7,7 @@ widgets:
 	button:
 		id: "btn_singleplayer"
 		text: "Create/load world"
+		command: "open_gui singleplayer"
 	button:
 		text: "Connect to server"
 		enabled: false

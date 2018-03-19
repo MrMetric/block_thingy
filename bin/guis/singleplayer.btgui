@@ -1,0 +1,38 @@
+# TODO: add option for deleting a world
+# TODO: display creation date and last modification date
+layout:
+	pos = parent.pos
+	size = parent.size
+widgets:
+	text:
+		text: "Create or load world"
+		layout:
+			center.x = parent.center.x
+			pos.y = parent.pos.y + 8
+	container:
+		id: "world_list"
+		auto_layout:
+			type: "column"
+			spacing: 8
+			shrink: false
+		child_layout:
+			size.x = parent.size.x
+		layout:
+			center.x = parent.center.x
+			pos.y = sibling_prev.end.y + 8
+			size.x = parent.size.x - 128
+			size.y = parent.size.y - sibling_next.size.y - sibling_prev.size.y - 8*4
+	container:
+		layout:
+			center.x = parent.center.x
+			end.y = parent.end.y - 8
+		auto_layout:
+			type: "row"
+			spacing: 8
+		widgets:
+			button:
+				text: "New"
+				command: "open_gui new_world"
+			button:
+				text: "Cancel"
+				command: "close_gui"

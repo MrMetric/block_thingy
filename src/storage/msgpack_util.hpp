@@ -66,7 +66,7 @@ template<typename T>
 void unpack_bytes(const std::string& bytes, T& v)
 {
 	msgpack::unpacked u;
-	msgpack::unpack(u, bytes.c_str(), bytes.length());
+	msgpack::unpack(u, bytes.data(), bytes.length());
 	msgpack::object o = u.get();
 	o.convert(v);
 }
