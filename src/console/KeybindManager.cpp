@@ -180,7 +180,7 @@ int KeybindManager::translate_key(string key)
 		{
 			return GLFW_KEY_UNKNOWN;
 		}
-		const int8_t btn = key[5] - '1';
+		const char btn = key[5] - '1';
 		if(btn < 0 || btn > 7)
 		{
 			return GLFW_KEY_UNKNOWN;
