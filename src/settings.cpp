@@ -14,6 +14,7 @@
 #include "util/logger.hpp"
 #include "util/misc.hpp"
 
+using std::nullopt;
 using std::string;
 
 namespace block_thingy::settings {
@@ -343,18 +344,15 @@ void add_command_handlers()
 			svalue = arg1;
 		}
 
-		try
+		if(const std::optional<double> value_ = util::stod(svalue);
+			value_ != nullopt)
 		{
-			value += m * std::stod(svalue);
+			// TODO: cancel operation if the new value is infinite
+			value += m * *value_;
 		}
-		catch(const std::invalid_argument&)
+		else
 		{
-			LOG(ERROR) << "error setting float " << name << ' ' << op << ' ' << svalue << ": not a number\n";
-			return;
-		}
-		catch(const std::out_of_range&)
-		{
-			LOG(ERROR) << "error setting float " << name << ' ' << op << ' ' << svalue << ": out of range\n";
+			LOG(ERROR) << "error setting float " << name << ' ' << op << ' ' << svalue << ": not a number or out of range\n";
 			return;
 		}
 
@@ -435,18 +433,15 @@ void add_command_handlers()
 			svalue = arg1;
 		}
 
-		try
+		if(const std::optional<int64_t> value_ = util::string_to_int<int64_t>(svalue);
+			value_ != nullopt)
 		{
-			value += m * util::stoll(svalue);
+			// TODO: -1 * MIN = MIN (with 2's complement)
+			value += m * *value_;
 		}
-		catch(const std::invalid_argument&)
+		else
 		{
-			LOG(ERROR) << "error setting int " << name << ' ' << op << ' ' << svalue << ": not an integer\n";
-			return;
-		}
-		catch(const std::out_of_range&)
-		{
-			LOG(ERROR) << "error setting int " << name << ' ' << op << ' ' << svalue << ": out of range\n";
+			LOG(ERROR) << "error setting int " << name << ' ' << op << ' ' << svalue << ": not an integer or out of range\n";
 			return;
 		}
 
@@ -494,18 +489,14 @@ void add_command_handlers()
 
 	#define STOD(var, s, type, name) \
 	double _ ## var ## _; \
-	try \
+	if(const std::optional<double> value_ = util::stod(s); \
+		value_ != nullopt) \
 	{ \
-		_ ## var ## _ = std::stod(s); \
+		_ ## var ## _ = *value_; \
 	} \
-	catch(const std::invalid_argument&) \
+	else \
 	{ \
-		LOG(ERROR) << "error setting " type " " << (name) << "[" #var "]" << " = " << (s) << ": not a number\n"; \
-		return; \
-	} \
-	catch(const std::out_of_range&) \
-	{ \
-		LOG(ERROR) << "error setting " type " " << (name) << "[" #var "]" << " = " << (s) << ": out of range\n"; \
+		LOG(ERROR) << "error setting " type " " << (name) << "[" #var "]" << " = " << (s) << ": not a number or out of range\n"; \
 		return; \
 	} \
 	const double var = _ ## var ## _;

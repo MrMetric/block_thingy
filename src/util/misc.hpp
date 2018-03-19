@@ -1,8 +1,10 @@
 #pragma once
 
 #include <algorithm>
+#include <limits>
 #include <optional>
 #include <string>
+#include <type_traits>
 
 #include <glad/glad.h>
 
@@ -76,11 +78,70 @@ std::string read_file(const fs::path&, bool is_text);
 
 std::string gl_object_log(GLuint object);
 
-bool is_integer(const std::string&);
-int stoi(const std::string&);
-long stol(const std::string&);
-long long stoll(const std::string&);
-std::optional<double> stod(const std::string&) noexcept;
+bool is_integer(const std::string&) noexcept;
+std::optional<unsigned int      > stou  (const std::string&) noexcept;
+std::optional<unsigned long     > stoul (const std::string&) noexcept;
+std::optional<unsigned long long> stoull(const std::string&) noexcept;
+std::optional<int               > stoi  (const std::string&) noexcept;
+std::optional<long              > stol  (const std::string&) noexcept;
+std::optional<long long         > stoll (const std::string&) noexcept;
+
+std::optional<float      > stof (const std::string&) noexcept;
+std::optional<double     > stod (const std::string&) noexcept;
+std::optional<long double> stold(const std::string&) noexcept;
+
+// TODO: lexical_cast
+template<typename T>
+std::optional<T> string_to_int(const std::string& s)
+{
+	static_assert(std::is_integral_v<T> && !std::is_same_v<T, bool>, "type must be an integer");
+
+	if constexpr(std::is_unsigned_v<T>)
+	{
+		if constexpr(sizeof(T) == sizeof(int))
+		{
+			return util::stou(s);
+		}
+		if constexpr(sizeof(T) == sizeof(long))
+		{
+			return util::stoul(s);
+		}
+		if constexpr(sizeof(T) == sizeof(long long))
+		{
+			return util::stoull(s);
+		}
+		const auto ll = util::stoull(s);
+		if(ll == std::nullopt
+		|| *ll > std::numeric_limits<T>::max())
+		{
+			return {};
+		}
+		return *ll;
+	}
+	else
+	{
+		if constexpr(sizeof(T) == sizeof(int))
+		{
+			return util::stoi(s);
+		}
+		if constexpr(sizeof(T) == sizeof(long))
+		{
+			return util::stol(s);
+		}
+		if constexpr(sizeof(T) == sizeof(long long))
+		{
+			return util::stoll(s);
+		}
+		const auto ll = util::stoll(s);
+		if(ll == std::nullopt
+		|| *ll < std::numeric_limits<T>::min()
+		|| *ll > std::numeric_limits<T>::max())
+		{
+			return {};
+		}
+		return *ll;
+	}
+}
 
 std::string datetime();
 

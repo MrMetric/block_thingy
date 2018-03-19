@@ -802,18 +802,24 @@ void game::impl::add_commands()
 			return;
 		}
 		const string part = args[0];
-		const double value = std::stod(args[1]);
+		const string svalue = args[1];
+		const std::optional<double> value = util::stod(svalue);
+		if(value == nullopt)
+		{
+			LOG(ERROR) << "not a number or out of range: " << svalue << '\n';
+			return;
+		}
 		if(part == "x")
 		{
-			g.camera.rotation.x += value;
+			g.camera.rotation.x += *value;
 		}
 		else if(part == "y")
 		{
-			g.camera.rotation.y += value;
+			g.camera.rotation.y += *value;
 		}
 		else if(part == "z")
 		{
-			g.camera.rotation.z += value;
+			g.camera.rotation.z += *value;
 		}
 		else
 		{

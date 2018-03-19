@@ -16,6 +16,7 @@
 #include "util/logger.hpp"
 #include "util/misc.hpp"
 
+using std::nullopt;
 using std::string;
 
 namespace block_thingy::graphics::gui {
@@ -238,7 +239,8 @@ double get_seed(const string& s)
 	{
 		return 0;
 	}
-	if(const std::optional<double> d = util::stod(s); d.has_value())
+	if(const std::optional<double> d = util::stod(s);
+		d != nullopt)
 	{
 		return *d;
 	}

@@ -18,6 +18,7 @@
 
 #include "util/logger.hpp"
 
+using std::nullopt;
 using std::string;
 using std::unique_ptr;
 
@@ -105,7 +106,7 @@ string gl_object_log(const GLuint object)
 	return string(log.get(), log_length);
 }
 
-bool is_integer(const string& s)
+bool is_integer(const string& s) noexcept
 {
 	if(s.empty())
 	{
@@ -129,45 +130,61 @@ bool is_integer(const string& s)
 	return s.find_first_not_of("0123456789", start_pos) == string::npos;
 }
 
-int stoi(const string& s)
+std::optional<unsigned int> stou(const string& s) noexcept
 {
-	if(!is_integer(s))
+	// there is no std::stou
+	const std::optional<unsigned long> u = util::stoul(s);
+	if(u == nullopt
+	|| *u > std::numeric_limits<unsigned int>::max())
 	{
-		throw std::invalid_argument("stoi");
+		return {};
 	}
-	return std::stoi(s);
+	return static_cast<unsigned int>(*u);
 }
-long stol(const string& s)
-{
-	if(!is_integer(s))
-	{
-		throw std::invalid_argument("stol");
-	}
-	return std::stol(s);
+
+#define STOI(TYPE, NAME) \
+std::optional<TYPE> NAME(const string& s) noexcept \
+{ \
+	if(!is_integer(s)) \
+	{ \
+		return {}; \
+	} \
+	try \
+	{ \
+		return std::NAME(s); \
+	} \
+	catch(...) \
+	{ \
+	} \
+	return {}; \
 }
-long long stoll(const string& s)
-{
-	if(!is_integer(s))
-	{
-		throw std::invalid_argument("stol");
-	}
-	return std::stoll(s);
+STOI(unsigned long     , stoul )
+STOI(unsigned long long, stoull)
+STOI(int               , stoi  )
+STOI(long              , stol  )
+STOI(long long         , stoll )
+#undef STOI
+
+#define STOF(TYPE, NAME) \
+std::optional<TYPE> NAME(const string& s) noexcept \
+{ \
+	try \
+	{ \
+		const TYPE f = std::NAME(s); \
+		if(!std::isnan(f) && !std::isinf(f)) \
+		{ \
+			return f; \
+		} \
+	} \
+	catch(...) \
+	{ \
+	} \
+	return {}; \
 }
-std::optional<double> stod(const string& s) noexcept
-{
-	try
-	{
-		const double d = std::stod(s);
-		if(!std::isnan(d) && !std::isinf(d))
-		{
-			return d;
-		}
-	}
-	catch(...)
-	{
-	}
-	return {};
-}
+STOF(float      , stof )
+STOF(double     , stod )
+STOF(long double, stold)
+#undef STOF
 
 string datetime()
 {

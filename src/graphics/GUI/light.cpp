@@ -11,6 +11,7 @@
 #include "graphics/GUI/Widget/text_input.hpp"
 #include "util/misc.hpp"
 
+using std::nullopt;
 using std::string;
 
 namespace block_thingy::graphics::gui {
@@ -56,29 +57,24 @@ void light::draw()
 
 void light::on_change(std::ptrdiff_t i, widget::text_input& w, const string& new_value)
 {
-	bool valid = true;
+	bool valid = false;
 	int v = 0;
-	try
+	if(const std::optional<int> v_ = util::stoi(new_value);
+		v_ != nullopt)
 	{
-		v = util::stoi(new_value);
-		if(v < 0)
+		if(*v_ < 0)
 		{
-			valid = false;
-			v = 0;
+			// v is already 0
 		}
-		else if(v > graphics::color::max)
+		else if(*v_ > graphics::color::max)
 		{
-			valid = false;
 			v = graphics::color::max;
 		}
-	}
-	catch(const std::invalid_argument&)
-	{
-		valid = false;
-	}
-	catch(const std::out_of_range&)
-	{
-		valid = false;
+		else
+		{
+			valid = true;
+			v = *v_;
+		}
 	}
 	w.valid(valid);
 	auto c = block.light();
