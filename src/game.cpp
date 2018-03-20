@@ -775,6 +775,11 @@ void game::impl::add_commands()
 			return;
 		}
 		const string save_name = args[0];
+		if(!fs::is_regular_file(save_name))
+		{
+			LOG(ERROR) << "file not found: " << save_name << '\n';
+			return;
+		}
 		std::ifstream streem(save_name);
 
 		glm::dvec3 pos;

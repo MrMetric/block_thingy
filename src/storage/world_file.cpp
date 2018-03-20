@@ -51,7 +51,7 @@ string world_file::get_name() const
 	msgpack::unpack(u, bytes.data(), bytes.length());
 	msgpack::object o = u.get();
 	if(o.type != msgpack::type::ARRAY
-	|| o.via.array.size < 1)
+	|| o.via.array.size == 0)
 	{
 		throw std::runtime_error("error loading " + world_path.u8string() + ": bad file format");
 	}
@@ -154,27 +154,30 @@ unique_ptr<Chunk> world_file::load_chunk(world::world& world, const position::ch
 	{
 		unpack_bytes(bytes, *chunk);
 	}
+	// TODO: rename the bad file so the user can attempt to recover it (because the new chunk will overwrite it)
 	catch(const msgpack::v1::insufficient_bytes& e)
 	{
 		// TODO: load truncated chunks
 		LOG(ERROR) << "error loading " << file_path.u8string() << ": " << e.what() << '\n';
 		return nullptr;
 	}
-	catch(const msgpack::type_error& e)
+	catch(const std::exception& e)
 	{
 		LOG(ERROR) << "error loading " << file_path.u8string() << ": " << e.what() << '\n';
-		// TODO: rename the bad file so the user can attempt to recover it (because the new chunk will overwrite it)
 		return nullptr;
 	}
-	//catch(const std::exception& e)
+	catch(...)
+	{
+		LOG(ERROR) << "error loading " << file_path.u8string() << '\n';
+		return nullptr;
+	}
 
 	return chunk;
 }
 
 bool world_file::has_chunk(const position::chunk_in_world& position)
 {
-	fs::path file_path = chunk_path(position);
-	return fs::exists(file_path);
+	return fs::exists(chunk_path(position));
 }
 
 fs::path world_file::chunk_path(const position::chunk_in_world& position)

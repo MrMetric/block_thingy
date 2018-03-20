@@ -39,8 +39,18 @@ singleplayer::singleplayer(game& g)
 	std::sort(dirs.begin(), dirs.end());
 	for(const fs::path& dir : dirs)
 	{
+		bool bad = false;
 		storage::world_file file("worlds" / dir);
-		string world_name = file.get_name();
+		string world_name;
+		try
+		{
+			world_name = file.get_name();
+		}
+		catch(...)
+		{
+			bad = true;
+			world_name = "(corrupted)";
+		}
 		if(world_name.empty())
 		{
 			world_name = "(unnamed)";
@@ -57,10 +67,17 @@ singleplayer::singleplayer(game& g)
 		btn.set_border_size(glm::dvec4(2));
 		btn.set_border_color(glm::dvec4(1));
 
-		btn.on_click([&g, dir](widget::Button&, const glm::dvec2& /*position*/)
+		if(bad)
 		{
-			g.load_world(dir);
-		});
+			btn.enabled(false);
+		}
+		else
+		{
+			btn.on_click([&g, dir](widget::Button&, const glm::dvec2& /*position*/)
+			{
+				g.load_world(dir);
+			});
+		}
 	}
 
 	refresh_layout();
