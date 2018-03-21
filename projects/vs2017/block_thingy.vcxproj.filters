@@ -79,6 +79,9 @@
     <Filter Include="Source Files\fwd\graphics\opengl">
       <UniqueIdentifier>{793bb1fc-c527-4d00-b6aa-ce07a71db182}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\fwd\input">
+      <UniqueIdentifier>{db1eb2f2-0fdb-4b69-901a-b5062be5b5b7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\fwd\physics">
       <UniqueIdentifier>{4cfdbb4c-48ac-4771-8077-32611e7c0a78}</UniqueIdentifier>
     </Filter>
@@ -90,6 +93,9 @@
     </Filter>
     <Filter Include="Source Files\fwd\util">
       <UniqueIdentifier>{f5cdab4d-cd32-40f8-bca4-49c418b42187}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\fwd\world">
+      <UniqueIdentifier>{7af4279b-cf3b-438c-a979-4b174f115db3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\graphics">
       <UniqueIdentifier>{36807984-d650-41f3-ae05-e0b5e513eb36}</UniqueIdentifier>
@@ -105,6 +111,9 @@
     </Filter>
     <Filter Include="Source Files\graphics\GUI\Widget\Component">
       <UniqueIdentifier>{3a392f6a-7a31-4af7-aeae-ecbdbf993000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\input">
+      <UniqueIdentifier>{b14b2cb5-aaf6-409e-8436-4987acde424e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\physics">
       <UniqueIdentifier>{20237342-118b-4a10-9b20-ea21fb93c818}</UniqueIdentifier>
