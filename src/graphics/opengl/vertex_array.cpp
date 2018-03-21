@@ -1,5 +1,8 @@
 #include "vertex_array.hpp"
 
+#include <limits>
+#include <stdexcept>
+
 #include "graphics/opengl/vertex_buffer.hpp"
 
 namespace block_thingy::graphics::opengl {
@@ -60,7 +63,11 @@ vertex_array::~vertex_array()
 	}
 }
 
-void vertex_array::attrib(const GLuint index, const bool enabled)
+void vertex_array::attrib
+(
+	const GLuint index,
+	const bool enabled
+)
 {
 	if(enabled)
 	{
@@ -72,8 +79,20 @@ void vertex_array::attrib(const GLuint index, const bool enabled)
 	}
 }
 
-void vertex_array::draw(const GLenum mode, const GLint first, const std::size_t count) const
+void vertex_array::draw
+(
+	const GLenum mode,
+	const GLint first,
+	const std::size_t count_
+) const
 {
+	static_assert(sizeof(GLsizei) <= sizeof(std::size_t));
+	if(count_ > static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()))
+	{
+		throw std::invalid_argument("count out of range");
+	}
+	const GLsizei count = static_cast<GLsizei>(count_);
+
 	glBindVertexArray(name);
 	glDrawArrays(mode, first, count);
 }

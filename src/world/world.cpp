@@ -6,6 +6,7 @@
 #include <memory>
 #include <mutex>
 #include <queue>
+#include <sstream>
 #include <stdexcept>
 #include <stdint.h>
 #include <tuple>
@@ -176,7 +177,9 @@ void world::set_block
 {
 	if(block == nullptr)
 	{
-		throw std::invalid_argument("block must not be null");
+		std::ostringstream ss;
+		ss << "can not set a block to null (coordinates: " << block_pos << ')';
+		throw std::invalid_argument(ss.str());
 	}
 
 	const chunk_in_world chunk_pos(block_pos);

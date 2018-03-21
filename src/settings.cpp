@@ -131,8 +131,8 @@ void load()
 	settings =
 	{
 		{"crosshair_color"		, glm::dvec4(1.0)},
-		{"crosshair_size"		, 32},
-		{"crosshair_thickness"	, 2},
+		{"crosshair_size"		, 32.0},
+		{"crosshair_thickness"	, 2.0},
 		{"cull_face"			, true},
 		{"cursor_blink_rate"	, 0.5}, // TODO: ensure > 0
 		{"far_plane"			, 1500.0},

@@ -39,7 +39,7 @@ Player::Player
 	{
 		g.camera.rotation = r;
 	}),
-	velocity(glm::dvec3(0), [](glm::dvec3 v)
+	velocity(glm::dvec3(0), [](glm::dvec3 /*v*/)
 	{
 	}),
 	g(g),
@@ -171,7 +171,7 @@ void Player::move(world::world& world, const glm::dvec3& acceleration)
 
 			if(on_ground_check)
 			{
-				position.y = static_cast<position::block_in_world::value_type>(std::round(pos_feet_new.y + 1));
+				position.y = pos_feet_new.y + 1;
 				if(flags.on_ground)
 				{
 					velocity.y = 0;

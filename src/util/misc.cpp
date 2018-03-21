@@ -97,11 +97,11 @@ string gl_object_log(const GLuint object)
 	unique_ptr<char[]> log = std::make_unique<char[]>(log_length);
 	if(glIsShader(object))
 	{
-		glGetShaderInfoLog(object, log_length, nullptr, log.get());
+		glGetShaderInfoLog(object, log_length_, nullptr, log.get());
 	}
 	else if(glIsProgram(object))
 	{
-		glGetProgramInfoLog(object, log_length, nullptr, log.get());
+		glGetProgramInfoLog(object, log_length_, nullptr, log.get());
 	}
 	return string(log.get(), log_length);
 }

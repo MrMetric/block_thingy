@@ -82,6 +82,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=mismatched-tags
 		-Werror=missing-declarations
 		-Werror=missing-field-initializers
+		-Werror=missing-prototypes
 		-Werror=newline-eof
 		-Werror=non-virtual-dtor
 		-Werror=old-style-cast

@@ -172,13 +172,15 @@ bool base::is_replaceable_by(const base& /*block*/) const
 void base::use_start
 (
 	game& /*g*/,
-	world::world& /*world*/,
+	world::world& world,
 	Player& player,
 	const position::block_in_world& pos,
 	const enums::Face face
 )
 {
-	LOG(DEBUG) << "+use on block " << pos << ':' << face << " by player " << player.name << '\n';
+	LOG(DEBUG) << "+use on block " << pos << ':' << face
+	           << " in world " << world.get_name()
+	           << " by player " << player.name << '\n';
 }
 
 void base::save(storage::OutputInterface& i) const

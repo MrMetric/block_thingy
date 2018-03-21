@@ -49,7 +49,7 @@ libpng | ❌ | libpng
 The only compilers that I guarantee will work are:
 
  * GCC == 7.3.1
- * Clang == 5.0.1
+ * Clang == 6.0.0
 
 Other versions of these compilers might work, but I do not guarantee that they do. I also do not guarantee that any other compilers work, although I do try to stick to standard C++ and use `#ifdef`s around non-standard features.
 
@@ -100,7 +100,7 @@ $ ./block_thingy ../bin
 
 ### Building
 
-I have tested building with Visual Studio Community 2017 version 15.6.2. I do not guarantee that any other version will work, but future 2017 versions should be fine.
+I have tested building with Visual Studio Community 2017 version 15.6.3. I do not guarantee that any other version will work, but future 2017 versions should be fine.
 
 Install [vcpkg](https://github.com/Microsoft/vcpkg) according to its instructions. Note that vcpkg's defaults to installing 32-bit libraries. Install the dependencies like this:
 

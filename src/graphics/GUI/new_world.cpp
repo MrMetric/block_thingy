@@ -143,7 +143,8 @@ new_world::new_world(game& g)
 			const auto now = std::chrono::system_clock::now();
 			const auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
 			const auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now_ms.time_since_epoch());
-			seed_value = duration.count();
+			// this cast is safe because integers lose precision after 2^53, which is over 200000 years from now
+			seed_value = static_cast<double>(duration.count());
 		}
 		g.new_world(dir_name, name->get_text(), seed_value);
 	});

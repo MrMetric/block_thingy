@@ -362,7 +362,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;BT_CHUNK_SIZE=32;BT_CHUNK_SIZE_STR="32";BT_DEBUG_BUILD;GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;BT_CHUNK_SIZE=32;BT_CHUNK_SIZE_STR="32";BT_DEBUG_BUILD;GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
@@ -371,6 +371,7 @@
       <ObjectFileName>$(IntDir)%(RelativeDir)\</ObjectFileName>
       <ProgramDataBaseFileName>$(IntDir)%(RelativeDir)\vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
       <XMLDocumentationFileName>$(IntDir)%(RelativeDir)\</XMLDocumentationFileName>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -384,7 +385,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;BT_CHUNK_SIZE=32;BT_CHUNK_SIZE_STR="32";BT_DEBUG_BUILD;GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;BT_CHUNK_SIZE=32;BT_CHUNK_SIZE_STR="32";BT_DEBUG_BUILD;GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
@@ -393,6 +394,7 @@
       <ObjectFileName>$(IntDir)%(RelativeDir)\</ObjectFileName>
       <ProgramDataBaseFileName>$(IntDir)%(RelativeDir)\vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
       <XMLDocumentationFileName>$(IntDir)%(RelativeDir)\</XMLDocumentationFileName>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -408,7 +410,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;BT_CHUNK_SIZE=32;BT_CHUNK_SIZE_STR="32";GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;BT_CHUNK_SIZE=32;BT_CHUNK_SIZE_STR="32";GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
@@ -417,6 +419,7 @@
       <ObjectFileName>$(IntDir)%(RelativeDir)\</ObjectFileName>
       <ProgramDataBaseFileName>$(IntDir)%(RelativeDir)\vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
       <XMLDocumentationFileName>$(IntDir)%(RelativeDir)\</XMLDocumentationFileName>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -434,7 +437,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;BT_CHUNK_SIZE=32;BT_CHUNK_SIZE_STR="32";GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;BT_CHUNK_SIZE=32;BT_CHUNK_SIZE_STR="32";GLFW_INCLUDE_NONE;GLM_ENABLE_EXPERIMENTAL;GLM_FORCE_EXPLICIT_CTOR;GLM_FORCE_SIZE_FUNC;GLM_FORCE_SIZE_T_LENGTH;MSGPACK_DISABLE_LEGACY_CONVERT;MSGPACK_DISABLE_LEGACY_NIL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
@@ -443,6 +446,7 @@
       <ObjectFileName>$(IntDir)%(RelativeDir)\</ObjectFileName>
       <ProgramDataBaseFileName>$(IntDir)%(RelativeDir)\vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
       <XMLDocumentationFileName>$(IntDir)%(RelativeDir)\</XMLDocumentationFileName>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

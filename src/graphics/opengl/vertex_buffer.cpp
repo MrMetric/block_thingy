@@ -70,8 +70,20 @@ vertex_buffer::vertex_buffer(vertex_buffer&& that)
 	}
 }
 
-void vertex_buffer::data(const std::size_t size, const void* data, const usage_hint usage)
+void vertex_buffer::data
+(
+	const std::size_t size_,
+	const void* data,
+	const usage_hint usage
+)
 {
+	static_assert(sizeof(GLsizei) <= sizeof(std::size_t));
+	if(size_ > static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()))
+	{
+		throw std::invalid_argument("size out of range");
+	}
+	const GLsizei size = static_cast<GLsizei>(size_);
+
 	glNamedBufferData(name, size, data, static_cast<GLenum>(usage));
 }
 

@@ -54,8 +54,15 @@ void texture::image2D
 	const GLvoid* data
 )
 {
-	if(width_ > std::numeric_limits<GLsizei>::max()) throw std::invalid_argument("width");
-	if(height_ > std::numeric_limits<GLsizei>::max()) throw std::invalid_argument("height");
+	static_assert(sizeof(GLsizei) <= sizeof(uint32_t));
+	if(width_ > static_cast<uint32_t>(std::numeric_limits<GLsizei>::max()))
+	{
+		throw std::invalid_argument("width out of range");
+	}
+	if(height_ > static_cast<uint32_t>(std::numeric_limits<GLsizei>::max()))
+	{
+		throw std::invalid_argument("height out of range");
+	}
 	const GLsizei width = static_cast<GLsizei>(width_);
 	const GLsizei height = static_cast<GLsizei>(height_);
 
@@ -72,8 +79,15 @@ void texture::image2D_multisample
 	const bool fixed_sample_locations
 )
 {
-	if(width_ > std::numeric_limits<GLsizei>::max()) throw std::invalid_argument("width");
-	if(height_ > std::numeric_limits<GLsizei>::max()) throw std::invalid_argument("height");
+	static_assert(sizeof(GLsizei) <= sizeof(uint32_t));
+	if(width_ > static_cast<uint32_t>(std::numeric_limits<GLsizei>::max()))
+	{
+		throw std::invalid_argument("width out of range");
+	}
+	if(height_ > static_cast<uint32_t>(std::numeric_limits<GLsizei>::max()))
+	{
+		throw std::invalid_argument("height out of range");
+	}
 	const GLsizei width = static_cast<GLsizei>(width_);
 	const GLsizei height = static_cast<GLsizei>(height_);
 
@@ -93,9 +107,19 @@ void texture::image3D
 	const GLvoid* data
 )
 {
-	if(width_ > std::numeric_limits<GLsizei>::max()) throw std::invalid_argument("width");
-	if(height_ > std::numeric_limits<GLsizei>::max()) throw std::invalid_argument("height");
-	if(depth_ > std::numeric_limits<GLsizei>::max()) throw std::invalid_argument("depth");
+	static_assert(sizeof(GLsizei) <= sizeof(uint32_t));
+	if(width_ > static_cast<uint32_t>(std::numeric_limits<GLsizei>::max()))
+	{
+		throw std::invalid_argument("width out of range");
+	}
+	if(height_ > static_cast<uint32_t>(std::numeric_limits<GLsizei>::max()))
+	{
+		throw std::invalid_argument("height out of range");
+	}
+	if(depth_ > static_cast<uint32_t>(std::numeric_limits<GLsizei>::max()))
+	{
+		throw std::invalid_argument("depth out of range");
+	}
 	const GLsizei width = static_cast<GLsizei>(width_);
 	const GLsizei height = static_cast<GLsizei>(height_);
 	const GLsizei depth = static_cast<GLsizei>(depth_);
@@ -118,9 +142,19 @@ void texture::image3D_sub
 	const GLvoid* data
 )
 {
-	if(width_ > std::numeric_limits<GLsizei>::max()) throw std::invalid_argument("width");
-	if(height_ > std::numeric_limits<GLsizei>::max()) throw std::invalid_argument("height");
-	if(depth_ > std::numeric_limits<GLsizei>::max()) throw std::invalid_argument("depth");
+	static_assert(sizeof(GLsizei) <= sizeof(uint32_t));
+	if(width_ > static_cast<uint32_t>(std::numeric_limits<GLsizei>::max()))
+	{
+		throw std::invalid_argument("width out of range");
+	}
+	if(height_ > static_cast<uint32_t>(std::numeric_limits<GLsizei>::max()))
+	{
+		throw std::invalid_argument("height out of range");
+	}
+	if(depth_ > static_cast<uint32_t>(std::numeric_limits<GLsizei>::max()))
+	{
+		throw std::invalid_argument("depth out of range");
+	}
 	const GLsizei width = static_cast<GLsizei>(width_);
 	const GLsizei height = static_cast<GLsizei>(height_);
 	const GLsizei depth = static_cast<GLsizei>(depth_);

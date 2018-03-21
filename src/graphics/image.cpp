@@ -208,7 +208,7 @@ struct png_read
 		}
 		png_init_io(png, file);
 
-		png_set_sig_bytes(png, header.size());
+		png_set_sig_bytes(png, static_cast<int>(header.size()));
 		png_read_info(png, info);
 	}
 
@@ -278,7 +278,7 @@ std::tuple<std::vector<uint8_t>, uint32_t, uint32_t> read_png
 	std::size_t rowbytes = png_get_rowbytes(read.png, read.info);
 
 	LOG(DEBUG) << path.u8string() << ": " << width << "×" << height
-			   << "; bit depth = " << bit_depth
+			   << "; bit depth = " << +bit_depth
 			   << "; color type = " << png_color_type_name(color_type)
 			   << "; pass count = " << number_of_passes
 			   << "; rowbytes = " << rowbytes
@@ -336,13 +336,13 @@ void write_png
 {
 	// http://www.libpng.org/pub/png/spec/iso/index-object.html#3PNGfourByteUnSignedInteger
 	// http://www.libpng.org/pub/png/spec/iso/index-object.html#11IHDR
-	if(width == 0 || width > std::numeric_limits<int32_t>::max())
+	if(width == 0 || width > static_cast<uint32_t>(std::numeric_limits<int32_t>::max()))
 	{
-		throw std::invalid_argument("width");
+		throw std::invalid_argument("width out of range");
 	}
-	if(height == 0 || height > std::numeric_limits<int32_t>::max())
+	if(height == 0 || height > static_cast<uint32_t>(std::numeric_limits<int32_t>::max()))
 	{
-		throw std::invalid_argument("height");
+		throw std::invalid_argument("height out of range");
 	}
 
 	assert(data.size() == 4 * width * height);

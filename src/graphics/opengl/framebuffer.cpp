@@ -29,12 +29,21 @@ framebuffer::framebuffer(framebuffer&& that) noexcept
 	}
 }
 
-void framebuffer::attach_renderbuffer(GLenum attachment_point, renderbuffer& rb)
+void framebuffer::attach_renderbuffer
+(
+	const GLenum attachment_point,
+	renderbuffer& rb
+)
 {
 	glNamedFramebufferRenderbuffer(name, attachment_point, GL_RENDERBUFFER, rb.get_name());
 }
 
-void framebuffer::attach_texture(GLenum attachment_point, texture& tex, GLint mipmap_level)
+void framebuffer::attach_texture
+(
+	const GLenum attachment_point,
+	texture& tex,
+	const GLint mipmap_level
+)
 {
 	glNamedFramebufferTexture(name, attachment_point, tex.get_name(), mipmap_level);
 }

@@ -40,8 +40,15 @@ void renderbuffer::storage
 	const GLsizei samples
 )
 {
-	if(width_ > std::numeric_limits<GLsizei>::max()) throw std::invalid_argument("width");
-	if(height_ > std::numeric_limits<GLsizei>::max()) throw std::invalid_argument("height");
+	static_assert(sizeof(GLsizei) <= sizeof(uint32_t));
+	if(width_ > static_cast<uint32_t>(std::numeric_limits<GLsizei>::max()))
+	{
+		throw std::invalid_argument("width out of range");
+	}
+	if(height_ > static_cast<uint32_t>(std::numeric_limits<GLsizei>::max()))
+	{
+		throw std::invalid_argument("height out of range");
+	}
 	const GLsizei width = static_cast<GLsizei>(width_);
 	const GLsizei height = static_cast<GLsizei>(height_);
 

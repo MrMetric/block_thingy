@@ -7,6 +7,7 @@ projects/**/*.idb
 projects/**/*.nativecodeanalysis.xml
 projects/**/*.obj
 projects/**/*.pdb
+projects/vs2017/block_thingy.vcxproj.user
 projects/vs2017/.vs/
 projects/vs2017/Debug/
 projects/vs2017/Release/

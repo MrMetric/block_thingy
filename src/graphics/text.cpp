@@ -124,8 +124,9 @@ void text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec3& col
 		float xpos = static_cast<float>(pos.x + ch.bearing.x);
 		float ypos = static_cast<float>(pos.y + (get_char('H').bearing.y - ch.bearing.y));
 
-		const float w = ch.size.x;
-		const float h = ch.size.y;
+		// ch.size.x and ch.size.y will surely never be large enough to break this cast (integers lose precision at 2^24)
+		const float w = static_cast<float>(ch.size.x);
+		const float h = static_cast<float>(ch.size.y);
 		const float y1 = ch.flip ? 1.0f : 0.0f;
 		const float y2 = 1.0f - ch.flip;
 		const float vertexes[]
