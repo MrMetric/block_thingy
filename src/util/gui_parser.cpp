@@ -8,9 +8,11 @@
 #include <unordered_map>
 #include <utility>
 
+#include "util/escape_sequence.hpp"
 #include "util/logger.hpp"
 #include "util/misc.hpp"
 
+using std::nullopt;
 using std::string;
 
 namespace block_thingy::util {
@@ -312,7 +314,34 @@ json gui_parser::read_primitive_thing(const string& text)
 
 	if(text.size() > 1 && (text[0] == '"' || text[0] == '\'') && text.back() == text[0])
 	{
-		return text.substr(1, text.size() - 2);
+		const string s = text.substr(1, text.size() - 2);
+		string s2;
+		for(auto i = s.cbegin(), end = s.cend(); i != end;)
+		{
+			const char c = *i++;
+			if(c == '\\')
+			{
+				if(i == end)
+				{
+					throw std::runtime_error("unexpected end of string in escape sequence");
+				}
+				if(const std::optional<string> esc = parse_escape_sequence(i, end);
+					esc != nullopt)
+				{
+					s2 += *esc;
+				}
+				else
+				{
+					// TODO?: throw exception (bad escape sequence)
+					s2 += *i++;
+				}
+			}
+			else
+			{
+				s2 += c;
+			}
+		}
+		return s2;
 	}
 
 	return {};

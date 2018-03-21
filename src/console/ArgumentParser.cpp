@@ -1,5 +1,8 @@
 #include "ArgumentParser.hpp"
 
+#include "util/escape_sequence.hpp"
+
+using std::nullopt;
 using std::string;
 
 namespace block_thingy {
@@ -36,28 +39,22 @@ string ArgumentParser::read_string(const char endchar)
 	string s;
 	while(iterator != end)
 	{
-		char c = *iterator;
-		++iterator;
+		const char c = *iterator++;
 		if(c == '\\')
 		{
 			if(iterator == end)
 			{
 				throw truncated_argument("unexpected end of argument string in escape sequence");
 			}
-			c = *iterator;
-			++iterator;
-			if(c == 'n')
+			if(const std::optional<string> esc = util::parse_escape_sequence(iterator, end);
+				esc != nullopt)
 			{
-				s += '\n';
-			}
-			else if(c == 't')
-			{
-				s += '\t';
+				s += *esc;
 			}
 			else
 			{
-				// TODO: throw exception on bad escape sequence?
-				s += c;
+				// TODO?: throw exception (bad escape sequence)
+				s += *iterator++;
 			}
 			continue;
 		}

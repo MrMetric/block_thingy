@@ -113,6 +113,7 @@
     <ClCompile Include="..\..\src\util\copy_stream.cpp" />
     <ClCompile Include="..\..\src\util\crc32.cpp" />
     <ClCompile Include="..\..\src\util\demangled_name.cpp" />
+    <ClCompile Include="..\..\src\util\escape_sequence.cpp" />
     <ClCompile Include="..\..\src\util\FileWatcher.cpp" />
     <ClCompile Include="..\..\src\util\gui_parser.cpp" />
     <ClCompile Include="..\..\src\util\logger.cpp" />
@@ -280,6 +281,7 @@
     <ClInclude Include="..\..\src\util\copy_stream.hpp" />
     <ClInclude Include="..\..\src\util\crc32.hpp" />
     <ClInclude Include="..\..\src\util\demangled_name.hpp" />
+    <ClInclude Include="..\..\src\util\escape_sequence.hpp" />
     <ClInclude Include="..\..\src\util\filesystem.hpp" />
     <ClInclude Include="..\..\src\util\FileWatcher.hpp" />
     <ClInclude Include="..\..\src\util\gui_parser.hpp" />

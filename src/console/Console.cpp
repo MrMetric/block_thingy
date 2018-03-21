@@ -1,6 +1,7 @@
 #include "Console.hpp"
 
 #include <fstream>
+#include <sstream>
 #include <utility>
 
 #include "console/ArgumentParser.hpp"
@@ -37,6 +38,29 @@ Console::Console()
 		{
 			run_line(line);
 		}
+	}});
+
+	add_command("echo", {[]
+	(
+		const std::vector<string>& args
+	)
+	{
+		if(args.empty())
+		{
+			LOG(INFO) << '\n';
+			return;
+		}
+
+		std::ostringstream ss;
+		for(auto i = args.begin(); i != args.end(); ++i)
+		{
+			ss << *i;
+			if(i != args.end() - 1)
+			{
+				ss << ' ';
+			}
+		}
+		LOG(INFO) << ss.str() << '\n';
 	}});
 }
 
