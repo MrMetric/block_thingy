@@ -146,7 +146,7 @@ void load()
 		{"joystick_sensitivity"	, 4.0},
 		{"language"				, "en"},
 		{"light_smoothing"		, 2},
-		{"mesher"				, "simple"},
+		{"mesher"				, "simple2"},
 		{"mouse_sensitivity"	, 0.1},
 		{"min_light"			, 0.005},
 		{"near_plane"			, 0.1},
