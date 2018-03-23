@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cctype>
 #include <cstddef>
 #include <cerrno>
 #include <chrono>
@@ -145,13 +146,19 @@ std::optional<unsigned int> stou(const string& s) noexcept
 #define STOI(TYPE, NAME) \
 std::optional<TYPE> NAME(const string& s) noexcept \
 { \
-	if(!is_integer(s)) \
+	/* the std functions ignore whitespace */ \
+	if(s.empty() || std::isspace(s[0])) \
 	{ \
 		return {}; \
 	} \
 	try \
 	{ \
-		return std::NAME(s); \
+		std::size_t pos; \
+		const TYPE x = std::NAME(s, &pos); \
+		if(pos == s.size()) \
+		{ \
+			return x; \
+		} \
 	} \
 	catch(...) \
 	{ \
@@ -168,12 +175,18 @@ STOI(long long         , stoll )
 #define STOF(TYPE, NAME) \
 std::optional<TYPE> NAME(const string& s) noexcept \
 { \
+	/* the std functions ignore whitespace */ \
+	if(s.empty() || std::isspace(s[0])) \
+	{ \
+		return {}; \
+	} \
 	try \
 	{ \
-		const TYPE f = std::NAME(s); \
-		if(!std::isnan(f) && !std::isinf(f)) \
+		std::size_t pos; \
+		const TYPE x = std::NAME(s, &pos); \
+		if(pos == s.size() && !std::isnan(x) && !std::isinf(x)) \
 		{ \
-			return f; \
+			return x; \
 		} \
 	} \
 	catch(...) \
