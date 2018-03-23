@@ -2,8 +2,6 @@
 
 #include <algorithm>
 #include <chrono>
-#include <limits>
-#include <sstream>
 #include <tuple>
 
 #include "game.hpp"
@@ -13,6 +11,7 @@
 #include "graphics/GUI/Widget/text_input.hpp"
 #include "util/crc32.hpp"
 #include "util/filesystem.hpp"
+#include "util/grisu2.hpp"
 #include "util/logger.hpp"
 #include "util/misc.hpp"
 
@@ -117,10 +116,7 @@ new_world::new_world(game& g)
 		}
 		else
 		{
-			std::ostringstream ss;
-			ss.precision(std::numeric_limits<double>::max_digits10);
-			ss << seed;
-			seed_display->set_text(" = " + ss.str());
+			seed_display->set_text(" = " + util::grisu2(seed));
 		}
 	});
 	confirm->on_click([this, &g, name, dir, seed, error](widget::Button&, const glm::dvec2& /*position*/)

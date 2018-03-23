@@ -20,6 +20,7 @@
 #include "util/compiler_info.hpp"
 #include "util/demangled_name.hpp"
 #include "util/filesystem.hpp"
+#include "util/grisu2.hpp"
 #include "util/logger.hpp"
 
 using std::string;

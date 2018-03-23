@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <fstream>
-#include <limits>
 #include <map>
 #include <stdexcept>
 #include <type_traits>
@@ -11,6 +10,7 @@
 #include "console/Console.hpp"
 #include "event/type/Event_change_setting.hpp"
 #include "util/demangled_name.hpp"
+#include "util/grisu2.hpp"
 #include "util/logger.hpp"
 #include "util/misc.hpp"
 
@@ -194,8 +194,7 @@ static string format_string(string s)
 void save()
 {
 	std::ofstream f("scripts/settings");
-	f << std::boolalpha;
-	f.precision(std::numeric_limits<double>::max_digits10);
+	f << std::boolalpha << util::os_grisu2;
 	for(const auto& p : settings)
 	{
 		const string name = format_string(p.first);
@@ -518,7 +517,7 @@ void add_command_handlers()
 		const glm::dvec2 value(x, y);
 
 		std::ostringstream ss;
-		ss.precision(std::numeric_limits<double>::max_digits10);
+		ss << util::os_grisu2;
 		ss << '[' << x << ',' << y << ']';
 		const string svalue = ss.str();
 
@@ -554,7 +553,7 @@ void add_command_handlers()
 		const glm::dvec3 value(x, y, z);
 
 		std::ostringstream ss;
-		ss.precision(std::numeric_limits<double>::max_digits10);
+		ss << util::os_grisu2;
 		ss << '[' << x << ',' << y << ',' << z << ']';
 		const string svalue = ss.str();
 
@@ -591,7 +590,7 @@ void add_command_handlers()
 		const glm::dvec4 value(x, y, z, w);
 
 		std::ostringstream ss;
-		ss.precision(std::numeric_limits<double>::max_digits10);
+		ss << util::os_grisu2;
 		ss << '[' << x << ',' << y << ',' << z << ',' << w << ']';
 		const string svalue = ss.str();
 

@@ -4,7 +4,6 @@
 #include <cmath>
 #include <fstream>
 #include <functional>
-#include <limits>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -57,6 +56,7 @@
 #include "position/chunk_in_world.hpp"
 #include "util/demangled_name.hpp"
 #include "util/filesystem.hpp"
+#include "util/grisu2.hpp"
 #include "util/logger.hpp"
 #include "util/misc.hpp"
 
@@ -754,7 +754,7 @@ void game::impl::add_commands()
 		}
 		const string save_name = args[0];
 		std::ofstream streem(save_name);
-		streem.precision(std::numeric_limits<double>::max_digits10);
+		streem << util::os_grisu2;
 
 		const glm::dvec3 pos = player->position();
 		streem << pos.x << ' ' << pos.y << ' ' << pos.z << '\n';

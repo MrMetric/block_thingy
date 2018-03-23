@@ -1,7 +1,6 @@
 #include "Play.hpp"
 
 #include <cmath>
-#include <limits>
 #include <sstream>
 #include <string>
 
@@ -24,6 +23,7 @@
 #include "position/block_in_chunk.hpp"
 #include "position/block_in_world.hpp"
 #include "position/chunk_in_world.hpp"
+#include "util/grisu2.hpp"
 
 using std::nullopt;
 using std::shared_ptr;
@@ -163,9 +163,7 @@ void Play::draw_debug_text()
 	ss << "global time : " << g.get_global_time() << '\n';
 	ss << "world ticks : " << g.world->get_ticks() << '\n';
 	ss << "world time  : " << g.world->get_time() << '\n';
-	ss.precision(std::numeric_limits<double>::max_digits10);
-	ss << "world seed  : " << g.world->get_seed() << '\n';
-	ss.precision(6); // default is 6: http://en.cppreference.com/w/cpp/io/ios_base/precision
+	ss << "world seed  : " << util::grisu2(g.world->get_seed()) << '\n';
 	ss << "noclip: " << g.player->get_noclip() << '\n';
 	auto show_block = [](const block::base& block) -> string
 	{

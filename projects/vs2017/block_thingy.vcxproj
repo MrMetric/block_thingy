@@ -115,6 +115,7 @@
     <ClCompile Include="..\..\src\util\demangled_name.cpp" />
     <ClCompile Include="..\..\src\util\escape_sequence.cpp" />
     <ClCompile Include="..\..\src\util\FileWatcher.cpp" />
+    <ClCompile Include="..\..\src\util\grisu2.cpp" />
     <ClCompile Include="..\..\src\util\gui_parser.cpp" />
     <ClCompile Include="..\..\src\util\logger.cpp" />
     <ClCompile Include="..\..\src\util\misc.cpp" />
@@ -284,6 +285,7 @@
     <ClInclude Include="..\..\src\util\escape_sequence.hpp" />
     <ClInclude Include="..\..\src\util\filesystem.hpp" />
     <ClInclude Include="..\..\src\util\FileWatcher.hpp" />
+    <ClInclude Include="..\..\src\util\grisu2.hpp" />
     <ClInclude Include="..\..\src\util\gui_parser.hpp" />
     <ClInclude Include="..\..\src\util\logger.hpp" />
     <ClInclude Include="..\..\src\util\misc.hpp" />
