@@ -26,6 +26,11 @@ singleplayer::singleplayer(game& g)
 	}
 	auto& world_list = *world_list_;
 
+	if(!fs::is_directory("worlds"))
+	{
+		return;
+	}
+
 	std::vector<fs::path> dirs;
 	for(const fs::directory_entry& entry : fs::directory_iterator("worlds"))
 	{
