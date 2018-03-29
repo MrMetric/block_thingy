@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cctype>
 #include <cstddef>
+#include <cstdlib>
 #include <cerrno>
 #include <chrono>
 #include <cmath>
@@ -11,6 +12,7 @@
 #include <ctime>
 #include <fstream>
 #include <iomanip>
+#include <limits>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
@@ -131,72 +133,56 @@ bool is_integer(const string& s) noexcept
 	return s.find_first_not_of("0123456789", start_pos) == string::npos;
 }
 
-std::optional<unsigned int> stou(const string& s) noexcept
-{
-	// there is no std::stou
-	const std::optional<unsigned long> u = util::stoul(s);
-	if(u == nullopt
-	|| *u > std::numeric_limits<unsigned int>::max())
-	{
-		return {};
-	}
-	return static_cast<unsigned int>(*u);
-}
-
-#define STOI(TYPE, NAME) \
-std::optional<TYPE> NAME(const string& s) noexcept \
+#define STOI(TYPE, NAME1, NAME2) \
+std::optional<TYPE> NAME1(const string& s) noexcept \
 { \
 	/* the std functions ignore whitespace */ \
 	if(s.empty() || std::isspace(s[0])) \
 	{ \
 		return {}; \
 	} \
-	try \
+	errno = 0; \
+	char* end; \
+	const auto x = std::NAME2(s.data(), &end, 10); \
+	if(errno == 0 \
+	&& end == s.data() + s.size() \
+	&& x >= std::numeric_limits<TYPE>::min() \
+	&& x <= std::numeric_limits<TYPE>::max()) \
 	{ \
-		std::size_t pos; \
-		const TYPE x = std::NAME(s, &pos); \
-		if(pos == s.size()) \
-		{ \
-			return x; \
-		} \
-	} \
-	catch(...) \
-	{ \
+		return x; \
 	} \
 	return {}; \
 }
-STOI(unsigned long     , stoul )
-STOI(unsigned long long, stoull)
-STOI(int               , stoi  )
-STOI(long              , stol  )
-STOI(long long         , stoll )
+STOI(unsigned int      , stou  , strtoul)
+STOI(unsigned long     , stoul , strtoul)
+STOI(unsigned long long, stoull, strtoull)
+STOI(int               , stoi  , strtol)
+STOI(long              , stol  , strtol)
+STOI(long long         , stoll , strtoll)
 #undef STOI
 
-#define STOF(TYPE, NAME) \
-std::optional<TYPE> NAME(const string& s) noexcept \
+#define STOF(TYPE, NAME1, NAME2) \
+std::optional<TYPE> NAME1(const string& s) noexcept \
 { \
 	/* the std functions ignore whitespace */ \
 	if(s.empty() || std::isspace(s[0])) \
 	{ \
 		return {}; \
 	} \
-	try \
+	errno = 0; \
+	char* end; \
+	const TYPE x = std::NAME2(s.data(), &end); \
+	if(errno == 0 \
+	&& end == (s.data() + s.size()) \
+	&& !std::isnan(x) && !std::isinf(x)) \
 	{ \
-		std::size_t pos; \
-		const TYPE x = std::NAME(s, &pos); \
-		if(pos == s.size() && !std::isnan(x) && !std::isinf(x)) \
-		{ \
-			return x; \
-		} \
-	} \
-	catch(...) \
-	{ \
+		return x; \
 	} \
 	return {}; \
 }
-STOF(float      , stof )
-STOF(double     , stod )
-STOF(long double, stold)
+STOF(float      , stof , strtof )
+STOF(double     , stod , strtod )
+STOF(long double, stold, strtold)
 #undef STOF
 
 string datetime()
