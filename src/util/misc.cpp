@@ -109,30 +109,6 @@ string gl_object_log(const GLuint object)
 	return string(log.get(), log_length);
 }
 
-bool is_integer(const string& s) noexcept
-{
-	if(s.empty())
-	{
-		return false;
-	}
-
-	string::size_type start_pos;
-	if(s[0] == '+' || s[0] == '-')
-	{
-		if(s.size() == 1)
-		{
-			return false;
-		}
-		start_pos = 1;
-	}
-	else
-	{
-		start_pos = 0;
-	}
-
-	return s.find_first_not_of("0123456789", start_pos) == string::npos;
-}
-
 #define STOI(TYPE, NAME1, NAME2) \
 std::optional<TYPE> NAME1(const string& s) noexcept \
 { \

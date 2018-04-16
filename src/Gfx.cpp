@@ -238,6 +238,8 @@ GLFWwindow* Gfx::init_glfw()
 		shim_GL_ARB_separate_shader_objects();
 	}
 
+	LOG(DEBUG) << "GPU: " << glGetString(GL_VENDOR) << ' ' << glGetString(GL_RENDERER) << '\n';
+
 	glfwSetFramebufferSizeCallback(window, [](GLFWwindow*, int width, int height)
 	{
 		if(width == 0 || height == 0)

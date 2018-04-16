@@ -78,7 +78,6 @@ std::string read_file(const fs::path&, bool is_text);
 
 std::string gl_object_log(GLuint object);
 
-bool is_integer(const std::string&) noexcept;
 std::optional<unsigned int      > stou  (const std::string&) noexcept;
 std::optional<unsigned long     > stoul (const std::string&) noexcept;
 std::optional<unsigned long long> stoull(const std::string&) noexcept;

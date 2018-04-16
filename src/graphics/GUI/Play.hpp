@@ -24,8 +24,10 @@ public:
 	void mousemove(const glm::dvec2& position) override;
 	void joymove(const glm::dvec2& offset) override;
 
-private:
+protected:
 	void draw_gui() override;
+
+private:
 	void draw_crosshair();
 	void draw_debug_text();
 };

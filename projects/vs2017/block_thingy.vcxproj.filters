@@ -8,6 +8,9 @@
     <Filter Include="Library Files">
       <UniqueIdentifier>{b5a73e00-2ebb-4486-bb84-d0c67b41c0a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Library Files\concurrentqueue">
+      <UniqueIdentifier>{}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Library Files\glad">
       <UniqueIdentifier>{60a3b763-f324-45e0-a8ec-93f0d0875b3f}</UniqueIdentifier>
     </Filter>
@@ -452,6 +455,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\lib\concurrentqueue\concurrentqueue.hpp">
+      <Filter>Library Files\concurrentqueue</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\lib\glad\glad.h">
       <Filter>Library Files\glad</Filter>
     </ClInclude>

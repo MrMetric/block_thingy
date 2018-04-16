@@ -76,6 +76,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=extra-semi
 		-Werror=extra-tokens
 		-Werror=float-conversion
+		-Werror=implicit-fallthrough
 		-Werror=inconsistent-missing-destructor-override
 		-Werror=inconsistent-missing-override
 		-Werror=invalid-pp-token
@@ -93,6 +94,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=sign-conversion
 		-Werror=static-inline-explicit-instantiation # note: GCC says that `inline template<>` is invalid syntax
 		-Werror=strict-prototypes
+		-Werror=string-compare
 		-Werror=string-plus-int
 		-Werror=uninitialized
 		-Werror=unknown-pragmas
@@ -137,6 +139,7 @@ target_compile_options(block_thingy PRIVATE
 	-march=native
 	-fno-math-errno
 	-fno-signed-zeros
+	-fstack-protector-strong
 	-DBT_CHUNK_SIZE=${BT_CHUNK_SIZE}
 	-DBT_CHUNK_SIZE_STR="${BT_CHUNK_SIZE}"
 	$<${DEBUG_BUILD}:-DBT_DEBUG_BUILD>

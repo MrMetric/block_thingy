@@ -123,6 +123,7 @@
     <ClCompile Include="..\..\src\world\world.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\lib\concurrentqueue\concurrentqueue.hpp" />
     <ClInclude Include="..\..\lib\glad\glad.h" />
     <ClInclude Include="..\..\lib\rhea\abstract_variable.hpp" />
     <ClInclude Include="..\..\lib\rhea\action_variable.hpp" />
