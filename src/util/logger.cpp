@@ -19,7 +19,7 @@ class nullbuf : public std::streambuf
 public:
 	int_type overflow(int_type c) override;
 };
-std::streambuf::int_type nullbuf::overflow(std::streambuf::int_type c)
+std::streambuf::int_type nullbuf::overflow(const std::streambuf::int_type c)
 {
 	return c;
 }
@@ -72,20 +72,23 @@ std::ostream& log(const string& category)
 
 std::ostream& operator<<(std::ostream& o, [[maybe_unused]] const format fmt)
 {
-#ifdef _WIN32
-	// not supported on Windows, except for recent versions of Windows 10
-	return o;
-#else
-	#ifdef HAVE_POSIX
-	if(&o == &cout && !isatty(STDOUT_FILENO)
-	|| &o == &cerr && !isatty(STDERR_FILENO))
+	// note: ANSI escape codes are not supported on Windows, except for recent versions of Windows 10
+	// but, a third-party shell can be used instead (such as ConEmu)
+	/*
+#ifdef HAVE_POSIX
+	#define is_a_tty isatty
+#elif defined(WIN32)
+	#define is_a_tty _isatty
+#endif
+	if(&o == &cout && !is_a_tty(STDOUT_FILENO)
+	|| &o == &cerr && !is_a_tty(STDERR_FILENO)
+	|| &o == &std::clog && !is_a_tty(STDERR_FILENO))
 	{
 		return o;
 	}
-	#endif
+	*/
 
 	return o << "\033[" << static_cast<int>(fmt) << 'm';
-#endif
 }
 
 }

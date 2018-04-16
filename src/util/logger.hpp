@@ -19,12 +19,13 @@ enum class format
 	faint_intensity			=  2, // faint, decreased intensity or second colour
 	italic					=  3, // italicized
 	underline				=  4, // singly underlined
-	slow_blink				=  5, // slowly blinking (less then 150 per minute)
+	slow_blink				=  5, // slowly blinking (less then [sic] 150 per minute)
 	rapid_blink				=  6, // rapidly blinking (150 per minute or more)
 	inverse					=  7, // negative image
 	conceal					=  8, // concealed characters
 	crossed_out				=  9, // crossed-out (characters still legible but marked as to be deleted)
 
+	/*
 	font_0					= 10, // primary (default) font
 	font_1					= 11, // first alternative font
 	font_2					= 12, // second alternative font
@@ -35,8 +36,12 @@ enum class format
 	font_7					= 17, // seventh alternative font
 	font_8					= 18, // eighth alternative font
 	font_9					= 19, // ninth alternative font
-
 	fraktur					= 20, // Fraktur (Gothic)
+	*/
+	// I have never seen anyone support or use the font codes, so I replaced them with more useful non-standard stuff
+	font					= 10, // takes 1 arg (an int): the font ID
+	blink					= 11, // takes 1 arg (an int): the milliseconds between blinks; TODO: multiple args for arbitrary patterns
+
 	double_underline		= 21, // doubly underlined
 	normal_intensity		= 22, // normal colour or normal intensity (neither bold nor faint)
 	italic_and_fraktur_off	= 23, // not italicized, not fraktur
@@ -55,6 +60,7 @@ enum class format
 	magenta					= 35, // magenta display
 	cyan					= 36, // cyan display
 	white					= 37, // white display
+	foreground_color		= 38,
 	default_fg				= 39, // default display colour (implementation-defined)
 
 	black_bg				= 40, // black background
@@ -65,6 +71,7 @@ enum class format
 	magenta_bg				= 45, // magenta background
 	cyan_bg					= 46, // cyan background
 	white_bg				= 47, // white background
+	background_color		= 48,
 	default_bg				= 49, // default background colour (implementation defined)
 
 	// 50 = reserved for cancelling the effect of the rendering aspect established by parameter value 26

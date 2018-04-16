@@ -137,6 +137,9 @@ void load()
 		{"cursor_blink_rate"	, 0.5}, // TODO: ensure > 0
 		{"far_plane"			, 1500.0},
 		{"font"					, "fonts/Anonymous Pro/Anonymous Pro.ttf"},
+		{"font_bold"			, "fonts/Anonymous Pro/Anonymous Pro B.ttf"},
+		{"font_bold_italic"		, "fonts/Anonymous Pro/Anonymous Pro BI.ttf"},
+		{"font_italic"			, "fonts/Anonymous Pro/Anonymous Pro I.ttf"},
 		{"font_size"			, 24},
 		{"fov"					, 75.0},
 		{"frustum_culling"		, true},

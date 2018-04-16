@@ -33,7 +33,14 @@ namespace block_thingy::graphics {
 class text
 {
 public:
-	text(const fs::path& font_path, FT_UInt height);
+	text
+	(
+		FT_UInt height,
+		const fs::path& font_path,
+		const fs::path& font_path_bold = {},
+		const fs::path& font_path_italic = {},
+		const fs::path& font_path_bold_italic = {}
+	);
 	~text();
 
 	text(text&&) = delete;
@@ -41,13 +48,29 @@ public:
 	text& operator=(text&&) = delete;
 	text& operator=(const text&) = delete;
 
-	void set_font(const fs::path& path, FT_UInt height);
-	void set_font(const fs::path& path);
+	enum class font_name
+	{
+		font0,
+		font1,
+		font2,
+		font3,
+		font4,
+		font5,
+		font6,
+		font7,
+		font8,
+		font9,
+		fraktur,
+	};
+	void set_font(font_name, const fs::path& path);
+	void set_font_bold(font_name, const fs::path& path);
+	void set_font_italic(font_name, const fs::path& path);
+	void set_font_bold_italic(font_name, const fs::path& path);
 	void set_font_size(const FT_UInt height);
 
 	void set_projection_matrix(const glm::dmat4& projection_matrix);
-	void draw(const std::string&, const glm::dvec2& pos, const glm::dvec3& color = glm::dvec3(1.0));
-	void draw(const std::u32string&, const glm::dvec2& pos, const glm::dvec3& color = glm::dvec3(1.0));
+	void draw(const std::string&, const glm::dvec2& pos, const glm::dvec4& color = glm::dvec4(1.0));
+	void draw(const std::u32string&, const glm::dvec2& pos, const glm::dvec4& color = glm::dvec4(1.0));
 
 	glm::dvec2 get_size(const std::string&);
 	glm::dvec2 get_size(std::u32string);
@@ -63,24 +86,35 @@ public:
 
 	static const uint8_t tab_width = 4;
 
+	// this is public so it can be used by static functions in text.cpp
+	struct font_data
+	{
+		character& get_char(char32_t);
+		character load_char(char32_t) const;
+
+		fs::path path;
+		FT_Face face;
+		std::unordered_map<char32_t, character> chars;
+	};
 private:
 	FT_Library ft;
-	fs::path font_path;
-	FT_Face face;
+	font_data font_normal;
+	std::unique_ptr<font_data> font_bold;
+	std::unique_ptr<font_data> font_italic;
+	std::unique_ptr<font_data> font_bold_italic;
 	FT_UInt height;
-	std::unordered_map<char32_t, character> chars;
 	opengl::vertex_buffer vbo;
 	opengl::vertex_array vao;
 	opengl::shader_program shader;
 
+	struct format_state;
 	std::tuple<glm::dvec2, std::vector<double>> loop
 	(
 		const std::u32string&,
 		glm::dvec2,
+		format_state&,
 		const std::function<void(const glm::dvec2&, character&)>&
 	);
-	character& get_char(char32_t);
-	character load_char(char32_t) const;
 };
 
 }

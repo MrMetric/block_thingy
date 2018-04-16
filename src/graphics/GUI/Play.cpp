@@ -24,6 +24,7 @@
 #include "position/block_in_world.hpp"
 #include "position/chunk_in_world.hpp"
 #include "util/grisu2.hpp"
+#include "util/logger.hpp"
 
 using std::nullopt;
 using std::shared_ptr;
@@ -123,7 +124,21 @@ void Play::draw_debug_text()
 	ss << glm::io::precision(4); // default is 3
 	ss << glm::io::width(10); // default is 9 (1 + 4 + 1 + default precision)
 
-	ss << "framerate: " << g.get_fps() << '\n';
+	ss << "framerate: ";
+	const auto fps = g.get_fps();
+	if(fps >= 50)
+	{
+		ss << logger::format::green;
+	}
+	else if(fps >= 30)
+	{
+		ss << logger::format::yellow;
+	}
+	else
+	{
+		ss << logger::format::red;
+	}
+	ss << fps << logger::format::reset << '\n';
 	ss << "camera position: " << g.gfx.graphical_position << '\n';
 
 	{
@@ -164,6 +179,7 @@ void Play::draw_debug_text()
 	ss << "world ticks : " << g.world->get_ticks() << '\n';
 	ss << "world time  : " << g.world->get_time() << '\n';
 	ss << "world seed  : " << util::grisu2(g.world->get_seed()) << '\n';
+	ss << "world name  : " << g.world->get_name() << '\n';
 	ss << "noclip: " << g.player->get_noclip() << '\n';
 	auto show_block = [](const block::base& block) -> string
 	{

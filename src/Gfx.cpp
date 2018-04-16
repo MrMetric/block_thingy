@@ -76,7 +76,14 @@ Gfx::Gfx()
 	s_lines("shaders/lines"),
 	outline_vbo({3, GL_FLOAT}),
 	outline_vao(outline_vbo),
-	gui_text(settings::get<string>("font"), static_cast<FT_UInt>(settings::get<int64_t>("font_size"))),
+	gui_text
+	(
+		static_cast<FT_UInt>(settings::get<int64_t>("font_size")),
+		settings::get<string>("font"),
+		settings::get<string>("font_bold"),
+		settings::get<string>("font_italic"),
+		settings::get<string>("font_bold_italic")
+	),
 	screen_rt(window_size, 8),
 	buf_rt(window_size),
 	screen_shader(nullptr, "null"),
@@ -152,7 +159,7 @@ void Gfx::hook_events(EventManager& event_manager)
 			const string font_path = *e.new_value.get<string>();
 			try
 			{
-				gui_text.set_font(font_path);
+				gui_text.set_font(graphics::text::font_name::font0, font_path);
 			}
 			catch(const std::runtime_error& error)
 			{
@@ -160,6 +167,42 @@ void Gfx::hook_events(EventManager& event_manager)
 				// TODO: cancel current event
 				// triggering an event from an event handler deadlocks
 				//settings::set<string>("font", *e.old_value.get<string>());
+			}
+		}
+		else if(e.name == "font_bold")
+		{
+			const string font_path = *e.new_value.get<string>();
+			try
+			{
+				gui_text.set_font_bold(graphics::text::font_name::font0, font_path);
+			}
+			catch(const std::runtime_error& error)
+			{
+				LOG(ERROR) << error.what() << '\n';
+			}
+		}
+		else if(e.name == "font_bold_italic")
+		{
+			const string font_path = *e.new_value.get<string>();
+			try
+			{
+				gui_text.set_font_bold_italic(graphics::text::font_name::font0, font_path);
+			}
+			catch(const std::runtime_error& error)
+			{
+				LOG(ERROR) << error.what() << '\n';
+			}
+		}
+		else if(e.name == "font_italic")
+		{
+			const string font_path = *e.new_value.get<string>();
+			try
+			{
+				gui_text.set_font_italic(graphics::text::font_name::font0, font_path);
+			}
+			catch(const std::runtime_error& error)
+			{
+				LOG(ERROR) << error.what() << '\n';
 			}
 		}
 		else if(e.name == "font_size")
