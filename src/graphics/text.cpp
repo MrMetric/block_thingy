@@ -311,7 +311,7 @@ void text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec4& col
 		const character& ch_H = state.get_font().get_char('H');
 		const double actual_height = ch_H.size.y;
 		const double offset = height - actual_height;
-		const glm::dvec2 bg_pos(pos.x, pos.y + offset - 2);
+		const glm::dvec2 bg_pos(pos.x, pos.y - 2);
 		const glm::dvec2 bg_size(ch.x_offset, height);
 		Gfx::instance->draw_rectangle(bg_pos, bg_size, color_bg);
 
@@ -321,10 +321,12 @@ void text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec4& col
 			return;
 		}
 
-		draw_ch({
+		const glm::dvec2 ch_pos
+		{
 			pos.x + ch.bearing.x,
-			pos.y + (height - static_cast<double>(ch.bearing.y)),
-		}, ch);
+			pos.y + (ch_H.bearing.y - static_cast<double>(ch.bearing.y)),
+		};
+		draw_ch(ch_pos, ch);
 		if(state.underline && state.double_underline)
 		{
 			const glm::dvec2 line_pos(pos.x, pos.y + height + 1);
@@ -388,7 +390,8 @@ glm::dvec2 text::get_size(u32string s)
 	{
 	};
 
-	glm::dvec2 size(0, height);
+	// assume that H has the max height
+	glm::dvec2 size(0, font_normal.get_char('H').size.y); // TODO: I assume using font_normal is not always correct
 	std::vector<double> widths;
 	std::tie(size, widths) = loop(s, size, state, draw_character);
 	widths.push_back(size.x);
