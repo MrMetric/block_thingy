@@ -227,9 +227,11 @@ void game::draw()
 {
 	// TODO: use double when available
 	const float global_time = static_cast<float>(get_global_time());
-	resource_manager.foreach_shader_program([global_time](resource<graphics::opengl::shader_program> r)
+	const float world_time = world != nullptr ? static_cast<float>(world->get_time()) : 0;
+	resource_manager.foreach_shader_program([global_time, world_time](resource<graphics::opengl::shader_program> r)
 	{
 		r->uniform("global_time", global_time);
+		r->uniform("world_time", world_time);
 	});
 
 	pImpl->draw_stats = {0, 0};

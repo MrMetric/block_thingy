@@ -3,6 +3,7 @@
 const float M_TAU = 6.283185307179586476925286766559;
 
 uniform float global_time;
+uniform float world_time;
 uniform sampler2DArray tex;
 uniform sampler3D light;
 uniform int light_smoothing;

@@ -12,10 +12,10 @@ vec3 hsv2rgb(vec3 c)
 
 vec4 color(vec2 uv)
 {
-	float radius = sin(4 * global_time + length(position)) / 4 + 1;
+	float radius = sin(4 * world_time + length(position)) / 4 + 1;
 	float radius_scaled = radius / radius_max;
 	vec3 c = vec3(1 - discretestep(0.3 * radius, length(uv - 0.5)));
-	c *= hsv2rgb(vec3(global_time + radius_scaled, 1, 1));
+	c *= hsv2rgb(vec3(world_time + radius_scaled, 1, 1));
 	c *= radius_scaled;
 	return vec4(c, 1);
 }

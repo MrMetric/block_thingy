@@ -6,8 +6,8 @@ vec4 color(vec2 uv)
 	const float r = 0.1;
 
 	vec2 m = uv - 0.5;
-	vec2 o1 = d * vec2(cos(global_time), sin(global_time));
-	vec2 o2 = d * vec2(cos(global_time + M_TAU / 4), sin(global_time + M_TAU / 4));
+	vec2 o1 = d * vec2(cos(world_time), sin(world_time));
+	vec2 o2 = d * vec2(cos(world_time + M_TAU / 4), sin(world_time + M_TAU / 4));
 	if(length(m + o1) < r
 	|| length(m - o1) < r
 	|| length(m + o2) < r
