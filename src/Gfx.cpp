@@ -307,8 +307,7 @@ void Gfx::opengl_setup()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// TODO
-	//glEnable(GL_FRAMEBUFFER_SRGB);
+	glEnable(GL_FRAMEBUFFER_SRGB);
 
 	set_screen_shader(settings::get<string>("screen_shader"));
 

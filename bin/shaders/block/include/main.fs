@@ -85,7 +85,7 @@ void main()
 	l *= 255.0 / 16.0;
 
 	float z = -min_light / (min_light - 1);
-	c.rgb *= pow((l * l + z) / (1 + z), vec3(1 / 2.2));
+	c.rgb *= (l * l + z) / (1 + z);
 
 	FragColor = clamp(c, 0, 1);
 }

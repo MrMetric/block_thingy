@@ -27,7 +27,7 @@ vec4 color(vec2 coords)
 	vec3 c = vec3((x + y) / 2);
 	c.r *= 0.975;
 	c.b *= 0.975;
-	return vec4(c, 1);
+	return vec4(srgb_to_linear(c), 1);
 }
 
 #define USE_COORDS

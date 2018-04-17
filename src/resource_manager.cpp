@@ -51,7 +51,7 @@ struct block_texture
 		tex.parameter(graphics::opengl::texture::Parameter::min_filter, GL_LINEAR);
 		tex.parameter(graphics::opengl::texture::Parameter::mag_filter, GL_NEAREST);
 		glActiveTexture(GL_TEXTURE0 + unit);
-		tex.image3D(0, GL_RGBA8, size, size, 256, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+		tex.image3D(0, GL_SRGB8_ALPHA8, size, size, 256, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 		glActiveTexture(GL_TEXTURE0);
 	}
 

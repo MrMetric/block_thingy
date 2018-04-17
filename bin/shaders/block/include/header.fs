@@ -35,3 +35,37 @@ vec2 get_face_coords(vec3 position)
 	if(face == FACE_FRONT || face == FACE_BACK) return position.xy;
 	return vec2(0);
 }
+
+float linear_to_srgb(float x)
+{
+	if(x > 0.0031308)
+	{
+		return 1.055 * pow(x, 1/2.4) - 0.055;
+	}
+	return 12.92 * x;
+}
+vec3 linear_to_srgb(vec3 v)
+{
+	return vec3(linear_to_srgb(v.r), linear_to_srgb(v.g), linear_to_srgb(v.b));
+}
+vec4 linear_to_srgb(vec4 v)
+{
+	return vec4(linear_to_srgb(v.rgb), v.a);
+}
+
+float srgb_to_linear(float x)
+{
+	if(x <= 0.04045)
+	{
+		return x / 12.92;
+	}
+	return pow((x + 0.055)/1.055, 2.4);
+}
+vec3 srgb_to_linear(vec3 v)
+{
+	return vec3(srgb_to_linear(v.r), srgb_to_linear(v.g), srgb_to_linear(v.b));
+}
+vec4 srgb_to_linear(vec4 v)
+{
+	return vec4(srgb_to_linear(v.rgb), v.a);
+}

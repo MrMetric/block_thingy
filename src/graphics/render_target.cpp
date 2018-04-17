@@ -72,7 +72,7 @@ void render_target::resize(const window_size_t& window_size)
 		frame_texture.image2D_multisample
 		(
 			samples,
-			GL_RGB,				// internal format
+			GL_RGBA16,			// internal format
 			width,
 			height,
 			true
@@ -83,7 +83,7 @@ void render_target::resize(const window_size_t& window_size)
 		frame_texture.image2D
 		(
 			0,					// level; 0 = not a mipmap
-			GL_RGB,				// internal format
+			GL_RGBA16,			// internal format
 			width,
 			height,
 			GL_RGB,				// format

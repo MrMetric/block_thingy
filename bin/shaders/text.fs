@@ -11,6 +11,5 @@ void main()
 {
 	float a = texture(text, TexCoords).r;
 	vec4 c = vec4(color.rgb, pow(a, faintness + 1));
-	c = pow(c, vec4(1.0 / 2.2)); // gamma correction
 	FragColor = c;
 }

@@ -47,7 +47,7 @@ void Play::switch_to()
 {
 	Base::switch_to();
 
-	glClearColor(0, 0, 0.1f, 1);
+	glClearColor(0, 0, 0.01f, 1);
 	glfwSetInputMode(g.gfx.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	g.gfx.center_cursor();
 }
