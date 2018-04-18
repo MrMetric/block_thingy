@@ -311,7 +311,11 @@ void text::draw(const u32string& s, const glm::dvec2& pos, const glm::dvec4& col
 		const character& ch_H = state.get_font().get_char('H');
 		const double actual_height = ch_H.size.y;
 		const double offset = height - actual_height;
-		const glm::dvec2 bg_pos(pos.x, pos.y - 2);
+
+		// TODO: per-font bg_pos tweaking
+		// Anonymous Pro looks best with pos.y - 3 (when height is 24)
+		// Grobe Deutschmeister looks best with no change
+		const glm::dvec2 bg_pos(pos.x, pos.y);
 		const glm::dvec2 bg_size(ch.x_offset, height);
 		Gfx::instance->draw_rectangle(bg_pos, bg_size, color_bg);
 
