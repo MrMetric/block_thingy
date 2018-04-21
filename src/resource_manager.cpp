@@ -8,8 +8,6 @@
 #include <thread>
 #include <unordered_map>
 
-#include <concurrentqueue/concurrentqueue.hpp>
-
 #include "game.hpp"
 #include "Gfx.hpp"
 #include "settings.hpp"
@@ -89,38 +87,19 @@ struct resource_manager::impl
 
 	block_texture& get_block_texture(uint32_t res)
 	{
-		const auto i = block_textures.find(res);
-		if(i != block_textures.cend())
+		if(const auto i = block_textures.find(res);
+			i != block_textures.cend())
 		{
 			return i->second;
 		}
-
-		if(std::this_thread::get_id() == main_thread_id)
-		{
-			return block_textures.emplace(res, block_texture(++units, res)).first->second;
-		}
-
-		std::atomic<bool> done(false);
-		work.enqueue([this, res, &done]()
-		{
-			block_textures.emplace(res, block_texture(++units, res));
-			done = true;
-		});
-		while(!done)
-		{
-			using namespace std::chrono_literals;
-			std::this_thread::sleep_for(2ms);
-		}
-		return block_textures.at(res);
+		return block_textures.emplace(res, block_texture(++units, res)).first->second;
 	}
 
 	util::file_watcher file_watcher;
-	moodycamel::ConcurrentQueue<std::function<void()>> work;
 	const std::thread::id main_thread_id;
 
 	std::unordered_map<uint32_t, block_texture> block_textures;
 	uint8_t units;
-	mutable std::mutex block_textures_mutex;
 
 	// note: fs::path can not be a key because it can not be hashed
 	std::unordered_map<string, unique_ptr<graphics::image>> cache_image;
@@ -157,12 +136,6 @@ void resource_manager::check_updates()
 		{
 			get_image(path, true);
 		}
-	}
-
-	std::function<void()> f;
-	while(pImpl->work.try_dequeue(f))
-	{
-		f();
 	}
 }
 
@@ -375,6 +348,8 @@ resource_manager::block_texture_info resource_manager::get_block_texture(fs::pat
 		return {0, 0};
 	}
 
+	assert(std::this_thread::get_id() == pImpl->main_thread_id);
+
 	path = "textures" / path;
 
 	resource<graphics::image> image = get_image(path);
@@ -383,8 +358,6 @@ resource_manager::block_texture_info resource_manager::get_block_texture(fs::pat
 	{
 		throw std::runtime_error("bad block texture dimensions: " + std::to_string(res) + "×" + std::to_string(image->get_height()));
 	}
-
-	std::lock_guard<std::mutex> g(pImpl->block_textures_mutex);
 
 	block_texture& t = pImpl->get_block_texture(res);
 	const auto i = t.index.find(path.string());
@@ -398,49 +371,39 @@ resource_manager::block_texture_info resource_manager::get_block_texture(fs::pat
 	}
 
 	const auto depth = t.count++;
-	pImpl->work.enqueue(
+
+	t.index.emplace(path.string(), depth);
+	image.on_update(
 	[
 		this,
 		path,
 		image,
-		res,
-		&t,
+		old_res=res,
 		depth
 	]()
 	{
-		image.on_update(
-		[
-			this,
-			path,
-			image,
-			old_res=res,
-			depth
-		]()
+		const auto res = image->get_width();
+		if(res != image->get_height())
 		{
-			const auto res = image->get_width();
-			if(res != image->get_height())
-			{
-				LOG(ERROR) << "error reloading " << path.u8string() << ": bad block texture dimensions: " << res << "×" << image->get_height() << '\n';
-				return;
-			}
-			if(res != old_res)
-			{
-				// TODO: allow this
-				LOG(ERROR) << "error reloading " << path.u8string() << ": the dimensions changed (old: " << old_res << "×; new: " << res << "×)\n";
-			}
-			std::lock_guard<std::mutex> g(pImpl->block_textures_mutex);
-			block_texture& t = pImpl->get_block_texture(res);
-			glActiveTexture(GL_TEXTURE0 + t.unit);
-			t.tex.image3D_sub(0, 0, 0, depth, res, res, 1, GL_RGBA, GL_UNSIGNED_BYTE, image->get_data());
-			glActiveTexture(GL_TEXTURE0);
-			LOG(INFO) << "reloaded " << path.u8string() << " (layer " << depth << " of unit " << std::to_string(t.unit) << ")\n";
-		});
+			LOG(ERROR) << "error reloading " << path.u8string() << ": bad block texture dimensions: " << res << "×" << image->get_height() << '\n';
+			return;
+		}
+		if(res != old_res)
+		{
+			// TODO: allow this
+			LOG(ERROR) << "error reloading " << path.u8string() << ": the dimensions changed (old: " << old_res << "×; new: " << res << "×)\n";
+		}
+		block_texture& t = pImpl->get_block_texture(res);
 		glActiveTexture(GL_TEXTURE0 + t.unit);
 		t.tex.image3D_sub(0, 0, 0, depth, res, res, 1, GL_RGBA, GL_UNSIGNED_BYTE, image->get_data());
 		glActiveTexture(GL_TEXTURE0);
-		LOG(DEBUG) << "loaded " << path.u8string() << " as layer " << depth << " of unit " << std::to_string(t.unit) << '\n';
+		LOG(INFO) << "reloaded " << path.u8string() << " (layer " << depth << " of unit " << std::to_string(t.unit) << ")\n";
 	});
-	t.index.emplace(path.string(), depth);
+	glActiveTexture(GL_TEXTURE0 + t.unit);
+	t.tex.image3D_sub(0, 0, 0, depth, res, res, 1, GL_RGBA, GL_UNSIGNED_BYTE, image->get_data());
+	glActiveTexture(GL_TEXTURE0);
+	LOG(DEBUG) << "loaded " << path.u8string() << " as layer " << depth << " of unit " << std::to_string(t.unit) << '\n';
+
 	return
 	{
 		t.unit,

@@ -160,7 +160,7 @@ bool base::block_visible_from
 		   sibling.type() != block::enums::type::none
 		&& !block.is_invisible() // this block is visible
 		&& !sibling.is_opaque() // this block can be seen thru the adjacent block
-		&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks (of the same type)
+		&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks of the same type
 	;
 }
 

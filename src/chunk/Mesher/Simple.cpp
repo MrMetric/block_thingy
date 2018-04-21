@@ -1,6 +1,5 @@
 #include "Simple.hpp"
 
-#include "game.hpp"
 #include "block/base.hpp"
 #include "chunk/Chunk.hpp"
 #include "position/block_in_chunk.hpp"
@@ -32,10 +31,10 @@ meshmap_t simple::make_mesh(const Chunk& chunk)
 			pos[i.y] += static_cast<int8_t>(side);
 			if(block_visible_from(chunk, block, pos.x, pos.y, pos.z))
 			{
-				const auto tex = game::instance->resource_manager.get_block_texture(block.texture(face));
+				const auto tex = block.texture_info(face);
 				const meshmap_key_t key =
 				{
-					block.shader(face),
+					block.shader_path(face),
 					block.is_translucent(),
 					tex.unit,
 				};

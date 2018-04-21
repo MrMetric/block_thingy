@@ -88,8 +88,8 @@ public:
 
 	struct block_texture_info
 	{
-		uint8_t unit;
-		uint16_t index;
+		uint8_t unit = 0;
+		uint16_t index = 0;
 	};
 	block_texture_info get_block_texture(fs::path);
 	bool texture_has_transparency(const fs::path&);

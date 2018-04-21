@@ -9,6 +9,7 @@
 
 #include "fwd/game.hpp"
 #include "fwd/Player.hpp"
+#include "resource_manager.hpp"
 #include "fwd/block/enums/Face.hpp"
 #include "fwd/block/enums/type.hpp"
 #include "block/enums/visibility_type.hpp"
@@ -48,8 +49,12 @@ public:
 	}
 	virtual void light(const graphics::color&);
 
-	fs::path shader(enums::Face) const;
-	fs::path texture(enums::Face) const;
+	fs::path shader_path(enums::Face) const;
+
+	fs::path texture_path(enums::Face) const;
+	void texture_path(enums::Face, const fs::path&);
+
+	resource_manager::block_texture_info texture_info(enums::Face) const;
 
 	glm::tvec3<uint8_t> rotation() const;
 	virtual uint8_t rotation(enums::Face) const;
@@ -108,15 +113,18 @@ public:
 	virtual void save(storage::OutputInterface&) const;
 	virtual void load(storage::InputInterface&);
 
+private:
+	enums::type type_;
 protected:
 	enums::visibility_type visibility_type_;
 	graphics::color light_;
-	std::array<fs::path, 6> shader_;
-	std::array<fs::path, 6> texture_;
 	glm::tvec3<uint8_t> rotation_;
+	std::array<fs::path, 6> shader_path_;
+	std::array<fs::path, 6> texture_path_;
+	std::array<resource_manager::block_texture_info, 6> texture_info_;
 
-private:
-	enums::type type_;
+	void fill_texture_path(const fs::path&);
+	void update_texture_info();
 };
 
 }

@@ -3,7 +3,6 @@
 #include <array>
 #include <cstddef>
 
-#include "game.hpp"
 #include "block/base.hpp"
 #include "block/enums/type.hpp"
 #include "chunk/Chunk.hpp"
@@ -59,7 +58,7 @@ meshmap_t simple2::make_mesh(const Chunk& chunk)
 					   sibling.type() != block::enums::type::none
 					&& !block.is_invisible() // this block is visible
 					&& !sibling.is_opaque() // this block can be seen thru the adjacent block
-					&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks (of the same type)
+					&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks of the same type
 				;
 			}
 			else
@@ -68,10 +67,10 @@ meshmap_t simple2::make_mesh(const Chunk& chunk)
 			}
 			if(is_visible)
 			{
-				const auto tex = game::instance->resource_manager.get_block_texture(block.texture(face));
+				const auto tex = block.texture_info(face);
 				const meshmap_key_t key =
 				{
-					block.shader(face),
+					block.shader_path(face),
 					block.is_translucent(),
 					tex.unit,
 				};

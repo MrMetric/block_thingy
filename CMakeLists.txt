@@ -87,6 +87,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=newline-eof
 		-Werror=non-virtual-dtor
 		-Werror=old-style-cast
+		-Werror=reorder
 		-Werror=return-type
 		-Werror=self-move
 		-Werror=shorten-64-to-32

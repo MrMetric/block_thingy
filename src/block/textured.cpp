@@ -36,28 +36,30 @@ textured::textured(const enums::type t, const fs::path& texture_path, const fs::
 :
 	base(t, get_visibility_type(texture_path), shader)
 {
-	texture_.fill(texture_path);
+	fill_texture_path(texture_path);
 }
 
 textured::textured(const enums::type t, const fs::path& texture_path, const std::array<fs::path, 6>& shaders)
 :
 	base(t, get_visibility_type(texture_path), shaders)
 {
-	texture_.fill(texture_path);
+	fill_texture_path(texture_path);
 }
 
 textured::textured(const enums::type t, std::array<fs::path, 6> textures, const fs::path& shader)
 :
 	base(t, get_visibility_type(textures), shader)
 {
-	texture_ = std::move(textures);
+	texture_path_ = std::move(textures);
+	update_texture_info();
 }
 
 textured::textured(const enums::type t, std::array<fs::path, 6> textures, const std::array<fs::path, 6>& shaders)
 :
 	base(t, get_visibility_type(textures), shaders)
 {
-	texture_ = std::move(textures);
+	texture_path_ = std::move(textures);
+	update_texture_info();
 }
 
 textured::~textured()

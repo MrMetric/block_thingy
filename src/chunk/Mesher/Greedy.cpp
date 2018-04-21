@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <tuple>
 
-#include "game.hpp"
 #include "block/base.hpp"
 #include "block/enums/Face.hpp"
 #include "position/block_in_chunk.hpp"
@@ -101,11 +100,11 @@ void generate_surface
 			const block::base& block = base::block_at(chunk, x, y, z);
 			if(base::block_visible_from(chunk, block, x + o[0], y + o[1], z + o[2]))
 			{
-				const auto tex = game::instance->resource_manager.get_block_texture(block.texture(face));
+				const auto tex = block.texture_info(face);
 				surface[pos[2]][pos[0]] =
 				{
 					{
-						block.shader(face),
+						block.shader_path(face),
 						block.is_translucent(),
 						tex.unit,
 					},

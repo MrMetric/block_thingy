@@ -41,20 +41,20 @@ base::base(const enums::type type, const enums::visibility_type visibility_type_
 
 base::base(const enums::type type, const enums::visibility_type visibility_type_, const fs::path& shader)
 :
-	visibility_type_(visibility_type_),
-	type_(type)
+	type_(type),
+	visibility_type_(visibility_type_)
 {
-	shader_.fill("shaders/block" / shader);
+	shader_path_.fill("shaders/block" / shader);
 }
 
 base::base(const enums::type type, const enums::visibility_type visibility_type_, const std::array<fs::path, 6>& shaders)
 :
-	visibility_type_(visibility_type_),
-	type_(type)
+	type_(type),
+	visibility_type_(visibility_type_)
 {
 	for(std::size_t i = 0; i < 6; ++i)
 	{
-		shader_[i] = "shaders/block" / shaders[i];
+		shader_path_[i] = "shaders/block" / shaders[i];
 	}
 }
 
@@ -80,8 +80,9 @@ base& base::operator=(const base& that)
 
 	visibility_type_ = that.visibility_type_;
 	light_ = that.light_;
-	shader_ = that.shader_;
-	texture_ = that.texture_;
+	shader_path_ = that.shader_path_;
+	texture_path_ = that.texture_path_;
+	texture_info_ = that.texture_info_;
 	rotation_ = that.rotation_;
 
 	return *this;
@@ -97,14 +98,37 @@ void base::light(const graphics::color& light)
 	light_ = light;
 }
 
-fs::path base::shader(const enums::Face face) const
+static std::size_t get_face_i
+(
+	const enums::Face face,
+	const glm::tvec3<uint8_t>& rotation
+)
 {
-	return shader_[static_cast<std::size_t>(rotation_util::rotate_face(face, rotation()))];
+	return static_cast<std::size_t>(rotation_util::rotate_face(face, rotation));
 }
 
-fs::path base::texture(const enums::Face face) const
+fs::path base::shader_path(const enums::Face face) const
 {
-	return texture_[static_cast<std::size_t>(rotation_util::rotate_face(face, rotation()))];
+	const auto i = get_face_i(face, rotation());
+	return shader_path_[i];
+}
+
+fs::path base::texture_path(const enums::Face face) const
+{
+	const auto i = get_face_i(face, rotation());
+	return texture_path_[i];
+}
+void base::texture_path(const enums::Face face, const fs::path& path)
+{
+	const auto i = get_face_i(face, rotation());
+	texture_path_[i] = path;
+	texture_info_[i] = game::instance->resource_manager.get_block_texture(path);
+}
+
+resource_manager::block_texture_info base::texture_info(const enums::Face face) const
+{
+	const auto i = get_face_i(face, rotation());
+	return texture_info_[i];
 }
 
 glm::tvec3<uint8_t> base::rotation() const
@@ -198,6 +222,20 @@ void base::load(storage::InputInterface& i)
 {
 	// type is set before loading
 	i.maybe_get("r", rotation_);
+}
+
+void base::fill_texture_path(const fs::path& path)
+{
+	texture_path_.fill(path);
+	texture_info_.fill(game::instance->resource_manager.get_block_texture(path));
+}
+
+void base::update_texture_info()
+{
+	for(std::size_t i = 0; i < texture_path_.size(); ++i)
+	{
+		texture_info_[i] = game::instance->resource_manager.get_block_texture(texture_path_[i]);
+	}
 }
 
 }
