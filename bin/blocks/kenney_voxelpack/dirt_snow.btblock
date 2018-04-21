@@ -1,0 +1,4 @@
+id				kenney_dirt_snow
+texture			kenney_voxelpack/Tiles/dirt_snow.png
+texture_top		kenney_voxelpack/Tiles/snow.png
+texture_bottom	kenney_voxelpack/Tiles/dirt.png

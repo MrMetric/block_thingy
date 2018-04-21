@@ -1,0 +1,4 @@
+id				kenney_stone_dirt
+texture			kenney_voxelpack/Tiles/stone_dirt.png
+texture_top		kenney_voxelpack/Tiles/dirt.png
+texture_bottom	kenney_voxelpack/Tiles/stone.png

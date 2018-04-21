@@ -1,0 +1,4 @@
+id				kenney_stone_grass
+texture			kenney_voxelpack/Tiles/stone_grass.png
+texture_top		kenney_voxelpack/Tiles/grass_top.png
+texture_bottom	kenney_voxelpack/Tiles/stone.png

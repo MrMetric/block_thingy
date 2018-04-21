@@ -1,0 +1,4 @@
+id				kenney_stone_red_sand
+texture			kenney_voxelpack/Tiles/redstone_sand.png
+texture_top		kenney_voxelpack/Tiles/redsand.png
+texture_bottom	kenney_voxelpack/Tiles/redstone.png

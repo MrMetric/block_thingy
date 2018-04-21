@@ -1,0 +1,4 @@
+id				kenney_stone_grey_sand
+texture			kenney_voxelpack/Tiles/greystone_sand.png
+texture_top		kenney_voxelpack/Tiles/greysand.png
+texture_bottom	kenney_voxelpack/Tiles/greystone.png

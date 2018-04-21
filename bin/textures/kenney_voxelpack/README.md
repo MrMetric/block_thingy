@@ -1,0 +1,3 @@
+These textures are from [the Kenney voxel pack](https://kenney.nl/assets/voxel-pack/) and [the Kenney holiday pack 2016](https://kenney.nl/assets/holiday-pack-2016).
+
+License: ([CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/)) You're free to use these game assets in any project, personal or commercial. There's no need to ask permission before using these. Giving attribution is not required, but is greatly appreciated! 

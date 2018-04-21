@@ -1,0 +1,4 @@
+id				kenney_cactus
+texture			kenney_voxelpack/Tiles/cactus_side.png
+texture_top		kenney_voxelpack/Tiles/cactus_top.png
+texture_bottom	kenney_voxelpack/Tiles/cactus_inside.png

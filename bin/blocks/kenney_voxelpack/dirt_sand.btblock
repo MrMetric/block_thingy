@@ -1,0 +1,4 @@
+id				kenney_dirt_sand
+texture			kenney_voxelpack/Tiles/dirt_sand.png
+texture_top		kenney_voxelpack/Tiles/sand.png
+texture_bottom	kenney_voxelpack/Tiles/dirt.png

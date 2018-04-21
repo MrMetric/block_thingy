@@ -1,0 +1,4 @@
+id				kenney_wood_snow
+texture			kenney_voxelpack/Tiles/holiday/voxelTile_16.png
+texture_top		kenney_voxelpack/Tiles/snow.png
+texture_bottom	kenney_voxelpack/Tiles/wood.png

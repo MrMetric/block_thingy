@@ -1,0 +1,4 @@
+id				kenney_stone_snow
+texture			kenney_voxelpack/Tiles/stone_snow.png
+texture_top		kenney_voxelpack/Tiles/snow.png
+texture_bottom	kenney_voxelpack/Tiles/stone.png

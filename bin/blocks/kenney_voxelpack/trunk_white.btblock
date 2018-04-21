@@ -1,0 +1,4 @@
+id				kenney_trunk_white
+texture			kenney_voxelpack/Tiles/trunk_white_side.png
+texture_top		kenney_voxelpack/Tiles/trunk_white_top.png
+texture_bottom	kenney_voxelpack/Tiles/trunk_white_top.png
