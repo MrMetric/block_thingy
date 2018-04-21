@@ -237,13 +237,13 @@ void world::set_block
 	}
 }
 
-const shared_ptr<block::base> world::get_block(const block_in_world& block_pos) const
+shared_ptr<const block::base> world::get_block(const block_in_world& block_pos) const
 {
 	const chunk_in_world chunk_pos(block_pos);
 	const shared_ptr<const Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static const shared_ptr<block::base> none = block_registry.get_default(block::enums::type::none);
+		static const shared_ptr<const block::base> none = block_registry.get_default(block::enums::type::none);
 		return none;
 	}
 
@@ -257,7 +257,7 @@ shared_ptr<block::base> world::get_block(const block_in_world& block_pos)
 	const shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static /*const*/ shared_ptr<block::base> none = block_registry.get_default(block::enums::type::none);
+		static const shared_ptr</*const*/ block::base> none = block_registry.get_default(block::enums::type::none);
 		return none;
 	}
 
@@ -268,7 +268,7 @@ shared_ptr<block::base> world::get_block(const block_in_world& block_pos)
 graphics::color world::get_blocklight(const block_in_world& block_pos) const
 {
 	const chunk_in_world chunk_pos(block_pos);
-	const shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
+	const shared_ptr<const Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
 		return {0, 0, 0};
@@ -284,7 +284,7 @@ void world::set_blocklight
 )
 {
 	const chunk_in_world chunk_pos(block_pos);
-	shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
+	const shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
 		// TODO?: handle this better
@@ -303,7 +303,7 @@ void world::set_blocklight
 			if(xyz.x) chunk_pos_2.x += (zero.x ? -1 : 1);
 			if(xyz.y) chunk_pos_2.y += (zero.y ? -1 : 1);
 			if(xyz.z) chunk_pos_2.z += (zero.z ? -1 : 1);
-			auto chunk2 = get_chunk(chunk_pos_2);
+			const shared_ptr<Chunk> chunk2 = get_chunk(chunk_pos_2);
 			if(chunk2 != nullptr)
 			{
 				glm::ivec3 pos2(glm::uninitialize);
@@ -411,13 +411,13 @@ void world::impl::process_blocklight_add()
 		)
 		{
 			const block_in_world pos2{pos.x + x, pos.y + y, pos.z + z};
-			const shared_ptr<Chunk> chunk = this_world.get_chunk(chunk_in_world(pos2));
+			const shared_ptr<const Chunk> chunk = this_world.get_chunk(chunk_in_world(pos2));
 			if(chunk == nullptr)
 			{
 				return;
 			}
 			const block_in_chunk pos2b(pos2);
-			const shared_ptr<block::base> block = chunk->get_block(pos2b);
+			const shared_ptr<const block::base> block = chunk->get_block(pos2b);
 			if(block->is_opaque())
 			{
 				return;
@@ -530,7 +530,7 @@ void world::impl::update_blocklight_around(const block_in_world& block_pos)
 
 void world::set_chunk(const chunk_in_world& chunk_pos, shared_ptr<Chunk> chunk)
 {
-	const shared_ptr<Chunk> prev_chunk = get_chunk(chunk_pos);
+	const shared_ptr<const Chunk> prev_chunk = get_chunk(chunk_pos);
 	if(prev_chunk == chunk)
 	{
 		return;
@@ -613,7 +613,7 @@ void world::set_chunk(const chunk_in_world& chunk_pos, shared_ptr<Chunk> chunk)
 			{
 				continue;
 			}
-			const auto chunk2 = get_chunk(chunk_pos_2);
+			const shared_ptr<Chunk> chunk2 = get_chunk(chunk_pos_2);
 			if(chunk2 != nullptr)
 			{
 				chunk->set_texbuflight(pos2, chunk2->get_blocklight(pos));
@@ -625,7 +625,18 @@ void world::set_chunk(const chunk_in_world& chunk_pos, shared_ptr<Chunk> chunk)
 	pImpl->update_chunk_neighbors(chunk_pos);
 }
 
-shared_ptr<Chunk> world::get_chunk(const chunk_in_world& chunk_pos) const
+shared_ptr<const Chunk> world::get_chunk(const chunk_in_world& chunk_pos) const
+{
+	std::lock_guard<std::mutex> g(pImpl->chunks_mutex);
+	const auto i = pImpl->chunks.find(chunk_pos);
+	if(i == pImpl->chunks.cend())
+	{
+		return nullptr;
+	}
+	return i->second;
+}
+
+shared_ptr<Chunk> world::get_chunk(const chunk_in_world& chunk_pos)
 {
 	std::lock_guard<std::mutex> g(pImpl->chunks_mutex);
 	const auto i = pImpl->chunks.find(chunk_pos);
@@ -720,7 +731,7 @@ void world::save()
 		const auto i = pImpl->chunks_to_save.cbegin();
 		const chunk_in_world position = *i;
 		pImpl->chunks_to_save.erase(i);
-		shared_ptr<Chunk> chunk = get_chunk(position);
+		const shared_ptr<const Chunk> chunk = get_chunk(position);
 		if(chunk != nullptr)
 		{
 			pImpl->file.save_chunk(*chunk);
@@ -766,7 +777,7 @@ void world::set_mesher(unique_ptr<mesher::base> mesher)
 	}
 }
 
-bool world::is_meshing_queued(const shared_ptr<Chunk>& chunk) const
+bool world::is_meshing_queued(const shared_ptr<const Chunk>& chunk) const
 {
 	if(chunk == nullptr)
 	{
@@ -846,7 +857,7 @@ void world::impl::update_chunk_neighbor
 	const bool thread
 )
 {
-	shared_ptr<Chunk> chunk = this_world.get_chunk(chunk_pos + offset);
+	const shared_ptr<Chunk> chunk = this_world.get_chunk(chunk_pos + offset);
 	if(chunk != nullptr)
 	{
 		if(thread)

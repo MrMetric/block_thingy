@@ -37,8 +37,8 @@ public:
 	world& operator=(world&&) = delete;
 	world& operator=(const world&) = delete;
 
-	const std::shared_ptr<block::base> get_block(const position::block_in_world&) const;
-	std::shared_ptr<block::base> get_block(const position::block_in_world&);
+	std::shared_ptr<const block::base> get_block(const position::block_in_world&) const;
+	std::shared_ptr<      block::base> get_block(const position::block_in_world&);
 
 	void set_block
 	(
@@ -52,7 +52,8 @@ public:
 	void update_blocklight(const position::block_in_world&, bool save);
 	void update_blocklight(const position::block_in_world&, const graphics::color&, bool save);
 
-	std::shared_ptr<Chunk> get_chunk(const position::chunk_in_world&) const;
+	std::shared_ptr<const Chunk> get_chunk(const position::chunk_in_world&) const;
+	std::shared_ptr<      Chunk> get_chunk(const position::chunk_in_world&);
 	std::shared_ptr<Chunk> get_or_make_chunk(const position::chunk_in_world&);
 	void set_chunk(const position::chunk_in_world&, std::shared_ptr<Chunk> chunk);
 
@@ -77,7 +78,7 @@ public:
 
 	void set_mesher(std::unique_ptr<mesher::base>);
 	std::unique_ptr<mesher::base> mesher;
-	bool is_meshing_queued(const std::shared_ptr<Chunk>&) const;
+	bool is_meshing_queued(const std::shared_ptr<const Chunk>&) const;
 	bool is_meshing_queued(const position::chunk_in_world&) const;
 
 	// for msgpack

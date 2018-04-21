@@ -153,7 +153,7 @@ chunk_in_world Chunk::get_position() const
 	return pImpl->position;
 }
 
-const shared_ptr<block::base> Chunk::get_block(const block_in_chunk& pos) const
+shared_ptr<const block::base> Chunk::get_block(const block_in_chunk& pos) const
 {
 	return blocks.get(pos);
 }

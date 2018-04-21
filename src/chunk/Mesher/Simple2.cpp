@@ -17,7 +17,7 @@ meshmap_t simple2::make_mesh(const Chunk& chunk)
 {
 	meshmap_t meshes;
 
-	std::array<block::base*, CHUNK_BLOCK_COUNT> cache;
+	std::array<const block::base*, CHUNK_BLOCK_COUNT> cache;
 
 	std::size_t block_i = 0;
 	block_in_chunk c_pos(0, 0, 0);

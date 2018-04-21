@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <functional>
+#include <memory>
 #include <mutex>
 #include <thread>
 #include <unordered_set>
@@ -78,6 +79,13 @@ public:
 	{
 		std::lock_guard<std::mutex> g(queued_mutex);
 		return queued.find(thing) != queued.cend();
+	}
+
+	template<typename T2>
+	bool has(const std::shared_ptr<const T2>& thing) const
+	{
+		std::lock_guard<std::mutex> g(queued_mutex);
+		return queued.find(std::const_pointer_cast<T2>(thing)) != queued.cend();
 	}
 
 	void stop()

@@ -28,8 +28,8 @@ public:
 	world::world& get_owner() const; // eeh
 	position::chunk_in_world get_position() const;
 
-	const std::shared_ptr<block::base> get_block(const position::block_in_chunk&) const;
-	std::shared_ptr<block::base> get_block(const position::block_in_chunk&);
+	std::shared_ptr<const block::base> get_block(const position::block_in_chunk&) const;
+	std::shared_ptr<      block::base> get_block(const position::block_in_chunk&);
 
 	void set_block(const position::block_in_chunk&, const std::shared_ptr<block::base>);
 
