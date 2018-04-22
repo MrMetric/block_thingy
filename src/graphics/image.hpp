@@ -15,6 +15,7 @@ public:
 	image();
 	explicit image(const fs::path&);
 	image(uint32_t width, uint32_t height, std::vector<uint8_t> data);
+	image(uint32_t width, uint32_t height, const uint8_t* data);
 	~image();
 
 	const uint8_t* get_data() const;

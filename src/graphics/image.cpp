@@ -123,6 +123,12 @@ image::image(const uint32_t width, const uint32_t height, std::vector<uint8_t> d
 {
 }
 
+image::image(const uint32_t width, const uint32_t height, const uint8_t* data)
+:
+	image(width, height, std::vector<uint8_t>(data, data + 4 * width * height))
+{
+}
+
 image::~image()
 {
 }

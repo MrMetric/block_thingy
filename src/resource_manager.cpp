@@ -2,7 +2,6 @@
 
 #include <atomic>
 #include <chrono>
-#include <mutex>
 #include <regex>
 #include <sstream>
 #include <thread>
@@ -103,13 +102,8 @@ struct resource_manager::impl
 
 	// note: fs::path can not be a key because it can not be hashed
 	std::unordered_map<string, unique_ptr<graphics::image>> cache_image;
-	mutable std::mutex cache_image_mutex;
-
 	std::unordered_map<string, unique_ptr<shader_object>> cache_shader_object;
-	mutable std::mutex cache_shader_object_mutex;
-
 	std::unordered_map<string, unique_ptr<shader_program>> cache_shader_program;
-	mutable std::mutex cache_shader_program_mutex;
 };
 
 resource_manager::resource_manager()
@@ -418,20 +412,36 @@ bool resource_manager::texture_has_transparency(const fs::path& path)
 
 bool resource_manager::has_image(const fs::path& path) const
 {
-	std::lock_guard<std::mutex> g(pImpl->cache_image_mutex);
 	return pImpl->cache_image.find(path.string()) != pImpl->cache_image.cend();
 }
 
+static const uint8_t MISSING_IMAGE[]
+{
+	0xFF, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0xFF,
+	0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0xFF, 0xFF,
+};
 resource<graphics::image> resource_manager::get_image(const fs::path& path, const bool reload)
 {
-	std::lock_guard<std::mutex> g(pImpl->cache_image_mutex);
 	auto i = pImpl->cache_image.find(path.string());
 	if(i == pImpl->cache_image.cend())
 	{
-		i = pImpl->cache_image.emplace(path.string(), std::make_unique<graphics::image>(path)).first;
-	#ifdef BT_WATCH_IMAGES
-		pImpl->file_watcher.add_watch(path);
-	#endif
+		unique_ptr<graphics::image> p;
+		try
+		{
+			p = std::make_unique<graphics::image>(path);
+		#ifdef BT_WATCH_IMAGES
+			pImpl->file_watcher.add_watch(path);
+		#endif
+		}
+		catch(const std::runtime_error& e)
+		{
+			LOG(ERROR) << "failed to load image " << path.u8string() << ": " << e.what() << '\n';
+			p = std::make_unique<graphics::image>(2, 2, MISSING_IMAGE);
+		#ifdef BT_WATCH_IMAGES
+			// TODO: watch directory
+		#endif
+		}
+		i = pImpl->cache_image.emplace(path.string(), std::move(p)).first;
 	}
 	else if(reload)
 	{
@@ -455,13 +465,11 @@ resource<graphics::image> resource_manager::get_image(const fs::path& path, cons
 
 bool resource_manager::has_shader_object(const fs::path& path) const
 {
-	std::lock_guard<std::mutex> g(pImpl->cache_shader_object_mutex);
 	return pImpl->cache_shader_object.find(path.string()) != pImpl->cache_shader_object.cend();
 }
 
 resource<shader_object> resource_manager::get_shader_object(fs::path path, const bool reload)
 {
-	std::lock_guard<std::mutex> g(pImpl->cache_shader_object_mutex);
 	GLenum type;
 	if(path.extension() == ".fs")
 	{
@@ -521,13 +529,11 @@ resource<shader_object> resource_manager::get_shader_object(fs::path path, const
 
 bool resource_manager::has_shader_program(const fs::path& path) const
 {
-	std::lock_guard<std::mutex> g(pImpl->cache_shader_program_mutex);
 	return pImpl->cache_shader_program.find(path.string()) != pImpl->cache_shader_program.cend();
 }
 
 resource<shader_program> resource_manager::get_shader_program(const fs::path& path, bool reload)
 {
-	std::lock_guard<std::mutex> g(pImpl->cache_shader_program_mutex);
 	auto i = pImpl->cache_shader_program.find(path.string());
 	if(i == pImpl->cache_shader_program.cend())
 	{
