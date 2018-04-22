@@ -75,7 +75,7 @@ void world_file::load(world::world& world)
 		return;
 	}
 
-	LOG(INFO) << "loading world: " << world_path.u8string() << '\n';
+	LOG(DEBUG) << "loading world: " << world_path.u8string() << '\n';
 	const string bytes = util::read_file(world_path);
 	try
 	{
@@ -112,7 +112,7 @@ unique_ptr<Player> world_file::load_player
 		return player;
 	}
 
-	LOG(INFO) << "loading player: " << file_path.u8string() << '\n';
+	LOG(DEBUG) << "loading player: " << file_path.u8string() << '\n';
 
 	string bytes = util::read_file(file_path);
 	try
@@ -131,7 +131,7 @@ void world_file::save_chunk(const Chunk& chunk)
 {
 	position::chunk_in_world position = chunk.get_position();
 	fs::path file_path = chunk_path(position);
-	LOG(INFO) << "saving " << file_path.u8string() << '\n';
+	LOG(DEBUG) << "saving " << file_path.u8string() << '\n';
 
 	std::ofstream stdstream(file_path, std::ofstream::binary);
 	zstr::ostream stream(stdstream);

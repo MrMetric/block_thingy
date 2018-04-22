@@ -47,20 +47,49 @@ Console::Console()
 	{
 		if(args.empty())
 		{
-			LOG(INFO) << '\n';
+			LOG(ECHO) << '\n';
 			return;
 		}
 
 		std::ostringstream ss;
-		for(auto i = args.begin(); i != args.end(); ++i)
+		for(auto i = args.cbegin(); i != args.cend(); ++i)
 		{
 			ss << *i;
-			if(i != args.end() - 1)
+			if(i != args.cend() - 1)
 			{
 				ss << ' ';
 			}
 		}
-		LOG(INFO) << ss.str() << '\n';
+		LOG(ECHO) << ss.str() << '\n';
+	}});
+
+	add_command("log", {[]
+	(
+		const std::vector<string>& args
+	)
+	{
+		if(args.empty())
+		{
+			LOG(ERROR) << "Usage: log <level: string> [text: string...]\n";
+			return;
+		}
+
+		if(args.size() == 1)
+		{
+			logger::log(args[0]) << '\n';
+			return;
+		}
+
+		std::ostringstream ss;
+		for(auto i = args.cbegin() + 1; i != args.cend(); ++i)
+		{
+			ss << *i;
+			if(i != args.cend() - 1)
+			{
+				ss << ' ';
+			}
+		}
+		logger::log(args[0]) << ss.str() << '\n';
 	}});
 }
 

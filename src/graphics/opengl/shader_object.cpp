@@ -27,7 +27,7 @@ shader_object::shader_object(const fs::path& file_path, const GLenum type)
 :
 	inited(true)
 {
-	LOG(INFO) << "compiling shader: " << file_path.u8string() << '\n';
+	LOG(DEBUG) << "compiling shader: " << file_path.u8string() << '\n';
 
 	std::vector<fs::path> file_paths;
 	file_paths.emplace_back(file_path);

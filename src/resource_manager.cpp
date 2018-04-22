@@ -391,7 +391,7 @@ resource_manager::block_texture_info resource_manager::get_block_texture(fs::pat
 		glActiveTexture(GL_TEXTURE0 + t.unit);
 		t.tex.image3D_sub(0, 0, 0, depth, res, res, 1, GL_RGBA, GL_UNSIGNED_BYTE, image->get_data());
 		glActiveTexture(GL_TEXTURE0);
-		LOG(INFO) << "reloaded " << path.u8string() << " (layer " << depth << " of unit " << std::to_string(t.unit) << ")\n";
+		LOG(DEBUG) << "reloaded " << path.u8string() << " (layer " << depth << " of unit " << std::to_string(t.unit) << ")\n";
 	});
 	glActiveTexture(GL_TEXTURE0 + t.unit);
 	t.tex.image3D_sub(0, 0, 0, depth, res, res, 1, GL_RGBA, GL_UNSIGNED_BYTE, image->get_data());
