@@ -1,6 +1,7 @@
 #include "text.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <optional>
 #include <sstream>
 #include <stdexcept>
