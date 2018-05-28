@@ -10,11 +10,10 @@
 
 #include "game.hpp"
 #include "Gfx.hpp"
+#include "language.hpp"
 #include "Player.hpp"
 #include "settings.hpp"
-#include "block/base.hpp"
 #include "block/enums/Face.hpp"
-#include "block/enums/type.hpp"
 #include "console/Console.hpp"
 #include "console/KeybindManager.hpp"
 #include "graphics/camera.hpp"
@@ -181,24 +180,34 @@ void Play::draw_debug_text()
 	ss << "world seed  : " << util::grisu2(g.world->get_seed()) << '\n';
 	ss << "world name  : " << g.world->get_name() << '\n';
 	ss << "noclip: " << g.player->get_noclip() << '\n';
-	auto show_block = [](const block::base& block) -> string
+	auto show_block = [&g=this->g](const block_t block) -> string
 	{
 		std::ostringstream ss;
-		ss << block.name() << " (" << block.type() << ')';
+		const auto name = g.world->block_manager.get_name(block);
+		if(name != nullopt)
+		{
+			ss << language::get(*name) << ' ';
+		}
+		const auto strid = g.world->block_manager.get_strid(block);
+		if(strid != nullopt)
+		{
+			ss << '[' << *strid << "] ";
+		}
+		ss << '{' << block.index << ", " << block.generation << '}';
 		return ss.str();
 	};
-	if(g.copied_block != nullptr)
+	if(g.player->copied_block != nullopt)
 	{
-		ss << "copied block: " << show_block(*g.copied_block) << '\n';
+		ss << "copied block: " << show_block(*g.player->copied_block) << '\n';
 	}
-	if(g.hovered_block != nullopt)
+	if(g.player->hovered_block != nullopt)
 	{
-		const shared_ptr<block::base> hovered = g.world->get_block(g.hovered_block->pos);
-		ss << "hovered: " << show_block(*hovered) << '\n';
-		ss << "\tface: " << g.hovered_block->face() << '\n';
-		ss << "\trotation: " << glm::io::width(2) << hovered->rotation() << '\n';
-		ss << "\temitted light: " << hovered->light() << '\n';
-		ss << "\tlight: " << g.world->get_blocklight(g.hovered_block->adjacent()) << '\n';
+		const block_t hovered = g.player->hovered_block->block;
+		ss << "hovered: " << show_block(hovered) << '\n';
+		ss << "\tface: " << g.player->hovered_block->face() << '\n';
+		ss << "\trotation: " << glm::io::width(2) << g.world->block_manager.info.rotation(hovered) << '\n';
+		ss << "\temitted light: " << g.world->block_manager.info.light(hovered) << '\n';
+		ss << "\tlight: " << g.world->get_blocklight(g.player->hovered_block->adjacent()) << '\n';
 	}
 
 	g.gfx.gui_text.draw(ss.str(), {8.0, 8.0});

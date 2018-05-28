@@ -2,21 +2,21 @@
 
 #include "event/EventType.hpp"
 
-using std::shared_ptr;
-
 namespace block_thingy {
 
 Event_enter_block::Event_enter_block
 (
 	world::world& world,
-	Player& player,
-	const shared_ptr<block::base> block
+	const position::block_in_world& position,
+	const block_t block,
+	Player& player
 )
 :
 	Event(EventType::enter_block),
 	world(world),
-	player(player),
-	block(block)
+	position(position),
+	block(block),
+	player(player)
 {
 }
 

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "fwd/block/base.hpp"
+#include "block/block.hpp"
 #include "chunk/ChunkData.hpp"
 #include "fwd/graphics/color.hpp"
 #include "fwd/position/block_in_chunk.hpp"
@@ -12,7 +12,7 @@
 
 namespace block_thingy {
 
-using chunk_blocks_t = chunk_data<std::shared_ptr<block::base>>;
+using chunk_blocks_t = chunk_data<block_t>;
 
 class Chunk
 {
@@ -28,10 +28,8 @@ public:
 	world::world& get_owner() const; // eeh
 	position::chunk_in_world get_position() const;
 
-	std::shared_ptr<const block::base> get_block(const position::block_in_chunk&) const;
-	std::shared_ptr<      block::base> get_block(const position::block_in_chunk&);
-
-	void set_block(const position::block_in_chunk&, const std::shared_ptr<block::base>);
+	block_t get_block(const position::block_in_chunk&) const;
+	void set_block(const position::block_in_chunk&, block_t);
 
 	graphics::color get_blocklight(const position::block_in_chunk&) const;
 	void set_blocklight(const position::block_in_chunk&, const graphics::color&);
@@ -42,7 +40,7 @@ public:
 
 	// for loading
 	void set_blocks(chunk_blocks_t);
-	void set_blocks(std::shared_ptr<block::base>);
+	void set_blocks(block_t);
 
 	// for msgpack
 	template<typename T> void save(T&) const;

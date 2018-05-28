@@ -4,8 +4,8 @@
 #include <stdint.h>
 #include <tuple>
 
-#include "block/base.hpp"
 #include "block/enums/Face.hpp"
+#include "chunk/Chunk.hpp"
 #include "position/block_in_chunk.hpp"
 
 namespace block_thingy::mesher {
@@ -85,6 +85,7 @@ void generate_surface
 	const Face face
 )
 {
+	const auto& info = chunk.get_owner().block_manager.info;
 	const Side side = base::to_side(face);
 	const auto offset = static_cast<int8_t>(side);
 	for(pos[0] = 0; pos[0] < CHUNK_SIZE; ++pos[0])
@@ -97,19 +98,19 @@ void generate_surface
 			int8_t o[] {0, 0, 0};
 			o[i.y] = offset;
 
-			const block::base& block = base::block_at(chunk, x, y, z);
-			if(base::block_visible_from(chunk, block, x + o[0], y + o[1], z + o[2]))
+			const block_t block = base::block_at(chunk, x, y, z);
+			if(base::block_visible_from(info, chunk, block, x + o[0], y + o[1], z + o[2]))
 			{
-				const auto tex = block.texture_info(face);
+				const auto tex = info.texture_info(block, face);
 				surface[pos[2]][pos[0]] =
 				{
 					{
-						block.shader_path(face),
-						block.is_translucent(),
+						info.shader_path(block, face),
+						info.is_translucent(block),
 						tex.unit,
 					},
 					tex.index,
-					block.rotation(face),
+					info.rotation(block, face),
 				};
 			}
 			else

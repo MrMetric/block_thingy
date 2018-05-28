@@ -7,7 +7,6 @@
 
 #include "game.hpp"
 #include "Gfx.hpp"
-#include "block/test_light.hpp"
 #include "graphics/GUI/Widget/text_input.hpp"
 #include "util/misc.hpp"
 
@@ -20,16 +19,16 @@ light::light
 (
 	game& g,
 	world::world& world,
-	block::test_light& block,
-	const position::block_in_world& block_pos
+	const position::block_in_world& block_pos,
+	const block_t block
 )
 :
 	Base(g, "guis/light.btgui"),
 	world(world),
-	block(block),
-	block_pos(block_pos)
+	block_pos(block_pos),
+	block(block)
 {
-	const graphics::color c = block.light();
+	const graphics::color c = world.block_manager.info.light(block);
 	for(std::ptrdiff_t i = 0; i < 3; ++i)
 	{
 		auto w = root.get_widget_by_id_t<widget::text_input>(std::to_string(i));
@@ -77,11 +76,11 @@ void light::on_change(std::ptrdiff_t i, widget::text_input& w, const string& new
 		}
 	}
 	w.valid(valid);
-	auto c = block.light();
+	auto c = world.block_manager.info.light(block);
 	if(v != c[i])
 	{
 		c[i] = static_cast<graphics::color::value_type>(v);
-		block.light(c);
+		world.block_manager.info.light(block, c);
 		world.update_blocklight(block_pos, c, true);
 	}
 }

@@ -10,8 +10,7 @@
 #include "game.hpp"
 #include "Gfx.hpp"
 #include "settings.hpp"
-#include "block/base.hpp"
-#include "block/textured.hpp"
+#include "block/manager.hpp"
 #include "block/enums/visibility_type.hpp"
 #include "console/ArgumentParser.hpp"
 #include "graphics/image.hpp"
@@ -235,7 +234,7 @@ static block_type get_block_type(const std::unordered_map<string, string>& block
 	return block_type::base;
 }
 
-void resource_manager::load_blocks(game& game)
+void resource_manager::load_blocks(block::manager& block_manager)
 {
 	for(const fs::directory_entry& entry : fs::recursive_directory_iterator("blocks"))
 	{
@@ -245,8 +244,8 @@ void resource_manager::load_blocks(game& game)
 			continue;
 		}
 
-		auto block = parse_block(util::read_text(path));
-		const block_type t = get_block_type(block);
+		auto block_map = parse_block(util::read_text(path));
+		const block_type t = get_block_type(block_map);
 		if(t == block_type::invalid)
 		{
 			// TODO
@@ -254,88 +253,73 @@ void resource_manager::load_blocks(game& game)
 			continue;
 		}
 		LOG(DEBUG) << "loading block: " << path.u8string() << '\n';
+		const block_t block = block_manager.create();
+
+		block_manager.set_strid(block, block_map.at("id"));
+		if(block_map.count("name") != 0)
+		{
+			block_manager.set_name(block, block_map.at("name"));
+		}
 
 		block::enums::visibility_type visibility_type;
-		if(block.count("visibility_type") == 0)
+		if(block_map.count("visibility_type") == 0)
 		{
 			visibility_type = block::enums::visibility_type::opaque;
 		}
 		else
 		{
 			// switch on first char works because the block validity has already been confirmed
-			switch(block.at("visibility_type")[0])
+			switch(block_map.at("visibility_type")[0])
 			{
 				case 't': visibility_type = block::enums::visibility_type::translucent; break;
 				case 'i': visibility_type = block::enums::visibility_type::invisible; break;
 				default : visibility_type = block::enums::visibility_type::opaque; break;
 			}
 		}
+		block_manager.info.visibility_type(block, visibility_type);
 
-		std::array<fs::path, 6> shaders;
-		if(block.count("shader") != 0)
+
+		if(block_map.count("shader") != 0)
 		{
-			shaders.fill(block.at("shader"));
+			block_manager.info.shader_path(block, block_map.at("shader"));
 		}
 		else if(t == block_type::textured)
 		{
-			shaders.fill("texture");
+			block_manager.info.shader_path(block, "texture");
 		}
-		if(block.count("shader_right" ) != 0) shaders[0] = block.at("shader_right" );
-		if(block.count("shader_left"  ) != 0) shaders[1] = block.at("shader_left"  );
-		if(block.count("shader_top"   ) != 0) shaders[2] = block.at("shader_top"   );
-		if(block.count("shader_bottom") != 0) shaders[3] = block.at("shader_bottom");
-		if(block.count("shader_front" ) != 0) shaders[4] = block.at("shader_front" );
-		if(block.count("shader_back"  ) != 0) shaders[5] = block.at("shader_back"  );
+		if(block_map.count("shader_right" ) != 0) block_manager.info.shader_path(block, block::enums::Face::right , block_map.at("shader_right" ));
+		if(block_map.count("shader_left"  ) != 0) block_manager.info.shader_path(block, block::enums::Face::left  , block_map.at("shader_left"  ));
+		if(block_map.count("shader_top"   ) != 0) block_manager.info.shader_path(block, block::enums::Face::top   , block_map.at("shader_top"   ));
+		if(block_map.count("shader_bottom") != 0) block_manager.info.shader_path(block, block::enums::Face::bottom, block_map.at("shader_bottom"));
+		if(block_map.count("shader_front" ) != 0) block_manager.info.shader_path(block, block::enums::Face::front , block_map.at("shader_front" ));
+		if(block_map.count("shader_back"  ) != 0) block_manager.info.shader_path(block, block::enums::Face::back  , block_map.at("shader_back"  ));
 
-		block::enums::type id;
-		if(t == block_type::textured)
-		{
-			std::array<fs::path, 6> textures;
-			if(block.count("texture") != 0)
-			{
-				textures.fill(block.at("texture"));
-			}
-			if(block.count("texture_right" ) != 0) textures[0] = block.at("texture_right" );
-			if(block.count("texture_left"  ) != 0) textures[1] = block.at("texture_left"  );
-			if(block.count("texture_top"   ) != 0) textures[2] = block.at("texture_top"   );
-			if(block.count("texture_bottom") != 0) textures[3] = block.at("texture_bottom");
-			if(block.count("texture_front" ) != 0) textures[4] = block.at("texture_front" );
-			if(block.count("texture_back"  ) != 0) textures[5] = block.at("texture_back"  );
-			id = game.block_registry.add<block::textured>
-			(
-				block.at("id"),
-				textures,
-				shaders
-			);
-		}
-		else if(t == block_type::base)
-		{
-			id = game.block_registry.add<block::base>
-			(
-				block.at("id"),
-				visibility_type,
-				shaders
-			);
-		}
-		else
-		{
-			LOG(BUG) << "attempted to load unhandled block type: " << std::to_string(static_cast<int>(t)) << '\n';
-			continue;
-		}
 
-		if(block.count("light") != 0)
+		if(block_map.count("texture") != 0)
+		{
+			block_manager.info.texture_path(block, block_map.at("texture"));
+		}
+		if(block_map.count("texture_right" ) != 0) block_manager.info.texture_path(block, block::enums::Face::right , block_map.at("texture_right" ));
+		if(block_map.count("texture_left"  ) != 0) block_manager.info.texture_path(block, block::enums::Face::left  , block_map.at("texture_left"  ));
+		if(block_map.count("texture_top"   ) != 0) block_manager.info.texture_path(block, block::enums::Face::top   , block_map.at("texture_top"   ));
+		if(block_map.count("texture_bottom") != 0) block_manager.info.texture_path(block, block::enums::Face::bottom, block_map.at("texture_bottom"));
+		if(block_map.count("texture_front" ) != 0) block_manager.info.texture_path(block, block::enums::Face::front , block_map.at("texture_front" ));
+		if(block_map.count("texture_back"  ) != 0) block_manager.info.texture_path(block, block::enums::Face::back  , block_map.at("texture_back"  ));
+
+
+		if(block_map.count("light") != 0)
 		{
 			// light.{r,g,b} is uint8_t, which is char, so stringstream treats the input as characters instead of digits
 			unsigned int r, g, b;
-			std::istringstream(block.at("light")) >> r >> g >> b;
+			std::istringstream(block_map.at("light")) >> r >> g >> b;
 			#define c(x) static_cast<uint8_t>(x)
-			game.block_registry.get_default(id)->light({c(r), c(g), c(b)});
+			block_manager.info.light(block, {c(r), c(g), c(b)});
 			#undef c
 		}
 	}
 }
 
-resource_manager::block_texture_info resource_manager::get_block_texture(fs::path path)
+resource_manager::block_texture_info resource_manager::get_block_texture(const fs::path& path)
 {
 	if(path.empty())
 	{
@@ -343,8 +327,6 @@ resource_manager::block_texture_info resource_manager::get_block_texture(fs::pat
 	}
 
 	assert(std::this_thread::get_id() == pImpl->main_thread_id);
-
-	path = "textures" / path;
 
 	resource<graphics::image> image = get_image(path);
 	const auto res = image->get_width();

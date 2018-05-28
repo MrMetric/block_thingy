@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "fwd/game.hpp"
+#include "fwd/block/manager.hpp"
 #include "fwd/graphics/image.hpp"
 #include "fwd/graphics/opengl/shader_object.hpp"
 #include "fwd/graphics/opengl/shader_program.hpp"
@@ -84,14 +84,14 @@ public:
 
 	void check_updates();
 
-	void load_blocks(game&);
+	void load_blocks(block::manager&);
 
 	struct block_texture_info
 	{
 		uint8_t unit = 0;
 		uint16_t index = 0;
 	};
-	block_texture_info get_block_texture(fs::path);
+	block_texture_info get_block_texture(const fs::path&);
 	bool texture_has_transparency(const fs::path&);
 
 	bool has_image(const fs::path&) const;

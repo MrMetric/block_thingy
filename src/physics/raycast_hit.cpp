@@ -9,10 +9,12 @@ using block::enums::Face;
 raycast_hit::raycast_hit
 (
 	const position::block_in_world& pos,
+	block_t block,
 	const glm::ivec3& face
 )
 :
 	pos(pos),
+	block(block),
 	face_vec(face)
 {
 }

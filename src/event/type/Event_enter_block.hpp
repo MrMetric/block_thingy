@@ -1,10 +1,9 @@
 #pragma once
 #include "event/Event.hpp"
 
-#include <memory>
-
 #include "fwd/Player.hpp"
-#include "fwd/block/base.hpp"
+#include "block/block.hpp"
+#include "position/block_in_world.hpp"
 #include "fwd/world/world.hpp"
 
 namespace block_thingy {
@@ -15,13 +14,15 @@ public:
 	Event_enter_block
 	(
 		world::world&,
-		Player&,
-		std::shared_ptr<block::base>
+		const position::block_in_world&,
+		block_t,
+		Player&
 	);
 
 	world::world& world;
+	position::block_in_world position;
+	block_t block;
 	Player& player;
-	std::shared_ptr<block::base> block;
 };
 
 }

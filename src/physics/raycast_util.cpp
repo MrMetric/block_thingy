@@ -12,7 +12,6 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
-#include "block/base.hpp"
 #include "physics/ray.hpp"
 #include "physics/raycast_hit.hpp"
 #include "position/block_in_world.hpp"
@@ -137,7 +136,8 @@ ray screen_pos_to_world_ray
 
 static bool pos_in_bounds(const position::block_in_world& pos, const glm::dvec3& min, const glm::dvec3& max)
 {
-	return !(pos.x < min.x || pos.y < min.y || pos.z < min.z || pos.x > max.x || pos.y > max.y || pos.z > max.z);
+	return !(pos.x < min.x || pos.y < min.y || pos.z < min.z
+	      || pos.x > max.x || pos.y > max.y || pos.z > max.z);
 }
 
 // this stuff is from http://gamedev.stackexchange.com/a/49423
@@ -204,9 +204,11 @@ std::optional<raycast_hit> raycast
 			(step.y > 0 ? cube_pos.y < max.y : cube_pos.y > min.y) &&
 			(step.z > 0 ? cube_pos.z < max.z : cube_pos.z > min.z))
 	{
-		if(pos_in_bounds(cube_pos, min, max) && world.get_block(cube_pos)->is_selectable())
+		if(const block_t block = world.get_block(cube_pos);
+			pos_in_bounds(cube_pos, min, max)
+			&& world.block_manager.info.selectable(block))
 		{
-			return raycast_hit(cube_pos, face);
+			return raycast_hit(cube_pos, block, face);
 		}
 
 		// tMax.x stores the t-value at which we cross a cube boundary along the

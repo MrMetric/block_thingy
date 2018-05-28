@@ -7,9 +7,6 @@
 #include <type_traits>
 
 #include "game.hpp"
-#include "block/base.hpp"
-#include "block/BlockRegistry.hpp"
-#include "block/enums/type.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "position/block_in_chunk.hpp"
 
@@ -21,13 +18,6 @@ class chunk_data
 public:
 	chunk_data()
 	{
-		// explicit template instantiation does not work with both MSVC and GCC/Clang
-		// with MSVC, putting a prototype in this file with the definition in a cpp file causes a linking error
-		// with GCC/Clang, putting the definition in this file breaks the one-definition rule
-		if constexpr(std::is_same<T, std::shared_ptr<block::base>>::value)
-		{
-			fill(game::instance->block_registry.get_default(block::enums::type::air));
-		}
 	}
 
 	chunk_data(T block)

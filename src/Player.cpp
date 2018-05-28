@@ -8,8 +8,6 @@
 #include <glm/vec3.hpp>
 
 #include "game.hpp"
-#include "block/base.hpp"
-#include "block/enums/type.hpp"
 #include "event/EventManager.hpp"
 #include "event/type/Event_enter_block.hpp"
 #include "position/block_in_world.hpp"
@@ -98,7 +96,7 @@ void Player::move(world::world& world, const glm::dvec3& acceleration)
 			if(skip) continue;
 
 			const position::block_in_world block_pos = block_pos_old + block_pos_offset;
-			if(!world.get_block(block_pos)->is_solid())
+			if(!world.block_manager.info.solid(world.get_block(block_pos)))
 			{
 				continue;
 			}
@@ -135,7 +133,7 @@ void Player::move(world::world& world, const glm::dvec3& acceleration)
 		{
 			bool on_ground_check = false;
 			const position::block_in_world pos_feet_new(glm::dvec3(position.x, position.y + move_vec.y, position.z));
-			shared_ptr<block::base> block_on;
+			block_t block_on;
 			for(int_fast64_t offset_x = -1; offset_x <= 1; ++offset_x)
 			{
 				for(int_fast64_t offset_z = -1; offset_z <= 1; ++offset_z)
@@ -145,17 +143,18 @@ void Player::move(world::world& world, const glm::dvec3& acceleration)
 						pos_feet_new.y,
 						position.z + offset_z * abs_offset)));
 
-					if(block_on->is_solid() && pos_feet_new.y <= position.y - 0.5)
+					if(world.block_manager.info.solid(block_on)
+					&& pos_feet_new.y <= position.y - 0.5)
 					{
 						int_fast64_t offset_y;
 						bool block_blocking = false;
 						for(offset_y = 1; offset_y <= height; ++offset_y)
 						{
-							shared_ptr<block::base> blocking_check = world.get_block(position::block_in_world(glm::dvec3(
+							const block_t blocking_check = world.get_block(position::block_in_world(glm::dvec3(
 								position.x + offset_x * abs_offset,
 								pos_feet_new.y + offset_y,
 								position.z + offset_z * abs_offset)));
-							if(blocking_check->is_solid())
+							if(world.block_manager.info.solid(blocking_check))
 							{
 								block_blocking = true;
 								break;
@@ -178,7 +177,7 @@ void Player::move(world::world& world, const glm::dvec3& acceleration)
 				}
 				else
 				{
-					velocity.y *= -block_on->bounciness();
+					velocity.y *= -world.block_manager.info.bounciness(block_on);
 				}
 			}
 
@@ -187,11 +186,11 @@ void Player::move(world::world& world, const glm::dvec3& acceleration)
 		else if(move_vec.y > 0)
 		{
 			const position::block_in_world pos_head_new(glm::dvec3(position.x, position.y + move_vec.y + height, position.z));
-			const shared_ptr<block::base> block = world.get_block(pos_head_new);
-			if(block->is_solid())
+			const block_t block = world.get_block(pos_head_new);
+			if(world.block_manager.info.solid(block))
 			{
 				position.y = pos_head_new.y - height;
-				velocity.y *= -block->bounciness();
+				velocity.y *= -world.block_manager.info.bounciness(block);
 			}
 			flags.on_ground = false;
 		}
@@ -260,13 +259,16 @@ void Player::step(world::world& world, const double delta_time)
 		const position::block_in_world new_position(position());
 		if(new_position != old_position)
 		{
-			const shared_ptr<block::base> block = world.get_block(new_position);
-			if(block->type() != block::enums::type::none
-			&& block->type() != block::enums::type::air
-			&& !block->is_solid())
+			const block_t block = world.get_block(new_position);
+			// TODO
+			/*
+			if(block != block_t()
+			&& block != air
+			&& !world.block_manager.info.solid(block))
 			{
-				g.event_manager.do_event(Event_enter_block(world, *this, block));
+				g.event_manager.do_event(Event_enter_block(world, new_position, block, *this));
 			}
+			*/
 		}
 
 		set_aabb();

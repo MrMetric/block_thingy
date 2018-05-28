@@ -18,9 +18,6 @@
 #include <glm/gtc/noise.hpp>
 
 #include "Player.hpp"
-#include "block/base.hpp"
-#include "block/BlockRegistry.hpp"
-#include "block/enums/type.hpp"
 #include "chunk/Chunk.hpp"
 #include "chunk/Mesher/base.hpp"
 #include "graphics/color.hpp"
@@ -31,6 +28,7 @@
 #include "storage/world_file.hpp"
 #include "util/ThreadThingy.hpp"
 
+using std::nullopt;
 using std::string;
 using std::shared_ptr;
 using std::unique_ptr;
@@ -131,11 +129,9 @@ struct world::impl
 world::world
 (
 	const fs::path& dir_path,
-	block::BlockRegistry& block_registry,
 	unique_ptr<mesher::base> mesher
 )
 :
-	block_registry(block_registry),
 	mesher(std::move(mesher)),
 	pImpl(std::make_unique<impl>
 	(
@@ -154,14 +150,15 @@ world::~world()
 	pImpl->mesh_thread.stop();
 }
 
-static bool does_affect_light(const block::base& block)
+static bool does_affect_light(const block::manager& block_manager, const block_t block)
 {
-	if(block.is_opaque())
+	if(block_manager.info.is_opaque(block))
 	{
 		return true;
 	}
 	static graphics::color max(graphics::color::max);
-	if(block.is_translucent() && block.light_filter() != max)
+	if(block_manager.info.is_translucent(block)
+	&& block_manager.info.light_filter(block) != max)
 	{
 		return true;
 	}
@@ -171,17 +168,10 @@ static bool does_affect_light(const block::base& block)
 void world::set_block
 (
 	const block_in_world& block_pos,
-	shared_ptr<block::base> block,
+	const block_t block,
 	bool thread
 )
 {
-	if(block == nullptr)
-	{
-		std::ostringstream ss;
-		ss << "can not set a block to null (coordinates: " << block_pos << ')';
-		throw std::invalid_argument(ss.str());
-	}
-
 	const chunk_in_world chunk_pos(block_pos);
 	shared_ptr<Chunk> chunk = get_or_make_chunk(chunk_pos);
 	if(chunk == nullptr)
@@ -190,7 +180,7 @@ void world::set_block
 		return;
 	}
 
-	const shared_ptr<block::base> old_block = get_block(block_pos);
+	const block_t old_block = get_block(block_pos);
 	if(old_block == block)
 	{
 		return;
@@ -200,11 +190,11 @@ void world::set_block
 	chunk->set_block(pos, block);
 	pImpl->chunks_to_save.emplace(chunk_pos);
 
-	const bool old_affects_light = does_affect_light(*old_block);
-	const bool affects_light = does_affect_light(*block);
+	const bool old_affects_light = does_affect_light(block_manager, old_block);
+	const bool affects_light = does_affect_light(block_manager, block);
 
-	const graphics::color old_light = old_block->light();
-	const graphics::color light = block->light();
+	const graphics::color old_light = block_manager.info.light(old_block);
+	const graphics::color light = block_manager.info.light(block);
 
 	// TODO: these checks might not work (a filter block could be overwritten by a different filter block)
 	if(affects_light && !old_affects_light)
@@ -237,28 +227,13 @@ void world::set_block
 	}
 }
 
-shared_ptr<const block::base> world::get_block(const block_in_world& block_pos) const
+block_t world::get_block(const block_in_world& block_pos) const
 {
 	const chunk_in_world chunk_pos(block_pos);
 	const shared_ptr<const Chunk> chunk = get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
-		static const shared_ptr<const block::base> none = block_registry.get_default(block::enums::type::none);
-		return none;
-	}
-
-	block_in_chunk pos(block_pos);
-	return chunk->get_block(pos);
-}
-
-shared_ptr<block::base> world::get_block(const block_in_world& block_pos)
-{
-	const chunk_in_world chunk_pos(block_pos);
-	const shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
-	if(chunk == nullptr)
-	{
-		static const shared_ptr</*const*/ block::base> none = block_registry.get_default(block::enums::type::none);
-		return none;
+		return {};
 	}
 
 	block_in_chunk pos(block_pos);
@@ -354,7 +329,7 @@ void world::update_blocklight
 	const bool save
 )
 {
-	update_blocklight(block_pos, get_block(block_pos)->light(), save);
+	update_blocklight(block_pos, block_manager.info.light(get_block(block_pos)), save);
 }
 
 void world::update_blocklight
@@ -417,14 +392,14 @@ void world::impl::process_blocklight_add()
 				return;
 			}
 			const block_in_chunk pos2b(pos2);
-			const shared_ptr<const block::base> block = chunk->get_block(pos2b);
-			if(block->is_opaque())
+			const block_t block = chunk->get_block(pos2b);
+			if(this_world.block_manager.info.is_opaque(block))
 			{
 				return;
 			}
-			if(block->is_translucent())
+			if(this_world.block_manager.info.is_translucent(block))
 			{
-				const graphics::color f = block->light_filter();
+				const graphics::color f = this_world.block_manager.info.light_filter(block);
 				color.r = std::min(color.r, f.r);
 				color.g = std::min(color.g, f.g);
 				color.b = std::min(color.b, f.b);
@@ -574,9 +549,8 @@ void world::set_chunk(const chunk_in_world& chunk_pos, shared_ptr<Chunk> chunk)
 		for(pos.y = 0; pos.y < CHUNK_SIZE; ++pos.y)
 		for(pos.z = 0; pos.z < CHUNK_SIZE; ++pos.z)
 		{
-			shared_ptr<block::base> block = chunk->get_block(pos);
-			assert(block != nullptr);
-			const graphics::color light = block->light();
+			const block_t block = chunk->get_block(pos);
+			const graphics::color light = block_manager.info.light(block);
 			if(light != 0)
 			{
 				pImpl->add_blocklight({chunk_pos, pos}, light, false);
@@ -933,7 +907,15 @@ void world::impl::gen_chunk(shared_ptr<Chunk>& chunk) const
 
 			// TODO: investigate performance of using strings here vs caching the IDs
 			const string t = y > -m / 2 ? "test_white" : "test_black";
-			chunk->set_block(block_in_chunk(block_pos), this_world.block_registry.get_default(t));
+			const auto block = this_world.block_manager.get_block(t);
+			if(block != nullopt)
+			{
+				chunk->set_block(block_in_chunk(block_pos), *block);
+			}
+			else
+			{
+				// TODO?
+			}
 		}
 	}
 }

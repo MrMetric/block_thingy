@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "game.hpp"
-#include "block/BlockRegistry.hpp"
+#include "storage/msgpack/block_manager.hpp"
 #include "world/world.hpp"
 
 namespace block_thingy::world {
@@ -18,7 +18,7 @@ void world::save(msgpack::packer<std::ofstream>& o) const
 	o.pack(get_name());
 	o.pack(get_seed());
 	o.pack(get_ticks());
-	o.pack(block_registry.get_extid_map());
+	o.pack(block_manager);
 }
 
 template<>
@@ -31,7 +31,7 @@ void world::load(const msgpack::object& o)
 	set_name(a[0].as<std::string>());
 	set_seed(a[1].as<double>());
 	set_ticks(a[2].as<uint64_t>());
-	block_registry.set_extid_map(a[3].as<block::BlockRegistry::extid_map_t>());
+	block_manager.load(a[3]);
 }
 
 }

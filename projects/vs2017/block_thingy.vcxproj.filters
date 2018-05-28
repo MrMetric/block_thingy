@@ -9,7 +9,7 @@
       <UniqueIdentifier>{b5a73e00-2ebb-4486-bb84-d0c67b41c0a3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Library Files\concurrentqueue">
-      <UniqueIdentifier>{}</UniqueIdentifier>
+      <UniqueIdentifier>{4d663ebb-1022-4726-a411-ce4602e7fe9f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Library Files\glad">
       <UniqueIdentifier>{60a3b763-f324-45e0-a8ec-93f0d0875b3f}</UniqueIdentifier>
@@ -27,6 +27,9 @@
     </Filter>
     <Filter Include="Source Files\block">
       <UniqueIdentifier>{a012aa91-b982-4a7e-bdc7-071ef60fdcea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\block\component">
+      <UniqueIdentifier>{5d68129d-d3db-418b-bbf1-bd219159d509}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\block\enums">
       <UniqueIdentifier>{3a324eb9-e0c3-4045-a21c-7f1fa49b24de}</UniqueIdentifier>
@@ -93,9 +96,6 @@
     </Filter>
     <Filter Include="Source Files\fwd\storage">
       <UniqueIdentifier>{403ec745-3f84-4973-86f5-da13ae2e3db0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\fwd\util">
-      <UniqueIdentifier>{f5cdab4d-cd32-40f8-bca4-49c418b42187}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\fwd\world">
       <UniqueIdentifier>{7af4279b-cf3b-438c-a979-4b174f115db3}</UniqueIdentifier>
@@ -192,40 +192,19 @@
     <ClCompile Include="..\..\src\settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\block\air.cpp">
-      <Filter>Source Files\block</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\block\base.cpp">
-      <Filter>Source Files\block</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\block\BlockRegistry.cpp">
-      <Filter>Source Files\block</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\block\none.cpp">
+    <ClCompile Include="..\..\src\block\manager.cpp">
       <Filter>Source Files\block</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\block\rotation_util.cpp">
       <Filter>Source Files\block</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\block\teleporter.cpp">
-      <Filter>Source Files\block</Filter>
+    <ClCompile Include="..\..\src\block\component\base.cpp">
+      <Filter>Source Files\block\component</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\block\test.cpp">
-      <Filter>Source Files\block</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\block\test_light.cpp">
-      <Filter>Source Files\block</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\block\textured.cpp">
-      <Filter>Source Files\block</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\block\unknown.cpp">
-      <Filter>Source Files\block</Filter>
+    <ClCompile Include="..\..\src\block\component\info.cpp">
+      <Filter>Source Files\block\component</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\block\enums\Face.cpp">
-      <Filter>Source Files\block\enums</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\block\enums\type.cpp">
       <Filter>Source Files\block\enums</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\block\enums\visibility_type.cpp">
@@ -530,40 +509,22 @@
     <ClInclude Include="..\..\src\settings.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\air.hpp">
+    <ClInclude Include="..\..\src\block\block.hpp">
       <Filter>Source Files\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\base.hpp">
-      <Filter>Source Files\block</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\block\BlockRegistry.hpp">
-      <Filter>Source Files\block</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\block\none.hpp">
+    <ClInclude Include="..\..\src\block\manager.hpp">
       <Filter>Source Files\block</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\block\rotation_util.hpp">
       <Filter>Source Files\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\teleporter.hpp">
-      <Filter>Source Files\block</Filter>
+    <ClInclude Include="..\..\src\block\component\base.hpp">
+      <Filter>Source Files\block\component</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\block\test.hpp">
-      <Filter>Source Files\block</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\block\test_light.hpp">
-      <Filter>Source Files\block</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\block\textured.hpp">
-      <Filter>Source Files\block</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\block\unknown.hpp">
-      <Filter>Source Files\block</Filter>
+    <ClInclude Include="..\..\src\block\component\info.hpp">
+      <Filter>Source Files\block\component</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\block\enums\Face.hpp">
-      <Filter>Source Files\block\enums</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\block\enums\type.hpp">
       <Filter>Source Files\block\enums</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\block\enums\visibility_type.hpp">
@@ -629,19 +590,13 @@
     <ClInclude Include="..\..\src\fwd\resource_manager.hpp">
       <Filter>Source Files\fwd</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\block\base.hpp">
+    <ClInclude Include="..\..\src\fwd\block\manager.hpp">
       <Filter>Source Files\fwd\block</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\fwd\block\BlockRegistry.hpp">
-      <Filter>Source Files\fwd\block</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\fwd\block\test_light.hpp">
-      <Filter>Source Files\fwd\block</Filter>
+    <ClInclude Include="..\..\src\fwd\block\component\info.hpp">
+      <Filter>Source Files\fwd\block\component</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\fwd\block\enums\Face.hpp">
-      <Filter>Source Files\fwd\block\enums</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\fwd\block\enums\type.hpp">
       <Filter>Source Files\fwd\block\enums</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\fwd\block\enums\visibility_type.hpp">
@@ -688,6 +643,18 @@
     </ClInclude>
     <ClInclude Include="..\..\src\fwd\graphics\GUI\Widget\Component\Base.hpp">
       <Filter>Source Files\fwd\graphics\GUI\Widget\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\fwd\graphics\opengl\renderbuffer.hpp">
+      <Filter>Source Files\fwd\graphics\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\fwd\graphics\opengl\shader_object.hpp">
+      <Filter>Source Files\fwd\graphics\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\fwd\graphics\opengl\shader_program.hpp">
+      <Filter>Source Files\fwd\graphics\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\fwd\graphics\opengl\texture.hpp">
+      <Filter>Source Files\fwd\graphics\opengl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\fwd\input\char_press.hpp">
       <Filter>Source Files\fwd\input</Filter>
@@ -890,7 +857,7 @@
     <ClInclude Include="..\..\src\storage\msgpack\block.hpp">
       <Filter>Source Files\storage\msgpack</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\storage\msgpack\block_type.hpp">
+    <ClInclude Include="..\..\src\storage\msgpack\block_manager.hpp">
       <Filter>Source Files\storage\msgpack</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\storage\msgpack\Chunk.hpp">
@@ -900,6 +867,9 @@
       <Filter>Source Files\storage\msgpack</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\storage\msgpack\color.hpp">
+      <Filter>Source Files\storage\msgpack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\storage\msgpack\fs_path.hpp">
       <Filter>Source Files\storage\msgpack</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\storage\msgpack\glm_vec3.hpp">

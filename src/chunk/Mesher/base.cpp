@@ -2,9 +2,8 @@
 
 #include <cassert>
 
-#include "block/base.hpp"
+#include "block/component/info.hpp"
 #include "block/enums/Face.hpp"
-#include "block/enums/type.hpp"
 #include "chunk/Chunk.hpp"
 #include "position/block_in_chunk.hpp"
 #include "position/block_in_world.hpp"
@@ -123,7 +122,7 @@ Side base::to_side(const Face face)
 	return (face == Face::top || face == Face::front || face == Face::right) ? Side::top : Side::bottom;
 }
 
-const block::base& base::block_at
+block_t base::block_at
 (
 	const Chunk& chunk,
 	const int_fast16_t x,
@@ -139,28 +138,29 @@ const block::base& base::block_at
 		block_pos.x += x;
 		block_pos.y += y;
 		block_pos.z += z;
-		return *chunk.get_owner().get_block(block_pos);
+		return chunk.get_owner().get_block(block_pos);
 	}
 	#define s(a) static_cast<position::block_in_chunk::value_type>(a)
-	return *chunk.get_block({s(x), s(y), s(z)});
+	return chunk.get_block({s(x), s(y), s(z)});
 	#undef s
 }
 
 bool base::block_visible_from
 (
+	const block::component::info& info,
 	const Chunk& chunk,
-	const block::base& block,
+	const block_t block,
 	const int_fast16_t x,
 	const int_fast16_t y,
 	const int_fast16_t z
 )
 {
-	const block::base& sibling = block_at(chunk, x, y, z);
+	const block_t sibling = block_at(chunk, x, y, z);
 	return
-		   sibling.type() != block::enums::type::none
-		&& !block.is_invisible() // this block is visible
-		&& !sibling.is_opaque() // this block can be seen thru the adjacent block
-		&& block.type() != sibling.type() // do not show sides inside of adjacent translucent blocks of the same type
+		   sibling != block_t()
+		&& !info.is_invisible(block) // this block is visible
+		&& !info.is_opaque(sibling) // this block can be seen thru the adjacent block
+		&& block != sibling // do not show sides inside of adjacent translucent blocks of the same type
 	;
 }
 

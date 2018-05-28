@@ -1,54 +1,60 @@
 #pragma once
 
-#include <memory>
+#include <type_traits>
 
-#include "game.hpp"
-#include "block/base.hpp"
-#include "block/BlockRegistry.hpp"
-#include "block/enums/type.hpp"
-#include "storage/Interface.hpp"
-#include "storage/msgpack/block_type.hpp"
+#include "block/block.hpp"
+#include "block/enums/visibility_type.hpp"
 
 namespace msgpack {
 MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
 namespace adaptor {
 
-using block_thingy::block::base;
-using block_thingy::storage::find_in_map_or_throw;
-using block_thingy::storage::InputInterface;
-using block_thingy::storage::OutputInterface;
+using block_thingy::block_t;
+using block_thingy::block::enums::visibility_type;
 
 template<>
-struct pack<base>
+struct pack<block_t>
 {
 	template<typename Stream>
-	packer<Stream>& operator()(packer<Stream>& o, const base& block) const
+	packer<Stream>& operator()(packer<Stream>& o, const block_t& block) const
 	{
-		OutputInterface i;
-		block.save(i);
-		i.flush(o);
+		o.pack((block.index << 8) | block.generation);
+		return o;
+	}
+};
+
+template<>
+struct convert<block_t>
+{
+	const msgpack::object& operator()(const msgpack::object& o, block_t& block) const
+	{
+		if(o.type != msgpack::type::POSITIVE_INTEGER) throw msgpack::type_error();
+
+		const uint32_t i = o.as<uint32_t>();
+		block.index = i >> 8;
+		block.generation = i & 0xFF;
 
 		return o;
 	}
 };
 
 template<>
-struct convert<std::shared_ptr<base>>
+struct pack<visibility_type>
 {
-	const msgpack::object& operator()(const msgpack::object& o, std::shared_ptr<base>& block) const
+	template<typename Stream>
+	packer<Stream>& operator()(packer<Stream>& o, const visibility_type& v) const
 	{
-		if(o.type != msgpack::type::MAP) throw msgpack::type_error();
-		if(o.via.map.size < 1) throw msgpack::type_error();
+		o.pack(static_cast<std::underlying_type_t<visibility_type>>(v));
+		return o;
+	}
+};
 
-		const auto map = o.as<std::map<std::string, msgpack::object>>();
-
-		block_thingy::block::enums::type_external t;
-		find_in_map_or_throw(map, "", t);
-		block_thingy::block::BlockRegistry& block_registry = block_thingy::game::instance->block_registry;
-		block = block_registry.make(block_registry.get_default(t)); // TODO
-		InputInterface i(map);
-		block->load(i);
-
+template<>
+struct convert<visibility_type>
+{
+	const msgpack::object& operator()(const msgpack::object& o, visibility_type& v) const
+	{
+		v = static_cast<visibility_type>(o.as<std::underlying_type_t<visibility_type>>());
 		return o;
 	}
 };

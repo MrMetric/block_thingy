@@ -2,7 +2,6 @@
 
 #include <cassert>
 #include <memory>
-#include <optional>
 #include <string>
 #include <tuple>
 
@@ -12,8 +11,6 @@
 #include "Gfx.hpp"
 #include "fwd/Player.hpp"
 #include "resource_manager.hpp"
-#include "block/BlockRegistry.hpp"
-#include "fwd/block/enums/type.hpp"
 #include "console/KeybindManager.hpp"
 #include "event/EventManager.hpp"
 #include "graphics/camera.hpp"
@@ -22,7 +19,6 @@
 #include "fwd/input/joy_press.hpp"
 #include "fwd/input/key_press.hpp"
 #include "fwd/input/mouse_press.hpp"
-#include "physics/raycast_hit.hpp"
 #include "shim/propagate_const.hpp"
 #include "types/window_size_t.hpp"
 #include "util/filesystem.hpp"
@@ -122,9 +118,6 @@ public:
 	void joypress(const input::joy_press&);
 	void joymove(const glm::dvec2& offset);
 
-	std::shared_ptr<block::base> copied_block;
-	std::optional<physics::raycast_hit> hovered_block;
-
 	block_thingy::resource_manager resource_manager;
 
 	// event_manager must be initialized before others!
@@ -132,7 +125,6 @@ public:
 	Gfx gfx;
 
 	graphics::camera camera;
-	block::BlockRegistry block_registry; // must be initialized before world
 	std::shared_ptr<world::world> world;
 	std::shared_ptr<Player> player;
 	KeybindManager keybinder;

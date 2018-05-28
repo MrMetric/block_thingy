@@ -12,13 +12,13 @@ namespace block_thingy {
 template<>
 void Chunk::save(msgpack::packer<zstr::ostream>& o) const
 {
-	o.pack(this->blocks);
+	o.pack(blocks);
 }
 
 template<>
 void Chunk::load(const msgpack::object& o)
 {
-	this->set_blocks(o.as<chunk_data<std::shared_ptr<block::base>>>());
+	blocks = o.as<decltype(blocks)>();
 }
 
 }

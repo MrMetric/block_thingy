@@ -19,7 +19,6 @@
 
 #include "game.hpp"
 #include "settings.hpp"
-#include "block/enums/type.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"

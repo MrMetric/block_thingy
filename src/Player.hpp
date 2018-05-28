@@ -1,14 +1,17 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <string>
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 #include "fwd/game.hpp"
+#include "block/block.hpp"
 #include "fwd/graphics/GUI/Base.hpp"
 #include "physics/AABB.hpp"
+#include "physics/raycast_hit.hpp"
 #include "fwd/position/block_in_world.hpp"
 #include "util/Property.hpp"
 #include "fwd/world/world.hpp"
@@ -57,6 +60,9 @@ public:
 	util::property<glm::dvec3> position;
 	util::property<glm::dvec3> rotation;
 	util::property<glm::dvec3> velocity;
+
+	std::optional<block_t> copied_block;
+	std::optional<physics::raycast_hit> hovered_block;
 
 private:
 	game& g;

@@ -9,8 +9,8 @@
 #include <unordered_set>
 
 #include "fwd/Player.hpp"
-#include "fwd/block/base.hpp"
-#include "fwd/block/BlockRegistry.hpp"
+#include "block/block.hpp"
+#include "block/manager.hpp"
 #include "fwd/chunk/Chunk.hpp"
 #include "fwd/chunk/Mesher/base.hpp"
 #include "fwd/graphics/color.hpp"
@@ -27,7 +27,6 @@ public:
 	world
 	(
 		const fs::path& dir_path,
-		block::BlockRegistry&,
 		std::unique_ptr<mesher::base>
 	);
 	~world();
@@ -37,13 +36,12 @@ public:
 	world& operator=(world&&) = delete;
 	world& operator=(const world&) = delete;
 
-	std::shared_ptr<const block::base> get_block(const position::block_in_world&) const;
-	std::shared_ptr<      block::base> get_block(const position::block_in_world&);
+	block_t get_block(const position::block_in_world&) const;
 
 	void set_block
 	(
 		const position::block_in_world&,
-		std::shared_ptr<block::base>,
+		block_t,
 		bool thread = true
 	);
 
@@ -74,7 +72,7 @@ public:
 	uint64_t get_ticks() const;
 	double get_time() const;
 
-	block::BlockRegistry& block_registry;
+	block::manager block_manager;
 
 	void set_mesher(std::unique_ptr<mesher::base>);
 	std::unique_ptr<mesher::base> mesher;

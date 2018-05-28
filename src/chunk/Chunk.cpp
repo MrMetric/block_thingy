@@ -13,7 +13,6 @@
 
 #include "game.hpp"
 #include "settings.hpp"
-#include "fwd/block/base.hpp"
 #include "chunk/Mesher/base.hpp"
 #include "event/EventManager.hpp"
 #include "event/EventType.hpp"
@@ -30,7 +29,7 @@
 #include "util/logger.hpp"
 #include "world/world.hpp"
 
-using std::shared_ptr;
+using std::nullopt;
 using std::unique_ptr;
 
 namespace block_thingy {
@@ -135,6 +134,15 @@ private:
 
 Chunk::Chunk(const chunk_in_world& position, world::world& owner)
 :
+	blocks([&owner]() -> block_t
+	{
+		const auto air = owner.block_manager.get_block("air");
+		if(air != nullopt)
+		{
+			return *air;
+		}
+		return {};
+	}()),
 	pImpl(std::make_unique<impl>(position, owner))
 {
 }
@@ -153,22 +161,13 @@ chunk_in_world Chunk::get_position() const
 	return pImpl->position;
 }
 
-shared_ptr<const block::base> Chunk::get_block(const block_in_chunk& pos) const
+block_t Chunk::get_block(const block_in_chunk& pos) const
 {
 	return blocks.get(pos);
 }
 
-shared_ptr<block::base> Chunk::get_block(const block_in_chunk& pos)
+void Chunk::set_block(const block_in_chunk& pos, block_t block)
 {
-	return blocks.get(pos);
-}
-
-void Chunk::set_block(const block_in_chunk& pos, shared_ptr<block::base> block)
-{
-	if(block == nullptr)
-	{
-		throw std::invalid_argument("Chunk::set_block: got a null block");
-	}
 	blocks.set(pos, block);
 }
 
@@ -281,12 +280,8 @@ void Chunk::set_blocks(chunk_blocks_t new_blocks)
 {
 	blocks = std::move(new_blocks);
 }
-void Chunk::set_blocks(shared_ptr<block::base> block)
+void Chunk::set_blocks(const block_t block)
 {
-	if(block == nullptr)
-	{
-		throw std::invalid_argument("Chunk::set_blocks(single): got a null block");
-	}
 	blocks.fill(block);
 }
 
