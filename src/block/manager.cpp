@@ -3,6 +3,9 @@
 #include <algorithm>
 #include <cassert>
 
+#include "Player.hpp"
+
+using std::nullopt;
 using std::string;
 
 namespace block_thingy::block {
@@ -14,11 +17,12 @@ manager::manager()
 	add_component(info);
 
 	const block_t none = create();
-	assert(none.index == 0 && none.generation == 0);
+	assert(none == NONE);
 	set_strid(none, "none");
 	info.visibility_type(none, enums::visibility_type::invisible);
 
 	const block_t air = create();
+	assert(air == AIR);
 	set_strid(air, "air");
 	info.solid(air, false);
 	info.selectable(air, false);
@@ -191,6 +195,60 @@ void manager::unadd_component(component::base& c)
 	{
 		// TODO: debug warning (DWARN?)
 	}
+}
+
+void manager::add_break_transformer(block_transformer_t transformer)
+{
+	break_transformers.emplace_back(std::move(transformer));
+}
+block_t manager::process_break
+(
+	Player& player,
+	world::world& world,
+	const position::block_in_world& pos,
+	const enums::Face face,
+	const block_t old_block
+)
+{
+	block_t new_block = old_block == NONE ? NONE : AIR;
+	for(const block_transformer_t& transform : break_transformers)
+	{
+		new_block = transform(player, world, pos, old_block, new_block, face);
+	}
+	return new_block;
+}
+
+void manager::add_place_transformer(block_transformer_t transformer)
+{
+	place_transformers.emplace_back(std::move(transformer));
+}
+block_t manager::process_place
+(
+	Player& player,
+	world::world& world,
+	const position::block_in_world& pos,
+	const enums::Face face,
+	const block_t old_block
+)
+{
+	if(player.copied_block == nullopt)
+	{
+		return old_block;
+	}
+
+	block_t new_block = *player.copied_block;
+	for(const block_transformer_t& transform : place_transformers)
+	{
+		new_block = transform(player, world, pos, old_block, new_block, face);
+	}
+
+	if(!player.can_place_block_at(pos)
+	&& info.solid(new_block))
+	{
+		return old_block;
+	}
+
+	return new_block;
 }
 
 }

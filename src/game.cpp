@@ -600,30 +600,20 @@ void game::impl::add_commands()
 			return;
 		}
 
-		const block_t block = g.player->hovered_block->block;
-		if(block != block_t()) // TODO: breakability check
+		const position::block_in_world pos = g.player->hovered_block->pos;
+		const block_t old_block = g.player->hovered_block->block;
+		const block_t new_block = g.world->block_manager.process_break
+		(
+			*g.player,
+			*g.world,
+			pos,
+			g.player->hovered_block->face(),
+			old_block
+		);
+		if(new_block != old_block)
 		{
-			g.world->set_block
-			(
-				g.player->hovered_block->pos,
-				*g.world->block_manager.get_block("air"),
-				false
-			);
+			g.world->set_block(pos, new_block, false);
 		}
-
-		/* TODO:
-		send break event to the block
-		default behavior:
-			replace block with air
-		override for none:
-			do nothing
-		function parameters:
-			Player& player
-			world::world& world
-			const position::block_in_world& pos
-			const block_t block
-			const block::enums::Face face
-		*/
 	});
 	COMMAND("place_block")
 	{
@@ -635,26 +625,20 @@ void game::impl::add_commands()
 			return;
 		}
 
-		const block_t block = *g.player->copied_block;
 		const position::block_in_world pos = g.player->hovered_block->adjacent();
-		if(true /*g.world->get_block(pos)->is_replaceable_by(block)*/
-		&& (player->can_place_block_at(pos)
-		    || !g.world->block_manager.info.solid(block)))
+		const block_t old_block = g.world->get_block(pos);
+		const block_t new_block = g.world->block_manager.process_place
+		(
+			*g.player,
+			*g.world,
+			pos,
+			g.player->hovered_block->face(),
+			old_block
+		);
+		if(new_block != old_block)
 		{
-			g.world->set_block(pos, block, false);
+			g.world->set_block(pos, new_block, false);
 		}
-
-		/* TODO:
-		send place event to the block
-		default behavior:
-			replace block with new block
-		function parameters:
-			Player& player
-			world::world& world
-			const position::block_in_world& pos
-			const block_t block
-			const block_t new_block
-		*/
 	});
 	COMMAND("copy_block")
 	{

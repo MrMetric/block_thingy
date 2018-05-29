@@ -9,33 +9,33 @@ struct block_t
 {
 	uint32_t index: 24, generation: 8;
 
-	block_t()
+	constexpr block_t()
 	:
 		block_t(0, 0)
 	{
 	}
 
-	block_t(const uint32_t index, const uint8_t generation)
+	constexpr block_t(const uint32_t index, const uint8_t generation)
 	:
 		index(index),
 		generation(generation)
 	{
 	}
 
-	bool operator==(const block_t that) const
+	constexpr bool operator==(const block_t that) const
 	{
 		// I wonder if this is optimized
 		return index == that.index
 		    && generation == that.generation;
 	}
-	bool operator!=(const block_t that) const
+	constexpr bool operator!=(const block_t that) const
 	{
 		return index != that.index
 		    || generation != that.generation;
 	}
 
 	// to allow use as the key type of std::map
-	bool operator<(const block_t that) const
+	constexpr bool operator<(const block_t that) const
 	{
 		if(index == that.index)
 		{
