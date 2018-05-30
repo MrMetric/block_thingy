@@ -456,14 +456,22 @@ void world::impl::sub_blocklight(const block_in_world& block_pos)
 		)
 		{
 			const block_in_world pos2{pos.x + x, pos.y + y, pos.z + z};
-			graphics::color color2 = this_world.get_blocklight(pos2);
+			const shared_ptr<const Chunk> chunk = this_world.get_chunk(chunk_in_world(pos2));
+			if(chunk == nullptr)
+			{
+				return;
+			}
+			const block_in_chunk pos2b(pos2);
+			const block_t block = chunk->get_block(pos2b);
+			const bool is_source = this_world.block_manager.info.light(block) != 0;
+			graphics::color color2 = chunk->get_blocklight(pos2b);
 			graphics::color color_set = color2;
 			graphics::color color_put(0, 0, 0);
 
 			bool set = false;
 			for(uint_fast8_t i = 0; i < 3; ++i)
 			{
-				if(color2[i] != 0 && color2[i] < color[i])
+				if(!is_source && color2[i] != 0 && color2[i] < color[i])
 				{
 					color_set[i] = 0;
 					color_put[i] = color2[i];
