@@ -63,6 +63,7 @@ public:
 
 	std::optional<block_t> copied_block;
 	std::optional<physics::raycast_hit> hovered_block;
+	std::optional<physics::raycast_hit> block_being_used;
 
 private:
 	game& g;

@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <vector>
 
+#include "fwd/game.hpp"
 #include "fwd/Player.hpp"
 #include "block/block.hpp"
 #include "block/component/info.hpp"
@@ -49,6 +50,7 @@ public:
 	using block_transformer_t = std::function<
 		block_t
 		(
+			game&,
 			Player&,
 			world::world&,
 			const position::block_in_world&,
@@ -60,6 +62,7 @@ public:
 	void add_break_transformer(block_transformer_t);
 	block_t process_break
 	(
+		game&,
 		Player&,
 		world::world&,
 		const position::block_in_world&,
@@ -70,6 +73,40 @@ public:
 	void add_place_transformer(block_transformer_t);
 	block_t process_place
 	(
+		game&,
+		Player&,
+		world::world&,
+		const position::block_in_world&,
+		enums::Face,
+		block_t
+	);
+
+	using use_listener_t = std::function<
+		void
+		(
+			game&,
+			Player&,
+			world::world&,
+			const position::block_in_world&,
+			enums::Face,
+			block_t
+		)>;
+
+	void hook_use_start(use_listener_t);
+	void start_use
+	(
+		game&,
+		Player&,
+		world::world&,
+		const position::block_in_world&,
+		enums::Face,
+		block_t
+	);
+
+	void hook_use_end(use_listener_t);
+	void end_use
+	(
+		game&,
 		Player&,
 		world::world&,
 		const position::block_in_world&,
@@ -91,6 +128,9 @@ private:
 
 	std::vector<block_transformer_t> break_transformers;
 	std::vector<block_transformer_t> place_transformers;
+
+	std::vector<use_listener_t> use_start_listeners;
+	std::vector<use_listener_t> use_end_listeners;
 };
 
 }

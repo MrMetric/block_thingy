@@ -4,6 +4,7 @@
 #include <cassert>
 
 #include "Player.hpp"
+#include "graphics/GUI/light.hpp"
 
 using std::nullopt;
 using std::string;
@@ -34,11 +35,24 @@ manager::manager()
 	info.bounciness(test, 1);
 	info.shader_path(test, "test");
 
-	// TODO: editing
 	const block_t test_light = create();
 	set_strid(test_light, "test_light");
 	info.shader_path(test_light, "light");
 	info.light(test_light, {graphics::color::max});
+	hook_use_start([]
+	(
+		game& g,
+		Player& player,
+		world::world& world,
+		const position::block_in_world& pos,
+		const enums::Face /*face*/,
+		const block_t block
+	) -> void
+	{
+		player.open_gui(std::make_unique<graphics::gui::light>(g, world, pos, block));
+	});
+	// TODO: close GUI on use end
+	// TODO: use a different block instance for each color
 
 	// TODO
 	const block_t test_teleporter = create();
@@ -203,6 +217,7 @@ void manager::add_break_transformer(block_transformer_t transformer)
 }
 block_t manager::process_break
 (
+	game& g,
 	Player& player,
 	world::world& world,
 	const position::block_in_world& pos,
@@ -213,7 +228,7 @@ block_t manager::process_break
 	block_t new_block = old_block == NONE ? NONE : AIR;
 	for(const block_transformer_t& transform : break_transformers)
 	{
-		new_block = transform(player, world, pos, old_block, new_block, face);
+		new_block = transform(g, player, world, pos, old_block, new_block, face);
 	}
 	return new_block;
 }
@@ -224,6 +239,7 @@ void manager::add_place_transformer(block_transformer_t transformer)
 }
 block_t manager::process_place
 (
+	game& g,
 	Player& player,
 	world::world& world,
 	const position::block_in_world& pos,
@@ -239,7 +255,7 @@ block_t manager::process_place
 	block_t new_block = *player.copied_block;
 	for(const block_transformer_t& transform : place_transformers)
 	{
-		new_block = transform(player, world, pos, old_block, new_block, face);
+		new_block = transform(g, player, world, pos, old_block, new_block, face);
 	}
 
 	if(!player.can_place_block_at(pos)
@@ -249,6 +265,46 @@ block_t manager::process_place
 	}
 
 	return new_block;
+}
+
+void manager::hook_use_start(use_listener_t listener)
+{
+	use_start_listeners.emplace_back(std::move(listener));
+}
+void manager::start_use
+(
+	game& g,
+	Player& player,
+	world::world& world,
+	const position::block_in_world& pos,
+	const enums::Face face,
+	const block_t block
+)
+{
+	for(const use_listener_t& listener : use_start_listeners)
+	{
+		listener(g, player, world, pos, face, block);
+	}
+}
+
+void manager::hook_use_end(use_listener_t listener)
+{
+	use_end_listeners.emplace_back(std::move(listener));
+}
+void manager::end_use
+(
+	game& g,
+	Player& player,
+	world::world& world,
+	const position::block_in_world& pos,
+	const enums::Face face,
+	const block_t block
+)
+{
+	for(const use_listener_t& listener : use_end_listeners)
+	{
+		listener(g, player, world, pos, face, block);
+	}
 }
 
 }

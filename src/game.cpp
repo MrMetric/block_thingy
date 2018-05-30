@@ -595,19 +595,20 @@ void game::impl::add_commands()
 	{
 		ASSERT_IN_GAME("break_block");
 
-		if(g.player->hovered_block == nullopt)
+		if(player->hovered_block == nullopt)
 		{
 			return;
 		}
 
-		const position::block_in_world pos = g.player->hovered_block->pos;
-		const block_t old_block = g.player->hovered_block->block;
+		const position::block_in_world pos = player->hovered_block->pos;
+		const block_t old_block = player->hovered_block->block;
 		const block_t new_block = g.world->block_manager.process_break
 		(
-			*g.player,
+			g,
+			*player,
 			*g.world,
 			pos,
-			g.player->hovered_block->face(),
+			player->hovered_block->face(),
 			old_block
 		);
 		if(new_block != old_block)
@@ -619,20 +620,21 @@ void game::impl::add_commands()
 	{
 		ASSERT_IN_GAME("place_block");
 
-		if(g.player->copied_block == nullopt
-		|| g.player->hovered_block == nullopt)
+		if(player->copied_block == nullopt
+		|| player->hovered_block == nullopt)
 		{
 			return;
 		}
 
-		const position::block_in_world pos = g.player->hovered_block->adjacent();
+		const position::block_in_world pos = player->hovered_block->adjacent();
 		const block_t old_block = g.world->get_block(pos);
 		const block_t new_block = g.world->block_manager.process_place
 		(
-			*g.player,
+			g,
+			*player,
 			*g.world,
 			pos,
-			g.player->hovered_block->face(),
+			player->hovered_block->face(),
 			old_block
 		);
 		if(new_block != old_block)
@@ -644,9 +646,9 @@ void game::impl::add_commands()
 	{
 		ASSERT_IN_GAME("copy_block");
 
-		if(g.player->hovered_block != nullopt)
+		if(player->hovered_block != nullopt)
 		{
-			g.player->copied_block = g.player->hovered_block->block;
+			player->copied_block = player->hovered_block->block;
 		}
 	});
 	COMMAND("set_block")
@@ -660,7 +662,7 @@ void game::impl::add_commands()
 		}
 		try
 		{
-			g.player->copied_block = g.world->block_manager.get_block(args[0]);
+			player->copied_block = g.world->block_manager.get_block(args[0]);
 		}
 		catch(const std::runtime_error& e)
 		{
@@ -668,7 +670,6 @@ void game::impl::add_commands()
 		}
 	});
 
-	// TODO: less copy/paste
 	COMMAND("+forward")
 	{
 		ASSERT_IN_GAME("+forward");
@@ -718,27 +719,50 @@ void game::impl::add_commands()
 	{
 		ASSERT_IN_GAME("+use");
 
-		if(g.player->hovered_block != nullopt)
+		if(player->hovered_block == nullopt)
 		{
-			/* TODO:
-			send use start event to the block
-			default behavior:
-				do nothing
-			override for test_light:
-				open editing GUI
-			function parameters:
-				Player& player
-				world::world& world
-				const position::block_in_world& pos
-				const block_t block
-				const block::enums::Face face
-			*/
+			return;
 		}
+
+		const physics::raycast_hit& hovered = *player->hovered_block;
+		player->block_being_used = hovered;
+		g.world->block_manager.start_use
+		(
+			g,
+			*player,
+			*g.world,
+			hovered.pos,
+			hovered.face(),
+			hovered.block
+		);
+		/* TODO:
+		when the block is unselected during use:
+			call -use on the block
+			? call +use on the new selected block
+		when the block is changed:
+			? call -use before changing
+			? call +use on the new block
+		*/
 	});
 	COMMAND("-use")
 	{
 		ASSERT_IN_GAME("-use");
-		// TODO
+
+		if(player->block_being_used == nullopt)
+		{
+			return;
+		}
+
+		const auto& used = *player->block_being_used;
+		g.world->block_manager.end_use
+		(
+			g,
+			*player,
+			*g.world,
+			used.pos,
+			used.face(),
+			used.block
+		);
 	});
 	COMMAND("+sprint")
 	{
@@ -899,16 +923,16 @@ void game::impl::add_commands()
 	{
 		ASSERT_IN_GAME("nazi");
 
-		if(g.player->copied_block == nullopt
-		|| g.player->hovered_block == nullopt)
+		if(player->copied_block == nullopt
+		|| player->hovered_block == nullopt)
 		{
 			return;
 		}
 
-		const position::block_in_world start_pos = g.player->hovered_block->adjacent();
+		const position::block_in_world start_pos = player->hovered_block->adjacent();
 		const position::block_in_world::value_type ysize = 9;
 		const position::block_in_world::value_type xsize = 9;
-		const block_t i = *g.player->copied_block;
+		const block_t i = *player->copied_block;
 		const block_t n;
 		const block_t nazi[ysize][xsize]
 		{
