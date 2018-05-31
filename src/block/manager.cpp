@@ -39,7 +39,7 @@ manager::manager()
 	set_strid(test_light, "test_light");
 	info.shader_path(test_light, "light");
 	info.light(test_light, {graphics::color::max});
-	hook_use_start([]
+	hook_use_start([test_light]
 	(
 		game& g,
 		Player& player,
@@ -49,7 +49,10 @@ manager::manager()
 		const block_t block
 	) -> void
 	{
-		player.open_gui(std::make_unique<graphics::gui::light>(g, world, pos, block));
+		if(block == test_light)
+		{
+			player.open_gui(std::make_unique<graphics::gui::light>(g, world, pos, block));
+		}
 	});
 	// TODO: close GUI on use end
 	// TODO: use a different block instance for each color
