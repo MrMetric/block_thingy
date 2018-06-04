@@ -108,8 +108,14 @@ struct Chunk::impl
 		light_tex->image3D(0, GL_RGB, CHUNK_SIZE_2, CHUNK_SIZE_2, CHUNK_SIZE_2, GL_RGB, GL_UNSIGNED_BYTE, light_tex_buf.data());
 	}
 
+	graphics::color get_light(const block_in_chunk&) const;
+
 	graphics::color get_blocklight(const block_in_chunk&) const;
 	void set_blocklight(const block_in_chunk&, const graphics::color& color);
+
+	graphics::color get_skylight(const block_in_chunk&) const;
+	void set_skylight(const block_in_chunk&, const graphics::color& color);
+
 	void set_texbuflight(const glm::ivec3& pos, const graphics::color& color);
 
 	world::world& owner;
@@ -129,6 +135,7 @@ struct Chunk::impl
 
 private:
 	chunk_data<graphics::color> blocklight;
+	chunk_data<graphics::color> skylight;
 	std::array<uint8_t, CHUNK_SIZE_2 * CHUNK_SIZE_2 * CHUNK_SIZE_2 * 3> light_tex_buf;
 };
 
@@ -171,6 +178,22 @@ void Chunk::set_block(const block_in_chunk& pos, block_t block)
 	blocks.set(pos, block);
 }
 
+graphics::color Chunk::get_light(const block_in_chunk& pos) const
+{
+	return pImpl->get_light(pos);
+}
+graphics::color Chunk::impl::get_light(const block_in_chunk& pos) const
+{
+	const graphics::color light1 = get_blocklight(pos);
+	const graphics::color light2 = get_skylight(pos);
+	return graphics::color
+	{
+		std::max(light1.r, light2.r),
+		std::max(light1.g, light2.g),
+		std::max(light1.b, light2.b),
+	};
+}
+
 graphics::color Chunk::get_blocklight(const block_in_chunk& pos) const
 {
 	return pImpl->get_blocklight(pos);
@@ -195,7 +218,34 @@ void Chunk::impl::set_blocklight
 )
 {
 	blocklight.set(pos, color);
-	set_texbuflight({pos.x, pos.y, pos.z}, color);
+	set_texbuflight({pos.x, pos.y, pos.z}, get_light(pos));
+}
+
+graphics::color Chunk::get_skylight(const block_in_chunk& pos) const
+{
+	return pImpl->get_skylight(pos);
+}
+graphics::color Chunk::impl::get_skylight(const block_in_chunk& pos) const
+{
+	return skylight.get(pos);
+}
+
+void Chunk::set_skylight
+(
+	const block_in_chunk& pos,
+	const graphics::color& color
+)
+{
+	pImpl->set_skylight(pos, color);
+}
+void Chunk::impl::set_skylight
+(
+	const block_in_chunk& pos,
+	const graphics::color& color
+)
+{
+	skylight.set(pos, color);
+	set_texbuflight({pos.x, pos.y, pos.z}, get_light(pos));
 }
 
 void Chunk::set_texbuflight(const glm::ivec3& pos, const graphics::color& color)

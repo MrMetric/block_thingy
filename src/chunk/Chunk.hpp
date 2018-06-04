@@ -31,8 +31,14 @@ public:
 	block_t get_block(const position::block_in_chunk&) const;
 	void set_block(const position::block_in_chunk&, block_t);
 
+	graphics::color get_light(const position::block_in_chunk&) const;
+
 	graphics::color get_blocklight(const position::block_in_chunk&) const;
 	void set_blocklight(const position::block_in_chunk&, const graphics::color&);
+
+	graphics::color get_skylight(const position::block_in_chunk&) const;
+	void set_skylight(const position::block_in_chunk&, const graphics::color&);
+
 	void set_texbuflight(const glm::ivec3& pos, const graphics::color&);
 
 	void update();

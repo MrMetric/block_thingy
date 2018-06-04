@@ -39,6 +39,10 @@ using position::block_in_chunk;
 using position::block_in_world;
 using position::chunk_in_world;
 
+constexpr std::size_t LIGHT_LAYER_BLOCK = 0;
+constexpr std::size_t LIGHT_LAYER_SKY   = 1;
+constexpr std::size_t LIGHT_LAYER_COUNT = 2;
+
 struct world::impl
 {
 	impl
@@ -69,7 +73,8 @@ struct world::impl
 			assert(chunk != nullptr);
 			chunk->update();
 			mesh_thread.dequeue(chunk);
-		}, 2)
+		}, 2),
+		skylight_color(8, 8, 8)
 	{
 	}
 
@@ -119,11 +124,24 @@ struct world::impl
 
 	util::ThreadThingy<shared_ptr<Chunk>> mesh_thread;
 
-	std::queue<block_in_world> blocklight_add;
-	void add_blocklight(const block_in_world&, const graphics::color&, bool save);
+	std::queue<block_in_world> light_add[LIGHT_LAYER_COUNT];
+
+	graphics::color skylight_color; // perhaps should be in world instance
+
+	graphics::color get_light(std::size_t layer, const block_in_world&) const;
+	void set_light(std::size_t layer, const block_in_world&, const graphics::color&, bool save);
+
+	void add_light(std::size_t layer, const block_in_world&, const graphics::color&, bool save);
+
+	void process_light_add(std::size_t layer);
 	void process_blocklight_add();
+	void process_skylight_add();
+
+	void sub_light(std::size_t layer, const block_in_world&);
 	void sub_blocklight(const block_in_world&);
-	void update_blocklight_around(const block_in_world&);
+	void sub_skylight(const block_in_world&);
+
+	void update_light_around(std::size_t layer, const block_in_world&);
 };
 
 world::world
@@ -199,21 +217,21 @@ void world::set_block
 	// TODO: these checks might not work (a filter block could be overwritten by a different filter block)
 	if(affects_light && !old_affects_light)
 	{
-		pImpl->sub_blocklight(block_pos);
+		pImpl->sub_light(LIGHT_LAYER_BLOCK, block_pos);
 	}
 
 	if(old_light != light)
 	{
 		if(old_light != 0)
 		{
-			pImpl->sub_blocklight(block_pos);
+			pImpl->sub_light(LIGHT_LAYER_BLOCK, block_pos);
 		}
-		pImpl->add_blocklight(block_pos, light, false);
+		pImpl->add_light(LIGHT_LAYER_BLOCK, block_pos, light, false);
 	}
 
 	if(affects_light != old_affects_light)
 	{
-		pImpl->update_blocklight_around(block_pos);
+		pImpl->update_light_around(LIGHT_LAYER_BLOCK, block_pos);
 	}
 
 	pImpl->update_chunk_neighbors(chunk_pos, pos, thread);
@@ -240,7 +258,7 @@ block_t world::get_block(const block_in_world& block_pos) const
 	return chunk->get_block(pos);
 }
 
-graphics::color world::get_blocklight(const block_in_world& block_pos) const
+graphics::color world::get_light(const block_in_world& block_pos) const
 {
 	const chunk_in_world chunk_pos(block_pos);
 	const shared_ptr<const Chunk> chunk = get_chunk(chunk_pos);
@@ -248,7 +266,12 @@ graphics::color world::get_blocklight(const block_in_world& block_pos) const
 	{
 		return {0, 0, 0};
 	}
-	return chunk->get_blocklight(block_in_chunk(block_pos));
+	return chunk->get_light(block_in_chunk(block_pos));
+}
+
+graphics::color world::get_blocklight(const block_in_world& block_pos) const
+{
+	return pImpl->get_light(LIGHT_LAYER_BLOCK, block_pos);
 }
 
 void world::set_blocklight
@@ -258,27 +281,112 @@ void world::set_blocklight
 	bool save
 )
 {
+	pImpl->set_light(LIGHT_LAYER_BLOCK, block_pos, color, save);
+}
+
+void world::update_blocklight
+(
+	const block_in_world& block_pos,
+	const bool save
+)
+{
+	update_blocklight(block_pos, block_manager.info.light(get_block(block_pos)), save);
+}
+
+void world::update_blocklight
+(
+	const block_in_world& block_pos,
+	const graphics::color& color,
+	const bool save
+)
+{
+	pImpl->sub_light(LIGHT_LAYER_BLOCK, block_pos);
+	pImpl->add_light(LIGHT_LAYER_BLOCK, block_pos, color, save);
+}
+
+graphics::color world::get_skylight(const block_in_world& block_pos) const
+{
+	return pImpl->get_light(LIGHT_LAYER_SKY, block_pos);
+}
+
+void world::set_skylight
+(
+	const block_in_world& block_pos,
+	const graphics::color& color,
+	bool save
+)
+{
+	pImpl->set_light(LIGHT_LAYER_SKY, block_pos, color, save);
+}
+
+void world::update_skylight
+(
+	const block_in_world& block_pos,
+	const graphics::color& color,
+	const bool save
+)
+{
+	pImpl->sub_light(LIGHT_LAYER_SKY, block_pos);
+	pImpl->add_light(LIGHT_LAYER_SKY, block_pos, color, save);
+}
+
+graphics::color world::impl::get_light(const std::size_t layer, const block_in_world& block_pos) const
+{
 	const chunk_in_world chunk_pos(block_pos);
-	const shared_ptr<Chunk> chunk = get_chunk(chunk_pos);
+	const shared_ptr<const Chunk> chunk = this_world.get_chunk(chunk_pos);
+	if(chunk == nullptr)
+	{
+		return {0, 0, 0};
+	}
+
+	const block_in_chunk pos(block_pos);
+	if(layer == LIGHT_LAYER_BLOCK)
+	{
+		return chunk->get_blocklight(pos);
+	}
+	assert(layer == LIGHT_LAYER_SKY);
+	return chunk->get_skylight(pos);
+}
+
+void world::impl::set_light
+(
+	const std::size_t layer,
+	const block_in_world& block_pos,
+	const graphics::color& color,
+	bool save
+)
+{
+	const chunk_in_world chunk_pos(block_pos);
+	const shared_ptr<Chunk> chunk = this_world.get_chunk(chunk_pos);
 	if(chunk == nullptr)
 	{
 		// TODO?: handle this better
 		return;
 	}
+
 	const block_in_chunk pos(block_pos);
-	chunk->set_blocklight(pos, color);
+	if(layer == LIGHT_LAYER_BLOCK)
+	{
+		chunk->set_blocklight(pos, color);
+	}
+	else
+	{
+		assert(layer == LIGHT_LAYER_SKY);
+		chunk->set_skylight(pos, color);
+	}
 
 	// update light in neighboring chunks
 	{
 		glm::tvec3<bool> xyz(false, false, false);
 		glm::tvec3<bool> zero(glm::uninitialize);
-		auto do_it = [this, &chunk_pos, &color, &pos, &zero](const glm::tvec3<bool>& xyz)
+		const graphics::color color2 = chunk->get_light(pos);
+		auto do_it = [this, &chunk_pos, &color=color2, &pos, &zero](const glm::tvec3<bool>& xyz)
 		{
 			chunk_in_world chunk_pos_2 = chunk_pos;
 			if(xyz.x) chunk_pos_2.x += (zero.x ? -1 : 1);
 			if(xyz.y) chunk_pos_2.y += (zero.y ? -1 : 1);
 			if(xyz.z) chunk_pos_2.z += (zero.z ? -1 : 1);
-			const shared_ptr<Chunk> chunk2 = get_chunk(chunk_pos_2);
+			const shared_ptr<Chunk> chunk2 = this_world.get_chunk(chunk_pos_2);
 			if(chunk2 != nullptr)
 			{
 				glm::ivec3 pos2(glm::uninitialize);
@@ -319,54 +427,50 @@ void world::set_blocklight
 
 	if(save)
 	{
-		pImpl->chunks_to_save.emplace(chunk_pos);
+		chunks_to_save.emplace(chunk_pos);
 	}
 }
 
-void world::update_blocklight
+void world::impl::add_light
 (
-	const block_in_world& block_pos,
-	const bool save
-)
-{
-	update_blocklight(block_pos, block_manager.info.light(get_block(block_pos)), save);
-}
-
-void world::update_blocklight
-(
+	const std::size_t layer,
 	const block_in_world& block_pos,
 	const graphics::color& color,
 	const bool save
 )
 {
-	pImpl->sub_blocklight(block_pos);
-	pImpl->add_blocklight(block_pos, color, save);
-}
-
-void world::impl::add_blocklight
-(
-	const block_in_world& block_pos,
-	const graphics::color& color,
-	const bool save
-)
-{
-	this_world.set_blocklight(block_pos, color, save);
+	set_light(layer, block_pos, color, save);
 	if(color == 0)
 	{
 		return;
 	}
 
 	// see https://www.seedofandromeda.com/blogs/29-fast-flood-fill-lighting-in-a-blocky-voxel-game-pt-1
-	blocklight_add.emplace(block_pos);
-	process_blocklight_add();
+	this->light_add[layer].emplace(block_pos);
+	process_light_add(layer);
 }
+
+void world::impl::process_light_add(const std::size_t layer)
+{
+	if(layer == LIGHT_LAYER_BLOCK)
+	{
+		process_blocklight_add();
+	}
+	else
+	{
+		assert(layer == LIGHT_LAYER_SKY);
+		process_skylight_add();
+	}
+}
+
 
 void world::impl::process_blocklight_add()
 {
-	while(!blocklight_add.empty())
+	auto& light_add = this->light_add[LIGHT_LAYER_BLOCK];
+	while(!light_add.empty())
 	{
-		const block_in_world pos = blocklight_add.front();
-		blocklight_add.pop();
+		const block_in_world pos = light_add.front();
+		light_add.pop();
 		const graphics::color color = this_world.get_blocklight(pos) - 1;
 		if(color == 0)
 		{
@@ -376,6 +480,7 @@ void world::impl::process_blocklight_add()
 		auto fill =
 		[
 			this,
+			&light_add,
 			&pos
 		]
 		(
@@ -412,7 +517,7 @@ void world::impl::process_blocklight_add()
 			if(set)
 			{
 				this_world.set_blocklight(pos2, color2, false);
-				blocklight_add.emplace(pos2);
+				light_add.emplace(pos2);
 			}
 		};
 
@@ -424,6 +529,106 @@ void world::impl::process_blocklight_add()
 		fill(+1,  0,  0, color);
 	}
 }
+void world::impl::process_skylight_add()
+{
+	auto& light_add = this->light_add[LIGHT_LAYER_SKY];
+	while(!light_add.empty())
+	{
+		const block_in_world pos = light_add.front();
+		light_add.pop();
+		const graphics::color color = this_world.get_skylight(pos);
+		const graphics::color color1 = color - 1;
+
+		auto fill =
+		[
+			this,
+			&light_add,
+			&pos
+		]
+		(
+			const int8_t x,
+			const int8_t y,
+			const int8_t z,
+			graphics::color color
+		)
+		{
+			if(color == 0)
+			{
+				return;
+			}
+			const block_in_world pos2{pos.x + x, pos.y + y, pos.z + z};
+			const shared_ptr<const Chunk> chunk = this_world.get_chunk(chunk_in_world(pos2));
+			if(chunk == nullptr)
+			{
+				return;
+			}
+			const block_in_chunk pos2b(pos2);
+			const block_t block = chunk->get_block(pos2b);
+			if(this_world.block_manager.info.is_opaque(block))
+			{
+				return;
+			}
+			if(this_world.block_manager.info.is_translucent(block))
+			{
+				const graphics::color f = this_world.block_manager.info.light_filter(block);
+				color.r = std::min(color.r, f.r);
+				color.g = std::min(color.g, f.g);
+				color.b = std::min(color.b, f.b);
+			}
+			graphics::color color2 = chunk->get_skylight(pos2b);
+			bool set = false;
+			if(color2.r < color.r) { color2.r = color.r; set = true; }
+			if(color2.g < color.g) { color2.g = color.g; set = true; }
+			if(color2.b < color.b) { color2.b = color.b; set = true; }
+			if(set)
+			{
+				this_world.set_skylight(pos2, color2, false);
+				light_add.emplace(pos2);
+			}
+		};
+
+		fill( 0,  0, -1, color1);
+		fill( 0,  0, +1, color1);
+
+		/*
+		Despite their drawbacks, either of these methods is reasonable. I chose the simpler one.
+		I could make it work for filtered light by storing a bool with the color.
+		The bool indicates whether or not the light is in its originating column.
+		If true, the sky visibility check applies. If false, it always dims going down.
+		*/
+
+		// checking if the sky is visible causes a problem when there is a filter block that sees the sky and brighter light goes underneath it horizontally
+		//const shared_ptr<const Chunk> chunk = this_world.get_chunk(chunk_in_world(pos));
+		//if(chunk.can_see_sky_at(pos))
+
+		// comparing the color causes light to start dimming when skylight goes through a light filter
+		if(color == skylight_color)
+		{
+			fill( 0, -1,  0, color);
+		}
+		else
+		{
+			fill( 0, -1,  0, color1);
+		}
+
+		fill( 0, +1,  0, color1);
+		fill(-1,  0,  0, color1);
+		fill(+1,  0,  0, color1);
+	}
+}
+
+void world::impl::sub_light(const std::size_t layer, const block_in_world& block_pos)
+{
+	if(layer == LIGHT_LAYER_BLOCK)
+	{
+		sub_blocklight(block_pos);
+	}
+	else
+	{
+		assert(layer == LIGHT_LAYER_SKY);
+		sub_skylight(block_pos);
+	}
+}
 
 void world::impl::sub_blocklight(const block_in_world& block_pos)
 {
@@ -432,6 +637,9 @@ void world::impl::sub_blocklight(const block_in_world& block_pos)
 	{
 		return;
 	}
+
+	auto& light_add = this->light_add[LIGHT_LAYER_BLOCK];
+
 	this_world.set_blocklight(block_pos, {0, 0, 0}, false);
 
 	std::queue<std::tuple<block_in_world, graphics::color>> q;
@@ -445,6 +653,7 @@ void world::impl::sub_blocklight(const block_in_world& block_pos)
 		auto fill =
 		[
 			this,
+			&light_add,
 			&q,
 			&pos
 		]
@@ -479,7 +688,7 @@ void world::impl::sub_blocklight(const block_in_world& block_pos)
 				}
 				else if(color2[i] >= color[i])
 				{
-					blocklight_add.emplace(pos2);
+					light_add.emplace(pos2);
 				}
 			}
 			if(set)
@@ -497,10 +706,106 @@ void world::impl::sub_blocklight(const block_in_world& block_pos)
 		fill(color, +1,  0,  0);
 	}
 }
-
-void world::impl::update_blocklight_around(const block_in_world& block_pos)
+void world::impl::sub_skylight(const block_in_world& block_pos)
 {
-	#define a(x_, y_, z_) blocklight_add.emplace(block_pos.x + (x_), block_pos.y + (y_), block_pos.z + (z_))
+	const graphics::color color = this_world.get_skylight(block_pos);
+	if(color == 0)
+	{
+		return;
+	}
+
+	auto& light_add = this->light_add[LIGHT_LAYER_SKY];
+
+	this_world.set_skylight(block_pos, {0, 0, 0}, false);
+
+	std::queue<std::tuple<block_in_world, graphics::color>> q;
+	q.emplace(block_pos, color);
+	while(!q.empty())
+	{
+		const block_in_world pos = std::get<0>(q.front());
+		const graphics::color color = std::get<1>(q.front());
+		q.pop();
+
+		auto fill =
+		[
+			this,
+			&light_add,
+			&q,
+			&pos
+		]
+		(
+			const graphics::color& color,
+			const int8_t x,
+			const int8_t y,
+			const int8_t z
+		)
+		{
+			const block_in_world pos2{pos.x + x, pos.y + y, pos.z + z};
+			const shared_ptr<const Chunk> chunk = this_world.get_chunk(chunk_in_world(pos2));
+			if(chunk == nullptr)
+			{
+				return;
+			}
+			const block_in_chunk pos2b(pos2);
+			const block_t block = chunk->get_block(pos2b);
+			const bool is_source = this_world.block_manager.info.light(block) != 0;
+			graphics::color color2 = chunk->get_skylight(pos2b);
+			graphics::color color_set = color2;
+			graphics::color color_put(0, 0, 0);
+
+			bool set = false;
+			if(y == -1)
+			{
+				for(uint_fast8_t i = 0; i < 3; ++i)
+				{
+					if(!is_source && color2[i] != 0 && color2[i] <= color[i])
+					{
+						color_set[i] = 0;
+						color_put[i] = color2[i];
+						set = true;
+					}
+					else if(color2[i] > color[i])
+					{
+						light_add.emplace(pos2);
+					}
+				}
+			}
+			else
+			{
+				for(uint_fast8_t i = 0; i < 3; ++i)
+				{
+					if(!is_source && color2[i] != 0 && color2[i] < color[i])
+					{
+						color_set[i] = 0;
+						color_put[i] = color2[i];
+						set = true;
+					}
+					else if(color2[i] >= color[i])
+					{
+						light_add.emplace(pos2);
+					}
+				}
+			}
+			if(set)
+			{
+				this_world.set_skylight(pos2, color_set, false);
+				q.emplace(pos2, color_put);
+			}
+		};
+
+		fill(color,  0,  0, -1);
+		fill(color,  0,  0, +1);
+		fill(color,  0, -1,  0);
+		fill(color,  0, +1,  0);
+		fill(color, -1,  0,  0);
+		fill(color, +1,  0,  0);
+	}
+}
+
+void world::impl::update_light_around(const std::size_t layer, const block_in_world& block_pos)
+{
+	auto& light_add = this->light_add[layer];
+	#define a(x_, y_, z_) light_add.emplace(block_pos.x + (x_), block_pos.y + (y_), block_pos.z + (z_))
 	a( 0,  0, -1);
 	a( 0,  0, +1);
 	a( 0, -1,  0);
@@ -508,7 +813,7 @@ void world::impl::update_blocklight_around(const block_in_world& block_pos)
 	a(-1,  0,  0);
 	a(+1,  0,  0);
 	#undef a
-	process_blocklight_add();
+	process_light_add(layer);
 }
 
 void world::set_chunk(const chunk_in_world& chunk_pos, shared_ptr<Chunk> chunk)
@@ -527,8 +832,38 @@ void world::set_chunk(const chunk_in_world& chunk_pos, shared_ptr<Chunk> chunk)
 		return;
 	}
 
+	// set skylight
+	// TODO: handle skylight being blocked by above chunks
+	// currently, every chunk has skylight emitted at the top
+	{
+		auto& skylight_add = pImpl->light_add[LIGHT_LAYER_SKY];
+		block_in_chunk pos(0, CHUNK_SIZE - 1, 0);
+		for(pos.x = 0; pos.x < CHUNK_SIZE; ++pos.x)
+		for(pos.z = 0; pos.z < CHUNK_SIZE; ++pos.z)
+		{
+			graphics::color light = pImpl->skylight_color;
+			const block_t block = chunk->get_block(pos);
+			if(block_manager.info.is_opaque(block))
+			{
+				light = 0;
+			}
+			else if(block_manager.info.is_translucent(block))
+			{
+				const graphics::color f = block_manager.info.light_filter(block);
+				light.r = std::min(light.r, f.r);
+				light.g = std::min(light.g, f.g);
+				light.b = std::min(light.b, f.b);
+			}
+			chunk->set_skylight(pos, light);
+			const block_in_world block_pos(chunk->get_position(), pos);
+			skylight_add.emplace(block_pos);
+		}
+		pImpl->process_light_add(LIGHT_LAYER_SKY);
+	}
+
 	// update light at chunk sides to make it flow into the new chunk
 	{
+		auto& blocklight_add = pImpl->light_add[LIGHT_LAYER_BLOCK];
 		block_in_world pos1(chunk_pos, {0, 0, 0});
 		block_in_world pos;
 		for(uint_fast8_t i1 = 0; i1 < 3; ++i1)
@@ -541,16 +876,16 @@ void world::set_chunk(const chunk_in_world& chunk_pos, shared_ptr<Chunk> chunk)
 				block_in_world pos2(pos);
 
 				pos2[i3] = pos1[i3] - 1;
-				pImpl->blocklight_add.emplace(pos2);
+				blocklight_add.emplace(pos2);
 
 				pos2[i3] = pos1[i3] + CHUNK_SIZE;
-				pImpl->blocklight_add.emplace(pos2);
+				blocklight_add.emplace(pos2);
 			}
 		}
-		pImpl->process_blocklight_add();
+		pImpl->process_light_add(LIGHT_LAYER_BLOCK);
 	}
 
-	// update light in chunk
+	// update blocklight
 	{
 		block_in_chunk pos;
 		for(pos.x = 0; pos.x < CHUNK_SIZE; ++pos.x)
@@ -561,7 +896,7 @@ void world::set_chunk(const chunk_in_world& chunk_pos, shared_ptr<Chunk> chunk)
 			const graphics::color light = block_manager.info.light(block);
 			if(light != 0)
 			{
-				pImpl->add_blocklight({chunk_pos, pos}, light, false);
+				pImpl->add_light(LIGHT_LAYER_BLOCK, {chunk_pos, pos}, light, false);
 			}
 		}
 	}
@@ -573,22 +908,30 @@ void world::set_chunk(const chunk_in_world& chunk_pos, shared_ptr<Chunk> chunk)
 		for(pos2.z = -1; pos2.z < CHUNK_SIZE + 1; ++pos2.z)
 		{
 			chunk_in_world chunk_pos_2 = chunk_pos;
-			block_in_chunk pos;
+			block_in_chunk lpos2;
+			glm::ivec3 pos1;
+			block_in_chunk lpos1;
 			for(uint_fast8_t i = 0; i < 3; ++i)
 			{
 				if(pos2[i] == -1)
 				{
 					chunk_pos_2[i] -= 1;
-					pos[i] = CHUNK_SIZE - 1;
+					lpos2[i] = CHUNK_SIZE - 1;
+					pos1[i] = CHUNK_SIZE;
+					lpos1[i] = 0;
 				}
 				else if(pos2[i] == CHUNK_SIZE)
 				{
 					chunk_pos_2[i] += 1;
-					pos[i] = 0;
+					lpos2[i] = 0;
+					pos1[i] = -1;
+					lpos1[i] = CHUNK_SIZE - 1;
 				}
 				else
 				{
-					pos[i] = static_cast<block_in_chunk::value_type>(pos2[i]);
+					lpos2[i] = static_cast<block_in_chunk::value_type>(pos2[i]);
+					pos1[i] = pos2[i];
+					lpos1[i] = static_cast<block_in_chunk::value_type>(pos2[i]);
 				}
 			}
 			if(chunk_pos_2 == chunk_pos)
@@ -598,7 +941,8 @@ void world::set_chunk(const chunk_in_world& chunk_pos, shared_ptr<Chunk> chunk)
 			const shared_ptr<Chunk> chunk2 = get_chunk(chunk_pos_2);
 			if(chunk2 != nullptr)
 			{
-				chunk->set_texbuflight(pos2, chunk2->get_blocklight(pos));
+				chunk->set_texbuflight(pos2, chunk2->get_light(lpos2));
+				chunk2->set_texbuflight(pos1, chunk->get_light(lpos1));
 			}
 		}
 	}

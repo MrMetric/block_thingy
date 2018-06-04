@@ -202,12 +202,17 @@ void Play::draw_debug_text()
 	}
 	if(g.player->hovered_block != nullopt)
 	{
-		const block_t hovered = g.player->hovered_block->block;
+		const auto& hovered_info = *g.player->hovered_block;
+		const block_t hovered = hovered_info.block;
+		const auto adjacent = hovered_info.adjacent();
 		ss << "hovered: " << show_block(hovered) << '\n';
-		ss << "\tface: " << g.player->hovered_block->face() << '\n';
+		ss << "\tposition: " << hovered_info.pos << '\n';
+		ss << "\tface: " << hovered_info.face() << '\n';
 		ss << "\trotation: " << glm::io::width(2) << g.world->block_manager.info.rotation(hovered) << '\n';
 		ss << "\temitted light: " << g.world->block_manager.info.light(hovered) << '\n';
-		ss << "\tlight: " << g.world->get_blocklight(g.player->hovered_block->adjacent()) << '\n';
+		ss << "\tblock light  : " << g.world->get_blocklight(adjacent) << '\n';
+		ss << "\tsky light    : " << g.world->get_skylight(adjacent) << '\n';
+		ss << "\ttotal light  : " << g.world->get_light(adjacent) << '\n';
 	}
 
 	g.gfx.gui_text.draw(ss.str(), {8.0, 8.0});
