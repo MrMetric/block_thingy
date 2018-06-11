@@ -80,8 +80,22 @@ void light::on_change(std::ptrdiff_t i, widget::text_input& w, const string& new
 	if(v != c[i])
 	{
 		c[i] = static_cast<graphics::color::value_type>(v);
-		world.block_manager.info.light(block, c);
-		world.update_blocklight(block_pos, c, true);
+		const string strid = "test_light_"
+		                    + std::to_string(c[0]) + '_'
+		                    + std::to_string(c[1]) + '_'
+		                    + std::to_string(c[2]);
+		if(const std::optional<block_t> b = world.block_manager.get_block(strid);
+			b != nullopt)
+		{
+			block = *b;
+		}
+		else
+		{
+			block = world.block_manager.duplicate(block);
+			world.block_manager.set_strid(block, strid);
+			world.block_manager.info.light(block, c);
+		}
+		world.set_block(block_pos, block);
 	}
 }
 

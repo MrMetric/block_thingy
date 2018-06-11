@@ -36,10 +36,13 @@ manager::manager()
 	info.shader_path(test, "test");
 
 	const block_t test_light = create();
-	set_strid(test_light, "test_light");
+	const string color_max = std::to_string(graphics::color::max);
+	set_strid(test_light, "test_light_" + color_max + '_' + color_max + '_' + color_max);
+	set_name(test_light, "block.test_light");
+	set_group(test_light, "test_light");
 	info.shader_path(test_light, "light");
 	info.light(test_light, {graphics::color::max});
-	hook_use_start([test_light]
+	hook_use_start([this]
 	(
 		game& g,
 		Player& player,
@@ -49,13 +52,12 @@ manager::manager()
 		const block_t block
 	) -> void
 	{
-		if(block == test_light)
+		if(get_group(block) == "test_light")
 		{
 			player.open_gui(std::make_unique<graphics::gui::light>(g, world, pos, block));
 		}
 	});
 	// TODO: close GUI on use end
-	// TODO: use a different block instance for each color
 
 	// TODO
 	const block_t test_teleporter = create();
@@ -124,10 +126,24 @@ bool manager::exists(const block_t block) const
 block_t manager::duplicate(const block_t block)
 {
 	block_t new_block = create();
+
+	if(const auto i = block_to_name.find(block);
+		i != block_to_name.cend())
+	{
+		set_name(new_block, i->second);
+	}
+
+	if(const auto i = block_to_group.find(block);
+		i != block_to_group.cend())
+	{
+		set_group(new_block, i->second);
+	}
+
 	for(component::base* c : components)
 	{
 		c->copy(block, new_block);
 	}
+
 	return new_block;
 }
 
@@ -185,16 +201,38 @@ std::optional<string> manager::get_name(const block_t block) const
 	{
 		return i->second;
 	}
+
 	if(const auto i = block_to_strid.find(block);
 		i != block_to_strid.cend())
 	{
 		return "block." + i->second;
 	}
+
+	if(const auto i = block_to_group.find(block);
+		i != block_to_group.cend())
+	{
+		return "block." + i->second;
+	}
+
 	return {};
 }
 void manager::set_name(const block_t block, const string& name)
 {
 	block_to_name.insert_or_assign(block, name);
+}
+
+std::optional<string> manager::get_group(const block_t block) const
+{
+	if(const auto i = block_to_group.find(block);
+		i != block_to_group.cend())
+	{
+		return i->second;
+	}
+	return {};
+}
+void manager::set_group(const block_t block, const string& group)
+{
+	block_to_group.insert_or_assign(block, group);
 }
 
 void manager::add_component(component::base& c)

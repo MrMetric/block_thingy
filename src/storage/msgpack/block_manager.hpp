@@ -10,12 +10,13 @@ namespace block_thingy::block {
 template<>
 void manager::save(msgpack::packer<std::ofstream>& o) const
 {
-	o.pack_array(6);
+	o.pack_array(7);
 	o.pack(generation);
 	o.pack(free_indexes);
 	o.pack(instance_count);
 	o.pack(block_to_strid);
 	o.pack(block_to_name);
+	o.pack(block_to_group);
 	// pack_map takes uint32_t
 	assert(components.size() <= std::numeric_limits<uint32_t>::max());
 	o.pack_map(static_cast<uint32_t>(components.size()));
@@ -30,7 +31,7 @@ template<>
 void manager::load(const msgpack::object& o)
 {
 	if(o.type != msgpack::type::ARRAY) throw msgpack::type_error();
-	if(o.via.array.size != 6) throw msgpack::type_error();
+	if(o.via.array.size != 7) throw msgpack::type_error();
 	const msgpack::object* a = o.via.array.ptr;
 	if(a[4].type != msgpack::type::MAP) throw msgpack::type_error();
 
@@ -44,8 +45,9 @@ void manager::load(const msgpack::object& o)
 		strid_to_block.emplace(strid, block);
 	}
 	block_to_name = a[4].as<decltype(block_to_name)>();
+	block_to_group = a[5].as<decltype(block_to_name)>();
 
-	const auto cm = a[5].as<std::map<std::string, msgpack::object>>();
+	const auto cm = a[6].as<std::map<std::string, msgpack::object>>();
 	for(component::base* const c : components)
 	{
 		if(const auto i = cm.find(c->get_id());

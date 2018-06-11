@@ -40,6 +40,9 @@ public:
 	std::optional<std::string> get_name(block_t) const;
 	void set_name(block_t, const std::string&);
 
+	std::optional<std::string> get_group(block_t) const;
+	void set_group(block_t, const std::string&);
+
 	component::info info;
 
 	// non-owning pointer
@@ -125,6 +128,7 @@ private:
 	std::map<block_t, std::string> block_to_strid;
 	std::map<std::string, block_t> strid_to_block;
 	std::map<block_t, std::string> block_to_name;
+	std::map<block_t, std::string> block_to_group;
 
 	std::vector<block_transformer_t> break_transformers;
 	std::vector<block_transformer_t> place_transformers;
