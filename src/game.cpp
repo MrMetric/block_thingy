@@ -324,6 +324,8 @@ void game::draw_world
 	const glm::dmat4& projection_matrix
 )
 {
+	assert(world != nullptr);
+
 	const bool wireframe = settings::get<bool>("wireframe");
 	graphics::opengl::push_state<GLenum, GL_POLYGON_MODE> _polygon_mode(wireframe ? GL_LINE : GL_FILL);
 
@@ -344,6 +346,7 @@ void game::draw_world
 		std::get<1>(pImpl->draw_stats) + std::get<1>(draw_stats),
 	};
 
+	assert(player != nullptr);
 	if(player->hovered_block != nullopt
 	&& settings::get<bool>("show_HUD"))
 	{

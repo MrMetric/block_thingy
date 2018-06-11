@@ -234,6 +234,7 @@ void Player::step(world::world& world, const double delta_time)
 		}
 
 		// friction
+		// TODO: add friction for on solid blocks and in nonsolid blocks
 		if(flags.on_ground)
 		{
 			velocity.x *= 0.75;

@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <ostream>
+#include <string>
+#include <type_traits>
 
 namespace block_thingy::block::enums {
 
@@ -17,7 +19,8 @@ glm::ivec3 face_to_vec(const Face face)
 		case Face::back  : return { 0,  0, -1};
 	}
 	assert(false);
-	return {}; // to satisfy -Werror
+	// to satisfy -Werror
+	return {};
 }
 
 Face vec_to_face(const glm::ivec3& vec)
@@ -29,7 +32,8 @@ Face vec_to_face(const glm::ivec3& vec)
 	if(vec.z == +1) return Face::front;
 	if(vec.z == -1) return Face::back;
 	assert(false);
-	return Face::front; // to satisfy -Werror
+	// to satisfy -Werror
+	return Face::front;
 }
 
 std::ostream& operator<<(std::ostream& o, const Face face)
@@ -44,7 +48,9 @@ std::ostream& operator<<(std::ostream& o, const Face face)
 		case Face::left  : return o << "left";
 	}
 	assert(false);
-	return o << "ERROR"; // to satisfy -Werror
+	// to satisfy -Werror
+	const auto i = static_cast<std::underlying_type_t<Face>>(face);
+	return o << "ERROR(" << std::to_string(i) << ')';
 }
 
 }
