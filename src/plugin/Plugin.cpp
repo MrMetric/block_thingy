@@ -84,6 +84,23 @@ void Plugin::init(game& g)
 	LOG(INFO) << "initialized " << name_ << '\n';
 }
 
+void Plugin::load_world(world::world& world)
+{
+	if(pImpl == nullptr)
+	{
+		return;
+	}
+
+	void* load_world_ptr = pImpl->get_symbol("bt_plugin_load_world");
+	if(load_world_ptr == nullptr)
+	{
+		return;
+	}
+
+	const auto load_world = *reinterpret_cast<void(*)(world::world&)>(load_world_ptr);
+	load_world(world);
+}
+
 Plugin::impl::impl(const fs::path& path)
 :
 	handle(nullptr),

@@ -5,6 +5,7 @@
 #include "fwd/game.hpp"
 #include "shim/propagate_const.hpp"
 #include "util/filesystem.hpp"
+#include "fwd/world/world.hpp"
 
 namespace block_thingy {
 
@@ -38,6 +39,7 @@ private:
 	std::string name_;
 
 	void init(game&);
+	void load_world(world::world&);
 
 	struct impl;
 	std::propagate_const<std::unique_ptr<impl>> pImpl;

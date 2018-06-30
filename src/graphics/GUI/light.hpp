@@ -6,6 +6,7 @@
 
 #include "fwd/game.hpp"
 #include "block/block.hpp"
+#include "graphics/color.hpp"
 #include "fwd/graphics/GUI/Widget/text_input.hpp"
 #include "position/block_in_world.hpp"
 #include "fwd/world/world.hpp"
@@ -19,12 +20,14 @@ public:
 
 	std::string type() const override;
 
+	void close() override;
 	void draw() override;
 
 private:
 	world::world& world;
 	position::block_in_world block_pos;
 	block_t block;
+	graphics::color color;
 
 	void on_change(std::ptrdiff_t, widget::text_input&, const std::string&);
 };

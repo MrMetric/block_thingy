@@ -20,6 +20,7 @@ manager::manager()
 	const block_t none = create();
 	assert(none == NONE);
 	set_strid(none, "none");
+	info.selection_color(none, {1, 0, 0, 0});
 	info.visibility_type(none, enums::visibility_type::invisible);
 
 	const block_t air = create();

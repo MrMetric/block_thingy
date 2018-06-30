@@ -8,6 +8,9 @@
 #include <string>
 #include <unordered_set>
 
+#include <msgpack/object_fwd_decl.hpp>
+#include <msgpack/pack_decl.hpp>
+
 #include "fwd/Player.hpp"
 #include "block/block.hpp"
 #include "block/manager.hpp"
@@ -48,19 +51,20 @@ public:
 	graphics::color get_light(const position::block_in_world&) const;
 
 	graphics::color get_blocklight(const position::block_in_world&) const;
-	void set_blocklight(const position::block_in_world&, const graphics::color&, bool save);
-	void update_blocklight(const position::block_in_world&, bool save);
-	void update_blocklight(const position::block_in_world&, const graphics::color&, bool save);
+	void set_blocklight(const position::block_in_world&, const graphics::color&);
 
 	graphics::color get_skylight(const position::block_in_world&) const;
-	void set_skylight(const position::block_in_world&, const graphics::color&, bool save);
-	void update_skylight(const position::block_in_world&, bool save);
-	void update_skylight(const position::block_in_world&, const graphics::color&, bool save);
+	void set_skylight(const position::block_in_world&, const graphics::color&);
 
 	std::shared_ptr<const Chunk> get_chunk(const position::chunk_in_world&) const;
 	std::shared_ptr<      Chunk> get_chunk(const position::chunk_in_world&);
 	std::shared_ptr<Chunk> get_or_make_chunk(const position::chunk_in_world&);
-	void set_chunk(const position::chunk_in_world&, std::shared_ptr<Chunk> chunk);
+	void set_chunk(const position::chunk_in_world&, std::shared_ptr<Chunk> chunk, bool set_light);
+
+	/*
+	 * Call this every tick to keep a chunk loaded
+	 */
+	void mark_chunk_active(const position::chunk_in_world&);
 
 	void step(double delta_time);
 
@@ -68,7 +72,7 @@ public:
 	std::shared_ptr<Player> get_player(const std::string& name);
 	const std::map<std::string, std::shared_ptr<Player>>& get_players();
 
-	void save();
+	void save_all();
 
 	std::string get_name() const;
 	void set_name(const std::string&);
@@ -87,13 +91,10 @@ public:
 	bool is_meshing_queued(const position::chunk_in_world&) const;
 
 	// for msgpack
-	template<typename T> void save(T&) const;
-	template<typename T> void load(const T&);
+	void save(msgpack::packer<std::ofstream>&) const;
+	void load(const msgpack::object&);
 
 private:
-	// for loading
-	void set_ticks(uint64_t);
-
 	struct impl;
 	std::propagate_const<std::unique_ptr<impl>> pImpl;
 };

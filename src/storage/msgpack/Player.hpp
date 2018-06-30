@@ -18,11 +18,26 @@ struct pack<Player>
 	template<typename Stream>
 	packer<Stream>& operator()(packer<Stream>& o, const Player& player) const
 	{
+		uint32_t n = 3;
+
 		const bool noclip = player.get_noclip();
-		o.pack_map(noclip ? 4 : 3);
+		if(noclip)
+		{
+			n += 1;
+		}
+		if(player.copied_block != std::nullopt)
+		{
+			n += 1;
+		}
+
+		o.pack_map(n);
 		o.pack("position"); o.pack(player.position);
 		o.pack("rotation"); o.pack(player.rotation);
 		o.pack("velocity"); o.pack(player.velocity);
+		if(player.copied_block != std::nullopt)
+		{
+			o.pack("copied_block"); o.pack(*player.copied_block);
+		}
 		if(noclip)
 		{
 			o.pack("noclip"); o.pack(player.get_noclip());
@@ -44,6 +59,17 @@ struct convert<Player>
 		find_in_map_or_throw(map, "position", player.position);
 		find_in_map_or_throw(map, "rotation", player.rotation);
 		find_in_map_or_throw(map, "velocity", player.velocity);
+
+		block_t copied_block;
+		if(find_in_map(map, "copied_block", copied_block))
+		{
+			player.copied_block = copied_block;
+		}
+		else
+		{
+			player.copied_block = std::nullopt;
+		}
+
 		bool noclip = false;
 		find_in_map(map, "noclip", noclip);
 		player.set_noclip(noclip);

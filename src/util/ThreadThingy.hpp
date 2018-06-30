@@ -32,9 +32,9 @@ public:
 	{
 		auto g = [this, f]()
 		{
-			T thing;
 			while(running)
 			{
+				T thing;
 				if(things.try_dequeue(thing))
 				{
 					f(thing);

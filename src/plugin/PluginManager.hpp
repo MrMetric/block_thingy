@@ -5,6 +5,7 @@
 
 #include "fwd/game.hpp"
 #include "shim/propagate_const.hpp"
+#include "fwd/world/world.hpp"
 
 namespace block_thingy {
 
@@ -19,7 +20,8 @@ public:
 	PluginManager& operator=(PluginManager&&) = delete;
 	PluginManager& operator=(const PluginManager&) = delete;
 
-	void init_plugins(game&);
+	void plugin_init(game&);
+	void plugin_load_world(world::world&);
 
 	static PluginManager* instance;
 

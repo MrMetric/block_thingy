@@ -8,23 +8,27 @@
 
 namespace block_thingy {
 
-using T = block_t;
+#define INSTANTIATE(T) \
+template<> \
+template<> \
+void chunk_data<T>::save(msgpack::packer<zstr::ostream>& o) const \
+{ \
+	o.pack(blocks); \
+} \
+\
+template<> \
+template<> \
+void chunk_data<T>::load(const msgpack::object& o) \
+{ \
+	if(o.type != msgpack::type::ARRAY) throw msgpack::type_error(); \
+	if(o.via.array.size != blocks.size()) throw msgpack::type_error(); \
+	blocks = o.as<decltype(blocks)>(); \
+} \
 
-template<>
-template<>
-void chunk_data<T>::save(msgpack::packer<zstr::ostream>& o) const
-{
-	o.pack(blocks);
-}
+INSTANTIATE(block_t)
+INSTANTIATE(graphics::color)
 
-template<>
-template<>
-void chunk_data<T>::load(const msgpack::object& o)
-{
-	if(o.type != msgpack::type::ARRAY) throw msgpack::type_error();
-	if(o.via.array.size != blocks.size()) throw msgpack::type_error();
-	blocks = o.as<decltype(blocks)>();
-}
+#undef INSTANTIATE
 
 }
 

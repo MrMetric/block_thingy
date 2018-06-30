@@ -10,13 +10,5 @@ widgets:
 		text: "Resume"
 		command: "close_gui"
 	button:
-		text: "Save"
-		command: "save"
-	button:
-		text: "Save & Quit"
-		command:
-			"save"
-			"quit"
-	button:
 		text: "Quit"
 		command: "quit"

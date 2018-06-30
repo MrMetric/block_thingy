@@ -13,6 +13,7 @@
 #include "physics/AABB.hpp"
 #include "physics/raycast_hit.hpp"
 #include "fwd/position/block_in_world.hpp"
+#include "fwd/position/chunk_in_world.hpp"
 #include "util/Property.hpp"
 #include "fwd/world/world.hpp"
 
@@ -49,6 +50,7 @@ public:
 	void move_right(bool);
 	void go_faster(bool);
 	void jump();
+	util::property<bool> crouching;
 
 	void toggle_noclip();
 	bool get_noclip() const;
@@ -60,6 +62,9 @@ public:
 	util::property<glm::dvec3> position;
 	util::property<glm::dvec3> rotation;
 	util::property<glm::dvec3> velocity;
+	position::chunk_in_world position_chunk() const;
+	glm::dvec3 view_position() const;
+	position::chunk_in_world view_position_chunk() const;
 
 	std::optional<block_t> copied_block;
 	std::optional<physics::raycast_hit> hovered_block;
@@ -73,6 +78,7 @@ private:
 	physics::AABB make_aabb(const glm::dvec3& position);
 	void set_aabb();
 	double eye_height;
+	double eye_height_crouching;
 	double height;
 	double walk_speed;
 	double max_velocity;
@@ -87,6 +93,7 @@ private:
 		bool going_faster = false;
 		bool on_ground = false;
 		bool do_jump = false;
+		bool crouching = false;
 		bool noclip = false;
 	} flags;
 };

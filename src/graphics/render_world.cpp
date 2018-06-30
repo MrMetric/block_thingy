@@ -104,7 +104,7 @@ std::tuple<uint64_t, uint64_t> draw_world
 			continue;
 		}
 
-		shared_ptr<Chunk> chunk = world.get_or_make_chunk(pos);
+		shared_ptr<Chunk> chunk = world.get_chunk(pos);
 
 		if(show_chunk_outlines)
 		{

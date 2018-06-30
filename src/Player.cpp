@@ -11,6 +11,7 @@
 #include "event/EventManager.hpp"
 #include "event/type/Event_enter_block.hpp"
 #include "position/block_in_world.hpp"
+#include "position/chunk_in_world.hpp"
 #include "world/world.hpp"
 
 using std::string;
@@ -27,13 +28,17 @@ Player::Player
 :
 	name(std::move(name)),
 	reach_distance(16),
+	crouching(false, [this](const bool c)
+	{
+		flags.crouching = c;
+	}),
 	spawn_position(0.5, 1.0, 0.5), // TODO: generate this
 	position(spawn_position, [this, &g](glm::dvec3 p)
 	{
-		p.y += eye_height;
+		p.y += flags.crouching ? eye_height_crouching : eye_height;
 		g.camera.position = p;
 	}),
-	rotation(glm::dvec3(0), [&g](glm::dvec3 r)
+	rotation(glm::dvec3(0), [&g](const glm::dvec3 r)
 	{
 		g.camera.rotation = r;
 	}),
@@ -43,6 +48,7 @@ Player::Player
 	g(g),
 	abs_offset(0.4),
 	eye_height(1.6),
+	eye_height_crouching(1.2),
 	height(1.8),
 	walk_speed(2),
 	max_velocity(1)
@@ -206,6 +212,11 @@ void Player::move(world::world& world, const glm::dvec3& acceleration)
 
 void Player::step(world::world& world, const double delta_time)
 {
+	if(world.get_chunk(position_chunk()) == nullptr)
+	{
+		return;
+	}
+
 	glm::dvec3 acceleration;
 	acceleration.y -= 0.5; // gravity
 
@@ -224,6 +235,10 @@ void Player::step(world::world& world, const double delta_time)
 		if(flags.do_jump)
 		{
 			acceleration.y += 18;
+		}
+		if(flags.crouching)
+		{
+			acceleration.y -= 18;
 		}
 	}
 	else
@@ -377,6 +392,21 @@ void Player::open_gui(unique_ptr<graphics::gui::Base> gui)
 {
 	// TODO
 	g.open_gui(std::move(gui));
+}
+
+position::chunk_in_world Player::position_chunk() const
+{
+	return position::chunk_in_world(position::block_in_world(position()));
+}
+
+glm::dvec3 Player::view_position() const
+{
+	return position() + (flags.crouching ? eye_height_crouching : eye_height);
+}
+
+position::chunk_in_world Player::view_position_chunk() const
+{
+	return position::chunk_in_world(position::block_in_world(view_position()));
 }
 
 physics::AABB Player::make_aabb(const glm::dvec3& position)

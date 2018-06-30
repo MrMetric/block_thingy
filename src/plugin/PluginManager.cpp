@@ -53,11 +53,19 @@ PluginManager::~PluginManager()
 {
 }
 
-void PluginManager::init_plugins(game& game)
+void PluginManager::plugin_init(game& game)
 {
 	for(Plugin& plugin : pImpl->plugins)
 	{
 		plugin.init(game);
+	}
+}
+
+void PluginManager::plugin_load_world(world::world& world)
+{
+	for(Plugin& plugin : pImpl->plugins)
+	{
+		plugin.load_world(world);
 	}
 }
 

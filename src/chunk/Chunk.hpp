@@ -4,7 +4,7 @@
 
 #include "block/block.hpp"
 #include "chunk/ChunkData.hpp"
-#include "fwd/graphics/color.hpp"
+#include "graphics/color.hpp"
 #include "fwd/position/block_in_chunk.hpp"
 #include "fwd/position/chunk_in_world.hpp"
 #include "shim/propagate_const.hpp"
@@ -45,8 +45,7 @@ public:
 	void render(bool transluscent_pass);
 
 	// for loading
-	void set_blocks(chunk_blocks_t);
-	void set_blocks(block_t);
+	void regenerate_texbuflight();
 
 	// for msgpack
 	template<typename T> void save(T&) const;
@@ -55,7 +54,10 @@ public:
 private:
 	friend class world::world;
 
-	chunk_blocks_t blocks; // this here (instead of in impl) for msgpack saving
+	// this here (instead of in impl) for msgpack saving
+	chunk_blocks_t blocks;
+	chunk_data<graphics::color> blocklight;
+	chunk_data<graphics::color> skylight;
 
 	struct impl;
 	std::propagate_const<std::unique_ptr<impl>> pImpl;

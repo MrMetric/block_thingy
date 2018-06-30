@@ -26,15 +26,15 @@ light::light
 	Base(g, "guis/light.btgui"),
 	world(world),
 	block_pos(block_pos),
-	block(block)
+	block(block),
+	color(world.block_manager.info.light(block))
 {
-	const graphics::color c = world.block_manager.info.light(block);
 	for(std::ptrdiff_t i = 0; i < 3; ++i)
 	{
 		auto w = root.get_widget_by_id_t<widget::text_input>(std::to_string(i));
 		if(w != nullptr)
 		{
-			w->set_text(std::to_string(c[i]));
+			w->set_text(std::to_string(color[i]));
 			w->on_change([this, i](widget::text_input& w, const string& /*old_value*/, const string& new_value)
 			{
 				on_change(i, w, new_value);
@@ -46,6 +46,31 @@ light::light
 string light::type() const
 {
 	return "light";
+}
+
+void light::close()
+{
+	if(color != world.block_manager.info.light(block))
+	{
+		const string strid = "test_light_"
+		                    + std::to_string(color[0]) + '_'
+		                    + std::to_string(color[1]) + '_'
+		                    + std::to_string(color[2]);
+		if(const std::optional<block_t> b = world.block_manager.get_block(strid);
+			b != nullopt)
+		{
+			block = *b;
+		}
+		else
+		{
+			block = world.block_manager.duplicate(block);
+			world.block_manager.set_strid(block, strid);
+			world.block_manager.info.light(block, color);
+		}
+		world.set_block(block_pos, block);
+	}
+
+	Base::close();
 }
 
 void light::draw()
@@ -76,27 +101,7 @@ void light::on_change(std::ptrdiff_t i, widget::text_input& w, const string& new
 		}
 	}
 	w.valid(valid);
-	auto c = world.block_manager.info.light(block);
-	if(v != c[i])
-	{
-		c[i] = static_cast<graphics::color::value_type>(v);
-		const string strid = "test_light_"
-		                    + std::to_string(c[0]) + '_'
-		                    + std::to_string(c[1]) + '_'
-		                    + std::to_string(c[2]);
-		if(const std::optional<block_t> b = world.block_manager.get_block(strid);
-			b != nullopt)
-		{
-			block = *b;
-		}
-		else
-		{
-			block = world.block_manager.duplicate(block);
-			world.block_manager.set_strid(block, strid);
-			world.block_manager.info.light(block, c);
-		}
-		world.set_block(block_pos, block);
-	}
+	color[i] = static_cast<graphics::color::value_type>(v);
 }
 
 }

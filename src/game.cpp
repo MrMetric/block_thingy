@@ -50,9 +50,7 @@
 #include "physics/raycast_hit.hpp"
 #include "physics/raycast_util.hpp"
 #include "plugin/PluginManager.hpp"
-#include "position/block_in_chunk.hpp"
 #include "position/block_in_world.hpp"
-#include "position/chunk_in_world.hpp"
 #include "util/demangled_name.hpp"
 #include "util/filesystem.hpp"
 #include "util/grisu2.hpp"
@@ -210,7 +208,7 @@ game::game()
 		}
 	});
 
-	PluginManager::instance->init_plugins(*this);
+	PluginManager::instance->plugin_init(*this);
 }
 
 game::~game()
@@ -403,6 +401,10 @@ void game::close_gui()
 
 void game::quit()
 {
+	if(world != nullptr)
+	{
+		world->save_all();
+	}
 	if(gui->parent == nullptr)
 	{
 		assert(gui.get() == pImpl->root_gui);
@@ -428,6 +430,7 @@ void game::new_world(fs::path path, const string& name, const double seed)
 	resource_manager.load_blocks(world->block_manager);
 	world->set_name(name);
 	world->set_seed(seed);
+	world->save_all();
 }
 
 void game::load_world(fs::path path)
@@ -444,6 +447,7 @@ void game::load_world(fs::path path)
 	LOG(INFO) << "loading world " << path.u8string() << '\n';
 	world = std::make_shared<world::world>(path, make_mesher(settings::get<string>("mesher")));
 	player = world->add_player("test_player");
+	PluginManager::instance->plugin_load_world(*world);
 	open_gui(make_gui("play"));
 }
 
@@ -587,7 +591,7 @@ void game::impl::add_commands()
 	COMMAND("save")
 	{
 		ASSERT_IN_GAME("save");
-		g.world->save();
+		g.world->save_all();
 	});
 	COMMAND("quit")
 	{
@@ -717,6 +721,16 @@ void game::impl::add_commands()
 	{
 		ASSERT_IN_GAME("jump");
 		player->jump();
+	});
+	COMMAND("+crouch")
+	{
+		ASSERT_IN_GAME("+crouch");
+		player->crouching = true;
+	});
+	COMMAND("-crouch")
+	{
+		ASSERT_IN_GAME("-crouch");
+		player->crouching = false;
 	});
 	COMMAND("+use")
 	{

@@ -18,7 +18,6 @@
 #include "event/EventType.hpp"
 #include "event/type/Event_change_setting.hpp"
 #include "graphics/camera.hpp"
-#include "graphics/color.hpp"
 #include "graphics/opengl/shader_program.hpp"
 #include "graphics/opengl/texture.hpp"
 #include "graphics/opengl/vertex_array.hpp"
@@ -108,14 +107,6 @@ struct Chunk::impl
 		light_tex->image3D(0, GL_RGB, CHUNK_SIZE_2, CHUNK_SIZE_2, CHUNK_SIZE_2, GL_RGB, GL_UNSIGNED_BYTE, light_tex_buf.data());
 	}
 
-	graphics::color get_light(const block_in_chunk&) const;
-
-	graphics::color get_blocklight(const block_in_chunk&) const;
-	void set_blocklight(const block_in_chunk&, const graphics::color& color);
-
-	graphics::color get_skylight(const block_in_chunk&) const;
-	void set_skylight(const block_in_chunk&, const graphics::color& color);
-
 	void set_texbuflight(const glm::ivec3& pos, const graphics::color& color);
 
 	world::world& owner;
@@ -134,8 +125,6 @@ struct Chunk::impl
 	void update_vaos();
 
 private:
-	chunk_data<graphics::color> blocklight;
-	chunk_data<graphics::color> skylight;
 	std::array<uint8_t, CHUNK_SIZE_2 * CHUNK_SIZE_2 * CHUNK_SIZE_2 * 3> light_tex_buf;
 };
 
@@ -180,10 +169,6 @@ void Chunk::set_block(const block_in_chunk& pos, block_t block)
 
 graphics::color Chunk::get_light(const block_in_chunk& pos) const
 {
-	return pImpl->get_light(pos);
-}
-graphics::color Chunk::impl::get_light(const block_in_chunk& pos) const
-{
 	const graphics::color light1 = get_blocklight(pos);
 	const graphics::color light2 = get_skylight(pos);
 	return graphics::color
@@ -196,22 +181,10 @@ graphics::color Chunk::impl::get_light(const block_in_chunk& pos) const
 
 graphics::color Chunk::get_blocklight(const block_in_chunk& pos) const
 {
-	return pImpl->get_blocklight(pos);
-}
-graphics::color Chunk::impl::get_blocklight(const block_in_chunk& pos) const
-{
 	return blocklight.get(pos);
 }
 
 void Chunk::set_blocklight
-(
-	const block_in_chunk& pos,
-	const graphics::color& color
-)
-{
-	pImpl->set_blocklight(pos, color);
-}
-void Chunk::impl::set_blocklight
 (
 	const block_in_chunk& pos,
 	const graphics::color& color
@@ -223,22 +196,10 @@ void Chunk::impl::set_blocklight
 
 graphics::color Chunk::get_skylight(const block_in_chunk& pos) const
 {
-	return pImpl->get_skylight(pos);
-}
-graphics::color Chunk::impl::get_skylight(const block_in_chunk& pos) const
-{
 	return skylight.get(pos);
 }
 
 void Chunk::set_skylight
-(
-	const block_in_chunk& pos,
-	const graphics::color& color
-)
-{
-	pImpl->set_skylight(pos, color);
-}
-void Chunk::impl::set_skylight
 (
 	const block_in_chunk& pos,
 	const graphics::color& color
@@ -326,13 +287,15 @@ void Chunk::render(const bool translucent_pass)
 	}
 }
 
-void Chunk::set_blocks(chunk_blocks_t new_blocks)
+void Chunk::regenerate_texbuflight()
 {
-	blocks = std::move(new_blocks);
-}
-void Chunk::set_blocks(const block_t block)
-{
-	blocks.fill(block);
+	block_in_chunk pos;
+	for(pos.x = 0; pos.x < CHUNK_SIZE; ++pos.x)
+	for(pos.y = 0; pos.y < CHUNK_SIZE; ++pos.y)
+	for(pos.z = 0; pos.z < CHUNK_SIZE; ++pos.z)
+	{
+		set_texbuflight({pos.x, pos.y, pos.z}, get_light(pos));
+	}
 }
 
 void Chunk::impl::update_vaos()

@@ -265,6 +265,7 @@
     <ClInclude Include="..\..\src\storage\msgpack\glm_vec3.hpp" />
     <ClInclude Include="..\..\src\storage\msgpack\glm_vec4.hpp" />
     <ClInclude Include="..\..\src\storage\msgpack\Player.hpp" />
+    <ClInclude Include="..\..\src\storage\msgpack\position.hpp" />
     <ClInclude Include="..\..\src\storage\msgpack\Property.hpp" />
     <ClInclude Include="..\..\src\storage\msgpack\world.hpp" />
     <ClInclude Include="..\..\src\types\window_size_t.hpp" />

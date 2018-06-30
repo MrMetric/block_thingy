@@ -6,6 +6,7 @@ bind d +right
 bind space jump
 bind e +use
 bind lshift +sprint
+bind lctrl +crouch
 bind mouse1 break_block
 bind mouse2 place_block
 bind mouse3 copy_block
