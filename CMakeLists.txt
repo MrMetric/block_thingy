@@ -72,22 +72,27 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=cast-qual
 		-Werror=conversion
 		-Werror=delete-incomplete
+		-Werror=delete-non-virtual-dtor
 		-Werror=deprecated
 		-Werror=extra-semi
 		-Werror=extra-tokens
 		-Werror=float-conversion
+		-Werror=format
 		-Werror=implicit-fallthrough
 		-Werror=inconsistent-missing-destructor-override
 		-Werror=inconsistent-missing-override
 		-Werror=invalid-pp-token
+		-Werror=mismatched-new-delete
 		-Werror=mismatched-tags
 		-Werror=missing-declarations
 		-Werror=missing-field-initializers
 		-Werror=missing-prototypes
+		-Werror=multichar
 		-Werror=newline-eof
 		-Werror=non-virtual-dtor
 		-Werror=old-style-cast
 		-Werror=reorder
+		-Werror=return-stack-address
 		-Werror=return-type
 		-Werror=self-move
 		-Werror=shorten-64-to-32
@@ -97,12 +102,14 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Werror=strict-prototypes
 		-Werror=string-compare
 		-Werror=string-plus-int
+		-Werror=undefined-reinterpret-cast
 		-Werror=uninitialized
 		-Werror=unknown-pragmas
 		-Werror=unknown-warning-option
 		-Werror=unused-result
 		-Werror=weak-vtables
 		-Werror=zero-as-null-pointer-constant
+		-Wno-c++98-compat
 		-Wno-c++98-compat-pedantic
 		-Wno-documentation-unknown-command
 		-Wno-exit-time-destructors
@@ -111,6 +118,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		-Wno-logical-op-parentheses
 		-Wno-missing-braces
 		-Wno-padded
+		-Wno-return-std-move-in-c++11
 		-Wno-shadow
 		-Wno-undefined-func-template
 	)
@@ -139,7 +147,9 @@ target_compile_options(block_thingy PRIVATE
 	$<${DEBUG_BUILD}:${FSANITIZE}>
 	-march=native
 	-fno-math-errno
+	-fno-omit-frame-pointer
 	-fno-signed-zeros
+	-fno-strict-aliasing
 	-fstack-protector-strong
 	-DBT_CHUNK_SIZE=${BT_CHUNK_SIZE}
 	-DBT_CHUNK_SIZE_STR="${BT_CHUNK_SIZE}"

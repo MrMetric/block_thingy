@@ -37,7 +37,7 @@ public:
 	double reach_distance;
 
 	void move(world::world&, const glm::dvec3& acceleration);
-	void step(world::world&, double delta_time);
+	void step(world::world&);
 	glm::dvec3 apply_movement_input(glm::dvec3 acceleration, double move_speed);
 	void set_analog_motion(const glm::dvec2&);
 	void respawn();

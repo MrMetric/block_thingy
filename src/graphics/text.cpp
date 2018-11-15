@@ -687,6 +687,22 @@ text::character text::font_data::load_char(const char32_t c) const
 	}
 
 	const auto& bitmap = face->glyph->bitmap;
+	if(bitmap.pixel_mode != FT_PIXEL_MODE_GRAY)
+	{
+		LOG(ERROR) << "error loading character '" << c << "': unhandled pixel mode: " << +bitmap.pixel_mode << '\n';
+		return
+		{
+			{},
+			{0, 0},
+			{0, 0},
+			0,
+			false,
+		};
+	}
+	if(bitmap.num_grays != 256)
+	{
+		LOG(WARN) << "for character '" << c << "', num_grays is " << bitmap.num_grays << " (expected 256)\n";
+	}
 
 	character ch
 	{

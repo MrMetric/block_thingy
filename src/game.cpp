@@ -294,7 +294,7 @@ void game::step()
 		assert(player != nullptr);
 		assert(world != nullptr);
 		player->rotation = camera.rotation;
-		world->step(pImpl->delta_time);
+		world->step();
 		pImpl->find_hovered_block();
 	}
 	++pImpl->global_ticks;

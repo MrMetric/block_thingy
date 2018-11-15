@@ -50,7 +50,7 @@ Player::Player
 	eye_height(1.6),
 	eye_height_crouching(1.2),
 	height(1.8),
-	walk_speed(2),
+	walk_speed(1.0 / 30.0),
 	max_velocity(1)
 {
 }
@@ -210,7 +210,7 @@ void Player::move(world::world& world, const glm::dvec3& acceleration)
 	this->velocity = velocity;
 }
 
-void Player::step(world::world& world, const double delta_time)
+void Player::step(world::world& world)
 {
 	if(world.get_chunk(position_chunk()) == nullptr)
 	{
@@ -218,7 +218,7 @@ void Player::step(world::world& world, const double delta_time)
 	}
 
 	glm::dvec3 acceleration;
-	acceleration.y -= 0.5; // gravity
+	acceleration.y += -1.0 / 120.0; // gravity
 
 	double move_speed = walk_speed;
 	if(flags.going_faster)
@@ -234,18 +234,18 @@ void Player::step(world::world& world, const double delta_time)
 		acceleration.y = 0;
 		if(flags.do_jump)
 		{
-			acceleration.y += 18;
+			acceleration.y += 0.3;
 		}
 		if(flags.crouching)
 		{
-			acceleration.y -= 18;
+			acceleration.y -= 0.3;
 		}
 	}
 	else
 	{
 		if(flags.do_jump && flags.on_ground)
 		{
-			acceleration.y += 9;
+			acceleration.y += 0.15;
 		}
 
 		// friction
@@ -270,22 +270,22 @@ void Player::step(world::world& world, const double delta_time)
 
 	if(acceleration != glm::dvec3(0))
 	{
-		const position::block_in_world old_position(position());
-		move(world, acceleration * delta_time);
-		const position::block_in_world new_position(position());
+		//const position::block_in_world old_position(position());
+		move(world, acceleration);
+		//const position::block_in_world new_position(position());
+		// TODO
+		/*
 		if(new_position != old_position)
 		{
 			const block_t block = world.get_block(new_position);
-			// TODO
-			/*
 			if(block != block_t()
 			&& block != air
 			&& !world.block_manager.info.solid(block))
 			{
 				g.event_manager.do_event(Event_enter_block(world, new_position, block, *this));
 			}
-			*/
 		}
+		*/
 
 		set_aabb();
 	}

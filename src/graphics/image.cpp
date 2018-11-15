@@ -281,7 +281,7 @@ std::tuple<std::vector<uint8_t>, uint32_t, uint32_t> read_png
 		throw std::runtime_error("error while reading PNG file " + path.u8string());
 	}
 
-	std::size_t rowbytes = png_get_rowbytes(read.png, read.info);
+	const std::size_t rowbytes = png_get_rowbytes(read.png, read.info);
 
 	LOG(DEBUG) << path.u8string() << ": " << width << "×" << height
 			   << "; bit depth = " << +bit_depth

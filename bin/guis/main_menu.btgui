@@ -10,9 +10,11 @@ widgets:
 		command: "open_gui singleplayer"
 	button:
 		text: "Connect to server"
+		command: "open_gui multiplayer"
 		enabled: false
 	button:
 		text: "Settings"
+		command: "open_gui settings"
 		enabled: false
 	button:
 		text: "Quit"

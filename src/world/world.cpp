@@ -53,6 +53,7 @@ using position::chunk_in_world;
 constexpr std::size_t LIGHT_LAYER_BLOCK = 0;
 constexpr std::size_t LIGHT_LAYER_SKY   = 1;
 constexpr std::size_t LIGHT_LAYER_COUNT = 2;
+constexpr double TICKS_PER_SECOND = 60;
 
 struct world::impl
 {
@@ -1035,10 +1036,8 @@ void world::mark_chunk_active(const chunk_in_world& chunk_pos)
 	pImpl->active_chunks.emplace(chunk_pos);
 }
 
-void world::step(double delta_time)
+void world::step()
 {
-	delta_time = 1.0 / 60.0; // TODO
-
 	shared_ptr<Chunk> chunk;
 	if(pImpl->loaded_chunks.try_dequeue(chunk))
 	{
@@ -1079,7 +1078,7 @@ void world::step(double delta_time)
 	const auto render_distance = static_cast<uint64_t>(settings::get<int64_t>("render_distance"));
 	for(auto& [name, player] : pImpl->players)
 	{
-		player->step(*this, delta_time);
+		player->step(*this);
 
 		const chunk_in_world chunk_pos = player->view_position_chunk();
 		const chunk_in_world::value_type render_distance_ = static_cast<chunk_in_world::value_type>(render_distance);
@@ -1190,7 +1189,7 @@ uint_fast64_t world::get_ticks() const
 
 double world::get_time() const
 {
-	return pImpl->ticks / 60.0;
+	return pImpl->ticks / TICKS_PER_SECOND;
 }
 
 void world::set_mesher(unique_ptr<mesher::base> mesher)

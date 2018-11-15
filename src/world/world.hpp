@@ -66,7 +66,7 @@ public:
 	 */
 	void mark_chunk_active(const position::chunk_in_world&);
 
-	void step(double delta_time);
+	void step();
 
 	std::shared_ptr<Player> add_player(const std::string& name);
 	std::shared_ptr<Player> get_player(const std::string& name);
